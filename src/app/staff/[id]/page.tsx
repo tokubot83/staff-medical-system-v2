@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import styles from './StaffDetail.module.css'
+import { staffDatabase } from '@/app/data/staffData'
 
 // Chart.jsを動的インポート（SSR対応）
 const Chart = dynamic(() => import('react-chartjs-2').then((mod) => mod.Chart), {
@@ -56,30 +57,40 @@ export default function StaffDetailPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // スタッフデータの取得（仮データ）
+    // スタッフデータの取得
     const fetchStaffData = async () => {
       setLoading(true)
-      // 実際のAPIコールに置き換える
-      setTimeout(() => {
+      
+      // データベースから取得
+      const data = staffDatabase[staffId]
+      
+      if (data) {
+        setStaffData(data)
+      } else {
+        // データが見つからない場合はデフォルトデータを使用
         setStaffData({
           id: staffId,
-          name: '田中 美咲',
-          position: '看護師（主任候補）',
-          department: '小原病院 地域包括ケア病棟',
-          employeeId: 'NS-2021-047',
-          joinDate: '2021年4月1日',
-          age: 36,
-          birthDate: '1989年4月15日',
-          evaluation: 'A',
-          nextMeeting: '2025年1月15日',
-          healthStatus: '良好',
-          stressIndex: 48,
-          engagement: 95,
-          overtime: 12,
-          paidLeaveRate: 78,
+          name: '不明な職員',
+          position: '不明',
+          department: '不明',
+          employeeId: staffId,
+          joinDate: '-',
+          tenure: '-',
+          age: 0,
+          birthDate: '-',
+          evaluation: '-',
+          evaluationPeriod: '-',
+          nextMeeting: '-',
+          healthStatus: '-',
+          stressIndex: 0,
+          engagement: 0,
+          overtime: 0,
+          paidLeaveRate: 0,
+          avatar: 'bg-gray-500',
         })
-        setLoading(false)
-      }, 1000)
+      }
+      
+      setLoading(false)
     }
 
     fetchStaffData()
@@ -113,7 +124,7 @@ export default function StaffDetailPage() {
       <div className={styles.basicInfoBar}>
         <div className={styles.basicInfoItem}>
           <span className={styles.basicInfoLabel}>入職:</span>
-          <span className={styles.basicInfoValue}>{staffData.joinDate}（4年3ヶ月）</span>
+          <span className={styles.basicInfoValue}>{staffData.joinDate}（{staffData.tenure}）</span>
         </div>
         <div className={styles.basicInfoItem}>
           <span className={styles.basicInfoLabel}>年齢:</span>
@@ -121,7 +132,7 @@ export default function StaffDetailPage() {
         </div>
         <div className={styles.basicInfoItem}>
           <span className={styles.basicInfoLabel}>最新評価:</span>
-          <span className={styles.basicInfoValue}>{staffData.evaluation}評価（2024年上期）</span>
+          <span className={styles.basicInfoValue}>{staffData.evaluation}評価（{staffData.evaluationPeriod}）</span>
         </div>
         <div className={styles.basicInfoItem}>
           <span className={styles.basicInfoLabel}>次回面談:</span>

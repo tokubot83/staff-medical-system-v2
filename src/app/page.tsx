@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { staffListData } from './data/staffData';
 
 // 型定義
 interface Staff {
