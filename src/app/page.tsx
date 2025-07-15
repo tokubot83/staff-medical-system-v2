@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 
 // 型定義
 interface Staff {
@@ -647,7 +648,9 @@ export default function Home() {
                                   {staff.nameInitial}
                                 </div>
                                 <div>
-                                  <div className="font-semibold text-gray-800">{staff.name}</div>
+                                  <Link href={`/staff/${staff.id}`} className="font-semibold text-blue-600 hover:text-blue-800 hover:underline">
+                                    {staff.name}
+                                  </Link>
                                   <div className="text-xs text-gray-500">{staff.id}</div>
                                 </div>
                               </div>
