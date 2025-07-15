@@ -1,0 +1,10 @@
+{
+  "buildCommand": "npm run build",
+  "framework": "nextjs",
+  "installCommand": "npm install",
+  "functions": {
+    "src/app/page.tsx": {
+      "maxDuration": 10
+    }
+  }
+}
