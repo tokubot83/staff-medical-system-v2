@@ -161,6 +161,24 @@ export default function Home() {
       time: '12:30',
       buttonText: '面談予約',
       staffName: '伊藤由美'
+    },
+    {
+      id: '4',
+      type: 'critical',
+      title: '急性疲労蓄積',
+      content: '山田太郎さん（ICU）の疲労度が限界値。連続勤務72時間超過。',
+      time: '10:15',
+      buttonText: '即時対応',
+      staffName: '山田太郎'
+    },
+    {
+      id: '5',
+      type: 'warning',
+      title: 'パワハラ相談',
+      content: '高橋さくらさん（リハビリ科）より上司に関する相談申請。',
+      time: '09:30',
+      buttonText: '相談対応',
+      staffName: '高橋さくら'
     }
   ];
 
@@ -180,6 +198,30 @@ export default function Home() {
       content: '一般病棟の平均残業時間が28時間/月。労基署対応要。',
       time: '13:20',
       buttonText: '業務見直し'
+    },
+    {
+      id: '3',
+      type: 'critical',
+      title: '人員不足深刻',
+      content: 'ICU部門で看護師3名が同時退職意向。シフト維持困難。',
+      time: '11:45',
+      buttonText: '緊急会議'
+    },
+    {
+      id: '4',
+      type: 'warning',
+      title: '研修未受講多発',
+      content: 'リハビリ科で必須研修の未受講者が40%超過。コンプライアンス違反リスク。',
+      time: '10:00',
+      buttonText: '研修計画'
+    },
+    {
+      id: '5',
+      type: 'warning',
+      title: '患者満足度低下',
+      content: '地域包括ケア病棟で患者満足度が前月比15%低下。職員対応に課題。',
+      time: '08:30',
+      buttonText: '原因分析'
     }
   ];
 
@@ -199,6 +241,30 @@ export default function Home() {
       time: '13:45',
       buttonText: '詳細確認',
       staffName: '佐藤太郎'
+    },
+    {
+      id: '3',
+      title: '資格取得',
+      content: '小林花子さん（内科）が認定看護師資格を取得。専門性向上。',
+      time: '12:00',
+      buttonText: '活用検討',
+      staffName: '小林花子'
+    },
+    {
+      id: '4',
+      title: 'メンター成果',
+      content: '渡辺明さん（外来）の指導で新人3名の定着率100%達成。',
+      time: '11:30',
+      buttonText: '表彰推薦',
+      staffName: '渡辺明'
+    },
+    {
+      id: '5',
+      title: '改善提案採用',
+      content: '木村さん（リハビリ科）の業務効率化案で月20時間削減達成。',
+      time: '10:45',
+      buttonText: '詳細分析',
+      staffName: '木村'
     }
   ];
 
@@ -216,6 +282,27 @@ export default function Home() {
       content: '地域包括ケア病棟：残業20%削減、効率15%向上達成。',
       time: '14:45',
       buttonText: '成功分析'
+    },
+    {
+      id: '3',
+      title: 'チーム医療推進',
+      content: '内科病棟：多職種連携強化で患者満足度92%達成。全国平均超え。',
+      time: '13:15',
+      buttonText: 'モデル化'
+    },
+    {
+      id: '4',
+      title: '教育プログラム効果',
+      content: '外来部門：新人教育プログラム導入で習熟期間40%短縮。',
+      time: '11:00',
+      buttonText: '横展開'
+    },
+    {
+      id: '5',
+      title: '働き方改革成功',
+      content: 'リハビリ科：フレックス制導入で有給取得率85%達成。',
+      time: '09:45',
+      buttonText: '制度拡大'
     }
   ];
 
