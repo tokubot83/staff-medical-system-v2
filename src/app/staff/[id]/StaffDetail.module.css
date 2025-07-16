@@ -267,9 +267,9 @@
 .chartContainer {
   background: #f8f9fa;
   border-radius: 8px;
-  padding: 30px;
+  padding: 30px 30px 40px;
   position: relative;
-  height: 380px;
+  height: 400px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.08);
 }
 
@@ -282,7 +282,7 @@
 
 .chartCanvas {
   position: relative;
-  height: 300px;
+  height: 280px;
 }
 
 /* テーブル */
