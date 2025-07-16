@@ -146,6 +146,12 @@ export default function StaffDetailPage() {
           <span className={styles.basicInfoLabel}>最新評価:</span>
           <span className={styles.basicInfoValue}>{staffData.evaluation}評価（{staffData.evaluationPeriod}）</span>
         </div>
+        {(staffData?.position?.includes('看護師') || staffData?.position?.includes('ナース')) && (
+          <div className={styles.basicInfoItem}>
+            <span className={styles.basicInfoLabel}>JNAラダー:</span>
+            <span className={styles.basicInfoValue}>レベルⅣ（2024年認定）</span>
+          </div>
+        )}
         <div className={styles.basicInfoItem}>
           <span className={styles.basicInfoLabel}>次回面談:</span>
           <span className={styles.basicInfoValue}>{staffData.nextMeeting}予定</span>
@@ -189,6 +195,9 @@ export default function StaffDetailPage() {
 
 // 総合分析タブコンポーネント
 function AnalyticsTab({ staffData }: { staffData: any }) {
+  // 看護師かどうかの判定
+  const isNurse = staffData?.position?.includes('看護師') || staffData?.position?.includes('ナース')
+  
   // タブ横断的統合分析チャート
   const crossTabAnalysisData = {
     labels: ['採用適合', '研修効果', '評価成長', '面談満足', '能力開発', '統合分析'],
@@ -267,6 +276,37 @@ function AnalyticsTab({ staffData }: { staffData: any }) {
     }]
   }
 
+  // JNAラダー進捗グラフ（看護師専用）
+  const jnaLadderProgressTimelineData = {
+    labels: ['2022年', '2023年上期', '2023年下期', '2024年上期', '2024年下期', '2025年予測'],
+    datasets: [{
+      label: 'JNAラダーレベル',
+      data: [2, 3, 3, 4, 4, 5],
+      borderColor: '#9b7cb6',
+      backgroundColor: 'rgba(155, 124, 203, 0.1)',
+      fill: true,
+      tension: 0.1
+    }]
+  }
+
+  // スキル獲得率・研修参加率統計（看護師専用）
+  const skillAcquisitionData = {
+    labels: ['基礎技術', '専門技術', 'リーダーシップ', '管理業務', '教育指導', '研究活動'],
+    datasets: [{
+      label: 'スキル獲得率(%)',
+      data: [100, 95, 75, 60, 85, 45],
+      backgroundColor: 'rgba(54, 162, 235, 0.5)',
+      borderColor: 'rgba(54, 162, 235, 1)',
+      borderWidth: 1
+    }, {
+      label: '目標達成率(%)',
+      data: [100, 90, 80, 80, 80, 60],
+      backgroundColor: 'rgba(255, 206, 86, 0.5)',
+      borderColor: 'rgba(255, 206, 86, 1)',
+      borderWidth: 1
+    }]
+  }
+
   return (
     <div className={styles.section}>
       <div className={styles.sectionHeader}>
@@ -304,6 +344,42 @@ function AnalyticsTab({ staffData }: { staffData: any }) {
           <div className={styles.statLabel}>総合健康スコア</div>
         </div>
       </div>
+
+      {isNurse && (
+        <>
+          <div className={styles.statsGrid} style={{ marginTop: '20px' }}>
+            <div className={`${styles.statCard} ${styles.success}`}>
+              <div className={styles.statTrend}>📊</div>
+              <div className={styles.statValue}>レベルⅣ</div>
+              <div className={styles.statLabel}>JNAラダー現在</div>
+              <div style={{ fontSize: '11px', color: '#666', marginTop: '5px' }}>レベルⅤまで80%</div>
+            </div>
+            <div className={`${styles.statCard} ${styles.info}`}>
+              <div className={styles.statTrend}>📈</div>
+              <div className={styles.statValue}>92%</div>
+              <div className={styles.statLabel}>スキル獲得率</div>
+              <div style={{ fontSize: '11px', color: '#666', marginTop: '5px' }}>看護技術13項目</div>
+            </div>
+            <div className={`${styles.statCard} ${styles.warning}`}>
+              <div className={styles.statTrend}>📚</div>
+              <div className={styles.statValue}>156h</div>
+              <div className={styles.statLabel}>年間研修時間</div>
+              <div style={{ fontSize: '11px', color: '#666', marginTop: '5px' }}>目標達成130%</div>
+            </div>
+            <div className={styles.statCard}>
+              <div className={styles.statTrend}>🏅</div>
+              <div className={styles.statValue}>48単位</div>
+              <div className={styles.statLabel}>継続教育単位</div>
+              <div style={{ fontSize: '11px', color: '#666', marginTop: '5px' }}>更新まで12単位</div>
+            </div>
+          </div>
+
+          <div className={`${styles.alert} ${styles.alertInfo}`} style={{ marginTop: '20px' }}>
+            <span>🎓</span>
+            <strong>JNAラダー統合分析:</strong> 順調な成長軌跡を維持。2025年度内にレベルⅤ（エキスパート）認定見込み。主任昇進に必要な全要件を満たしています。
+          </div>
+        </>
+      )}
 
       <div className={styles.chartGrid}>
         <div className={styles.chartContainer}>
@@ -365,6 +441,15 @@ function AnalyticsTab({ staffData }: { staffData: any }) {
             <strong>相互作用分析:</strong><br />
             • 面談満足度↑ → ストレス指数↓ → 評価↑<br />
             • 研修参加↑ → スキル↑ → 昇進準備度↑
+            {isNurse && (
+              <>
+                <br /><br />
+                <strong>JNAラダー関連分析:</strong><br />
+                • ラダーレベル↑ → 評価向上 → 昇進機会拡大<br />
+                • 専門研修受講 → ラダー要件充足 → キャリア発展<br />
+                • 教育実績蓄積 → 指導力評価↑ → 管理職適性向上
+              </>
+            )}
           </div>
         </div>
 
@@ -441,6 +526,61 @@ function AnalyticsTab({ staffData }: { staffData: any }) {
           </div>
         </div>
       </div>
+
+      {isNurse && (
+        <div className={styles.chartGrid} style={{ marginTop: '30px' }}>
+          <div className={styles.chartContainer}>
+            <h4>JNAラダー成長履歴</h4>
+            <div className={`${styles.alert} ${styles.alertSuccess}`} style={{ margin: '10px 0', fontSize: '11px' }}>
+              <span>📈</span>
+              <span>2年間で2レベル向上。組織内でもトップクラスの成長速度を記録しています。</span>
+            </div>
+            <div className={styles.chartCanvas}>
+              <Line data={jnaLadderProgressTimelineData} options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    max: 5,
+                    ticks: {
+                      stepSize: 1,
+                      callback: function(value) {
+                        const levels = ['', 'レベルⅠ', 'レベルⅡ', 'レベルⅢ', 'レベルⅣ', 'レベルⅤ']
+                        return levels[value as number] || ''
+                      }
+                    }
+                  }
+                },
+                plugins: {
+                  legend: {
+                    display: false
+                  }
+                }
+              }} />
+            </div>
+          </div>
+          <div className={styles.chartContainer}>
+            <h4>スキル獲得率・研修統計</h4>
+            <div className={`${styles.alert} ${styles.alertInfo}`} style={{ margin: '10px 0', fontSize: '11px' }}>
+              <span>💡</span>
+              <span>6分野のスキル獲得状況。管理業務と研究活動が今後の重点強化領域です。</span>
+            </div>
+            <div className={styles.chartCanvas}>
+              <Bar data={skillAcquisitionData} options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    max: 100
+                  }
+                }
+              }} />
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className={styles.infoGrid}>
         <div className={styles.infoCard}>
@@ -559,6 +699,9 @@ function AnalyticsTab({ staffData }: { staffData: any }) {
 
 // 人事評価タブコンポーネント
 function EvaluationTab({ staffData }: { staffData: any }) {
+  // 看護師かどうかの判定
+  const isNurse = staffData?.position?.includes('看護師') || staffData?.position?.includes('ナース')
+  
   // 評価推移チャート
   const evaluationTrendData = {
     labels: ['2022下期', '2023上期', '2023下期', '2024上期'],
@@ -574,19 +717,39 @@ function EvaluationTab({ staffData }: { staffData: any }) {
 
   // 評価レーダーチャート
   const evaluationRadarData = {
-    labels: ['業務成果', '専門スキル', 'チームワーク', 'リーダーシップ', '成長性'],
+    labels: isNurse 
+      ? ['業務成果', '専門スキル', 'チームワーク', 'リーダーシップ', '成長性', 'JNAラダー達成度']
+      : ['業務成果', '専門スキル', 'チームワーク', 'リーダーシップ', '成長性'],
     datasets: [{
       label: '現在',
-      data: [4.5, 4.2, 4.8, 3.5, 4.0],
+      data: isNurse ? [4.5, 4.2, 4.8, 3.5, 4.0, 4.0] : [4.5, 4.2, 4.8, 3.5, 4.0],
       borderColor: '#007bff',
       backgroundColor: 'rgba(0, 123, 255, 0.2)',
       pointBackgroundColor: '#007bff'
     }, {
       label: '目標',
-      data: [4.8, 4.5, 4.8, 4.2, 4.5],
+      data: isNurse ? [4.8, 4.5, 4.8, 4.2, 4.5, 5.0] : [4.8, 4.5, 4.8, 4.2, 4.5],
       borderColor: '#28a745',
       backgroundColor: 'rgba(40, 167, 69, 0.1)',
       pointBackgroundColor: '#28a745'
+    }]
+  }
+
+  // JNAラダー評価反映データ（看護師専用）
+  const jnaLadderEvaluationData = {
+    labels: ['看護実践', '組織的役割', '自己教育', '倫理的実践', '総合評価'],
+    datasets: [{
+      label: '2023年評価',
+      data: [3.8, 3.5, 3.5, 3.9, 3.7],
+      backgroundColor: 'rgba(155, 124, 203, 0.5)',
+      borderColor: '#9b7cb6',
+      borderWidth: 1
+    }, {
+      label: '2024年評価',
+      data: [4.2, 4.0, 4.0, 4.3, 4.1],
+      backgroundColor: 'rgba(102, 187, 106, 0.5)',
+      borderColor: '#66bb6a',
+      borderWidth: 1
     }]
   }
 
@@ -799,6 +962,104 @@ function EvaluationTab({ staffData }: { staffData: any }) {
         <span>📋</span>
         <span>過去2年間の評価履歴。B-からAへの着実な成長を示し、昇進検討段階に到達しています。</span>
       </div>
+
+      {isNurse && (
+        <>
+          <div className={styles.sectionHeader} style={{ marginTop: '30px' }}>
+            <h3 className={styles.sectionTitle}>🎓 教育・研修実績の評価反映</h3>
+          </div>
+
+          <div className={styles.chartGrid}>
+            <div className={styles.chartContainer}>
+              <h4>JNAラダー評価への反映</h4>
+              <div className={`${styles.alert} ${styles.alertInfo}`} style={{ margin: '10px 0', fontSize: '11px' }}>
+                <span>📊</span>
+                <span>JNAラダー4領域の評価推移。教育実績が組織的役割遂行能力の向上に大きく寄与しています。</span>
+              </div>
+              <div className={styles.chartCanvas}>
+                <Bar data={jnaLadderEvaluationData} options={{
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  scales: {
+                    y: {
+                      beginAtZero: true,
+                      max: 5,
+                      ticks: {
+                        stepSize: 1
+                      }
+                    }
+                  }
+                }} />
+              </div>
+            </div>
+
+            <div className={styles.infoCard}>
+              <div className={styles.cardTitle}>研修実績・資格の評価加点</div>
+              <div className={`${styles.alert} ${styles.alertSuccess}`} style={{ marginBottom: '15px', fontSize: '11px' }}>
+                <span>🏆</span>
+                <span>研修・資格取得が評価に与えたプラス影響。定量的な加点要素として明確化されています。</span>
+              </div>
+              <div className={styles.cardContent}>
+                <strong>2024年度加点要素:</strong><br />
+                • 認知症ケア専門士資格: +0.3点<br />
+                • プリセプター実績(3名): +0.2点<br />
+                • 院内研修講師実績: +0.2点<br />
+                • 必須研修完了率100%: +0.1点<br />
+                • 選択研修85%達成: +0.1点<br /><br />
+                
+                <strong>総合評価への影響:</strong><br />
+                基礎評価 3.3点 + 加点 0.9点 = 最終評価 4.2点<br />
+                ※教育・研修実績により1ランクアップ達成
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.infoGrid} style={{ marginTop: '20px' }}>
+            <div className={styles.infoCard}>
+              <div className={styles.cardTitle}>360度評価における教育貢献度</div>
+              <div className={`${styles.alert} ${styles.alertInfo}`} style={{ marginBottom: '15px', fontSize: '11px' }}>
+                <span>👥</span>
+                <span>同僚・後輩・上司からの多面的評価。教育・指導面での高い評価が昇進推薦の根拠となっています。</span>
+              </div>
+              <div className={styles.cardContent}>
+                <strong>評価者別スコア（5段階）:</strong><br />
+                • 後輩看護師(n=8): 平均4.8 「的確で温かい指導」<br />
+                • 同僚看護師(n=12): 平均4.5 「頼りになる相談相手」<br />
+                • 医師(n=5): 平均4.3 「専門知識が豊富」<br />
+                • 上司(n=2): 平均4.2 「教育熱心で成果あり」<br /><br />
+                
+                <strong>特に評価された点:</strong><br />
+                • 新人の離職防止に貢献（指導した新人の定着率100%）<br />
+                • 勉強会の企画・実施（月1回の認知症ケア勉強会）<br />
+                • マニュアル整備への貢献（3つの看護手順書作成）
+              </div>
+            </div>
+
+            <div className={styles.infoCard}>
+              <div className={styles.cardTitle}>研修目標の設定・達成度管理</div>
+              <div className={`${styles.alert} ${styles.alertWarning}`} style={{ marginBottom: '15px', fontSize: '11px' }}>
+                <span>🎯</span>
+                <span>2025年度の研修目標設定。評価と連動した明確な目標により、計画的なキャリア開発を支援します。</span>
+              </div>
+              <div className={styles.cardContent}>
+                <strong>2025年度 必達目標:</strong><br />
+                • JNAラダーレベルⅤ認定取得<br />
+                • 管理職準備研修修了<br />
+                • 主任業務の段階的習得<br /><br />
+                
+                <strong>評価連動KPI:</strong><br />
+                • リーダーシップ評価: 3.5→4.2以上<br />
+                • 管理業務スキル: レベル2→レベル4<br />
+                • 後輩指導実績: 年間5名以上<br /><br />
+                
+                <strong>インセンティブ:</strong><br />
+                • 目標達成時: 特別手当支給<br />
+                • 資格取得時: 資格手当追加
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }
