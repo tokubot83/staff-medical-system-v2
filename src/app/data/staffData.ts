@@ -64,7 +64,7 @@ export const staffDatabase: Record<string, StaffDetail> = {
     id: 'NS-2021-047',
     name: '田中美咲',
     nameInitial: '田',
-    position: '看護師（主任候補）',
+    position: '看護師',
     department: '地域包括ケア病棟',
     employeeId: 'NS-2021-047',
     joinDate: '2021年4月1日',
