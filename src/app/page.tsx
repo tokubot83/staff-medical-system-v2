@@ -62,6 +62,10 @@ export default function Home() {
     { id: '4', content: '新人研修計画レビュー', time: '16:00', priority: 'normal', completed: false },
     { id: '5', content: '外来部門 緊急対策会議', time: '17:00', priority: 'urgent', completed: false },
     { id: '6', content: 'AI分析レポート確認', time: '18:00', priority: 'normal', completed: false },
+    { id: '7', content: '産業医面談（鈴木一郎さん）', time: '11:00', priority: 'urgent', completed: false },
+    { id: '8', content: '新人看護師オリエンテーション', time: '13:00', priority: 'normal', completed: false },
+    { id: '9', content: '労務管理システム更新確認', time: '15:30', priority: 'normal', completed: false },
+    { id: '10', content: '部署長会議資料準備', time: '19:00', priority: 'normal', completed: false },
   ]);
 
   // モックデータ
@@ -403,7 +407,7 @@ export default function Home() {
                 {tasks.filter(t => !t.completed).length}件
               </span>
             </div>
-            <div className="space-y-3">
+            <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
               {tasks.map((task) => (
                 <div key={task.id} className={`flex items-center gap-3 p-3 rounded-lg border-l-4 ${
                   task.priority === 'urgent' ? 'border-l-red-500 bg-red-50' : 'border-l-blue-500 bg-blue-50'
