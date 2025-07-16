@@ -71,6 +71,19 @@ export default function Home() {
   // モックデータ
   const staffData: Staff[] = [
     {
+      id: 'NS-2025-001',
+      name: '佐藤花子',
+      nameInitial: '佐',
+      department: '内科病棟',
+      position: '看護師',
+      grade: 'A',
+      status: 'excellent',
+      statusText: 'JNAラダーⅣ',
+      nextAction: '1/20 キャリア面談',
+      priority: 'normal',
+      avatar: 'bg-gradient-to-r from-purple-500 to-pink-600'
+    },
+    {
       id: '1',
       name: '中村恵子',
       nameInitial: '中',
