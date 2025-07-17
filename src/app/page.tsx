@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { staffListData } from './data/staffData';
+import { staffListData, staffDatabase } from './data/staffData';
 
 // 型定義
 interface Staff {
@@ -84,7 +84,7 @@ export default function Home() {
       avatar: 'bg-gradient-to-r from-purple-500 to-pink-600'
     },
     {
-      id: '1',
+      id: 'NS-2018-035',
       name: '中村恵子',
       nameInitial: '中',
       department: '外来',
@@ -94,11 +94,11 @@ export default function Home() {
       statusText: '離職リスク高',
       nextAction: '本日 9:00 緊急面談',
       priority: 'emergency',
-      avatar: 'bg-red-500',
+      avatar: 'bg-gradient-to-r from-red-500 to-red-600',
       riskLevel: 84
     },
     {
-      id: '2',
+      id: 'NS-2021-047',
       name: '田中美咲',
       nameInitial: '田',
       department: '地域包括ケア病棟',
@@ -108,46 +108,46 @@ export default function Home() {
       statusText: '昇進候補',
       nextAction: '本日 10:30 昇進面談',
       priority: 'high',
-      avatar: 'bg-blue-500'
+      avatar: 'bg-gradient-to-r from-green-500 to-emerald-600'
     },
     {
-      id: '3',
-      name: '鈴木一郎',
-      nameInitial: '鈴',
-      department: '内科',
-      position: '医師',
+      id: 'NS-2024-012',
+      name: '小林さくら',
+      nameInitial: '小',
+      department: '外科病棟',
+      position: '看護師',
       grade: 'B',
       status: 'average',
-      statusText: 'ストレス高',
-      nextAction: '1/20 産業医面談',
+      statusText: '新人フォロー要',
+      nextAction: '1/18 フォローアップ面談',
       priority: 'high',
-      avatar: 'bg-yellow-500'
+      avatar: 'bg-gradient-to-r from-pink-500 to-rose-600'
     },
     {
-      id: '4',
-      name: '佐藤太郎',
-      nameInitial: '佐',
-      department: 'ICU',
-      position: '看護師',
-      grade: 'A',
-      status: 'excellent',
-      statusText: '成長顕著',
-      nextAction: '1/25 キャリア面談',
-      priority: 'medium',
-      avatar: 'bg-blue-500'
-    },
-    {
-      id: '5',
-      name: '田中花子',
-      nameInitial: '田',
-      department: 'ICU',
-      position: '看護師',
+      id: 'NS-2015-008',
+      name: '伊藤由美',
+      nameInitial: '伊',
+      department: '緩和ケア病棟',
+      position: '看護師（認定看護師）',
       grade: 'S',
       status: 'excellent',
-      statusText: 'メンター候補',
-      nextAction: '2/1 メンター任命式',
+      statusText: 'エキスパート',
+      nextAction: '2/5 研究発表準備',
       priority: 'normal',
-      avatar: 'bg-blue-500'
+      avatar: 'bg-gradient-to-r from-indigo-500 to-purple-600'
+    },
+    {
+      id: 'NS-2017-022',
+      name: '渡辺麻衣',
+      nameInitial: '渡',
+      department: '小児科病棟',
+      position: '看護師',
+      grade: 'B',
+      status: 'good',
+      statusText: '復職支援中',
+      nextAction: '1/22 キャリア相談',
+      priority: 'medium',
+      avatar: 'bg-gradient-to-r from-teal-500 to-cyan-600'
     }
   ];
 
@@ -787,36 +787,474 @@ export default function Home() {
 
               {activeTab === 'staff' && (
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">職員管理 - 人材の見える化</h3>
-                  <p className="text-gray-600">500名の職員データを一元管理。スキルマップとキャリアパスの可視化により、戦略的な人材配置を実現します。</p>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center justify-between">
+                    職員管理 - 人材の見える化
+                    <div className="flex items-center gap-3">
+                      <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">職員追加</button>
+                      <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">エクスポート</button>
+                    </div>
+                  </h3>
+                  
+                  <div className="grid grid-cols-2 gap-4 mb-6">
+                    <div className="bg-blue-50 rounded-lg p-4">
+                      <h4 className="font-semibold text-blue-800 mb-2">部門別職員分布</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span>内科病棟</span>
+                          <span className="font-semibold">45名</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span>外科病棟</span>
+                          <span className="font-semibold">38名</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span>ICU</span>
+                          <span className="font-semibold">28名</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span>外来</span>
+                          <span className="font-semibold">56名</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="bg-green-50 rounded-lg p-4">
+                      <h4 className="font-semibold text-green-800 mb-2">JNAラダー分布（看護師）</h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span>レベルⅠ</span>
+                          <span className="font-semibold">32名</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span>レベルⅡ</span>
+                          <span className="font-semibold">65名</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span>レベルⅢ</span>
+                          <span className="font-semibold">78名</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span>レベルⅣ</span>
+                          <span className="font-semibold">45名</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span>レベルⅤ</span>
+                          <span className="font-semibold">12名</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b border-gray-200">
+                          <th className="text-left py-3 px-4 font-semibold text-gray-600">職員名</th>
+                          <th className="text-left py-3 px-4 font-semibold text-gray-600">部署</th>
+                          <th className="text-left py-3 px-4 font-semibold text-gray-600">職種</th>
+                          <th className="text-left py-3 px-4 font-semibold text-gray-600">JNAラダー</th>
+                          <th className="text-left py-3 px-4 font-semibold text-gray-600">状態</th>
+                          <th className="text-left py-3 px-4 font-semibold text-gray-600">アクション</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {Object.values(staffDatabase).filter(staff => staff.position.includes('看護師')).map((staff) => {
+                          const jnaLevel = staff.skills.find(s => s.name === '看護実践能力')?.level || 0;
+                          const jnaLevelText = ['', 'Ⅰ', 'Ⅱ', 'Ⅲ', 'Ⅳ', 'Ⅴ'][jnaLevel] || '-';
+                          return (
+                            <tr key={staff.id} className="border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors">
+                              <td className="py-4 px-4">
+                                <div className="flex items-center gap-3">
+                                  <div className={`w-9 h-9 rounded-full flex items-center justify-center text-white font-semibold ${staff.avatar}`}>
+                                    {staff.nameInitial}
+                                  </div>
+                                  <div>
+                                    <Link href={`/staff/${staff.id}`} className="font-semibold text-blue-600 hover:text-blue-800 hover:underline">
+                                      {staff.name}
+                                    </Link>
+                                    <div className="text-xs text-gray-500">{staff.id}</div>
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="py-4 px-4 text-sm text-gray-600">{staff.department}</td>
+                              <td className="py-4 px-4 text-sm text-gray-600">{staff.position}</td>
+                              <td className="py-4 px-4">
+                                <span className="px-2 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800">
+                                  レベル{jnaLevelText}
+                                </span>
+                              </td>
+                              <td className="py-4 px-4">
+                                <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                                  staff.healthStatus === '良好' ? 'bg-green-100 text-green-800' :
+                                  staff.healthStatus === '注意' ? 'bg-yellow-100 text-yellow-800' :
+                                  'bg-red-100 text-red-800'
+                                }`}>
+                                  {staff.healthStatus}
+                                </span>
+                              </td>
+                              <td className="py-4 px-4">
+                                <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">詳細</button>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               )}
 
               {activeTab === 'interview' && (
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">面談管理</h3>
-                  <p className="text-gray-600">AIが推奨する面談スケジュールと進捗管理。効果的な1on1を支援します。</p>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center justify-between">
+                    面談管理 - AIスケジューリング
+                    <div className="flex items-center gap-3">
+                      <button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">面談予約</button>
+                      <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">カレンダー表示</button>
+                    </div>
+                  </h3>
+                  
+                  <div className="grid grid-cols-3 gap-4 mb-6">
+                    <div className="bg-red-50 rounded-lg p-4 text-center">
+                      <div className="text-3xl font-bold text-red-600">3</div>
+                      <div className="text-sm text-red-700">緊急面談要</div>
+                    </div>
+                    <div className="bg-yellow-50 rounded-lg p-4 text-center">
+                      <div className="text-3xl font-bold text-yellow-600">12</div>
+                      <div className="text-sm text-yellow-700">今月予定</div>
+                    </div>
+                    <div className="bg-green-50 rounded-lg p-4 text-center">
+                      <div className="text-3xl font-bold text-green-600">8</div>
+                      <div className="text-sm text-green-700">完了済</div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h4 className="font-semibold text-red-800">中村恵子さん - 緊急面談</h4>
+                          <p className="text-sm text-red-600 mt-1">離職リスク84% - 3日連続欠勤</p>
+                          <p className="text-xs text-gray-600 mt-2">推奨トピック: 勤務環境改善、メンタルヘルスサポート</p>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-sm font-semibold text-red-700">本日 9:00</div>
+                          <button className="mt-2 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs font-semibold transition-colors">開始</button>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded-lg">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h4 className="font-semibold text-green-800">田中美咲さん - 昇進検討面談</h4>
+                          <p className="text-sm text-green-600 mt-1">主任昇進候補 - 準備度85%</p>
+                          <p className="text-xs text-gray-600 mt-2">推奨トピック: キャリアパス、管理職研修計画</p>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-sm font-semibold text-green-700">本日 10:30</div>
+                          <button className="mt-2 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-xs font-semibold transition-colors">準備</button>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h4 className="font-semibold text-blue-800">小林さくらさん - 新人フォローアップ</h4>
+                          <p className="text-sm text-blue-600 mt-1">入職9ヶ月 - ストレス指数68</p>
+                          <p className="text-xs text-gray-600 mt-2">推奨トピック: 技術習得状況、職場適応、今後の目標</p>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-sm font-semibold text-blue-700">1月18日 14:00</div>
+                          <button className="mt-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs font-semibold transition-colors">詳細</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
 
               {activeTab === 'evaluation' && (
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">評価管理</h3>
-                  <p className="text-gray-600">自動的な評価時期判定と評価プロセス支援。公平で効率的な人事評価を実現します。</p>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center justify-between">
+                    評価管理 - 360度評価システム
+                    <div className="flex items-center gap-3">
+                      <button className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">評価開始</button>
+                      <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">レポート出力</button>
+                    </div>
+                  </h3>
+                  
+                  <div className="grid grid-cols-4 gap-4 mb-6">
+                    <div className="bg-purple-50 rounded-lg p-4 text-center">
+                      <div className="text-2xl font-bold text-purple-600">45</div>
+                      <div className="text-sm text-purple-700">評価待ち</div>
+                    </div>
+                    <div className="bg-blue-50 rounded-lg p-4 text-center">
+                      <div className="text-2xl font-bold text-blue-600">23</div>
+                      <div className="text-sm text-blue-700">評価中</div>
+                    </div>
+                    <div className="bg-green-50 rounded-lg p-4 text-center">
+                      <div className="text-2xl font-bold text-green-600">156</div>
+                      <div className="text-sm text-green-700">完了済</div>
+                    </div>
+                    <div className="bg-yellow-50 rounded-lg p-4 text-center">
+                      <div className="text-2xl font-bold text-yellow-600">8</div>
+                      <div className="text-sm text-yellow-700">承認待ち</div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white border border-gray-200 rounded-lg p-5">
+                    <h4 className="font-semibold text-gray-800 mb-4">評価期限が近い職員</h4>
+                    <div className="space-y-3">
+                      {[
+                        { name: '佐藤花子', dept: '内科病棟', dueDate: '1月20日', status: '自己評価完了', progress: 75 },
+                        { name: '伊藤由美', dept: '緩和ケア病棟', dueDate: '2月5日', status: '360度評価中', progress: 60 },
+                        { name: '渡辺麻衣', dept: '小児科病棟', dueDate: '1月22日', status: '上司評価待ち', progress: 85 },
+                        { name: '小林さくら', dept: '外科病棟', dueDate: '1月18日', status: '未開始', progress: 0 },
+                      ].map((staff, index) => (
+                        <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
+                          <div className="flex items-center gap-4">
+                            <div className="w-10 h-10 bg-purple-500 text-white rounded-full flex items-center justify-center font-semibold">
+                              {staff.name[0]}
+                            </div>
+                            <div>
+                              <div className="font-semibold text-gray-800">{staff.name}</div>
+                              <div className="text-sm text-gray-600">{staff.dept}</div>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-4">
+                            <div className="text-right">
+                              <div className="text-sm font-semibold text-gray-700">期限: {staff.dueDate}</div>
+                              <div className="text-xs text-gray-500">{staff.status}</div>
+                            </div>
+                            <div className="w-24">
+                              <div className="w-full bg-gray-200 rounded-full h-2">
+                                <div className="bg-purple-500 h-2 rounded-full" style={{width: `${staff.progress}%`}}></div>
+                              </div>
+                              <div className="text-xs text-gray-500 mt-1">{staff.progress}%</div>
+                            </div>
+                            <button className="bg-purple-500 hover:bg-purple-600 text-white px-3 py-1 rounded text-sm font-medium transition-colors">
+                              詳細
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               )}
 
               {activeTab === 'training' && (
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">教育・研修</h3>
-                  <p className="text-gray-600">個人のスキルギャップ分析と最適な研修プラン提案。継続的な成長を支援します。</p>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center justify-between">
+                    教育・研修 - スキルアップ支援
+                    <div className="flex items-center gap-3">
+                      <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">研修計画作成</button>
+                      <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">受講履歴</button>
+                    </div>
+                  </h3>
+                  
+                  <div className="grid grid-cols-2 gap-6 mb-6">
+                    <div className="bg-orange-50 rounded-lg p-5">
+                      <h4 className="font-semibold text-orange-800 mb-3">今月の研修予定</h4>
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <div className="font-medium text-gray-800">BLS更新研修</div>
+                            <div className="text-sm text-gray-600">1月25日 13:00-17:00</div>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-sm font-semibold text-orange-600">必須</div>
+                            <div className="text-xs text-gray-500">対象: 15名</div>
+                          </div>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <div className="font-medium text-gray-800">認知症ケア研修</div>
+                            <div className="text-sm text-gray-600">1月28日 10:00-16:00</div>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-sm font-semibold text-blue-600">推奨</div>
+                            <div className="text-xs text-gray-500">対象: 8名</div>
+                          </div>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <div className="font-medium text-gray-800">リーダーシップ研修</div>
+                            <div className="text-sm text-gray-600">2月3日 9:00-17:00</div>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-sm font-semibold text-green-600">選抜</div>
+                            <div className="text-xs text-gray-500">対象: 5名</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-blue-50 rounded-lg p-5">
+                      <h4 className="font-semibold text-blue-800 mb-3">JNAラダー進捗（看護師）</h4>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm">レベルⅠ→Ⅱ</span>
+                          <div className="flex items-center gap-2">
+                            <div className="w-32 h-2 bg-gray-200 rounded-full">
+                              <div className="h-full bg-blue-500 rounded-full" style={{width: '75%'}}></div>
+                            </div>
+                            <span className="text-xs font-semibold">18名</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm">レベルⅡ→Ⅲ</span>
+                          <div className="flex items-center gap-2">
+                            <div className="w-32 h-2 bg-gray-200 rounded-full">
+                              <div className="h-full bg-blue-500 rounded-full" style={{width: '60%'}}></div>
+                            </div>
+                            <span className="text-xs font-semibold">24名</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm">レベルⅢ→Ⅳ</span>
+                          <div className="flex items-center gap-2">
+                            <div className="w-32 h-2 bg-gray-200 rounded-full">
+                              <div className="h-full bg-blue-500 rounded-full" style={{width: '45%'}}></div>
+                            </div>
+                            <span className="text-xs font-semibold">15名</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm">レベルⅣ→Ⅴ</span>
+                          <div className="flex items-center gap-2">
+                            <div className="w-32 h-2 bg-gray-200 rounded-full">
+                              <div className="h-full bg-blue-500 rounded-full" style={{width: '30%'}}></div>
+                            </div>
+                            <span className="text-xs font-semibold">8名</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-white border border-gray-200 rounded-lg p-5">
+                    <h4 className="font-semibold text-gray-800 mb-4">個別研修推奨</h4>
+                    <div className="space-y-3">
+                      <div className="p-3 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <span className="font-semibold text-gray-800">小林さくら</span>
+                            <span className="text-sm text-gray-600 ml-2">外科病棟・新人看護師</span>
+                          </div>
+                          <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full font-semibold">AI推奨</span>
+                        </div>
+                        <p className="text-sm text-gray-600 mt-2">BLS再受講推奨。前回評価「再受講中」。急変対応スキル向上が必要。</p>
+                      </div>
+                      <div className="p-3 bg-green-50 rounded-lg border-l-4 border-green-500">
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <span className="font-semibold text-gray-800">田中美咲</span>
+                            <span className="text-sm text-gray-600 ml-2">地域包括ケア病棟・看護師</span>
+                          </div>
+                          <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full font-semibold">昇進準備</span>
+                        </div>
+                        <p className="text-sm text-gray-600 mt-2">管理職準備研修開始推奨。2025年7月主任昇進に向けて6ヶ月プログラム。</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
 
               {activeTab === 'analytics' && (
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">分析レポート</h3>
-                  <p className="text-gray-600">AI洞察レポートと組織全体のトレンド分析。データドリブンな意思決定を支援します。</p>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center justify-between">
+                    分析レポート - AI洞察
+                    <div className="flex items-center gap-3">
+                      <button className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">レポート生成</button>
+                      <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">ダウンロード</button>
+                    </div>
+                  </h3>
+                  
+                  <div className="grid grid-cols-2 gap-6 mb-6">
+                    <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-5">
+                      <h4 className="font-semibold text-indigo-800 mb-3">組織健全性スコア</h4>
+                      <div className="text-center py-4">
+                        <div className="text-5xl font-bold text-indigo-600">78.5</div>
+                        <div className="text-sm text-indigo-700 mt-2">前月比 +2.3ポイント</div>
+                      </div>
+                      <div className="space-y-2 mt-4">
+                        <div className="flex justify-between text-sm">
+                          <span>職員満足度</span>
+                          <span className="font-semibold">87%</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span>離職率</span>
+                          <span className="font-semibold">5.2%</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span>エンゲージメント</span>
+                          <span className="font-semibold">82%</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-gradient-to-r from-red-50 to-orange-50 rounded-lg p-5">
+                      <h4 className="font-semibold text-red-800 mb-3">リスク予測</h4>
+                      <div className="space-y-3">
+                        <div className="p-3 bg-white rounded-lg border-l-4 border-red-500">
+                          <div className="font-medium text-red-700">外来部門 離職リスク上昇</div>
+                          <p className="text-sm text-gray-600 mt-1">3名が高リスク状態。部門全体のストレス指数が前月比15%上昇。</p>
+                        </div>
+                        <div className="p-3 bg-white rounded-lg border-l-4 border-yellow-500">
+                          <div className="font-medium text-yellow-700">新人定着率低下傾向</div>
+                          <p className="text-sm text-gray-600 mt-1">1年目看護師の離職率が前年比8%増。サポート体制強化が必要。</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-white border border-gray-200 rounded-lg p-5">
+                    <h4 className="font-semibold text-gray-800 mb-4">部門別パフォーマンス</h4>
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="border-b border-gray-200">
+                            <th className="text-left py-2 px-3 text-sm font-semibold text-gray-600">部門</th>
+                            <th className="text-left py-2 px-3 text-sm font-semibold text-gray-600">満足度</th>
+                            <th className="text-left py-2 px-3 text-sm font-semibold text-gray-600">離職率</th>
+                            <th className="text-left py-2 px-3 text-sm font-semibold text-gray-600">残業時間</th>
+                            <th className="text-left py-2 px-3 text-sm font-semibold text-gray-600">総合評価</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr className="border-b border-gray-100">
+                            <td className="py-3 px-3 text-sm">ICU</td>
+                            <td className="py-3 px-3 text-sm font-semibold text-green-600">89%</td>
+                            <td className="py-3 px-3 text-sm font-semibold text-green-600">3.2%</td>
+                            <td className="py-3 px-3 text-sm font-semibold text-yellow-600">18h</td>
+                            <td className="py-3 px-3">
+                              <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-semibold">優秀</span>
+                            </td>
+                          </tr>
+                          <tr className="border-b border-gray-100">
+                            <td className="py-3 px-3 text-sm">内科病棟</td>
+                            <td className="py-3 px-3 text-sm font-semibold text-blue-600">85%</td>
+                            <td className="py-3 px-3 text-sm font-semibold text-blue-600">4.5%</td>
+                            <td className="py-3 px-3 text-sm font-semibold text-green-600">12h</td>
+                            <td className="py-3 px-3">
+                              <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-semibold">良好</span>
+                            </td>
+                          </tr>
+                          <tr className="border-b border-gray-100">
+                            <td className="py-3 px-3 text-sm">外来</td>
+                            <td className="py-3 px-3 text-sm font-semibold text-red-600">72%</td>
+                            <td className="py-3 px-3 text-sm font-semibold text-red-600">8.5%</td>
+                            <td className="py-3 px-3 text-sm font-semibold text-red-600">25h</td>
+                            <td className="py-3 px-3">
+                              <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-semibold">要改善</span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
@@ -1168,13 +1606,218 @@ export default function Home() {
                 </div>
               )}
 
+              {selectedStaff.name === '小林さくら' && (
+                <div className="space-y-6">
+                  {/* プロフィールヘッダー */}
+                  <div className="flex gap-5 p-5 bg-gradient-to-r from-pink-50 to-rose-50 rounded-xl">
+                    <div className="w-20 h-20 bg-gradient-to-r from-pink-500 to-rose-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                      小
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-semibold text-gray-800 mb-2">小林さくら</h3>
+                      <p className="text-gray-600 mb-3">外科病棟・看護師（新人）</p>
+                      <div className="flex gap-4 text-sm text-gray-600">
+                        <span><strong>ID:</strong> NS-2024-012</span>
+                        <span><strong>入職:</strong> 2024年4月（9ヶ月）</span>
+                        <span><strong>年齢:</strong> 23歳</span>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-semibold mb-2">
+                        新人フォロー要
+                      </div>
+                      <div className="text-lg font-semibold text-yellow-600">ストレス指数 68</div>
+                    </div>
+                  </div>
+
+                  {/* 新人サポート状況 */}
+                  <div className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-5">
+                    <h4 className="text-yellow-800 font-semibold mb-4 flex items-center gap-2">
+                      📋 新人教育進捗状況
+                      <span className="text-xs bg-yellow-600 text-white px-2 py-1 rounded-full">JNAラダーⅠ</span>
+                    </h4>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-white p-3 rounded-lg">
+                        <h5 className="font-semibold text-gray-800 mb-2">基礎技術習得</h5>
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-sm">
+                            <span>基礎看護技術</span>
+                            <span className="font-semibold text-yellow-600">40%</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span>与薬管理</span>
+                            <span className="font-semibold text-yellow-600">35%</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span>急変対応</span>
+                            <span className="font-semibold text-red-600">20%</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="bg-white p-3 rounded-lg">
+                        <h5 className="font-semibold text-gray-800 mb-2">研修状況</h5>
+                        <div className="text-sm text-gray-600 space-y-1">
+                          <div>✅ 新人看護師研修 完了</div>
+                          <div>✅ 医療安全基礎研修 完了</div>
+                          <div>⚠️ BLS研修 再受講中</div>
+                          <div>⏳ 褥創予防研修 未修了</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* サポートプラン */}
+                  <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-5">
+                    <h4 className="text-blue-800 font-semibold mb-4">🎯 AI推奨サポートプラン</h4>
+                    <div className="space-y-3">
+                      <div className="flex items-start gap-3">
+                        <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
+                        <div>
+                          <strong className="text-gray-800">急変対応スキル強化</strong>
+                          <p className="text-sm text-gray-600 mt-1">BLS再受講と実践的シミュレーション訓練の実施</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
+                        <div>
+                          <strong className="text-gray-800">メンタルサポート強化</strong>
+                          <p className="text-sm text-gray-600 mt-1">先輩看護師とのペアリング、定期的な1on1面談</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
+                        <div>
+                          <strong className="text-gray-800">業務負荷調整</strong>
+                          <p className="text-sm text-gray-600 mt-1">残業時間削減、夜勤回数の段階的増加</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* アクションボタン */}
+                  <div className="flex justify-center gap-3">
+                    <button className="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
+                      フォローアップ面談
+                    </button>
+                    <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
+                      教育計画確認
+                    </button>
+                    <button 
+                      onClick={() => setShowModal(false)}
+                      className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-lg font-semibold transition-colors"
+                    >
+                      閉じる
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {selectedStaff.name === '伊藤由美' && (
+                <div className="space-y-6">
+                  {/* プロフィールヘッダー */}
+                  <div className="flex gap-5 p-5 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl">
+                    <div className="w-20 h-20 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                      伊
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-semibold text-gray-800 mb-2">伊藤由美</h3>
+                      <p className="text-gray-600 mb-3">緩和ケア病棟・認定看護師</p>
+                      <div className="flex gap-4 text-sm text-gray-600">
+                        <span><strong>ID:</strong> NS-2015-008</span>
+                        <span><strong>勤続:</strong> 9年9ヶ月</span>
+                        <span><strong>年齢:</strong> 38歳</span>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="bg-purple-500 text-white px-3 py-1 rounded-full text-sm font-semibold mb-2">
+                        エキスパート
+                      </div>
+                      <div className="text-lg font-semibold text-purple-600">JNAラダーⅤ</div>
+                    </div>
+                  </div>
+
+                  {/* 専門性・実績 */}
+                  <div className="bg-purple-50 border-2 border-purple-200 rounded-xl p-5">
+                    <h4 className="text-purple-800 font-semibold mb-4 flex items-center gap-2">
+                      🏆 専門性と実績
+                      <span className="text-xs bg-purple-600 text-white px-2 py-1 rounded-full">認定看護師</span>
+                    </h4>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-white p-3 rounded-lg">
+                        <h5 className="font-semibold text-gray-800 mb-2">専門スキル</h5>
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-sm">
+                            <span>緩和ケア</span>
+                            <span className="font-semibold text-purple-600">マスター</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span>疼痛管理</span>
+                            <span className="font-semibold text-purple-600">マスター</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span>後輩指導</span>
+                            <span className="font-semibold text-purple-600">マスター</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="bg-white p-3 rounded-lg">
+                        <h5 className="font-semibold text-gray-800 mb-2">最近の活動</h5>
+                        <div className="text-sm text-gray-600 space-y-1">
+                          <div>🏅 看護研究発表会 最優秀賞</div>
+                          <div>📚 緩和ケア認定更新完了</div>
+                          <div>👥 新人教育プリセプター3名</div>
+                          <div>🎯 院内研修講師 年6回</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* キャリア展望 */}
+                  <div className="bg-green-50 border-2 border-green-200 rounded-xl p-5">
+                    <h4 className="text-green-800 font-semibold mb-4">🚀 キャリア展望</h4>
+                    <div className="space-y-3">
+                      <div className="bg-white p-3 rounded-lg">
+                        <strong className="text-gray-800">看護部教育担当への登用検討</strong>
+                        <p className="text-sm text-gray-600 mt-1">豊富な指導経験と高い専門性を活かし、組織全体の教育水準向上に貢献</p>
+                      </div>
+                      <div className="bg-white p-3 rounded-lg">
+                        <strong className="text-gray-800">専門看護師資格取得支援</strong>
+                        <p className="text-sm text-gray-600 mt-1">更なる専門性向上のため、大学院進学支援制度の活用を推奨</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* アクションボタン */}
+                  <div className="flex justify-center gap-3">
+                    <button className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
+                      キャリア開発計画
+                    </button>
+                    <button className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
+                      研究活動支援
+                    </button>
+                    <button 
+                      onClick={() => setShowModal(false)}
+                      className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-lg font-semibold transition-colors"
+                    >
+                      閉じる
+                    </button>
+                  </div>
+                </div>
+              )}
+
               {/* その他のスタッフのデフォルト表示 */}
-              {!['田中美咲', '中村恵子'].includes(selectedStaff.name) && (
+              {!['田中美咲', '中村恵子', '小林さくら', '伊藤由美'].includes(selectedStaff.name) && (
                 <div className="text-center py-8">
-                  <p className="text-gray-600">詳細情報が見つかりません。</p>
+                  <p className="text-gray-600">詳細情報は個別ページでご確認ください。</p>
+                  <Link 
+                    href={`/staff/${selectedStaff.id}`}
+                    className="inline-block mt-4 bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold transition-colors"
+                  >
+                    詳細ページへ
+                  </Link>
                   <button 
                     onClick={() => setShowModal(false)}
-                    className="mt-4 bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded-lg font-semibold transition-colors"
+                    className="ml-3 mt-4 bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded-lg font-semibold transition-colors"
                   >
                     閉じる
                   </button>
