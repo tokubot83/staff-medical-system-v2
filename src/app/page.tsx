@@ -1304,26 +1304,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* 今日の予定 */}
-            <div className="bg-white rounded-lg p-5 shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                📅 今日の予定
-              </h3>
-              <div className="space-y-4">
-                <div className="p-3 bg-red-50 rounded-lg border-l-4 border-red-500">
-                  <div className="text-sm font-semibold text-red-700">9:00 - 緊急</div>
-                  <div className="text-sm text-red-600 mt-1">中村恵子さん面談</div>
-                </div>
-                <div className="p-3 bg-green-50 rounded-lg border-l-4 border-green-500">
-                  <div className="text-sm font-semibold text-green-700">10:30 - 重要</div>
-                  <div className="text-sm text-green-600 mt-1">田中美咲さん昇進面談</div>
-                </div>
-                <div className="p-3 bg-blue-50 rounded-lg border-l-4 border-blue-500">
-                  <div className="text-sm font-semibold text-blue-700">14:00</div>
-                  <div className="text-sm text-blue-600 mt-1">月次評価会議</div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
