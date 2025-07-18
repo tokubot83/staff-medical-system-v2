@@ -24,7 +24,7 @@ export default function QualityMetricsPage() {
     ],
     facilities: [
       {
-        name: '本院',
+        name: '小原病院',
         departments: [
           {
             name: '内科病棟',
@@ -65,7 +65,7 @@ export default function QualityMetricsPage() {
         ]
       },
       {
-        name: '分院A',
+        name: '立神リハビリテーション温泉病院',
         departments: [
           {
             name: '一般病棟',
@@ -83,6 +83,52 @@ export default function QualityMetricsPage() {
               { label: 'エンゲージメント', value: 85, unit: '%' },
               { label: '資格保有率', value: 71, unit: '%' },
               { label: '専門認定率', value: 44, unit: '%' }
+            ]
+          }
+        ]
+      },
+      {
+        name: 'エスポワール立神',
+        departments: [
+          {
+            name: '介護医療院',
+            metrics: [
+              { label: '満足度', value: 84, unit: '%', trend: { value: '+2%', isPositive: true } },
+              { label: 'エンゲージメント', value: 79, unit: '%' },
+              { label: '資格保有率', value: 64, unit: '%' },
+              { label: '専門認定率', value: 36, unit: '%' }
+            ]
+          },
+          {
+            name: '通所リハビリ',
+            metrics: [
+              { label: '満足度', value: 87, unit: '%', trend: { value: '+3%', isPositive: true } },
+              { label: 'エンゲージメント', value: 82, unit: '%' },
+              { label: '資格保有率', value: 68, unit: '%' },
+              { label: '専門認定率', value: 41, unit: '%' }
+            ]
+          }
+        ]
+      },
+      {
+        name: '宝寿庵',
+        departments: [
+          {
+            name: '特別養護老人ホーム',
+            metrics: [
+              { label: '満足度', value: 82, unit: '%', trend: { value: '±0%', isPositive: true } },
+              { label: 'エンゲージメント', value: 77, unit: '%' },
+              { label: '資格保有率', value: 62, unit: '%' },
+              { label: '専門認定率', value: 35, unit: '%' }
+            ]
+          },
+          {
+            name: 'ショートステイ',
+            metrics: [
+              { label: '満足度', value: 85, unit: '%', trend: { value: '+2%', isPositive: true } },
+              { label: 'エンゲージメント', value: 80, unit: '%' },
+              { label: '資格保有率', value: 60, unit: '%' },
+              { label: '専門認定率', value: 32, unit: '%' }
             ]
           }
         ]

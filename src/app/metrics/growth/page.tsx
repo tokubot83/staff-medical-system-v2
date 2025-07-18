@@ -24,7 +24,7 @@ export default function GrowthMetricsPage() {
     ],
     facilities: [
       {
-        name: '本院',
+        name: '小原病院',
         departments: [
           {
             name: '内科病棟',
@@ -65,7 +65,7 @@ export default function GrowthMetricsPage() {
         ]
       },
       {
-        name: '分院A',
+        name: '立神リハビリテーション温泉病院',
         departments: [
           {
             name: '一般病棟',
@@ -83,6 +83,52 @@ export default function GrowthMetricsPage() {
               { label: 'スキル達成', value: 79, unit: '%' },
               { label: '昇進率', value: 15, unit: '%' },
               { label: 'メンター活用', value: 68, unit: '%' }
+            ]
+          }
+        ]
+      },
+      {
+        name: 'エスポワール立神',
+        departments: [
+          {
+            name: '介護医療院',
+            metrics: [
+              { label: '研修受講率', value: 89, unit: '%', trend: { value: '+4%', isPositive: true } },
+              { label: 'スキル達成', value: 74, unit: '%' },
+              { label: '昇進率', value: 13, unit: '%' },
+              { label: 'メンター活用', value: 62, unit: '%' }
+            ]
+          },
+          {
+            name: '通所リハビリ',
+            metrics: [
+              { label: '研修受講率', value: 91, unit: '%', trend: { value: '+5%', isPositive: true } },
+              { label: 'スキル達成', value: 77, unit: '%' },
+              { label: '昇進率', value: 14, unit: '%' },
+              { label: 'メンター活用', value: 66, unit: '%' }
+            ]
+          }
+        ]
+      },
+      {
+        name: '宝寿庵',
+        departments: [
+          {
+            name: '特別養護老人ホーム',
+            metrics: [
+              { label: '研修受講率', value: 87, unit: '%', trend: { value: '+3%', isPositive: true } },
+              { label: 'スキル達成', value: 72, unit: '%' },
+              { label: '昇進率', value: 12, unit: '%' },
+              { label: 'メンター活用', value: 60, unit: '%' }
+            ]
+          },
+          {
+            name: 'ショートステイ',
+            metrics: [
+              { label: '研修受講率', value: 90, unit: '%', trend: { value: '+4%', isPositive: true } },
+              { label: 'スキル達成', value: 75, unit: '%' },
+              { label: '昇進率', value: 13, unit: '%' },
+              { label: 'メンター活用', value: 63, unit: '%' }
             ]
           }
         ]

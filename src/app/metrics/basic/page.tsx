@@ -24,7 +24,7 @@ export default function BasicMetricsPage() {
     ],
     facilities: [
       {
-        name: '本院',
+        name: '小原病院',
         departments: [
           {
             name: '内科病棟',
@@ -65,7 +65,7 @@ export default function BasicMetricsPage() {
         ]
       },
       {
-        name: '分院A',
+        name: '立神リハビリテーション温泉病院',
         departments: [
           {
             name: '一般病棟',
@@ -83,6 +83,52 @@ export default function BasicMetricsPage() {
               { label: '平均年齢', value: 40.2, unit: '歳' },
               { label: '勤続年数', value: 8.5, unit: '年' },
               { label: '正規率', value: 78, unit: '%' }
+            ]
+          }
+        ]
+      },
+      {
+        name: 'エスポワール立神',
+        departments: [
+          {
+            name: '介護医療院',
+            metrics: [
+              { label: '職員数', value: 24, unit: '名' },
+              { label: '平均年齢', value: 42.1, unit: '歳' },
+              { label: '勤続年数', value: 9.2, unit: '年' },
+              { label: '正規率', value: 76, unit: '%' }
+            ]
+          },
+          {
+            name: '通所リハビリ',
+            metrics: [
+              { label: '職員数', value: 18, unit: '名' },
+              { label: '平均年齢', value: 38.7, unit: '歳' },
+              { label: '勤続年数', value: 6.8, unit: '年' },
+              { label: '正規率', value: 72, unit: '%' }
+            ]
+          }
+        ]
+      },
+      {
+        name: '宝寿庵',
+        departments: [
+          {
+            name: '特別養護老人ホーム',
+            metrics: [
+              { label: '職員数', value: 35, unit: '名' },
+              { label: '平均年齢', value: 40.5, unit: '歳' },
+              { label: '勤続年数', value: 7.3, unit: '年' },
+              { label: '正規率', value: 70, unit: '%' }
+            ]
+          },
+          {
+            name: 'ショートステイ',
+            metrics: [
+              { label: '職員数', value: 12, unit: '名' },
+              { label: '平均年齢', value: 36.2, unit: '歳' },
+              { label: '勤続年数', value: 5.5, unit: '年' },
+              { label: '正規率', value: 67, unit: '%' }
             ]
           }
         ]

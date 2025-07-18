@@ -24,7 +24,7 @@ export default function EfficiencyMetricsPage() {
     ],
     facilities: [
       {
-        name: '本院',
+        name: '小原病院',
         departments: [
           {
             name: '内科病棟',
@@ -65,7 +65,7 @@ export default function EfficiencyMetricsPage() {
         ]
       },
       {
-        name: '分院A',
+        name: '立神リハビリテーション温泉病院',
         departments: [
           {
             name: '一般病棟',
@@ -83,6 +83,52 @@ export default function EfficiencyMetricsPage() {
               { label: '残業時間', value: 14.2, unit: '時間' },
               { label: '有給取得', value: 73, unit: '%' },
               { label: '生産性', value: 116, unit: '' }
+            ]
+          }
+        ]
+      },
+      {
+        name: 'エスポワール立神',
+        departments: [
+          {
+            name: '介護医療院',
+            metrics: [
+              { label: '緊急対応', value: 0, unit: '件' },
+              { label: '残業時間', value: 13.5, unit: '時間' },
+              { label: '有給取得', value: 71, unit: '%' },
+              { label: '生産性', value: 109, unit: '' }
+            ]
+          },
+          {
+            name: '通所リハビリ',
+            metrics: [
+              { label: '緊急対応', value: 0, unit: '件' },
+              { label: '残業時間', value: 11.2, unit: '時間' },
+              { label: '有給取得', value: 74, unit: '%' },
+              { label: '生産性', value: 111, unit: '' }
+            ]
+          }
+        ]
+      },
+      {
+        name: '宝寿庵',
+        departments: [
+          {
+            name: '特別養護老人ホーム',
+            metrics: [
+              { label: '緊急対応', value: 1, unit: '件' },
+              { label: '残業時間', value: 19.8, unit: '時間', trend: { value: '+3h', isPositive: false } },
+              { label: '有給取得', value: 62, unit: '%' },
+              { label: '生産性', value: 105, unit: '' }
+            ]
+          },
+          {
+            name: 'ショートステイ',
+            metrics: [
+              { label: '緊急対応', value: 0, unit: '件' },
+              { label: '残業時間', value: 15.5, unit: '時間' },
+              { label: '有給取得', value: 68, unit: '%' },
+              { label: '生産性', value: 107, unit: '' }
             ]
           }
         ]
