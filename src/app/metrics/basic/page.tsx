@@ -27,39 +27,39 @@ export default function BasicMetricsPage() {
         name: '小原病院',
         departments: [
           {
-            name: '内科病棟',
+            name: '地域包括医療病棟',
             metrics: [
-              { label: '職員数', value: 45, unit: '名' },
-              { label: '平均年齢', value: 36.8, unit: '歳' },
-              { label: '勤続年数', value: 7.5, unit: '年' },
-              { label: '正規率', value: 84, unit: '%' }
+              { label: '職員数', value: 42, unit: '名' },
+              { label: '平均年齢', value: 37.2, unit: '歳' },
+              { label: '勤続年数', value: 7.8, unit: '年' },
+              { label: '正規率', value: 85, unit: '%' }
             ]
           },
           {
-            name: '外科病棟',
+            name: '地域包括ケア病棟',
             metrics: [
               { label: '職員数', value: 38, unit: '名' },
-              { label: '平均年齢', value: 39.2, unit: '歳' },
-              { label: '勤続年数', value: 8.8, unit: '年' },
-              { label: '正規率', value: 79, unit: '%' }
+              { label: '平均年齢', value: 38.5, unit: '歳' },
+              { label: '勤続年数', value: 8.2, unit: '年' },
+              { label: '正規率', value: 82, unit: '%' }
             ]
           },
           {
-            name: 'ICU',
+            name: '回復期リハ病棟',
             metrics: [
-              { label: '職員数', value: 28, unit: '名' },
-              { label: '平均年齢', value: 34.5, unit: '歳' },
-              { label: '勤続年数', value: 6.2, unit: '年' },
-              { label: '正規率', value: 92, unit: '%' }
+              { label: '職員数', value: 35, unit: '名' },
+              { label: '平均年齢', value: 35.8, unit: '歳' },
+              { label: '勤続年数', value: 6.5, unit: '年' },
+              { label: '正規率', value: 88, unit: '%' }
             ]
           },
           {
             name: '外来',
             metrics: [
-              { label: '職員数', value: 56, unit: '名' },
-              { label: '平均年齢', value: 41.3, unit: '歳' },
-              { label: '勤続年数', value: 9.8, unit: '年' },
-              { label: '正規率', value: 75, unit: '%' }
+              { label: '職員数', value: 52, unit: '名' },
+              { label: '平均年齢', value: 40.2, unit: '歳' },
+              { label: '勤続年数', value: 9.2, unit: '年' },
+              { label: '正規率', value: 76, unit: '%' }
             ]
           }
         ]
@@ -68,21 +68,30 @@ export default function BasicMetricsPage() {
         name: '立神リハビリテーション温泉病院',
         departments: [
           {
-            name: '一般病棟',
+            name: '医療療養病棟',
             metrics: [
-              { label: '職員数', value: 32, unit: '名' },
-              { label: '平均年齢', value: 37.5, unit: '歳' },
-              { label: '勤続年数', value: 7.0, unit: '年' },
-              { label: '正規率', value: 80, unit: '%' }
+              { label: '職員数', value: 30, unit: '名' },
+              { label: '平均年齢', value: 38.2, unit: '歳' },
+              { label: '勤続年数', value: 7.5, unit: '年' },
+              { label: '正規率', value: 81, unit: '%' }
             ]
           },
           {
-            name: '地域包括ケア',
+            name: '介護医療院',
             metrics: [
               { label: '職員数', value: 28, unit: '名' },
-              { label: '平均年齢', value: 40.2, unit: '歳' },
-              { label: '勤続年数', value: 8.5, unit: '年' },
+              { label: '平均年齢', value: 39.5, unit: '歳' },
+              { label: '勤続年数', value: 8.0, unit: '年' },
               { label: '正規率', value: 78, unit: '%' }
+            ]
+          },
+          {
+            name: '外来',
+            metrics: [
+              { label: '職員数', value: 22, unit: '名' },
+              { label: '平均年齢', value: 41.0, unit: '歳' },
+              { label: '勤続年数', value: 9.0, unit: '年' },
+              { label: '正規率', value: 75, unit: '%' }
             ]
           }
         ]
@@ -91,21 +100,12 @@ export default function BasicMetricsPage() {
         name: 'エスポワール立神',
         departments: [
           {
-            name: '介護医療院',
-            metrics: [
-              { label: '職員数', value: 24, unit: '名' },
-              { label: '平均年齢', value: 42.1, unit: '歳' },
-              { label: '勤続年数', value: 9.2, unit: '年' },
-              { label: '正規率', value: 76, unit: '%' }
-            ]
-          },
-          {
             name: '通所リハビリ',
             metrics: [
-              { label: '職員数', value: 18, unit: '名' },
+              { label: '職員数', value: 22, unit: '名' },
               { label: '平均年齢', value: 38.7, unit: '歳' },
               { label: '勤続年数', value: 6.8, unit: '年' },
-              { label: '正規率', value: 72, unit: '%' }
+              { label: '正規率', value: 74, unit: '%' }
             ]
           }
         ]
@@ -114,21 +114,21 @@ export default function BasicMetricsPage() {
         name: '宝寿庵',
         departments: [
           {
-            name: '特別養護老人ホーム',
+            name: '1号館',
             metrics: [
-              { label: '職員数', value: 35, unit: '名' },
-              { label: '平均年齢', value: 40.5, unit: '歳' },
-              { label: '勤続年数', value: 7.3, unit: '年' },
-              { label: '正規率', value: 70, unit: '%' }
+              { label: '職員数', value: 32, unit: '名' },
+              { label: '平均年齢', value: 39.8, unit: '歳' },
+              { label: '勤続年数', value: 7.2, unit: '年' },
+              { label: '正規率', value: 71, unit: '%' }
             ]
           },
           {
-            name: 'ショートステイ',
+            name: '2号館',
             metrics: [
-              { label: '職員数', value: 12, unit: '名' },
-              { label: '平均年齢', value: 36.2, unit: '歳' },
-              { label: '勤続年数', value: 5.5, unit: '年' },
-              { label: '正規率', value: 67, unit: '%' }
+              { label: '職員数', value: 28, unit: '名' },
+              { label: '平均年齢', value: 38.5, unit: '歳' },
+              { label: '勤続年数', value: 6.8, unit: '年' },
+              { label: '正規率', value: 69, unit: '%' }
             ]
           }
         ]

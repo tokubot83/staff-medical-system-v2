@@ -27,39 +27,39 @@ export default function QualityMetricsPage() {
         name: '小原病院',
         departments: [
           {
-            name: '内科病棟',
+            name: '地域包括医療病棟',
             metrics: [
-              { label: '満足度', value: 88, unit: '%', trend: { value: '+2%', isPositive: true } },
-              { label: 'エンゲージメント', value: 84, unit: '%' },
-              { label: '資格保有率', value: 72, unit: '%' },
-              { label: '専門認定率', value: 45, unit: '%' }
+              { label: '満足度', value: 87, unit: '%', trend: { value: '+2%', isPositive: true } },
+              { label: 'エンゲージメント', value: 83, unit: '%' },
+              { label: '資格保有率', value: 71, unit: '%' },
+              { label: '専門認定率', value: 44, unit: '%' }
             ]
           },
           {
-            name: '外科病棟',
+            name: '地域包括ケア病棟',
             metrics: [
-              { label: '満足度', value: 85, unit: '%', trend: { value: '+1%', isPositive: true } },
-              { label: 'エンゲージメント', value: 80, unit: '%' },
-              { label: '資格保有率', value: 70, unit: '%' },
-              { label: '専門認定率', value: 48, unit: '%' }
+              { label: '満足度', value: 86, unit: '%', trend: { value: '+1%', isPositive: true } },
+              { label: 'エンゲージメント', value: 82, unit: '%' },
+              { label: '資格保有率', value: 69, unit: '%' },
+              { label: '専門認定率', value: 42, unit: '%' }
             ]
           },
           {
-            name: 'ICU',
+            name: '回復期リハ病棟',
             metrics: [
-              { label: '満足度', value: 89, unit: '%', trend: { value: '+5%', isPositive: true } },
-              { label: 'エンゲージメント', value: 86, unit: '%' },
-              { label: '資格保有率', value: 85, unit: '%' },
-              { label: '専門認定率', value: 62, unit: '%' }
+              { label: '満足度', value: 89, unit: '%', trend: { value: '+3%', isPositive: true } },
+              { label: 'エンゲージメント', value: 85, unit: '%' },
+              { label: '資格保有率', value: 76, unit: '%' },
+              { label: '専門認定率', value: 52, unit: '%' }
             ]
           },
           {
             name: '外来',
             metrics: [
-              { label: '満足度', value: 83, unit: '%', trend: { value: '-1%', isPositive: false } },
-              { label: 'エンゲージメント', value: 78, unit: '%' },
-              { label: '資格保有率', value: 65, unit: '%' },
-              { label: '専門認定率', value: 38, unit: '%' }
+              { label: '満足度', value: 84, unit: '%', trend: { value: '±0%', isPositive: true } },
+              { label: 'エンゲージメント', value: 79, unit: '%' },
+              { label: '資格保有率', value: 66, unit: '%' },
+              { label: '専門認定率', value: 39, unit: '%' }
             ]
           }
         ]
@@ -68,7 +68,7 @@ export default function QualityMetricsPage() {
         name: '立神リハビリテーション温泉病院',
         departments: [
           {
-            name: '一般病棟',
+            name: '医療療養病棟',
             metrics: [
               { label: '満足度', value: 86, unit: '%', trend: { value: '+3%', isPositive: true } },
               { label: 'エンゲージメント', value: 81, unit: '%' },
@@ -77,12 +77,21 @@ export default function QualityMetricsPage() {
             ]
           },
           {
-            name: '地域包括ケア',
+            name: '介護医療院',
             metrics: [
               { label: '満足度', value: 90, unit: '%', trend: { value: '+4%', isPositive: true } },
               { label: 'エンゲージメント', value: 85, unit: '%' },
               { label: '資格保有率', value: 71, unit: '%' },
               { label: '専門認定率', value: 44, unit: '%' }
+            ]
+          },
+          {
+            name: '外来',
+            metrics: [
+              { label: '満足度', value: 88, unit: '%', trend: { value: '+2%', isPositive: true } },
+              { label: 'エンゲージメント', value: 83, unit: '%' },
+              { label: '資格保有率', value: 68, unit: '%' },
+              { label: '専門認定率', value: 42, unit: '%' }
             ]
           }
         ]
@@ -90,15 +99,6 @@ export default function QualityMetricsPage() {
       {
         name: 'エスポワール立神',
         departments: [
-          {
-            name: '介護医療院',
-            metrics: [
-              { label: '満足度', value: 84, unit: '%', trend: { value: '+2%', isPositive: true } },
-              { label: 'エンゲージメント', value: 79, unit: '%' },
-              { label: '資格保有率', value: 64, unit: '%' },
-              { label: '専門認定率', value: 36, unit: '%' }
-            ]
-          },
           {
             name: '通所リハビリ',
             metrics: [
@@ -114,7 +114,7 @@ export default function QualityMetricsPage() {
         name: '宝寿庵',
         departments: [
           {
-            name: '特別養護老人ホーム',
+            name: '1号館',
             metrics: [
               { label: '満足度', value: 82, unit: '%', trend: { value: '±0%', isPositive: true } },
               { label: 'エンゲージメント', value: 77, unit: '%' },
@@ -123,7 +123,7 @@ export default function QualityMetricsPage() {
             ]
           },
           {
-            name: 'ショートステイ',
+            name: '2号館',
             metrics: [
               { label: '満足度', value: 85, unit: '%', trend: { value: '+2%', isPositive: true } },
               { label: 'エンゲージメント', value: 80, unit: '%' },

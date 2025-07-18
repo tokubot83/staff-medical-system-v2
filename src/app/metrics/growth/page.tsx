@@ -27,7 +27,7 @@ export default function GrowthMetricsPage() {
         name: '小原病院',
         departments: [
           {
-            name: '内科病棟',
+            name: '地域包括医療病棟',
             metrics: [
               { label: '研修受講率', value: 94, unit: '%', trend: { value: '+6%', isPositive: true } },
               { label: 'スキル達成', value: 80, unit: '%' },
@@ -36,7 +36,7 @@ export default function GrowthMetricsPage() {
             ]
           },
           {
-            name: '外科病棟',
+            name: '地域包括ケア病棟',
             metrics: [
               { label: '研修受講率', value: 91, unit: '%', trend: { value: '+4%', isPositive: true } },
               { label: 'スキル達成', value: 75, unit: '%' },
@@ -45,7 +45,7 @@ export default function GrowthMetricsPage() {
             ]
           },
           {
-            name: 'ICU',
+            name: '回復期リハ病棟',
             metrics: [
               { label: '研修受講率', value: 96, unit: '%', trend: { value: '+7%', isPositive: true } },
               { label: 'スキル達成', value: 85, unit: '%' },
@@ -68,7 +68,7 @@ export default function GrowthMetricsPage() {
         name: '立神リハビリテーション温泉病院',
         departments: [
           {
-            name: '一般病棟',
+            name: '医療療養病棟',
             metrics: [
               { label: '研修受講率', value: 90, unit: '%', trend: { value: '+5%', isPositive: true } },
               { label: 'スキル達成', value: 76, unit: '%' },
@@ -77,12 +77,21 @@ export default function GrowthMetricsPage() {
             ]
           },
           {
-            name: '地域包括ケア',
+            name: '介護医療院',
             metrics: [
               { label: '研修受講率', value: 93, unit: '%', trend: { value: '+6%', isPositive: true } },
               { label: 'スキル達成', value: 79, unit: '%' },
               { label: '昇進率', value: 15, unit: '%' },
               { label: 'メンター活用', value: 68, unit: '%' }
+            ]
+          },
+          {
+            name: '外来',
+            metrics: [
+              { label: '研修受講率', value: 91, unit: '%', trend: { value: '+5%', isPositive: true } },
+              { label: 'スキル達成', value: 77, unit: '%' },
+              { label: '昇進率', value: 14, unit: '%' },
+              { label: 'メンター活用', value: 66, unit: '%' }
             ]
           }
         ]
@@ -90,15 +99,6 @@ export default function GrowthMetricsPage() {
       {
         name: 'エスポワール立神',
         departments: [
-          {
-            name: '介護医療院',
-            metrics: [
-              { label: '研修受講率', value: 89, unit: '%', trend: { value: '+4%', isPositive: true } },
-              { label: 'スキル達成', value: 74, unit: '%' },
-              { label: '昇進率', value: 13, unit: '%' },
-              { label: 'メンター活用', value: 62, unit: '%' }
-            ]
-          },
           {
             name: '通所リハビリ',
             metrics: [
@@ -114,7 +114,7 @@ export default function GrowthMetricsPage() {
         name: '宝寿庵',
         departments: [
           {
-            name: '特別養護老人ホーム',
+            name: '1号館',
             metrics: [
               { label: '研修受講率', value: 87, unit: '%', trend: { value: '+3%', isPositive: true } },
               { label: 'スキル達成', value: 72, unit: '%' },
@@ -123,7 +123,7 @@ export default function GrowthMetricsPage() {
             ]
           },
           {
-            name: 'ショートステイ',
+            name: '2号館',
             metrics: [
               { label: '研修受講率', value: 90, unit: '%', trend: { value: '+4%', isPositive: true } },
               { label: 'スキル達成', value: 75, unit: '%' },

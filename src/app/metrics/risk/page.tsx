@@ -27,7 +27,7 @@ export default function RiskMetricsPage() {
         name: '小原病院',
         departments: [
           {
-            name: '内科病棟',
+            name: '地域包括医療病棟',
             metrics: [
               { label: '要注意職員', value: 2, unit: '名' },
               { label: '離職率', value: 7.5, unit: '%' },
@@ -36,7 +36,7 @@ export default function RiskMetricsPage() {
             ]
           },
           {
-            name: '外科病棟',
+            name: '地域包括ケア病棟',
             metrics: [
               { label: '要注意職員', value: 3, unit: '名', trend: { value: '+1名', isPositive: false } },
               { label: '離職率', value: 9.2, unit: '%' },
@@ -45,7 +45,7 @@ export default function RiskMetricsPage() {
             ]
           },
           {
-            name: 'ICU',
+            name: '回復期リハ病棟',
             metrics: [
               { label: '要注意職員', value: 1, unit: '名' },
               { label: '離職率', value: 3.2, unit: '%' },
@@ -68,7 +68,7 @@ export default function RiskMetricsPage() {
         name: '立神リハビリテーション温泉病院',
         departments: [
           {
-            name: '一般病棟',
+            name: '医療療養病棟',
             metrics: [
               { label: '要注意職員', value: 1, unit: '名' },
               { label: '離職率', value: 8.0, unit: '%' },
@@ -77,12 +77,21 @@ export default function RiskMetricsPage() {
             ]
           },
           {
-            name: '地域包括ケア',
+            name: '介護医療院',
             metrics: [
               { label: '要注意職員', value: 1, unit: '名' },
               { label: '離職率', value: 6.5, unit: '%' },
               { label: '欠勤率', value: 3.5, unit: '%' },
               { label: 'メンタル不調', value: 1, unit: '名' }
+            ]
+          },
+          {
+            name: '外来',
+            metrics: [
+              { label: '要注意職員', value: 1, unit: '名' },
+              { label: '離職率', value: 7.0, unit: '%' },
+              { label: '欠勤率', value: 3.8, unit: '%' },
+              { label: 'メンタル不調', value: 2, unit: '名' }
             ]
           }
         ]
@@ -90,15 +99,6 @@ export default function RiskMetricsPage() {
       {
         name: 'エスポワール立神',
         departments: [
-          {
-            name: '介護医療院',
-            metrics: [
-              { label: '要注意職員', value: 2, unit: '名' },
-              { label: '離職率', value: 9.5, unit: '%' },
-              { label: '欠勤率', value: 4.3, unit: '%' },
-              { label: 'メンタル不調', value: 2, unit: '名' }
-            ]
-          },
           {
             name: '通所リハビリ',
             metrics: [
@@ -114,7 +114,7 @@ export default function RiskMetricsPage() {
         name: '宝寿庵',
         departments: [
           {
-            name: '特別養護老人ホーム',
+            name: '1号館',
             metrics: [
               { label: '要注意職員', value: 3, unit: '名', trend: { value: '+1名', isPositive: false } },
               { label: '離職率', value: 11.0, unit: '%' },
@@ -123,7 +123,7 @@ export default function RiskMetricsPage() {
             ]
           },
           {
-            name: 'ショートステイ',
+            name: '2号館',
             metrics: [
               { label: '要注意職員', value: 1, unit: '名' },
               { label: '離職率', value: 8.5, unit: '%' },

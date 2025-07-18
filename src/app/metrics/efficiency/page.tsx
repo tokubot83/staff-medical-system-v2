@@ -27,7 +27,7 @@ export default function EfficiencyMetricsPage() {
         name: '小原病院',
         departments: [
           {
-            name: '内科病棟',
+            name: '地域包括医療病棟',
             metrics: [
               { label: '緊急対応', value: 0, unit: '件' },
               { label: '残業時間', value: 16.2, unit: '時間' },
@@ -36,7 +36,7 @@ export default function EfficiencyMetricsPage() {
             ]
           },
           {
-            name: '外科病棟',
+            name: '地域包括ケア病棟',
             metrics: [
               { label: '緊急対応', value: 1, unit: '件' },
               { label: '残業時間', value: 22.8, unit: '時間', trend: { value: '+4h', isPositive: false } },
@@ -45,7 +45,7 @@ export default function EfficiencyMetricsPage() {
             ]
           },
           {
-            name: 'ICU',
+            name: '回復期リハ病棟',
             metrics: [
               { label: '緊急対応', value: 0, unit: '件' },
               { label: '残業時間', value: 28.5, unit: '時間' },
@@ -68,7 +68,7 @@ export default function EfficiencyMetricsPage() {
         name: '立神リハビリテーション温泉病院',
         departments: [
           {
-            name: '一般病棟',
+            name: '医療療養病棟',
             metrics: [
               { label: '緊急対応', value: 0, unit: '件' },
               { label: '残業時間', value: 15.8, unit: '時間' },
@@ -77,12 +77,21 @@ export default function EfficiencyMetricsPage() {
             ]
           },
           {
-            name: '地域包括ケア',
+            name: '介護医療院',
             metrics: [
               { label: '緊急対応', value: 0, unit: '件' },
               { label: '残業時間', value: 14.2, unit: '時間' },
               { label: '有給取得', value: 73, unit: '%' },
               { label: '生産性', value: 116, unit: '' }
+            ]
+          },
+          {
+            name: '外来',
+            metrics: [
+              { label: '緊急対応', value: 0, unit: '件' },
+              { label: '残業時間', value: 13.5, unit: '時間' },
+              { label: '有給取得', value: 72, unit: '%' },
+              { label: '生産性', value: 114, unit: '' }
             ]
           }
         ]
@@ -90,15 +99,6 @@ export default function EfficiencyMetricsPage() {
       {
         name: 'エスポワール立神',
         departments: [
-          {
-            name: '介護医療院',
-            metrics: [
-              { label: '緊急対応', value: 0, unit: '件' },
-              { label: '残業時間', value: 13.5, unit: '時間' },
-              { label: '有給取得', value: 71, unit: '%' },
-              { label: '生産性', value: 109, unit: '' }
-            ]
-          },
           {
             name: '通所リハビリ',
             metrics: [
@@ -114,7 +114,7 @@ export default function EfficiencyMetricsPage() {
         name: '宝寿庵',
         departments: [
           {
-            name: '特別養護老人ホーム',
+            name: '1号館',
             metrics: [
               { label: '緊急対応', value: 1, unit: '件' },
               { label: '残業時間', value: 19.8, unit: '時間', trend: { value: '+3h', isPositive: false } },
@@ -123,7 +123,7 @@ export default function EfficiencyMetricsPage() {
             ]
           },
           {
-            name: 'ショートステイ',
+            name: '2号館',
             metrics: [
               { label: '緊急対応', value: 0, unit: '件' },
               { label: '残業時間', value: 15.5, unit: '時間' },
