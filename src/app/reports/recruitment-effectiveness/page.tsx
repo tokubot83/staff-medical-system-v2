@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ReportLayout from '@/components/reports/ReportLayout';
 import { facilities } from '@/app/data/facilityData';
 
-export default function RecruitmentEffectivenessReport() {
+function RecruitmentEffectivenessReportContent() {
   const searchParams = useSearchParams();
   const facilityId = searchParams.get('facility');
   const [facility, setFacility] = useState<any>(null);
@@ -334,5 +334,13 @@ export default function RecruitmentEffectivenessReport() {
         </section>
       </div>
     </ReportLayout>
+  );
+}
+
+export default function RecruitmentEffectivenessReport() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center h-screen">読み込み中...</div>}>
+      <RecruitmentEffectivenessReportContent />
+    </Suspense>
   );
 }

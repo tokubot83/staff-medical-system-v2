@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ReportLayout from '@/components/reports/ReportLayout';
 import { facilities } from '@/app/data/facilityData';
 import { staffDatabase } from '@/app/data/staffData';
 
-export default function SkillQualificationReport() {
+function SkillQualificationReportContent() {
   const searchParams = useSearchParams();
   const facilityId = searchParams.get('facility');
   const [facility, setFacility] = useState<any>(null);
@@ -413,5 +413,13 @@ export default function SkillQualificationReport() {
         </section>
       </div>
     </ReportLayout>
+  );
+}
+
+export default function SkillQualificationReport() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center h-screen">読み込み中...</div>}>
+      <SkillQualificationReportContent />
+    </Suspense>
   );
 }
