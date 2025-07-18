@@ -1,0 +1,224 @@
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import ReportLayout from '@/components/reports/ReportLayout';
+import { facilities } from '@/app/data/facilityData';
+import { staffDatabase } from '@/app/data/staffData';
+
+export default function HRStrategyReport() {
+  const searchParams = useSearchParams();
+  const facilityId = searchParams.get('facility');
+  const [facility, setFacility] = useState<any>(null);
+  
+  useEffect(() => {
+    if (facilityId) {
+      const selected = facilities.find(f => f.id === facilityId);
+      setFacility(selected);
+    }
+  }, [facilityId]);
+
+  // ダミーデータの生成（実際の実装では施設ごとのデータを取得）
+  const generateReportData = () => {
+    const staff = Object.values(staffDatabase);
+    const totalStaff = facilityId ? Math.floor(staff.length * 0.3) : staff.length;
+    
+    return {
+      overview: {
+        totalStaff,
+        departments: facilityId ? 6 : 15,
+        averageAge: 38.5,
+        averageTenure: 8.2,
+        turnoverRate: 8.5,
+        recruitmentRate: 10.2
+      },
+      departmentAnalysis: [
+        { name: '内科', staff: 85, efficiency: 92, satisfaction: 88 },
+        { name: '外科', staff: 72, efficiency: 88, satisfaction: 85 },
+        { name: 'ICU', staff: 45, efficiency: 95, satisfaction: 82 },
+        { name: '小児科', staff: 38, efficiency: 90, satisfaction: 90 },
+        { name: 'リハビリ科', staff: 42, efficiency: 87, satisfaction: 91 }
+      ],
+      strengthsWeaknesses: {
+        strengths: [
+          '高い定着率（離職率8.5%は業界平均以下）',
+          '部門間連携の効率性が高い',
+          '継続的な人材育成プログラムの実施'
+        ],
+        weaknesses: [
+          '特定部門での人員不足（ICU、小児科）',
+          '管理職候補の不足',
+          '非正規職員の比率が高い部門の存在'
+        ]
+      },
+      recommendations: [
+        {
+          title: '戦略的採用計画の策定',
+          description: 'ICUと小児科を重点部門として、専門性の高い人材の採用を強化',
+          priority: 'high',
+          timeline: '3ヶ月以内'
+        },
+        {
+          title: '管理職育成プログラムの導入',
+          description: '次世代リーダー育成のための体系的な教育プログラムを開始',
+          priority: 'high',
+          timeline: '6ヶ月以内'
+        },
+        {
+          title: '非正規職員の正規化推進',
+          description: '優秀な非正規職員の正規雇用転換により組織の安定性を向上',
+          priority: 'medium',
+          timeline: '1年以内'
+        }
+      ]
+    };
+  };
+
+  const reportData = generateReportData();
+
+  return (
+    <ReportLayout
+      title="人事管理戦略分析"
+      description="組織の人事管理戦略を総合的に分析し、改善提案を提供します"
+      icon="📊"
+      color="bg-blue-500"
+      facility={facility}
+      onExportPDF={() => console.log('PDF export')}
+    >
+      <div className="p-8">
+        {/* 概要セクション */}
+        <section className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">組織概要</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <p className="text-sm text-gray-600">総職員数</p>
+              <p className="text-2xl font-bold text-gray-900">{reportData.overview.totalStaff}名</p>
+            </div>
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <p className="text-sm text-gray-600">部門数</p>
+              <p className="text-2xl font-bold text-gray-900">{reportData.overview.departments}</p>
+            </div>
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <p className="text-sm text-gray-600">平均年齢</p>
+              <p className="text-2xl font-bold text-gray-900">{reportData.overview.averageAge}歳</p>
+            </div>
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <p className="text-sm text-gray-600">平均勤続年数</p>
+              <p className="text-2xl font-bold text-gray-900">{reportData.overview.averageTenure}年</p>
+            </div>
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <p className="text-sm text-gray-600">離職率</p>
+              <p className="text-2xl font-bold text-gray-900">{reportData.overview.turnoverRate}%</p>
+            </div>
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <p className="text-sm text-gray-600">採用率</p>
+              <p className="text-2xl font-bold text-gray-900">{reportData.overview.recruitmentRate}%</p>
+            </div>
+          </div>
+        </section>
+
+        {/* 部門別分析 */}
+        <section className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">部門別分析</h2>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">部門</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">職員数</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">効率性</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">満足度</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {reportData.departmentAnalysis.map((dept, index) => (
+                  <tr key={index}>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{dept.name}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{dept.staff}名</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <div className="w-full bg-gray-200 rounded-full h-2.5 mr-2">
+                          <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: `${dept.efficiency}%` }}></div>
+                        </div>
+                        <span className="text-sm text-gray-500">{dept.efficiency}%</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <div className="w-full bg-gray-200 rounded-full h-2.5 mr-2">
+                          <div className="bg-green-600 h-2.5 rounded-full" style={{ width: `${dept.satisfaction}%` }}></div>
+                        </div>
+                        <span className="text-sm text-gray-500">{dept.satisfaction}%</span>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* 強み・弱み分析 */}
+        <section className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">SWOT分析</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-green-50 p-6 rounded-lg">
+              <h3 className="text-lg font-semibold text-green-900 mb-3">強み</h3>
+              <ul className="space-y-2">
+                {reportData.strengthsWeaknesses.strengths.map((strength, index) => (
+                  <li key={index} className="flex items-start">
+                    <svg className="w-5 h-5 text-green-600 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span className="text-gray-700">{strength}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="bg-red-50 p-6 rounded-lg">
+              <h3 className="text-lg font-semibold text-red-900 mb-3">改善点</h3>
+              <ul className="space-y-2">
+                {reportData.strengthsWeaknesses.weaknesses.map((weakness, index) => (
+                  <li key={index} className="flex items-start">
+                    <svg className="w-5 h-5 text-red-600 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                    <span className="text-gray-700">{weakness}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* 改善提案 */}
+        <section>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">戦略的改善提案</h2>
+          <div className="space-y-4">
+            {reportData.recommendations.map((rec, index) => (
+              <div key={index} className="border rounded-lg p-6">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold text-gray-900">{rec.title}</h3>
+                    <p className="mt-2 text-gray-600">{rec.description}</p>
+                  </div>
+                  <div className="ml-4 flex flex-col items-end">
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      rec.priority === 'high' ? 'bg-red-100 text-red-800' :
+                      rec.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                      'bg-green-100 text-green-800'
+                    }`}>
+                      {rec.priority === 'high' ? '優先度：高' :
+                       rec.priority === 'medium' ? '優先度：中' : '優先度：低'}
+                    </span>
+                    <span className="mt-2 text-sm text-gray-500">実施期限: {rec.timeline}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      </div>
+    </ReportLayout>
+  );
+}

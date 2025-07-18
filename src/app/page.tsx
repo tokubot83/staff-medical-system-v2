@@ -1080,7 +1080,7 @@ export default function Home() {
                   <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center justify-between">
                     分析レポート - AI洞察
                     <div className="flex items-center gap-3">
-                      <button className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">レポート生成</button>
+                      <Link href="/reports" className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors inline-block">レポート生成</Link>
                       <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">ダウンロード</button>
                     </div>
                   </h3>
@@ -1202,17 +1202,27 @@ export default function Home() {
               </h3>
               <div className="space-y-3">
                 {[
-                  { label: '🔍 職員検索', color: 'bg-blue-500 hover:bg-blue-600' },
-                  { label: '📅 面談予約', color: 'bg-green-500 hover:bg-green-600' },
-                  { label: '📊 レポート作成', color: 'bg-yellow-500 hover:bg-yellow-600' },
-                  { label: '⚙️ システム設定', color: 'bg-purple-500 hover:bg-purple-600' }
+                  { label: '🔍 職員検索', color: 'bg-blue-500 hover:bg-blue-600', href: null },
+                  { label: '📅 面談予約', color: 'bg-green-500 hover:bg-green-600', href: null },
+                  { label: '📊 レポート作成', color: 'bg-yellow-500 hover:bg-yellow-600', href: '/reports' },
+                  { label: '⚙️ システム設定', color: 'bg-purple-500 hover:bg-purple-600', href: null }
                 ].map((action, index) => (
-                  <button
-                    key={index}
-                    className={`w-full ${action.color} text-white py-3 rounded-lg text-sm font-semibold transition-colors`}
-                  >
-                    {action.label}
-                  </button>
+                  action.href ? (
+                    <Link
+                      key={index}
+                      href={action.href}
+                      className={`block w-full ${action.color} text-white py-3 rounded-lg text-sm font-semibold transition-colors text-center`}
+                    >
+                      {action.label}
+                    </Link>
+                  ) : (
+                    <button
+                      key={index}
+                      className={`w-full ${action.color} text-white py-3 rounded-lg text-sm font-semibold transition-colors`}
+                    >
+                      {action.label}
+                    </button>
+                  )
                 ))}
               </div>
             </div>

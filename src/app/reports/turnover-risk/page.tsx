@@ -1,0 +1,387 @@
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import ReportLayout from '@/components/reports/ReportLayout';
+import { facilities } from '@/app/data/facilityData';
+import { staffDatabase } from '@/app/data/staffData';
+
+export default function TurnoverRiskReport() {
+  const searchParams = useSearchParams();
+  const facilityId = searchParams.get('facility');
+  const [facility, setFacility] = useState<any>(null);
+  
+  useEffect(() => {
+    if (facilityId) {
+      const selected = facilities.find(f => f.id === facilityId);
+      setFacility(selected);
+    }
+  }, [facilityId]);
+
+  // レポートデータの生成
+  const generateReportData = () => {
+    // 実際のスタッフデータからリスク分析
+    const staff = Object.values(staffDatabase);
+    const highRiskStaff = staff.filter(s => 
+      s.stressIndex > 70 || s.engagement < 50 || s.overtime > 30 || s.paidLeaveRate < 30
+    );
+    
+    return {
+      overview: {
+        totalStaff: staff.length,
+        highRisk: highRiskStaff.length,
+        mediumRisk: Math.floor(staff.length * 0.25),
+        lowRisk: staff.length - highRiskStaff.length - Math.floor(staff.length * 0.25),
+        predictedTurnover: Math.round(highRiskStaff.length * 0.4),
+        currentTurnoverRate: 8.5
+      },
+      riskFactors: [
+        {
+          factor: '過重労働（残業過多）',
+          weight: 25,
+          affectedStaff: staff.filter(s => s.overtime > 25).length,
+          correlation: 0.72
+        },
+        {
+          factor: '低エンゲージメント',
+          weight: 22,
+          affectedStaff: staff.filter(s => s.engagement < 60).length,
+          correlation: 0.68
+        },
+        {
+          factor: '高ストレス指標',
+          weight: 20,
+          affectedStaff: staff.filter(s => s.stressIndex > 70).length,
+          correlation: 0.65
+        },
+        {
+          factor: '有給未消化',
+          weight: 15,
+          affectedStaff: staff.filter(s => s.paidLeaveRate < 40).length,
+          correlation: 0.58
+        },
+        {
+          factor: '評価への不満',
+          weight: 10,
+          affectedStaff: staff.filter(s => s.evaluation === 'C' || s.evaluation === 'D').length,
+          correlation: 0.52
+        },
+        {
+          factor: 'キャリア停滞',
+          weight: 8,
+          affectedStaff: Math.floor(staff.length * 0.15),
+          correlation: 0.45
+        }
+      ],
+      highRiskProfiles: highRiskStaff.slice(0, 5).map(s => ({
+        id: s.id,
+        name: s.name,
+        department: s.department,
+        position: s.position,
+        riskScore: Math.min(95, Math.round(
+          (s.stressIndex / 100) * 30 +
+          ((100 - s.engagement) / 100) * 25 +
+          (s.overtime / 50) * 20 +
+          ((100 - s.paidLeaveRate) / 100) * 15 +
+          (s.evaluation === 'C' || s.evaluation === 'D' ? 10 : 0)
+        )),
+        mainRisks: [
+          s.stressIndex > 70 && 'ストレス過多',
+          s.engagement < 50 && '低エンゲージメント',
+          s.overtime > 30 && '過重労働',
+          s.paidLeaveRate < 30 && '休暇未取得'
+        ].filter(Boolean) as string[],
+        recommendedActions: [
+          '個別面談の実施',
+          '業務負荷の見直し',
+          'メンタルヘルスサポート'
+        ]
+      })),
+      departmentRisk: [
+        { name: 'ICU', avgRiskScore: 72, turnoverRate: 12.5, trend: 'increasing' },
+        { name: '外来', avgRiskScore: 65, turnoverRate: 10.2, trend: 'stable' },
+        { name: '外科病棟', avgRiskScore: 58, turnoverRate: 8.8, trend: 'increasing' },
+        { name: '内科病棟', avgRiskScore: 45, turnoverRate: 6.5, trend: 'decreasing' },
+        { name: 'リハビリ科', avgRiskScore: 38, turnoverRate: 5.2, trend: 'stable' }
+      ],
+      survivalAnalysis: {
+        periods: ['0-1年', '1-2年', '2-3年', '3-5年', '5年以上'],
+        survivalRates: [88, 82, 78, 85, 92],
+        criticalPeriod: '1-3年目'
+      },
+      interventions: [
+        {
+          title: '高リスク職員への早期介入プログラム',
+          description: 'AIで特定した高リスク職員に対する個別支援プログラムの実施',
+          targetGroup: 'リスクスコア70以上',
+          expectedReduction: 40,
+          cost: 2000000,
+          roi: 320
+        },
+        {
+          title: 'ICU・救急部門の勤務体制改善',
+          description: '2交代制から3交代制への移行と増員による負担軽減',
+          targetGroup: 'ICU・救急部門全職員',
+          expectedReduction: 35,
+          cost: 8000000,
+          roi: 180
+        },
+        {
+          title: 'キャリア開発支援プログラム',
+          description: '個別キャリア相談とスキルアップ支援の強化',
+          targetGroup: '勤続3年以上の中堅職員',
+          expectedReduction: 25,
+          cost: 3000000,
+          roi: 250
+        }
+      ]
+    };
+  };
+
+  const reportData = generateReportData();
+
+  return (
+    <ReportLayout
+      title="離職リスク予測"
+      description="AI分析による離職リスクの予測と対策を提案します"
+      icon="⚠️"
+      color="bg-orange-500"
+      facility={facility}
+      onExportPDF={() => console.log('PDF export')}
+    >
+      <div className="p-8">
+        {/* リスク概要 */}
+        <section className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">離職リスク概要</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+            <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+              <p className="text-sm text-red-600">高リスク職員</p>
+              <p className="text-2xl font-bold text-red-700">{reportData.overview.highRisk}名</p>
+              <p className="text-xs text-red-600 mt-1">全体の{Math.round(reportData.overview.highRisk / reportData.overview.totalStaff * 100)}%</p>
+            </div>
+            <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+              <p className="text-sm text-yellow-600">中リスク職員</p>
+              <p className="text-2xl font-bold text-yellow-700">{reportData.overview.mediumRisk}名</p>
+              <p className="text-xs text-yellow-600 mt-1">全体の{Math.round(reportData.overview.mediumRisk / reportData.overview.totalStaff * 100)}%</p>
+            </div>
+            <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+              <p className="text-sm text-green-600">低リスク職員</p>
+              <p className="text-2xl font-bold text-green-700">{reportData.overview.lowRisk}名</p>
+              <p className="text-xs text-green-600 mt-1">全体の{Math.round(reportData.overview.lowRisk / reportData.overview.totalStaff * 100)}%</p>
+            </div>
+          </div>
+          <div className="bg-gray-50 p-6 rounded-lg">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">予測離職者数（1年以内）</p>
+                <p className="text-3xl font-bold text-gray-900">{reportData.overview.predictedTurnover}名</p>
+              </div>
+              <div className="text-right">
+                <p className="text-sm text-gray-600">現在の離職率</p>
+                <p className="text-2xl font-bold text-gray-900">{reportData.overview.currentTurnoverRate}%</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* リスク要因分析 */}
+        <section className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">主要離職リスク要因</h2>
+          <div className="space-y-3">
+            {reportData.riskFactors.map((factor, index) => (
+              <div key={index} className="bg-white border rounded-lg p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="font-medium text-gray-900">{factor.factor}</h3>
+                  <div className="flex items-center space-x-4">
+                    <span className="text-sm text-gray-600">該当者: {factor.affectedStaff}名</span>
+                    <span className="text-sm text-gray-600">相関係数: {factor.correlation}</span>
+                  </div>
+                </div>
+                <div className="flex items-center">
+                  <div className="flex-1">
+                    <div className="w-full bg-gray-200 rounded-full h-3">
+                      <div 
+                        className={`h-3 rounded-full ${
+                          factor.weight >= 20 ? 'bg-red-500' :
+                          factor.weight >= 15 ? 'bg-orange-500' : 'bg-yellow-500'
+                        }`}
+                        style={{ width: `${factor.weight}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                  <span className="ml-3 text-sm font-medium text-gray-700 w-12 text-right">
+                    {factor.weight}%
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* 高リスク職員プロファイル */}
+        <section className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">高リスク職員プロファイル（上位5名）</h2>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">職員情報</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">リスクスコア</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">主要リスク要因</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">推奨対応</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {reportData.highRiskProfiles.map((profile, index) => (
+                  <tr key={index} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">{profile.name}</p>
+                        <p className="text-xs text-gray-500">{profile.department} - {profile.position}</p>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <div className="w-24 bg-gray-200 rounded-full h-2.5 mr-2">
+                          <div 
+                            className={`h-2.5 rounded-full ${
+                              profile.riskScore >= 80 ? 'bg-red-600' :
+                              profile.riskScore >= 60 ? 'bg-orange-600' : 'bg-yellow-600'
+                            }`}
+                            style={{ width: `${profile.riskScore}%` }}
+                          ></div>
+                        </div>
+                        <span className={`text-sm font-medium ${
+                          profile.riskScore >= 80 ? 'text-red-600' :
+                          profile.riskScore >= 60 ? 'text-orange-600' : 'text-yellow-600'
+                        }`}>{profile.riskScore}%</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex flex-wrap gap-1">
+                        {profile.mainRisks.map((risk, idx) => (
+                          <span key={idx} className="px-2 py-1 bg-red-100 text-red-800 text-xs rounded">
+                            {risk}
+                          </span>
+                        ))}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <ul className="text-xs text-gray-600 space-y-1">
+                        {profile.recommendedActions.map((action, idx) => (
+                          <li key={idx}>• {action}</li>
+                        ))}
+                      </ul>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* 部門別リスク分析 */}
+        <section className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">部門別離職リスク分析</h2>
+          <div className="space-y-3">
+            {reportData.departmentRisk.map((dept, index) => (
+              <div key={index} className="bg-gray-50 p-4 rounded-lg">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="font-medium text-gray-900">{dept.name}</h3>
+                  <div className="flex items-center space-x-4">
+                    <span className="text-sm text-gray-600">離職率: {dept.turnoverRate}%</span>
+                    <span className={`text-sm flex items-center ${
+                      dept.trend === 'increasing' ? 'text-red-600' :
+                      dept.trend === 'decreasing' ? 'text-green-600' : 'text-gray-600'
+                    }`}>
+                      {dept.trend === 'increasing' && '↑ 上昇傾向'}
+                      {dept.trend === 'decreasing' && '↓ 低下傾向'}
+                      {dept.trend === 'stable' && '→ 横ばい'}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-center">
+                  <span className="text-xs text-gray-600 mr-2">リスクスコア:</span>
+                  <div className="flex-1">
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div 
+                        className={`h-2 rounded-full ${
+                          dept.avgRiskScore >= 70 ? 'bg-red-500' :
+                          dept.avgRiskScore >= 50 ? 'bg-orange-500' : 'bg-green-500'
+                        }`}
+                        style={{ width: `${dept.avgRiskScore}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                  <span className="ml-2 text-sm font-medium text-gray-700">{dept.avgRiskScore}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* 生存分析 */}
+        <section className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">勤続年数別定着率分析</h2>
+          <div className="bg-white border rounded-lg p-6">
+            <p className="text-sm text-gray-600 mb-4">
+              クリティカル期間: <span className="font-medium text-orange-600">{reportData.survivalAnalysis.criticalPeriod}</span>
+            </p>
+            <div className="space-y-3">
+              {reportData.survivalAnalysis.periods.map((period, index) => (
+                <div key={index} className="flex items-center">
+                  <span className="text-sm text-gray-600 w-24">{period}</span>
+                  <div className="flex-1 mx-3">
+                    <div className="w-full bg-gray-200 rounded-full h-3">
+                      <div 
+                        className={`h-3 rounded-full ${
+                          reportData.survivalAnalysis.survivalRates[index] >= 85 ? 'bg-green-500' :
+                          reportData.survivalAnalysis.survivalRates[index] >= 80 ? 'bg-yellow-500' : 'bg-orange-500'
+                        }`}
+                        style={{ width: `${reportData.survivalAnalysis.survivalRates[index]}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                  <span className="text-sm font-medium text-gray-700">
+                    {reportData.survivalAnalysis.survivalRates[index]}%
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 介入施策の提案 */}
+        <section>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">推奨介入施策</h2>
+          <div className="space-y-4">
+            {reportData.interventions.map((intervention, index) => (
+              <div key={index} className="border rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-gray-900">{intervention.title}</h3>
+                <p className="mt-2 text-gray-600">{intervention.description}</p>
+                <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                  <div>
+                    <p className="text-gray-600">対象グループ</p>
+                    <p className="font-medium">{intervention.targetGroup}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-600">期待削減率</p>
+                    <p className="font-medium text-green-600">{intervention.expectedReduction}%</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-600">必要投資</p>
+                    <p className="font-medium">¥{intervention.cost.toLocaleString()}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-600">ROI</p>
+                    <p className="font-medium text-blue-600">{intervention.roi}%</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      </div>
+    </ReportLayout>
+  );
+}
