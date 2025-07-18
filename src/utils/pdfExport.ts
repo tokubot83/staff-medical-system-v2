@@ -148,7 +148,7 @@ export const exportToPDF = async (options: PDFExportOptions) => {
     }
 
     // フッター情報
-    const totalPages = pdf.getNumberOfPages();
+    const totalPages = pdf.internal.getNumberOfPages();
     for (let i = 1; i <= totalPages; i++) {
       pdf.setPage(i);
       pdf.setFontSize(10);
