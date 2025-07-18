@@ -1,6 +1,6 @@
 import React from 'react';
 import MetricsLayout from '@/components/metrics/MetricsLayout';
-import { QualityMetrics } from '@/types/metrics';
+import { QualityMetrics, AIAnalysis } from '@/types/metrics';
 
 export default function QualityMetricsPage() {
   const metricsData: QualityMetrics = {
@@ -96,5 +96,75 @@ export default function QualityMetricsPage() {
     evaluationScore: 4.2
   };
 
-  return <MetricsLayout metrics={metricsData} />;
+  const aiAnalysis: AIAnalysis = {
+    summary: '総合満足度87%と高水準を維持していますが、外来部門では満足度が前月比-1%と低下傾向です。ICUと地域包括ケアの高い満足度はベストプラクティスのモデルとなり得ます。',
+    insights: [
+      {
+        title: 'ICUの高エンゲージメント',
+        priority: 'high',
+        content: 'ICUは満足度89%、専門認定率62%と全部署で最高レベル。チーム文化が良好。',
+        impact: '他部署へのロールモデルとして機能'
+      },
+      {
+        title: '外来の満足度低下',
+        priority: 'urgent',
+        content: '外来部門の満足度83%（-1%）、エンゲージメント78%と低調。業務負荷が主要因。',
+        impact: '離職リスク上昇、患者サービス品質低下'
+      },
+      {
+        title: '資格保有率の差',
+        priority: 'medium',
+        content: 'ICUの資格保有率85%に対し、外来は65%と大きな格差。',
+        impact: 'サービス品質のバラツキ'
+      }
+    ],
+    recommendations: [
+      {
+        title: '外来部門の業務改革',
+        priority: 'urgent',
+        content: '外来の業務プロセスを見直し、スタッフの負担軽減を図る。',
+        actions: [
+          '業務フローの可視化と分析',
+          '事務作業の自動化・効率化',
+          '適正な人員配置の再検討'
+        ]
+      },
+      {
+        title: 'ICUモデルの水平展開',
+        priority: 'high',
+        content: 'ICUの成功要因を分析し、他部署へ展開する。',
+        actions: [
+          'ICUのマネジメント手法の文書化',
+          '部署間交流プログラムの実施',
+          'ベストプラクティス共有会の開催'
+        ]
+      },
+      {
+        title: '資格取得支援強化',
+        priority: 'medium',
+        content: '外来スタッフの資格取得を組織的に支援する。',
+        actions: [
+          '勉強会・研修の実施',
+          '資格取得費用の補助',
+          '学習時間の確保'
+        ]
+      }
+    ],
+    risks: [
+      {
+        title: '外来部門の離職連鎖',
+        priority: 'urgent',
+        content: '満足度低下が続くと、優秀人材の離職が連鎖的に発生するリスク。',
+        impact: '残ったスタッフの負担増、さらなる満足度低下'
+      },
+      {
+        title: 'サービス品質の低下',
+        priority: 'high',
+        content: 'エンゲージメント低下が患者対応に影響し、患者満足度が低下する可能性。',
+        impact: '病院の評判低下、患者減少'
+      }
+    ]
+  };
+
+  return <MetricsLayout metrics={metricsData} aiAnalysis={aiAnalysis} />;
 }

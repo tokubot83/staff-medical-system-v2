@@ -2,13 +2,14 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { CategoryMetrics, MetricData } from '@/types/metrics';
+import { CategoryMetrics, MetricData, AIAnalysis } from '@/types/metrics';
 
 interface MetricsLayoutProps {
   metrics: CategoryMetrics;
+  aiAnalysis?: AIAnalysis;
 }
 
-export default function MetricsLayout({ metrics }: MetricsLayoutProps) {
+export default function MetricsLayout({ metrics, aiAnalysis }: MetricsLayoutProps) {
   const getTrendClass = (trend?: { isPositive: boolean }) => {
     if (!trend) return 'text-gray-600';
     return trend.isPositive ? 'text-green-600' : 'text-red-600';
@@ -17,6 +18,16 @@ export default function MetricsLayout({ metrics }: MetricsLayoutProps) {
   const getTrendIcon = (trend?: { isPositive: boolean }) => {
     if (!trend) return '';
     return trend.isPositive ? '↑' : '↓';
+  };
+
+  const getPriorityClass = (priority: string) => {
+    switch (priority) {
+      case 'urgent': return 'bg-red-100 text-red-800';
+      case 'high': return 'bg-orange-100 text-orange-800';
+      case 'medium': return 'bg-blue-100 text-blue-800';
+      case 'low': return 'bg-green-100 text-green-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
   };
 
   return (
@@ -135,6 +146,107 @@ export default function MetricsLayout({ metrics }: MetricsLayoutProps) {
             ))}
           </div>
         </div>
+
+        {/* AIアシスタント分析・提案 */}
+        {aiAnalysis && (
+          <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-xl p-6 mt-6">
+            <div className="flex justify-between items-center mb-5">
+              <h2 className="text-xl font-semibold text-blue-800 flex items-center gap-2">
+                🤖 AIアシスタント分析・提案
+              </h2>
+              <div className="flex items-center gap-2 text-sm text-blue-700 bg-white px-3 py-1 rounded-full">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                リアルタイム分析中
+              </div>
+            </div>
+            
+            <div className="mb-6 bg-white rounded-lg p-4">
+              <h3 className="font-semibold text-gray-800 mb-2">📊 分析サマリー</h3>
+              <p className="text-sm text-gray-700 leading-relaxed">{aiAnalysis.summary}</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* インサイト */}
+              <div>
+                <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                  💡 重要なインサイト
+                </h3>
+                <div className="space-y-3">
+                  {aiAnalysis.insights.map((insight, index) => (
+                    <div key={index} className="bg-white rounded-lg p-4 hover:shadow-md transition-shadow">
+                      <div className="flex justify-between items-start mb-2">
+                        <h4 className="font-semibold text-gray-800 text-sm">{insight.title}</h4>
+                        <span className={`px-2 py-1 rounded text-xs font-semibold ${getPriorityClass(insight.priority)}`}>
+                          {insight.priority === 'urgent' ? '緊急' : insight.priority === 'high' ? '高' : insight.priority === 'medium' ? '中' : '低'}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-2">{insight.content}</p>
+                      {insight.impact && (
+                        <p className="text-xs text-gray-500">影響: {insight.impact}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* 改善提案 */}
+              <div>
+                <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                  🎯 改善提案
+                </h3>
+                <div className="space-y-3">
+                  {aiAnalysis.recommendations.map((rec, index) => (
+                    <div key={index} className="bg-white rounded-lg p-4 hover:shadow-md transition-shadow">
+                      <div className="flex justify-between items-start mb-2">
+                        <h4 className="font-semibold text-gray-800 text-sm">{rec.title}</h4>
+                        <span className={`px-2 py-1 rounded text-xs font-semibold ${getPriorityClass(rec.priority)}`}>
+                          {rec.priority === 'urgent' ? '緊急' : rec.priority === 'high' ? '高' : rec.priority === 'medium' ? '中' : '低'}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-2">{rec.content}</p>
+                      {rec.actions && rec.actions.length > 0 && (
+                        <div className="mt-2">
+                          <p className="text-xs font-semibold text-gray-500 mb-1">アクション:</p>
+                          <ul className="text-xs text-gray-600 space-y-1">
+                            {rec.actions.map((action, actionIndex) => (
+                              <li key={actionIndex} className="flex items-start gap-1">
+                                <span>•</span>
+                                <span>{action}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* リスク警告 */}
+              <div>
+                <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                  ⚠️ リスク警告
+                </h3>
+                <div className="space-y-3">
+                  {aiAnalysis.risks.map((risk, index) => (
+                    <div key={index} className="bg-white rounded-lg p-4 hover:shadow-md transition-shadow border-l-4 border-red-400">
+                      <div className="flex justify-between items-start mb-2">
+                        <h4 className="font-semibold text-gray-800 text-sm">{risk.title}</h4>
+                        <span className={`px-2 py-1 rounded text-xs font-semibold ${getPriorityClass(risk.priority)}`}>
+                          {risk.priority === 'urgent' ? '緊急' : risk.priority === 'high' ? '高' : risk.priority === 'medium' ? '中' : '低'}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-2">{risk.content}</p>
+                      {risk.impact && (
+                        <p className="text-xs text-red-600 font-semibold">潜在的影響: {risk.impact}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

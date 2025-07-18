@@ -77,3 +77,19 @@ export interface EfficiencyMetrics extends CategoryMetrics {
   productivityIndex: number;
   transferRequests: number;
 }
+
+// AI分析
+export interface AIAnalysisItem {
+  title: string;
+  priority: 'urgent' | 'high' | 'medium' | 'low';
+  content: string;
+  actions?: string[];
+  impact?: string;
+}
+
+export interface AIAnalysis {
+  summary: string;
+  insights: AIAnalysisItem[];
+  recommendations: AIAnalysisItem[];
+  risks: AIAnalysisItem[];
+}
