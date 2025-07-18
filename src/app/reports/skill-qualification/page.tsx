@@ -5,6 +5,9 @@ import { useSearchParams } from 'next/navigation';
 import ReportLayout from '@/components/reports/ReportLayout';
 import { facilities } from '@/app/data/facilityData';
 import { staffDatabase } from '@/app/data/staffData';
+import { exportToPDF } from '@/utils/pdfExport';
+import { DataCommentList, MetricWithComment } from '@/components/DataComment';
+import { generateSkillComments } from '@/utils/reportComments';
 
 function SkillQualificationReportContent() {
   const searchParams = useSearchParams();
@@ -158,9 +161,15 @@ function SkillQualificationReportContent() {
       icon="📜"
       color="bg-pink-500"
       facility={facility}
-      onExportPDF={() => console.log('PDF export')}
+      onExportPDF={() => exportToPDF({
+        title: 'スキル・資格管理分析レポート',
+        facility: facility?.name,
+        reportType: 'skill-qualification',
+        elementId: 'report-content',
+        dateRange: new Date().toLocaleDateString('ja-JP')
+      })}
     >
-      <div className="p-8">
+      <div id="report-content" className="p-8">
         {/* 概要 */}
         <section className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">スキル・資格管理概要</h2>
@@ -183,12 +192,32 @@ function SkillQualificationReportContent() {
               <p className="text-2xl font-bold text-green-600">{reportData.overview.trainingCompletion}%</p>
             </div>
             <div className="bg-gray-50 p-4 rounded-lg">
-              <p className="text-sm text-gray-600">スキルギャップ指数</p>
-              <p className="text-2xl font-bold text-orange-600">{reportData.overview.skillGapIndex}%</p>
+              <MetricWithComment
+                label="スキルギャップ指数"
+                value={reportData.overview.skillGapIndex}
+                unit="%"
+                comment={reportData.overview.skillGapIndex > 25 ? {
+                  id: 'skill-gap-warning',
+                  type: 'warning',
+                  title: 'スキルギャップが大きい',
+                  message: '重要スキルの不足が見られます。計画的な研修プログラムの実施が必要です。',
+                  priority: 'high'
+                } : undefined}
+              />
             </div>
             <div className="bg-gray-50 p-4 rounded-lg">
-              <p className="text-sm text-gray-600">更新期限迫る資格</p>
-              <p className="text-2xl font-bold text-red-600">{reportData.overview.upcomingRenewals}件</p>
+              <MetricWithComment
+                label="更新期限迫る資格"
+                value={reportData.overview.upcomingRenewals}
+                unit="件"
+                comment={{
+                  id: 'renewal-alert',
+                  type: 'action',
+                  title: '早急な更新手続きが必要',
+                  message: '23件の資格が更新期限を迎えます。リマインダー送付と更新支援を行ってください。',
+                  priority: 'high'
+                }}
+              />
             </div>
           </div>
         </section>
@@ -410,6 +439,52 @@ function SkillQualificationReportContent() {
               </div>
             ))}
           </div>
+        </section>
+
+        {/* データ解釈コメント */}
+        <section className="mt-8">
+          <DataCommentList 
+            comments={[
+              ...generateSkillComments({
+                skillGap: reportData.overview.skillGapIndex
+              }),
+              {
+                id: 'digital-skill-crisis',
+                type: 'warning',
+                title: 'デジタルスキルの深刻な不足',
+                message: '職員の65%がデジタルスキル不足を抱えており、業務効率低下の主要因となっています。早急なスキルアッププログラムが必要です。',
+                priority: 'high'
+              },
+              {
+                id: 'qualification-shortage',
+                type: 'interpretation',
+                title: '専門資格保有者の不足',
+                message: '認定看護師が12名（目標20名）、専門看護師が5名（目标10名）と不足しています。資格取得支援制度の拡充が効果的です。',
+                priority: 'high'
+              },
+              {
+                id: 'training-effectiveness',
+                type: 'benchmark',
+                title: '研修効果の高さ',
+                message: 'スキルアップ研修の満足度が85-92%と高く、研修プログラムの質の高さを示しています。',
+                priority: 'low'
+              },
+              {
+                id: 'mentor-action',
+                type: 'action',
+                title: 'メンター制度の効果',
+                message: 'メンター制度導入により、定着率15%向上、スキル習得速度20%向上が期待されます。低コストで高い効果が得られます。',
+                priority: 'medium'
+              },
+              {
+                id: 'development-trend',
+                type: 'trend',
+                title: '継続的な能力開発の重要性',
+                message: '医療の高度化・専門化が進む中、継続的なスキルアップと資格取得が組織の競争力を左右します。',
+                priority: 'medium'
+              }
+            ]}
+          />
         </section>
       </div>
     </ReportLayout>

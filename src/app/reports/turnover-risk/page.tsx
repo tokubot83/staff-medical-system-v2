@@ -5,6 +5,9 @@ import { useSearchParams } from 'next/navigation';
 import ReportLayout from '@/components/reports/ReportLayout';
 import { facilities } from '@/app/data/facilityData';
 import { staffDatabase } from '@/app/data/staffData';
+import { exportToPDF } from '@/utils/pdfExport';
+import { DataCommentList, MetricWithComment } from '@/components/DataComment';
+import { DataComment } from '@/types/commentTypes';
 
 function TurnoverRiskReportContent() {
   const searchParams = useSearchParams();
@@ -147,16 +150,32 @@ function TurnoverRiskReportContent() {
       icon="⚠️"
       color="bg-orange-500"
       facility={facility}
-      onExportPDF={() => console.log('PDF export')}
+      onExportPDF={() => exportToPDF({
+        title: '離職リスク予測レポート',
+        facility: facility?.name,
+        reportType: 'turnover-risk',
+        elementId: 'report-content',
+        dateRange: new Date().toLocaleDateString('ja-JP')
+      })}
     >
-      <div className="p-8">
+      <div id="report-content" className="p-8">
         {/* リスク概要 */}
         <section className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">離職リスク概要</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
             <div className="bg-red-50 p-4 rounded-lg border border-red-200">
-              <p className="text-sm text-red-600">高リスク職員</p>
-              <p className="text-2xl font-bold text-red-700">{reportData.overview.highRisk}名</p>
+              <MetricWithComment
+                label="高リスク職員"
+                value={reportData.overview.highRisk}
+                unit="名"
+                comment={reportData.overview.highRisk > reportData.overview.totalStaff * 0.15 ? {
+                  id: 'high-risk-warning',
+                  type: 'warning',
+                  title: '早急な対策が必要',
+                  message: `高リスク職員が全体の${Math.round(reportData.overview.highRisk / reportData.overview.totalStaff * 100)}%に達しています。個別面談と業務負荷の見直しが急務です。`,
+                  priority: 'high'
+                } : undefined}
+              />
               <p className="text-xs text-red-600 mt-1">全体の{Math.round(reportData.overview.highRisk / reportData.overview.totalStaff * 100)}%</p>
             </div>
             <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
@@ -380,6 +399,56 @@ function TurnoverRiskReportContent() {
               </div>
             ))}
           </div>
+        </section>
+
+        {/* データ解釈コメント */}
+        <section className="mt-8">
+          <DataCommentList 
+            comments={[
+              reportData.overview.highRisk > reportData.overview.totalStaff * 0.15 ? {
+                id: 'turnover-crisis',
+                type: 'warning',
+                title: '離職クライシスのリスク',
+                message: `高リスク職員が${reportData.overview.highRisk}名に上っています。予測離職者数${reportData.overview.predictedTurnover}名を防ぐための緊急対策が必要です。`,
+                priority: 'high'
+              } : null,
+              {
+                id: 'critical-factors',
+                type: 'interpretation',
+                title: '主要離職要因の分析',
+                message: '「過重労働」「低エンゲージメント」「高ストレス」が主要な離職リスク要因です。これらは相互に関連しており、総合的な対策が効果的です。',
+                priority: 'high'
+              },
+              {
+                id: 'dept-insight',
+                type: 'insight',
+                title: 'ICU・救急部門の深刻な状況',
+                message: 'ICUの離職率が12.5%と突出して高く、且つ上昇傾向にあります。勤務体制の根本的な見直しが必要です。',
+                priority: 'high'
+              },
+              {
+                id: 'survival-trend',
+                type: 'trend',
+                title: '勤続1-3年目がクリティカル',
+                message: '勤続1-3年目の定着率が低下しています。この時期のキャリア支援とメンタリング強化が重要です。',
+                priority: 'medium'
+              },
+              {
+                id: 'intervention-action',
+                type: 'action',
+                title: '推奨介入施策のROI',
+                message: '「高リスク職員への早期介入プログラム」はROI 320%と最も費用対効果が高く、優先的に実施すべきです。',
+                priority: 'high'
+              },
+              {
+                id: 'benchmark-turnover',
+                type: 'benchmark',
+                title: '業界ベンチマーク',
+                message: '現在の離職率8.5%は医療業界平均（10-12%）より良好ですが、高リスク職員の割合が懸念材料です。',
+                priority: 'low'
+              }
+            ].filter(Boolean) as DataComment[]}
+          />
         </section>
       </div>
     </ReportLayout>

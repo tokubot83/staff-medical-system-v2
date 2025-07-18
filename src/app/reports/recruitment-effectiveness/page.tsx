@@ -4,6 +4,9 @@ import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ReportLayout from '@/components/reports/ReportLayout';
 import { facilities } from '@/app/data/facilityData';
+import { exportToPDF } from '@/utils/pdfExport';
+import { DataCommentList, MetricWithComment } from '@/components/DataComment';
+import { generateRecruitmentComments } from '@/utils/reportComments';
 
 function RecruitmentEffectivenessReportContent() {
   const searchParams = useSearchParams();
@@ -104,9 +107,15 @@ function RecruitmentEffectivenessReportContent() {
       icon="🎯"
       color="bg-teal-500"
       facility={facility}
-      onExportPDF={() => console.log('PDF export')}
+      onExportPDF={() => exportToPDF({
+        title: '採用効果分析レポート',
+        facility: facility?.name,
+        reportType: 'recruitment-effectiveness',
+        elementId: 'report-content',
+        dateRange: new Date().toLocaleDateString('ja-JP')
+      })}
     >
-      <div className="p-8">
+      <div id="report-content" className="p-8">
         {/* 採用概要 */}
         <section className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">採用活動概要</h2>
@@ -125,12 +134,31 @@ function RecruitmentEffectivenessReportContent() {
               <p className="text-2xl font-bold text-gray-900">{reportData.overview.avgTimeToHire}日</p>
             </div>
             <div className="bg-gray-50 p-4 rounded-lg">
-              <p className="text-sm text-gray-600">採用単価</p>
-              <p className="text-2xl font-bold text-gray-900">¥{reportData.overview.costPerHire.toLocaleString()}</p>
+              <MetricWithComment
+                label="採用単価"
+                value={`¥${reportData.overview.costPerHire.toLocaleString()}`}
+                comment={reportData.overview.costPerHire > 400000 ? {
+                  id: 'cost-high',
+                  type: 'warning',
+                  title: '採用コストが高額',
+                  message: '一人当たり採用コストが業界平均を上回っています。チャネルの見直しが必要です。',
+                  priority: 'high'
+                } : undefined}
+              />
             </div>
             <div className="bg-gray-50 p-4 rounded-lg">
-              <p className="text-sm text-gray-600">1年定着率</p>
-              <p className="text-2xl font-bold text-green-600">{reportData.overview.retentionRate1Year}%</p>
+              <MetricWithComment
+                label="1年定着率"
+                value={reportData.overview.retentionRate1Year}
+                unit="%"
+                comment={{
+                  id: 'retention-good',
+                  type: 'benchmark',
+                  title: '良好な定着率',
+                  message: '1年定着率88%は業界平均を上回る良好な水準です。',
+                  priority: 'low'
+                }}
+              />
             </div>
           </div>
         </section>
@@ -331,6 +359,46 @@ function RecruitmentEffectivenessReportContent() {
               </div>
             ))}
           </div>
+        </section>
+
+        {/* データ解釈コメント */}
+        <section className="mt-8">
+          <DataCommentList 
+            comments={[
+              ...generateRecruitmentComments({
+                costPerHire: reportData.overview.costPerHire,
+                retentionRate: reportData.overview.retentionRate1Year
+              }),
+              {
+                id: 'referral-insight',
+                type: 'insight',
+                title: 'リファラル採用の優位性',
+                message: 'リファラル採用は質スコア95%、コストも5万円と最も効率的です。紹介制度の拡充が採用成功の鍵となります。',
+                priority: 'high'
+              },
+              {
+                id: 'doctor-recruitment',
+                type: 'warning',
+                title: '医師採用の課題',
+                message: '医師の採用達成率70%と低く、平均採用日数85日と長期化しています。専門エージェントとの連携強化が急務です。',
+                priority: 'high'
+              },
+              {
+                id: 'quality-trend',
+                type: 'trend',
+                title: '採用品質の向上傾向',
+                message: '試用期間通過率96%、研修修了率92%と高い水準を維持しており、採用品質の向上が見られます。',
+                priority: 'medium'
+              },
+              {
+                id: 'roi-action',
+                type: 'action',
+                title: '採用ROIの最大化',
+                message: '3年間ROI 285%は良好ですが、直接応募の増加とリファラル採用の拡充により、さらなる向上が可能です。',
+                priority: 'medium'
+              }
+            ]}
+          />
         </section>
       </div>
     </ReportLayout>

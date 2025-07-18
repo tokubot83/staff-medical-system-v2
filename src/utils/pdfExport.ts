@@ -1,52 +1,184 @@
 // PDF出力機能のユーティリティ
-// 注意: 実際の実装にはjsPDFやpuppeteerなどのライブラリが必要です
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 export interface PDFExportOptions {
   title: string;
   facility?: string;
   reportType: string;
-  content: any;
+  dateRange?: string;
+  elementId: string;
 }
 
+// 日本語フォントのBase64データ（実際のプロジェクトでは外部ファイルから読み込む）
+// ここでは代替として標準フォントを使用
+const addJapaneseFont = (doc: jsPDF) => {
+  // 実際の実装では、日本語フォント（例：NotoSansJP）のBase64データを追加
+  // doc.addFileToVFS('NotoSansJP-Regular.ttf', fontBase64);
+  // doc.addFont('NotoSansJP-Regular.ttf', 'NotoSansJP', 'normal');
+  // doc.setFont('NotoSansJP');
+  
+  // 現時点では標準フォントを使用（日本語は画像として出力）
+  doc.setFont('helvetica');
+};
+
 export const exportToPDF = async (options: PDFExportOptions) => {
-  // 実際の実装では、以下のような処理を行います：
-  // 1. HTMLコンテンツをPDF用にフォーマット
-  // 2. jsPDFやpuppeteerを使用してPDF生成
-  // 3. ダウンロードリンクの作成
-  
-  console.log('PDF出力機能は実装予定です', options);
-  
-  // デモ用: アラートを表示
-  alert(`PDF出力機能は実装予定です。\n\nレポート: ${options.title}\n施設: ${options.facility || '全施設'}`);
-  
-  // 実装例（jsPDFを使用する場合）:
-  /*
-  import jsPDF from 'jspdf';
-  import html2canvas from 'html2canvas';
-  
-  const doc = new jsPDF('p', 'mm', 'a4');
-  
-  // タイトル追加
-  doc.setFontSize(20);
-  doc.text(options.title, 20, 20);
-  
-  // 施設情報追加
-  if (options.facility) {
-    doc.setFontSize(14);
-    doc.text(`施設: ${options.facility}`, 20, 30);
-  }
-  
-  // コンテンツ追加（HTMLからキャンバスへ変換）
-  const element = document.getElementById('report-content');
-  if (element) {
-    const canvas = await html2canvas(element);
+  try {
+    // 対象要素の取得
+    const element = document.getElementById(options.elementId);
+    if (!element) {
+      throw new Error('レポート要素が見つかりません');
+    }
+
+    // ローディング表示
+    const loadingDiv = document.createElement('div');
+    loadingDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+    loadingDiv.innerHTML = `
+      <div class="bg-white p-6 rounded-lg shadow-lg">
+        <div class="flex items-center space-x-3">
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          <span class="text-lg">PDFを生成中...</span>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(loadingDiv);
+
+    // 一時的にスタイルを調整（印刷用）
+    const originalStyle = element.style.cssText;
+    element.style.cssText = `
+      background: white;
+      padding: 20px;
+      width: 1000px;
+    `;
+
+    // HTML要素をキャンバスに変換
+    const canvas = await html2canvas(element, {
+      scale: 2, // 高解像度
+      useCORS: true,
+      logging: false,
+      backgroundColor: '#ffffff'
+    });
+
+    // スタイルを元に戻す
+    element.style.cssText = originalStyle;
+
+    // PDFドキュメントの作成
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4'
+    });
+
+    // 日本語フォントの設定
+    addJapaneseFont(pdf);
+
+    // ページサイズの取得
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const margin = 10;
+
+    // ヘッダー情報の追加
+    pdf.setFontSize(20);
+    pdf.text(options.title, margin, 20);
+    
+    pdf.setFontSize(12);
+    let yPosition = 30;
+    
+    if (options.facility) {
+      pdf.text(`施設: ${options.facility}`, margin, yPosition);
+      yPosition += 7;
+    }
+    
+    if (options.dateRange) {
+      pdf.text(`期間: ${options.dateRange}`, margin, yPosition);
+      yPosition += 7;
+    }
+    
+    pdf.text(`出力日: ${new Date().toLocaleDateString('ja-JP')}`, margin, yPosition);
+    yPosition += 10;
+
+    // キャンバスからイメージデータを取得
     const imgData = canvas.toDataURL('image/png');
-    doc.addImage(imgData, 'PNG', 10, 40, 190, 0);
+    
+    // 画像のサイズ計算
+    const imgWidth = pageWidth - (margin * 2);
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    
+    // 残りのスペースに画像を配置
+    const remainingHeight = pageHeight - yPosition - margin;
+    
+    if (imgHeight <= remainingHeight) {
+      // 1ページに収まる場合
+      pdf.addImage(imgData, 'PNG', margin, yPosition, imgWidth, imgHeight);
+    } else {
+      // 複数ページに分割
+      let position = 0;
+      let pageNumber = 1;
+      
+      while (position < imgHeight) {
+        if (pageNumber > 1) {
+          pdf.addPage();
+          yPosition = margin;
+        }
+        
+        const currentHeight = Math.min(imgHeight - position, pageHeight - yPosition - margin);
+        const sourceY = (position / imgHeight) * canvas.height;
+        const sourceHeight = (currentHeight / imgHeight) * canvas.height;
+        
+        // 部分的な画像を追加
+        const partialCanvas = document.createElement('canvas');
+        partialCanvas.width = canvas.width;
+        partialCanvas.height = sourceHeight;
+        const ctx = partialCanvas.getContext('2d');
+        
+        if (ctx) {
+          ctx.drawImage(
+            canvas,
+            0, sourceY, canvas.width, sourceHeight,
+            0, 0, canvas.width, sourceHeight
+          );
+          
+          const partialImgData = partialCanvas.toDataURL('image/png');
+          pdf.addImage(partialImgData, 'PNG', margin, yPosition, imgWidth, currentHeight);
+        }
+        
+        position += currentHeight;
+        pageNumber++;
+      }
+    }
+
+    // フッター情報
+    const totalPages = pdf.getNumberOfPages();
+    for (let i = 1; i <= totalPages; i++) {
+      pdf.setPage(i);
+      pdf.setFontSize(10);
+      pdf.setTextColor(128);
+      pdf.text(
+        `${i} / ${totalPages}`,
+        pageWidth / 2,
+        pageHeight - 5,
+        { align: 'center' }
+      );
+    }
+
+    // ローディング表示を削除
+    document.body.removeChild(loadingDiv);
+
+    // PDFをダウンロード
+    const filename = `${options.reportType}_${options.facility?.replace(/[\s\/]/g, '_') || '全施設'}_${new Date().toISOString().split('T')[0]}.pdf`;
+    pdf.save(filename);
+    
+  } catch (error) {
+    console.error('PDF生成エラー:', error);
+    
+    // ローディング表示を削除
+    const loadingDiv = document.querySelector('.fixed.inset-0');
+    if (loadingDiv) {
+      document.body.removeChild(loadingDiv);
+    }
+    
+    alert('PDF生成中にエラーが発生しました。');
   }
-  
-  // PDFダウンロード
-  doc.save(`${options.reportType}_${new Date().toISOString().split('T')[0]}.pdf`);
-  */
 };
 
 // CSVエクスポート機能（追加機能）

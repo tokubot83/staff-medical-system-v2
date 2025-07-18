@@ -5,6 +5,9 @@ import { useSearchParams } from 'next/navigation';
 import ReportLayout from '@/components/reports/ReportLayout';
 import { facilities } from '@/app/data/facilityData';
 import { staffDatabase } from '@/app/data/staffData';
+import { exportToPDF } from '@/utils/pdfExport';
+import { DataCommentList, MetricWithComment } from '@/components/DataComment';
+import { generateComments } from '@/types/commentTypes';
 
 function WorkLifeBalanceReportContent() {
   const searchParams = useSearchParams();
@@ -106,26 +109,62 @@ function WorkLifeBalanceReportContent() {
       icon="⚖️"
       color="bg-green-500"
       facility={facility}
-      onExportPDF={() => console.log('PDF export')}
+      onExportPDF={() => exportToPDF({
+        title: 'ワークライフバランス分析レポート',
+        facility: facility?.name,
+        reportType: 'work-life-balance',
+        elementId: 'report-content',
+        dateRange: new Date().toLocaleDateString('ja-JP')
+      })}
     >
-      <div className="p-8">
+      <div id="report-content" className="p-8">
         {/* 概要指標 */}
         <section className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">主要指標</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             <div className="bg-gray-50 p-4 rounded-lg">
-              <p className="text-sm text-gray-600">平均残業時間</p>
-              <p className="text-2xl font-bold text-gray-900">{reportData.overview.avgOvertime}時間/月</p>
+              <MetricWithComment
+                label="平均残業時間"
+                value={reportData.overview.avgOvertime}
+                unit="時間/月"
+                comment={reportData.overview.avgOvertime > 20 ? {
+                  id: 'overtime-warning',
+                  type: 'warning',
+                  title: '過重労働のリスク',
+                  message: `月平均${reportData.overview.avgOvertime}時間の残業は健康リスクが高い状態です。早急な対策が必要です。`,
+                  priority: 'high'
+                } : undefined}
+              />
               <p className="text-xs text-red-600 mt-1">業界平均: 15時間</p>
             </div>
             <div className="bg-gray-50 p-4 rounded-lg">
-              <p className="text-sm text-gray-600">有給休暇取得率</p>
-              <p className="text-2xl font-bold text-gray-900">{reportData.overview.avgPaidLeaveRate}%</p>
+              <MetricWithComment
+                label="有給休暇取得率"
+                value={reportData.overview.avgPaidLeaveRate}
+                unit="%"
+                comment={reportData.overview.avgPaidLeaveRate < 70 ? {
+                  id: 'leave-action',
+                  type: 'action',
+                  title: '取得促進が必要',
+                  message: '有給休暇取得率が低い状態です。計画的な取得を推進し、ワークライフバランスの改善を図りましょう。',
+                  priority: 'high'
+                } : undefined}
+              />
               <p className="text-xs text-green-600 mt-1">目標: 80%以上</p>
             </div>
             <div className="bg-gray-50 p-4 rounded-lg">
-              <p className="text-sm text-gray-600">ストレス指標</p>
-              <p className="text-2xl font-bold text-gray-900">{reportData.overview.avgStressIndex}</p>
+              <MetricWithComment
+                label="ストレス指標"
+                value={reportData.overview.avgStressIndex}
+                unit=""
+                comment={reportData.overview.avgStressIndex > 60 ? {
+                  id: 'stress-warning',
+                  type: 'warning',
+                  title: '高ストレス状態',
+                  message: 'ストレス指標が60を超えており、メンタルヘルス対策が急務です。',
+                  priority: 'high'
+                } : undefined}
+              />
               <p className="text-xs text-orange-600 mt-1">注意: 60以上</p>
             </div>
             <div className="bg-gray-50 p-4 rounded-lg">
@@ -296,6 +335,37 @@ function WorkLifeBalanceReportContent() {
               </div>
             ))}
           </div>
+        </section>
+
+        {/* データ解釈コメント */}
+        <section className="mt-8">
+          <DataCommentList 
+            comments={[
+              ...generateComments(reportData.overview.avgOvertime, 'overtimeHours'),
+              ...generateComments(reportData.overview.avgStressIndex, 'stressIndex'),
+              {
+                id: 'balance-insight',
+                type: 'insight',
+                title: 'ワークライフバランス改善のポイント',
+                message: 'ICUや救急部門の負担軽減が最優先課題です。フレックスタイム制度の活用とメンタルヘルスサポートの強化が効果的です。',
+                priority: 'medium'
+              },
+              reportData.overview.workFromHomeRate < 20 ? {
+                id: 'remote-trend',
+                type: 'trend',
+                title: 'リモートワークの拡大可能性',
+                message: '在宅勤務利用率が低い状態です。事務部門を中心に制度拡充の余地があります。',
+                priority: 'low'
+              } : null,
+              {
+                id: 'benchmark-info',
+                type: 'benchmark',
+                title: '業界ベンチマーク',
+                message: '医療業界の平均残業時間は15時間/月、有給取得率80%が目安です。',
+                priority: 'low'
+              }
+            ].filter(Boolean) as any[]}
+          />
         </section>
       </div>
     </ReportLayout>

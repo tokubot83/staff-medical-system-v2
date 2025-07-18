@@ -5,6 +5,9 @@ import { useSearchParams } from 'next/navigation';
 import ReportLayout from '@/components/reports/ReportLayout';
 import { facilities } from '@/app/data/facilityData';
 import { staffDatabase } from '@/app/data/staffData';
+import { exportToPDF } from '@/utils/pdfExport';
+import { DataCommentList, MetricWithComment } from '@/components/DataComment';
+import { generateHRStrategyComments } from '@/utils/reportComments';
 
 function HRStrategyReportContent() {
   const searchParams = useSearchParams();
@@ -83,9 +86,15 @@ function HRStrategyReportContent() {
       icon="📊"
       color="bg-blue-500"
       facility={facility}
-      onExportPDF={() => console.log('PDF export')}
+      onExportPDF={() => exportToPDF({
+        title: '人事管理戦略分析レポート',
+        facility: facility?.name,
+        reportType: 'hr-strategy',
+        elementId: 'report-content',
+        dateRange: new Date().toLocaleDateString('ja-JP')
+      })}
     >
-      <div className="p-8">
+      <div id="report-content" className="p-8">
         {/* 概要セクション */}
         <section className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">組織概要</h2>
@@ -107,8 +116,18 @@ function HRStrategyReportContent() {
               <p className="text-2xl font-bold text-gray-900">{reportData.overview.averageTenure}年</p>
             </div>
             <div className="bg-gray-50 p-4 rounded-lg">
-              <p className="text-sm text-gray-600">離職率</p>
-              <p className="text-2xl font-bold text-gray-900">{reportData.overview.turnoverRate}%</p>
+              <MetricWithComment
+                label="離職率"
+                value={reportData.overview.turnoverRate}
+                unit="%"
+                comment={{
+                  id: 'turnover-benchmark',
+                  type: 'benchmark',
+                  title: '業界平均以下',
+                  message: '離職率8.5%は医療業界平均（10-12%）を下回っており、良好な状態です。',
+                  priority: 'low'
+                }}
+              />
             </div>
             <div className="bg-gray-50 p-4 rounded-lg">
               <p className="text-sm text-gray-600">採用率</p>
@@ -217,6 +236,40 @@ function HRStrategyReportContent() {
               </div>
             ))}
           </div>
+        </section>
+
+        {/* データ解釈コメント */}
+        <section className="mt-8">
+          <DataCommentList 
+            comments={[
+              ...generateHRStrategyComments({
+                recruitmentEfficiency: 85,
+                costPerHire: 450000,
+                retentionRate: 91.5
+              }),
+              {
+                id: 'dept-shortage',
+                type: 'warning',
+                title: '特定部門の人員不足',
+                message: 'ICUと小児科で深刻な人員不足が発生しています。戦略的採用計画の早期実施が必要です。',
+                priority: 'high'
+              },
+              {
+                id: 'management-gap',
+                type: 'interpretation',
+                title: '管理職候補の不足',
+                message: '次世代リーダーの育成が遅れています。管理職育成プログラムの導入により、組織の持続的成長を支える基盤を構築しましょう。',
+                priority: 'high'
+              },
+              {
+                id: 'efficiency-insight',
+                type: 'insight',
+                title: '部門間連携の高い効率性',
+                message: '部門間の連携効率が高く、組織全体のパフォーマンスに貢献しています。この強みを活かした更なる最適化が可能です。',
+                priority: 'medium'
+              }
+            ]}
+          />
         </section>
       </div>
     </ReportLayout>

@@ -5,6 +5,9 @@ import { useSearchParams } from 'next/navigation';
 import ReportLayout from '@/components/reports/ReportLayout';
 import { facilities } from '@/app/data/facilityData';
 import { staffDatabase } from '@/app/data/staffData';
+import { exportToPDF } from '@/utils/pdfExport';
+import { DataCommentList, MetricWithComment } from '@/components/DataComment';
+import { DataComment } from '@/types/commentTypes';
 
 function TalentDevelopmentReportContent() {
   const searchParams = useSearchParams();
@@ -133,9 +136,15 @@ function TalentDevelopmentReportContent() {
       icon="🎯"
       color="bg-purple-500"
       facility={facility}
-      onExportPDF={() => console.log('PDF export')}
+      onExportPDF={() => exportToPDF({
+        title: '職種別人材育成戦略レポート',
+        facility: facility?.name,
+        reportType: 'talent-development',
+        elementId: 'report-content',
+        dateRange: new Date().toLocaleDateString('ja-JP')
+      })}
     >
-      <div className="p-8">
+      <div id="report-content" className="p-8">
         {/* 職種別スキル分布 */}
         <section className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">職種別スキル分布</h2>
@@ -299,6 +308,56 @@ function TalentDevelopmentReportContent() {
               </div>
             ))}
           </div>
+        </section>
+
+        {/* データ解釈コメント */}
+        <section className="mt-8">
+          <DataCommentList 
+            comments={[
+              {
+                id: 'skill-gap',
+                type: 'warning',
+                title: 'スキルギャップの存在',
+                message: '看護師のレベル4（達人）・レベル5（エキスパート）が合計14%と少なく、上級スキルの継承が課題です。',
+                priority: 'high'
+              },
+              {
+                id: 'career-path-insight',
+                type: 'insight',
+                title: 'キャリアパスの明確化効果',
+                message: '管理職コースとスペシャリストコースの2つのキャリアパスを明確にすることで、職員のモチベーション向上が期待できます。',
+                priority: 'medium'
+              },
+              {
+                id: 'training-effectiveness',
+                type: 'interpretation',
+                title: '研修プログラムの効果分析',
+                message: '新人教育プログラムの修了率95%、満足度88%と高い成果を上げています。一方、専門資格取得支援の修了率65%と改善の余地があります。',
+                priority: 'medium'
+              },
+              {
+                id: 'action-mentor',
+                type: 'action',
+                title: 'メンター制度の早期導入',
+                message: 'メンター制度の強化により、新人定着率20%向上が期待されます。実施期間3ヶ月と短期間で効果が得られるため、優先的に取り組むべきです。',
+                priority: 'high'
+              },
+              {
+                id: 'digital-trend',
+                type: 'trend',
+                title: 'デジタル学習の潮流',
+                message: 'e-ラーニングシステムの導入により、研修参加率30%向上が見込まれます。多忙な医療現場でも柔軟に学習できる環境が整います。',
+                priority: 'medium'
+              },
+              {
+                id: 'benchmark-development',
+                type: 'benchmark',
+                title: '業界水準との比較',
+                message: '看護師のスキルレベル分布はJNAラダーの標準的な分布に近い状態ですが、上級レベルの割合を高める余地があります。',
+                priority: 'low'
+              }
+            ] as DataComment[]}
+          />
         </section>
       </div>
     </ReportLayout>

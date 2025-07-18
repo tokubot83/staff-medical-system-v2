@@ -4,6 +4,9 @@ import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ReportLayout from '@/components/reports/ReportLayout';
 import { facilities } from '@/app/data/facilityData';
+import { exportToPDF } from '@/utils/pdfExport';
+import { DataCommentList, MetricWithComment } from '@/components/DataComment';
+import { generateCostComments } from '@/utils/reportComments';
 
 function CostOptimizationReportContent() {
   const searchParams = useSearchParams();
@@ -143,9 +146,15 @@ function CostOptimizationReportContent() {
       icon="💰"
       color="bg-red-500"
       facility={facility}
-      onExportPDF={() => console.log('PDF export')}
+      onExportPDF={() => exportToPDF({
+        title: '人件費最適化分析レポート',
+        facility: facility?.name,
+        reportType: 'cost-optimization',
+        elementId: 'report-content',
+        dateRange: new Date().toLocaleDateString('ja-JP')
+      })}
     >
-      <div className="p-8">
+      <div id="report-content" className="p-8">
         {/* 概要 */}
         <section className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">人件費概要</h2>
@@ -156,8 +165,18 @@ function CostOptimizationReportContent() {
               <p className="text-xs text-gray-500 mt-1">年間</p>
             </div>
             <div className="bg-gray-50 p-4 rounded-lg">
-              <p className="text-sm text-gray-600">人件費率</p>
-              <p className="text-2xl font-bold text-red-600">{reportData.overview.laborCostRatio}%</p>
+              <MetricWithComment
+                label="人件費率"
+                value={reportData.overview.laborCostRatio}
+                unit="%"
+                comment={reportData.overview.laborCostRatio > 45 ? {
+                  id: 'cost-ratio-warning',
+                  type: 'warning',
+                  title: '人件費率が高水準',
+                  message: `人件費率${reportData.overview.laborCostRatio}%は目標値を上回っています。効率化施策の検討が必要です。`,
+                  priority: 'high'
+                } : undefined}
+              />
               <p className="text-xs text-gray-500 mt-1">目標: {reportData.overview.targetRatio}%</p>
             </div>
             <div className="bg-gray-50 p-4 rounded-lg">
@@ -374,6 +393,46 @@ function CostOptimizationReportContent() {
               </div>
             </div>
           </div>
+        </section>
+
+        {/* データ解釈コメント */}
+        <section className="mt-8">
+          <DataCommentList 
+            comments={[
+              ...generateCostComments({
+                laborCostRatio: reportData.overview.laborCostRatio,
+                overtimeCost: reportData.overtimeCosts.total
+              }),
+              {
+                id: 'optimization-potential',
+                type: 'insight',
+                title: '大幅なコスト削減の可能性',
+                message: '各種最適化施策の実施により、年間8,760万円のコスト削減が可能です。特に残業削減と業務効率化が効果的です。',
+                priority: 'high'
+              },
+              {
+                id: 'dept-efficiency',
+                type: 'interpretation',
+                title: '部門別効率性の分析',
+                message: '事務部の効率性が78%と低く、RPA導入や業務プロセス改善による大幅な改善余地があります。',
+                priority: 'medium'
+              },
+              {
+                id: 'overtime-action',
+                type: 'action',
+                title: 'AIシフト最適化の導入',
+                message: 'AIを活用したシフト最適化により、残業を年間2,940万円削減できます。実施期間3ヶ月と短期間で効果が得られます。',
+                priority: 'high'
+              },
+              {
+                id: 'projection-trend',
+                type: 'trend',
+                title: '人件費率の改善見込み',
+                message: '最適化施策の実施により、3年後には人件費率44.2%まで低減し、業界ベストプラクティスに近づきます。',
+                priority: 'medium'
+              }
+            ]}
+          />
         </section>
       </div>
     </ReportLayout>

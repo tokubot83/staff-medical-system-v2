@@ -4,6 +4,9 @@ import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ReportLayout from '@/components/reports/ReportLayout';
 import { facilities } from '@/app/data/facilityData';
+import { exportToPDF } from '@/utils/pdfExport';
+import { DataCommentList, MetricWithComment } from '@/components/DataComment';
+import { generateWorkEnvironmentComments } from '@/utils/reportComments';
 
 function WorkEnvironmentReportContent() {
   const searchParams = useSearchParams();
@@ -127,16 +130,33 @@ function WorkEnvironmentReportContent() {
       icon="🌟"
       color="bg-yellow-500"
       facility={facility}
-      onExportPDF={() => console.log('PDF export')}
+      onExportPDF={() => exportToPDF({
+        title: '労働環境改善戦略レポート',
+        facility: facility?.name,
+        reportType: 'work-environment',
+        elementId: 'report-content',
+        dateRange: new Date().toLocaleDateString('ja-JP')
+      })}
     >
-      <div className="p-8">
+      <div id="report-content" className="p-8">
         {/* 環境スコア概要 */}
         <section className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">労働環境総合評価</h2>
           <div className="bg-gray-50 p-6 rounded-lg mb-4">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-gray-900">総合スコア</h3>
-              <span className="text-3xl font-bold text-yellow-600">{reportData.environmentScores.overall}/100</span>
+              <MetricWithComment
+                label=""
+                value={`${reportData.environmentScores.overall}/100`}
+                className="text-3xl font-bold text-yellow-600"
+                comment={reportData.environmentScores.overall < 75 ? {
+                  id: 'environment-score-low',
+                  type: 'warning',
+                  title: '労働環境の改善が必要',
+                  message: '総合スコア71点は業界平均を下回っています。早急な改善施策が必要です。',
+                  priority: 'high'
+                } : undefined}
+              />
             </div>
             <div className="space-y-3">
               {Object.entries(reportData.environmentScores).filter(([key]) => key !== 'overall').map(([category, score]) => (
@@ -300,6 +320,53 @@ function WorkEnvironmentReportContent() {
               </div>
             ))}
           </div>
+        </section>
+
+        {/* データ解釈コメント */}
+        <section className="mt-8">
+          <DataCommentList 
+            comments={[
+              ...generateWorkEnvironmentComments({
+                environmentScore: reportData.environmentScores.overall,
+                safetyIncidents: 0
+              }),
+              {
+                id: 'rest-space-crisis',
+                type: 'warning',
+                title: '休憩スペース不足の深刻化',
+                message: '職員の65%が休憩スペース不足を訴えています。疲労蓄積とストレス増加の主要因となっています。',
+                priority: 'high'
+              },
+              {
+                id: 'psychological-safety',
+                type: 'interpretation',
+                title: '心理的安全性の課題',
+                message: '心理的安全性スコア68点と低く、ハラスメント懸念や意見の言いにくさが問題となっています。',
+                priority: 'high'
+              },
+              {
+                id: 'it-system-action',
+                type: 'action',
+                title: 'ITシステムの早急な改善',
+                message: 'ITシステム満足度58%と低く、業務効率を大きく阻害しています。システム刷新により30%の効率化が期待できます。',
+                priority: 'high'
+              },
+              {
+                id: 'culture-insight',
+                type: 'insight',
+                title: '組織文化の改革ポイント',
+                message: '長時間労働の常態化（58%の職員が影響）が最大の課題です。働き方改革が急務です。',
+                priority: 'high'
+              },
+              {
+                id: 'investment-trend',
+                type: 'trend',
+                title: '環境投資のROI',
+                message: '職場環境への投資は、職員満足度向上、離職率低下、生産性向上として高いROIを示します。',
+                priority: 'medium'
+              }
+            ]}
+          />
         </section>
       </div>
     </ReportLayout>

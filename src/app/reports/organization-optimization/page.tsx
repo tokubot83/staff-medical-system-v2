@@ -4,6 +4,9 @@ import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ReportLayout from '@/components/reports/ReportLayout';
 import { facilities } from '@/app/data/facilityData';
+import { exportToPDF } from '@/utils/pdfExport';
+import { DataCommentList, MetricWithComment } from '@/components/DataComment';
+import { generateOrganizationComments } from '@/utils/reportComments';
 
 function OrganizationOptimizationReportContent() {
   const searchParams = useSearchParams();
@@ -140,9 +143,15 @@ function OrganizationOptimizationReportContent() {
       icon="🏢"
       color="bg-indigo-500"
       facility={facility}
-      onExportPDF={() => console.log('PDF export')}
+      onExportPDF={() => exportToPDF({
+        title: '組織構造最適化分析レポート',
+        facility: facility?.name,
+        reportType: 'organization-optimization',
+        elementId: 'report-content',
+        dateRange: new Date().toLocaleDateString('ja-JP')
+      })}
     >
-      <div className="p-8">
+      <div id="report-content" className="p-8">
         {/* 組織概要 */}
         <section className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">組織構造概要</h2>
@@ -160,8 +169,18 @@ function OrganizationOptimizationReportContent() {
               <p className="text-2xl font-bold text-gray-900">{reportData.overview.managerRatio}%</p>
             </div>
             <div className="bg-gray-50 p-4 rounded-lg">
-              <p className="text-sm text-gray-600">管理スパン</p>
-              <p className="text-2xl font-bold text-gray-900">{reportData.overview.spanOfControl}</p>
+              <MetricWithComment
+                label="管理スパン"
+                value={reportData.overview.spanOfControl}
+                unit=""
+                comment={reportData.overview.spanOfControl > 7 ? {
+                  id: 'span-warning',
+                  type: 'warning',
+                  title: '管理スパンが過大',
+                  message: '一人の管理者が管理する人数が多すぎます。マネジメント負荷の軽減が必要です。',
+                  priority: 'high'
+                } : undefined}
+              />
               <p className="text-xs text-gray-500 mt-1">推奨: 5-7</p>
             </div>
             <div className="bg-gray-50 p-4 rounded-lg">
@@ -411,6 +430,45 @@ function OrganizationOptimizationReportContent() {
               </div>
             ))}
           </div>
+        </section>
+
+        {/* データ解釈コメント */}
+        <section className="mt-8">
+          <DataCommentList 
+            comments={[
+              ...generateOrganizationComments({
+                avgSpanOfControl: reportData.overview.spanOfControl
+              }),
+              {
+                id: 'outpatient-crisis',
+                type: 'warning',
+                title: '外来部門の管理体制不足',
+                message: '外来部門の管理スパンが8.7と過大で、効率性が72%に低下しています。管理者の増員が急務です。',
+                priority: 'high'
+              },
+              {
+                id: 'communication-gap',
+                type: 'interpretation',
+                title: '部門横断コミュニケーションの課題',
+                message: '部門横断のコミュニケーション効率58%と低く、患者ケアの質に影響を与える可能性があります。',
+                priority: 'high'
+              },
+              {
+                id: 'empowerment-action',
+                type: 'action',
+                title: '権限委譲の推進',
+                message: '権限委譲度55%と低く、意思決定の遅れにつながっています。フラット組織化と現場への権限委譲を進めましょう。',
+                priority: 'medium'
+              },
+              {
+                id: 'cross-functional-trend',
+                type: 'trend',
+                title: '多職種連携の重要性',
+                message: '医療の質向上には部門横断チームの設置が効果的です。患者満足度10%向上が期待されます。',
+                priority: 'medium'
+              }
+            ]}
+          />
         </section>
       </div>
     </ReportLayout>
