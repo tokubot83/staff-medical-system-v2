@@ -666,33 +666,33 @@ export default function Home() {
           </div>
         </div>
 
-        {/* 統計カード */}
+        {/* 統計カード - 5カテゴリ */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-          <div className="bg-white rounded-lg p-5 text-center shadow-sm border-t-4 border-green-500">
+          <Link href="/metrics/basic" className="bg-white rounded-lg p-5 text-center shadow-sm border-t-4 border-green-500 hover:shadow-md transition-shadow cursor-pointer">
             <div className="text-3xl font-bold text-gray-800 mb-1">500</div>
-            <div className="text-sm text-gray-600 mb-2">総職員数</div>
-            <div className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">前月比 ±0</div>
-          </div>
-          <div className="bg-white rounded-lg p-5 text-center shadow-sm border-t-4 border-blue-500">
+            <div className="text-sm text-gray-600 mb-2">基本指標</div>
+            <div className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">総職員数</div>
+          </Link>
+          <Link href="/metrics/quality" className="bg-white rounded-lg p-5 text-center shadow-sm border-t-4 border-blue-500 hover:shadow-md transition-shadow cursor-pointer">
             <div className="text-3xl font-bold text-gray-800 mb-1">87%</div>
-            <div className="text-sm text-gray-600 mb-2">総合満足度</div>
-            <div className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">前月比 +2%</div>
-          </div>
-          <div className="bg-white rounded-lg p-5 text-center shadow-sm border-t-4 border-yellow-500">
-            <div className="text-3xl font-bold text-gray-800 mb-1">12</div>
-            <div className="text-sm text-gray-600 mb-2">要注意職員</div>
-            <div className="text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full">前月比 +3名</div>
-          </div>
-          <div className="bg-white rounded-lg p-5 text-center shadow-sm border-t-4 border-red-500">
-            <div className="text-3xl font-bold text-gray-800 mb-1">3</div>
-            <div className="text-sm text-gray-600 mb-2">緊急対応要</div>
-            <div className="text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full">前月比 +1名</div>
-          </div>
-          <div className="bg-white rounded-lg p-5 text-center shadow-sm border-t-4 border-purple-500">
+            <div className="text-sm text-gray-600 mb-2">人材の質</div>
+            <div className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">総合満足度</div>
+          </Link>
+          <Link href="/metrics/growth" className="bg-white rounded-lg p-5 text-center shadow-sm border-t-4 border-purple-500 hover:shadow-md transition-shadow cursor-pointer">
             <div className="text-3xl font-bold text-gray-800 mb-1">92%</div>
-            <div className="text-sm text-gray-600 mb-2">研修受講率</div>
-            <div className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">前月比 +5%</div>
-          </div>
+            <div className="text-sm text-gray-600 mb-2">人材の成長</div>
+            <div className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">研修受講率</div>
+          </Link>
+          <Link href="/metrics/risk" className="bg-white rounded-lg p-5 text-center shadow-sm border-t-4 border-yellow-500 hover:shadow-md transition-shadow cursor-pointer">
+            <div className="text-3xl font-bold text-gray-800 mb-1">12</div>
+            <div className="text-sm text-gray-600 mb-2">リスク管理</div>
+            <div className="text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full">要注意職員</div>
+          </Link>
+          <Link href="/metrics/efficiency" className="bg-white rounded-lg p-5 text-center shadow-sm border-t-4 border-red-500 hover:shadow-md transition-shadow cursor-pointer">
+            <div className="text-3xl font-bold text-gray-800 mb-1">3</div>
+            <div className="text-sm text-gray-600 mb-2">組織効率</div>
+            <div className="text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full">緊急対応要</div>
+          </Link>
         </div>
 
         {/* メインダッシュボード */}
