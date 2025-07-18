@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "職員カルテシステム",
-  description: "AIアシスタント統合版 - 500名を3名で効率運用",
+  description: "医療法人厚生会",
 };
 
 export default function RootLayout({

@@ -383,7 +383,7 @@ export default function Home() {
             </div>
             <div>
               <h1 className="text-2xl font-light">職員カルテシステム</h1>
-              <p className="text-sm opacity-90">AIアシスタント統合版 - 500名を3名で効率運用</p>
+              <p className="text-sm opacity-90">医療法人厚生会</p>
             </div>
           </div>
           <div className="flex items-center gap-4">
