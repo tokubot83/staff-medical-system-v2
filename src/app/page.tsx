@@ -881,60 +881,50 @@ export default function Home() {
        {activeTab === 'overview' && (
         <div>
          <h3 className="text-lg font-semibold text-gray-800 mb-5">重点管理対象職員</h3>
-         <div className="overflow-x-auto">
-          <table className="w-full">
-           <thead>
-            <tr className="border-b border-gray-200">
-             <th className="text-left py-3 px-4 font-semibold text-gray-600">職員名</th>
-             <th className="text-left py-3 px-4 font-semibold text-gray-600">施設</th>
-             <th className="text-left py-3 px-4 font-semibold text-gray-600">部署</th>
-             <th className="text-left py-3 px-4 font-semibold text-gray-600">総合評価</th>
-             <th className="text-left py-3 px-4 font-semibold text-gray-600">状態</th>
-             <th className="text-left py-3 px-4 font-semibold text-gray-600">次回アクション</th>
-             <th className="text-left py-3 px-4 font-semibold text-gray-600">優先度</th>
-            </tr>
-           </thead>
-           <tbody>
-            {filterStaffByFacility(staffData, selectedFacility).map((staff) => (
-             <tr
-              key={staff.id}
-              className="border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors"
-              onClick={() => handleStaffClick(staff)}
-             >
-              <td className="py-4 px-4">
-               <div className="flex items-center gap-3">
-                <div className={`w-9 h-9 rounded-full flex items-center justify-center text-white font-semibold ${staff.avatar}`}>
-                 {staff.nameInitial}
-                </div>
-                <div>
-                 <Link href={`/staff/${staff.id}`} className="font-semibold text-blue-600 hover:text-blue-800 hover:underline">
-                  {staff.name}
-                 </Link>
-                 <div className="text-xs text-gray-500">{staff.id}</div>
-                </div>
+         <div className="space-y-3">
+          {filterStaffByFacility(staffData, selectedFacility).map((staff) => (
+           <div
+            key={staff.id}
+            className="bg-white border border-gray-200 rounded-lg p-4 hover:bg-gray-50 cursor-pointer transition-colors"
+            onClick={() => handleStaffClick(staff)}
+           >
+            <div className="flex items-center justify-between">
+             <div className="flex items-center gap-3">
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold ${staff.avatar}`}>
+               {staff.nameInitial}
+              </div>
+              <div>
+               <Link href={`/staff/${staff.id}`} className="font-semibold text-blue-600 hover:text-blue-800 hover:underline">
+                {staff.name}
+               </Link>
+               <div className="flex items-center gap-3 text-sm text-gray-600 mt-1">
+                <span>{staff.id}</span>
+                <span>•</span>
+                <span>{staff.department}</span>
                </div>
-              </td>
-              <td className="py-4 px-4 text-sm text-gray-600">{staff.department}</td>
-              <td className="py-4 px-4">
-               <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusBadgeClass(staff.status)}`}>
-                {staff.grade}
-               </span>
-              </td>
-              <td className="py-4 px-4">
-               <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusBadgeClass(staff.status)}`}>
-                {staff.statusText}
-               </span>
-              </td>
-              <td className="py-4 px-4 text-sm font-medium text-gray-800">{staff.nextAction}</td>
-              <td className="py-4 px-4">
-               <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getPriorityBadgeClass(staff.priority)}`}>
+              </div>
+             </div>
+             <div className="flex items-center gap-4">
+              <div className="text-right">
+               <div className="flex items-center gap-2 mb-1">
+                <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusBadgeClass(staff.status)}`}>
+                 {staff.grade}
+                </span>
+                <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusBadgeClass(staff.status)}`}>
+                 {staff.statusText}
+                </span>
+               </div>
+               <div className="text-sm text-gray-600">{staff.nextAction}</div>
+              </div>
+              <div className="flex items-center gap-2">
+               <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getPriorityBadgeClass(staff.priority)}`}>
                 {staff.priority === 'emergency' ? '緊急' : staff.priority === 'high' ? '高' : staff.priority === 'medium' ? '中' : '低'}
                </span>
-              </td>
-             </tr>
-            ))}
-           </tbody>
-          </table>
+              </div>
+             </div>
+            </div>
+           </div>
+          ))}
          </div>
         </div>
        )}
@@ -996,51 +986,32 @@ export default function Home() {
           </div>
          </div>
 
-         <div className="overflow-x-auto">
-          <table className="w-full">
-           <thead>
-            <tr className="border-b border-gray-200">
-             <th className="text-left py-3 px-4 font-semibold text-gray-600">職員名</th>
-             <th className="text-left py-3 px-4 font-semibold text-gray-600">施設</th>
-             <th className="text-left py-3 px-4 font-semibold text-gray-600">部署</th>
-             <th className="text-left py-3 px-4 font-semibold text-gray-600">職種</th>
-             <th className="text-left py-3 px-4 font-semibold text-gray-600">評価</th>
-             <th className="text-left py-3 px-4 font-semibold text-gray-600">状態</th>
-             <th className="text-left py-3 px-4 font-semibold text-gray-600">アクション</th>
-            </tr>
-           </thead>
-           <tbody>
-            {filterStaffByFacility(Object.values(staffDatabase), selectedFacility).slice(0, 6).map((staff) => {
-             return (
-              <tr key={staff.id} className="border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors">
-               <td className="py-4 px-4">
-                <div className="flex items-center gap-3">
-                 <div className={`w-9 h-9 rounded-full flex items-center justify-center text-white font-semibold ${staff.avatar}`}>
-                  {staff.nameInitial}
-                 </div>
-                 <div>
-                  <Link href={`/staff/${staff.id}`} className="font-semibold text-blue-600 hover:text-blue-800 hover:underline">
-                   {staff.name}
-                  </Link>
-                  <div className="text-xs text-gray-500">{staff.id}</div>
-                 </div>
+         <div className="space-y-3">
+          {filterStaffByFacility(Object.values(staffDatabase), selectedFacility).slice(0, 6).map((staff) => {
+           return (
+            <div key={staff.id} className="bg-white border border-gray-200 rounded-lg p-4 hover:bg-gray-50 cursor-pointer transition-colors">
+             <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+               <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold ${staff.avatar}`}>
+                {staff.nameInitial}
+               </div>
+               <div>
+                <Link href={`/staff/${staff.id}`} className="font-semibold text-blue-600 hover:text-blue-800 hover:underline">
+                 {staff.name}
+                </Link>
+                <div className="flex items-center gap-3 text-sm text-gray-600 mt-1">
+                 <span>{staff.id}</span>
+                 <span>•</span>
+                 <span>{staff.facility}</span>
+                 <span>•</span>
+                 <span>{staff.department}</span>
+                 <span>•</span>
+                 <span>{staff.position}</span>
                 </div>
-               </td>
-               <td className="py-4 px-4">
-                <div className="text-sm text-gray-600">{staff.facility}</div>
-                <div className="text-xs text-gray-400">
-                 {staff.facility === '小原病院' ? '急性期' : '回復期リハ'}
-                </div>
-               </td>
-               <td className="py-4 px-4">
-                <div className="text-sm text-gray-600">{staff.facility}</div>
-                <div className="text-xs text-gray-400">
-                 {staff.facility === '小原病院' ? '急性期' : '回復期リハ'}
-                </div>
-               </td>
-               <td className="py-4 px-4 text-sm text-gray-600">{staff.department}</td>
-               <td className="py-4 px-4 text-sm text-gray-600">{staff.position}</td>
-               <td className="py-4 px-4">
+               </div>
+              </div>
+              <div className="flex items-center gap-4">
+               <div className="flex items-center gap-2">
                 <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
                  staff.evaluation === 'S' ? 'bg-purple-100 text-purple-800 border border-purple-300' :
                  staff.evaluation === 'A' ? 'bg-blue-100 text-blue-800 border border-blue-300' :
@@ -1049,8 +1020,6 @@ export default function Home() {
                 }`}>
                  {staff.evaluation}評価
                 </span>
-               </td>
-               <td className="py-4 px-4">
                 <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
                  staff.healthStatus === '良好' ? 'bg-green-100 text-green-800 border border-green-300' :
                  staff.healthStatus === '注意' ? 'bg-yellow-100 text-yellow-800 border border-yellow-300' :
@@ -1058,17 +1027,15 @@ export default function Home() {
                 }`}>
                  {staff.healthStatus}
                 </span>
-               </td>
-               <td className="py-4 px-4">
-                <Link href={`/staff/${staff.id}`} className="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                 詳細
-                </Link>
-               </td>
-              </tr>
-             );
-            })}
-           </tbody>
-          </table>
+               </div>
+               <Link href={`/staff/${staff.id}`} className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                詳細 →
+               </Link>
+              </div>
+             </div>
+            </div>
+           );
+          })}
          </div>
         </div>
        )}
@@ -1182,7 +1149,7 @@ export default function Home() {
             { name: '渡辺麻衣', dept: '小児科病棟', dueDate: '1月22日', status: '上司評価待ち', progress: 85 },
             { name: '小林さくら', dept: '外科病棟', dueDate: '1月18日', status: '未開始', progress: 0 },
            ].map((staff, index) => (
-            <div key={index} className="flex items-center justify-between p-3 bg-white rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+            <div key={index} className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
              <div className="flex items-center gap-4">
               <div className="w-10 h-10 bg-gradient-to-r from-gray-400 to-gray-500 text-white rounded-full flex items-center justify-center font-semibold">
                {staff.name[0]}
