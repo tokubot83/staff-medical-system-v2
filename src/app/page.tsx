@@ -421,19 +421,19 @@ export default function Home() {
 
  const getAlertTypeClass = (type: string) => {
   switch (type) {
-   case 'critical': return 'border-l-red-500 bg-gray-50';
-   case 'warning': return 'border-l-yellow-500 bg-gray-50';
-   case 'info': return 'border-l-blue-500 bg-gray-50';
-   default: return 'border-l-gray-500 bg-white';
+   case 'critical': return 'border-l-red-500 bg-red-50';
+   case 'warning': return 'border-l-yellow-500 bg-yellow-50';
+   case 'info': return 'border-l-blue-500 bg-blue-50';
+   default: return 'border-l-gray-500 bg-gray-50';
   }
  };
 
  const getAlertButtonClass = (type: string) => {
   switch (type) {
-   case 'critical': return 'bg-red-50 hover:bg-red-100 border border-red-500 text-red-600';
-   case 'warning': return 'bg-yellow-50 hover:bg-yellow-100 border border-yellow-500 text-yellow-600';
-   case 'info': return 'bg-blue-50 hover:bg-blue-100 border border-blue-500 text-blue-600';
-   default: return 'bg-gray-50 hover:bg-gray-100 border border-gray-500 text-gray-600';
+   case 'critical': return 'bg-red-500 hover:bg-red-600 text-white';
+   case 'warning': return 'bg-yellow-500 hover:bg-yellow-600 text-white';
+   case 'info': return 'bg-blue-500 hover:bg-blue-600 text-white';
+   default: return 'bg-gray-500 hover:bg-gray-600 text-white';
   }
  };
 
@@ -502,7 +502,7 @@ export default function Home() {
       <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
        {tasks.map((task) => (
         <div key={task.id} className={`flex items-center gap-3 p-3 rounded-lg border-l-4 ${
-         task.priority === 'urgent' ? 'border-l-red-500 bg-gray-50' : 'border-l-blue-500 bg-gray-50'
+         task.priority === 'urgent' ? 'border-l-red-500 bg-red-50' : 'border-l-blue-500 bg-blue-50'
         } hover:bg-gray-50 transition-colors cursor-pointer`}>
          <div
           className={`w-5 h-5 border-2 border-gray-400 rounded cursor-pointer flex items-center justify-center transition-colors ${
@@ -529,7 +529,7 @@ export default function Home() {
        <h2 className="text-lg font-semibold flex items-center gap-2">
         🚨 緊急アラート
        </h2>
-       <span className="bg-gray-200 text-red-800 px-3 py-1 rounded-full text-sm font-semibold border border-red-200">
+       <span className="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-semibold">
         5件
        </span>
       </div>
@@ -626,7 +626,7 @@ export default function Home() {
 
       <div className="space-y-3 max-h-80 overflow-y-auto">
        {(activeSuccessTab === 'personal' ? personalSuccess : departmentSuccess).map((success) => (
-        <div key={success.id} className="p-3 rounded-lg border-l-4 border-l-green-500 bg-gray-50 hover:bg-gray-50 transition-colors cursor-pointer">
+        <div key={success.id} className="p-3 rounded-lg border-l-4 border-l-green-500 bg-green-50 hover:bg-gray-50 transition-colors cursor-pointer">
          <div className="text-xs text-gray-500 absolute top-2 right-3">
           {success.time}
          </div>
@@ -649,7 +649,7 @@ export default function Home() {
            success.content
           )}
          </div>
-         <button className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-xs font-semibold transition-colors">
+         <button className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-xs font-semibold transition-colors">
           {success.buttonText}
          </button>
         </div>
