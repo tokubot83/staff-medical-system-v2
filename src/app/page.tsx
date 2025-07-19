@@ -475,7 +475,7 @@ export default function Home() {
       <div className="max-w-7xl mx-auto p-5">
         {/* アクションセンター */}
         <div className="mb-12">
-          <div className="bg-gradient-to-r from-red-50 to-orange-50 rounded-2xl p-8 shadow-lg border border-red-100">
+          <div className="bg-gradient-to-r from-pink-100 to-rose-100 rounded-2xl p-8 shadow-lg border border-pink-200">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-12 h-12 bg-gradient-to-r from-red-500 to-orange-500 rounded-xl flex items-center justify-center text-white text-2xl font-bold shadow-lg">
                 ⚡
@@ -659,7 +659,7 @@ export default function Home() {
 
         {/* 組織健康診断 */}
         <div className="mb-12">
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 shadow-lg border border-blue-100">
+          <div className="bg-gradient-to-r from-rose-50 to-pink-50 rounded-2xl p-8 shadow-lg border border-rose-100">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center text-white text-2xl font-bold shadow-lg">
                 📊
@@ -718,7 +718,7 @@ export default function Home() {
 
         {/* 職員カルテ */}
         <div className="mb-12">
-          <div className="bg-gradient-to-r from-green-50 to-teal-50 rounded-2xl p-8 shadow-lg border border-green-100">
+          <div className="bg-gradient-to-r from-pink-50 to-fuchsia-50 rounded-2xl p-8 shadow-lg border border-pink-100">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-teal-500 rounded-xl flex items-center justify-center text-white text-2xl font-bold shadow-lg">
                 📋
@@ -730,9 +730,7 @@ export default function Home() {
             </div>
             
             {/* メインダッシュボード */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* メインコンテンツ */}
-              <div className="lg:col-span-2 bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+            <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
             {/* タブナビゲーション */}
             <div className="flex bg-gray-50 border-b border-gray-200">
               {[
@@ -1205,60 +1203,60 @@ export default function Home() {
                 </div>
               )}
 
-              {/* サイドバー */}
-              <div className="space-y-6">
-                {/* 今月の統計 */}
-                <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                📊 今月の活動統計
-              </h3>
-              <div className="space-y-3">
-                {[
-                  { label: '面談実施', value: '23件' },
-                  { label: '評価完了', value: '32名' },
-                  { label: '研修実施', value: '5回' },
-                  { label: '新規採用', value: '2名' }
-                ].map((stat, index) => (
-                  <div key={index} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                    <span className="text-sm text-gray-600">{stat.label}</span>
-                    <span className="text-lg font-semibold text-gray-800">{stat.value}</span>
-                  </div>
-                ))}
+            </div>
+            
+            {/* 今月の活動統計とクイックアクション */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+              {/* 今月の統計 */}
+              <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                  📊 今月の活動統計
+                </h3>
+                <div className="space-y-3">
+                  {[
+                    { label: '面談実施', value: '23件' },
+                    { label: '評価完了', value: '32名' },
+                    { label: '研修実施', value: '5回' },
+                    { label: '新規採用', value: '2名' }
+                  ].map((stat, index) => (
+                    <div key={index} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                      <span className="text-sm text-gray-600">{stat.label}</span>
+                      <span className="text-lg font-semibold text-gray-800">{stat.value}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-                </div>
 
-                {/* クイックアクション */}
-                <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                ⚡ クイックアクション
-              </h3>
-              <div className="space-y-3">
-                {[
-                  { label: '🔍 職員検索', color: 'bg-blue-500 hover:bg-blue-600', href: null },
-                  { label: '📅 面談予約', color: 'bg-green-500 hover:bg-green-600', href: null },
-                  { label: '📊 レポート作成', color: 'bg-yellow-500 hover:bg-yellow-600', href: '/reports' },
-                  { label: '⚙️ システム設定', color: 'bg-purple-500 hover:bg-purple-600', href: null }
-                ].map((action, index) => (
-                  action.href ? (
-                    <Link
-                      key={index}
-                      href={action.href}
-                      className={`block w-full ${action.color} text-white py-3 rounded-lg text-sm font-semibold transition-colors text-center`}
-                    >
-                      {action.label}
-                    </Link>
-                  ) : (
-                    <button
-                      key={index}
-                      className={`w-full ${action.color} text-white py-3 rounded-lg text-sm font-semibold transition-colors`}
-                    >
-                      {action.label}
-                    </button>
-                  )
-                ))}
-                  </div>
+              {/* クイックアクション */}
+              <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                  ⚡ クイックアクション
+                </h3>
+                <div className="space-y-3">
+                  {[
+                    { label: '🔍 職員検索', color: 'bg-blue-500 hover:bg-blue-600', href: null },
+                    { label: '📅 面談予約', color: 'bg-green-500 hover:bg-green-600', href: null },
+                    { label: '📊 レポート作成', color: 'bg-yellow-500 hover:bg-yellow-600', href: '/reports' },
+                    { label: '⚙️ システム設定', color: 'bg-purple-500 hover:bg-purple-600', href: null }
+                  ].map((action, index) => (
+                    action.href ? (
+                      <Link
+                        key={index}
+                        href={action.href}
+                        className={`block w-full ${action.color} text-white py-3 rounded-lg text-sm font-semibold transition-colors text-center`}
+                      >
+                        {action.label}
+                      </Link>
+                    ) : (
+                      <button
+                        key={index}
+                        className={`w-full ${action.color} text-white py-3 rounded-lg text-sm font-semibold transition-colors`}
+                      >
+                        {action.label}
+                      </button>
+                    )
+                  ))}
                 </div>
-
               </div>
             </div>
           </div>
