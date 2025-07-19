@@ -681,34 +681,34 @@ export default function Home() {
        <Link href="/metrics/basic" className="bg-gray-50 rounded-xl p-5 text-center shadow-md border-t-4 border-green-500 hover:shadow-lg transition-shadow cursor-pointer">
       <div className="text-3xl font-bold text-gray-800 mb-1">500</div>
       <div className="text-sm text-gray-600 mb-2">基本指標</div>
-      <div className="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full border border-gray-300">総職員数</div>
+      <div className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">総職員数</div>
        </Link>
        <Link href="/metrics/quality" className="bg-gray-50 rounded-xl p-5 text-center shadow-md border-t-4 border-blue-500 hover:shadow-lg transition-shadow cursor-pointer">
       <div className="text-3xl font-bold text-gray-800 mb-1">87%</div>
       <div className="text-sm text-gray-600 mb-2">人材の質</div>
-      <div className="text-xs bg-gray-200 text-green-700 px-2 py-1 rounded-full border border-green-300">総合満足度</div>
+      <div className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">総合満足度</div>
        </Link>
        <Link href="/metrics/growth" className="bg-gray-50 rounded-xl p-5 text-center shadow-md border-t-4 border-purple-500 hover:shadow-lg transition-shadow cursor-pointer">
       <div className="text-3xl font-bold text-gray-800 mb-1">92%</div>
       <div className="text-sm text-gray-600 mb-2">人材の成長</div>
-      <div className="text-xs bg-gray-200 text-green-700 px-2 py-1 rounded-full border border-green-300">研修受講率</div>
+      <div className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">研修受講率</div>
        </Link>
        <Link href="/metrics/risk" className="bg-gray-50 rounded-xl p-5 text-center shadow-md border-t-4 border-yellow-500 hover:shadow-lg transition-shadow cursor-pointer">
       <div className="text-3xl font-bold text-gray-800 mb-1">12</div>
       <div className="text-sm text-gray-600 mb-2">リスク管理</div>
-      <div className="text-xs bg-gray-200 text-red-700 px-2 py-1 rounded-full border border-red-300">要注意職員</div>
+      <div className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">要注意職員</div>
        </Link>
        <Link href="/metrics/efficiency" className="bg-gray-50 rounded-xl p-5 text-center shadow-md border-t-4 border-red-500 hover:shadow-lg transition-shadow cursor-pointer">
       <div className="text-3xl font-bold text-gray-800 mb-1">3</div>
       <div className="text-sm text-gray-600 mb-2">組織効率</div>
-      <div className="text-xs bg-gray-200 text-red-700 px-2 py-1 rounded-full border border-red-300">緊急対応要</div>
+      <div className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">緊急対応要</div>
        </Link>
       </div>
 
       {/* 詳細レポートボタン */}
       <div className="mt-6">
        <Link href="/reports" className="block">
-        <button className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-4 px-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-3">
+        <button className="w-full bg-gray-700 hover:bg-gray-800 text-white font-semibold py-4 px-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-3">
          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
          </svg>
