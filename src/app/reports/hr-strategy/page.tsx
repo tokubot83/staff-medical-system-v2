@@ -267,32 +267,32 @@ function HRStrategyReportContent() {
                 costPerHire: 450000,
                 retentionRate: 91.5
               }),
-              facilityId === 'tachigami-hospital' ? {
+              ...(facilityId === 'tachigami-hospital' ? [{
                 id: 'dept-shortage',
-                type: 'warning',
+                type: 'warning' as const,
                 title: '介護医療院の人員不足',
                 message: '介護医療院で深刻な人員不足が発生し、離職率も高い状態です。早急な対策が必要です。',
-                priority: 'high'
-              } : {
+                priority: 'high' as const
+              }] : [{
                 id: 'dept-shortage',
-                type: 'warning',
+                type: 'warning' as const,
                 title: '特定部門の人員不足',
                 message: 'ICUと小児科で深刻な人員不足が発生しています。戦略的採用計画の早期実施が必要です。',
-                priority: 'high'
-              },
+                priority: 'high' as const
+              }]),
               {
                 id: 'management-gap',
-                type: 'interpretation',
+                type: 'interpretation' as const,
                 title: '管理職候補の不足',
                 message: '次世代リーダーの育成が遅れています。管理職育成プログラムの導入により、組織の持続的成長を支える基盤を構築しましょう。',
-                priority: 'high'
+                priority: 'high' as const
               },
               {
                 id: 'efficiency-insight',
-                type: 'insight',
+                type: 'insight' as const,
                 title: '部門間連携の高い効率性',
                 message: '部門間の連携効率が高く、組織全体のパフォーマンスに貢献しています。この強みを活かした更なる最適化が可能です。',
-                priority: 'medium'
+                priority: 'medium' as const
               }
             ]}
           />
