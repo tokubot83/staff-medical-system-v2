@@ -57,6 +57,7 @@ export default function Home() {
  const [showModal, setShowModal] = useState(false);
  const [selectedStaff, setSelectedStaff] = useState<Staff | null>(null);
  const [selectedFacility, setSelectedFacility] = useState<'all' | 'obara' | 'tategami'>('all');
+ const [staffFilter, setStaffFilter] = useState<'priority' | 'all' | 'excellent'>('priority');
  const [tasks, setTasks] = useState<Task[]>([
   { id: '1', content: '中村恵子さん 緊急面談', time: '9:00', priority: 'urgent', completed: false },
   { id: '2', content: '田中美咲さん 昇進検討面談', time: '10:30', priority: 'urgent', completed: false },
@@ -880,9 +881,150 @@ export default function Home() {
 
        {activeTab === 'overview' && (
         <div>
-         <h3 className="text-lg font-semibold text-gray-800 mb-5">重点管理対象職員</h3>
+         {/* サマリーエリア */}
+         <div className="mb-6">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">組織の健康状態サマリー</h3>
+          <div className="grid grid-cols-4 gap-4 mb-6">
+           <div className="bg-red-50 border-l-4 border-red-500 rounded-lg p-4">
+            <div className="flex items-center justify-between">
+             <div>
+              <p className="text-sm font-medium text-red-700">緊急対応必要</p>
+              <p className="text-2xl font-bold text-red-800 mt-1">
+               {filterStaffByFacility(staffData, selectedFacility).filter(s => s.priority === 'emergency').length}名
+              </p>
+             </div>
+             <div className="text-3xl text-red-500">🚨</div>
+            </div>
+           </div>
+           <div className="bg-yellow-50 border-l-4 border-yellow-500 rounded-lg p-4">
+            <div className="flex items-center justify-between">
+             <div>
+              <p className="text-sm font-medium text-yellow-700">要注意職員</p>
+              <p className="text-2xl font-bold text-yellow-800 mt-1">
+               {filterStaffByFacility(staffData, selectedFacility).filter(s => s.priority === 'high' || s.priority === 'medium').length}名
+              </p>
+             </div>
+             <div className="text-3xl text-yellow-500">⚠️</div>
+            </div>
+           </div>
+           <div className="bg-green-50 border-l-4 border-green-500 rounded-lg p-4">
+            <div className="flex items-center justify-between">
+             <div>
+              <p className="text-sm font-medium text-green-700">優秀職員</p>
+              <p className="text-2xl font-bold text-green-800 mt-1">
+               {filterStaffByFacility(staffData, selectedFacility).filter(s => s.status === 'excellent').length}名
+              </p>
+             </div>
+             <div className="text-3xl text-green-500">✨</div>
+            </div>
+           </div>
+           <div className="bg-blue-50 border-l-4 border-blue-500 rounded-lg p-4">
+            <div className="flex items-center justify-between">
+             <div>
+              <p className="text-sm font-medium text-blue-700">総職員数</p>
+              <p className="text-2xl font-bold text-blue-800 mt-1">
+               {filterStaffByFacility(staffData, selectedFacility).length}名
+              </p>
+             </div>
+             <div className="text-3xl text-blue-500">👥</div>
+            </div>
+           </div>
+          </div>
+
+          {/* 簡易グラフ */}
+          <div className="bg-gray-50 rounded-lg p-4">
+           <div className="flex items-center gap-2 mb-2">
+            <span className="text-sm font-medium text-gray-700">職員状態分布</span>
+           </div>
+           <div className="flex items-center gap-2">
+            <div className="flex-1 bg-gray-200 rounded-full h-6 overflow-hidden flex">
+             <div 
+              className="bg-red-500 h-full transition-all duration-500"
+              style={{ width: `${(filterStaffByFacility(staffData, selectedFacility).filter(s => s.status === 'poor').length / filterStaffByFacility(staffData, selectedFacility).length * 100)}%` }}
+             />
+             <div 
+              className="bg-yellow-500 h-full transition-all duration-500"
+              style={{ width: `${(filterStaffByFacility(staffData, selectedFacility).filter(s => s.status === 'average').length / filterStaffByFacility(staffData, selectedFacility).length * 100)}%` }}
+             />
+             <div 
+              className="bg-blue-500 h-full transition-all duration-500"
+              style={{ width: `${(filterStaffByFacility(staffData, selectedFacility).filter(s => s.status === 'good').length / filterStaffByFacility(staffData, selectedFacility).length * 100)}%` }}
+             />
+             <div 
+              className="bg-green-500 h-full transition-all duration-500"
+              style={{ width: `${(filterStaffByFacility(staffData, selectedFacility).filter(s => s.status === 'excellent').length / filterStaffByFacility(staffData, selectedFacility).length * 100)}%` }}
+             />
+            </div>
+           </div>
+           <div className="flex items-center gap-4 mt-2 text-xs">
+            <div className="flex items-center gap-1">
+             <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+             <span className="text-gray-600">要改善</span>
+            </div>
+            <div className="flex items-center gap-1">
+             <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+             <span className="text-gray-600">普通</span>
+            </div>
+            <div className="flex items-center gap-1">
+             <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+             <span className="text-gray-600">良好</span>
+            </div>
+            <div className="flex items-center gap-1">
+             <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+             <span className="text-gray-600">優秀</span>
+            </div>
+           </div>
+          </div>
+         </div>
+
+         {/* フィルター */}
+         <div className="flex items-center justify-between mb-5">
+          <h3 className="text-lg font-semibold text-gray-800">職員一覧</h3>
+          <div className="flex gap-2">
+           <button
+            onClick={() => setStaffFilter('priority')}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+             staffFilter === 'priority'
+              ? 'bg-red-500 text-white'
+              : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300'
+            }`}
+           >
+            要対応職員のみ
+           </button>
+           <button
+            onClick={() => setStaffFilter('all')}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+             staffFilter === 'all'
+              ? 'bg-blue-500 text-white'
+              : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300'
+            }`}
+           >
+            全員表示
+           </button>
+           <button
+            onClick={() => setStaffFilter('excellent')}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+             staffFilter === 'excellent'
+              ? 'bg-green-500 text-white'
+              : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300'
+            }`}
+           >
+            優秀職員
+           </button>
+          </div>
+         </div>
+
          <div className="space-y-3">
-          {filterStaffByFacility(staffData, selectedFacility).map((staff) => (
+          {filterStaffByFacility(staffData, selectedFacility)
+           .filter(staff => {
+            if (staffFilter === 'priority') {
+             return staff.priority === 'emergency' || staff.priority === 'high' || staff.status === 'poor';
+            } else if (staffFilter === 'excellent') {
+             return staff.status === 'excellent';
+            }
+            return true;
+           })
+           .map((staff) => (
            <div
             key={staff.id}
             className="bg-white border border-gray-200 rounded-lg p-4 hover:bg-gray-50 cursor-pointer transition-colors"
