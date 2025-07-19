@@ -738,6 +738,70 @@ export default function Home() {
        </div>
       </div>
       
+      {/* 3つの独立したブロック */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+       {/* 今月の活動統計 */}
+       <div className="bg-gray-50 rounded-xl p-6 shadow-md border-t-4 border-purple-500 hover:shadow-lg transition-shadow">
+        <h3 className="text-lg font-semibold text-gray-800 mb-4">📊 今月の活動統計</h3>
+        <div className="space-y-3">
+         <div className="flex justify-between items-center">
+          <span className="text-sm text-gray-600">面談実施</span>
+          <span className="text-xl font-bold text-purple-600">24件</span>
+         </div>
+         <div className="flex justify-between items-center">
+          <span className="text-sm text-gray-600">評価完了</span>
+          <span className="text-xl font-bold text-green-600">156名</span>
+         </div>
+         <div className="flex justify-between items-center">
+          <span className="text-sm text-gray-600">研修参加</span>
+          <span className="text-xl font-bold text-blue-600">89名</span>
+         </div>
+         <div className="flex justify-between items-center">
+          <span className="text-sm text-gray-600">離職率</span>
+          <span className="text-xl font-bold text-red-600">2.3%</span>
+         </div>
+        </div>
+       </div>
+
+       {/* クイックアクション */}
+       <div className="bg-gray-50 rounded-xl p-6 shadow-md border-t-4 border-blue-500 hover:shadow-lg transition-shadow">
+        <h3 className="text-lg font-semibold text-gray-800 mb-4">⚡ クイックアクション</h3>
+        <div className="space-y-3">
+         <button className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold transition-colors">
+          新規職員登録
+         </button>
+         <button className="w-full bg-green-500 hover:bg-green-600 text-white py-3 px-4 rounded-lg font-semibold transition-colors">
+          面談予約
+         </button>
+         <button className="w-full bg-purple-500 hover:bg-purple-600 text-white py-3 px-4 rounded-lg font-semibold transition-colors">
+          評価入力
+         </button>
+         <button className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 px-4 rounded-lg font-semibold transition-colors">
+          レポート作成
+         </button>
+        </div>
+       </div>
+
+       {/* 重要指標サマリー */}
+       <div className="bg-gray-50 rounded-xl p-6 shadow-md border-t-4 border-green-500 hover:shadow-lg transition-shadow">
+        <h3 className="text-lg font-semibold text-gray-800 mb-4">🎯 重要指標</h3>
+        <div className="space-y-3">
+         <div className="bg-red-100 p-3 rounded-lg">
+          <div className="text-sm text-red-700 font-semibold">緊急対応必要</div>
+          <div className="text-2xl font-bold text-red-800">3名</div>
+         </div>
+         <div className="bg-yellow-100 p-3 rounded-lg">
+          <div className="text-sm text-yellow-700 font-semibold">要注意職員</div>
+          <div className="text-2xl font-bold text-yellow-800">12名</div>
+         </div>
+         <div className="bg-green-100 p-3 rounded-lg">
+          <div className="text-sm text-green-700 font-semibold">優秀職員</div>
+          <div className="text-2xl font-bold text-green-800">45名</div>
+         </div>
+        </div>
+       </div>
+      </div>
+      
       {/* メインダッシュボード */}
       <div className="bg-gray-50 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
       {/* タブナビゲーション */}
