@@ -507,7 +507,8 @@ export function getDepartmentPath(departmentId: string): Department[] {
   while (current) {
     path.unshift(current);
     if (current.parentId) {
-      current = organizationData.find(d => d.id === current.parentId);
+      const parentId = current.parentId;
+      current = organizationData.find(d => d.id === parentId);
     } else {
       break;
     }
