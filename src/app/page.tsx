@@ -730,9 +730,7 @@ export default function Home() {
             </div>
             
             {/* メインダッシュボード */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* メインコンテンツ */}
-              <div className="lg:col-span-2 bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+            <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
             {/* タブナビゲーション */}
             <div className="flex bg-gray-50 border-b border-gray-200">
               {[
@@ -1204,11 +1202,12 @@ export default function Home() {
                   </div>
                 </div>
               )}
-
-              {/* サイドバー */}
-              <div className="space-y-6">
-                {/* 今月の統計 */}
-                <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow">
+            </div>
+            
+            {/* 今月の活動統計とクイックアクション */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+              {/* 今月の統計 */}
+              <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow">
               <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
                 📊 今月の活動統計
               </h3>
@@ -1258,8 +1257,6 @@ export default function Home() {
                 ))}
                   </div>
                 </div>
-
-              </div>
             </div>
           </div>
         </div>
