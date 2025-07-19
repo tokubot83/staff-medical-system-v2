@@ -437,5 +437,5 @@ export default function Home() {
     }
   };
 
-  return (
+  return <div>Test Page</div>;
 }
