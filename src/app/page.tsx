@@ -62,7 +62,7 @@ export default function Home() {
     { id: '3', content: '月次評価会議準備', time: '14:00', priority: 'normal', completed: false },
     { id: '4', content: '新人研修計画レビュー', time: '16:00', priority: 'normal', completed: false },
     { id: '5', content: '外来部門 緊急対策会議', time: '17:00', priority: 'urgent', completed: false },
-    { id: '6', content: 'AI分析レポート確認', time: '18:00', priority: 'normal', completed: false },
+    { id: '6', content: '分析レポート確認', time: '18:00', priority: 'normal', completed: false },
     { id: '7', content: '産業医面談（鈴木一郎さん）', time: '11:00', priority: 'urgent', completed: false },
     { id: '8', content: '新人看護師オリエンテーション', time: '13:00', priority: 'normal', completed: false },
     { id: '9', content: '労務管理システム更新確認', time: '15:30', priority: 'normal', completed: false },
@@ -894,7 +894,7 @@ export default function Home() {
               {activeTab === 'interview' && (
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center justify-between">
-                    面談管理 - AIスケジューリング
+                    面談管理 - スマートスケジューリング
                     <div className="flex items-center gap-3">
                       <button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">面談予約</button>
                       <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">カレンダー表示</button>
@@ -1131,7 +1131,7 @@ export default function Home() {
                             <span className="font-semibold text-gray-800">小林さくら</span>
                             <span className="text-sm text-gray-600 ml-2">外科病棟・新人看護師</span>
                           </div>
-                          <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full font-semibold">AI推奨</span>
+                          <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full font-semibold">推奨</span>
                         </div>
                         <p className="text-sm text-gray-600 mt-2">BLS再受講推奨。前回評価「再受講中」。急変対応スキル向上が必要。</p>
                       </div>
@@ -1153,7 +1153,7 @@ export default function Home() {
               {activeTab === 'analytics' && (
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center justify-between">
-                    分析レポート - AI洞察
+                    分析レポート - データ分析による洞察
                     <div className="flex items-center gap-3">
                       <Link href="/reports" className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors inline-block">レポート生成</Link>
                       <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">ダウンロード</button>
@@ -1347,10 +1347,10 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {/* AI総合分析 */}
+                  {/* 総合分析 */}
                   <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-5">
                     <h4 className="text-blue-800 font-semibold mb-4 flex items-center gap-2">
-                      🤖 AI総合分析
+                      📈 総合分析
                       <span className="text-xs bg-blue-600 text-white px-2 py-1 rounded-full">最新</span>
                     </h4>
                     <div className="grid grid-cols-3 gap-4 text-center mb-4">
@@ -1528,7 +1528,7 @@ export default function Home() {
                       </div>
                     </div>
                     <div className="bg-white border border-gray-200 rounded-lg p-4">
-                      <h5 className="font-semibold text-gray-800 mb-3">💡 AI推測要因</h5>
+                      <h5 className="font-semibold text-gray-800 mb-3">💡 推定要因</h5>
                       <div className="text-sm text-gray-600 space-y-1">
                         <div>• 家庭環境の急変（育児・介護）</div>
                         <div>• 職場での人間関係の悪化</div>
@@ -1540,7 +1540,7 @@ export default function Home() {
 
                   {/* 緊急対応プラン */}
                   <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-5">
-                    <h4 className="text-blue-800 font-semibold mb-4">🎯 AI推奨緊急対応プラン</h4>
+                    <h4 className="text-blue-800 font-semibold mb-4">🎯 推奨緊急対応プラン</h4>
                     <div className="space-y-3">
                       <div className="flex items-start gap-3">
                         <div className="w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
@@ -1646,7 +1646,7 @@ export default function Home() {
 
                   {/* サポートプラン */}
                   <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-5">
-                    <h4 className="text-blue-800 font-semibold mb-4">🎯 AI推奨サポートプラン</h4>
+                    <h4 className="text-blue-800 font-semibold mb-4">🎯 推奨サポートプラン</h4>
                     <div className="space-y-3">
                       <div className="flex items-start gap-3">
                         <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
