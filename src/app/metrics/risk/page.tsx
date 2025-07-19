@@ -27,39 +27,39 @@ export default function RiskMetricsPage() {
         name: '小原病院',
         departments: [
           {
-            name: '地域包括医療病棟',
-            metrics: [
-              { label: '要注意職員', value: 2, unit: '名' },
-              { label: '離職率', value: 7.5, unit: '%' },
-              { label: '欠勤率', value: 3.8, unit: '%' },
-              { label: 'メンタル不調', value: 3, unit: '名' }
-            ]
-          },
-          {
-            name: '地域包括ケア病棟',
+            name: '診療部',
             metrics: [
               { label: '要注意職員', value: 3, unit: '名', trend: { value: '+1名', isPositive: false } },
-              { label: '離職率', value: 9.2, unit: '%' },
-              { label: '欠勤率', value: 4.5, unit: '%' },
+              { label: '離職率', value: 4.7, unit: '%' },
+              { label: '欠勤率', value: 2.1, unit: '%' },
               { label: 'メンタル不調', value: 4, unit: '名' }
             ]
           },
           {
-            name: '回復期リハ病棟',
+            name: '看護部',
             metrics: [
-              { label: '要注意職員', value: 1, unit: '名' },
-              { label: '離職率', value: 3.2, unit: '%' },
-              { label: '欠勤率', value: 2.1, unit: '%' },
-              { label: 'メンタル不調', value: 2, unit: '名' }
+              { label: '要注意職員', value: 8, unit: '名', trend: { value: '+2名', isPositive: false } },
+              { label: '離職率', value: 11.2, unit: '%' },
+              { label: '欠勤率', value: 5.5, unit: '%' },
+              { label: 'メンタル不調', value: 10, unit: '名' }
             ]
           },
           {
-            name: '外来',
+            name: '診療技術部',
             metrics: [
-              { label: '要注意職員', value: 4, unit: '名', trend: { value: '+2名', isPositive: false } },
+              { label: '要注意職員', value: 2, unit: '名' },
+              { label: '離職率', value: 3.1, unit: '%' },
+              { label: '欠勤率', value: 2.5, unit: '%' },
+              { label: 'メンタル不調', value: 3, unit: '名' }
+            ]
+          },
+          {
+            name: '事務部',
+            metrics: [
+              { label: '要注意職員', value: 5, unit: '名', trend: { value: '+2名', isPositive: false } },
               { label: '離職率', value: 12.5, unit: '%' },
-              { label: '欠勤率', value: 5.8, unit: '%' },
-              { label: 'メンタル不調', value: 5, unit: '名' }
+              { label: '欠勤率', value: 4.8, unit: '%' },
+              { label: 'メンタル不調', value: 6, unit: '名' }
             ]
           }
         ]
@@ -68,30 +68,39 @@ export default function RiskMetricsPage() {
         name: '立神リハビリテーション温泉病院',
         departments: [
           {
-            name: '医療療養病棟',
+            name: '診療部門',
             metrics: [
-              { label: '要注意職員', value: 1, unit: '名' },
-              { label: '離職率', value: 8.0, unit: '%' },
-              { label: '欠勤率', value: 4.0, unit: '%' },
+              { label: '要注意職員', value: 2, unit: '名' },
+              { label: '離職率', value: 5.6, unit: '%' },
+              { label: '欠勤率', value: 2.8, unit: '%' },
               { label: 'メンタル不調', value: 2, unit: '名' }
             ]
           },
           {
-            name: '介護医療院',
+            name: '看護部門',
+            metrics: [
+              { label: '要注意職員', value: 4, unit: '名', trend: { value: '+1名', isPositive: false } },
+              { label: '離職率', value: 10.3, unit: '%' },
+              { label: '欠勤率', value: 4.8, unit: '%' },
+              { label: 'メンタル不調', value: 5, unit: '名' }
+            ]
+          },
+          {
+            name: '診療技術部',
             metrics: [
               { label: '要注意職員', value: 1, unit: '名' },
-              { label: '離職率', value: 6.5, unit: '%' },
-              { label: '欠勤率', value: 3.5, unit: '%' },
+              { label: '離職率', value: 2.4, unit: '%' },
+              { label: '欠勤率', value: 1.9, unit: '%' },
               { label: 'メンタル不調', value: 1, unit: '名' }
             ]
           },
           {
-            name: '外来',
+            name: '事務部門',
             metrics: [
-              { label: '要注意職員', value: 1, unit: '名' },
-              { label: '離職率', value: 7.0, unit: '%' },
-              { label: '欠勤率', value: 3.8, unit: '%' },
-              { label: 'メンタル不調', value: 2, unit: '名' }
+              { label: '要注意職員', value: 3, unit: '名' },
+              { label: '離職率', value: 13.6, unit: '%' },
+              { label: '欠勤率', value: 5.2, unit: '%' },
+              { label: 'メンタル不調', value: 3, unit: '名' }
             ]
           }
         ]
@@ -143,37 +152,37 @@ export default function RiskMetricsPage() {
   };
 
   const aiAnalysis: AIAnalysis = {
-    summary: '要注意職員12名（+3名）、離職率8.5%（+1.2%）とリスク指標が悪化しています。特に外来部門が深刻で、要注意職員4名、離職率12.5%と緊急対応が必要です。メンタルヘルス不調者も全体で15名に上り、総合的な対策が急務です。',
+    summary: '要注意職員が両病院計10名以上、特に看護部門（12名）と事務部門（8名）に集中しています。離職率もこれらの部門で10%を超え、緊急対応が必要です。一方、診療技術部は両病院ともリスク指標が良好です。',
     insights: [
       {
-        title: '外来部門の危機的状況',
+        title: '看護部門の集団離職リスク',
         priority: 'urgent',
-        content: '外来で要注意職員4名（+2名）、離職率12.5%、欠勤率5.8%と全指標が悪化。',
-        impact: '業務継続性の危機、残ったスタッフの連鎖離職'
+        content: '両病院の看護部門で離職率10-11%、要注意職員12名、メンタル不調15名。',
+        impact: '看護体制の崩壊、患者ケアの質低下'
       },
       {
-        title: 'メンタルヘルスの悪化',
+        title: '事務部門の高離職率',
         priority: 'high',
-        content: 'メンタルヘルス不調者が15名に増加。特に外来（5名）と外科（4名）に集中。',
-        impact: '長期休職リスク、パフォーマンス低下'
+        content: '両病院の事務部門で離職率12.5-13.6%、要注意職員8名。キャリアパス不明確が主因。',
+        impact: '組織運営ノウハウの喪失、業務効率低下'
       },
       {
-        title: 'ICUの優良状態',
+        title: '診療技術部の安定性',
         priority: 'low',
-        content: 'ICUは要注意1名、離職率3.2%、欠勤率2.1%と全面的に良好。',
-        impact: 'ベストプラクティスのモデル'
+        content: '両病院の診療技術部が離職率2.4-3.1%、欠勤率2%前後と全指標で優良。',
+        impact: '組織の安定性モデル、ベストプラクティス'
       }
     ],
     recommendations: [
       {
-        title: '外来部門の緊急支援',
+        title: '看護部門の緊急対策',
         priority: 'urgent',
-        content: '外来部門に対して緊急支援チームを編成し、即座に介入する。',
+        content: '両病院の看護部門に対して緊急支援体制を構築し、離職連鎖を防ぐ。',
         actions: [
-          '管理職による個別面談の実施',
-          '業務量の緊急見直し',
-          '他部署からの応援体制構築',
-          'メンタルヘルスケアの強化'
+          '看護部長による全員面談',
+          '勤務体制の柔軟化',
+          '業務負荷の平準化',
+          'キャリア支援の強化'
         ]
       },
       {
@@ -188,22 +197,22 @@ export default function RiskMetricsPage() {
         ]
       },
       {
-        title: 'ICUモデルの分析・展開',
+        title: '診療技術部モデルの分析・展開',
         priority: 'medium',
-        content: 'ICUの低リスク維持要因を分析し、他部署に展開する。',
+        content: '診療技術部の低リスク維持要因を分析し、他部門に展開する。',
         actions: [
-          'ICUの組織文化調査',
-          'マネジメント手法の文書化',
-          '他部署への段階的導入'
+          '専門性を活かしたキャリア形成',
+          'チームワークの仕組み化',
+          '学習文化の移植'
         ]
       }
     ],
     risks: [
       {
-        title: '外来部門の崩壊',
+        title: '看護体制の崩壊',
         priority: 'urgent',
-        content: '現状のままでは3ヶ月以内に外来部門が機能不全に陥るリスク。',
-        impact: '外来機能停止、患者サービスの重大な低下'
+        content: '現状のままでは3ヶ月以内に看護部門で大量離職が発生し、看護体制が崩壊するリスク。',
+        impact: '病棟運営の危機、患者安全への重大な影響'
       },
       {
         title: '連鎖離職の発生',

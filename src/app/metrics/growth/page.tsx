@@ -27,39 +27,39 @@ export default function GrowthMetricsPage() {
         name: '小原病院',
         departments: [
           {
-            name: '地域包括医療病棟',
+            name: '診療部',
             metrics: [
-              { label: '研修受講率', value: 94, unit: '%', trend: { value: '+6%', isPositive: true } },
-              { label: 'スキル達成', value: 80, unit: '%' },
-              { label: '昇進率', value: 16, unit: '%' },
-              { label: 'メンター活用', value: 70, unit: '%' }
+              { label: '研修受講率', value: 98, unit: '%', trend: { value: '+3%', isPositive: true } },
+              { label: 'スキル達成', value: 92, unit: '%' },
+              { label: '昇進率', value: 20, unit: '%' },
+              { label: 'メンター活用', value: 85, unit: '%' }
             ]
           },
           {
-            name: '地域包括ケア病棟',
+            name: '看護部',
             metrics: [
-              { label: '研修受講率', value: 91, unit: '%', trend: { value: '+4%', isPositive: true } },
-              { label: 'スキル達成', value: 75, unit: '%' },
-              { label: '昇進率', value: 14, unit: '%' },
-              { label: 'メンター活用', value: 62, unit: '%' }
+              { label: '研修受講率', value: 92, unit: '%', trend: { value: '+5%', isPositive: true } },
+              { label: 'スキル達成', value: 78, unit: '%' },
+              { label: '昇進率', value: 15, unit: '%' },
+              { label: 'メンター活用', value: 72, unit: '%' }
             ]
           },
           {
-            name: '回復期リハ病棟',
+            name: '診療技術部',
             metrics: [
-              { label: '研修受講率', value: 96, unit: '%', trend: { value: '+7%', isPositive: true } },
+              { label: '研修受講率', value: 95, unit: '%', trend: { value: '+7%', isPositive: true } },
               { label: 'スキル達成', value: 85, unit: '%' },
               { label: '昇進率', value: 18, unit: '%' },
-              { label: 'メンター活用', value: 75, unit: '%' }
+              { label: 'メンター活用', value: 78, unit: '%' }
             ]
           },
           {
-            name: '外来',
+            name: '事務部',
             metrics: [
-              { label: '研修受講率', value: 88, unit: '%', trend: { value: '+3%', isPositive: true } },
-              { label: 'スキル達成', value: 72, unit: '%' },
-              { label: '昇進率', value: 12, unit: '%' },
-              { label: 'メンター活用', value: 58, unit: '%' }
+              { label: '研修受講率', value: 85, unit: '%', trend: { value: '+2%', isPositive: true } },
+              { label: 'スキル達成', value: 70, unit: '%' },
+              { label: '昇進率', value: 10, unit: '%' },
+              { label: 'メンター活用', value: 55, unit: '%' }
             ]
           }
         ]
@@ -68,30 +68,39 @@ export default function GrowthMetricsPage() {
         name: '立神リハビリテーション温泉病院',
         departments: [
           {
-            name: '医療療養病棟',
+            name: '診療部門',
             metrics: [
-              { label: '研修受講率', value: 90, unit: '%', trend: { value: '+5%', isPositive: true } },
-              { label: 'スキル達成', value: 76, unit: '%' },
-              { label: '昇進率', value: 14, unit: '%' },
-              { label: 'メンター活用', value: 64, unit: '%' }
+              { label: '研修受講率', value: 96, unit: '%', trend: { value: '+2%', isPositive: true } },
+              { label: 'スキル達成', value: 88, unit: '%' },
+              { label: '昇進率', value: 18, unit: '%' },
+              { label: 'メンター活用', value: 80, unit: '%' }
             ]
           },
           {
-            name: '介護医療院',
+            name: '看護部門',
             metrics: [
-              { label: '研修受講率', value: 93, unit: '%', trend: { value: '+6%', isPositive: true } },
-              { label: 'スキル達成', value: 79, unit: '%' },
-              { label: '昇進率', value: 15, unit: '%' },
+              { label: '研修受講率', value: 90, unit: '%', trend: { value: '+4%', isPositive: true } },
+              { label: 'スキル達成', value: 75, unit: '%' },
+              { label: '昇進率', value: 14, unit: '%' },
               { label: 'メンター活用', value: 68, unit: '%' }
             ]
           },
           {
-            name: '外来',
+            name: '診療技術部',
             metrics: [
-              { label: '研修受講率', value: 91, unit: '%', trend: { value: '+5%', isPositive: true } },
-              { label: 'スキル達成', value: 77, unit: '%' },
-              { label: '昇進率', value: 14, unit: '%' },
-              { label: 'メンター活用', value: 66, unit: '%' }
+              { label: '研修受講率', value: 97, unit: '%', trend: { value: '+8%', isPositive: true } },
+              { label: 'スキル達成', value: 90, unit: '%' },
+              { label: '昇進率', value: 22, unit: '%' },
+              { label: 'メンター活用', value: 82, unit: '%' }
+            ]
+          },
+          {
+            name: '事務部門',
+            metrics: [
+              { label: '研修受講率', value: 82, unit: '%', trend: { value: '+1%', isPositive: true } },
+              { label: 'スキル達成', value: 68, unit: '%' },
+              { label: '昇進率', value: 8, unit: '%' },
+              { label: 'メンター活用', value: 50, unit: '%' }
             ]
           }
         ]
@@ -143,36 +152,36 @@ export default function GrowthMetricsPage() {
   };
 
   const aiAnalysis: AIAnalysis = {
-    summary: '研修受講率92%、メンター活用率65%（+10%）と人材育成への取り組みは活発です。特にICUの研修受講率96%、スキル達成率85%は卓越しています。一方、外来の各指標が低く、改善が必要です。',
+    summary: '研修受講率92%、メンター活用率65%（+10%）と人材育成が活発です。診療部・診療技術部の各指標が特に高く、専門性向上への意欲が高いことがわかります。一方、事務部門の各指標が低く、組織全体での支援強化が必要です。',
     insights: [
       {
-        title: 'メンター制度の急速な普及',
+        title: '診療技術部の卓越した成長環境',
         priority: 'high',
-        content: 'メンター活用率65%（前月比+10%）と急上昇。新人育成に良好な影響。',
-        impact: '新人の早期戦力化、定着率向上'
+        content: '両病院の診療技術部が研修受講率95-97%、スキル達成率85-90%、昇進率18-22%と突出。',
+        impact: '専門性の高い人材の輩出、組織的价値向上'
       },
       {
-        title: 'ICUの学習文化',
+        title: '診療部門の高い学習意欲',
         priority: 'medium',
-        content: 'ICUは全指標でトップレベル。継続的学習が文化として定着。',
-        impact: '専門性向上、イノベーション创出'
+        content: '両病院の診療部門が研修受講率96-98%、メンター活用率80-85%と高水準。専門医育成が順調。',
+        impact: '医療の質向上、地域医療への貢献'
       },
       {
-        title: '教育ROIの高さ',
-        priority: 'medium',
-        content: '教育投資リターン3.2倍と高効率。投資が成果に結びついている。',
-        impact: '経営層への説明材料として活用可'
+        title: '事務部門の成長支援不足',
+        priority: 'urgent',
+        content: '両病院の事務部門が昇進率8-10%、メンター活用率50-55%と低調。キャリア支援体制が脆弱。',
+        impact: '事務職員のモチベーション低下、他業界への流出'
       }
     ],
     recommendations: [
       {
-        title: '外来部門の教育強化',
+        title: '事務部門の教育体制強化',
         priority: 'urgent',
-        content: '外来の各指標が低いため、緊急に教育体制を再構築する。',
+        content: '事務部門の各指標が低いため、緊急にキャリア開発体制を構築する。',
         actions: [
-          '業務時間内研修の確保',
-          'オンライン学習環境の整備',
-          '部署特性に合わせたカリキュラム'
+          '事務専門研修の拡充',
+          'メンター制度の強化',
+          '他部門との交流促進'
         ]
       },
       {
@@ -186,22 +195,22 @@ export default function GrowthMetricsPage() {
         ]
       },
       {
-        title: 'ICUモデルの全面展開',
+        title: '診療技術部モデルの全病院展開',
         priority: 'medium',
-        content: 'ICUの教育・メンター制度を全部署に展開する。',
+        content: '診療技術部の成功モデルを両病院の全部門に展開する。',
         actions: [
-          'ICUスタッフによる研修',
-          '成功事例の水平展開',
-          '部署間メンター交流'
+          '専門性評価制度の導入',
+          'キャリアラダーの明確化',
+          '部門間ローテーション制度'
         ]
       }
     ],
     risks: [
       {
-        title: '部署間格差の拡大',
+        title: '部門間成長格差の拡大',
         priority: 'high',
-        content: 'ICUと外来の教育格差が拡大し、サービス品質に影響するリスク。',
-        impact: '部署間の人材流動停滞、モチベーション低下'
+        content: '医療系部門と事務部門の成長機会格差が拡大し、組織内不公平感が生じるリスク。',
+        impact: '事務部門の人材流出、組織運営の非効率化'
       },
       {
         title: '教育疲れ',
