@@ -29,8 +29,8 @@ export const generateHRStrategyComments = (data: any): DataComment[] => {
   comments.push({
     id: 'hr-action',
     type: 'action',
-    title: 'AIを活用した人材マッチング',
-    message: 'スキルと適性を考慮したAI人材配置システムの導入により、配置精度の向上が見込まれます。',
+    title: 'データ駆動型人材マッチング',
+    message: 'スキルと適性を考慮した最適配置支援システムの導入により、配置精度の向上が見込まれます。',
     priority: 'high'
   });
 

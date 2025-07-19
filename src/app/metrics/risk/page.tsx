@@ -1,6 +1,6 @@
 import React from 'react';
 import MetricsLayout from '@/components/metrics/MetricsLayout';
-import { RiskMetrics, AIAnalysis } from '@/types/metrics';
+import { RiskMetrics, DataAnalysis } from '@/types/metrics';
 
 export default function RiskMetricsPage() {
   const metricsData: RiskMetrics = {
@@ -151,7 +151,7 @@ export default function RiskMetricsPage() {
     accidentRate: 0.8
   };
 
-  const aiAnalysis: AIAnalysis = {
+  const aiAnalysis: DataAnalysis = {
     summary: '要注意職員が両病院計10名以上、特に看護部門（12名）と事務部門（8名）に集中しています。離職率もこれらの部門で10%を超え、緊急対応が必要です。一方、診療技術部は両病院ともリスク指標が良好です。',
     insights: [
       {

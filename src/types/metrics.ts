@@ -78,8 +78,8 @@ export interface EfficiencyMetrics extends CategoryMetrics {
   transferRequests: number;
 }
 
-// AI分析
-export interface AIAnalysisItem {
+// データ分析
+export interface DataAnalysisItem {
   title: string;
   priority: 'urgent' | 'high' | 'medium' | 'low';
   content: string;
@@ -87,9 +87,9 @@ export interface AIAnalysisItem {
   impact?: string;
 }
 
-export interface AIAnalysis {
+export interface DataAnalysis {
   summary: string;
-  insights: AIAnalysisItem[];
-  recommendations: AIAnalysisItem[];
-  risks: AIAnalysisItem[];
+  insights: DataAnalysisItem[];
+  recommendations: DataAnalysisItem[];
+  risks: DataAnalysisItem[];
 }

@@ -483,7 +483,7 @@ function AnalyticsTab({ staffData }: { staffData: any }) {
           <h4>昇進後パフォーマンス予測</h4>
           <div className={`${styles.alert} ${styles.alertInfo}`} style={{ margin: '10px 0', fontSize: '11px' }}>
             <span>🔮</span>
-            <span>AIによる予測分析。過去の類似ケース50例を基に、87%の成功確率を算出しています。</span>
+            <span>データに基づく予測分析。過去の類似ケース50例を基に、87%の成功確率を算出しています。</span>
           </div>
           <div className={styles.chartCanvas}>
             <Line data={promotionPredictionData} options={{

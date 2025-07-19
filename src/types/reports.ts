@@ -83,7 +83,7 @@ export const reports: Report[] = [
   {
     id: 'turnover-risk',
     title: '離職リスク予測',
-    description: 'AI分析による離職リスクの予測と対策を提案します',
+    description: 'データ分析による離職リスクの予測と対策を提案します',
     category: 'retention',
     icon: '⚠️',
     color: 'bg-orange-500',

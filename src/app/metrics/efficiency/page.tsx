@@ -1,6 +1,6 @@
 import React from 'react';
 import MetricsLayout from '@/components/metrics/MetricsLayout';
-import { EfficiencyMetrics, AIAnalysis } from '@/types/metrics';
+import { EfficiencyMetrics, DataAnalysis } from '@/types/metrics';
 
 export default function EfficiencyMetricsPage() {
   const metricsData: EfficiencyMetrics = {
@@ -151,7 +151,7 @@ export default function EfficiencyMetricsPage() {
     transferRequests: 8
   };
 
-  const aiAnalysis: AIAnalysis = {
+  const aiAnalysis: DataAnalysis = {
     summary: '診療部門の残業時間が両病院で35時間以上と過重労働状態です。一方、診療技術部は残業8時間前後、有給取得率85%以上、生産性120以上と非常に良好です。部門間の業務効率格差が明確です。',
     insights: [
       {

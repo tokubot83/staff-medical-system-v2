@@ -1,6 +1,6 @@
 import React from 'react';
 import MetricsLayout from '@/components/metrics/MetricsLayout';
-import { BasicMetrics, AIAnalysis } from '@/types/metrics';
+import { BasicMetrics, DataAnalysis } from '@/types/metrics';
 
 export default function BasicMetricsPage() {
   const metricsData: BasicMetrics = {
@@ -151,7 +151,7 @@ export default function BasicMetricsPage() {
     averageTenure: 8.2
   };
 
-  const aiAnalysis: AIAnalysis = {
+  const aiAnalysis: DataAnalysis = {
     summary: '両病院の職員数は計500名で安定していますが、病院間・部門間で年齢構成に差異が見られます。小原病院の診療部は平均年齢42.5歳と高く、立神病院の診療技術部は34.8歳と若手中心です。この差異を活かした人材交流が有効です。',
     insights: [
       {

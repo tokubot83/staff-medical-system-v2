@@ -1,6 +1,6 @@
 import React from 'react';
 import MetricsLayout from '@/components/metrics/MetricsLayout';
-import { QualityMetrics, AIAnalysis } from '@/types/metrics';
+import { QualityMetrics, DataAnalysis } from '@/types/metrics';
 
 export default function QualityMetricsPage() {
   const metricsData: QualityMetrics = {
@@ -151,7 +151,7 @@ export default function QualityMetricsPage() {
     evaluationScore: 4.2
   };
 
-  const aiAnalysis: AIAnalysis = {
+  const aiAnalysis: DataAnalysis = {
     summary: '総合満足度87%と高水準を維持しています。両病院とも診療技術部の満足度が90%前後と非常に高く、資格保有率も高いのが特徴です。一方、事務部門のエンゲージメントが78-79%と低く、改善が必要です。',
     insights: [
       {

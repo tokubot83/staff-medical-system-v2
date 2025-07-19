@@ -2,11 +2,11 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { CategoryMetrics, MetricData, AIAnalysis } from '@/types/metrics';
+import { CategoryMetrics, MetricData, DataAnalysis } from '@/types/metrics';
 
 interface MetricsLayoutProps {
   metrics: CategoryMetrics;
-  aiAnalysis?: AIAnalysis;
+  aiAnalysis?: DataAnalysis;
 }
 
 export default function MetricsLayout({ metrics, aiAnalysis }: MetricsLayoutProps) {

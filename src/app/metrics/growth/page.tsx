@@ -1,6 +1,6 @@
 import React from 'react';
 import MetricsLayout from '@/components/metrics/MetricsLayout';
-import { GrowthMetrics, AIAnalysis } from '@/types/metrics';
+import { GrowthMetrics, DataAnalysis } from '@/types/metrics';
 
 export default function GrowthMetricsPage() {
   const metricsData: GrowthMetrics = {
@@ -151,7 +151,7 @@ export default function GrowthMetricsPage() {
     mentorshipRate: 65
   };
 
-  const aiAnalysis: AIAnalysis = {
+  const aiAnalysis: DataAnalysis = {
     summary: '研修受講率92%、メンター活用率65%（+10%）と人材育成が活発です。診療部・診療技術部の各指標が特に高く、専門性向上への意欲が高いことがわかります。一方、事務部門の各指標が低く、組織全体での支援強化が必要です。',
     insights: [
       {
