@@ -11,6 +11,7 @@ interface Staff {
   nameInitial: string;
   department: string;
   position: string;
+  facility?: string;
   grade: 'S' | 'A' | 'B' | 'C';
   status: 'excellent' | 'good' | 'average' | 'poor';
   statusText: string;
