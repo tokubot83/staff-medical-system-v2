@@ -3,10 +3,11 @@ export interface Report {
   id: string;
   title: string;
   description: string;
-  category: 'hr' | 'worklife' | 'talent' | 'organization' | 'environment' | 'cost' | 'recruitment' | 'retention' | 'skill';
+  category: 'metrics' | 'hr' | 'worklife' | 'talent' | 'organization' | 'environment' | 'cost' | 'recruitment' | 'retention' | 'skill';
   icon: string;
   color: string;
   path: string;
+  type?: 'basic' | 'strategic';
 }
 
 export interface ReportData {
@@ -98,4 +99,64 @@ export const reports: Report[] = [
     color: 'bg-pink-500',
     path: '/reports/skill-qualification'
   }
+];
+
+// 基本指標レポート定義
+export const metricsReports: Report[] = [
+  {
+    id: 'basic-metrics',
+    title: '基本指標',
+    description: '総職員数、部門別人員構成など基本的な統計データを確認します',
+    category: 'metrics',
+    icon: '📊',
+    color: 'bg-green-500',
+    path: '/metrics/basic',
+    type: 'basic'
+  },
+  {
+    id: 'quality-metrics',
+    title: '人材の質',
+    description: '職員満足度、スキル評価、資格保有状況を分析します',
+    category: 'metrics',
+    icon: '⭐',
+    color: 'bg-blue-500',
+    path: '/metrics/quality',
+    type: 'basic'
+  },
+  {
+    id: 'growth-metrics',
+    title: '人材の成長',
+    description: '研修受講率、スキル向上度、キャリア開発状況を確認します',
+    category: 'metrics',
+    icon: '📈',
+    color: 'bg-purple-500',
+    path: '/metrics/growth',
+    type: 'basic'
+  },
+  {
+    id: 'risk-metrics',
+    title: 'リスク管理',
+    description: '離職リスク、コンプライアンス、要注意職員の状況を管理します',
+    category: 'metrics',
+    icon: '⚠️',
+    color: 'bg-yellow-500',
+    path: '/metrics/risk',
+    type: 'basic'
+  },
+  {
+    id: 'efficiency-metrics',
+    title: '組織効率',
+    description: '労働生産性、業務効率、緊急対応事項を確認します',
+    category: 'metrics',
+    icon: '⚡',
+    color: 'bg-red-500',
+    path: '/metrics/efficiency',
+    type: 'basic'
+  }
+];
+
+// 全レポート統合
+export const allReports: Report[] = [
+  ...metricsReports,
+  ...reports.map(report => ({ ...report, type: 'strategic' as const }))
 ];

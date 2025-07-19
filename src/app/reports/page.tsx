@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { reports } from '@/types/reports';
+import { allReports } from '@/types/reports';
 import FacilitySelector from '@/components/reports/FacilitySelector';
 
 export default function ReportsPage() {
@@ -19,9 +19,9 @@ export default function ReportsPage() {
           >
             ← ダッシュボードに戻る
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">分析レポート</h1>
+          <h1 className="text-3xl font-bold text-gray-900">レポートセンター</h1>
           <p className="mt-2 text-gray-600">
-            各種分析レポートを生成・閲覧できます。施設を選択してレポートを生成してください。
+            基本指標から戦略的分析まで、全てのレポートを一覧できます。施設を選択してレポートを生成してください。
           </p>
         </div>
 
@@ -33,9 +33,11 @@ export default function ReportsPage() {
           />
         </div>
 
-        {/* レポート一覧 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {reports.map((report) => (
+        {/* 基本指標レポート */}
+        <div className="mb-12">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">基本指標レポート</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {allReports.filter(report => report.type === 'basic').map((report) => (
             <Link
               key={report.id}
               href={`${report.path}${selectedFacility ? `?facility=${selectedFacility}` : ''}`}
@@ -61,7 +63,42 @@ export default function ReportsPage() {
                 </div>
               </div>
             </Link>
-          ))}
+            ))}
+          </div>
+        </div>
+
+        {/* 戦略分析レポート */}
+        <div className="mb-12">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">戦略分析レポート</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {allReports.filter(report => report.type === 'strategic').map((report) => (
+              <Link
+                key={report.id}
+                href={`${report.path}${selectedFacility ? `?facility=${selectedFacility}` : ''}`}
+                className="block"
+              >
+                <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 p-6 h-full">
+                  <div className="flex items-center mb-4">
+                    <div className={`${report.color} text-white rounded-lg p-3 text-2xl`}>
+                      {report.icon}
+                    </div>
+                    <h3 className="ml-4 text-lg font-semibold text-gray-900">
+                      {report.title}
+                    </h3>
+                  </div>
+                  <p className="text-gray-600 text-sm">
+                    {report.description}
+                  </p>
+                  <div className="mt-4 flex items-center text-blue-600">
+                    <span className="text-sm">レポートを見る</span>
+                    <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
 
         {/* 注意事項 */}

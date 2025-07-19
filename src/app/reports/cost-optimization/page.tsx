@@ -462,7 +462,7 @@ function CostOptimizationReportContent() {
                 message: '各種最適化施策の実施により、年間8,760万円のコスト削減が可能です。特に残業削減と業務効率化が効果的です。',
                 priority: 'high'
               },
-              isRehabilitation ? {
+              facilityId === 'tachigami-hospital' ? {
                 id: 'dept-efficiency',
                 type: 'interpretation',
                 title: '部門別効率性の分析',
