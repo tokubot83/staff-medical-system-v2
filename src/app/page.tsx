@@ -656,7 +656,6 @@ export default function Home() {
             </div>
           </div>
         </div>
-        </div>
 
         {/* 組織健康診断 */}
         <div className="mb-12">
@@ -1205,8 +1204,6 @@ export default function Home() {
                   </div>
                 </div>
               )}
-            </div>
-          </div>
 
               {/* サイドバー */}
               <div className="space-y-6">
@@ -1767,6 +1764,10 @@ export default function Home() {
         </div>
       )}
     </div>
-  </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
   );
 }
