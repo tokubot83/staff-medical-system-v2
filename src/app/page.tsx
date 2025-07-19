@@ -421,9 +421,9 @@ export default function Home() {
 
  const getAlertTypeClass = (type: string) => {
   switch (type) {
-   case 'critical': return 'border-l-red-500 bg-white';
-   case 'warning': return 'border-l-yellow-500 bg-white';
-   case 'info': return 'border-l-blue-500 bg-white';
+   case 'critical': return 'border-l-red-500 bg-gray-50';
+   case 'warning': return 'border-l-yellow-500 bg-gray-50';
+   case 'info': return 'border-l-blue-500 bg-gray-50';
    default: return 'border-l-gray-500 bg-white';
   }
  };
@@ -476,9 +476,9 @@ export default function Home() {
    <div className="bg-white">
     <div className="max-w-7xl mx-auto p-5">
      <div className="mb-12">
-      <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
+      <div className="bg-gray-50 rounded-2xl p-8 shadow-lg border border-gray-200">
       <div className="flex items-center gap-3 mb-6">
-       <div className="w-12 h-12 bg-white border rounded-xl flex items-center justify-center text-gray-800 text-2xl font-bold shadow-lg">
+       <div className="w-12 h-12 bg-gray-100 border rounded-xl flex items-center justify-center text-gray-800 text-2xl font-bold shadow-lg">
         ⚡
        </div>
        <div>
@@ -490,19 +490,19 @@ export default function Home() {
       {/* 最優先エリア */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
        {/* 今日のタスク */}
-       <div className="bg-white rounded-xl p-6 shadow-md border-t-4 border-green-500 hover:shadow-lg transition-shadow">
+       <div className="bg-gray-50 rounded-xl p-6 shadow-md border-t-4 border-green-500 hover:shadow-lg transition-shadow">
       <div className="flex justify-between items-center mb-4">
        <h2 className="text-lg font-semibold flex items-center gap-2">
         📅 今日のタスク
        </h2>
-       <span className="bg-white text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
+       <span className="bg-gray-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
         {tasks.filter(t => !t.completed).length}件
        </span>
       </div>
       <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
        {tasks.map((task) => (
         <div key={task.id} className={`flex items-center gap-3 p-3 rounded-lg border-l-4 ${
-         task.priority === 'urgent' ? 'border-l-red-500 bg-white' : 'border-l-blue-500 bg-white'
+         task.priority === 'urgent' ? 'border-l-red-500 bg-gray-50' : 'border-l-blue-500 bg-gray-50'
         } hover:bg-gray-50 transition-colors cursor-pointer`}>
          <div
           className={`w-5 h-5 border-2 border-gray-300 rounded cursor-pointer flex items-center justify-center transition-colors ${
@@ -515,7 +515,7 @@ export default function Home() {
          <div className="flex-1 text-sm font-medium text-gray-600">
           {task.content}
          </div>
-         <div className="text-xs font-semibold text-gray-500 bg-white px-2 py-1 rounded-full">
+         <div className="text-xs font-semibold text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
           {task.time}
          </div>
         </div>
@@ -524,21 +524,21 @@ export default function Home() {
      </div>
 
        {/* 緊急アラート */}
-       <div className="bg-white rounded-xl p-6 shadow-md border-t-4 border-red-500 hover:shadow-lg transition-shadow">
+       <div className="bg-gray-50 rounded-xl p-6 shadow-md border-t-4 border-red-500 hover:shadow-lg transition-shadow">
       <div className="flex justify-between items-center mb-4">
        <h2 className="text-lg font-semibold flex items-center gap-2">
         🚨 緊急アラート
        </h2>
-       <span className="bg-white text-red-800 px-3 py-1 rounded-full text-sm font-semibold">
+       <span className="bg-gray-100 text-red-800 px-3 py-1 rounded-full text-sm font-semibold">
         5件
        </span>
       </div>
       
-      <div className="flex bg-white rounded-lg p-1 mb-4">
+      <div className="flex bg-gray-100 rounded-lg p-1 mb-4">
        <button
         className={`flex-1 py-2 px-3 rounded-md text-sm font-semibold transition-colors ${
          activeAlertTab === 'personal' 
-          ? 'bg-white text-white shadow-sm' 
+          ? 'bg-white border-2 border-gray-800 text-gray-800 shadow-sm' 
           : 'text-gray-600 hover:text-gray-800'
         }`}
         onClick={() => setActiveAlertTab('personal')}
@@ -548,7 +548,7 @@ export default function Home() {
        <button
         className={`flex-1 py-2 px-3 rounded-md text-sm font-semibold transition-colors ${
          activeAlertTab === 'department' 
-          ? 'bg-white text-white shadow-sm' 
+          ? 'bg-white border-2 border-gray-800 text-gray-800 shadow-sm' 
           : 'text-gray-600 hover:text-gray-800'
         }`}
         onClick={() => setActiveAlertTab('department')}
@@ -591,21 +591,21 @@ export default function Home() {
        </div>
 
        {/* 成功・良好状態 */}
-       <div className="bg-white rounded-xl p-6 shadow-md border-t-4 border-blue-500 hover:shadow-lg transition-shadow">
+       <div className="bg-gray-50 rounded-xl p-6 shadow-md border-t-4 border-blue-500 hover:shadow-lg transition-shadow">
       <div className="flex justify-between items-center mb-4">
        <h2 className="text-lg font-semibold flex items-center gap-2">
         🌟 成功・良好状態
        </h2>
-       <span className="bg-white text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
+       <span className="bg-gray-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
         5件
        </span>
       </div>
       
-      <div className="flex bg-white rounded-lg p-1 mb-4">
+      <div className="flex bg-gray-100 rounded-lg p-1 mb-4">
        <button
         className={`flex-1 py-2 px-3 rounded-md text-sm font-semibold transition-colors ${
          activeSuccessTab === 'personal' 
-          ? 'bg-white text-white shadow-sm' 
+          ? 'bg-white border-2 border-gray-800 text-gray-800 shadow-sm' 
           : 'text-gray-600 hover:text-gray-800'
         }`}
         onClick={() => setActiveSuccessTab('personal')}
@@ -615,7 +615,7 @@ export default function Home() {
        <button
         className={`flex-1 py-2 px-3 rounded-md text-sm font-semibold transition-colors ${
          activeSuccessTab === 'department' 
-          ? 'bg-white text-white shadow-sm' 
+          ? 'bg-white border-2 border-gray-800 text-gray-800 shadow-sm' 
           : 'text-gray-600 hover:text-gray-800'
         }`}
         onClick={() => setActiveSuccessTab('department')}
@@ -626,7 +626,7 @@ export default function Home() {
 
       <div className="space-y-3 max-h-80 overflow-y-auto">
        {(activeSuccessTab === 'personal' ? personalSuccess : departmentSuccess).map((success) => (
-        <div key={success.id} className="p-3 rounded-lg border-l-4 border-l-green-500 bg-white hover:bg-gray-50 transition-colors cursor-pointer">
+        <div key={success.id} className="p-3 rounded-lg border-l-4 border-l-green-500 bg-gray-50 hover:bg-gray-50 transition-colors cursor-pointer">
          <div className="text-xs text-gray-500 absolute top-2 right-3">
           {success.time}
          </div>
@@ -665,7 +665,7 @@ export default function Home() {
    <div className="bg-white">
     <div className="max-w-7xl mx-auto p-5">
      <div className="mb-12">
-      <div className="bg-white rounded-2xl p-8 shadow-lg border border-rose-200">
+      <div className="bg-gray-50 rounded-2xl p-8 shadow-lg border border-rose-200">
       <div className="flex items-center gap-3 mb-6">
        <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-white text-2xl font-bold shadow-lg">
         📊
@@ -678,27 +678,27 @@ export default function Home() {
       
       {/* 統計カード - 5カテゴリ */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-       <Link href="/metrics/basic" className="bg-white rounded-xl p-5 text-center shadow-md border-t-4 border-green-500 hover:shadow-lg transition-shadow cursor-pointer">
+       <Link href="/metrics/basic" className="bg-gray-50 rounded-xl p-5 text-center shadow-md border-t-4 border-green-500 hover:shadow-lg transition-shadow cursor-pointer">
       <div className="text-3xl font-bold text-gray-800 mb-1">500</div>
       <div className="text-sm text-gray-600 mb-2">基本指標</div>
       <div className="text-xs bg-white text-gray-600 px-2 py-1 rounded-full">総職員数</div>
        </Link>
-       <Link href="/metrics/quality" className="bg-white rounded-xl p-5 text-center shadow-md border-t-4 border-blue-500 hover:shadow-lg transition-shadow cursor-pointer">
+       <Link href="/metrics/quality" className="bg-gray-50 rounded-xl p-5 text-center shadow-md border-t-4 border-blue-500 hover:shadow-lg transition-shadow cursor-pointer">
       <div className="text-3xl font-bold text-gray-800 mb-1">87%</div>
       <div className="text-sm text-gray-600 mb-2">人材の質</div>
       <div className="text-xs bg-white text-green-600 px-2 py-1 rounded-full">総合満足度</div>
        </Link>
-       <Link href="/metrics/growth" className="bg-white rounded-xl p-5 text-center shadow-md border-t-4 border-purple-500 hover:shadow-lg transition-shadow cursor-pointer">
+       <Link href="/metrics/growth" className="bg-gray-50 rounded-xl p-5 text-center shadow-md border-t-4 border-purple-500 hover:shadow-lg transition-shadow cursor-pointer">
       <div className="text-3xl font-bold text-gray-800 mb-1">92%</div>
       <div className="text-sm text-gray-600 mb-2">人材の成長</div>
       <div className="text-xs bg-white text-green-600 px-2 py-1 rounded-full">研修受講率</div>
        </Link>
-       <Link href="/metrics/risk" className="bg-white rounded-xl p-5 text-center shadow-md border-t-4 border-yellow-500 hover:shadow-lg transition-shadow cursor-pointer">
+       <Link href="/metrics/risk" className="bg-gray-50 rounded-xl p-5 text-center shadow-md border-t-4 border-yellow-500 hover:shadow-lg transition-shadow cursor-pointer">
       <div className="text-3xl font-bold text-gray-800 mb-1">12</div>
       <div className="text-sm text-gray-600 mb-2">リスク管理</div>
       <div className="text-xs bg-white text-red-600 px-2 py-1 rounded-full">要注意職員</div>
        </Link>
-       <Link href="/metrics/efficiency" className="bg-white rounded-xl p-5 text-center shadow-md border-t-4 border-red-500 hover:shadow-lg transition-shadow cursor-pointer">
+       <Link href="/metrics/efficiency" className="bg-gray-50 rounded-xl p-5 text-center shadow-md border-t-4 border-red-500 hover:shadow-lg transition-shadow cursor-pointer">
       <div className="text-3xl font-bold text-gray-800 mb-1">3</div>
       <div className="text-sm text-gray-600 mb-2">組織効率</div>
       <div className="text-xs bg-white text-red-600 px-2 py-1 rounded-full">緊急対応要</div>
@@ -727,7 +727,7 @@ export default function Home() {
    <div className="bg-white">
     <div className="max-w-7xl mx-auto p-5">
      <div className="mb-12">
-      <div className="bg-white rounded-2xl p-8 shadow-lg border border-fuchsia-200">
+      <div className="bg-gray-50 rounded-2xl p-8 shadow-lg border border-fuchsia-200">
       <div className="flex items-center gap-3 mb-6">
        <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-white text-2xl font-bold shadow-lg">
         📋
@@ -739,7 +739,7 @@ export default function Home() {
       </div>
       
       {/* メインダッシュボード */}
-      <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+      <div className="bg-gray-50 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
       {/* タブナビゲーション */}
       <div className="flex bg-white border-b border-gray-200">
        {[
@@ -836,7 +836,7 @@ export default function Home() {
          </h3>
          
          <div className="grid grid-cols-2 gap-4 mb-6">
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-gray-50 rounded-lg p-4">
            <h4 className="font-semibold text-blue-800 mb-2">施設別職員数</h4>
            <div className="space-y-2">
             <div className="flex justify-between text-sm">
@@ -855,7 +855,7 @@ export default function Home() {
             </div>
            </div>
           </div>
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-gray-50 rounded-lg p-4">
            <h4 className="font-semibold text-green-800 mb-2">職種別分布</h4>
            <div className="space-y-2">
             <div className="flex justify-between text-sm">
@@ -964,22 +964,22 @@ export default function Home() {
          </h3>
          
          <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="bg-white rounded-lg p-4 text-center">
+          <div className="bg-gray-50 rounded-lg p-4 text-center">
            <div className="text-3xl font-bold text-red-600">3</div>
            <div className="text-sm text-red-700">緊急面談要</div>
           </div>
-          <div className="bg-white rounded-lg p-4 text-center">
+          <div className="bg-gray-50 rounded-lg p-4 text-center">
            <div className="text-3xl font-bold text-yellow-600">12</div>
            <div className="text-sm text-yellow-700">今月予定</div>
           </div>
-          <div className="bg-white rounded-lg p-4 text-center">
+          <div className="bg-gray-50 rounded-lg p-4 text-center">
            <div className="text-3xl font-bold text-green-600">8</div>
            <div className="text-sm text-green-700">完了済</div>
           </div>
          </div>
 
          <div className="space-y-4">
-          <div className="bg-white border-l-4 border-red-500 p-4 rounded-lg">
+          <div className="bg-gray-50 border-l-4 border-red-500 p-4 rounded-lg">
            <div className="flex justify-between items-start">
             <div>
              <h4 className="font-semibold text-red-800">中村恵子さん - 緊急面談</h4>
@@ -993,7 +993,7 @@ export default function Home() {
            </div>
           </div>
           
-          <div className="bg-white border-l-4 border-green-500 p-4 rounded-lg">
+          <div className="bg-gray-50 border-l-4 border-green-500 p-4 rounded-lg">
            <div className="flex justify-between items-start">
             <div>
              <h4 className="font-semibold text-green-800">田中美咲さん - 昇進検討面談</h4>
@@ -1007,7 +1007,7 @@ export default function Home() {
            </div>
           </div>
           
-          <div className="bg-white border-l-4 border-blue-500 p-4 rounded-lg">
+          <div className="bg-gray-50 border-l-4 border-blue-500 p-4 rounded-lg">
            <div className="flex justify-between items-start">
             <div>
              <h4 className="font-semibold text-blue-800">小林さくらさん - 新人フォローアップ</h4>
@@ -1035,25 +1035,25 @@ export default function Home() {
          </h3>
          
          <div className="grid grid-cols-4 gap-4 mb-6">
-          <div className="bg-white rounded-lg p-4 text-center">
+          <div className="bg-gray-50 rounded-lg p-4 text-center">
            <div className="text-2xl font-bold text-purple-600">45</div>
            <div className="text-sm text-purple-700">評価待ち</div>
           </div>
-          <div className="bg-white rounded-lg p-4 text-center">
+          <div className="bg-gray-50 rounded-lg p-4 text-center">
            <div className="text-2xl font-bold text-blue-600">23</div>
            <div className="text-sm text-blue-700">評価中</div>
           </div>
-          <div className="bg-white rounded-lg p-4 text-center">
+          <div className="bg-gray-50 rounded-lg p-4 text-center">
            <div className="text-2xl font-bold text-green-600">156</div>
            <div className="text-sm text-green-700">完了済</div>
           </div>
-          <div className="bg-white rounded-lg p-4 text-center">
+          <div className="bg-gray-50 rounded-lg p-4 text-center">
            <div className="text-2xl font-bold text-yellow-600">8</div>
            <div className="text-sm text-yellow-700">承認待ち</div>
           </div>
          </div>
 
-         <div className="bg-white border border-gray-200 rounded-lg p-5">
+         <div className="bg-gray-50 border border-gray-200 rounded-lg p-5">
           <h4 className="font-semibold text-gray-800 mb-4">評価期限が近い職員</h4>
           <div className="space-y-3">
            {[
@@ -1105,7 +1105,7 @@ export default function Home() {
          </h3>
          
          <div className="grid grid-cols-2 gap-6 mb-6">
-          <div className="bg-white rounded-lg p-5">
+          <div className="bg-gray-50 rounded-lg p-5">
            <h4 className="font-semibold text-orange-800 mb-3">今月の研修予定</h4>
            <div className="space-y-3">
             <div className="flex justify-between items-center">
@@ -1141,7 +1141,7 @@ export default function Home() {
            </div>
           </div>
           
-          <div className="bg-white rounded-lg p-5">
+          <div className="bg-gray-50 rounded-lg p-5">
            <h4 className="font-semibold text-blue-800 mb-3">JNAラダー進捗（看護師）</h4>
            <div className="space-y-2">
             <div className="flex items-center justify-between">
@@ -1184,7 +1184,7 @@ export default function Home() {
           </div>
          </div>
          
-         <div className="bg-white border border-gray-200 rounded-lg p-5">
+         <div className="bg-gray-50 border border-gray-200 rounded-lg p-5">
           <h4 className="font-semibold text-gray-800 mb-4">個別研修推奨</h4>
           <div className="space-y-3">
            <div className="p-3 bg-white rounded-lg border-l-4 border-yellow-500">
@@ -1291,8 +1291,8 @@ export default function Home() {
        {selectedStaff.name === '田中美咲' && (
         <div className="space-y-6">
          {/* プロフィールヘッダー */}
-         <div className="flex gap-5 p-5 bg-white rounded-xl">
-          <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center text-white text-2xl font-bold">
+         <div className="flex gap-5 p-5 bg-gray-50 rounded-xl">
+          <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-2xl font-bold">
            田
           </div>
           <div className="flex-1">
@@ -1313,7 +1313,7 @@ export default function Home() {
          </div>
 
          {/* 総合分析 */}
-         <div className="bg-white border-2 border-blue-200 rounded-xl p-5">
+         <div className="bg-gray-50 border-2 border-blue-200 rounded-xl p-5">
           <h4 className="text-blue-800 font-semibold mb-4 flex items-center gap-2">
            📈 総合分析
            <span className="text-xs bg-white text-white px-2 py-1 rounded-full">最新</span>
@@ -1335,7 +1335,7 @@ export default function Home() {
             <div className="text-xs text-purple-600">5年間予測</div>
            </div>
           </div>
-          <div className="bg-white p-3 rounded-lg">
+          <div className="bg-gray-50 p-3 rounded-lg">
            <strong className="text-gray-800">🎯 最終推奨:</strong>
            <span className="text-gray-600 ml-2">
             2025年7月昇進が最適。準備期間6ヶ月で成功確率87%、ROI 340%の高い投資効果が期待できます。
@@ -1345,7 +1345,7 @@ export default function Home() {
 
          {/* スキル・実績 */}
          <div className="grid grid-cols-2 gap-5">
-          <div className="bg-white border border-gray-200 rounded-lg p-4">
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
            <h5 className="font-semibold text-gray-800 mb-3">🎯 主要スキル</h5>
            <div className="space-y-3">
             {[
@@ -1365,7 +1365,7 @@ export default function Home() {
             ))}
            </div>
           </div>
-          <div className="bg-white border border-gray-200 rounded-lg p-4">
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
            <h5 className="font-semibold text-gray-800 mb-3">📊 実績指標</h5>
            <div className="space-y-2 text-sm">
             <div className="flex justify-between">
@@ -1385,7 +1385,7 @@ export default function Home() {
          </div>
 
          {/* アクションプラン */}
-         <div className="bg-white border border-yellow-200 rounded-lg p-4">
+         <div className="bg-gray-50 border border-yellow-200 rounded-lg p-4">
           <h5 className="font-semibold text-yellow-800 mb-3">📋 今後のアクションプラン</h5>
           <div className="space-y-3">
            <div className="flex items-start gap-3">
@@ -1430,8 +1430,8 @@ export default function Home() {
        {selectedStaff.name === '中村恵子' && (
         <div className="space-y-6">
          {/* プロフィールヘッダー */}
-         <div className="flex gap-5 p-5 bg-white rounded-xl">
-          <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center text-white text-2xl font-bold">
+         <div className="flex gap-5 p-5 bg-gray-50 rounded-xl">
+          <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-2xl font-bold">
            中
           </div>
           <div className="flex-1">
@@ -1458,15 +1458,15 @@ export default function Home() {
            <span className="text-xs bg-white text-white px-2 py-1 rounded-full">HIGH</span>
           </h4>
           <div className="space-y-3">
-           <div className="bg-white p-3 rounded-lg border-l-4 border-red-500">
+           <div className="bg-gray-50 p-3 rounded-lg border-l-4 border-red-500">
             <strong className="text-red-700">3日連続欠勤</strong>
             <p className="text-sm text-red-600 mt-1">過去1年で初回。家庭環境の変化が疑われます。</p>
            </div>
-           <div className="bg-white p-3 rounded-lg border-l-4 border-yellow-500">
+           <div className="bg-gray-50 p-3 rounded-lg border-l-4 border-yellow-500">
             <strong className="text-yellow-700">評価スコア低下</strong>
             <p className="text-sm text-yellow-600 mt-1">直近3ヶ月で15%低下（83% → 68%）</p>
            </div>
-           <div className="bg-white p-3 rounded-lg border-l-4 border-yellow-500">
+           <div className="bg-gray-50 p-3 rounded-lg border-l-4 border-yellow-500">
             <strong className="text-yellow-700">ストレス指標上昇</strong>
             <p className="text-sm text-yellow-600 mt-1">先月比25%上昇、要注意レベル</p>
            </div>
@@ -1475,7 +1475,7 @@ export default function Home() {
 
          {/* 状況分析 */}
          <div className="grid grid-cols-2 gap-5">
-          <div className="bg-white border border-gray-200 rounded-lg p-4">
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
            <h5 className="font-semibold text-gray-800 mb-3">📊 現在の状況</h5>
            <div className="space-y-2 text-sm">
             <div className="flex justify-between">
@@ -1492,7 +1492,7 @@ export default function Home() {
             </div>
            </div>
           </div>
-          <div className="bg-white border border-gray-200 rounded-lg p-4">
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
            <h5 className="font-semibold text-gray-800 mb-3">💡 推定要因</h5>
            <div className="text-sm text-gray-600 space-y-1">
             <div>• 家庭環境の急変（育児・介護）</div>
@@ -1504,7 +1504,7 @@ export default function Home() {
          </div>
 
          {/* 緊急対応プラン */}
-         <div className="bg-white border-2 border-blue-200 rounded-xl p-5">
+         <div className="bg-gray-50 border-2 border-blue-200 rounded-xl p-5">
           <h4 className="text-blue-800 font-semibold mb-4">🎯 推奨緊急対応プラン</h4>
           <div className="space-y-3">
            <div className="flex items-start gap-3">
@@ -1552,8 +1552,8 @@ export default function Home() {
        {selectedStaff.name === '小林さくら' && (
         <div className="space-y-6">
          {/* プロフィールヘッダー */}
-         <div className="flex gap-5 p-5 bg-white rounded-xl">
-          <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center text-white text-2xl font-bold">
+         <div className="flex gap-5 p-5 bg-gray-50 rounded-xl">
+          <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-2xl font-bold">
            小
           </div>
           <div className="flex-1">
@@ -1580,7 +1580,7 @@ export default function Home() {
            <span className="text-xs bg-white text-white px-2 py-1 rounded-full">JNAラダーⅠ</span>
           </h4>
           <div className="grid grid-cols-2 gap-4">
-           <div className="bg-white p-3 rounded-lg">
+           <div className="bg-gray-50 p-3 rounded-lg">
             <h5 className="font-semibold text-gray-800 mb-2">基礎技術習得</h5>
             <div className="space-y-2">
              <div className="flex justify-between text-sm">
@@ -1597,7 +1597,7 @@ export default function Home() {
              </div>
             </div>
            </div>
-           <div className="bg-white p-3 rounded-lg">
+           <div className="bg-gray-50 p-3 rounded-lg">
             <h5 className="font-semibold text-gray-800 mb-2">研修状況</h5>
             <div className="text-sm text-gray-600 space-y-1">
              <div>✅ 新人看護師研修 完了</div>
@@ -1610,7 +1610,7 @@ export default function Home() {
          </div>
 
          {/* サポートプラン */}
-         <div className="bg-white border-2 border-blue-200 rounded-xl p-5">
+         <div className="bg-gray-50 border-2 border-blue-200 rounded-xl p-5">
           <h4 className="text-blue-800 font-semibold mb-4">🎯 推奨サポートプラン</h4>
           <div className="space-y-3">
            <div className="flex items-start gap-3">
@@ -1658,8 +1658,8 @@ export default function Home() {
        {selectedStaff.name === '伊藤由美' && (
         <div className="space-y-6">
          {/* プロフィールヘッダー */}
-         <div className="flex gap-5 p-5 bg-white rounded-xl">
-          <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center text-white text-2xl font-bold">
+         <div className="flex gap-5 p-5 bg-gray-50 rounded-xl">
+          <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-2xl font-bold">
            伊
           </div>
           <div className="flex-1">
@@ -1686,7 +1686,7 @@ export default function Home() {
            <span className="text-xs bg-white text-white px-2 py-1 rounded-full">認定看護師</span>
           </h4>
           <div className="grid grid-cols-2 gap-4">
-           <div className="bg-white p-3 rounded-lg">
+           <div className="bg-gray-50 p-3 rounded-lg">
             <h5 className="font-semibold text-gray-800 mb-2">専門スキル</h5>
             <div className="space-y-2">
              <div className="flex justify-between text-sm">
@@ -1703,7 +1703,7 @@ export default function Home() {
              </div>
             </div>
            </div>
-           <div className="bg-white p-3 rounded-lg">
+           <div className="bg-gray-50 p-3 rounded-lg">
             <h5 className="font-semibold text-gray-800 mb-2">最近の活動</h5>
             <div className="text-sm text-gray-600 space-y-1">
              <div>🏅 看護研究発表会 最優秀賞</div>
@@ -1719,11 +1719,11 @@ export default function Home() {
          <div className="bg-white border-2 border-green-200 rounded-xl p-5">
           <h4 className="text-green-800 font-semibold mb-4">🚀 キャリア展望</h4>
           <div className="space-y-3">
-           <div className="bg-white p-3 rounded-lg">
+           <div className="bg-gray-50 p-3 rounded-lg">
             <strong className="text-gray-800">看護部教育担当への登用検討</strong>
             <p className="text-sm text-gray-600 mt-1">豊富な指導経験と高い専門性を活かし、組織全体の教育水準向上に貢献</p>
            </div>
-           <div className="bg-white p-3 rounded-lg">
+           <div className="bg-gray-50 p-3 rounded-lg">
             <strong className="text-gray-800">専門看護師資格取得支援</strong>
             <p className="text-sm text-gray-600 mt-1">更なる専門性向上のため、大学院進学支援制度の活用を推奨</p>
            </div>
