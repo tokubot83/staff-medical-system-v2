@@ -27,39 +27,39 @@ export default function QualityMetricsPage() {
         name: '小原病院',
         departments: [
           {
-            name: '地域包括医療病棟',
+            name: '診療部',
             metrics: [
-              { label: '満足度', value: 87, unit: '%', trend: { value: '+2%', isPositive: true } },
-              { label: 'エンゲージメント', value: 83, unit: '%' },
-              { label: '資格保有率', value: 71, unit: '%' },
-              { label: '専門認定率', value: 44, unit: '%' }
+              { label: '満足度', value: 88, unit: '%', trend: { value: '+1%', isPositive: true } },
+              { label: 'エンゲージメント', value: 84, unit: '%' },
+              { label: '資格保有率', value: 98, unit: '%' },
+              { label: '専門認定率', value: 85, unit: '%' }
             ]
           },
           {
-            name: '地域包括ケア病棟',
+            name: '看護部',
             metrics: [
-              { label: '満足度', value: 86, unit: '%', trend: { value: '+1%', isPositive: true } },
+              { label: '満足度', value: 86, unit: '%', trend: { value: '+2%', isPositive: true } },
               { label: 'エンゲージメント', value: 82, unit: '%' },
-              { label: '資格保有率', value: 69, unit: '%' },
-              { label: '専門認定率', value: 42, unit: '%' }
+              { label: '資格保有率', value: 100, unit: '%' },
+              { label: '専門認定率', value: 48, unit: '%' }
             ]
           },
           {
-            name: '回復期リハ病棟',
+            name: '診療技術部',
             metrics: [
               { label: '満足度', value: 89, unit: '%', trend: { value: '+3%', isPositive: true } },
               { label: 'エンゲージメント', value: 85, unit: '%' },
-              { label: '資格保有率', value: 76, unit: '%' },
-              { label: '専門認定率', value: 52, unit: '%' }
+              { label: '資格保有率', value: 95, unit: '%' },
+              { label: '専門認定率', value: 62, unit: '%' }
             ]
           },
           {
-            name: '外来',
+            name: '事務部',
             metrics: [
               { label: '満足度', value: 84, unit: '%', trend: { value: '±0%', isPositive: true } },
               { label: 'エンゲージメント', value: 79, unit: '%' },
-              { label: '資格保有率', value: 66, unit: '%' },
-              { label: '専門認定率', value: 39, unit: '%' }
+              { label: '資格保有率', value: 45, unit: '%' },
+              { label: '専門認定率', value: 38, unit: '%' }
             ]
           }
         ]
@@ -68,30 +68,39 @@ export default function QualityMetricsPage() {
         name: '立神リハビリテーション温泉病院',
         departments: [
           {
-            name: '医療療養病棟',
+            name: '診療部門',
             metrics: [
-              { label: '満足度', value: 86, unit: '%', trend: { value: '+3%', isPositive: true } },
-              { label: 'エンゲージメント', value: 81, unit: '%' },
-              { label: '資格保有率', value: 66, unit: '%' },
-              { label: '専門認定率', value: 40, unit: '%' }
+              { label: '満足度', value: 85, unit: '%', trend: { value: '+1%', isPositive: true } },
+              { label: 'エンゲージメント', value: 80, unit: '%' },
+              { label: '資格保有率', value: 98, unit: '%' },
+              { label: '専門認定率', value: 75, unit: '%' }
             ]
           },
           {
-            name: '介護医療院',
+            name: '看護部門',
             metrics: [
-              { label: '満足度', value: 90, unit: '%', trend: { value: '+4%', isPositive: true } },
-              { label: 'エンゲージメント', value: 85, unit: '%' },
-              { label: '資格保有率', value: 71, unit: '%' },
-              { label: '専門認定率', value: 44, unit: '%' }
-            ]
-          },
-          {
-            name: '外来',
-            metrics: [
-              { label: '満足度', value: 88, unit: '%', trend: { value: '+2%', isPositive: true } },
+              { label: '満足度', value: 88, unit: '%', trend: { value: '+3%', isPositive: true } },
               { label: 'エンゲージメント', value: 83, unit: '%' },
-              { label: '資格保有率', value: 68, unit: '%' },
+              { label: '資格保有率', value: 100, unit: '%' },
               { label: '専門認定率', value: 42, unit: '%' }
+            ]
+          },
+          {
+            name: '診療技術部',
+            metrics: [
+              { label: '満足度', value: 91, unit: '%', trend: { value: '+4%', isPositive: true } },
+              { label: 'エンゲージメント', value: 87, unit: '%' },
+              { label: '資格保有率', value: 92, unit: '%' },
+              { label: '専門認定率', value: 58, unit: '%' }
+            ]
+          },
+          {
+            name: '事務部門',
+            metrics: [
+              { label: '満足度', value: 83, unit: '%', trend: { value: '±0%', isPositive: true } },
+              { label: 'エンゲージメント', value: 78, unit: '%' },
+              { label: '資格保有率', value: 38, unit: '%' },
+              { label: '専門認定率', value: 28, unit: '%' }
             ]
           }
         ]
@@ -143,65 +152,65 @@ export default function QualityMetricsPage() {
   };
 
   const aiAnalysis: AIAnalysis = {
-    summary: '総合満足度87%と高水準を維持していますが、外来部門では満足度が前月比-1%と低下傾向です。ICUと地域包括ケアの高い満足度はベストプラクティスのモデルとなり得ます。',
+    summary: '総合満足度87%と高水準を維持しています。両病院とも診療技術部の満足度が90%前後と非常に高く、資格保有率も高いのが特徴です。一方、事務部門のエンゲージメントが78-79%と低く、改善が必要です。',
     insights: [
       {
-        title: 'ICUの高エンゲージメント',
+        title: '診療技術部の高エンゲージメント',
         priority: 'high',
-        content: 'ICUは満足度89%、専門認定率62%と全部署で最高レベル。チーム文化が良好。',
-        impact: '他部署へのロールモデルとして機能'
+        content: '両病院の診療技術部が満足度89-91%、エンゲージメント85-87%と突出。専門性が高く評価されている。',
+        impact: '他部門へのロールモデルとして機能'
       },
       {
-        title: '外来の満足度低下',
+        title: '事務部門の低エンゲージメント',
         priority: 'urgent',
-        content: '外来部門の満足度83%（-1%）、エンゲージメント78%と低調。業務負荷が主要因。',
-        impact: '離職リスク上昇、患者サービス品質低下'
+        content: '両病院の事務部門がエンゲージメント78-79%と低く、資格保有率で38-45%。キャリアパスが不明確。',
+        impact: 'モチベーション低下、業務効率への影響'
       },
       {
-        title: '資格保有率の差',
+        title: '部門間の資格保有率格差',
         priority: 'medium',
-        content: 'ICUの資格保有率85%に対し、外来は65%と大きな格差。',
-        impact: 'サービス品質のバラツキ'
+        content: '医療系部門は92-100%と高いが、事務部門は38-45%と半分以下。専門性への投資に格差。',
+        impact: '部門間のサービス品質格差'
       }
     ],
     recommendations: [
       {
-        title: '外来部門の業務改革',
+        title: '事務部門のキャリア支援',
         priority: 'urgent',
-        content: '外来の業務プロセスを見直し、スタッフの負担軽減を図る。',
+        content: '事務部門のキャリアパスを明確化し、モチベーション向上を図る。',
         actions: [
-          '業務フローの可視化と分析',
-          '事務作業の自動化・効率化',
-          '適正な人員配置の再検討'
+          '事務系資格の取得支援強化',
+          'キャリアラダーの可視化',
+          '評価制度の明確化'
         ]
       },
       {
-        title: 'ICUモデルの水平展開',
+        title: '診療技術部モデルの水平展開',
         priority: 'high',
-        content: 'ICUの成功要因を分析し、他部署へ展開する。',
+        content: '診療技術部の成功要因を分析し、他部門へ展開する。',
         actions: [
-          'ICUのマネジメント手法の文書化',
-          '部署間交流プログラムの実施',
-          'ベストプラクティス共有会の開催'
+          '専門性評価の仕組み導入',
+          '部門間交流会の定期開催',
+          'チームビルディングの実施'
         ]
       },
       {
-        title: '資格取得支援強化',
+        title: '両病院共通の能力開発体系',
         priority: 'medium',
-        content: '外来スタッフの資格取得を組織的に支援する。',
+        content: '両病院共通の資格取得支援とキャリア開発体系を構築する。',
         actions: [
-          '勉強会・研修の実施',
-          '資格取得費用の補助',
-          '学習時間の確保'
+          '統一的な研修プログラムの策定',
+          '資格取得補助制度の拡充',
+          'オンライン学習環境の整備'
         ]
       }
     ],
     risks: [
       {
-        title: '外来部門の離職連鎖',
+        title: '事務部門の人材流出',
         priority: 'urgent',
-        content: '満足度低下が続くと、優秀人材の離職が連鎖的に発生するリスク。',
-        impact: '残ったスタッフの負担増、さらなる満足度低下'
+        content: 'エンゲージメント低下が続くと、優秀な事務職員が他業界へ流出するリスク。',
+        impact: '業務ノウハウの喪失、組織運営への影響'
       },
       {
         title: 'サービス品質の低下',

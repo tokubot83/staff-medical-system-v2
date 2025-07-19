@@ -711,48 +711,46 @@ export default function Home() {
                   
                   <div className="grid grid-cols-2 gap-4 mb-6">
                     <div className="bg-blue-50 rounded-lg p-4">
-                      <h4 className="font-semibold text-blue-800 mb-2">部門別職員分布</h4>
+                      <h4 className="font-semibold text-blue-800 mb-2">施設別職員数</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between text-sm">
-                          <span>内科病棟</span>
-                          <span className="font-semibold">45名</span>
+                          <span>小原病院（急性期）</span>
+                          <span className="font-semibold">420名</span>
                         </div>
                         <div className="flex justify-between text-sm">
-                          <span>外科病棟</span>
-                          <span className="font-semibold">38名</span>
+                          <span>立神リハビリテーション温泉病院</span>
+                          <span className="font-semibold">180名</span>
                         </div>
-                        <div className="flex justify-between text-sm">
-                          <span>ICU</span>
-                          <span className="font-semibold">28名</span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                          <span>外来</span>
-                          <span className="font-semibold">56名</span>
+                        <div className="mt-3 pt-3 border-t border-blue-200">
+                          <div className="flex justify-between text-sm font-semibold">
+                            <span>総職員数</span>
+                            <span>600名</span>
+                          </div>
                         </div>
                       </div>
                     </div>
                     <div className="bg-green-50 rounded-lg p-4">
-                      <h4 className="font-semibold text-green-800 mb-2">JNAラダー分布（看護師）</h4>
+                      <h4 className="font-semibold text-green-800 mb-2">職種別分布</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between text-sm">
-                          <span>レベルⅠ</span>
-                          <span className="font-semibold">32名</span>
+                          <span>看護師</span>
+                          <span className="font-semibold">245名</span>
                         </div>
                         <div className="flex justify-between text-sm">
-                          <span>レベルⅡ</span>
-                          <span className="font-semibold">65名</span>
+                          <span>医師</span>
+                          <span className="font-semibold">53名</span>
                         </div>
                         <div className="flex justify-between text-sm">
-                          <span>レベルⅢ</span>
-                          <span className="font-semibold">78名</span>
+                          <span>リハビリ職</span>
+                          <span className="font-semibold">75名</span>
                         </div>
                         <div className="flex justify-between text-sm">
-                          <span>レベルⅣ</span>
-                          <span className="font-semibold">45名</span>
+                          <span>介護職員</span>
+                          <span className="font-semibold">35名</span>
                         </div>
                         <div className="flex justify-between text-sm">
-                          <span>レベルⅤ</span>
-                          <span className="font-semibold">12名</span>
+                          <span>その他</span>
+                          <span className="font-semibold">192名</span>
                         </div>
                       </div>
                     </div>
@@ -763,17 +761,16 @@ export default function Home() {
                       <thead>
                         <tr className="border-b border-gray-200">
                           <th className="text-left py-3 px-4 font-semibold text-gray-600">職員名</th>
+                          <th className="text-left py-3 px-4 font-semibold text-gray-600">施設</th>
                           <th className="text-left py-3 px-4 font-semibold text-gray-600">部署</th>
                           <th className="text-left py-3 px-4 font-semibold text-gray-600">職種</th>
-                          <th className="text-left py-3 px-4 font-semibold text-gray-600">JNAラダー</th>
+                          <th className="text-left py-3 px-4 font-semibold text-gray-600">評価</th>
                           <th className="text-left py-3 px-4 font-semibold text-gray-600">状態</th>
                           <th className="text-left py-3 px-4 font-semibold text-gray-600">アクション</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {Object.values(staffDatabase).filter(staff => staff.position.includes('看護師')).map((staff) => {
-                          const jnaLevel = staff.skills.find(s => s.name === '看護実践能力')?.level || 0;
-                          const jnaLevelText = ['', 'Ⅰ', 'Ⅱ', 'Ⅲ', 'Ⅳ', 'Ⅴ'][jnaLevel] || '-';
+                        {Object.values(staffDatabase).slice(0, 6).map((staff) => {
                           return (
                             <tr key={staff.id} className="border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors">
                               <td className="py-4 px-4">
@@ -789,11 +786,22 @@ export default function Home() {
                                   </div>
                                 </div>
                               </td>
+                              <td className="py-4 px-4">
+                                <div className="text-sm text-gray-600">{staff.facility}</div>
+                                <div className="text-xs text-gray-400">
+                                  {staff.facility === '小原病院' ? '急性期' : '回復期リハ'}
+                                </div>
+                              </td>
                               <td className="py-4 px-4 text-sm text-gray-600">{staff.department}</td>
                               <td className="py-4 px-4 text-sm text-gray-600">{staff.position}</td>
                               <td className="py-4 px-4">
-                                <span className="px-2 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800">
-                                  レベル{jnaLevelText}
+                                <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                                  staff.evaluation === 'S' ? 'bg-purple-100 text-purple-800' :
+                                  staff.evaluation === 'A' ? 'bg-blue-100 text-blue-800' :
+                                  staff.evaluation === 'B+' || staff.evaluation === 'B' ? 'bg-green-100 text-green-800' :
+                                  'bg-gray-100 text-gray-800'
+                                }`}>
+                                  {staff.evaluation}評価
                                 </span>
                               </td>
                               <td className="py-4 px-4">
@@ -806,7 +814,9 @@ export default function Home() {
                                 </span>
                               </td>
                               <td className="py-4 px-4">
-                                <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">詳細</button>
+                                <Link href={`/staff/${staff.id}`} className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                  詳細
+                                </Link>
                               </td>
                             </tr>
                           );
