@@ -477,7 +477,7 @@ export default function Home() {
         検索
        </button>
       </div>
-      <div className="flex items-center gap-2 bg-gray-50 border-2 border-gray-300 px-4 py-2 rounded-full cursor-pointer hover:bg-gray-100 transition-colors">
+      <div className="flex items-center gap-2 bg-white text-gray-700 border-2 border-gray-300 px-4 py-2 rounded-full cursor-pointer hover:bg-gray-100 transition-colors">
        <span>人事部 田中さん</span>
        <div className="w-8 h-8 bg-gray-200 border border-gray-400 rounded-full flex items-center justify-center font-bold text-gray-700">
         田
