@@ -32,19 +32,27 @@ export default function MetricsLayout({ metrics, aiAnalysis }: MetricsLayoutProp
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* 戻るボタン - ヘッダーの外に配置 */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-5 py-3">
+          <Link href="/" className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            <span className="text-sm font-medium">ダッシュボードに戻る</span>
+          </Link>
+        </div>
+      </div>
+
       {/* ヘッダー */}
       <header className="bg-gradient-to-r from-blue-800 to-blue-900 text-white p-5">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center gap-4">
-            <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-              <div className="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center text-xl">
-                🏥
-              </div>
-              <span className="text-sm">← 戻る</span>
-            </Link>
-            <div className="flex-1">
-              <h1 className="text-2xl font-light flex items-center gap-3">
-                <span className="text-3xl">{metrics.icon}</span>
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center text-2xl">
+              {metrics.icon}
+            </div>
+            <div>
+              <h1 className="text-2xl font-light">
                 {metrics.categoryName}
               </h1>
               <p className="text-sm opacity-90 mt-1">{metrics.description}</p>
