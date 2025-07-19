@@ -82,7 +82,7 @@ export default function Home() {
    statusText: 'JNAラダーⅣ',
    nextAction: '1/20 キャリア面談',
    priority: 'normal',
-   avatar: 'bg-white'
+   avatar: 'bg-gradient-to-r from-purple-500 to-pink-600'
   },
   {
    id: 'NS-2018-035',
@@ -95,7 +95,7 @@ export default function Home() {
    statusText: '離職リスク高',
    nextAction: '本日 9:00 緊急面談',
    priority: 'emergency',
-   avatar: 'bg-white',
+   avatar: 'bg-gradient-to-r from-purple-500 to-pink-600',
    riskLevel: 84
   },
   {
@@ -109,7 +109,7 @@ export default function Home() {
    statusText: '昇進候補',
    nextAction: '本日 10:30 昇進面談',
    priority: 'high',
-   avatar: 'bg-white'
+   avatar: 'bg-gradient-to-r from-purple-500 to-pink-600'
   },
   {
    id: 'NS-2024-012',
@@ -122,7 +122,7 @@ export default function Home() {
    statusText: '新人フォロー要',
    nextAction: '1/18 フォローアップ面談',
    priority: 'high',
-   avatar: 'bg-white'
+   avatar: 'bg-gradient-to-r from-purple-500 to-pink-600'
   },
   {
    id: 'NS-2015-008',
@@ -135,7 +135,7 @@ export default function Home() {
    statusText: 'エキスパート',
    nextAction: '2/5 研究発表準備',
    priority: 'normal',
-   avatar: 'bg-white'
+   avatar: 'bg-gradient-to-r from-purple-500 to-pink-600'
   },
   {
    id: 'NS-2017-022',
@@ -148,7 +148,7 @@ export default function Home() {
    statusText: '復職支援中',
    nextAction: '1/22 キャリア相談',
    priority: 'medium',
-   avatar: 'bg-white'
+   avatar: 'bg-gradient-to-r from-purple-500 to-pink-600'
   }
  ];
 
@@ -401,21 +401,21 @@ export default function Home() {
 
  const getStatusBadgeClass = (status: string) => {
   switch (status) {
-   case 'excellent': return 'bg-white text-green-800 border border-green-300';
-   case 'good': return 'bg-white text-blue-800 border border-blue-300';
-   case 'average': return 'bg-white text-yellow-800 border border-yellow-300';
-   case 'poor': return 'bg-white text-red-800 border border-red-300';
-   default: return 'bg-white text-gray-800 border border-gray-300';
+   case 'excellent': return 'bg-green-100 text-green-800 border border-green-300';
+   case 'good': return 'bg-blue-100 text-blue-800 border border-blue-300';
+   case 'average': return 'bg-yellow-100 text-yellow-800 border border-yellow-300';
+   case 'poor': return 'bg-red-100 text-red-800 border border-red-300';
+   default: return 'bg-gray-100 text-gray-800 border border-gray-300';
   }
  };
 
  const getPriorityBadgeClass = (priority: string) => {
   switch (priority) {
-   case 'emergency': return 'bg-white text-red-800 border border-red-300';
-   case 'high': return 'bg-white text-orange-800 border border-orange-300';
-   case 'medium': return 'bg-white text-blue-800 border border-blue-300';
-   case 'normal': return 'bg-white text-green-800 border border-green-300';
-   default: return 'bg-white text-gray-800 border border-gray-300';
+   case 'emergency': return 'bg-red-100 text-red-800 border border-red-300';
+   case 'high': return 'bg-orange-100 text-orange-800 border border-orange-300';
+   case 'medium': return 'bg-blue-100 text-blue-800 border border-blue-300';
+   case 'normal': return 'bg-green-100 text-green-800 border border-green-300';
+   default: return 'bg-gray-100 text-gray-800 border border-gray-300';
   }
  };
 
@@ -430,10 +430,10 @@ export default function Home() {
 
  const getAlertButtonClass = (type: string) => {
   switch (type) {
-   case 'critical': return 'bg-white hover:bg-gray-50 border border-red-500 text-red-600';
-   case 'warning': return 'bg-white hover:bg-gray-50 border border-yellow-500 text-yellow-600';
-   case 'info': return 'bg-white hover:bg-gray-50 border border-blue-500 text-blue-600';
-   default: return 'bg-white hover:bg-gray-50 border border-gray-500 text-gray-600';
+   case 'critical': return 'bg-red-50 hover:bg-red-100 border border-red-500 text-red-600';
+   case 'warning': return 'bg-yellow-50 hover:bg-yellow-100 border border-yellow-500 text-yellow-600';
+   case 'info': return 'bg-blue-50 hover:bg-blue-100 border border-blue-500 text-blue-600';
+   default: return 'bg-gray-50 hover:bg-gray-100 border border-gray-500 text-gray-600';
   }
  };
 
@@ -443,7 +443,7 @@ export default function Home() {
    <header className="bg-white text-gray-800 p-5 border-b">
     <div className="flex justify-between items-center">
      <div className="flex items-center gap-4">
-      <div className="w-12 h-12 bg-white border rounded-lg flex items-center justify-center text-2xl">
+      <div className="w-12 h-12 bg-gray-100 border-2 border-gray-300 rounded-lg flex items-center justify-center text-2xl">
        🏥
       </div>
       <div>
@@ -458,13 +458,13 @@ export default function Home() {
         placeholder="職員名・ID・部署で検索..."
         className="w-80 px-4 py-2 rounded-full text-gray-700 pr-20"
        />
-       <button className="absolute right-1 top-1 bg-white text-white px-4 py-1 rounded-full text-sm font-medium">
+       <button className="absolute right-1 top-1 bg-gray-700 text-white px-4 py-1 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors">
         検索
        </button>
       </div>
-      <div className="flex items-center gap-2 bg-white border px-4 py-2 rounded-full cursor-pointer hover:bg-gray-50 transition-colors">
+      <div className="flex items-center gap-2 bg-gray-50 border-2 border-gray-300 px-4 py-2 rounded-full cursor-pointer hover:bg-gray-100 transition-colors">
        <span>人事部 田中さん</span>
-       <div className="w-8 h-8 bg-white border rounded-full flex items-center justify-center font-bold">
+       <div className="w-8 h-8 bg-gray-200 border border-gray-400 rounded-full flex items-center justify-center font-bold text-gray-700">
         田
        </div>
       </div>
@@ -478,7 +478,7 @@ export default function Home() {
      <div className="mb-12">
       <div className="bg-gray-50 rounded-2xl p-8 shadow-lg border border-gray-200">
       <div className="flex items-center gap-3 mb-6">
-       <div className="w-12 h-12 bg-gray-100 border rounded-xl flex items-center justify-center text-gray-800 text-2xl font-bold shadow-lg">
+       <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center text-white text-2xl font-bold shadow-lg">
         ⚡
        </div>
        <div>
@@ -495,7 +495,7 @@ export default function Home() {
        <h2 className="text-lg font-semibold flex items-center gap-2">
         📅 今日のタスク
        </h2>
-       <span className="bg-gray-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
+       <span className="bg-gray-200 text-green-800 px-3 py-1 rounded-full text-sm font-semibold border border-green-200">
         {tasks.filter(t => !t.completed).length}件
        </span>
       </div>
@@ -505,8 +505,8 @@ export default function Home() {
          task.priority === 'urgent' ? 'border-l-red-500 bg-gray-50' : 'border-l-blue-500 bg-gray-50'
         } hover:bg-gray-50 transition-colors cursor-pointer`}>
          <div
-          className={`w-5 h-5 border-2 border-gray-300 rounded cursor-pointer flex items-center justify-center transition-colors ${
-           task.completed ? 'bg-white border-blue-500 text-white' : 'hover:border-blue-500'
+          className={`w-5 h-5 border-2 border-gray-400 rounded cursor-pointer flex items-center justify-center transition-colors ${
+           task.completed ? 'bg-blue-500 border-blue-500 text-white' : 'hover:border-blue-500 bg-white'
           }`}
           onClick={() => toggleTask(task.id)}
          >
@@ -515,7 +515,7 @@ export default function Home() {
          <div className="flex-1 text-sm font-medium text-gray-600">
           {task.content}
          </div>
-         <div className="text-xs font-semibold text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+         <div className="text-xs font-semibold text-gray-600 bg-gray-200 px-2 py-1 rounded-full border border-gray-300">
           {task.time}
          </div>
         </div>
@@ -529,16 +529,16 @@ export default function Home() {
        <h2 className="text-lg font-semibold flex items-center gap-2">
         🚨 緊急アラート
        </h2>
-       <span className="bg-gray-100 text-red-800 px-3 py-1 rounded-full text-sm font-semibold">
+       <span className="bg-gray-200 text-red-800 px-3 py-1 rounded-full text-sm font-semibold border border-red-200">
         5件
        </span>
       </div>
       
-      <div className="flex bg-gray-100 rounded-lg p-1 mb-4">
+      <div className="flex bg-gray-200 rounded-lg p-1 mb-4 border border-gray-300">
        <button
         className={`flex-1 py-2 px-3 rounded-md text-sm font-semibold transition-colors ${
          activeAlertTab === 'personal' 
-          ? 'bg-white border-2 border-gray-800 text-gray-800 shadow-sm' 
+          ? 'bg-gray-50 border-2 border-gray-700 text-gray-800 shadow-sm' 
           : 'text-gray-600 hover:text-gray-800'
         }`}
         onClick={() => setActiveAlertTab('personal')}
@@ -548,7 +548,7 @@ export default function Home() {
        <button
         className={`flex-1 py-2 px-3 rounded-md text-sm font-semibold transition-colors ${
          activeAlertTab === 'department' 
-          ? 'bg-white border-2 border-gray-800 text-gray-800 shadow-sm' 
+          ? 'bg-gray-50 border-2 border-gray-700 text-gray-800 shadow-sm' 
           : 'text-gray-600 hover:text-gray-800'
         }`}
         onClick={() => setActiveAlertTab('department')}
@@ -596,16 +596,16 @@ export default function Home() {
        <h2 className="text-lg font-semibold flex items-center gap-2">
         🌟 成功・良好状態
        </h2>
-       <span className="bg-gray-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
+       <span className="bg-gray-200 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold border border-blue-200">
         5件
        </span>
       </div>
       
-      <div className="flex bg-gray-100 rounded-lg p-1 mb-4">
+      <div className="flex bg-gray-200 rounded-lg p-1 mb-4 border border-gray-300">
        <button
         className={`flex-1 py-2 px-3 rounded-md text-sm font-semibold transition-colors ${
          activeSuccessTab === 'personal' 
-          ? 'bg-white border-2 border-gray-800 text-gray-800 shadow-sm' 
+          ? 'bg-gray-50 border-2 border-gray-700 text-gray-800 shadow-sm' 
           : 'text-gray-600 hover:text-gray-800'
         }`}
         onClick={() => setActiveSuccessTab('personal')}
@@ -615,7 +615,7 @@ export default function Home() {
        <button
         className={`flex-1 py-2 px-3 rounded-md text-sm font-semibold transition-colors ${
          activeSuccessTab === 'department' 
-          ? 'bg-white border-2 border-gray-800 text-gray-800 shadow-sm' 
+          ? 'bg-gray-50 border-2 border-gray-700 text-gray-800 shadow-sm' 
           : 'text-gray-600 hover:text-gray-800'
         }`}
         onClick={() => setActiveSuccessTab('department')}
@@ -649,7 +649,7 @@ export default function Home() {
            success.content
           )}
          </div>
-         <button className="bg-white hover:bg-gray-50 text-white px-3 py-1 rounded-md text-xs font-semibold transition-colors">
+         <button className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-xs font-semibold transition-colors">
           {success.buttonText}
          </button>
         </div>
@@ -667,7 +667,7 @@ export default function Home() {
      <div className="mb-12">
       <div className="bg-gray-50 rounded-2xl p-8 shadow-lg border border-rose-200">
       <div className="flex items-center gap-3 mb-6">
-       <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+       <div className="w-12 h-12 bg-gradient-to-br from-rose-400 to-pink-500 rounded-xl flex items-center justify-center text-white text-2xl font-bold shadow-lg">
         📊
        </div>
        <div>
@@ -681,34 +681,34 @@ export default function Home() {
        <Link href="/metrics/basic" className="bg-gray-50 rounded-xl p-5 text-center shadow-md border-t-4 border-green-500 hover:shadow-lg transition-shadow cursor-pointer">
       <div className="text-3xl font-bold text-gray-800 mb-1">500</div>
       <div className="text-sm text-gray-600 mb-2">基本指標</div>
-      <div className="text-xs bg-white text-gray-600 px-2 py-1 rounded-full">総職員数</div>
+      <div className="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full border border-gray-300">総職員数</div>
        </Link>
        <Link href="/metrics/quality" className="bg-gray-50 rounded-xl p-5 text-center shadow-md border-t-4 border-blue-500 hover:shadow-lg transition-shadow cursor-pointer">
       <div className="text-3xl font-bold text-gray-800 mb-1">87%</div>
       <div className="text-sm text-gray-600 mb-2">人材の質</div>
-      <div className="text-xs bg-white text-green-600 px-2 py-1 rounded-full">総合満足度</div>
+      <div className="text-xs bg-gray-200 text-green-700 px-2 py-1 rounded-full border border-green-300">総合満足度</div>
        </Link>
        <Link href="/metrics/growth" className="bg-gray-50 rounded-xl p-5 text-center shadow-md border-t-4 border-purple-500 hover:shadow-lg transition-shadow cursor-pointer">
       <div className="text-3xl font-bold text-gray-800 mb-1">92%</div>
       <div className="text-sm text-gray-600 mb-2">人材の成長</div>
-      <div className="text-xs bg-white text-green-600 px-2 py-1 rounded-full">研修受講率</div>
+      <div className="text-xs bg-gray-200 text-green-700 px-2 py-1 rounded-full border border-green-300">研修受講率</div>
        </Link>
        <Link href="/metrics/risk" className="bg-gray-50 rounded-xl p-5 text-center shadow-md border-t-4 border-yellow-500 hover:shadow-lg transition-shadow cursor-pointer">
       <div className="text-3xl font-bold text-gray-800 mb-1">12</div>
       <div className="text-sm text-gray-600 mb-2">リスク管理</div>
-      <div className="text-xs bg-white text-red-600 px-2 py-1 rounded-full">要注意職員</div>
+      <div className="text-xs bg-gray-200 text-red-700 px-2 py-1 rounded-full border border-red-300">要注意職員</div>
        </Link>
        <Link href="/metrics/efficiency" className="bg-gray-50 rounded-xl p-5 text-center shadow-md border-t-4 border-red-500 hover:shadow-lg transition-shadow cursor-pointer">
       <div className="text-3xl font-bold text-gray-800 mb-1">3</div>
       <div className="text-sm text-gray-600 mb-2">組織効率</div>
-      <div className="text-xs bg-white text-red-600 px-2 py-1 rounded-full">緊急対応要</div>
+      <div className="text-xs bg-gray-200 text-red-700 px-2 py-1 rounded-full border border-red-300">緊急対応要</div>
        </Link>
       </div>
 
       {/* 詳細レポートボタン */}
       <div className="mt-6">
        <Link href="/reports" className="block">
-        <button className="w-full bg-white hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-4 px-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-3">
+        <button className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-4 px-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-3">
          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
          </svg>
@@ -729,7 +729,7 @@ export default function Home() {
      <div className="mb-12">
       <div className="bg-gray-50 rounded-2xl p-8 shadow-lg border border-fuchsia-200">
       <div className="flex items-center gap-3 mb-6">
-       <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+       <div className="w-12 h-12 bg-gradient-to-br from-fuchsia-400 to-purple-500 rounded-xl flex items-center justify-center text-white text-2xl font-bold shadow-lg">
         📋
        </div>
        <div>
@@ -830,8 +830,8 @@ export default function Home() {
          <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center justify-between">
           職員管理 - 人材の見える化
           <div className="flex items-center gap-3">
-           <button className="bg-white hover:bg-gray-50 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">職員追加</button>
-           <button className="bg-white hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">エクスポート</button>
+           <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">職員追加</button>
+           <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-gray-300">エクスポート</button>
           </div>
          </h3>
          
@@ -922,19 +922,19 @@ export default function Home() {
                <td className="py-4 px-4 text-sm text-gray-600">{staff.position}</td>
                <td className="py-4 px-4">
                 <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                 staff.evaluation === 'S' ? 'bg-white text-purple-800' :
-                 staff.evaluation === 'A' ? 'bg-white text-blue-800' :
-                 staff.evaluation === 'B+' || staff.evaluation === 'B' ? 'bg-white text-green-800' :
-                 'bg-white text-gray-800'
+                 staff.evaluation === 'S' ? 'bg-purple-100 text-purple-800 border border-purple-300' :
+                 staff.evaluation === 'A' ? 'bg-blue-100 text-blue-800 border border-blue-300' :
+                 staff.evaluation === 'B+' || staff.evaluation === 'B' ? 'bg-green-100 text-green-800 border border-green-300' :
+                 'bg-gray-100 text-gray-800 border border-gray-300'
                 }`}>
                  {staff.evaluation}評価
                 </span>
                </td>
                <td className="py-4 px-4">
                 <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                 staff.healthStatus === '良好' ? 'bg-white text-green-800' :
-                 staff.healthStatus === '注意' ? 'bg-white text-yellow-800' :
-                 'bg-white text-red-800'
+                 staff.healthStatus === '良好' ? 'bg-green-100 text-green-800 border border-green-300' :
+                 staff.healthStatus === '注意' ? 'bg-yellow-100 text-yellow-800 border border-yellow-300' :
+                 'bg-red-100 text-red-800 border border-red-300'
                 }`}>
                  {staff.healthStatus}
                 </span>
@@ -958,8 +958,8 @@ export default function Home() {
          <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center justify-between">
           面談管理 - スマートスケジューリング
           <div className="flex items-center gap-3">
-           <button className="bg-white hover:bg-gray-50 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">面談予約</button>
-           <button className="bg-white hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">カレンダー表示</button>
+           <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">面談予約</button>
+           <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-gray-300">カレンダー表示</button>
           </div>
          </h3>
          
@@ -988,7 +988,7 @@ export default function Home() {
             </div>
             <div className="text-right">
              <div className="text-sm font-semibold text-red-700">本日 9:00</div>
-             <button className="mt-2 bg-white hover:bg-gray-50 text-white px-3 py-1 rounded text-xs font-semibold transition-colors">開始</button>
+             <button className="mt-2 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs font-semibold transition-colors">開始</button>
             </div>
            </div>
           </div>
@@ -1002,7 +1002,7 @@ export default function Home() {
             </div>
             <div className="text-right">
              <div className="text-sm font-semibold text-green-700">本日 10:30</div>
-             <button className="mt-2 bg-white hover:bg-gray-50 text-white px-3 py-1 rounded text-xs font-semibold transition-colors">準備</button>
+             <button className="mt-2 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-xs font-semibold transition-colors">準備</button>
             </div>
            </div>
           </div>
@@ -1016,7 +1016,7 @@ export default function Home() {
             </div>
             <div className="text-right">
              <div className="text-sm font-semibold text-blue-700">1月18日 14:00</div>
-             <button className="mt-2 bg-white hover:bg-gray-50 text-white px-3 py-1 rounded text-xs font-semibold transition-colors">詳細</button>
+             <button className="mt-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs font-semibold transition-colors">詳細</button>
             </div>
            </div>
           </div>
@@ -1029,8 +1029,8 @@ export default function Home() {
          <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center justify-between">
           評価管理 - 360度評価システム
           <div className="flex items-center gap-3">
-           <button className="bg-white hover:bg-gray-50 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">評価開始</button>
-           <button className="bg-white hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">レポート出力</button>
+           <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">評価開始</button>
+           <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-gray-300">レポート出力</button>
           </div>
          </h3>
          
@@ -1064,7 +1064,7 @@ export default function Home() {
            ].map((staff, index) => (
             <div key={index} className="flex items-center justify-between p-3 bg-white rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
              <div className="flex items-center gap-4">
-              <div className="w-10 h-10 bg-white text-white rounded-full flex items-center justify-center font-semibold">
+              <div className="w-10 h-10 bg-gradient-to-r from-gray-400 to-gray-500 text-white rounded-full flex items-center justify-center font-semibold">
                {staff.name[0]}
               </div>
               <div>
@@ -1078,12 +1078,12 @@ export default function Home() {
                <div className="text-xs text-gray-500">{staff.status}</div>
               </div>
               <div className="w-24">
-               <div className="w-full bg-white rounded-full h-2">
-                <div className="bg-white h-2 rounded-full" style={{width: `${staff.progress}%`}}></div>
+               <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className="bg-blue-500 h-2 rounded-full" style={{width: `${staff.progress}%`}}></div>
                </div>
                <div className="text-xs text-gray-500 mt-1">{staff.progress}%</div>
               </div>
-              <button className="bg-white hover:bg-gray-50 text-white px-3 py-1 rounded text-sm font-medium transition-colors">
+              <button className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm font-medium transition-colors">
                詳細
               </button>
              </div>
@@ -1099,8 +1099,8 @@ export default function Home() {
          <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center justify-between">
           教育・研修 - スキルアップ支援
           <div className="flex items-center gap-3">
-           <button className="bg-white hover:bg-gray-50 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">研修計画作成</button>
-           <button className="bg-white hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">受講履歴</button>
+           <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">研修計画作成</button>
+           <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-gray-300">受講履歴</button>
           </div>
          </h3>
          
@@ -1147,8 +1147,8 @@ export default function Home() {
             <div className="flex items-center justify-between">
              <span className="text-sm">レベルⅠ→Ⅱ</span>
              <div className="flex items-center gap-2">
-              <div className="w-32 h-2 bg-white rounded-full">
-               <div className="h-full bg-white rounded-full" style={{width: '75%'}}></div>
+              <div className="w-32 h-2 bg-gray-200 rounded-full">
+               <div className="h-full bg-blue-500 rounded-full" style={{width: '75%'}}></div>
               </div>
               <span className="text-xs font-semibold">18名</span>
              </div>
@@ -1193,7 +1193,7 @@ export default function Home() {
               <span className="font-semibold text-gray-800">小林さくら</span>
               <span className="text-sm text-gray-600 ml-2">外科病棟・新人看護師</span>
              </div>
-             <span className="text-xs bg-white text-yellow-800 px-2 py-1 rounded-full font-semibold">推奨</span>
+             <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full font-semibold border border-yellow-300">推奨</span>
             </div>
             <p className="text-sm text-gray-600 mt-2">BLS再受講推奨。前回評価「再受講中」。急変対応スキル向上が必要。</p>
            </div>
@@ -1203,7 +1203,7 @@ export default function Home() {
               <span className="font-semibold text-gray-800">田中美咲</span>
               <span className="text-sm text-gray-600 ml-2">地域包括ケア病棟・看護師</span>
              </div>
-             <span className="text-xs bg-white text-green-800 px-2 py-1 rounded-full font-semibold">昇進準備</span>
+             <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full font-semibold border border-green-300">昇進準備</span>
             </div>
             <p className="text-sm text-gray-600 mt-2">管理職準備研修開始推奨。2025年7月主任昇進に向けて6ヶ月プログラム。</p>
            </div>
@@ -1227,7 +1227,7 @@ export default function Home() {
          { label: '研修実施', value: '5回' },
          { label: '新規採用', value: '2名' }
         ].map((stat, index) => (
-         <div key={index} className="flex justify-between items-center p-3 bg-white rounded-lg">
+         <div key={index} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
           <span className="text-sm text-gray-600">{stat.label}</span>
           <span className="text-lg font-semibold text-gray-800">{stat.value}</span>
          </div>
@@ -1242,23 +1242,23 @@ export default function Home() {
        </h3>
        <div className="space-y-3">
         {[
-         { label: '🔍 職員検索', color: 'bg-white hover:bg-gray-50', href: null },
-         { label: '📅 面談予約', color: 'bg-white hover:bg-gray-50', href: null },
-         { label: '📊 レポート作成', color: 'bg-white hover:bg-gray-50', href: '/reports' },
-         { label: '⚙️ システム設定', color: 'bg-white hover:bg-gray-50', href: null }
+         { label: '🔍 職員検索', color: 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300', href: null },
+         { label: '📅 面談予約', color: 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300', href: null },
+         { label: '📊 レポート作成', color: 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300', href: '/reports' },
+         { label: '⚙️ システム設定', color: 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300', href: null }
         ].map((action, index) => (
          action.href ? (
           <Link
            key={index}
            href={action.href}
-           className={`block w-full ${action.color} text-white py-3 rounded-lg text-sm font-semibold transition-colors text-center`}
+           className={`block w-full ${action.color} py-3 rounded-lg text-sm font-semibold transition-colors text-center`}
           >
            {action.label}
           </Link>
          ) : (
           <button
            key={index}
-           className={`w-full ${action.color} text-white py-3 rounded-lg text-sm font-semibold transition-colors`}
+           className={`w-full ${action.color} py-3 rounded-lg text-sm font-semibold transition-colors`}
           >
            {action.label}
           </button>
@@ -1305,7 +1305,7 @@ export default function Home() {
            </div>
           </div>
           <div className="text-right">
-           <div className="bg-white text-white px-3 py-1 rounded-full text-sm font-semibold mb-2">
+           <div className="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold mb-2">
             昇進候補
            </div>
            <div className="text-lg font-semibold text-green-600">準備度 85%</div>
@@ -1316,7 +1316,7 @@ export default function Home() {
          <div className="bg-gray-50 border-2 border-blue-200 rounded-xl p-5">
           <h4 className="text-blue-800 font-semibold mb-4 flex items-center gap-2">
            📈 総合分析
-           <span className="text-xs bg-white text-white px-2 py-1 rounded-full">最新</span>
+           <span className="text-xs bg-blue-500 text-white px-2 py-1 rounded-full">最新</span>
           </h4>
           <div className="grid grid-cols-3 gap-4 text-center mb-4">
            <div>
@@ -1389,19 +1389,19 @@ export default function Home() {
           <h5 className="font-semibold text-yellow-800 mb-3">📋 今後のアクションプラン</h5>
           <div className="space-y-3">
            <div className="flex items-start gap-3">
-            <div className="w-6 h-6 bg-white text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
+            <div className="w-6 h-6 bg-yellow-500 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
             <div className="text-sm text-yellow-800">
              <strong>本日 10:30</strong> - 昇進検討面談実施（準備資料あり）
             </div>
            </div>
            <div className="flex items-start gap-3">
-            <div className="w-6 h-6 bg-white text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
+            <div className="w-6 h-6 bg-yellow-500 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
             <div className="text-sm text-yellow-800">
              <strong>2025年2月</strong> - 管理職準備研修開始（6ヶ月プログラム）
             </div>
            </div>
            <div className="flex items-start gap-3">
-            <div className="w-6 h-6 bg-white text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
+            <div className="w-6 h-6 bg-yellow-500 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
             <div className="text-sm text-yellow-800">
              <strong>2025年7月</strong> - 主任昇進実施（成功確率87%）
             </div>
@@ -1411,15 +1411,15 @@ export default function Home() {
 
          {/* アクションボタン */}
          <div className="flex justify-center gap-3">
-          <button className="bg-white hover:bg-gray-50 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
+          <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
            昇進プロセス開始
           </button>
-          <button className="bg-white hover:bg-gray-50 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
+          <button className="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
            詳細カルテ表示
           </button>
           <button 
            onClick={() => setShowModal(false)}
-           className="bg-white hover:bg-gray-50 text-gray-700 px-6 py-3 rounded-lg font-semibold transition-colors"
+           className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-semibold transition-colors border border-gray-300"
           >
            閉じる
           </button>
@@ -1444,7 +1444,7 @@ export default function Home() {
            </div>
           </div>
           <div className="text-right">
-           <div className="bg-white text-white px-3 py-1 rounded-full text-sm font-semibold mb-2">
+           <div className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold mb-2">
             緊急対応要
            </div>
            <div className="text-lg font-semibold text-red-600">離職リスク 84%</div>
@@ -1455,7 +1455,7 @@ export default function Home() {
          <div className="bg-white border-2 border-red-200 rounded-xl p-5">
           <h4 className="text-red-800 font-semibold mb-4 flex items-center gap-2">
            🚨 緊急対応が必要
-           <span className="text-xs bg-white text-white px-2 py-1 rounded-full">HIGH</span>
+           <span className="text-xs bg-red-500 text-white px-2 py-1 rounded-full">HIGH</span>
           </h4>
           <div className="space-y-3">
            <div className="bg-gray-50 p-3 rounded-lg border-l-4 border-red-500">
@@ -1508,21 +1508,21 @@ export default function Home() {
           <h4 className="text-blue-800 font-semibold mb-4">🎯 推奨緊急対応プラン</h4>
           <div className="space-y-3">
            <div className="flex items-start gap-3">
-            <div className="w-6 h-6 bg-white text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
+            <div className="w-6 h-6 bg-yellow-500 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
             <div>
              <strong className="text-gray-800">本日 9:00 - 緊急面談実施</strong>
              <p className="text-sm text-gray-600 mt-1">欠勤理由の詳細ヒアリング、支援ニーズの把握</p>
             </div>
            </div>
            <div className="flex items-start gap-3">
-            <div className="w-6 h-6 bg-white text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
+            <div className="w-6 h-6 bg-yellow-500 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
             <div>
              <strong className="text-gray-800">支援制度の即時適用</strong>
              <p className="text-sm text-gray-600 mt-1">勤務時間調整、在宅勤務、育児・介護支援制度</p>
             </div>
            </div>
            <div className="flex items-start gap-3">
-            <div className="w-6 h-6 bg-white text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
+            <div className="w-6 h-6 bg-yellow-500 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
             <div>
              <strong className="text-gray-800">メンタルヘルスケア</strong>
              <p className="text-sm text-gray-600 mt-1">産業医面談、カウンセリング、ストレス軽減プログラム</p>
@@ -1541,7 +1541,7 @@ export default function Home() {
           </button>
           <button 
            onClick={() => setShowModal(false)}
-           className="bg-white hover:bg-gray-50 text-gray-700 px-6 py-3 rounded-lg font-semibold transition-colors"
+           className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-semibold transition-colors border border-gray-300"
           >
            閉じる
           </button>
@@ -1614,21 +1614,21 @@ export default function Home() {
           <h4 className="text-blue-800 font-semibold mb-4">🎯 推奨サポートプラン</h4>
           <div className="space-y-3">
            <div className="flex items-start gap-3">
-            <div className="w-6 h-6 bg-white text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
+            <div className="w-6 h-6 bg-yellow-500 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
             <div>
              <strong className="text-gray-800">急変対応スキル強化</strong>
              <p className="text-sm text-gray-600 mt-1">BLS再受講と実践的シミュレーション訓練の実施</p>
             </div>
            </div>
            <div className="flex items-start gap-3">
-            <div className="w-6 h-6 bg-white text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
+            <div className="w-6 h-6 bg-yellow-500 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
             <div>
              <strong className="text-gray-800">メンタルサポート強化</strong>
              <p className="text-sm text-gray-600 mt-1">先輩看護師とのペアリング、定期的な1on1面談</p>
             </div>
            </div>
            <div className="flex items-start gap-3">
-            <div className="w-6 h-6 bg-white text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
+            <div className="w-6 h-6 bg-yellow-500 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
             <div>
              <strong className="text-gray-800">業務負荷調整</strong>
              <p className="text-sm text-gray-600 mt-1">残業時間削減、夜勤回数の段階的増加</p>
@@ -1647,7 +1647,7 @@ export default function Home() {
           </button>
           <button 
            onClick={() => setShowModal(false)}
-           className="bg-white hover:bg-gray-50 text-gray-700 px-6 py-3 rounded-lg font-semibold transition-colors"
+           className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-semibold transition-colors border border-gray-300"
           >
            閉じる
           </button>
@@ -1740,7 +1740,7 @@ export default function Home() {
           </button>
           <button 
            onClick={() => setShowModal(false)}
-           className="bg-white hover:bg-gray-50 text-gray-700 px-6 py-3 rounded-lg font-semibold transition-colors"
+           className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-semibold transition-colors border border-gray-300"
           >
            閉じる
           </button>
