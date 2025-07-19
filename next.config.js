@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  output: 'export',
+  // Removed output: 'export' to support dynamic routes with client components
   images: {
     unoptimized: true,
   },
