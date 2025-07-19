@@ -17,7 +17,7 @@ export default function CommonHeader({
   backText = 'ダッシュボードに戻る'
 }: CommonHeaderProps) {
   return (
-    <header className="bg-gray-700 text-white p-5 border-b">
+    <header className="bg-gray-700 text-white p-5 border-b" style={{ backgroundColor: '#374151' }}>
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-4">
