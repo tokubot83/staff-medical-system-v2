@@ -18,7 +18,7 @@ export const facilities: Facility[] = [
     name: '医療法人 厚生会 小原病院',
     type: '急性期病院',
     location: '〒898-0003 鹿児島県枕崎市折口町109番地',
-    beds: 250,
+    beds: 118,
     departments: [
       '脳神経外科', '外科', '泌尿器科', '整形外科', '消化器外科', '消化器内科',
       '循環器内科', '糖尿病内科', '神経内科', '腎臓内科（人工透析）',
@@ -35,7 +35,7 @@ export const facilities: Facility[] = [
     name: '立神リハビリテーション温泉病院',
     type: '慢性期・リハビリテーション病院',
     location: '〒898-0048 鹿児島県枕崎市火之神町620番地',
-    beds: 120,
+    beds: 110,
     departments: ['内科', 'リハビリテーション科'],
     specialFeatures: ['医療療養病床', '介護医療院', '慢性期医療', '医療・介護・福祉の連携'],
     staffCount: 180

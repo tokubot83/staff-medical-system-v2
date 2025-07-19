@@ -44,9 +44,6 @@ export default function FacilitySelector({ selectedFacility, onFacilityChange }:
                     <span className="font-medium">病床数:</span> {facility.beds}床
                   </p>
                 )}
-                <p className="text-sm text-gray-600">
-                  <span className="font-medium">職員数:</span> {facility.staffCount}名
-                </p>
                 {facility.departments && (
                   <p className="text-sm text-gray-600">
                     <span className="font-medium">診療科:</span> {facility.departments.join('、')}
