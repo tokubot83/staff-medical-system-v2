@@ -23,7 +23,7 @@ export default function FacilitySelector({ selectedFacility, onFacilityChange }:
         <option value="">全施設</option>
         {facilities.map((facility) => (
           <option key={facility.id} value={facility.id}>
-            {facility.name} ({facility.type})
+            {facility.name}
           </option>
         ))}
       </select>

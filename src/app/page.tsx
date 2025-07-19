@@ -166,7 +166,7 @@ export default function Home() {
       id: '2',
       type: 'critical',
       title: 'ストレス急上昇',
-      content: '鈴木一郎さん（内科）のストレス指数が危険レベル到達。',
+      content: '鈴木一郎さん（循環器内科）のストレス指数が危険レベル到達。',
       time: '11:20',
       buttonText: '対応開始',
       staffName: '鈴木一郎'
@@ -175,7 +175,7 @@ export default function Home() {
       id: '3',
       type: 'warning',
       title: '残業時間超過',
-      content: '伊藤由美さん（一般病棟）の月間残業が32時間。',
+      content: '伊藤由美さん（3階病棟）の月間残業が32時間。',
       time: '12:30',
       buttonText: '面談予約',
       staffName: '伊藤由美'
@@ -184,7 +184,7 @@ export default function Home() {
       id: '4',
       type: 'critical',
       title: '急性疲労蓄積',
-      content: '山田太郎さん（ICU）の疲労度が限界値。連続勤務72時間超過。',
+      content: '山田太郎さん（5階病棟）の疲労度が限界値。連続勤務72時間超過。',
       time: '10:15',
       buttonText: '即時対応',
       staffName: '山田太郎'
@@ -193,10 +193,28 @@ export default function Home() {
       id: '5',
       type: 'warning',
       title: 'パワハラ相談',
-      content: '高橋さくらさん（リハビリ科）より上司に関する相談申請。',
+      content: '高橋さくらさん（リハビリテーション科）より上司に関する相談申請。',
       time: '09:30',
       buttonText: '相談対応',
       staffName: '高橋さくら'
+    },
+    {
+      id: '6',
+      type: 'warning',
+      title: '介護スタッフストレス',
+      content: '渡辺花子さん（介護医療院）のストレス指数が上昇。立神リハビリ。',
+      time: '08:45',
+      buttonText: '面談調整',
+      staffName: '渡辺花子'
+    },
+    {
+      id: '7',
+      type: 'critical',
+      title: 'リハビリスタッフ不足',
+      content: '木村洋平さん（リハビリテーション部門）が退職検討中。立神リハビリ。',
+      time: '07:30',
+      buttonText: '緊急対応',
+      staffName: '木村洋平'
     }
   ];
 
@@ -213,7 +231,7 @@ export default function Home() {
       id: '2',
       type: 'warning',
       title: '残業部署超過',
-      content: '一般病棟の平均残業時間が28時間/月。労基署対応要。',
+      content: '3階病棟の平均残業時間が28時間/月。労基署対応要。',
       time: '13:20',
       buttonText: '業務見直し'
     },
@@ -240,6 +258,22 @@ export default function Home() {
       content: '地域包括ケア病棟で患者満足度が前月比15%低下。職員対応に課題。',
       time: '08:30',
       buttonText: '原因分析'
+    },
+    {
+      id: '6',
+      type: 'warning',
+      title: '外来残業超過',
+      content: '立神リハビリ外来で平均残業25時間/月。人員配置見直し必要。',
+      time: '07:00',
+      buttonText: '人員計画'
+    },
+    {
+      id: '7',
+      type: 'critical',
+      title: '第１病棟人員不足',
+      content: '立神リハビリ第１病棟で看護師2名不足。シフト編成困難。',
+      time: '06:30',
+      buttonText: '緊急調整'
     }
   ];
 
@@ -283,6 +317,22 @@ export default function Home() {
       time: '10:45',
       buttonText: '詳細分析',
       staffName: '木村'
+    },
+    {
+      id: '6',
+      title: 'リハビリ成果',
+      content: '鈴木明美さん（リハビリテーション部門）がPT主任昇格。立神リハビリ。',
+      time: '09:30',
+      buttonText: '祝福メッセージ',
+      staffName: '鈴木明美'
+    },
+    {
+      id: '7',
+      title: '介護スキル向上',
+      content: '山本花さん（介護医療院）が介護福祉士資格取得。立神リハビリ。',
+      time: '08:15',
+      buttonText: 'キャリア支援',
+      staffName: '山本花'
     }
   ];
 
@@ -321,6 +371,20 @@ export default function Home() {
       content: 'リハビリ科：フレックス制導入で有給取得率85%達成。',
       time: '09:45',
       buttonText: '制度拡大'
+    },
+    {
+      id: '6',
+      title: '介護医療院満足度向上',
+      content: '立神リハビリ介護医療院：入居者満足度91%達成。全国平均上回る。',
+      time: '08:00',
+      buttonText: '成功事例共有'
+    },
+    {
+      id: '7',
+      title: 'リハビリ部門成績',
+      content: '立神リハビリリハビリテーション部門：機能改善率92%。運動療法効果高い。',
+      time: '07:30',
+      buttonText: '治療法共有'
     }
   ];
 
