@@ -455,7 +455,7 @@ function SkillQualificationReportContent() {
                 message: '職員の65%がデジタルスキル不足を抱えており、業務効率低下の主要因となっています。早急なスキルアッププログラムが必要です。',
                 priority: 'high'
               },
-              isRehabilitation ? {
+              facilityId === 'tachigami-hospital' ? {
                 id: 'qualification-shortage',
                 type: 'interpretation',
                 title: '専門資格保有者の不足',

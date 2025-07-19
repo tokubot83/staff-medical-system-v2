@@ -360,7 +360,7 @@ function WorkLifeBalanceReportContent() {
             comments={[
               ...generateComments(reportData.overview.avgOvertime, 'overtimeHours'),
               ...generateComments(reportData.overview.avgStressIndex, 'stressIndex'),
-              isRehabilitation ? {
+              facilityId === 'tachigami-hospital' ? {
                 id: 'balance-insight',
                 type: 'insight',
                 title: 'ワークライフバランス改善のポイント',

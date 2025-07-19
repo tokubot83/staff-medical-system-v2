@@ -437,7 +437,7 @@ function TurnoverRiskReportContent() {
                 message: '「過重労働」「低エンゲージメント」「高ストレス」が主要な離職リスク要因です。これらは相互に関連しており、総合的な対策が効果的です。',
                 priority: 'high'
               },
-              isRehabilitation ? {
+              facilityId === 'tachigami-hospital' ? {
                 id: 'dept-insight',
                 type: 'insight',
                 title: '介護医療院の離職リスク上昇',

@@ -267,7 +267,7 @@ function HRStrategyReportContent() {
                 costPerHire: 450000,
                 retentionRate: 91.5
               }),
-              isRehabilitation ? {
+              facilityId === 'tachigami-hospital' ? {
                 id: 'dept-shortage',
                 type: 'warning',
                 title: '介護医療院の人員不足',

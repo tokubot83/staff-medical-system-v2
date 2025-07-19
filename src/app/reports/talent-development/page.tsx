@@ -354,7 +354,7 @@ function TalentDevelopmentReportContent() {
         <section className="mt-8">
           <DataCommentList 
             comments={[
-              isRehabilitation ? {
+              facilityId === 'tachigami-hospital' ? {
                 id: 'skill-gap',
                 type: 'warning',
                 title: 'スキルギャップの存在',

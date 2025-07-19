@@ -108,7 +108,7 @@ function OrganizationOptimizationReportContent() {
           gap: 'スキルバランス要調整'
         }
       ],
-      recommendations: isRehabilitation ? [
+      recommendations: facilityId === 'tachigami-hospital' ? [
         {
           title: '介護医療院の管理体制強化',
           description: '管理者を2名増員し、スパンオブコントロールを適正化（11.7→7.0）',

@@ -391,7 +391,7 @@ function RecruitmentEffectivenessReportContent() {
                 message: 'リファラル採用は質スコア95%、コストも5万円と最も効率的です。紹介制度の拡充が採用成功の鍵となります。',
                 priority: 'high'
               },
-              isRehabilitation ? {
+              facilityId === 'tachigami-hospital' ? {
                 id: 'therapist-recruitment',
                 type: 'warning',
                 title: 'セラピスト採用の課題',
