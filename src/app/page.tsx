@@ -56,6 +56,7 @@ export default function Home() {
  const [activeSuccessTab, setActiveSuccessTab] = useState<'personal' | 'department'>('personal');
  const [showModal, setShowModal] = useState(false);
  const [selectedStaff, setSelectedStaff] = useState<Staff | null>(null);
+ const [selectedFacility, setSelectedFacility] = useState<'all' | 'obara' | 'tategami'>('all');
  const [tasks, setTasks] = useState<Task[]>([
   { id: '1', content: '中村恵子さん 緊急面談', time: '9:00', priority: 'urgent', completed: false },
   { id: '2', content: '田中美咲さん 昇進検討面談', time: '10:30', priority: 'urgent', completed: false },
@@ -77,6 +78,7 @@ export default function Home() {
    nameInitial: '佐',
    department: '内科病棟',
    position: '看護師',
+   facility: '小原病院',
    grade: 'A',
    status: 'excellent',
    statusText: 'JNAラダーⅣ',
@@ -90,6 +92,7 @@ export default function Home() {
    nameInitial: '中',
    department: '外来',
    position: '看護師',
+   facility: '小原病院',
    grade: 'C',
    status: 'poor',
    statusText: '離職リスク高',
@@ -104,6 +107,7 @@ export default function Home() {
    nameInitial: '田',
    department: '地域包括ケア病棟',
    position: '看護師',
+   facility: '立神リハビリテーション温泉病院',
    grade: 'A',
    status: 'excellent',
    statusText: '昇進候補',
@@ -117,6 +121,7 @@ export default function Home() {
    nameInitial: '小',
    department: '外科病棟',
    position: '看護師',
+   facility: '小原病院',
    grade: 'B',
    status: 'average',
    statusText: '新人フォロー要',
@@ -130,6 +135,7 @@ export default function Home() {
    nameInitial: '伊',
    department: '緩和ケア病棟',
    position: '看護師（認定看護師）',
+   facility: '小原病院',
    grade: 'S',
    status: 'excellent',
    statusText: 'エキスパート',
@@ -143,6 +149,7 @@ export default function Home() {
    nameInitial: '渡',
    department: '小児科病棟',
    position: '看護師',
+   facility: '立神リハビリテーション温泉病院',
    grade: 'B',
    status: 'good',
    statusText: '復職支援中',
@@ -151,6 +158,14 @@ export default function Home() {
    avatar: 'bg-gradient-to-r from-purple-500 to-pink-600'
   }
  ];
+
+ // フィルタリング関数
+ const filterStaffByFacility = (staffList: Staff[], facility: string) => {
+  if (facility === 'all') return staffList;
+  if (facility === 'obara') return staffList.filter(s => s.facility === '小原病院');
+  if (facility === 'tategami') return staffList.filter(s => s.facility === '立神リハビリテーション温泉病院');
+  return staffList;
+ };
 
  const personalAlerts: AlertItem[] = [
   {
@@ -829,6 +844,40 @@ export default function Home() {
 
       {/* タブコンテンツ */}
       <div className="p-6">
+       {/* 施設フィルター */}
+       <div className="flex gap-2 mb-6">
+        <button
+         onClick={() => setSelectedFacility('all')}
+         className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+          selectedFacility === 'all'
+           ? 'bg-blue-500 text-white'
+           : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300'
+         }`}
+        >
+         全施設
+        </button>
+        <button
+         onClick={() => setSelectedFacility('obara')}
+         className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+          selectedFacility === 'obara'
+           ? 'bg-blue-500 text-white'
+           : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300'
+         }`}
+        >
+         小原病院
+        </button>
+        <button
+         onClick={() => setSelectedFacility('tategami')}
+         className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+          selectedFacility === 'tategami'
+           ? 'bg-blue-500 text-white'
+           : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300'
+         }`}
+        >
+         立神リハビリ
+        </button>
+       </div>
+
        {activeTab === 'overview' && (
         <div>
          <h3 className="text-lg font-semibold text-gray-800 mb-5">重点管理対象職員</h3>
@@ -837,6 +886,7 @@ export default function Home() {
            <thead>
             <tr className="border-b border-gray-200">
              <th className="text-left py-3 px-4 font-semibold text-gray-600">職員名</th>
+             <th className="text-left py-3 px-4 font-semibold text-gray-600">施設</th>
              <th className="text-left py-3 px-4 font-semibold text-gray-600">部署</th>
              <th className="text-left py-3 px-4 font-semibold text-gray-600">総合評価</th>
              <th className="text-left py-3 px-4 font-semibold text-gray-600">状態</th>
@@ -845,7 +895,7 @@ export default function Home() {
             </tr>
            </thead>
            <tbody>
-            {staffData.map((staff) => (
+            {filterStaffByFacility(staffData, selectedFacility).map((staff) => (
              <tr
               key={staff.id}
               className="border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors"
@@ -960,7 +1010,7 @@ export default function Home() {
             </tr>
            </thead>
            <tbody>
-            {Object.values(staffDatabase).slice(0, 6).map((staff) => {
+            {filterStaffByFacility(Object.values(staffDatabase), selectedFacility).slice(0, 6).map((staff) => {
              return (
               <tr key={staff.id} className="border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors">
                <td className="py-4 px-4">
@@ -974,6 +1024,12 @@ export default function Home() {
                   </Link>
                   <div className="text-xs text-gray-500">{staff.id}</div>
                  </div>
+                </div>
+               </td>
+               <td className="py-4 px-4">
+                <div className="text-sm text-gray-600">{staff.facility}</div>
+                <div className="text-xs text-gray-400">
+                 {staff.facility === '小原病院' ? '急性期' : '回復期リハ'}
                 </div>
                </td>
                <td className="py-4 px-4">
