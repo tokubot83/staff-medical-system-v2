@@ -502,14 +502,15 @@ export function getDepartmentsByType(type: Department['type']): Department[] {
 // 部門の階層パスを取得
 export function getDepartmentPath(departmentId: string): Department[] {
   const path: Department[] = [];
-  let current = organizationData.find(d => d.id === departmentId);
+  let current: Department | undefined = organizationData.find(d => d.id === departmentId);
   
   while (current) {
     path.unshift(current);
     if (current.parentId) {
-      current = organizationData.find(d => d.id === current.parentId);
+      const parentId = current.parentId;
+      current = organizationData.find(d => d.id === parentId);
     } else {
-      break;
+      current = undefined;
     }
   }
   
