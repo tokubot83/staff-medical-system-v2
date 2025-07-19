@@ -120,7 +120,7 @@ export default function StaffDetailPage() {
           <div>
             <h1>職員カルテ - {staffData.name}</h1>
             <div className={styles.subtitle}>
-              {staffData.position} | ID: {staffData.employeeId} | {staffData.department}
+              {staffData.position} | ID: {staffData.employeeId} | {staffData.department} | {staffData.facility || ''}
             </div>
           </div>
           <div className={styles.quickActions}>
