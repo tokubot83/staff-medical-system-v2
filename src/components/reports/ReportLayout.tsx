@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Facility } from '@/app/data/facilityData';
+import CommonHeader from '@/components/CommonHeader';
 
 interface ReportLayoutProps {
   title: string;
@@ -24,27 +25,26 @@ export default function ReportLayout({
   onExportPDF
 }: ReportLayoutProps) {
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        {/* ヘッダー */}
-        <div className="mb-8">
-          <Link 
-            href="/reports"
-            className="text-blue-600 hover:text-blue-800 mb-4 inline-block"
-          >
-            ← レポート一覧に戻る
-          </Link>
-          
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <div className={`${color} text-white rounded-lg p-4 text-3xl`}>
-                {icon}
+    <div className="min-h-screen bg-gray-50">
+      <CommonHeader 
+        title={title}
+        showBackButton={true}
+        backUrl="/reports"
+        backText="レポート一覧に戻る"
+      />
+      <div className="py-8 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          {/* レポート説明 */}
+          <div className="mb-8">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <div className={`${color} text-white rounded-lg p-4 text-3xl`}>
+                  {icon}
+                </div>
+                <div className="ml-4">
+                  <p className="text-gray-600">{description}</p>
+                </div>
               </div>
-              <div className="ml-4">
-                <h1 className="text-3xl font-bold text-gray-900">{title}</h1>
-                <p className="mt-1 text-gray-600">{description}</p>
-              </div>
-            </div>
             
             {onExportPDF && (
               <button
@@ -87,6 +87,7 @@ export default function ReportLayout({
         <div className="mt-8 text-center text-sm text-gray-500">
           <p>レポート生成日時: {new Date().toLocaleString('ja-JP')}</p>
           <p className="mt-1">医療法人厚生会 人事管理システム</p>
+          </div>
         </div>
       </div>
     </div>

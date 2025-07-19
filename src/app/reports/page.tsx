@@ -4,26 +4,27 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { allReports } from '@/types/reports';
 import FacilitySelector from '@/components/reports/FacilitySelector';
+import CommonHeader from '@/components/CommonHeader';
 
 export default function ReportsPage() {
   const [selectedFacility, setSelectedFacility] = useState('');
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        {/* ヘッダー */}
-        <div className="mb-8">
-          <Link 
-            href="/"
-            className="text-blue-600 hover:text-blue-800 mb-4 inline-block"
-          >
-            ← ダッシュボードに戻る
-          </Link>
-          <h1 className="text-3xl font-bold text-gray-900">レポートセンター</h1>
-          <p className="mt-2 text-gray-600">
-            基本指標から戦略的分析まで、全てのレポートを一覧できます。施設を選択してレポートを生成してください。
-          </p>
-        </div>
+    <div className="min-h-screen bg-gray-50">
+      <CommonHeader 
+        title="レポートセンター" 
+        showBackButton={true}
+        backUrl="/"
+        backText="ダッシュボードに戻る"
+      />
+      <div className="py-8 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          {/* ページ説明 */}
+          <div className="mb-8">
+            <p className="text-gray-600">
+              基本指標から戦略的分析まで、全てのレポートを一覧できます。施設を選択してレポートを生成してください。
+            </p>
+          </div>
 
         {/* 施設選択 */}
         <div className="mb-8">
@@ -112,6 +113,7 @@ export default function ReportsPage() {
             <li>各レポートはPDF形式でダウンロード可能です</li>
             <li>レポートは最新のデータに基づいてリアルタイムで生成されます</li>
           </ul>
+        </div>
         </div>
       </div>
     </div>
