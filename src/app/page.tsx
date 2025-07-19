@@ -474,19 +474,22 @@ export default function Home() {
 
       <div className="max-w-7xl mx-auto p-5">
         {/* アクションセンター */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 bg-gradient-to-r from-red-500 to-orange-500 rounded-lg flex items-center justify-center text-white text-xl font-bold shadow-md">
-              ⚡
+        <div className="mb-12">
+          <div className="bg-gradient-to-r from-red-50 to-orange-50 rounded-2xl p-8 shadow-lg border border-red-100">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 bg-gradient-to-r from-red-500 to-orange-500 rounded-xl flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+                ⚡
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-800">アクションセンター</h2>
+                <p className="text-sm text-gray-600">緊急対応が必要な情報</p>
+              </div>
             </div>
-            <h2 className="text-2xl font-bold text-gray-800">アクションセンター</h2>
-            <p className="text-sm text-gray-600 ml-2">緊急対応が必要な情報</p>
-          </div>
           
-          {/* 最優先エリア */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          {/* 今日のタスク */}
-          <div className="bg-white rounded-xl p-5 shadow-sm border-t-4 border-green-500">
+            {/* 最優先エリア */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* 今日のタスク */}
+              <div className="bg-white rounded-xl p-6 shadow-md border-t-4 border-green-500 hover:shadow-lg transition-shadow">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold flex items-center gap-2">
                 📅 今日のタスク
@@ -519,8 +522,8 @@ export default function Home() {
             </div>
           </div>
 
-          {/* 緊急アラート */}
-          <div className="bg-white rounded-xl p-5 shadow-sm border-t-4 border-red-500">
+              {/* 緊急アラート */}
+              <div className="bg-white rounded-xl p-6 shadow-md border-t-4 border-red-500 hover:shadow-lg transition-shadow">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold flex items-center gap-2">
                 🚨 緊急アラート
@@ -584,10 +587,10 @@ export default function Home() {
                 </div>
               ))}
             </div>
-          </div>
+              </div>
 
-          {/* 成功・良好状態 */}
-          <div className="bg-white rounded-xl p-5 shadow-sm border-t-4 border-blue-500">
+              {/* 成功・良好状態 */}
+              <div className="bg-white rounded-xl p-6 shadow-md border-t-4 border-blue-500 hover:shadow-lg transition-shadow">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold flex items-center gap-2">
                 🌟 成功・良好状態
@@ -656,74 +659,81 @@ export default function Home() {
         </div>
 
         {/* 組織健康診断 */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg flex items-center justify-center text-white text-xl font-bold shadow-md">
-              📊
+        <div className="mb-12">
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 shadow-lg border border-blue-100">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+                📊
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-800">組織健康診断</h2>
+                <p className="text-sm text-gray-600">組織全体の状態を数値で把握</p>
+              </div>
             </div>
-            <h2 className="text-2xl font-bold text-gray-800">組織健康診断</h2>
-            <p className="text-sm text-gray-600 ml-2">組織全体の状態を数値で把握</p>
-          </div>
-          
-          {/* 統計カード - 5カテゴリ */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-          <Link href="/metrics/basic" className="bg-white rounded-lg p-5 text-center shadow-sm border-t-4 border-green-500 hover:shadow-md transition-shadow cursor-pointer">
+            
+            {/* 統計カード - 5カテゴリ */}
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+              <Link href="/metrics/basic" className="bg-white rounded-xl p-5 text-center shadow-md border-t-4 border-green-500 hover:shadow-lg transition-shadow cursor-pointer">
             <div className="text-3xl font-bold text-gray-800 mb-1">500</div>
             <div className="text-sm text-gray-600 mb-2">基本指標</div>
             <div className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">総職員数</div>
-          </Link>
-          <Link href="/metrics/quality" className="bg-white rounded-lg p-5 text-center shadow-sm border-t-4 border-blue-500 hover:shadow-md transition-shadow cursor-pointer">
+              </Link>
+              <Link href="/metrics/quality" className="bg-white rounded-xl p-5 text-center shadow-md border-t-4 border-blue-500 hover:shadow-lg transition-shadow cursor-pointer">
             <div className="text-3xl font-bold text-gray-800 mb-1">87%</div>
             <div className="text-sm text-gray-600 mb-2">人材の質</div>
             <div className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">総合満足度</div>
-          </Link>
-          <Link href="/metrics/growth" className="bg-white rounded-lg p-5 text-center shadow-sm border-t-4 border-purple-500 hover:shadow-md transition-shadow cursor-pointer">
+              </Link>
+              <Link href="/metrics/growth" className="bg-white rounded-xl p-5 text-center shadow-md border-t-4 border-purple-500 hover:shadow-lg transition-shadow cursor-pointer">
             <div className="text-3xl font-bold text-gray-800 mb-1">92%</div>
             <div className="text-sm text-gray-600 mb-2">人材の成長</div>
             <div className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">研修受講率</div>
-          </Link>
-          <Link href="/metrics/risk" className="bg-white rounded-lg p-5 text-center shadow-sm border-t-4 border-yellow-500 hover:shadow-md transition-shadow cursor-pointer">
+              </Link>
+              <Link href="/metrics/risk" className="bg-white rounded-xl p-5 text-center shadow-md border-t-4 border-yellow-500 hover:shadow-lg transition-shadow cursor-pointer">
             <div className="text-3xl font-bold text-gray-800 mb-1">12</div>
             <div className="text-sm text-gray-600 mb-2">リスク管理</div>
             <div className="text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full">要注意職員</div>
-          </Link>
-          <Link href="/metrics/efficiency" className="bg-white rounded-lg p-5 text-center shadow-sm border-t-4 border-red-500 hover:shadow-md transition-shadow cursor-pointer">
+              </Link>
+              <Link href="/metrics/efficiency" className="bg-white rounded-xl p-5 text-center shadow-md border-t-4 border-red-500 hover:shadow-lg transition-shadow cursor-pointer">
             <div className="text-3xl font-bold text-gray-800 mb-1">3</div>
             <div className="text-sm text-gray-600 mb-2">組織効率</div>
             <div className="text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full">緊急対応要</div>
-          </Link>
-          </div>
+              </Link>
+            </div>
 
-          {/* 詳細レポートボタン */}
-          <div className="mb-6">
-          <Link href="/reports" className="block">
-            <button className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-4 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-3">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              <span className="text-lg">詳細レポートを見る</span>
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-          </Link>
+            {/* 詳細レポートボタン */}
+            <div className="mt-6">
+              <Link href="/reports" className="block">
+                <button className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-4 px-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-3">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <span className="text-lg">詳細レポートを見る</span>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
 
         {/* 職員カルテ */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-teal-500 rounded-lg flex items-center justify-center text-white text-xl font-bold shadow-md">
-              📋
+        <div className="mb-12">
+          <div className="bg-gradient-to-r from-green-50 to-teal-50 rounded-2xl p-8 shadow-lg border border-green-100">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-teal-500 rounded-xl flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+                📋
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-800">職員カルテ</h2>
+                <p className="text-sm text-gray-600">個々の職員情報を詳細に管理</p>
+              </div>
             </div>
-            <h2 className="text-2xl font-bold text-gray-800">職員カルテ</h2>
-            <p className="text-sm text-gray-600 ml-2">個々の職員情報を詳細に管理</p>
-          </div>
-          
-          {/* メインダッシュボード */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* メインコンテンツ */}
-          <div className="lg:col-span-2 bg-white rounded-xl shadow-sm overflow-hidden">
+            
+            {/* メインダッシュボード */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* メインコンテンツ */}
+              <div className="lg:col-span-2 bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
             {/* タブナビゲーション */}
             <div className="flex bg-gray-50 border-b border-gray-200">
               {[
@@ -1198,10 +1208,10 @@ export default function Home() {
             </div>
           </div>
 
-          {/* サイドバー */}
-          <div className="space-y-6">
-            {/* 今月の統計 */}
-            <div className="bg-white rounded-lg p-5 shadow-sm">
+              {/* サイドバー */}
+              <div className="space-y-6">
+                {/* 今月の統計 */}
+                <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow">
               <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
                 📊 今月の活動統計
               </h3>
@@ -1218,10 +1228,10 @@ export default function Home() {
                   </div>
                 ))}
               </div>
-            </div>
+                </div>
 
-            {/* クイックアクション */}
-            <div className="bg-white rounded-lg p-5 shadow-sm">
+                {/* クイックアクション */}
+                <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow">
               <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
                 ⚡ クイックアクション
               </h3>
@@ -1249,12 +1259,13 @@ export default function Home() {
                     </button>
                   )
                 ))}
+                  </div>
+                </div>
+
               </div>
             </div>
-
           </div>
         </div>
-      </div>
 
       {/* モーダル */}
       {showModal && selectedStaff && (
