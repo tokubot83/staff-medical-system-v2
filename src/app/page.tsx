@@ -882,10 +882,10 @@ export default function Home() {
        {activeTab === 'overview' && (
         <div>
          {/* サマリーエリア */}
-         <div className="mb-6">
+         <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mb-8">
           <h3 className="text-lg font-semibold text-gray-800 mb-4">組織の健康状態サマリー</h3>
           <div className="grid grid-cols-4 gap-4 mb-6">
-           <div className="bg-red-50 border-l-4 border-red-500 rounded-lg p-4">
+           <div className="bg-red-50 border-l-4 border-red-500 rounded-lg p-4 shadow-sm">
             <div className="flex items-center justify-between">
              <div>
               <p className="text-sm font-medium text-red-700">緊急対応必要</p>
@@ -896,7 +896,7 @@ export default function Home() {
              <div className="text-3xl text-red-500">🚨</div>
             </div>
            </div>
-           <div className="bg-yellow-50 border-l-4 border-yellow-500 rounded-lg p-4">
+           <div className="bg-yellow-50 border-l-4 border-yellow-500 rounded-lg p-4 shadow-sm">
             <div className="flex items-center justify-between">
              <div>
               <p className="text-sm font-medium text-yellow-700">要注意職員</p>
@@ -907,7 +907,7 @@ export default function Home() {
              <div className="text-3xl text-yellow-500">⚠️</div>
             </div>
            </div>
-           <div className="bg-green-50 border-l-4 border-green-500 rounded-lg p-4">
+           <div className="bg-green-50 border-l-4 border-green-500 rounded-lg p-4 shadow-sm">
             <div className="flex items-center justify-between">
              <div>
               <p className="text-sm font-medium text-green-700">優秀職員</p>
@@ -918,7 +918,7 @@ export default function Home() {
              <div className="text-3xl text-green-500">✨</div>
             </div>
            </div>
-           <div className="bg-blue-50 border-l-4 border-blue-500 rounded-lg p-4">
+           <div className="bg-blue-50 border-l-4 border-blue-500 rounded-lg p-4 shadow-sm">
             <div className="flex items-center justify-between">
              <div>
               <p className="text-sm font-medium text-blue-700">総職員数</p>
@@ -932,7 +932,7 @@ export default function Home() {
           </div>
 
           {/* 簡易グラフ */}
-          <div className="bg-gray-50 rounded-lg p-4">
+          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
            <div className="flex items-center gap-2 mb-2">
             <span className="text-sm font-medium text-gray-700">職員状態分布</span>
            </div>
@@ -1014,8 +1014,10 @@ export default function Home() {
           </div>
          </div>
 
-         <div className="space-y-3">
-          {filterStaffByFacility(staffData, selectedFacility)
+         {/* 職員リストエリア */}
+         <div className="border-t-2 border-gray-200 pt-6 mt-6">
+          <div className="space-y-3">
+           {filterStaffByFacility(staffData, selectedFacility)
            .filter(staff => {
             if (staffFilter === 'priority') {
              return staff.priority === 'emergency' || staff.priority === 'high' || staff.status === 'poor';
@@ -1066,23 +1068,26 @@ export default function Home() {
              </div>
             </div>
            </div>
-          ))}
+           ))}
+          </div>
          </div>
         </div>
        )}
 
        {activeTab === 'staff' && (
         <div>
-         <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center justify-between">
-          職員管理 - 人材の見える化
-          <div className="flex items-center gap-3">
-           <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">職員追加</button>
-           <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-gray-300">エクスポート</button>
-          </div>
-         </h3>
-         
-         <div className="grid grid-cols-2 gap-4 mb-6">
-          <div className="bg-gray-50 rounded-lg p-4">
+         {/* サマリーエリア */}
+         <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mb-8">
+          <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center justify-between">
+           職員管理 - 人材の見える化
+           <div className="flex items-center gap-3">
+            <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">職員追加</button>
+            <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-gray-300">エクスポート</button>
+           </div>
+          </h3>
+          
+          <div className="grid grid-cols-2 gap-4">
+           <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
            <h4 className="font-semibold text-blue-800 mb-2">施設別職員数</h4>
            <div className="space-y-2">
             <div className="flex justify-between text-sm">
@@ -1101,7 +1106,7 @@ export default function Home() {
             </div>
            </div>
           </div>
-          <div className="bg-gray-50 rounded-lg p-4">
+          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
            <h4 className="font-semibold text-green-800 mb-2">職種別分布</h4>
            <div className="space-y-2">
             <div className="flex justify-between text-sm">
@@ -1127,7 +1132,11 @@ export default function Home() {
            </div>
           </div>
          </div>
+        </div>
 
+        {/* 職員リストエリア */}
+        <div className="border-t-2 border-gray-200 pt-6 mt-6">
+         <h4 className="text-md font-semibold text-gray-700 mb-4">職員一覧</h4>
          <div className="space-y-3">
           {filterStaffByFacility(Object.values(staffDatabase), selectedFacility).slice(0, 6).map((staff) => {
            return (
@@ -1179,6 +1188,7 @@ export default function Home() {
            );
           })}
          </div>
+        </div>
         </div>
        )}
 
