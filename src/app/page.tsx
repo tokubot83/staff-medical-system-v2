@@ -473,8 +473,18 @@ export default function Home() {
       </header>
 
       <div className="max-w-7xl mx-auto p-5">
-        {/* 最優先エリア */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-6">
+        {/* アクションセンター */}
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 bg-gradient-to-r from-red-500 to-orange-500 rounded-lg flex items-center justify-center text-white text-xl font-bold shadow-md">
+              ⚡
+            </div>
+            <h2 className="text-2xl font-bold text-gray-800">アクションセンター</h2>
+            <p className="text-sm text-gray-600 ml-2">緊急対応が必要な情報</p>
+          </div>
+          
+          {/* 最優先エリア */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           {/* 今日のタスク */}
           <div className="bg-white rounded-xl p-5 shadow-sm border-t-4 border-green-500">
             <div className="flex justify-between items-center mb-4">
@@ -643,9 +653,20 @@ export default function Home() {
             </div>
           </div>
         </div>
+        </div>
 
-        {/* 統計カード - 5カテゴリ */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+        {/* 組織健康診断 */}
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg flex items-center justify-center text-white text-xl font-bold shadow-md">
+              📊
+            </div>
+            <h2 className="text-2xl font-bold text-gray-800">組織健康診断</h2>
+            <p className="text-sm text-gray-600 ml-2">組織全体の状態を数値で把握</p>
+          </div>
+          
+          {/* 統計カード - 5カテゴリ */}
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
           <Link href="/metrics/basic" className="bg-white rounded-lg p-5 text-center shadow-sm border-t-4 border-green-500 hover:shadow-md transition-shadow cursor-pointer">
             <div className="text-3xl font-bold text-gray-800 mb-1">500</div>
             <div className="text-sm text-gray-600 mb-2">基本指標</div>
@@ -671,10 +692,10 @@ export default function Home() {
             <div className="text-sm text-gray-600 mb-2">組織効率</div>
             <div className="text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full">緊急対応要</div>
           </Link>
-        </div>
+          </div>
 
-        {/* 詳細レポートボタン */}
-        <div className="mb-6">
+          {/* 詳細レポートボタン */}
+          <div className="mb-6">
           <Link href="/reports" className="block">
             <button className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-4 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-3">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -686,10 +707,21 @@ export default function Home() {
               </svg>
             </button>
           </Link>
+          </div>
         </div>
 
-        {/* メインダッシュボード */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* 職員カルテ */}
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-teal-500 rounded-lg flex items-center justify-center text-white text-xl font-bold shadow-md">
+              📋
+            </div>
+            <h2 className="text-2xl font-bold text-gray-800">職員カルテ</h2>
+            <p className="text-sm text-gray-600 ml-2">個々の職員情報を詳細に管理</p>
+          </div>
+          
+          {/* メインダッシュボード */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* メインコンテンツ */}
           <div className="lg:col-span-2 bg-white rounded-xl shadow-sm overflow-hidden">
             {/* タブナビゲーション */}
@@ -699,8 +731,7 @@ export default function Home() {
                 { key: 'staff', label: '👥 職員管理' },
                 { key: 'interview', label: '💬 面談管理' },
                 { key: 'evaluation', label: '📋 評価管理' },
-                { key: 'training', label: '🎓 教育・研修' },
-                { key: 'analytics', label: '📈 分析レポート' }
+                { key: 'training', label: '🎓 教育・研修' }
               ].map((tab) => (
                 <button
                   key={tab.key}
@@ -1160,102 +1191,6 @@ export default function Home() {
                         </div>
                         <p className="text-sm text-gray-600 mt-2">管理職準備研修開始推奨。2025年7月主任昇進に向けて6ヶ月プログラム。</p>
                       </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {activeTab === 'analytics' && (
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center justify-between">
-                    分析レポート - データ分析による洞察
-                    <div className="flex items-center gap-3">
-                      <Link href="/reports" className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors inline-block">レポート生成</Link>
-                      <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">ダウンロード</button>
-                    </div>
-                  </h3>
-                  
-                  <div className="grid grid-cols-2 gap-6 mb-6">
-                    <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-5">
-                      <h4 className="font-semibold text-indigo-800 mb-3">組織健全性スコア</h4>
-                      <div className="text-center py-4">
-                        <div className="text-5xl font-bold text-indigo-600">78.5</div>
-                        <div className="text-sm text-indigo-700 mt-2">前月比 +2.3ポイント</div>
-                      </div>
-                      <div className="space-y-2 mt-4">
-                        <div className="flex justify-between text-sm">
-                          <span>職員満足度</span>
-                          <span className="font-semibold">87%</span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                          <span>離職率</span>
-                          <span className="font-semibold">5.2%</span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                          <span>エンゲージメント</span>
-                          <span className="font-semibold">82%</span>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="bg-gradient-to-r from-red-50 to-orange-50 rounded-lg p-5">
-                      <h4 className="font-semibold text-red-800 mb-3">リスク予測</h4>
-                      <div className="space-y-3">
-                        <div className="p-3 bg-white rounded-lg border-l-4 border-red-500">
-                          <div className="font-medium text-red-700">外来部門 離職リスク上昇</div>
-                          <p className="text-sm text-gray-600 mt-1">3名が高リスク状態。部門全体のストレス指数が前月比15%上昇。</p>
-                        </div>
-                        <div className="p-3 bg-white rounded-lg border-l-4 border-yellow-500">
-                          <div className="font-medium text-yellow-700">新人定着率低下傾向</div>
-                          <p className="text-sm text-gray-600 mt-1">1年目看護師の離職率が前年比8%増。サポート体制強化が必要。</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-white border border-gray-200 rounded-lg p-5">
-                    <h4 className="font-semibold text-gray-800 mb-4">部門別パフォーマンス</h4>
-                    <div className="overflow-x-auto">
-                      <table className="w-full">
-                        <thead>
-                          <tr className="border-b border-gray-200">
-                            <th className="text-left py-2 px-3 text-sm font-semibold text-gray-600">部門</th>
-                            <th className="text-left py-2 px-3 text-sm font-semibold text-gray-600">満足度</th>
-                            <th className="text-left py-2 px-3 text-sm font-semibold text-gray-600">離職率</th>
-                            <th className="text-left py-2 px-3 text-sm font-semibold text-gray-600">残業時間</th>
-                            <th className="text-left py-2 px-3 text-sm font-semibold text-gray-600">総合評価</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr className="border-b border-gray-100">
-                            <td className="py-3 px-3 text-sm">ICU</td>
-                            <td className="py-3 px-3 text-sm font-semibold text-green-600">89%</td>
-                            <td className="py-3 px-3 text-sm font-semibold text-green-600">3.2%</td>
-                            <td className="py-3 px-3 text-sm font-semibold text-yellow-600">18h</td>
-                            <td className="py-3 px-3">
-                              <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-semibold">優秀</span>
-                            </td>
-                          </tr>
-                          <tr className="border-b border-gray-100">
-                            <td className="py-3 px-3 text-sm">内科病棟</td>
-                            <td className="py-3 px-3 text-sm font-semibold text-blue-600">85%</td>
-                            <td className="py-3 px-3 text-sm font-semibold text-blue-600">4.5%</td>
-                            <td className="py-3 px-3 text-sm font-semibold text-green-600">12h</td>
-                            <td className="py-3 px-3">
-                              <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-semibold">良好</span>
-                            </td>
-                          </tr>
-                          <tr className="border-b border-gray-100">
-                            <td className="py-3 px-3 text-sm">外来</td>
-                            <td className="py-3 px-3 text-sm font-semibold text-red-600">72%</td>
-                            <td className="py-3 px-3 text-sm font-semibold text-red-600">8.5%</td>
-                            <td className="py-3 px-3 text-sm font-semibold text-red-600">25h</td>
-                            <td className="py-3 px-3">
-                              <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-semibold">要改善</span>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
                     </div>
                   </div>
                 </div>
