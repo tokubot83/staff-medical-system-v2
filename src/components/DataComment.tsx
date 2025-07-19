@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { DataComment as DataCommentType, commentIcons, commentStyles } from '@/types/commentTypes';
 
 interface DataCommentProps {
@@ -7,7 +7,6 @@ interface DataCommentProps {
 }
 
 export const DataComment: React.FC<DataCommentProps> = ({ comment, inline = false }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
   const style = commentStyles[comment.type];
   const icon = commentIcons[comment.type];
 
@@ -22,27 +21,14 @@ export const DataComment: React.FC<DataCommentProps> = ({ comment, inline = fals
 
   return (
     <div 
-      className={`p-4 rounded-lg border ${style.bgColor} ${style.borderColor} ${style.textColor} cursor-pointer transition-all duration-200 hover:shadow-md`}
-      onClick={() => setIsExpanded(!isExpanded)}
+      className={`p-4 rounded-lg border ${style.bgColor} ${style.borderColor} ${style.textColor} transition-all duration-200`}
     >
-      <div className="flex items-start justify-between">
-        <div className="flex items-start gap-3">
-          <span className="text-2xl">{icon}</span>
-          <div className="flex-1">
-            <h4 className="font-semibold text-base">{comment.title}</h4>
-            {isExpanded && (
-              <p className="mt-2 text-sm opacity-90">{comment.message}</p>
-            )}
-          </div>
+      <div className="flex items-start gap-3">
+        <span className="text-2xl">{icon}</span>
+        <div className="flex-1">
+          <h4 className="font-semibold text-base">{comment.title}</h4>
+          <p className="mt-2 text-sm opacity-90">{comment.message}</p>
         </div>
-        <svg
-          className={`w-5 h-5 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
       </div>
     </div>
   );
@@ -81,7 +67,7 @@ export const MetricWithComment: React.FC<MetricWithCommentProps> = ({
   comment,
   className = ''
 }) => {
-  const [showTooltip, setShowTooltip] = useState(false);
+  const [showTooltip, setShowTooltip] = React.useState(false);
 
   return (
     <div className={`relative ${className}`}>

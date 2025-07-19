@@ -155,12 +155,12 @@ export default function MetricsLayout({ metrics, aiAnalysis }: MetricsLayoutProp
           </div>
         </div>
 
-        {/* AIアシスタント分析・提案 */}
+        {/* データ分析サポート */}
         {aiAnalysis && (
           <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-xl p-6 mt-6">
             <div className="flex justify-between items-center mb-5">
               <h2 className="text-xl font-semibold text-blue-800 flex items-center gap-2">
-                🤖 AIアシスタント分析・提案
+                📈 データ分析サポート
               </h2>
               <div className="flex items-center gap-2 text-sm text-blue-700 bg-white px-3 py-1 rounded-full">
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>

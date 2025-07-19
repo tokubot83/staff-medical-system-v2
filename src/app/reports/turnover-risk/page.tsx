@@ -115,7 +115,7 @@ function TurnoverRiskReportContent() {
       interventions: [
         {
           title: '高リスク職員への早期介入プログラム',
-          description: 'AIで特定した高リスク職員に対する個別支援プログラムの実施',
+          description: 'データ分析で特定した高リスク職員に対する個別支援プログラムの実施',
           targetGroup: 'リスクスコア70以上',
           expectedReduction: 40,
           cost: 2000000,
