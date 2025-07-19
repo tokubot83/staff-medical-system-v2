@@ -8,6 +8,8 @@ import { staffDatabase } from '@/app/data/staffData';
 import { exportToPDF } from '@/utils/pdfExport';
 import { DataCommentList, MetricWithComment } from '@/components/DataComment';
 import { generateHRStrategyComments } from '@/utils/reportComments';
+import { organizationData, getDepartmentsByType } from '@/app/data/organizationData';
+import { tachigamiOrganizationData } from '@/app/data/tachigamiOrganizationData';
 
 function HRStrategyReportContent() {
   const searchParams = useSearchParams();
@@ -25,6 +27,7 @@ function HRStrategyReportContent() {
   const generateReportData = () => {
     const staff = Object.values(staffDatabase);
     const totalStaff = facilityId ? Math.floor(staff.length * 0.3) : staff.length;
+    const isRehabilitation = facilityId === 'tachigami-hospital';
     
     return {
       overview: {
@@ -35,12 +38,18 @@ function HRStrategyReportContent() {
         turnoverRate: 8.5,
         recruitmentRate: 10.2
       },
-      departmentAnalysis: [
+      departmentAnalysis: isRehabilitation ? [
+        { name: 'リハビリテーション部門', staff: 35, efficiency: 92, satisfaction: 90 },
+        { name: '看護部門', staff: 65, efficiency: 88, satisfaction: 85 },
+        { name: '介護医療院', staff: 35, efficiency: 82, satisfaction: 78 },
+        { name: '医局', staff: 8, efficiency: 90, satisfaction: 88 },
+        { name: '事務部門', staff: 20, efficiency: 85, satisfaction: 82 }
+      ] : [
         { name: '内科', staff: 85, efficiency: 92, satisfaction: 88 },
         { name: '外科', staff: 72, efficiency: 88, satisfaction: 85 },
         { name: 'ICU', staff: 45, efficiency: 95, satisfaction: 82 },
         { name: '小児科', staff: 38, efficiency: 90, satisfaction: 90 },
-        { name: 'リハビリ科', staff: 42, efficiency: 87, satisfaction: 91 }
+        { name: 'リハビリテーション科', staff: 42, efficiency: 87, satisfaction: 91 }
       ],
       strengthsWeaknesses: {
         strengths: [
@@ -48,13 +57,24 @@ function HRStrategyReportContent() {
           '部門間連携の効率性が高い',
           '継続的な人材育成プログラムの実施'
         ],
-        weaknesses: [
+        weaknesses: isRehabilitation ? [
+          '介護医療院での人員不足と高い離職率',
+          'セラピストの採用競争が激化',
+          '夜勤スタッフの確保が困難'
+        ] : [
           '特定部門での人員不足（ICU、小児科）',
           '管理職候補の不足',
           '非正規職員の比率が高い部門の存在'
         ]
       },
-      recommendations: [
+      recommendations: isRehabilitation ? [
+        {
+          title: '介護職員の採用強化',
+          description: '介護医療院への人員配置を優先し、福利厚生の充実で定着率向上',
+          priority: 'high',
+          timeline: '3ヶ月以内'
+        },
+      ] : [
         {
           title: '戦略的採用計画の策定',
           description: 'ICUと小児科を重点部門として、専門性の高い人材の採用を強化',
@@ -247,7 +267,13 @@ function HRStrategyReportContent() {
                 costPerHire: 450000,
                 retentionRate: 91.5
               }),
-              {
+              isRehabilitation ? {
+                id: 'dept-shortage',
+                type: 'warning',
+                title: '介護医療院の人員不足',
+                message: '介護医療院で深刻な人員不足が発生し、離職率も高い状態です。早急な対策が必要です。',
+                priority: 'high'
+              } : {
                 id: 'dept-shortage',
                 type: 'warning',
                 title: '特定部門の人員不足',

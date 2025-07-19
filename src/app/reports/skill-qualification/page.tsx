@@ -455,11 +455,17 @@ function SkillQualificationReportContent() {
                 message: '職員の65%がデジタルスキル不足を抱えており、業務効率低下の主要因となっています。早急なスキルアッププログラムが必要です。',
                 priority: 'high'
               },
-              {
+              isRehabilitation ? {
                 id: 'qualification-shortage',
                 type: 'interpretation',
                 title: '専門資格保有者の不足',
-                message: '認定看護師が12名（目標20名）、専門看護師が5名（目标10名）と不足しています。資格取得支援制度の拡充が効果的です。',
+                message: '認定理学療法士が8名（目標12名）、認知症ケア専門士が6名（目標10名）と不足しています。資格取得支援の強化が必要です。',
+                priority: 'high'
+              } : {
+                id: 'qualification-shortage',
+                type: 'interpretation',
+                title: '専門資格保有者の不足',
+                message: '認定看護師が12名（目標20名）、専門看護師が5名（目標10名）と不足しています。資格取得支援制度の拡充が効果的です。',
                 priority: 'high'
               },
               {

@@ -8,6 +8,8 @@ import { staffDatabase } from '@/app/data/staffData';
 import { exportToPDF } from '@/utils/pdfExport';
 import { DataCommentList, MetricWithComment } from '@/components/DataComment';
 import { generateComments } from '@/types/commentTypes';
+import { organizationData, getDepartmentsByType } from '@/app/data/organizationData';
+import { tachigamiOrganizationData } from '@/app/data/tachigamiOrganizationData';
 
 function WorkLifeBalanceReportContent() {
   const searchParams = useSearchParams();
@@ -26,6 +28,10 @@ function WorkLifeBalanceReportContent() {
     const staff = Object.values(staffDatabase);
     const targetStaff = facilityId ? staff.slice(0, Math.floor(staff.length * 0.3)) : staff;
     
+    // 施設に応じて組織データを選択
+    const currentOrgData = facilityId === 'tachigami-hospital' ? tachigamiOrganizationData : organizationData;
+    const isRehabilitation = facilityId === 'tachigami-hospital';
+    
     // 平均値の計算
     const avgOvertime = targetStaff.reduce((sum, s) => sum + s.overtime, 0) / targetStaff.length;
     const avgPaidLeaveRate = targetStaff.reduce((sum, s) => sum + s.paidLeaveRate, 0) / targetStaff.length;
@@ -40,11 +46,17 @@ function WorkLifeBalanceReportContent() {
         flexTimeUsage: 32,
         childcareLeaveRate: 95
       },
-      departmentData: [
+      departmentData: isRehabilitation ? [
+        { name: 'リハビリテーション部門', overtime: 8, paidLeave: 88, stress: 32, satisfaction: 90 },
+        { name: '第１病棟', overtime: 12, paidLeave: 75, stress: 45, satisfaction: 82 },
+        { name: '介護医療院', overtime: 18, paidLeave: 65, stress: 58, satisfaction: 75 },
+        { name: '外来', overtime: 6, paidLeave: 92, stress: 28, satisfaction: 94 },
+        { name: '薬剤部門', overtime: 5, paidLeave: 95, stress: 25, satisfaction: 92 }
+      ] : [
         { name: 'ICU', overtime: 22, paidLeave: 45, stress: 68, satisfaction: 72 },
         { name: '内科病棟', overtime: 15, paidLeave: 72, stress: 48, satisfaction: 85 },
         { name: '外来', overtime: 8, paidLeave: 85, stress: 35, satisfaction: 90 },
-        { name: 'リハビリ科', overtime: 5, paidLeave: 90, stress: 30, satisfaction: 92 },
+        { name: 'リハビリテーション科', overtime: 5, paidLeave: 90, stress: 30, satisfaction: 92 },
         { name: '薬剤部', overtime: 10, paidLeave: 88, stress: 38, satisfaction: 88 }
       ],
       stressFactors: [
@@ -78,7 +90,12 @@ function WorkLifeBalanceReportContent() {
         }
       ],
       recommendations: [
-        {
+        isRehabilitation ? {
+          title: '介護医療院の負担軽減',
+          description: '介護職員の配置最適化とシフト改善により、平均残業時間を15時間以下に',
+          priority: 'urgent',
+          expectedImpact: '離職率4%改善、ストレス指戵12ポイント改善'
+        } : {
           title: 'ICU・救急部門の負担軽減',
           description: '交代制勤務の見直しと増員により、平均残業時間を20時間以下に',
           priority: 'urgent',
@@ -343,7 +360,13 @@ function WorkLifeBalanceReportContent() {
             comments={[
               ...generateComments(reportData.overview.avgOvertime, 'overtimeHours'),
               ...generateComments(reportData.overview.avgStressIndex, 'stressIndex'),
-              {
+              isRehabilitation ? {
+                id: 'balance-insight',
+                type: 'insight',
+                title: 'ワークライフバランス改善のポイント',
+                message: '介護医療院の介護職員の負担軽減が最優先課題です。温泉利用やリフレッシュ休暇制度の導入が効果的です。',
+                priority: 'medium'
+              } : {
                 id: 'balance-insight',
                 type: 'insight',
                 title: 'ワークライフバランス改善のポイント',

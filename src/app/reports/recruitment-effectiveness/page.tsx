@@ -7,6 +7,8 @@ import { facilities } from '@/app/data/facilityData';
 import { exportToPDF } from '@/utils/pdfExport';
 import { DataCommentList, MetricWithComment } from '@/components/DataComment';
 import { generateRecruitmentComments } from '@/utils/reportComments';
+import { organizationData, getDepartmentsByType } from '@/app/data/organizationData';
+import { tachigamiOrganizationData } from '@/app/data/tachigamiOrganizationData';
 
 function RecruitmentEffectivenessReportContent() {
   const searchParams = useSearchParams();
@@ -22,6 +24,8 @@ function RecruitmentEffectivenessReportContent() {
 
   // レポートデータの生成
   const generateReportData = () => {
+    const isRehabilitation = facilityId === 'tachigami-hospital';
+    
     return {
       overview: {
         totalHires: 68,
@@ -38,7 +42,13 @@ function RecruitmentEffectivenessReportContent() {
         { channel: 'リファラル採用', hires: 8, cost: 400000, quality: 95 },
         { channel: '新卒採用', hires: 5, cost: 1000000, quality: 88 }
       ],
-      hiringByPosition: [
+      hiringByPosition: isRehabilitation ? [
+        { position: 'セラピスト', target: 15, actual: 12, achievement: 80, avgDays: 65 },
+        { position: '看護師', target: 20, actual: 18, achievement: 90, avgDays: 42 },
+        { position: '介護職員', target: 25, actual: 20, achievement: 80, avgDays: 35 },
+        { position: '医師', target: 3, actual: 2, achievement: 67, avgDays: 90 },
+        { position: '事務職', target: 5, actual: 5, achievement: 100, avgDays: 28 }
+      ] : [
         { position: '看護師', target: 35, actual: 32, achievement: 91, avgDays: 38 },
         { position: '医師', target: 10, actual: 7, achievement: 70, avgDays: 85 },
         { position: 'リハビリ職', target: 15, actual: 14, achievement: 93, avgDays: 42 },
@@ -82,7 +92,12 @@ function RecruitmentEffectivenessReportContent() {
           expectedImpact: 'コスト30%削減、質の向上',
           priority: 'high'
         },
-        {
+        isRehabilitation ? {
+          title: 'セラピスト採用チャネルの強化',
+          description: 'セラピスト採用の競争激化に対応するため、養成校との連携強化',
+          expectedImpact: '採用達成率を80%から95%へ',
+          priority: 'urgent'
+        } : {
           title: '医師採用チャネルの見直し',
           description: '医師採用の成功率向上のため、専門エージェントとの連携強化',
           expectedImpact: '採用達成率を70%から90%へ',
@@ -376,7 +391,13 @@ function RecruitmentEffectivenessReportContent() {
                 message: 'リファラル採用は質スコア95%、コストも5万円と最も効率的です。紹介制度の拡充が採用成功の鍵となります。',
                 priority: 'high'
               },
-              {
+              isRehabilitation ? {
+                id: 'therapist-recruitment',
+                type: 'warning',
+                title: 'セラピスト採用の課題',
+                message: 'セラピストの採用達成率80%、平均採用日数65日と競争が激化しています。養成校との連携強化が必要です。',
+                priority: 'high'
+              } : {
                 id: 'doctor-recruitment',
                 type: 'warning',
                 title: '医師採用の課題',

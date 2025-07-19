@@ -108,7 +108,15 @@ function OrganizationOptimizationReportContent() {
           gap: 'スキルバランス要調整'
         }
       ],
-      recommendations: [
+      recommendations: isRehabilitation ? [
+        {
+          title: '介護医療院の管理体制強化',
+          description: '管理者を2名増員し、スパンオブコントロールを適正化（11.7→7.0）',
+          impact: '効率性20%向上、離職率低下',
+          cost: 10000000,
+          priority: 'high'
+        },
+      ] : [
         {
           title: '外来部門の管理体制強化',
           description: '管理者を2名増員し、スパンオブコントロールを適正化（8.7→6.0）',

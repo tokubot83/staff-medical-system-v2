@@ -8,6 +8,8 @@ import { staffDatabase } from '@/app/data/staffData';
 import { exportToPDF } from '@/utils/pdfExport';
 import { DataCommentList, MetricWithComment } from '@/components/DataComment';
 import { DataComment } from '@/types/commentTypes';
+import { organizationData, getDepartmentsByType } from '@/app/data/organizationData';
+import { tachigamiOrganizationData } from '@/app/data/tachigamiOrganizationData';
 
 function TalentDevelopmentReportContent() {
   const searchParams = useSearchParams();
@@ -23,8 +25,46 @@ function TalentDevelopmentReportContent() {
 
   // レポートデータの生成
   const generateReportData = () => {
+    const isRehabilitation = facilityId === 'tachigami-hospital';
+    
     return {
-      jobCategories: [
+      jobCategories: isRehabilitation ? [
+        {
+          name: 'セラピスト',
+          total: 35,
+          skillLevels: [
+            { level: '新人（1-2年）', count: 8, percentage: 23 },
+            { level: '中堅（3-7年）', count: 15, percentage: 43 },
+            { level: 'ベテラン（8年以上）', count: 12, percentage: 34 }
+          ],
+          criticalSkills: ['回復期リハビリ', '運動器リハビリ', '認知症リハビリ', '温泉療法'],
+          trainingNeeds: ['回復期リハ専門資格', '認知症ケア技術', '多職種連携研修']
+        },
+        {
+          name: '看護師',
+          total: 65,
+          skillLevels: [
+            { level: 'レベル1（新人）', count: 10, percentage: 15 },
+            { level: 'レベル2（一人前）', count: 26, percentage: 40 },
+            { level: 'レベル3（中堅）', count: 20, percentage: 31 },
+            { level: 'レベル4（達人）', count: 7, percentage: 11 },
+            { level: 'レベル5（エキスパート）', count: 2, percentage: 3 }
+          ],
+          criticalSkills: ['回復期看護', '認知症ケア', '慢性疾患管理', '在宅復帰支援'],
+          trainingNeeds: ['回復期看護研修', '認知症専門資格', '地域連携研修']
+        },
+        {
+          name: '介護職員',
+          total: 35,
+          skillLevels: [
+            { level: '新人（1-2年）', count: 10, percentage: 29 },
+            { level: '中堅（3-7年）', count: 15, percentage: 42 },
+            { level: 'ベテラン（8年以上）', count: 10, percentage: 29 }
+          ],
+          criticalSkills: ['身体介護技術', '認知症ケア', 'レクリエーション', 'コミュニケーション'],
+          trainingNeeds: ['介護福祉士資格取得', '認知症ケア研修', 'チームケア研修']
+        }
+      ] : [
         {
           name: '看護師',
           total: 220,
@@ -314,7 +354,13 @@ function TalentDevelopmentReportContent() {
         <section className="mt-8">
           <DataCommentList 
             comments={[
-              {
+              isRehabilitation ? {
+                id: 'skill-gap',
+                type: 'warning',
+                title: 'スキルギャップの存在',
+                message: '看護師のレベル4・5が合計14%、セラピストのベテランが34%と、上級スキル保有者の育成が課題です。',
+                priority: 'high'
+              } : {
                 id: 'skill-gap',
                 type: 'warning',
                 title: 'スキルギャップの存在',

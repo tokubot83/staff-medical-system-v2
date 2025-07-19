@@ -7,6 +7,8 @@ import { facilities } from '@/app/data/facilityData';
 import { exportToPDF } from '@/utils/pdfExport';
 import { DataCommentList, MetricWithComment } from '@/components/DataComment';
 import { generateCostComments } from '@/utils/reportComments';
+import { organizationData, getDepartmentsByType } from '@/app/data/organizationData';
+import { tachigamiOrganizationData } from '@/app/data/tachigamiOrganizationData';
 
 function CostOptimizationReportContent() {
   const searchParams = useSearchParams();
@@ -21,6 +23,9 @@ function CostOptimizationReportContent() {
   }, [facilityId]);
 
   const generateReportData = () => {
+    // 施設に応じてデータを調整
+    const isRehabilitation = facilityId === 'tachigami-hospital';
+    
     return {
       overview: {
         totalCost: 2450000000,
@@ -36,7 +41,48 @@ function CostOptimizationReportContent() {
         { category: '各種手当', amount: 180000000, percentage: 7.3 },
         { category: '法定福利費', amount: 170000000, percentage: 6.9 }
       ],
-      departmentCosts: [
+      departmentCosts: isRehabilitation ? [
+        {
+          name: '看護部門',
+          staff: 65,
+          totalCost: 318500000,
+          avgCost: 4900000,
+          costPerPatient: 8500,
+          efficiency: 85
+        },
+        {
+          name: 'リハビリテーション部門',
+          staff: 35,
+          totalCost: 154000000,
+          avgCost: 4400000,
+          costPerPatient: 4200,
+          efficiency: 92
+        },
+        {
+          name: '介護部門',
+          staff: 35,
+          totalCost: 126000000,
+          avgCost: 3600000,
+          costPerPatient: 3800,
+          efficiency: 78
+        },
+        {
+          name: '医局',
+          staff: 8,
+          totalCost: 64000000,
+          avgCost: 8000000,
+          costPerPatient: 12000,
+          efficiency: 88
+        },
+        {
+          name: '事務部門',
+          staff: 20,
+          totalCost: 84000000,
+          avgCost: 4200000,
+          costPerPatient: 2500,
+          efficiency: 82
+        }
+      ] : [
         {
           name: '看護部',
           staff: 220,
@@ -54,7 +100,7 @@ function CostOptimizationReportContent() {
           efficiency: 92
         },
         {
-          name: 'リハビリ部',
+          name: 'リハビリテーション科',
           staff: 45,
           totalCost: 198000000,
           avgCost: 4400000,
@@ -80,7 +126,13 @@ function CostOptimizationReportContent() {
       ],
       overtimeCosts: {
         total: 98000000,
-        byDepartment: [
+        byDepartment: isRehabilitation ? [
+          { name: '介護医療院', amount: 18000000, hours: 3200 },
+          { name: '看護部門', amount: 15000000, hours: 2800 },
+          { name: 'リハビリテーション部門', amount: 8000000, hours: 1600 },
+          { name: '医局', amount: 3000000, hours: 400 },
+          { name: 'その他', amount: 4000000, hours: 800 }
+        ] : [
           { name: 'ICU', amount: 28000000, hours: 4200 },
           { name: '看護部（病棟）', amount: 35000000, hours: 5800 },
           { name: '医局', amount: 20000000, hours: 2400 },
@@ -410,7 +462,13 @@ function CostOptimizationReportContent() {
                 message: '各種最適化施策の実施により、年間8,760万円のコスト削減が可能です。特に残業削減と業務効率化が効果的です。',
                 priority: 'high'
               },
-              {
+              isRehabilitation ? {
+                id: 'dept-efficiency',
+                type: 'interpretation',
+                title: '部門別効率性の分析',
+                message: '介護部門の効率性が78%と低く、業務フローの改善や介護ロボットの導入による改善余地があります。',
+                priority: 'medium'
+              } : {
                 id: 'dept-efficiency',
                 type: 'interpretation',
                 title: '部門別効率性の分析',

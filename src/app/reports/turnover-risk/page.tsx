@@ -8,6 +8,8 @@ import { staffDatabase } from '@/app/data/staffData';
 import { exportToPDF } from '@/utils/pdfExport';
 import { DataCommentList, MetricWithComment } from '@/components/DataComment';
 import { DataComment } from '@/types/commentTypes';
+import { organizationData, getDepartmentsByType } from '@/app/data/organizationData';
+import { tachigamiOrganizationData } from '@/app/data/tachigamiOrganizationData';
 
 function TurnoverRiskReportContent() {
   const searchParams = useSearchParams();
@@ -23,6 +25,9 @@ function TurnoverRiskReportContent() {
 
   // レポートデータの生成
   const generateReportData = () => {
+    // 施設に応じて組織データを選択
+    const currentOrgData = facilityId === 'tachigami-hospital' ? tachigamiOrganizationData : organizationData;
+    const isRehabilitation = facilityId === 'tachigami-hospital';
     // 実際のスタッフデータからリスク分析
     const staff = Object.values(staffDatabase);
     const highRiskStaff = staff.filter(s => 
@@ -100,12 +105,18 @@ function TurnoverRiskReportContent() {
           'メンタルヘルスサポート'
         ]
       })),
-      departmentRisk: [
+      departmentRisk: isRehabilitation ? [
+        { name: 'リハビリテーション部門', avgRiskScore: 52, turnoverRate: 8.5, trend: 'stable' },
+        { name: '第１病棟', avgRiskScore: 48, turnoverRate: 7.2, trend: 'decreasing' },
+        { name: '介護医療院', avgRiskScore: 45, turnoverRate: 9.8, trend: 'increasing' },
+        { name: '外来', avgRiskScore: 40, turnoverRate: 5.5, trend: 'stable' },
+        { name: '薬剤部門', avgRiskScore: 35, turnoverRate: 4.2, trend: 'stable' }
+      ] : [
         { name: 'ICU', avgRiskScore: 72, turnoverRate: 12.5, trend: 'increasing' },
         { name: '外来', avgRiskScore: 65, turnoverRate: 10.2, trend: 'stable' },
         { name: '外科病棟', avgRiskScore: 58, turnoverRate: 8.8, trend: 'increasing' },
         { name: '内科病棟', avgRiskScore: 45, turnoverRate: 6.5, trend: 'decreasing' },
-        { name: 'リハビリ科', avgRiskScore: 38, turnoverRate: 5.2, trend: 'stable' }
+        { name: 'リハビリテーション科', avgRiskScore: 38, turnoverRate: 5.2, trend: 'stable' }
       ],
       survivalAnalysis: {
         periods: ['0-1年', '1-2年', '2-3年', '3-5年', '5年以上'],
@@ -121,7 +132,14 @@ function TurnoverRiskReportContent() {
           cost: 2000000,
           roi: 320
         },
-        {
+        isRehabilitation ? {
+          title: '介護医療院の人員配置最適化',
+          description: '介護職員の増員と勤務シフトの改善による負担軽減',
+          targetGroup: '介護医療院全職員',
+          expectedReduction: 30,
+          cost: 5000000,
+          roi: 200
+        } : {
           title: 'ICU・救急部門の勤務体制改善',
           description: '2交代制から3交代制への移行と増員による負担軽減',
           targetGroup: 'ICU・救急部門全職員',
@@ -419,7 +437,13 @@ function TurnoverRiskReportContent() {
                 message: '「過重労働」「低エンゲージメント」「高ストレス」が主要な離職リスク要因です。これらは相互に関連しており、総合的な対策が効果的です。',
                 priority: 'high'
               },
-              {
+              isRehabilitation ? {
+                id: 'dept-insight',
+                type: 'insight',
+                title: '介護医療院の離職リスク上昇',
+                message: '介護医療院の離職率が9.8%と上昇傾向にあります。介護職員の負担軽減策が必要です。',
+                priority: 'high'
+              } : {
                 id: 'dept-insight',
                 type: 'insight',
                 title: 'ICU・救急部門の深刻な状況',
