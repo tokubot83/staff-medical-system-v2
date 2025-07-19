@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { staffListData, staffDatabase } from './data/staffData';
+import { staffListData, staffDatabase, StaffDetail } from './data/staffData';
 
 // 型定義
 interface Staff {
@@ -159,8 +159,8 @@ export default function Home() {
   }
  ];
 
- // フィルタリング関数
- const filterStaffByFacility = (staffList: Staff[], facility: string) => {
+ // フィルタリング関数（ジェネリックに変更）
+ const filterStaffByFacility = <T extends { facility?: string }>(staffList: T[], facility: string): T[] => {
   if (facility === 'all') return staffList;
   if (facility === 'obara') return staffList.filter(s => s.facility === '小原病院');
   if (facility === 'tategami') return staffList.filter(s => s.facility === '立神リハビリテーション温泉病院');
