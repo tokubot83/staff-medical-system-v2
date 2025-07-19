@@ -455,10 +455,10 @@ export default function Home() {
  return (
   <div className="min-h-screen bg-white">
    {/* Header */}
-   <header className="bg-white text-gray-800 p-5 border-b">
+   <header className="bg-gray-700 text-white p-5 border-b">
     <div className="flex justify-between items-center">
      <div className="flex items-center gap-4">
-      <div className="w-12 h-12 bg-gray-100 border-2 border-gray-300 rounded-lg flex items-center justify-center text-2xl">
+      <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center text-2xl">
        🏥
       </div>
       <div>
@@ -471,7 +471,7 @@ export default function Home() {
        <input
         type="text"
         placeholder="職員名・ID・部署で検索..."
-        className="w-80 px-4 py-2 rounded-full text-gray-700 pr-20"
+        className="w-80 px-4 py-2 rounded-full text-gray-700 pr-20 bg-white"
        />
        <button className="absolute right-1 top-1 bg-gray-700 text-white px-4 py-1 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors">
         検索
