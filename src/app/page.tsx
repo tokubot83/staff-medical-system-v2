@@ -1332,61 +1332,6 @@ export default function Home() {
         </div>
        )}
       </div>
-      
-      {/* 今月の活動統計とクイックアクション */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-       {/* 今月の統計 */}
-       <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow">
-       <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-        📊 今月の活動統計
-       </h3>
-       <div className="space-y-3">
-        {[
-         { label: '面談実施', value: '23件' },
-         { label: '評価完了', value: '32名' },
-         { label: '研修実施', value: '5回' },
-         { label: '新規採用', value: '2名' }
-        ].map((stat, index) => (
-         <div key={index} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
-          <span className="text-sm text-gray-600">{stat.label}</span>
-          <span className="text-lg font-semibold text-gray-800">{stat.value}</span>
-         </div>
-        ))}
-       </div>
-        </div>
-
-        {/* クイックアクション */}
-        <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow">
-       <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-        ⚡ クイックアクション
-       </h3>
-       <div className="space-y-3">
-        {[
-         { label: '🔍 職員検索', color: 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300', href: null },
-         { label: '📅 面談予約', color: 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300', href: null },
-         { label: '📊 レポート作成', color: 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300', href: '/reports' },
-         { label: '⚙️ システム設定', color: 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300', href: null }
-        ].map((action, index) => (
-         action.href ? (
-          <Link
-           key={index}
-           href={action.href}
-           className={`block w-full ${action.color} py-3 rounded-lg text-sm font-semibold transition-colors text-center`}
-          >
-           {action.label}
-          </Link>
-         ) : (
-          <button
-           key={index}
-           className={`w-full ${action.color} py-3 rounded-lg text-sm font-semibold transition-colors`}
-          >
-           {action.label}
-          </button>
-         )
-        ))}
-         </div>
-        </div>
-      </div>
      </div>
     </div>
    </div>
