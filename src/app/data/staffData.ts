@@ -65,7 +65,7 @@ export const staffDatabase: Record<string, StaffDetail> = {
     name: '佐藤花子',
     nameInitial: '佐',
     position: '看護師',
-    department: '内科病棟',
+    department: '第１病棟',
     employeeId: 'NS-2025-001',
     joinDate: '2022年4月1日',
     tenure: '2年9ヶ月',
@@ -85,9 +85,9 @@ export const staffDatabase: Record<string, StaffDetail> = {
     emergencyContact: '090-1111-2222（実母）',
     address: '東京都渋谷区○○2-3-4',
     evaluationHistory: [
-      { period: '2024年下期', overall: 'A', performance: 4.5, skills: 4.0, teamwork: 4.8, growth: 4.6, evaluator: '看護部 山田師長' },
-      { period: '2024年上期', overall: 'B', performance: 4.0, skills: 3.8, teamwork: 4.5, growth: 4.2, evaluator: '看護部 山田師長' },
-      { period: '2023年下期', overall: 'B', performance: 3.8, skills: 3.5, teamwork: 4.2, growth: 4.0, evaluator: '看護部 山田師長' },
+      { period: '2024年下期', overall: 'A', performance: 4.5, skills: 4.0, teamwork: 4.8, growth: 4.6, evaluator: '第１病棟 師長' },
+      { period: '2024年上期', overall: 'B', performance: 4.0, skills: 3.8, teamwork: 4.5, growth: 4.2, evaluator: '第１病棟 師長' },
+      { period: '2023年下期', overall: 'B', performance: 3.8, skills: 3.5, teamwork: 4.2, growth: 4.0, evaluator: '第１病棟 師長' },
     ],
     skills: [
       { name: '看護実践能力', level: 4, category: 'JNAラダー' },
@@ -112,8 +112,8 @@ export const staffDatabase: Record<string, StaffDetail> = {
       { name: '緩和ケア研修', date: '2024年4月', category: '専門技術', hours: 8, evaluation: '計画中', certificate: false },
     ],
     assignmentHistory: [
-      { date: '2024年4月1日', department: '内科病棟', position: '看護師', reason: 'キャリア開発のため' },
-      { date: '2022年10月1日', department: '外科病棟', position: '看護師', reason: '基礎技術習得' },
+      { date: '2024年4月1日', department: '第１病棟', position: '看護師', reason: 'キャリア開発のため' },
+      { date: '2022年10月1日', department: '第１病棟', position: '看護師', reason: '基礎技術習得' },
       { date: '2022年4月1日', department: 'オリエンテーション', position: '新入職員', reason: '入職' },
     ],
   },
@@ -122,7 +122,7 @@ export const staffDatabase: Record<string, StaffDetail> = {
     name: '田中美咲',
     nameInitial: '田',
     position: '看護師',
-    department: '地域包括ケア病棟',
+    department: '第１病棟',
     employeeId: 'NS-2021-047',
     joinDate: '2021年4月1日',
     tenure: '4年3ヶ月',
@@ -142,10 +142,10 @@ export const staffDatabase: Record<string, StaffDetail> = {
     emergencyContact: '090-8765-4321（配偶者）',
     address: '東京都世田谷区○○1-2-3',
     evaluationHistory: [
-      { period: '2024年上期', overall: 'A', performance: 4.5, skills: 4.2, teamwork: 4.8, growth: 4.0, evaluator: '師長' },
-      { period: '2023年下期', overall: 'B+', performance: 4.0, skills: 3.8, teamwork: 4.5, growth: 3.8, evaluator: '師長' },
-      { period: '2023年上期', overall: 'B', performance: 3.5, skills: 3.5, teamwork: 4.2, growth: 3.5, evaluator: '主任' },
-      { period: '2022年下期', overall: 'B-', performance: 3.2, skills: 3.2, teamwork: 3.8, growth: 3.0, evaluator: '主任' },
+      { period: '2024年上期', overall: 'A', performance: 4.5, skills: 4.2, teamwork: 4.8, growth: 4.0, evaluator: '第１病棟 師長' },
+      { period: '2023年下期', overall: 'B+', performance: 4.0, skills: 3.8, teamwork: 4.5, growth: 3.8, evaluator: '第１病棟 師長' },
+      { period: '2023年上期', overall: 'B', performance: 3.5, skills: 3.5, teamwork: 4.2, growth: 3.5, evaluator: 'リハビリテーション部門 主任' },
+      { period: '2022年下期', overall: 'B-', performance: 3.2, skills: 3.2, teamwork: 3.8, growth: 3.0, evaluator: 'リハビリテーション部門 主任' },
     ],
     skills: [
       { name: '基礎看護技術', level: 4, category: '基本技術' },
@@ -160,8 +160,8 @@ export const staffDatabase: Record<string, StaffDetail> = {
       { name: '医療安全研修', date: '2024/06/15', category: '安全管理', hours: 3, evaluation: '良好', certificate: true },
     ],
     assignmentHistory: [
-      { date: '2023年6月1日', department: '地域包括ケア病棟', position: '看護師', reason: '専門性向上とリーダーシップ経験' },
-      { date: '2021年10月1日', department: '内科病棟', position: '看護師', reason: '基礎スキル向上' },
+      { date: '2023年6月1日', department: '第１病棟', position: '看護師', reason: '専門性向上とリーダーシップ経験' },
+      { date: '2021年10月1日', department: '第１病棟', position: '看護師', reason: '基礎スキル向上' },
       { date: '2021年4月1日', department: 'オリエンテーション', position: '新入職員', reason: '入職' },
     ],
   },
@@ -169,8 +169,8 @@ export const staffDatabase: Record<string, StaffDetail> = {
     id: 'NS-2019-023',
     name: '山田太郎',
     nameInitial: '山',
-    position: '看護師主任',
-    department: 'ICU',
+    position: '主任',
+    department: '第１病棟',
     employeeId: 'NS-2019-023',
     joinDate: '2019年4月1日',
     tenure: '6年3ヶ月',
@@ -190,8 +190,8 @@ export const staffDatabase: Record<string, StaffDetail> = {
     emergencyContact: '090-7654-3210（配偶者）',
     address: '東京都杉並区○○2-3-4',
     evaluationHistory: [
-      { period: '2024年上期', overall: 'A', performance: 4.6, skills: 4.5, teamwork: 4.4, growth: 4.2, evaluator: '師長' },
-      { period: '2023年下期', overall: 'A', performance: 4.5, skills: 4.4, teamwork: 4.3, growth: 4.0, evaluator: '師長' },
+      { period: '2024年上期', overall: 'A', performance: 4.6, skills: 4.5, teamwork: 4.4, growth: 4.2, evaluator: '第１病棟 師長' },
+      { period: '2023年下期', overall: 'A', performance: 4.5, skills: 4.4, teamwork: 4.3, growth: 4.0, evaluator: '第１病棟 師長' },
     ],
     skills: [
       { name: '救急看護', level: 5, category: '専門技術' },
@@ -204,8 +204,8 @@ export const staffDatabase: Record<string, StaffDetail> = {
       { name: '管理職研修', date: '2024/07/15', category: '管理・指導', hours: 24, evaluation: '優秀', certificate: true },
     ],
     assignmentHistory: [
-      { date: '2022年4月1日', department: 'ICU', position: '看護師主任', reason: '昇進' },
-      { date: '2019年4月1日', department: 'ICU', position: '看護師', reason: '配属' },
+      { date: '2022年4月1日', department: '第１病棟', position: '主任', reason: '昇進' },
+      { date: '2019年4月1日', department: '第１病棟', position: '看護師', reason: '配属' },
     ],
   },
   'PT-2020-015': {
@@ -213,7 +213,7 @@ export const staffDatabase: Record<string, StaffDetail> = {
     name: '佐藤花子',
     nameInitial: '佐',
     position: '理学療法士',
-    department: 'リハビリテーション科',
+    department: 'リハビリテーション部門',
     employeeId: 'PT-2020-015',
     joinDate: '2020年4月1日',
     tenure: '5年3ヶ月',
@@ -233,8 +233,8 @@ export const staffDatabase: Record<string, StaffDetail> = {
     emergencyContact: '090-6543-2109（母親）',
     address: '東京都渋谷区○○3-4-5',
     evaluationHistory: [
-      { period: '2024年上期', overall: 'B+', performance: 4.1, skills: 4.0, teamwork: 4.3, growth: 4.2, evaluator: '主任' },
-      { period: '2023年下期', overall: 'B', performance: 3.8, skills: 3.7, teamwork: 4.0, growth: 3.9, evaluator: '主任' },
+      { period: '2024年上期', overall: 'B+', performance: 4.1, skills: 4.0, teamwork: 4.3, growth: 4.2, evaluator: 'リハビリテーション部門 主任' },
+      { period: '2023年下期', overall: 'B', performance: 3.8, skills: 3.7, teamwork: 4.0, growth: 3.9, evaluator: 'リハビリテーション部門 主任' },
     ],
     skills: [
       { name: '運動療法', level: 4, category: '専門技術' },
@@ -247,14 +247,14 @@ export const staffDatabase: Record<string, StaffDetail> = {
       { name: 'コミュニケーション研修', date: '2024/05/20', category: '対人スキル', hours: 6, evaluation: '優秀', certificate: true },
     ],
     assignmentHistory: [
-      { date: '2020年4月1日', department: 'リハビリテーション科', position: '理学療法士', reason: '新卒配属' },
+      { date: '2020年4月1日', department: 'リハビリテーション部門', position: '理学療法士', reason: '新卒配属' },
     ],
   },
   'DR-2018-008': {
     id: 'DR-2018-008',
     name: '鈴木一郎',
     nameInitial: '鈴',
-    position: '医師（内科部長）',
+    position: '医師',
     department: '内科',
     employeeId: 'DR-2018-008',
     joinDate: '2018年4月1日',
@@ -289,7 +289,7 @@ export const staffDatabase: Record<string, StaffDetail> = {
       { name: '病院管理者研修', date: '2024/06/10', category: '管理・指導', hours: 16, evaluation: '優秀', certificate: true },
     ],
     assignmentHistory: [
-      { date: '2023年4月1日', department: '内科', position: '内科部長', reason: '昇進' },
+      { date: '2023年4月1日', department: '内科', position: '医師', reason: '昇進' },
       { date: '2018年4月1日', department: '内科', position: '医師', reason: '中途採用' },
     ],
   },
@@ -298,7 +298,7 @@ export const staffDatabase: Record<string, StaffDetail> = {
     name: '高橋美穂',
     nameInitial: '高',
     position: '薬剤師',
-    department: '薬剤部',
+    department: '薬剤部門',
     employeeId: 'PH-2022-031',
     joinDate: '2022年4月1日',
     tenure: '3年3ヶ月',
@@ -318,8 +318,8 @@ export const staffDatabase: Record<string, StaffDetail> = {
     emergencyContact: '090-4321-0987（父親）',
     address: '東京都新宿区○○5-6-7',
     evaluationHistory: [
-      { period: '2024年上期', overall: 'B', performance: 3.6, skills: 3.5, teamwork: 3.8, growth: 3.9, evaluator: '薬剤部長' },
-      { period: '2023年下期', overall: 'B-', performance: 3.3, skills: 3.2, teamwork: 3.5, growth: 3.6, evaluator: '薬剤部長' },
+      { period: '2024年上期', overall: 'B', performance: 3.6, skills: 3.5, teamwork: 3.8, growth: 3.9, evaluator: '薬剤部門 薬局長' },
+      { period: '2023年下期', overall: 'B-', performance: 3.3, skills: 3.2, teamwork: 3.5, growth: 3.6, evaluator: '薬剤部門 薬局長' },
     ],
     skills: [
       { name: '調剤技術', level: 3, category: '専門技術' },
@@ -332,7 +332,7 @@ export const staffDatabase: Record<string, StaffDetail> = {
       { name: '医薬品安全管理研修', date: '2024/04/15', category: '安全管理', hours: 4, evaluation: '良好', certificate: true },
     ],
     assignmentHistory: [
-      { date: '2022年4月1日', department: '薬剤部', position: '薬剤師', reason: '新卒配属' },
+      { date: '2022年4月1日', department: '薬剤部門', position: '薬剤師', reason: '新卒配属' },
     ],
   },
   // 新人看護師（1年目）
@@ -341,7 +341,7 @@ export const staffDatabase: Record<string, StaffDetail> = {
     name: '小林さくら',
     nameInitial: '小',
     position: '看護師',
-    department: '外科病棟',
+    department: '第１病棟',
     employeeId: 'NS-2024-012',
     joinDate: '2024年4月1日',
     tenure: '9ヶ月',
@@ -361,8 +361,8 @@ export const staffDatabase: Record<string, StaffDetail> = {
     emergencyContact: '090-3333-4444（母親）',
     address: '東京都練馬区○○1-2-3',
     evaluationHistory: [
-      { period: '2024年下期', overall: 'B', performance: 3.2, skills: 3.0, teamwork: 3.5, growth: 3.8, evaluator: '看護部 佐藤主任' },
-      { period: '2024年上期', overall: 'C', performance: 2.8, skills: 2.5, teamwork: 3.2, growth: 3.5, evaluator: '看護部 佐藤主任' },
+      { period: '2024年下期', overall: 'B', performance: 3.2, skills: 3.0, teamwork: 3.5, growth: 3.8, evaluator: '第１病棟 主任' },
+      { period: '2024年上期', overall: 'C', performance: 2.8, skills: 2.5, teamwork: 3.2, growth: 3.5, evaluator: '第１病棟 主任' },
     ],
     skills: [
       { name: '看護実践能力', level: 1, category: 'JNAラダー' },
@@ -385,7 +385,7 @@ export const staffDatabase: Record<string, StaffDetail> = {
       { name: '看護記録研修', date: '2024年9月', category: '管理', hours: 3, evaluation: '良好', certificate: true },
     ],
     assignmentHistory: [
-      { date: '2024年7月1日', department: '外科病棟', position: '看護師', reason: '新人ローテーション' },
+      { date: '2024年7月1日', department: '第１病棟', position: '看護師', reason: '新人ローテーション' },
       { date: '2024年4月1日', department: 'オリエンテーション', position: '新入職員', reason: '入職' },
     ],
   },
@@ -394,8 +394,8 @@ export const staffDatabase: Record<string, StaffDetail> = {
     id: 'NS-2015-008',
     name: '伊藤由美',
     nameInitial: '伊',
-    position: '看護師（認定看護師）',
-    department: '緩和ケア病棟',
+    position: '看護師',
+    department: '第１病棟',
     employeeId: 'NS-2015-008',
     joinDate: '2015年4月1日',
     tenure: '9年9ヶ月',
@@ -415,9 +415,9 @@ export const staffDatabase: Record<string, StaffDetail> = {
     emergencyContact: '090-6666-7777（配偶者）',
     address: '東京都品川区○○2-3-4',
     evaluationHistory: [
-      { period: '2024年下期', overall: 'S', performance: 4.8, skills: 4.9, teamwork: 4.7, growth: 4.5, evaluator: '看護部長' },
-      { period: '2024年上期', overall: 'S', performance: 4.7, skills: 4.8, teamwork: 4.6, growth: 4.4, evaluator: '看護部長' },
-      { period: '2023年下期', overall: 'A', performance: 4.5, skills: 4.6, teamwork: 4.5, growth: 4.3, evaluator: '看護部長' },
+      { period: '2024年下期', overall: 'S', performance: 4.8, skills: 4.9, teamwork: 4.7, growth: 4.5, evaluator: '総師長' },
+      { period: '2024年上期', overall: 'S', performance: 4.7, skills: 4.8, teamwork: 4.6, growth: 4.4, evaluator: '総師長' },
+      { period: '2023年下期', overall: 'A', performance: 4.5, skills: 4.6, teamwork: 4.5, growth: 4.3, evaluator: '総師長' },
     ],
     skills: [
       { name: '看護実践能力', level: 5, category: 'JNAラダー' },
@@ -439,9 +439,9 @@ export const staffDatabase: Record<string, StaffDetail> = {
       { name: '緩和ケアチーム研修', date: '2024年5月', category: '連携', hours: 12, evaluation: '優秀', certificate: true },
     ],
     assignmentHistory: [
-      { date: '2020年4月1日', department: '緩和ケア病棟', position: '看護師（認定看護師）', reason: '認定取得・専門性活用' },
-      { date: '2018年4月1日', department: '内科病棟', position: '看護師', reason: '緩和ケア経験蓄積' },
-      { date: '2015年4月1日', department: '外科病棟', position: '看護師', reason: '新卒配属' },
+      { date: '2020年4月1日', department: '第１病棟', position: '看護師', reason: '認定取得・専門性活用' },
+      { date: '2018年4月1日', department: '第１病棟', position: '看護師', reason: '緩和ケア経験蓄積' },
+      { date: '2015年4月1日', department: '第１病棟', position: '看護師', reason: '新卒配属' },
     ],
   },
   // 中堅看護師（離職リスク高）
@@ -470,9 +470,9 @@ export const staffDatabase: Record<string, StaffDetail> = {
     emergencyContact: '090-9999-0000（配偶者）',
     address: '東京都大田区○○3-4-5',
     evaluationHistory: [
-      { period: '2024年下期', overall: 'C', performance: 2.8, skills: 3.2, teamwork: 2.5, growth: 2.3, evaluator: '外来主任' },
-      { period: '2024年上期', overall: 'B', performance: 3.5, skills: 3.8, teamwork: 3.3, growth: 3.2, evaluator: '外来主任' },
-      { period: '2023年下期', overall: 'B', performance: 3.8, skills: 4.0, teamwork: 3.7, growth: 3.5, evaluator: '外来主任' },
+      { period: '2024年下期', overall: 'C', performance: 2.8, skills: 3.2, teamwork: 2.5, growth: 2.3, evaluator: '外来 主任' },
+      { period: '2024年上期', overall: 'B', performance: 3.5, skills: 3.8, teamwork: 3.3, growth: 3.2, evaluator: '外来 主任' },
+      { period: '2023年下期', overall: 'B', performance: 3.8, skills: 4.0, teamwork: 3.7, growth: 3.5, evaluator: '外来 主任' },
     ],
     skills: [
       { name: '看護実践能力', level: 3, category: 'JNAラダー' },
@@ -494,7 +494,7 @@ export const staffDatabase: Record<string, StaffDetail> = {
     assignmentHistory: [
       { date: '2022年4月1日', department: '外来', position: '看護師', reason: '本人希望（家庭事情）' },
       { date: '2020年4月1日', department: '救急外来', position: '看護師', reason: 'スキルアップ' },
-      { date: '2018年4月1日', department: '内科病棟', position: '看護師', reason: '新卒配属' },
+      { date: '2018年4月1日', department: '第１病棟', position: '看護師', reason: '新卒配属' },
     ],
   },
   // 育休明け看護師
@@ -503,7 +503,7 @@ export const staffDatabase: Record<string, StaffDetail> = {
     name: '渡辺麻衣',
     nameInitial: '渡',
     position: '看護師',
-    department: '小児科病棟',
+    department: '第１病棟',
     employeeId: 'NS-2017-022',
     joinDate: '2017年4月1日',
     tenure: '7年9ヶ月',
@@ -523,8 +523,8 @@ export const staffDatabase: Record<string, StaffDetail> = {
     emergencyContact: '090-4444-5555（配偶者）',
     address: '東京都世田谷区○○4-5-6',
     evaluationHistory: [
-      { period: '2024年下期', overall: 'B', performance: 3.5, skills: 3.8, teamwork: 4.0, growth: 3.3, evaluator: '小児科師長' },
-      { period: '2022年上期', overall: 'A', performance: 4.2, skills: 4.3, teamwork: 4.5, growth: 4.0, evaluator: '小児科師長' },
+      { period: '2024年下期', overall: 'B', performance: 3.5, skills: 3.8, teamwork: 4.0, growth: 3.3, evaluator: '第１病棟 師長' },
+      { period: '2022年上期', overall: 'A', performance: 4.2, skills: 4.3, teamwork: 4.5, growth: 4.0, evaluator: '第１病棟 師長' },
     ],
     skills: [
       { name: '看護実践能力', level: 3, category: 'JNAラダー' },
@@ -542,9 +542,9 @@ export const staffDatabase: Record<string, StaffDetail> = {
       { name: '医療安全研修', date: '2024年10月', category: '安全管理', hours: 3, evaluation: '良好', certificate: true },
     ],
     assignmentHistory: [
-      { date: '2024年7月1日', department: '小児科病棟', position: '看護師', reason: '育休復帰（時短勤務）' },
-      { date: '2019年4月1日', department: '小児科病棟', position: '看護師', reason: '本人希望' },
-      { date: '2017年4月1日', department: '外科病棟', position: '看護師', reason: '新卒配属' },
+      { date: '2024年7月1日', department: '第１病棟', position: '看護師', reason: '育休復帰（時短勤務）' },
+      { date: '2019年4月1日', department: '第１病棟', position: '看護師', reason: '本人希望' },
+      { date: '2017年4月1日', department: '第１病棟', position: '看護師', reason: '新卒配属' },
     ],
   },
 };
