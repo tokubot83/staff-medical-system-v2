@@ -18,36 +18,45 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body className={inter.className}>
-        <nav className="bg-gray-800 text-white">
+        {/* タイトルヘッダー */}
+        <header className="bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg">
+          <div className="max-w-7xl mx-auto px-4 py-6">
+            <div className="flex items-center space-x-3">
+              <span className="text-4xl">🏥</span>
+              <div>
+                <h1 className="text-2xl font-bold">職員カルテシステム</h1>
+                <p className="text-sm text-blue-100">医療法人厚生会</p>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        {/* ナビゲーションバー */}
+        <nav className="bg-gray-800 text-white shadow-md">
           <div className="max-w-7xl mx-auto px-4">
-            <div className="flex items-center justify-between h-16">
-              <div className="flex items-center space-x-8">
-                <Link href="/" className="flex items-center space-x-2">
-                  <span className="text-2xl">🏥</span>
-                  <span className="font-semibold text-lg">職員カルテシステム</span>
+            <div className="flex items-center h-12">
+              <div className="flex space-x-1">
+                <Link href="/" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
+                  ダッシュボード
                 </Link>
-                <div className="hidden md:flex space-x-6">
-                  <Link href="/" className="hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                    ダッシュボード
-                  </Link>
-                  <Link href="/staff" className="hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                    職員カルテ
-                  </Link>
-                  <Link href="/metrics" className="hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                    メトリクス
-                  </Link>
-                  <Link href="/reports" className="hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                    レポート
-                  </Link>
-                  <Link href="/hr-strategy" className="hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-1">
-                    <span>🎯</span>
-                    <span>人材戦略</span>
-                  </Link>
-                </div>
+                <Link href="/staff" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
+                  職員カルテ
+                </Link>
+                <Link href="/metrics" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
+                  メトリクス
+                </Link>
+                <Link href="/reports" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
+                  レポート
+                </Link>
+                <Link href="/hr-strategy" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400 flex items-center gap-1">
+                  <span>🎯</span>
+                  <span>人材戦略</span>
+                </Link>
               </div>
             </div>
           </div>
         </nav>
+        
         {children}
       </body>
     </html>
