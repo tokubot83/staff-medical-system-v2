@@ -7,11 +7,11 @@ import { staffDatabase } from '../data/staffData.js'
 import styles from './StaffCards.module.css'
 
 const tabs = [
-  { id: 'list', label: '👥 職員一覧', icon: '👥' },
-  { id: 'detail', label: '📋 個別カルテ', icon: '📋' },
-  { id: 'evaluation', label: '📊 評価管理', icon: '📊' },
-  { id: 'health', label: '🏥 健康状態', icon: '🏥' },
-  { id: 'training', label: '🎓 研修記録', icon: '🎓' },
+  { id: 'list', label: '職員一覧', icon: '👥' },
+  { id: 'detail', label: '個別カルテ', icon: '📋' },
+  { id: 'evaluation', label: '評価管理', icon: '📊' },
+  { id: 'health', label: '健康状態', icon: '🏥' },
+  { id: 'training', label: '研修記録', icon: '🎓' },
 ]
 
 interface Staff {
