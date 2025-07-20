@@ -493,9 +493,6 @@ export default function Home() {
     <div className="max-w-7xl mx-auto px-4">
      <div className="flex items-center h-12">
       <div className="flex space-x-1">
-       <Link href="/" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
-        ダッシュボード
-       </Link>
        <Link href="/staff-cards" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
         職員カルテ
        </Link>
@@ -505,15 +502,15 @@ export default function Home() {
        <Link href="/training" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
         教育・研修
        </Link>
-       <Link href="/reports" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
-        レポート
-       </Link>
        <Link href="/evaluation" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
         評価管理
        </Link>
        <Link href="/hr-strategy" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400 flex items-center gap-1">
         <span>🎯</span>
         <span>人材戦略</span>
+       </Link>
+       <Link href="/reports" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
+        レポート
        </Link>
       </div>
      </div>
