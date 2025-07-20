@@ -6,10 +6,10 @@ import styles from './HrStrategy.module.css'
 
 // タブの定義
 const tabs = [
-  { id: 'dashboard', label: '📊 戦略ダッシュボード', icon: '📊' },
-  { id: 'transfer', label: '🔄 異動プランニング', icon: '🔄' },
-  { id: 'talent', label: '🎯 タレント管理', icon: '🎯' },
-  { id: 'optimization', label: '📈 組織最適化', icon: '📈' },
+  { id: 'dashboard', label: '戦略ダッシュボード', icon: '📊' },
+  { id: 'transfer', label: '異動プランニング', icon: '🔄' },
+  { id: 'talent', label: 'タレント管理', icon: '🎯' },
+  { id: 'optimization', label: '組織最適化', icon: '📈' },
 ]
 
 export default function HrStrategyPage() {
