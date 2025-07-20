@@ -5,6 +5,44 @@ import CommonHeader from '@/components/CommonHeader'
 import Link from 'next/link'
 import { staffDatabase } from '../data/staffData.js'
 import styles from './StaffCards.module.css'
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  RadialLinearScale,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+} from 'chart.js'
+import { Line, Bar, Radar, Scatter, Doughnut } from 'react-chartjs-2'
+import { 
+  AnalyticsTab, 
+  EvaluationTab, 
+  RecruitmentTab, 
+  InterviewTab, 
+  DevelopmentTab, 
+  EducationTab 
+} from './staff-tabs'
+
+// Chart.jsの登録
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  RadialLinearScale,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+)
 
 const tabs = [
   { id: 'list', label: '職員一覧', icon: '👥' },
@@ -16,6 +54,12 @@ const tabs = [
   { id: 'wellbeing', label: '健康・ウェルビーイング', icon: '💚' },
   { id: 'links', label: '統合管理リンク', icon: '🔗' },
   { id: 'management', label: 'カルテ管理', icon: '⚙️' },
+  { id: 'analytics', label: '総合分析', icon: '📈' },
+  { id: 'evaluation', label: '人事評価', icon: '📊' },
+  { id: 'recruitment', label: '採用・配属', icon: '👥' },
+  { id: 'interview', label: '面談・指導', icon: '💬' },
+  { id: 'development', label: '能力開発', icon: '🚀' },
+  { id: 'education', label: '教育・研修', icon: '🎓' },
 ]
 
 interface Staff {
@@ -107,6 +151,12 @@ export default function StaffCardsPage() {
           {activeTab === 'wellbeing' && <WellbeingTab selectedStaff={selectedStaff} />}
           {activeTab === 'links' && <ManagementLinksTab selectedStaff={selectedStaff} />}
           {activeTab === 'management' && <ManagementTab />}
+          {activeTab === 'analytics' && <AnalyticsTab selectedStaff={selectedStaff} />}
+          {activeTab === 'evaluation' && <EvaluationTab selectedStaff={selectedStaff} />}
+          {activeTab === 'recruitment' && <RecruitmentTab selectedStaff={selectedStaff} />}
+          {activeTab === 'interview' && <InterviewTab selectedStaff={selectedStaff} />}
+          {activeTab === 'development' && <DevelopmentTab selectedStaff={selectedStaff} />}
+          {activeTab === 'education' && <EducationTab selectedStaff={selectedStaff} />}
         </div>
       </div>
     </div>

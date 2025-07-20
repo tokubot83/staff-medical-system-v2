@@ -6,6 +6,7 @@
 
 .tabNavigation {
   display: flex;
+  flex-wrap: wrap;
   background: white;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -14,7 +15,7 @@
 }
 
 .tabButton {
-  flex: 1;
+  flex: 0 0 calc(100% / 8);
   padding: 16px 20px;
   background: transparent;
   border: none;
@@ -29,6 +30,24 @@
   transition: all 0.2s;
   border-bottom: 3px solid transparent;
   min-width: 0;
+}
+
+@media (max-width: 1200px) {
+  .tabButton {
+    flex: 0 0 calc(100% / 6);
+  }
+}
+
+@media (max-width: 900px) {
+  .tabButton {
+    flex: 0 0 calc(100% / 4);
+  }
+}
+
+@media (max-width: 600px) {
+  .tabButton {
+    flex: 0 0 calc(100% / 3);
+  }
 }
 
 .tabButton:hover {
@@ -1164,4 +1183,553 @@
   font-size: 14px;
   color: #4b5563;
   line-height: 1.5;
+}
+
+/* 新しいタブコンポーネント用スタイル */
+.tabContentSection {
+  padding: 24px;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.sectionHeader h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}
+
+.sectionActions {
+  display: flex;
+  gap: 12px;
+}
+
+.actionButton {
+  padding: 10px 20px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.actionButton:hover {
+  background: #2563eb;
+}
+
+.actionButtonSecondary {
+  padding: 10px 20px;
+  background: #e5e7eb;
+  color: #4b5563;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.actionButtonSecondary:hover {
+  background: #d1d5db;
+  color: #1f2937;
+}
+
+.alertBox {
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.alertIcon {
+  font-size: 20px;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.statCard {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.statCard:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.statValue {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+.statLabel {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.statSubtext {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-top: 4px;
+}
+
+.chartGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.chartContainer {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.chartContainer h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 16px;
+}
+
+.chartWrapper {
+  height: 300px;
+  position: relative;
+}
+
+.noDataContainer {
+  padding: 48px;
+  text-align: center;
+  color: #6b7280;
+}
+
+.nurseSpecificSection {
+  background: #f3f0ff;
+  border: 1px solid #c7b2db;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.nurseSpecificSection h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #5b21b6;
+  margin-bottom: 16px;
+}
+
+/* 評価タブ用 */
+.evaluationSummary {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+  background: #f9fafb;
+  padding: 24px;
+  border-radius: 8px;
+}
+
+.evaluationScore {
+  text-align: center;
+  padding-right: 24px;
+  border-right: 1px solid #e5e7eb;
+}
+
+.scoreMain {
+  font-size: 48px;
+  font-weight: 700;
+  color: #3b82f6;
+}
+
+.scoreLabel {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.evaluationDetails {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.evaluationItem {
+  display: flex;
+  justify-content: space-between;
+}
+
+.evaluationLabel {
+  color: #6b7280;
+}
+
+.evaluationValue {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.evaluationComments {
+  margin-top: 24px;
+}
+
+.evaluationComments h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 12px;
+}
+
+.commentCard {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 12px;
+}
+
+.commentHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.commentAuthor {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.commentDate {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.commentBody {
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+/* その他のタブ用スタイル */
+.recruitmentInfo,
+.interviewSummary,
+.developmentOverview,
+.trainingSummary {
+  margin-bottom: 24px;
+}
+
+.summaryCard {
+  background: #f9fafb;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.summaryValue {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 4px;
+}
+
+.summaryLabel {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.recommendationSection,
+.interviewHistory,
+.developmentPlan,
+.trainingSchedule {
+  margin-top: 24px;
+}
+
+.recommendationCard {
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 12px;
+}
+
+.recommendationHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.recommendationBadge {
+  background: #22c55e;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.recommendationTitle {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.recommendationBody {
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+/* JNAラダー関連 */
+.jnaLadderSection {
+  background: #f3f0ff;
+  border: 1px solid #c7b2db;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.ladderProgress {
+  margin-bottom: 20px;
+}
+
+.ladderLevel {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.currentLevel,
+.nextLevel {
+  font-weight: 600;
+  color: #5b21b6;
+}
+
+.progressBar {
+  flex: 1;
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: #8b5cf6;
+  transition: width 0.3s;
+}
+
+.nurseTrainingPlan {
+  margin-top: 24px;
+}
+
+.nurseTrainingPlan h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 12px;
+}
+
+.trainingList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.trainingItem {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+.trainingStatus {
+  padding: 4px 12px;
+  background: #3b82f6;
+  color: white;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  height: fit-content;
+}
+
+.trainingInfo {
+  flex: 1;
+}
+
+.trainingTitle {
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 4px;
+}
+
+.trainingDetails {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* 追加スタイル */
+.overviewCard {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.overviewCard h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 12px;
+}
+
+.growthRate {
+  font-size: 36px;
+  font-weight: 700;
+  color: #22c55e;
+  margin-bottom: 4px;
+}
+
+.growthPeriod {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.recommendList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.recommendList li {
+  padding: 8px 0;
+  color: #4b5563;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.recommendList li:last-child {
+  border-bottom: none;
+}
+
+.planTimeline {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.timelineItem {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 8px;
+  border-left: 4px solid #3b82f6;
+}
+
+.timelinePeriod {
+  font-weight: 600;
+  color: #1f2937;
+  min-width: 100px;
+}
+
+.timelineContent strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #1f2937;
+}
+
+.timelineContent p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.historyItem {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.historyHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.historyDate {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.historyType {
+  background: #dbeafe;
+  color: #1e40af;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.historyContent {
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.scheduleList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.scheduleItem {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+.scheduleDate {
+  font-weight: 600;
+  color: #1f2937;
+  min-width: 120px;
+}
+
+.scheduleContent {
+  flex: 1;
+}
+
+.scheduleTitle {
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 4px;
+}
+
+.scheduleDetails {
+  font-size: 14px;
+  color: #6b7280;
 }
