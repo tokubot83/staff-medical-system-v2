@@ -575,7 +575,7 @@ export default function Home() {
         🚨 緊急アラート
        </h2>
        <span className="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-semibold">
-        5件
+        7件
        </span>
       </div>
       
@@ -642,7 +642,7 @@ export default function Home() {
         🌟 成功・良好状態
        </h2>
        <span className="bg-gray-200 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold border border-blue-200">
-        5件
+        7件
        </span>
       </div>
       
