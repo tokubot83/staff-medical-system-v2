@@ -274,6 +274,24 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
     }]
   }
 
+  // 評価項目別成長度
+  const evaluationGrowthData = {
+    labels: ['専門性', 'コミュニケーション', 'リーダーシップ', '問題解決力', '協調性'],
+    datasets: [{
+      label: '2023年',
+      data: [3.8, 4.0, 3.5, 3.6, 4.2],
+      backgroundColor: 'rgba(255, 99, 132, 0.5)'
+    }, {
+      label: '2024年',
+      data: [4.2, 4.3, 4.0, 4.1, 4.5],
+      backgroundColor: 'rgba(54, 162, 235, 0.5)'
+    }, {
+      label: '2025年',
+      data: [4.5, 4.5, 4.3, 4.4, 4.7],
+      backgroundColor: 'rgba(75, 192, 192, 0.5)'
+    }]
+  }
+
   return (
     <div className={styles.tabContentSection}>
       <div className={styles.sectionHeader}>
@@ -334,6 +352,27 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
                 r: {
                   min: 0,
                   max: 100
+                }
+              }
+            }} />
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.chartGrid}>
+        <div className={styles.chartContainer}>
+          <h4>評価項目別成長度</h4>
+          <div className={styles.chartWrapper}>
+            <Bar data={evaluationGrowthData} options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                y: {
+                  min: 0,
+                  max: 5,
+                  ticks: {
+                    stepSize: 0.5
+                  }
                 }
               }
             }} />
@@ -420,6 +459,24 @@ export function RecruitmentTab({ selectedStaff }: { selectedStaff: any }) {
     }]
   }
 
+  // 採用評価成熟度データ
+  const recruitmentMaturityData = {
+    labels: ['採用時', '3ヶ月', '6ヶ月', '1年', '2年', '3年', '現在'],
+    datasets: [{
+      label: '業務習熟度',
+      data: [0, 30, 55, 75, 85, 92, 95],
+      borderColor: '#007bff',
+      backgroundColor: 'rgba(0, 123, 255, 0.1)',
+      fill: true
+    }, {
+      label: '組織適応度',
+      data: [0, 40, 65, 80, 88, 94, 96],
+      borderColor: '#28a745',
+      backgroundColor: 'rgba(40, 167, 69, 0.1)',
+      fill: true
+    }]
+  }
+
   return (
     <div className={styles.tabContentSection}>
       <div className={styles.sectionHeader}>
@@ -485,6 +542,28 @@ export function RecruitmentTab({ selectedStaff }: { selectedStaff: any }) {
         </div>
       </div>
 
+      <div className={styles.chartGrid}>
+        <div className={styles.chartContainer}>
+          <h4>採用後の成熟度推移</h4>
+          <div className={styles.chartWrapper}>
+            <Line data={recruitmentMaturityData} options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                y: {
+                  min: 0,
+                  max: 100,
+                  title: {
+                    display: true,
+                    text: '成熟度(%)'
+                  }
+                }
+              }
+            }} />
+          </div>
+        </div>
+      </div>
+
       <div className={styles.recommendationSection}>
         <h3>配属推奨</h3>
         <div className={styles.recommendationCard}>
@@ -535,6 +614,47 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
       borderColor: '#007bff',
       backgroundColor: 'rgba(0, 123, 255, 0.1)',
       fill: true
+    }]
+  }
+
+  // 話題分析円グラフデータ
+  const topicAnalysisData = {
+    labels: ['キャリア相談', '業務改善', '人間関係', '健康管理', 'スキル向上', 'その他'],
+    datasets: [{
+      data: [35, 25, 15, 10, 10, 5],
+      backgroundColor: [
+        'rgba(0, 123, 255, 0.8)',
+        'rgba(40, 167, 69, 0.8)',
+        'rgba(255, 193, 7, 0.8)',
+        'rgba(220, 53, 69, 0.8)',
+        'rgba(23, 162, 184, 0.8)',
+        'rgba(108, 117, 125, 0.8)'
+      ],
+      borderColor: [
+        'rgba(0, 123, 255, 1)',
+        'rgba(40, 167, 69, 1)',
+        'rgba(255, 193, 7, 1)',
+        'rgba(220, 53, 69, 1)',
+        'rgba(23, 162, 184, 1)',
+        'rgba(108, 117, 125, 1)'
+      ],
+      borderWidth: 1
+    }]
+  }
+
+  // 指導効果測定レーダーチャート
+  const coachingEffectData = {
+    labels: ['目標達成', 'モチベーション', 'スキル向上', '問題解決', '自己理解', '行動変容'],
+    datasets: [{
+      label: '指導前',
+      data: [60, 65, 70, 55, 60, 50],
+      borderColor: 'rgba(220, 53, 69, 0.8)',
+      backgroundColor: 'rgba(220, 53, 69, 0.2)'
+    }, {
+      label: '指導後',
+      data: [85, 90, 88, 82, 85, 80],
+      borderColor: 'rgba(40, 167, 69, 0.8)',
+      backgroundColor: 'rgba(40, 167, 69, 0.2)'
     }]
   }
 
@@ -595,6 +715,50 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                 y: {
                   min: 1,
                   max: 5
+                }
+              }
+            }} />
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.chartGrid}>
+        <div className={styles.chartContainer}>
+          <h4>話題分析</h4>
+          <div className={styles.chartWrapper}>
+            <Doughnut data={topicAnalysisData} options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  position: 'right'
+                },
+                tooltip: {
+                  callbacks: {
+                    label: function(context) {
+                      const label = context.label || '';
+                      const value = context.parsed || 0;
+                      return label + ': ' + value + '%';
+                    }
+                  }
+                }
+              }
+            }} />
+          </div>
+        </div>
+        <div className={styles.chartContainer}>
+          <h4>指導効果測定</h4>
+          <div className={styles.chartWrapper}>
+            <Radar data={coachingEffectData} options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                r: {
+                  min: 0,
+                  max: 100,
+                  ticks: {
+                    stepSize: 20
+                  }
                 }
               }
             }} />
@@ -798,6 +962,24 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
     }]
   }
 
+  // JNAキャリアラダーレベル経過グラフ
+  const jnaLadderProgressData = {
+    labels: ['2020年', '2021年', '2022年', '2023年', '2024年', '2025年(現在)'],
+    datasets: [{
+      label: 'JNAラダーレベル',
+      data: [1, 2, 2, 3, 4, 4],
+      borderColor: 'rgba(155, 124, 182, 1)',
+      backgroundColor: 'rgba(155, 124, 182, 0.2)',
+      fill: true,
+      tension: 0.4,
+      pointRadius: 6,
+      pointHoverRadius: 8,
+      pointBackgroundColor: 'rgba(155, 124, 182, 1)',
+      pointBorderColor: '#fff',
+      pointBorderWidth: 2
+    }]
+  }
+
   if (isNurse) {
     return (
       <div className={styles.tabContentSection}>
@@ -843,6 +1025,50 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
 
         <div className={styles.chartGrid}>
           <div className={styles.chartContainer}>
+            <h4>JNAキャリアラダーレベル経過</h4>
+            <div className={styles.chartWrapper}>
+              <Line data={jnaLadderProgressData} options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                  y: {
+                    min: 0,
+                    max: 5,
+                    ticks: {
+                      stepSize: 1,
+                      callback: function(value) {
+                        const levels = ['', 'レベルⅠ', 'レベルⅡ', 'レベルⅢ', 'レベルⅣ', 'レベルⅤ'];
+                        return levels[value] || '';
+                      }
+                    }
+                  }
+                },
+                plugins: {
+                  tooltip: {
+                    callbacks: {
+                      label: function(context) {
+                        const levels = ['', 'レベルⅠ', 'レベルⅡ', 'レベルⅢ', 'レベルⅣ', 'レベルⅤ'];
+                        return levels[context.parsed.y] || '';
+                      }
+                    }
+                  }
+                }
+              }} />
+            </div>
+          </div>
+          <div className={styles.chartContainer}>
+            <h4>研修カテゴリ別実績</h4>
+            <div className={styles.chartWrapper}>
+              <Doughnut data={trainingParticipationData} options={{
+                responsive: true,
+                maintainAspectRatio: false
+              }} />
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.chartGrid}>
+          <div className={styles.chartContainer}>
             <h4>JNA領域別研修進捗</h4>
             <div className={styles.chartWrapper}>
               <Bar data={jnaTrainingData} options={{
@@ -858,11 +1084,17 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
             </div>
           </div>
           <div className={styles.chartContainer}>
-            <h4>研修カテゴリ別実績</h4>
+            <h4>研修効果測定</h4>
             <div className={styles.chartWrapper}>
-              <Doughnut data={trainingParticipationData} options={{
+              <Bar data={trainingEffectData} options={{
                 responsive: true,
-                maintainAspectRatio: false
+                maintainAspectRatio: false,
+                scales: {
+                  y: {
+                    min: 0,
+                    max: 100
+                  }
+                }
               }} />
             </div>
           </div>
@@ -892,6 +1124,34 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
   }
 
   // 看護師以外の場合
+  // 年間研修計画進捗データ
+  const annualTrainingPlanData = {
+    labels: ['4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月', '1月', '2月', '3月'],
+    datasets: [{
+      label: '計画',
+      data: [2, 1, 2, 1, 0, 2, 1, 2, 1, 1, 2, 1],
+      backgroundColor: 'rgba(220, 53, 69, 0.5)'
+    }, {
+      label: '実施済み',
+      data: [2, 1, 2, 1, 0, 2, 1, 2, 1, 1, 0, 0],
+      backgroundColor: 'rgba(40, 167, 69, 0.5)'
+    }]
+  }
+
+  // 研修分野別成長度
+  const trainingGrowthByAreaData = {
+    labels: ['専門技術', '管理・指導', '安全管理', '多職種連携', '法令・倫理'],
+    datasets: [{
+      label: '研修前',
+      data: [65, 50, 70, 60, 55],
+      backgroundColor: 'rgba(255, 99, 132, 0.5)'
+    }, {
+      label: '研修後',
+      data: [88, 75, 90, 85, 78],
+      backgroundColor: 'rgba(75, 192, 192, 0.5)'
+    }]
+  }
+
   return (
     <div className={styles.tabContentSection}>
       <div className={styles.sectionHeader}>
@@ -935,6 +1195,43 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
               maintainAspectRatio: false,
               scales: {
                 y: {
+                  min: 0,
+                  max: 100
+                }
+              }
+            }} />
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.chartGrid}>
+        <div className={styles.chartContainer}>
+          <h4>年間研修計画進捗</h4>
+          <div className={styles.chartWrapper}>
+            <Bar data={annualTrainingPlanData} options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                x: {
+                  stacked: false
+                },
+                y: {
+                  beginAtZero: true,
+                  max: 3
+                }
+              }
+            }} />
+          </div>
+        </div>
+        <div className={styles.chartContainer}>
+          <h4>研修分野別成長度</h4>
+          <div className={styles.chartWrapper}>
+            <Bar data={trainingGrowthByAreaData} options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              indexAxis: 'y',
+              scales: {
+                x: {
                   min: 0,
                   max: 100
                 }
