@@ -25,15 +25,15 @@ const RiskMetricsPage = () => {
     ],
     facilityData: [
       {
-        facilityName: '総合病院',
+        facilityName: '医療法人 厚生会 小原病院',
         departments: [
           {
-            name: '内科',
+            name: '脳神経外科',
             metrics: [
-              { name: '離職リスク', value: 7.5, unit: '%', trend: 'down' },
-              { name: 'インシデント発生率', value: 0.3, unit: '%', trend: 'down' },
-              { name: 'メンタルヘルスリスク', value: 10.5, unit: '%', trend: 'down' },
-              { name: '過重労働リスク', value: 18.0, unit: '%', trend: 'up' }
+              { name: '離職リスク', value: 8.5, unit: '%', trend: 'down' },
+              { name: 'インシデント発生率', value: 0.5, unit: '%', trend: 'down' },
+              { name: 'メンタルヘルスリスク', value: 13.5, unit: '%', trend: 'up' },
+              { name: '過重労働リスク', value: 25.0, unit: '%', trend: 'up' }
             ]
           },
           {
@@ -44,19 +44,46 @@ const RiskMetricsPage = () => {
               { name: 'メンタルヘルスリスク', value: 14.5, unit: '%', trend: 'up' },
               { name: '過重労働リスク', value: 22.5, unit: '%', trend: 'up' }
             ]
+          },
+          {
+            name: '整形外科',
+            metrics: [
+              { name: '離職リスク', value: 8.0, unit: '%', trend: 'down' },
+              { name: 'インシデント発生率', value: 0.4, unit: '%', trend: 'down' },
+              { name: 'メンタルヘルスリスク', value: 12.0, unit: '%', trend: 'down' },
+              { name: '過重労働リスク', value: 20.0, unit: '%', trend: 'up' }
+            ]
+          },
+          {
+            name: '内科',
+            metrics: [
+              { name: '離職リスク', value: 7.5, unit: '%', trend: 'down' },
+              { name: 'インシデント発生率', value: 0.3, unit: '%', trend: 'down' },
+              { name: 'メンタルヘルスリスク', value: 10.5, unit: '%', trend: 'down' },
+              { name: '過重労働リスク', value: 18.0, unit: '%', trend: 'up' }
+            ]
           }
         ]
       },
       {
-        facilityName: 'クリニックA',
+        facilityName: '立神リハビリテーション温泉病院',
         departments: [
           {
-            name: '一般診療',
+            name: '内科',
             metrics: [
-              { name: '離職リスク', value: 5.5, unit: '%', trend: 'down' },
+              { name: '離職リスク', value: 5.0, unit: '%', trend: 'down' },
               { name: 'インシデント発生率', value: 0.2, unit: '%', trend: 'down' },
-              { name: 'メンタルヘルスリスク', value: 8.0, unit: '%', trend: 'down' },
-              { name: '過重労働リスク', value: 10.5, unit: '%', trend: 'down' }
+              { name: 'メンタルヘルスリスク', value: 7.5, unit: '%', trend: 'down' },
+              { name: '過重労働リスク', value: 9.5, unit: '%', trend: 'down' }
+            ]
+          },
+          {
+            name: 'リハビリテーション科',
+            metrics: [
+              { name: '離職リスク', value: 6.0, unit: '%', trend: 'down' },
+              { name: 'インシデント発生率', value: 0.3, unit: '%', trend: 'down' },
+              { name: 'メンタルヘルスリスク', value: 8.5, unit: '%', trend: 'down' },
+              { name: '過重労働リスク', value: 11.0, unit: '%', trend: 'down' }
             ]
           }
         ]

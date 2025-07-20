@@ -26,38 +26,67 @@ const BasicMetricsPage = () => {
     ],
     facilityData: [
       {
-        facilityName: '総合病院',
+        facilityName: '医療法人 厚生会 小原病院',
         departments: [
           {
-            name: '内科',
+            name: '脳神経外科',
             metrics: [
-              { name: '職員数', value: 45, unit: '人', trend: 'up' },
-              { name: '医師数', value: 12, unit: '人', trend: 'up' },
-              { name: '看護師数', value: 28, unit: '人', trend: 'down' },
+              { name: '職員数', value: 35, unit: '人', trend: 'up' },
+              { name: '医師数', value: 8, unit: '人', trend: 'up' },
+              { name: '看護師数', value: 22, unit: '人', trend: 'down' },
               { name: 'その他', value: 5, unit: '人', trend: 'up' }
             ]
           },
           {
             name: '外科',
             metrics: [
-              { name: '職員数', value: 38, unit: '人', trend: 'down' },
+              { name: '職員数', value: 42, unit: '人', trend: 'down' },
               { name: '医師数', value: 10, unit: '人', trend: 'down' },
-              { name: '看護師数', value: 23, unit: '人', trend: 'down' },
-              { name: 'その他', value: 5, unit: '人', trend: 'up' }
+              { name: '看護師数', value: 26, unit: '人', trend: 'down' },
+              { name: 'その他', value: 6, unit: '人', trend: 'up' }
+            ]
+          },
+          {
+            name: '整形外科',
+            metrics: [
+              { name: '職員数', value: 38, unit: '人', trend: 'up' },
+              { name: '医師数', value: 9, unit: '人', trend: 'up' },
+              { name: '看護師数', value: 24, unit: '人', trend: 'up' },
+              { name: 'その他', value: 5, unit: '人', trend: 'down' }
+            ]
+          },
+          {
+            name: '内科',
+            metrics: [
+              { name: '職員数', value: 48, unit: '人', trend: 'up' },
+              { name: '医師数', value: 12, unit: '人', trend: 'up' },
+              { name: '看護師数', value: 30, unit: '人', trend: 'up' },
+              { name: 'その他', value: 6, unit: '人', trend: 'up' }
             ]
           }
         ]
       },
       {
-        facilityName: 'クリニックA',
+        facilityName: '立神リハビリテーション温泉病院',
         departments: [
           {
-            name: '一般診療',
+            name: '内科',
             metrics: [
-              { name: '職員数', value: 15, unit: '人', trend: 'up' },
-              { name: '医師数', value: 3, unit: '人', trend: 'up' },
-              { name: '看護師数', value: 8, unit: '人', trend: 'up' },
-              { name: 'その他', value: 4, unit: '人', trend: 'up' }
+              { name: '職員数', value: 35, unit: '人', trend: 'up' },
+              { name: '医師数', value: 6, unit: '人', trend: 'up' },
+              { name: '看護師数', value: 22, unit: '人', trend: 'up' },
+              { name: 'その他', value: 7, unit: '人', trend: 'down' }
+            ]
+          },
+          {
+            name: 'リハビリテーション科',
+            metrics: [
+              { name: '職員数', value: 85, unit: '人', trend: 'up' },
+              { name: '医師数', value: 4, unit: '人', trend: 'down' },
+              { name: '看護師数', value: 28, unit: '人', trend: 'up' },
+              { name: '理学療法士', value: 25, unit: '人', trend: 'up' },
+              { name: '作業療法士', value: 18, unit: '人', trend: 'up' },
+              { name: 'その他', value: 10, unit: '人', trend: 'up' }
             ]
           }
         ]

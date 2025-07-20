@@ -25,15 +25,15 @@ const GrowthMetricsPage = () => {
     ],
     facilityData: [
       {
-        facilityName: '総合病院',
+        facilityName: '医療法人 厚生会 小原病院',
         departments: [
           {
-            name: '内科',
+            name: '脳神経外科',
             metrics: [
-              { name: 'キャリア成長率', value: 80.5, unit: '%', trend: 'up' },
-              { name: '昇進率', value: 18.0, unit: '%', trend: 'up' },
-              { name: 'スキル向上度', value: 4.2, unit: '点', trend: 'up' },
-              { name: '目標達成率', value: 94.5, unit: '%', trend: 'up' }
+              { name: 'キャリア成長率', value: 83.5, unit: '%', trend: 'up' },
+              { name: '昇進率', value: 20.0, unit: '%', trend: 'up' },
+              { name: 'スキル向上度', value: 4.4, unit: '点', trend: 'up' },
+              { name: '目標達成率', value: 95.5, unit: '%', trend: 'up' }
             ]
           },
           {
@@ -44,19 +44,46 @@ const GrowthMetricsPage = () => {
               { name: 'スキル向上度', value: 4.3, unit: '点', trend: 'up' },
               { name: '目標達成率', value: 91.0, unit: '%', trend: 'up' }
             ]
+          },
+          {
+            name: '整形外科',
+            metrics: [
+              { name: 'キャリア成長率', value: 81.0, unit: '%', trend: 'up' },
+              { name: '昇進率', value: 17.5, unit: '%', trend: 'up' },
+              { name: 'スキル向上度', value: 4.2, unit: '点', trend: 'up' },
+              { name: '目標達成率', value: 92.5, unit: '%', trend: 'up' }
+            ]
+          },
+          {
+            name: '内科',
+            metrics: [
+              { name: 'キャリア成長率', value: 80.5, unit: '%', trend: 'up' },
+              { name: '昇進率', value: 18.0, unit: '%', trend: 'up' },
+              { name: 'スキル向上度', value: 4.2, unit: '点', trend: 'up' },
+              { name: '目標達成率', value: 94.5, unit: '%', trend: 'up' }
+            ]
           }
         ]
       },
       {
-        facilityName: 'クリニックA',
+        facilityName: '立神リハビリテーション温泉病院',
         departments: [
           {
-            name: '一般診療',
+            name: '内科',
             metrics: [
-              { name: 'キャリア成長率', value: 72.5, unit: '%', trend: 'up' },
-              { name: '昇進率', value: 12.0, unit: '%', trend: 'down' },
-              { name: 'スキル向上度', value: 3.9, unit: '点', trend: 'up' },
-              { name: '目標達成率', value: 88.5, unit: '%', trend: 'up' }
+              { name: 'キャリア成長率', value: 76.5, unit: '%', trend: 'up' },
+              { name: '昇進率', value: 14.0, unit: '%', trend: 'up' },
+              { name: 'スキル向上度', value: 4.0, unit: '点', trend: 'up' },
+              { name: '目標達成率', value: 90.5, unit: '%', trend: 'up' }
+            ]
+          },
+          {
+            name: 'リハビリテーション科',
+            metrics: [
+              { name: 'キャリア成長率', value: 78.0, unit: '%', trend: 'up' },
+              { name: '昇進率', value: 15.5, unit: '%', trend: 'up' },
+              { name: 'スキル向上度', value: 4.1, unit: '点', trend: 'up' },
+              { name: '目標達成率', value: 91.5, unit: '%', trend: 'up' }
             ]
           }
         ]

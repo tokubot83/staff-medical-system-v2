@@ -25,15 +25,15 @@ const QualityMetricsPage = () => {
     ],
     facilityData: [
       {
-        facilityName: '総合病院',
+        facilityName: '医療法人 厚生会 小原病院',
         departments: [
           {
-            name: '内科',
+            name: '脳神経外科',
             metrics: [
-              { name: '専門資格保有率', value: 82.5, unit: '%', trend: 'up' },
-              { name: '研修参加率', value: 95.0, unit: '%', trend: 'up' },
-              { name: '患者満足度', value: 4.6, unit: '点', trend: 'up' },
-              { name: 'チーム連携度', value: 4.3, unit: '点', trend: 'down' }
+              { name: '専門資格保有率', value: 88.5, unit: '%', trend: 'up' },
+              { name: '研修参加率', value: 96.0, unit: '%', trend: 'up' },
+              { name: '患者満足度', value: 4.7, unit: '点', trend: 'up' },
+              { name: 'チーム連携度', value: 4.5, unit: '点', trend: 'up' }
             ]
           },
           {
@@ -44,19 +44,46 @@ const QualityMetricsPage = () => {
               { name: '患者満足度', value: 4.4, unit: '点', trend: 'up' },
               { name: 'チーム連携度', value: 4.2, unit: '点', trend: 'up' }
             ]
+          },
+          {
+            name: '整形外科',
+            metrics: [
+              { name: '専門資格保有率', value: 86.5, unit: '%', trend: 'up' },
+              { name: '研修参加率', value: 92.0, unit: '%', trend: 'up' },
+              { name: '患者満足度', value: 4.5, unit: '点', trend: 'up' },
+              { name: 'チーム連携度', value: 4.3, unit: '点', trend: 'down' }
+            ]
+          },
+          {
+            name: '内科',
+            metrics: [
+              { name: '専門資格保有率', value: 82.5, unit: '%', trend: 'up' },
+              { name: '研修参加率', value: 95.0, unit: '%', trend: 'up' },
+              { name: '患者満足度', value: 4.6, unit: '点', trend: 'up' },
+              { name: 'チーム連携度', value: 4.3, unit: '点', trend: 'down' }
+            ]
           }
         ]
       },
       {
-        facilityName: 'クリニックA',
+        facilityName: '立神リハビリテーション温泉病院',
         departments: [
           {
-            name: '一般診療',
+            name: '内科',
             metrics: [
-              { name: '専門資格保有率', value: 70.0, unit: '%', trend: 'up' },
+              { name: '専門資格保有率', value: 75.0, unit: '%', trend: 'up' },
               { name: '研修参加率', value: 88.5, unit: '%', trend: 'up' },
-              { name: '患者満足度', value: 4.7, unit: '点', trend: 'up' },
-              { name: 'チーム連携度', value: 4.5, unit: '点', trend: 'up' }
+              { name: '患者満足度', value: 4.8, unit: '点', trend: 'up' },
+              { name: 'チーム連携度', value: 4.6, unit: '点', trend: 'up' }
+            ]
+          },
+          {
+            name: 'リハビリテーション科',
+            metrics: [
+              { name: '専門資格保有率', value: 82.0, unit: '%', trend: 'up' },
+              { name: '研修参加率', value: 91.0, unit: '%', trend: 'up' },
+              { name: '患者満足度', value: 4.9, unit: '点', trend: 'up' },
+              { name: 'チーム連携度', value: 4.7, unit: '点', trend: 'up' }
             ]
           }
         ]
