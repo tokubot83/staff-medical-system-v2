@@ -6,11 +6,11 @@ import Link from 'next/link'
 import styles from './Training.module.css'
 
 const tabs = [
-  { id: 'programs', label: '📚 研修プログラム', icon: '📚' },
-  { id: 'schedule', label: '📅 スケジュール', icon: '📅' },
-  { id: 'progress', label: '📊 進捗管理', icon: '📊' },
-  { id: 'history', label: '📝 受講履歴', icon: '📝' },
-  { id: 'analytics', label: '📈 分析', icon: '📈' },
+  { id: 'programs', label: '研修プログラム', icon: '📚' },
+  { id: 'schedule', label: 'スケジュール', icon: '📅' },
+  { id: 'progress', label: '進捗管理', icon: '📊' },
+  { id: 'history', label: '受講履歴', icon: '📝' },
+  { id: 'analytics', label: '分析', icon: '📈' },
 ]
 
 interface TrainingProgram {

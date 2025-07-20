@@ -7,11 +7,11 @@ import { staffDatabase } from '../data/staffData.js'
 import styles from './Interviews.module.css'
 
 const tabs = [
-  { id: 'schedule', label: '📅 面談予定', icon: '📅' },
-  { id: 'history', label: '📝 面談履歴', icon: '📝' },
-  { id: 'feedback', label: '💬 フィードバック', icon: '💬' },
-  { id: 'report', label: '📊 レポート', icon: '📊' },
-  { id: 'settings', label: '⚙️ 設定', icon: '⚙️' },
+  { id: 'schedule', label: '面談予定', icon: '📅' },
+  { id: 'history', label: '面談履歴', icon: '📝' },
+  { id: 'feedback', label: 'フィードバック', icon: '💬' },
+  { id: 'report', label: 'レポート', icon: '📊' },
+  { id: 'settings', label: '設定', icon: '⚙️' },
 ]
 
 interface Interview {
