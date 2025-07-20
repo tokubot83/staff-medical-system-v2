@@ -326,6 +326,10 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
       <div className={styles.chartGrid}>
         <div className={styles.chartContainer}>
           <h4>評価推移</h4>
+          <div className={`${styles.alert} ${styles.alertSuccess}`}>
+            <span>📈</span>
+            <span>評価が安定的に上昇中（3.8→4.3）。3年連続A評価以上を維持しています。</span>
+          </div>
           <div className={styles.chartWrapper}>
             <Line data={evaluationTrendData} options={{
               responsive: true,
@@ -344,6 +348,10 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
         </div>
         <div className={styles.chartContainer}>
           <h4>多面評価分析</h4>
+          <div className={`${styles.alert} ${styles.alertInfo}`}>
+            <span>👥</span>
+            <span>自己評価と他者評価がほぼ一致。特にチームワークで高評価を得ています。</span>
+          </div>
           <div className={styles.chartWrapper}>
             <Radar data={multiEvaluationData} options={{
               responsive: true,
@@ -362,6 +370,10 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
       <div className={styles.chartGrid}>
         <div className={styles.chartContainer}>
           <h4>評価項目別成長度</h4>
+          <div className={`${styles.alert} ${styles.alertSuccess}`}>
+            <span>🌱</span>
+            <span>全項目で前年度を上回る成長。特にリーダーシップが大幅改善（+0.8ポイント）。</span>
+          </div>
           <div className={styles.chartWrapper}>
             <Bar data={evaluationGrowthData} options={{
               responsive: true,
@@ -384,6 +396,10 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
         <div className={styles.nurseSpecificSection}>
           <h3>JNAキャリアラダー評価</h3>
           <div className={styles.chartContainer}>
+            <div className={`${styles.alert} ${styles.alertWarning}`}>
+              <span>🎯</span>
+              <span>レベルⅣ認定済み。組織貢献の項目をさらに強化することでレベルⅤ達成が見込まれます。</span>
+            </div>
             <div className={styles.chartWrapper}>
               <Radar data={jnaAchievementData} options={{
                 responsive: true,
@@ -508,6 +524,10 @@ export function RecruitmentTab({ selectedStaff }: { selectedStaff: any }) {
       <div className={styles.chartGrid}>
         <div className={styles.chartContainer}>
           <h4>部署適性分析</h4>
+          <div className={`${styles.alert} ${styles.alertInfo}`}>
+            <span>🎯</span>
+            <span>現在の部署適性は92%。長期的には管理部門や教育部門への適性も高い評価です。</span>
+          </div>
           <div className={styles.chartWrapper}>
             <Bar data={departmentFitData} options={{
               responsive: true,
@@ -523,6 +543,10 @@ export function RecruitmentTab({ selectedStaff }: { selectedStaff: any }) {
         </div>
         <div className={styles.chartContainer}>
           <h4>キャリアパス予測</h4>
+          <div className={`${styles.alert} ${styles.alertSuccess}`}>
+            <span>🚀</span>
+            <span>5年後の管理職昇進確率72%。現在の成長ペースを維持すれば十分に達成可能です。</span>
+          </div>
           <div className={styles.chartWrapper}>
             <Line data={careerPathData} options={{
               responsive: true,
@@ -545,6 +569,10 @@ export function RecruitmentTab({ selectedStaff }: { selectedStaff: any }) {
       <div className={styles.chartGrid}>
         <div className={styles.chartContainer}>
           <h4>採用後の成熟度推移</h4>
+          <div className={`${styles.alert} ${styles.alertSuccess}`}>
+            <span>🔥</span>
+            <span>組織適応度が特に高く、3年でほぼ完全に成熟。優秀な成長曲線を描いています。</span>
+          </div>
           <div className={styles.chartWrapper}>
             <Line data={recruitmentMaturityData} options={{
               responsive: true,
@@ -690,6 +718,10 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
       <div className={styles.chartGrid}>
         <div className={styles.chartContainer}>
           <h4>面談実施状況</h4>
+          <div className={`${styles.alert} ${styles.alertWarning}`}>
+            <span>⚠️</span>
+            <span>定期面談は予定通り実施。フォロー面談の頻度を増やすことで、さらなる成長支援が可能です。</span>
+          </div>
           <div className={styles.chartWrapper}>
             <Bar data={interviewFrequencyData} options={{
               responsive: true,
@@ -707,6 +739,10 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
         </div>
         <div className={styles.chartContainer}>
           <h4>面談満足度推移</h4>
+          <div className={`${styles.alert} ${styles.alertSuccess}`}>
+            <span>✨</span>
+            <span>満足度が継続的に向上（3.5→4.5）。職員との信頼関係が着実に構築されています。</span>
+          </div>
           <div className={styles.chartWrapper}>
             <Line data={satisfactionTrendData} options={{
               responsive: true,
@@ -725,6 +761,10 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
       <div className={styles.chartGrid}>
         <div className={styles.chartContainer}>
           <h4>話題分析</h4>
+          <div className={`${styles.alert} ${styles.alertInfo}`}>
+            <span>💡</span>
+            <span>キャリア相談が35%で最多。今後の育成計画では業務改善やスキル向上の話題を増やすことを推奨します。</span>
+          </div>
           <div className={styles.chartWrapper}>
             <Doughnut data={topicAnalysisData} options={{
               responsive: true,
@@ -748,6 +788,10 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
         </div>
         <div className={styles.chartContainer}>
           <h4>指導効果測定</h4>
+          <div className={`${styles.alert} ${styles.alertSuccess}`}>
+            <span>📈</span>
+            <span>全項目で大幅改善。特にモチベーション向上が顕著（+25ポイント）。継続的な指導の成果が表れています。</span>
+          </div>
           <div className={styles.chartWrapper}>
             <Radar data={coachingEffectData} options={{
               responsive: true,
@@ -1026,6 +1070,10 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
         <div className={styles.chartGrid}>
           <div className={styles.chartContainer}>
             <h4>JNAキャリアラダーレベル経過</h4>
+            <div className={`${styles.alert} ${styles.alertSuccess}`}>
+              <span>📈</span>
+              <span>2年間で2レベル向上。組織内でもトップクラスの成長速度を記録しています。</span>
+            </div>
             <div className={styles.chartWrapper}>
               <Line data={jnaLadderProgressData} options={{
                 responsive: true,
@@ -1070,6 +1118,10 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
         <div className={styles.chartGrid}>
           <div className={styles.chartContainer}>
             <h4>JNA領域別研修進捗</h4>
+            <div className={`${styles.alert} ${styles.alertInfo}`}>
+              <span>📊</span>
+              <span>6分野のスキル獲得状況。管理業務と研究活動が今後の重点強化領域です。</span>
+            </div>
             <div className={styles.chartWrapper}>
               <Bar data={jnaTrainingData} options={{
                 responsive: true,
@@ -1085,6 +1137,10 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
           </div>
           <div className={styles.chartContainer}>
             <h4>研修効果測定</h4>
+            <div className={`${styles.alert} ${styles.alertSuccess}`}>
+              <span>✅</span>
+              <span>研修前後で平均20ポイント以上の成長を確認。研修プログラムの有効性が実証されています。</span>
+            </div>
             <div className={styles.chartWrapper}>
               <Bar data={trainingEffectData} options={{
                 responsive: true,
@@ -1180,6 +1236,10 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
       <div className={styles.chartGrid}>
         <div className={styles.chartContainer}>
           <h4>研修参加実績</h4>
+          <div className={`${styles.alert} ${styles.alertInfo}`}>
+            <span>📖</span>
+            <span>研修修了率は85%で順調。参加予定の研修も予定通り進捧。継続的な学びの姿勢が評価されています。</span>
+          </div>
           <div className={styles.chartWrapper}>
             <Doughnut data={trainingParticipationData} options={{
               responsive: true,
@@ -1189,6 +1249,10 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
         </div>
         <div className={styles.chartContainer}>
           <h4>研修効果測定</h4>
+          <div className={`${styles.alert} ${styles.alertSuccess}`}>
+            <span>✅</span>
+            <span>研修前後で平均20ポイント以上の成長を確認。研修プログラムの有効性が実証されています。</span>
+          </div>
           <div className={styles.chartWrapper}>
             <Bar data={trainingEffectData} options={{
               responsive: true,
@@ -1207,6 +1271,10 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
       <div className={styles.chartGrid}>
         <div className={styles.chartContainer}>
           <h4>年間研修計画進捗</h4>
+          <div className={`${styles.alert} ${styles.alertWarning}`}>
+            <span>📅</span>
+            <span>今年度の研修計画は75%完了。残り3ヶ月で2つの必須研修が未完了。計画的な受講を推奨します。</span>
+          </div>
           <div className={styles.chartWrapper}>
             <Bar data={annualTrainingPlanData} options={{
               responsive: true,
@@ -1225,6 +1293,10 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
         </div>
         <div className={styles.chartContainer}>
           <h4>研修分野別成長度</h4>
+          <div className={`${styles.alert} ${styles.alertInfo}`}>
+            <span>🎯</span>
+            <span>全分野で成長を確認。特に安全管理分野で顕著な伸び（+20ポイント）。バランスの良い成長です。</span>
+          </div>
           <div className={styles.chartWrapper}>
             <Bar data={trainingGrowthByAreaData} options={{
               responsive: true,

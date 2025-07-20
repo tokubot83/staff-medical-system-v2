@@ -292,6 +292,41 @@
   color: #ef4444;
 }
 
+/* アラートコメントスタイル */
+.alert {
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin: 15px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.alertInfo {
+  background: #d1ecf1;
+  color: #0c5460;
+  border-left: 4px solid #17a2b8;
+}
+
+.alertWarning {
+  background: #fff3cd;
+  color: #856404;
+  border-left: 4px solid #ffc107;
+}
+
+.alertSuccess {
+  background: #d4edda;
+  color: #155724;
+  border-left: 4px solid #28a745;
+}
+
+.alertDanger {
+  background: #f8d7da;
+  color: #721c24;
+  border-left: 4px solid #dc3545;
+}
+
 /* 個別カルテタブ */
 .detailContainer {
   padding: 24px;
