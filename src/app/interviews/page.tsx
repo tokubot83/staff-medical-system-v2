@@ -161,7 +161,7 @@ function ScheduleTab({ interviews, searchTerm, setSearchTerm, selectedFacility, 
           >
             <option value="all">全施設</option>
             <option value="小原病院">小原病院</option>
-            <option value="立髪診療所">立髪診療所</option>
+            <option value="立神リハビリテーション温泉病院">立神リハビリテーション温泉病院</option>
           </select>
           <select 
             value={selectedDepartment} 
