@@ -4,7 +4,6 @@ import React from 'react'
 import MetricsLayout from '@/components/metrics/MetricsLayout'
 import { ReportCategory } from '@/types/reports'
 import { CategoryMetrics } from '@/types/metrics'
-import { Users, TrendingUp, TrendingDown } from 'lucide-react'
 
 const BasicMetricsPage = () => {
   // サンプルデータ（実際のアプリケーションではAPIから取得）
