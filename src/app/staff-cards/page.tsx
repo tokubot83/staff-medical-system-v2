@@ -105,7 +105,18 @@ export default function StaffCardsPage() {
   )
 }
 
-function StaffListTab({ filteredStaff, searchTerm, setSearchTerm, selectedFacility, setSelectedFacility, selectedDepartment, setSelectedDepartment, onStaffSelect }) {
+interface StaffListTabProps {
+  filteredStaff: any[]
+  searchTerm: string
+  setSearchTerm: (value: string) => void
+  selectedFacility: string
+  setSelectedFacility: (value: string) => void
+  selectedDepartment: string
+  setSelectedDepartment: (value: string) => void
+  onStaffSelect: (staff: any) => void
+}
+
+function StaffListTab({ filteredStaff, searchTerm, setSearchTerm, selectedFacility, setSelectedFacility, selectedDepartment, setSelectedDepartment, onStaffSelect }: StaffListTabProps) {
   return (
     <div className={styles.listContainer}>
       <div className={styles.searchSection}>
@@ -201,7 +212,12 @@ function StaffListTab({ filteredStaff, searchTerm, setSearchTerm, selectedFacili
   )
 }
 
-function StaffDetailTab({ selectedStaff, onBackToList }) {
+interface StaffDetailTabProps {
+  selectedStaff: any
+  onBackToList: () => void
+}
+
+function StaffDetailTab({ selectedStaff, onBackToList }: StaffDetailTabProps) {
   if (!selectedStaff) {
     return (
       <div className={styles.noSelection}>
@@ -335,7 +351,7 @@ function StaffDetailTab({ selectedStaff, onBackToList }) {
   )
 }
 
-function EvaluationTab() {
+function EvaluationTab(): React.ReactElement {
   return (
     <div className={styles.evaluationContainer}>
       <h2>評価管理</h2>
@@ -346,7 +362,7 @@ function EvaluationTab() {
   )
 }
 
-function HealthTab() {
+function HealthTab(): React.ReactElement {
   return (
     <div className={styles.healthContainer}>
       <h2>健康状態管理</h2>
@@ -357,7 +373,7 @@ function HealthTab() {
   )
 }
 
-function TrainingTab() {
+function TrainingTab(): React.ReactElement {
   return (
     <div className={styles.trainingContainer}>
       <h2>研修記録</h2>
