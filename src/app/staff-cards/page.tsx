@@ -8,10 +8,14 @@ import styles from './StaffCards.module.css'
 
 const tabs = [
   { id: 'list', label: '職員一覧', icon: '👥' },
-  { id: 'detail', label: '個別カルテ', icon: '📋' },
-  { id: 'evaluation', label: '評価管理', icon: '📊' },
-  { id: 'health', label: '健康状態', icon: '🏥' },
-  { id: 'training', label: '研修記録', icon: '🎓' },
+  { id: 'basic', label: '基本情報', icon: '📋' },
+  { id: 'career', label: '経歴・キャリア', icon: '💼' },
+  { id: 'qualification', label: '資格・専門性', icon: '📜' },
+  { id: 'achievement', label: '実績・表彰', icon: '📊' },
+  { id: 'attendance', label: '勤務状況', icon: '⏰' },
+  { id: 'wellbeing', label: '健康・ウェルビーイング', icon: '💚' },
+  { id: 'links', label: '統合管理リンク', icon: '🔗' },
+  { id: 'management', label: 'カルテ管理', icon: '⚙️' },
 ]
 
 interface Staff {
@@ -44,7 +48,7 @@ export default function StaffCardsPage() {
 
   const handleStaffSelect = (staff: Staff) => {
     setSelectedStaff(staff)
-    setActiveTab('detail')
+    setActiveTab('basic')
   }
 
   const filteredStaff = Object.values(staffDatabase).filter((staff: any) => {
@@ -90,15 +94,19 @@ export default function StaffCardsPage() {
               onStaffSelect={handleStaffSelect}
             />
           )}
-          {activeTab === 'detail' && (
-            <StaffDetailTab 
+          {activeTab === 'basic' && (
+            <BasicInfoTab 
               selectedStaff={selectedStaff}
               onBackToList={() => setActiveTab('list')}
             />
           )}
-          {activeTab === 'evaluation' && <EvaluationTab />}
-          {activeTab === 'health' && <HealthTab />}
-          {activeTab === 'training' && <TrainingTab />}
+          {activeTab === 'career' && <CareerTab selectedStaff={selectedStaff} />}
+          {activeTab === 'qualification' && <QualificationTab selectedStaff={selectedStaff} />}
+          {activeTab === 'achievement' && <AchievementTab selectedStaff={selectedStaff} />}
+          {activeTab === 'attendance' && <AttendanceTab selectedStaff={selectedStaff} />}
+          {activeTab === 'wellbeing' && <WellbeingTab selectedStaff={selectedStaff} />}
+          {activeTab === 'links' && <ManagementLinksTab selectedStaff={selectedStaff} />}
+          {activeTab === 'management' && <ManagementTab />}
         </div>
       </div>
     </div>
@@ -223,7 +231,7 @@ interface StaffDetailTabProps {
   onBackToList: () => void
 }
 
-function StaffDetailTab({ selectedStaff, onBackToList }: StaffDetailTabProps) {
+function BasicInfoTab({ selectedStaff, onBackToList }: StaffDetailTabProps) {
   if (!selectedStaff) {
     return (
       <div className={styles.noSelection}>
@@ -357,34 +365,498 @@ function StaffDetailTab({ selectedStaff, onBackToList }: StaffDetailTabProps) {
   )
 }
 
-function EvaluationTab(): React.ReactElement {
+function CareerTab({ selectedStaff }: { selectedStaff: any }): React.ReactElement {
+  if (!selectedStaff) {
+    return <div className={styles.noSelection}><p>職員を選択してください</p></div>
+  }
   return (
-    <div className={styles.evaluationContainer}>
-      <h2>評価管理</h2>
-      <div className={styles.comingSoon}>
-        <p>評価管理機能は現在開発中です</p>
+    <div className={styles.careerContainer}>
+      <h2>経歴・キャリア</h2>
+      <div className={styles.sectionCard}>
+        <h3>学歴</h3>
+        <div className={styles.timelineList}>
+          <div className={styles.timelineItem}>
+            <span className={styles.timelineDate}>2012年3月</span>
+            <span className={styles.timelineContent}>〇〇大学 医学部 看護学科 卒業</span>
+          </div>
+        </div>
+      </div>
+      <div className={styles.sectionCard}>
+        <h3>職歴</h3>
+        <div className={styles.timelineList}>
+          <div className={styles.timelineItem}>
+            <span className={styles.timelineDate}>{selectedStaff.joinDate}</span>
+            <span className={styles.timelineContent}>{selectedStaff.facility} 入職</span>
+          </div>
+        </div>
+      </div>
+      <div className={styles.sectionCard}>
+        <h3>異動歴</h3>
+        <div className={styles.timelineList}>
+          <div className={styles.timelineItem}>
+            <span className={styles.timelineDate}>2023年4月</span>
+            <span className={styles.timelineContent}>{selectedStaff.department} 配属</span>
+          </div>
+        </div>
+      </div>
+      <div className={styles.sectionCard}>
+        <h3>キャリア志向・目標</h3>
+        <p>認定看護師資格取得を目指している</p>
       </div>
     </div>
   )
 }
 
-function HealthTab(): React.ReactElement {
+function QualificationTab({ selectedStaff }: { selectedStaff: any }): React.ReactElement {
+  if (!selectedStaff) {
+    return <div className={styles.noSelection}><p>職員を選択してください</p></div>
+  }
   return (
-    <div className={styles.healthContainer}>
-      <h2>健康状態管理</h2>
-      <div className={styles.comingSoon}>
-        <p>健康状態管理機能は現在開発中です</p>
+    <div className={styles.qualificationContainer}>
+      <h2>資格・専門性</h2>
+      <div className={styles.sectionCard}>
+        <h3>専門資格・上位資格</h3>
+        <ul className={styles.qualificationList}>
+          {selectedStaff.qualifications?.map((qual: string, index: number) => (
+            <li key={index}>{qual}</li>
+          )) || <li>看護師免許</li>}
+        </ul>
+      </div>
+      <div className={styles.sectionCard}>
+        <h3>その他の資格</h3>
+        <ul className={styles.qualificationList}>
+          {selectedStaff.certifications?.map((cert: string, index: number) => (
+            <li key={index}>{cert}</li>
+          )) || <li>BLS（一次救命処置）</li>}
+        </ul>
+      </div>
+      <div className={styles.sectionCard}>
+        <h3>所属学会</h3>
+        <p>日本看護協会</p>
+      </div>
+      <div className={styles.sectionCard}>
+        <h3>学会発表実績</h3>
+        <p>2023年度 看護研究発表会 優秀賞</p>
+      </div>
+      <div className={styles.sectionCard}>
+        <h3>研修受講歴</h3>
+        <div className={styles.timelineList}>
+          <div className={styles.timelineItem}>
+            <span className={styles.timelineDate}>2024年3月</span>
+            <span className={styles.timelineContent}>感染対策研修 修了</span>
+          </div>
+        </div>
       </div>
     </div>
   )
 }
 
-function TrainingTab(): React.ReactElement {
+function AchievementTab({ selectedStaff }: { selectedStaff: any }): React.ReactElement {
+  if (!selectedStaff) {
+    return <div className={styles.noSelection}><p>職員を選択してください</p></div>
+  }
   return (
-    <div className={styles.trainingContainer}>
-      <h2>研修記録</h2>
-      <div className={styles.comingSoon}>
-        <p>研修記録機能は現在開発中です</p>
+    <div className={styles.achievementContainer}>
+      <h2>実績・表彰</h2>
+      <div className={styles.sectionCard}>
+        <h3>職員表彰歴</h3>
+        <div className={styles.achievementList}>
+          <div className={styles.achievementItem}>
+            <span className={styles.achievementDate}>2023年12月</span>
+            <span className={styles.achievementTitle}>年間MVP賞</span>
+            <p className={styles.achievementDetail}>患者満足度向上への貢献</p>
+          </div>
+        </div>
+      </div>
+      <div className={styles.sectionCard}>
+        <h3>業務実績</h3>
+        <p>患者満足度: 95%以上を3年連続達成</p>
+      </div>
+      <div className={styles.sectionCard}>
+        <h3>組織貢献度</h3>
+        <div className={styles.metricValue}>{selectedStaff.engagement}%</div>
+      </div>
+      <div className={styles.sectionCard}>
+        <h3>プロジェクト参加歴</h3>
+        <ul>
+          <li>2024年 電子カルテ導入プロジェクト メンバー</li>
+          <li>2023年 患者満足度向上委員会 リーダー</li>
+        </ul>
+      </div>
+    </div>
+  )
+}
+
+function AttendanceTab({ selectedStaff }: { selectedStaff: any }): React.ReactElement {
+  if (!selectedStaff) {
+    return <div className={styles.noSelection}><p>職員を選択してください</p></div>
+  }
+  return (
+    <div className={styles.attendanceContainer}>
+      <h2>勤務状況</h2>
+      <div className={styles.metricsGrid}>
+        <div className={styles.metricCard}>
+          <h3>遅刻回数</h3>
+          <div className={styles.metricValue}>0回</div>
+          <p className={styles.metricLabel}>過去1年間</p>
+        </div>
+        <div className={styles.metricCard}>
+          <h3>早退回数</h3>
+          <div className={styles.metricValue}>2回</div>
+          <p className={styles.metricLabel}>過去1年間</p>
+        </div>
+        <div className={styles.metricCard}>
+          <h3>平均残業時間</h3>
+          <div className={styles.metricValue}>15.5時間</div>
+          <p className={styles.metricLabel}>月平均</p>
+        </div>
+        <div className={styles.metricCard}>
+          <h3>有給取得率</h3>
+          <div className={styles.metricValue}>75%</div>
+          <p className={styles.metricLabel}>今年度</p>
+        </div>
+      </div>
+      <div className={styles.sectionCard}>
+        <h3>シフト履歴</h3>
+        <p>日勤: 60% / 夜勤: 40%</p>
+      </div>
+      <div className={styles.sectionCard}>
+        <h3>業務出張履歴</h3>
+        <div className={styles.timelineList}>
+          <div className={styles.timelineItem}>
+            <span className={styles.timelineDate}>2024年2月</span>
+            <span className={styles.timelineContent}>東京研修センター 3日間</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function WellbeingTab({ selectedStaff }: { selectedStaff: any }): React.ReactElement {
+  if (!selectedStaff) {
+    return <div className={styles.noSelection}><p>職員を選択してください</p></div>
+  }
+  return (
+    <div className={styles.wellbeingContainer}>
+      <h2>健康・ウェルビーイング</h2>
+      <div className={styles.metricsGrid}>
+        <div className={styles.metricCard}>
+          <h3>健康スコア</h3>
+          <div className={styles.metricValue}>{selectedStaff.healthScore}</div>
+          <p className={styles.metricLabel}>総合評価</p>
+        </div>
+        <div className={styles.metricCard}>
+          <h3>ストレス指数</h3>
+          <div className={styles.metricValue}>{selectedStaff.stressLevel || 48}</div>
+          <p className={styles.metricLabel}>要注意: 50以上</p>
+        </div>
+      </div>
+      <div className={styles.sectionCard}>
+        <h3>ストレスチェック結果</h3>
+        <p>前回実施: 2024年3月</p>
+        <p>結果: 良好（要経過観察項目なし）</p>
+      </div>
+      <div className={styles.sectionCard}>
+        <h3>健康診断記録</h3>
+        <div className={styles.timelineList}>
+          <div className={styles.timelineItem}>
+            <span className={styles.timelineDate}>2024年4月</span>
+            <span className={styles.timelineContent}>定期健康診断 A判定</span>
+          </div>
+        </div>
+      </div>
+      <div className={styles.sectionCard}>
+        <h3>メンタルヘルス相談履歴</h3>
+        <p>相談実績なし</p>
+      </div>
+      <div className={styles.sectionCard}>
+        <h3>家族構成（参考情報）</h3>
+        <p>配偶者あり、子供2人</p>
+      </div>
+    </div>
+  )
+}
+
+function ManagementLinksTab({ selectedStaff }: { selectedStaff: any }): React.ReactElement {
+  return (
+    <div className={styles.linksContainer}>
+      <h2>統合管理リンク</h2>
+      <div className={styles.linksGrid}>
+        <a href="/evaluation" className={styles.linkCard}>
+          <div className={styles.linkIcon}>📊</div>
+          <h3>評価管理システム</h3>
+          <p>人事評価の詳細確認・管理</p>
+          {selectedStaff && (
+            <div className={styles.linkInfo}>
+              現在の評価: {selectedStaff.evaluation}
+            </div>
+          )}
+        </a>
+        <a href="/training" className={styles.linkCard}>
+          <div className={styles.linkIcon}>🎓</div>
+          <h3>教育研修システム</h3>
+          <p>研修計画・受講履歴の管理</p>
+          {selectedStaff && (
+            <div className={styles.linkInfo}>
+              未受講研修: 2件
+            </div>
+          )}
+        </a>
+        <a href="/interviews" className={styles.linkCard}>
+          <div className={styles.linkIcon}>💬</div>
+          <h3>面談管理システム</h3>
+          <p>面談記録・フィードバック管理</p>
+          {selectedStaff && (
+            <div className={styles.linkInfo}>
+              次回面談: 2024年5月
+            </div>
+          )}
+        </a>
+        <div className={styles.linkCard}>
+          <div className={styles.linkIcon}>🎯</div>
+          <h3>目標管理機能</h3>
+          <p>個人目標の設定・評価</p>
+          {selectedStaff && (
+            <div className={styles.linkInfo}>
+              進行中の目標: 3件
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function ManagementTab(): React.ReactElement {
+  const [showNewStaffForm, setShowNewStaffForm] = useState(false)
+  const [editMode, setEditMode] = useState(false)
+  const [deleteMode, setDeleteMode] = useState(false)
+  const [selectedStaffIds, setSelectedStaffIds] = useState<string[]>([])
+  
+  const handleSelectStaff = (staffId: string) => {
+    if (selectedStaffIds.includes(staffId)) {
+      setSelectedStaffIds(selectedStaffIds.filter(id => id !== staffId))
+    } else {
+      setSelectedStaffIds([...selectedStaffIds, staffId])
+    }
+  }
+
+  const handleDeleteSelected = () => {
+    if (window.confirm(`選択した${selectedStaffIds.length}名の職員データを削除しますか？`)) {
+      // 削除処理を実装
+      alert('削除機能は現在開発中です')
+      setSelectedStaffIds([])
+      setDeleteMode(false)
+    }
+  }
+
+  return (
+    <div className={styles.managementContainer}>
+      <div className={styles.managementHeader}>
+        <h2>職員カルテ管理</h2>
+        <div className={styles.managementActions}>
+          <button 
+            className={`${styles.actionButton} ${styles.primaryButton}`}
+            onClick={() => setShowNewStaffForm(true)}
+          >
+            <span className={styles.actionIcon}>➕</span>
+            新規作成
+          </button>
+          <button 
+            className={`${styles.actionButton} ${editMode ? styles.activeButton : ''}`}
+            onClick={() => {
+              setEditMode(!editMode)
+              setDeleteMode(false)
+              setSelectedStaffIds([])
+            }}
+          >
+            <span className={styles.actionIcon}>✏️</span>
+            編集モード
+          </button>
+          <button 
+            className={`${styles.actionButton} ${deleteMode ? styles.dangerButton : ''}`}
+            onClick={() => {
+              setDeleteMode(!deleteMode)
+              setEditMode(false)
+              setSelectedStaffIds([])
+            }}
+          >
+            <span className={styles.actionIcon}>🗑️</span>
+            削除モード
+          </button>
+        </div>
+      </div>
+
+      {showNewStaffForm && (
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <div className={styles.modalHeader}>
+              <h3>新規職員登録</h3>
+              <button 
+                className={styles.closeButton}
+                onClick={() => setShowNewStaffForm(false)}
+              >
+                ✕
+              </button>
+            </div>
+            <form className={styles.newStaffForm}>
+              <div className={styles.formSection}>
+                <h4>基本情報</h4>
+                <div className={styles.formGrid}>
+                  <div className={styles.formGroup}>
+                    <label>氏名 *</label>
+                    <input type="text" required />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label>職員ID *</label>
+                    <input type="text" required />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label>生年月日</label>
+                    <input type="date" />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label>性別</label>
+                    <select>
+                      <option value="">選択してください</option>
+                      <option value="男性">男性</option>
+                      <option value="女性">女性</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              
+              <div className={styles.formSection}>
+                <h4>所属情報</h4>
+                <div className={styles.formGrid}>
+                  <div className={styles.formGroup}>
+                    <label>施設 *</label>
+                    <select required>
+                      <option value="">選択してください</option>
+                      <option value="小原病院">小原病院</option>
+                      <option value="立神リハビリテーション温泉病院">立神リハビリテーション温泉病院</option>
+                    </select>
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label>部署 *</label>
+                    <select required>
+                      <option value="">選択してください</option>
+                      <option value="内科">内科</option>
+                      <option value="リハビリテーション科">リハビリテーション科</option>
+                      <option value="第１病棟">第１病棟</option>
+                      <option value="外来">外来</option>
+                    </select>
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label>役職</label>
+                    <input type="text" placeholder="例: 看護師" />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label>入職日</label>
+                    <input type="date" />
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.formActions}>
+                <button type="button" className={styles.cancelButton} onClick={() => setShowNewStaffForm(false)}>
+                  キャンセル
+                </button>
+                <button type="submit" className={styles.submitButton}>
+                  登録
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      <div className={styles.managementContent}>
+        {deleteMode && selectedStaffIds.length > 0 && (
+          <div className={styles.selectionBar}>
+            <span>{selectedStaffIds.length}名選択中</span>
+            <button 
+              className={styles.deleteButton}
+              onClick={handleDeleteSelected}
+            >
+              選択した職員を削除
+            </button>
+          </div>
+        )}
+
+        <div className={styles.staffManagementGrid}>
+          {Object.values(staffDatabase).map((staff: any) => (
+            <div 
+              key={staff.id} 
+              className={`${styles.staffManagementCard} ${
+                selectedStaffIds.includes(staff.id) ? styles.selected : ''
+              }`}
+            >
+              {(editMode || deleteMode) && (
+                <input
+                  type="checkbox"
+                  className={styles.checkbox}
+                  checked={selectedStaffIds.includes(staff.id)}
+                  onChange={() => handleSelectStaff(staff.id)}
+                />
+              )}
+              
+              <div className={styles.staffCardContent}>
+                <div className={styles.staffBasicInfo}>
+                  <h4>{staff.name}</h4>
+                  <p>{staff.id}</p>
+                  <p>{staff.facility} / {staff.department}</p>
+                  <p>{staff.position}</p>
+                </div>
+                
+                {editMode && !deleteMode && (
+                  <div className={styles.editActions}>
+                    <button className={styles.editButton}>
+                      編集
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {!editMode && !deleteMode && (
+          <div className={styles.managementInfo}>
+            <div className={styles.infoCard}>
+              <h3>📊 統計情報</h3>
+              <div className={styles.statsGrid}>
+                <div className={styles.statItem}>
+                  <span className={styles.statLabel}>総職員数</span>
+                  <span className={styles.statValue}>{Object.keys(staffDatabase).length}名</span>
+                </div>
+                <div className={styles.statItem}>
+                  <span className={styles.statLabel}>小原病院</span>
+                  <span className={styles.statValue}>
+                    {Object.values(staffDatabase).filter((s: any) => s.facility === '小原病院').length}名
+                  </span>
+                </div>
+                <div className={styles.statItem}>
+                  <span className={styles.statLabel}>立神リハビリテーション温泉病院</span>
+                  <span className={styles.statValue}>
+                    {Object.values(staffDatabase).filter((s: any) => s.facility === '立神リハビリテーション温泉病院').length}名
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.infoCard}>
+              <h3>🔧 管理機能</h3>
+              <ul className={styles.featureList}>
+                <li>職員データの一括インポート/エクスポート</li>
+                <li>テンプレートを使用した効率的な登録</li>
+                <li>部署別・施設別の一括編集</li>
+                <li>アーカイブ機能（退職者データの管理）</li>
+              </ul>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
