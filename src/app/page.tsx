@@ -48,7 +48,7 @@ interface SuccessItem {
  staffName?: string;
 }
 
-type TabType = 'overview' | 'staff' | 'interview' | 'evaluation' | 'training' | 'analytics';
+type TabType = 'overview' | 'alerts' | 'achievements';
 
 export default function Home() {
  const [activeTab, setActiveTab] = useState<TabType>('overview');
@@ -856,10 +856,8 @@ export default function Home() {
       <div className="flex bg-white border-b border-gray-200">
        {[
         { key: 'overview', label: '📊 全体状況' },
-        { key: 'staff', label: '👥 職員管理' },
-        { key: 'interview', label: '💬 面談管理' },
-        { key: 'evaluation', label: '📋 評価管理' },
-        { key: 'training', label: '🎓 教育・研修' }
+        { key: 'alerts', label: '🔔 アラート・通知' },
+        { key: 'achievements', label: '🎉 成果・表彰' }
        ].map((tab) => (
         <button
          key={tab.key}
@@ -913,581 +911,218 @@ export default function Home() {
 
        {activeTab === 'overview' && (
         <div>
-         {/* サマリーエリア */}
+         {/* 組織健康スコアサマリー */}
          <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mb-8">
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">組織の健康状態サマリー</h3>
-          <div className="grid grid-cols-4 gap-4 mb-6">
-           <div className="bg-red-50 border-l-4 border-red-500 rounded-lg p-4 shadow-sm">
-            <div className="flex items-center justify-between">
-             <div>
-              <p className="text-sm font-medium text-red-700">緊急対応必要</p>
-              <p className="text-2xl font-bold text-red-800 mt-1">
-               {filterStaffByFacility(staffData, selectedFacility).filter(s => s.priority === 'emergency').length}名
-              </p>
-             </div>
-             <div className="text-3xl text-red-500">🚨</div>
-            </div>
-           </div>
-           <div className="bg-yellow-50 border-l-4 border-yellow-500 rounded-lg p-4 shadow-sm">
-            <div className="flex items-center justify-between">
-             <div>
-              <p className="text-sm font-medium text-yellow-700">要注意職員</p>
-              <p className="text-2xl font-bold text-yellow-800 mt-1">
-               {filterStaffByFacility(staffData, selectedFacility).filter(s => s.priority === 'high' || s.priority === 'medium').length}名
-              </p>
-             </div>
-             <div className="text-3xl text-yellow-500">⚠️</div>
-            </div>
-           </div>
-           <div className="bg-green-50 border-l-4 border-green-500 rounded-lg p-4 shadow-sm">
-            <div className="flex items-center justify-between">
-             <div>
-              <p className="text-sm font-medium text-green-700">優秀職員</p>
-              <p className="text-2xl font-bold text-green-800 mt-1">
-               {filterStaffByFacility(staffData, selectedFacility).filter(s => s.status === 'excellent').length}名
-              </p>
-             </div>
-             <div className="text-3xl text-green-500">✨</div>
-            </div>
-           </div>
-           <div className="bg-blue-50 border-l-4 border-blue-500 rounded-lg p-4 shadow-sm">
-            <div className="flex items-center justify-between">
-             <div>
-              <p className="text-sm font-medium text-blue-700">総職員数</p>
-              <p className="text-2xl font-bold text-blue-800 mt-1">
-               {filterStaffByFacility(staffData, selectedFacility).length}名
-              </p>
-             </div>
-             <div className="text-3xl text-blue-500">👥</div>
-            </div>
-           </div>
-          </div>
-
-          {/* 簡易グラフ */}
-          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-           <div className="flex items-center gap-2 mb-2">
-            <span className="text-sm font-medium text-gray-700">職員状態分布</span>
-           </div>
-           <div className="flex items-center gap-2">
-            <div className="flex-1 bg-gray-200 rounded-full h-6 overflow-hidden flex">
-             <div 
-              className="bg-red-500 h-full transition-all duration-500"
-              style={{ width: `${(filterStaffByFacility(staffData, selectedFacility).filter(s => s.status === 'poor').length / filterStaffByFacility(staffData, selectedFacility).length * 100)}%` }}
-             />
-             <div 
-              className="bg-yellow-500 h-full transition-all duration-500"
-              style={{ width: `${(filterStaffByFacility(staffData, selectedFacility).filter(s => s.status === 'average').length / filterStaffByFacility(staffData, selectedFacility).length * 100)}%` }}
-             />
-             <div 
-              className="bg-blue-500 h-full transition-all duration-500"
-              style={{ width: `${(filterStaffByFacility(staffData, selectedFacility).filter(s => s.status === 'good').length / filterStaffByFacility(staffData, selectedFacility).length * 100)}%` }}
-             />
-             <div 
-              className="bg-green-500 h-full transition-all duration-500"
-              style={{ width: `${(filterStaffByFacility(staffData, selectedFacility).filter(s => s.status === 'excellent').length / filterStaffByFacility(staffData, selectedFacility).length * 100)}%` }}
-             />
-            </div>
-           </div>
-           <div className="flex items-center gap-4 mt-2 text-xs">
-            <div className="flex items-center gap-1">
-             <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-             <span className="text-gray-600">要改善</span>
-            </div>
-            <div className="flex items-center gap-1">
-             <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-             <span className="text-gray-600">普通</span>
-            </div>
-            <div className="flex items-center gap-1">
-             <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-             <span className="text-gray-600">良好</span>
-            </div>
-            <div className="flex items-center gap-1">
-             <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-             <span className="text-gray-600">優秀</span>
-            </div>
-           </div>
-          </div>
-         </div>
-
-         {/* フィルター */}
-         <div className="flex items-center justify-between mb-5">
-          <h3 className="text-lg font-semibold text-gray-800">職員一覧</h3>
-          <div className="flex gap-2">
-           <button
-            onClick={() => setStaffFilter('priority')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-             staffFilter === 'priority'
-              ? 'bg-red-500 text-white'
-              : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300'
-            }`}
-           >
-            要対応職員のみ
-           </button>
-           <button
-            onClick={() => setStaffFilter('all')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-             staffFilter === 'all'
-              ? 'bg-blue-500 text-white'
-              : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300'
-            }`}
-           >
-            全員表示
-           </button>
-           <button
-            onClick={() => setStaffFilter('excellent')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-             staffFilter === 'excellent'
-              ? 'bg-green-500 text-white'
-              : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300'
-            }`}
-           >
-            優秀職員
-           </button>
-          </div>
-         </div>
-
-         {/* 職員リストエリア */}
-         <div className="border-t-2 border-gray-200 pt-6 mt-6">
-          <div className="space-y-3">
-           {filterStaffByFacility(staffData, selectedFacility)
-           .filter(staff => {
-            if (staffFilter === 'priority') {
-             return staff.priority === 'emergency' || staff.priority === 'high' || staff.status === 'poor';
-            } else if (staffFilter === 'excellent') {
-             return staff.status === 'excellent';
-            }
-            return true;
-           })
-           .map((staff) => (
-           <div
-            key={staff.id}
-            className="bg-white border border-gray-200 rounded-lg p-4 hover:bg-gray-50 cursor-pointer transition-colors"
-            onClick={() => handleStaffClick(staff)}
-           >
-            <div className="flex items-center justify-between">
-             <div className="flex items-center gap-3">
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold ${staff.avatar}`}>
-               {staff.nameInitial}
-              </div>
-              <div>
-               <Link href={`/staff/${staff.id}`} className="font-semibold text-blue-600 hover:text-blue-800 hover:underline">
-                {staff.name}
-               </Link>
-               <div className="flex items-center gap-3 text-sm text-gray-600 mt-1">
-                <span>{staff.id}</span>
-                <span>•</span>
-                <span>{staff.department}</span>
-               </div>
-              </div>
-             </div>
-             <div className="flex items-center gap-4">
-              <div className="text-right">
-               <div className="flex items-center gap-2 mb-1">
-                <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusBadgeClass(staff.status)}`}>
-                 {staff.grade}
-                </span>
-                <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusBadgeClass(staff.status)}`}>
-                 {staff.statusText}
-                </span>
-               </div>
-               <div className="text-sm text-gray-600">{staff.nextAction}</div>
-              </div>
-              <div className="flex items-center gap-2">
-               <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getPriorityBadgeClass(staff.priority)}`}>
-                {staff.priority === 'emergency' ? '緊急' : staff.priority === 'high' ? '高' : staff.priority === 'medium' ? '中' : '低'}
-               </span>
-              </div>
-             </div>
-            </div>
-           </div>
-           ))}
-          </div>
-         </div>
-        </div>
-       )}
-
-       {activeTab === 'staff' && (
-        <div>
-         {/* サマリーエリア */}
-         <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mb-8">
-          <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center justify-between">
-           職員管理 - 人材の見える化
-           <div className="flex items-center gap-3">
-            <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">職員追加</button>
-            <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-gray-300">エクスポート</button>
-           </div>
-          </h3>
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">📊 組織健康スコア</h3>
           
-          <div className="grid grid-cols-2 gap-4">
-           <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-           <h4 className="font-semibold text-blue-800 mb-2">施設別職員数</h4>
-           <div className="space-y-2">
-            <div className="flex justify-between text-sm">
-             <span>小原病院（急性期）</span>
-             <span className="font-semibold">420名</span>
-            </div>
-            <div className="flex justify-between text-sm">
-             <span>立神リハビリテーション温泉病院</span>
-             <span className="font-semibold">180名</span>
-            </div>
-            <div className="mt-3 pt-3 border-t border-blue-200">
-             <div className="flex justify-between text-sm font-semibold">
-              <span>総職員数</span>
-              <span>600名</span>
-             </div>
-            </div>
+          {/* メインスコア */}
+          <div className="text-center mb-6">
+           <div className="text-5xl font-bold text-blue-600 mb-2">78.5</div>
+           <div className="text-sm text-gray-600">総合健康スコア</div>
+           <div className="flex items-center justify-center gap-2 mt-2">
+            <span className="text-green-500">▲ 2.3</span>
+            <span className="text-sm text-gray-500">前月比</span>
            </div>
           </div>
-          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-           <h4 className="font-semibold text-green-800 mb-2">職種別分布</h4>
-           <div className="space-y-2">
-            <div className="flex justify-between text-sm">
-             <span>看護師</span>
-             <span className="font-semibold">245名</span>
-            </div>
-            <div className="flex justify-between text-sm">
-             <span>医師</span>
-             <span className="font-semibold">53名</span>
-            </div>
-            <div className="flex justify-between text-sm">
-             <span>リハビリ職</span>
-             <span className="font-semibold">75名</span>
-            </div>
-            <div className="flex justify-between text-sm">
-             <span>介護職員</span>
-             <span className="font-semibold">35名</span>
-            </div>
-            <div className="flex justify-between text-sm">
-             <span>その他</span>
-             <span className="font-semibold">192名</span>
-            </div>
+
+          {/* 主要指標 */}
+          <div className="grid grid-cols-4 gap-4 mb-6">
+           <div className="text-center">
+            <div className="text-2xl font-bold text-gray-800">92%</div>
+            <div className="text-xs text-gray-600">出勤率</div>
+           </div>
+           <div className="text-center">
+            <div className="text-2xl font-bold text-gray-800">85%</div>
+            <div className="text-xs text-gray-600">満足度</div>
+           </div>
+           <div className="text-center">
+            <div className="text-2xl font-bold text-gray-800">2.3%</div>
+            <div className="text-xs text-gray-600">離職率</div>
+           </div>
+           <div className="text-center">
+            <div className="text-2xl font-bold text-gray-800">88%</div>
+            <div className="text-xs text-gray-600">研修受講率</div>
            </div>
           </div>
          </div>
-        </div>
 
-        {/* 職員リストエリア */}
-        <div className="border-t-2 border-gray-200 pt-6 mt-6">
-         <div className="flex justify-between items-center mb-4">
-          <h4 className="text-md font-semibold text-gray-700">職員一覧</h4>
-          <Link href="/staff-cards" className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center gap-1 hover:underline">
-           詳細を見る
-           <span className="text-lg">→</span>
+         {/* クイックアクセスカード */}
+         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <Link href="/staff-cards" className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-shadow">
+           <div className="flex flex-col items-center text-center">
+            <div className="text-4xl mb-3">👥</div>
+            <h3 className="font-semibold text-gray-800">職員カルテ管理</h3>
+            <p className="text-sm text-gray-600 mt-1">個人情報・詳細管理</p>
+           </div>
+          </Link>
+          
+          <Link href="/interviews" className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-shadow">
+           <div className="flex flex-col items-center text-center">
+            <div className="text-4xl mb-3">💬</div>
+            <h3 className="font-semibold text-gray-800">面談管理</h3>
+            <p className="text-sm text-gray-600 mt-1">面談予約・記録管理</p>
+           </div>
+          </Link>
+          
+          <Link href="/evaluation" className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-shadow">
+           <div className="flex flex-col items-center text-center">
+            <div className="text-4xl mb-3">📋</div>
+            <h3 className="font-semibold text-gray-800">評価管理</h3>
+            <p className="text-sm text-gray-600 mt-1">人事評価・360度評価</p>
+           </div>
+          </Link>
+          
+          <Link href="/training" className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-shadow">
+           <div className="flex flex-col items-center text-center">
+            <div className="text-4xl mb-3">🎓</div>
+            <h3 className="font-semibold text-gray-800">教育研修</h3>
+            <p className="text-sm text-gray-600 mt-1">研修計画・受講管理</p>
+           </div>
           </Link>
          </div>
-         <div className="space-y-3">
-          {filterStaffByFacility(Object.values(staffDatabase), selectedFacility).slice(0, 6).map((staff) => {
-           return (
-            <div key={staff.id} className="bg-white border border-gray-200 rounded-lg p-4 hover:bg-gray-50 cursor-pointer transition-colors">
-             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-               <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold ${staff.avatar}`}>
-                {staff.nameInitial}
-               </div>
-               <div>
-                <Link href={`/staff/${staff.id}`} className="font-semibold text-blue-600 hover:text-blue-800 hover:underline">
-                 {staff.name}
-                </Link>
-                <div className="flex items-center gap-3 text-sm text-gray-600 mt-1">
-                 <span>{staff.id}</span>
-                 <span>•</span>
-                 <span>{staff.facility}</span>
-                 <span>•</span>
-                 <span>{staff.department}</span>
-                 <span>•</span>
-                 <span>{staff.position}</span>
-                </div>
-               </div>
-              </div>
-              <div className="flex items-center gap-4">
-               <div className="flex items-center gap-2">
-                <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                 staff.evaluation === 'S' ? 'bg-purple-100 text-purple-800 border border-purple-300' :
-                 staff.evaluation === 'A' ? 'bg-blue-100 text-blue-800 border border-blue-300' :
-                 staff.evaluation === 'B+' || staff.evaluation === 'B' ? 'bg-green-100 text-green-800 border border-green-300' :
-                 'bg-gray-100 text-gray-800 border border-gray-300'
-                }`}>
-                 {staff.evaluation}評価
-                </span>
-                <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                 staff.healthStatus === '良好' ? 'bg-green-100 text-green-800 border border-green-300' :
-                 staff.healthStatus === '注意' ? 'bg-yellow-100 text-yellow-800 border border-yellow-300' :
-                 'bg-red-100 text-red-800 border border-red-300'
-                }`}>
-                 {staff.healthStatus}
-                </span>
-               </div>
-               <Link href={`/staff/${staff.id}`} className="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                詳細 →
-               </Link>
-              </div>
-             </div>
-            </div>
-           );
-          })}
-         </div>
-        </div>
         </div>
        )}
 
-       {activeTab === 'interview' && (
+       {activeTab === 'alerts' && (
         <div>
-         <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center justify-between">
-          面談管理 - スマートスケジューリング
-          <div className="flex items-center gap-3">
-           <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">面談予約</button>
-           <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-gray-300">カレンダー表示</button>
-          </div>
-         </h3>
-         
-         <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="bg-gray-50 rounded-lg p-4 text-center">
-           <div className="text-3xl font-bold text-red-600">3</div>
-           <div className="text-sm text-red-700">緊急面談要</div>
-          </div>
-          <div className="bg-gray-50 rounded-lg p-4 text-center">
-           <div className="text-3xl font-bold text-yellow-600">12</div>
-           <div className="text-sm text-yellow-700">今月予定</div>
-          </div>
-          <div className="bg-gray-50 rounded-lg p-4 text-center">
-           <div className="text-3xl font-bold text-green-600">8</div>
-           <div className="text-sm text-green-700">完了済</div>
-          </div>
+         <div className="flex bg-gray-200 rounded-lg p-1 mb-6 border border-gray-300">
+          <button
+           className={`flex-1 py-2 px-3 rounded-md text-sm font-semibold transition-colors ${
+            activeAlertTab === 'personal' 
+             ? 'bg-gray-50 border-2 border-gray-700 text-gray-800 shadow-sm' 
+             : 'text-gray-600 hover:text-gray-800'
+           }`}
+           onClick={() => setActiveAlertTab('personal')}
+          >
+           👤 個人レベル
+          </button>
+          <button
+           className={`flex-1 py-2 px-3 rounded-md text-sm font-semibold transition-colors ${
+            activeAlertTab === 'department' 
+             ? 'bg-gray-50 border-2 border-gray-700 text-gray-800 shadow-sm' 
+             : 'text-gray-600 hover:text-gray-800'
+           }`}
+           onClick={() => setActiveAlertTab('department')}
+          >
+           🏢 部署レベル
+          </button>
          </div>
 
          <div className="space-y-4">
-          <div className="bg-gray-50 border-l-4 border-red-500 p-4 rounded-lg">
-           <div className="flex justify-between items-start">
-            <div>
-             <h4 className="font-semibold text-red-800">中村恵子さん - 緊急面談</h4>
-             <p className="text-sm text-red-600 mt-1">離職リスク84% - 3日連続欠勤</p>
-             <p className="text-xs text-gray-600 mt-2">推奨トピック: 勤務環境改善、メンタルヘルスサポート</p>
-            </div>
-            <div className="text-right">
-             <div className="text-sm font-semibold text-red-700">本日 9:00</div>
-             <button className="mt-2 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs font-semibold transition-colors">開始</button>
-            </div>
-           </div>
-          </div>
-          
-          <div className="bg-gray-50 border-l-4 border-green-500 p-4 rounded-lg">
-           <div className="flex justify-between items-start">
-            <div>
-             <h4 className="font-semibold text-green-800">田中美咲さん - 昇進検討面談</h4>
-             <p className="text-sm text-green-600 mt-1">主任昇進候補 - 準備度85%</p>
-             <p className="text-xs text-gray-600 mt-2">推奨トピック: キャリアパス、管理職研修計画</p>
-            </div>
-            <div className="text-right">
-             <div className="text-sm font-semibold text-green-700">本日 10:30</div>
-             <button className="mt-2 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-xs font-semibold transition-colors">準備</button>
-            </div>
-           </div>
-          </div>
-          
-          <div className="bg-gray-50 border-l-4 border-blue-500 p-4 rounded-lg">
-           <div className="flex justify-between items-start">
-            <div>
-             <h4 className="font-semibold text-blue-800">小林さくらさん - 新人フォローアップ</h4>
-             <p className="text-sm text-blue-600 mt-1">入職9ヶ月 - ストレス指数68</p>
-             <p className="text-xs text-gray-600 mt-2">推奨トピック: 技術習得状況、職場適応、今後の目標</p>
-            </div>
-            <div className="text-right">
-             <div className="text-sm font-semibold text-blue-700">1月18日 14:00</div>
-             <button className="mt-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs font-semibold transition-colors">詳細</button>
-            </div>
-           </div>
-          </div>
-         </div>
-        </div>
-       )}
-
-       {activeTab === 'evaluation' && (
-        <div>
-         <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center justify-between">
-          評価管理 - 360度評価システム
-          <div className="flex items-center gap-3">
-           <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">評価開始</button>
-           <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-gray-300">レポート出力</button>
-          </div>
-         </h3>
-         
-         <div className="grid grid-cols-4 gap-4 mb-6">
-          <div className="bg-gray-50 rounded-lg p-4 text-center">
-           <div className="text-2xl font-bold text-purple-600">45</div>
-           <div className="text-sm text-purple-700">評価待ち</div>
-          </div>
-          <div className="bg-gray-50 rounded-lg p-4 text-center">
-           <div className="text-2xl font-bold text-blue-600">23</div>
-           <div className="text-sm text-blue-700">評価中</div>
-          </div>
-          <div className="bg-gray-50 rounded-lg p-4 text-center">
-           <div className="text-2xl font-bold text-green-600">156</div>
-           <div className="text-sm text-green-700">完了済</div>
-          </div>
-          <div className="bg-gray-50 rounded-lg p-4 text-center">
-           <div className="text-2xl font-bold text-yellow-600">8</div>
-           <div className="text-sm text-yellow-700">承認待ち</div>
-          </div>
-         </div>
-
-         <div className="bg-gray-50 border border-gray-200 rounded-lg p-5">
-          <h4 className="font-semibold text-gray-800 mb-4">評価期限が近い職員</h4>
-          <div className="space-y-3">
-           {[
-            { name: '佐藤花子', dept: '内科病棟', dueDate: '1月20日', status: '自己評価完了', progress: 75 },
-            { name: '伊藤由美', dept: '緩和ケア病棟', dueDate: '2月5日', status: '360度評価中', progress: 60 },
-            { name: '渡辺麻衣', dept: '小児科病棟', dueDate: '1月22日', status: '上司評価待ち', progress: 85 },
-            { name: '小林さくら', dept: '外科病棟', dueDate: '1月18日', status: '未開始', progress: 0 },
-           ].map((staff, index) => (
-            <div key={index} className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
-             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 bg-gradient-to-r from-gray-400 to-gray-500 text-white rounded-full flex items-center justify-center font-semibold">
-               {staff.name[0]}
+          {(activeAlertTab === 'personal' ? personalAlerts : departmentAlerts).map((alert) => (
+           <div key={alert.id} className={`p-4 rounded-lg border-l-4 ${getAlertTypeClass(alert.type)} hover:shadow-md transition-shadow`}>
+            <div className="flex justify-between items-start">
+             <div className="flex-1">
+              <div className="flex items-center gap-2 mb-2">
+               <h4 className="font-semibold text-gray-800">{alert.title}</h4>
+               <span className={`text-xs px-2 py-1 rounded-full font-semibold ${
+                alert.type === 'critical' ? 'bg-red-100 text-red-800' :
+                alert.type === 'warning' ? 'bg-yellow-100 text-yellow-800' :
+                'bg-blue-100 text-blue-800'
+               }`}>
+                {alert.type === 'critical' ? '緊急' : alert.type === 'warning' ? '警告' : '情報'}
+               </span>
               </div>
-              <div>
-               <div className="font-semibold text-gray-800">{staff.name}</div>
-               <div className="text-sm text-gray-600">{staff.dept}</div>
-              </div>
+              <p className="text-sm text-gray-600 mb-3">
+               {alert.staffName ? (
+                <>
+                 <span 
+                  className="text-blue-600 cursor-pointer font-medium hover:text-blue-800 hover:underline"
+                  onClick={() => {
+                   const staff = staffData.find(s => s.name === alert.staffName);
+                   if (staff) handleStaffClick(staff);
+                  }}
+                 >
+                  {alert.staffName}さん
+                 </span>
+                 {alert.content.replace(alert.staffName + 'さん', '')}
+                </>
+               ) : (
+                alert.content
+               )}
+              </p>
              </div>
-             <div className="flex items-center gap-4">
-              <div className="text-right">
-               <div className="text-sm font-semibold text-gray-700">期限: {staff.dueDate}</div>
-               <div className="text-xs text-gray-500">{staff.status}</div>
-              </div>
-              <div className="w-24">
-               <div className="w-full bg-gray-200 rounded-full h-2">
-                <div className="bg-blue-500 h-2 rounded-full" style={{width: `${staff.progress}%`}}></div>
-               </div>
-               <div className="text-xs text-gray-500 mt-1">{staff.progress}%</div>
-              </div>
-              <button className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm font-medium transition-colors">
-               詳細
+             <div className="text-right ml-4">
+              <div className="text-xs text-gray-500 mb-2">{alert.time}</div>
+              <button className={`text-white px-4 py-2 rounded-md text-sm font-semibold transition-colors ${getAlertButtonClass(alert.type)}`}>
+               {alert.buttonText}
               </button>
              </div>
             </div>
-           ))}
-          </div>
+           </div>
+          ))}
          </div>
         </div>
        )}
 
-       {activeTab === 'training' && (
+       {activeTab === 'achievements' && (
         <div>
-         <h3 className="text-lg font-semibold text-gray-800 mb-5 flex items-center justify-between">
-          教育・研修 - スキルアップ支援
-          <div className="flex items-center gap-3">
-           <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">研修計画作成</button>
-           <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-gray-300">受講履歴</button>
-          </div>
-         </h3>
-         
-         <div className="grid grid-cols-2 gap-6 mb-6">
-          <div className="bg-gray-50 rounded-lg p-5">
-           <h4 className="font-semibold text-orange-800 mb-3">今月の研修予定</h4>
-           <div className="space-y-3">
-            <div className="flex justify-between items-center">
-             <div>
-              <div className="font-medium text-gray-800">BLS更新研修</div>
-              <div className="text-sm text-gray-600">1月25日 13:00-17:00</div>
-             </div>
-             <div className="text-right">
-              <div className="text-sm font-semibold text-orange-600">必須</div>
-              <div className="text-xs text-gray-500">対象: 15名</div>
-             </div>
-            </div>
-            <div className="flex justify-between items-center">
-             <div>
-              <div className="font-medium text-gray-800">認知症ケア研修</div>
-              <div className="text-sm text-gray-600">1月28日 10:00-16:00</div>
-             </div>
-             <div className="text-right">
-              <div className="text-sm font-semibold text-blue-600">推奨</div>
-              <div className="text-xs text-gray-500">対象: 8名</div>
-             </div>
-            </div>
-            <div className="flex justify-between items-center">
-             <div>
-              <div className="font-medium text-gray-800">リーダーシップ研修</div>
-              <div className="text-sm text-gray-600">2月3日 9:00-17:00</div>
-             </div>
-             <div className="text-right">
-              <div className="text-sm font-semibold text-green-600">選抜</div>
-              <div className="text-xs text-gray-500">対象: 5名</div>
-             </div>
-            </div>
-           </div>
-          </div>
-          
-          <div className="bg-gray-50 rounded-lg p-5">
-           <h4 className="font-semibold text-blue-800 mb-3">JNAラダー進捗（看護師）</h4>
-           <div className="space-y-2">
-            <div className="flex items-center justify-between">
-             <span className="text-sm">レベルⅠ→Ⅱ</span>
-             <div className="flex items-center gap-2">
-              <div className="w-32 h-2 bg-gray-200 rounded-full">
-               <div className="h-full bg-blue-500 rounded-full" style={{width: '75%'}}></div>
-              </div>
-              <span className="text-xs font-semibold">18名</span>
-             </div>
-            </div>
-            <div className="flex items-center justify-between">
-             <span className="text-sm">レベルⅡ→Ⅲ</span>
-             <div className="flex items-center gap-2">
-              <div className="w-32 h-2 bg-white rounded-full">
-               <div className="h-full bg-white rounded-full" style={{width: '60%'}}></div>
-              </div>
-              <span className="text-xs font-semibold">24名</span>
-             </div>
-            </div>
-            <div className="flex items-center justify-between">
-             <span className="text-sm">レベルⅢ→Ⅳ</span>
-             <div className="flex items-center gap-2">
-              <div className="w-32 h-2 bg-white rounded-full">
-               <div className="h-full bg-white rounded-full" style={{width: '45%'}}></div>
-              </div>
-              <span className="text-xs font-semibold">15名</span>
-             </div>
-            </div>
-            <div className="flex items-center justify-between">
-             <span className="text-sm">レベルⅣ→Ⅴ</span>
-             <div className="flex items-center gap-2">
-              <div className="w-32 h-2 bg-white rounded-full">
-               <div className="h-full bg-white rounded-full" style={{width: '30%'}}></div>
-              </div>
-              <span className="text-xs font-semibold">8名</span>
-             </div>
-            </div>
-           </div>
-          </div>
+         <div className="flex bg-gray-200 rounded-lg p-1 mb-6 border border-gray-300">
+          <button
+           className={`flex-1 py-2 px-3 rounded-md text-sm font-semibold transition-colors ${
+            activeSuccessTab === 'personal' 
+             ? 'bg-gray-50 border-2 border-gray-700 text-gray-800 shadow-sm' 
+             : 'text-gray-600 hover:text-gray-800'
+           }`}
+           onClick={() => setActiveSuccessTab('personal')}
+          >
+           👤 個人表彰
+          </button>
+          <button
+           className={`flex-1 py-2 px-3 rounded-md text-sm font-semibold transition-colors ${
+            activeSuccessTab === 'department' 
+             ? 'bg-gray-50 border-2 border-gray-700 text-gray-800 shadow-sm' 
+             : 'text-gray-600 hover:text-gray-800'
+           }`}
+           onClick={() => setActiveSuccessTab('department')}
+          >
+           🏢 部署成果
+          </button>
          </div>
-         
-         <div className="bg-gray-50 border border-gray-200 rounded-lg p-5">
-          <h4 className="font-semibold text-gray-800 mb-4">個別研修推奨</h4>
-          <div className="space-y-3">
-           <div className="p-3 bg-white rounded-lg border-l-4 border-yellow-500">
-            <div className="flex justify-between items-center">
-             <div>
-              <span className="font-semibold text-gray-800">小林さくら</span>
-              <span className="text-sm text-gray-600 ml-2">外科病棟・新人看護師</span>
+
+         <div className="space-y-4">
+          {(activeSuccessTab === 'personal' ? personalSuccess : departmentSuccess).map((success) => (
+           <div key={success.id} className="p-4 rounded-lg border-l-4 border-l-green-500 bg-green-50 hover:shadow-md transition-shadow">
+            <div className="flex justify-between items-start">
+             <div className="flex-1">
+              <div className="flex items-center gap-2 mb-2">
+               <h4 className="font-semibold text-gray-800">{success.title}</h4>
+               <span className="text-xs px-2 py-1 rounded-full font-semibold bg-green-100 text-green-800">
+                成果
+               </span>
+              </div>
+              <p className="text-sm text-gray-600 mb-3">
+               {success.staffName ? (
+                <>
+                 <span 
+                  className="text-blue-600 cursor-pointer font-medium hover:text-blue-800 hover:underline"
+                  onClick={() => {
+                   const staff = staffData.find(s => s.name === success.staffName);
+                   if (staff) handleStaffClick(staff);
+                  }}
+                 >
+                  {success.staffName}さん
+                 </span>
+                 {success.content.replace(success.staffName + 'さん', '')}
+                </>
+               ) : (
+                success.content
+               )}
+              </p>
              </div>
-             <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full font-semibold border border-yellow-300">推奨</span>
-            </div>
-            <p className="text-sm text-gray-600 mt-2">BLS再受講推奨。前回評価「再受講中」。急変対応スキル向上が必要。</p>
-           </div>
-           <div className="p-3 bg-white rounded-lg border-l-4 border-green-500">
-            <div className="flex justify-between items-center">
-             <div>
-              <span className="font-semibold text-gray-800">田中美咲</span>
-              <span className="text-sm text-gray-600 ml-2">地域包括ケア病棟・看護師</span>
+             <div className="text-right ml-4">
+              <div className="text-xs text-gray-500 mb-2">{success.time}</div>
+              <button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md text-sm font-semibold transition-colors">
+               {success.buttonText}
+              </button>
              </div>
-             <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full font-semibold border border-green-300">昇進準備</span>
             </div>
-            <p className="text-sm text-gray-600 mt-2">管理職準備研修開始推奨。2025年7月主任昇進に向けて6ヶ月プログラム。</p>
            </div>
-          </div>
+          ))}
          </div>
         </div>
        )}
+
       </div>
      </div>
     </div>
