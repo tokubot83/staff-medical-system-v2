@@ -1,0 +1,805 @@
+.container {
+  min-height: calc(100vh - 100px);
+  background-color: #f3f4f6;
+}
+
+/* タブナビゲーション */
+.tabNavigation {
+  background-color: white;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  padding: 0 2rem;
+  gap: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.tabButton {
+  padding: 1rem 1.5rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  color: #6b7280;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+}
+
+.tabButton:hover {
+  color: #374151;
+}
+
+.tabButton.active {
+  color: #1f2937;
+  border-bottom-color: #3b82f6;
+  font-weight: 600;
+}
+
+.tabIcon {
+  font-size: 1.2rem;
+}
+
+.tabLabel {
+  font-size: 0.95rem;
+}
+
+.tabContent {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* 戦略ダッシュボード */
+.dashboardContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.summarySection h2,
+.analysisSection h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #1f2937;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.summaryCard {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  transition: transform 0.2s;
+}
+
+.summaryCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.cardIcon {
+  font-size: 2.5rem;
+  width: 60px;
+  height: 60px;
+  background: #eff6ff;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cardContent {
+  flex: 1;
+}
+
+.cardContent h3 {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.cardValue {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}
+
+.cardChange {
+  font-size: 0.875rem;
+  color: #10b981;
+  margin-top: 0.25rem;
+}
+
+.cardSubtext {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+.cardAlert {
+  font-size: 0.875rem;
+  color: #ef4444;
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
+.cardWarning {
+  font-size: 0.875rem;
+  color: #f59e0b;
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
+.chartsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: 1.5rem;
+}
+
+.chartCard {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.chartCard h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #374151;
+}
+
+.chartPlaceholder {
+  height: 300px;
+  background: #f9fafb;
+  border: 2px dashed #e5e7eb;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+}
+
+/* 異動プランニング */
+.transferContainer {
+  background: white;
+  border-radius: 0.75rem;
+  padding: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.transferHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.transferHeader h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.simulationButton {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.simulationButton:hover {
+  background: #2563eb;
+}
+
+.transferContent {
+  display: grid;
+  grid-template-columns: 300px 1fr 300px;
+  gap: 2rem;
+  min-height: 600px;
+}
+
+.leftPanel,
+.centerPanel,
+.rightPanel {
+  background: #f9fafb;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+}
+
+.leftPanel h3,
+.centerPanel h3,
+.rightPanel h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #374151;
+}
+
+.searchBox {
+  margin-bottom: 1rem;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+}
+
+.filterSection {
+  margin-bottom: 1.5rem;
+}
+
+.filterSection label {
+  display: block;
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+}
+
+.filterSelect {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+  background: white;
+}
+
+.staffList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.staffItem {
+  background: white;
+  padding: 1rem;
+  border-radius: 0.375rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.staffItem:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.staffName {
+  font-weight: 500;
+  color: #1f2937;
+  margin: 0 0 0.25rem 0;
+}
+
+.staffDetail {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.badge {
+  background: #fef3c7;
+  color: #d97706;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.matchingResults {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.matchCard {
+  background: white;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  display: flex;
+  gap: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.matchScore {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #10b981;
+  width: 80px;
+  text-align: center;
+}
+
+.matchInfo {
+  flex: 1;
+}
+
+.matchInfo h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  color: #1f2937;
+}
+
+.matchInfo p {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0.25rem 0;
+}
+
+.matchReasons {
+  margin-top: 0.75rem;
+  padding-left: 1.25rem;
+}
+
+.matchReasons li {
+  font-size: 0.875rem;
+  color: #374151;
+  margin: 0.25rem 0;
+}
+
+.departmentItem {
+  background: white;
+  padding: 1rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1rem;
+}
+
+.departmentItem h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.75rem 0;
+  color: #1f2937;
+}
+
+.wishList p {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0.25rem 0;
+}
+
+/* タレント管理 */
+.talentContainer {
+  background: white;
+  border-radius: 0.75rem;
+  padding: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.talentHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.talentHeader h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.headerActions {
+  display: flex;
+  gap: 1rem;
+}
+
+.actionButton {
+  background: #6366f1;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.actionButton:hover {
+  background: #4f46e5;
+}
+
+.talentGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+}
+
+.talentSection {
+  background: #f9fafb;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+}
+
+.talentSection h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #1f2937;
+}
+
+.performerCard {
+  background: white;
+  padding: 1rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.performerHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.performerRank {
+  width: 32px;
+  height: 32px;
+  background: #fbbf24;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.performerHeader h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+  color: #1f2937;
+}
+
+.performerDetails p {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0.25rem 0;
+}
+
+.talentTags {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.tag {
+  background: #e0e7ff;
+  color: #4338ca;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.performerActions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.smallButton {
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.smallButton:hover {
+  background: #e5e7eb;
+}
+
+.positionCard {
+  background: white;
+  padding: 1rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1rem;
+}
+
+.positionCard h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.75rem 0;
+  color: #1f2937;
+}
+
+.candidate {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.candidate:last-child {
+  border-bottom: none;
+}
+
+.readiness {
+  font-size: 0.75rem;
+  color: #059669;
+  font-weight: 500;
+}
+
+.candidate p {
+  font-size: 0.875rem;
+  color: #374151;
+  margin: 0.25rem 0 0 0;
+}
+
+.careerPathViewer,
+.developmentTracker {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 0.375rem;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+}
+
+.developmentItem {
+  width: 100%;
+}
+
+.developmentItem h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.75rem 0;
+  color: #1f2937;
+}
+
+.progressBar {
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progressFill {
+  height: 100%;
+  background: #10b981;
+  transition: width 0.3s;
+}
+
+.developmentItem p {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* 組織最適化 */
+.optimizationContainer {
+  background: white;
+  border-radius: 0.75rem;
+  padding: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.optimizationHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.optimizationHeader h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.analysisButton {
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.analysisButton:hover {
+  background: #059669;
+}
+
+.optimizationContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.analysisSection h3,
+.recommendationSection h3,
+.futureProjection h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #1f2937;
+}
+
+.compositionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.compositionCard {
+  background: #f9fafb;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+}
+
+.compositionCard h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+  color: #374151;
+}
+
+.analysisChart {
+  height: 200px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  margin-bottom: 1rem;
+}
+
+.analysisInsight {
+  padding: 0.75rem;
+  background: white;
+  border-radius: 0.375rem;
+}
+
+.warning {
+  color: #f59e0b;
+  font-weight: 500;
+  margin: 0;
+}
+
+.good {
+  color: #10b981;
+  font-weight: 500;
+  margin: 0;
+}
+
+.recommendationCard {
+  background: #f9fafb;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  border-left: 4px solid #ef4444;
+}
+
+.recommendationPriority {
+  font-size: 0.875rem;
+  color: #ef4444;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.recommendationCard h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 0.75rem 0;
+  color: #1f2937;
+}
+
+.recommendationCard p {
+  font-size: 0.875rem;
+  color: #374151;
+  margin: 0 0 1rem 0;
+}
+
+.impactAnalysis {
+  background: white;
+  padding: 1rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1rem;
+}
+
+.impactAnalysis p {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0.25rem 0;
+}
+
+.detailButton {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.detailButton:hover {
+  background: #2563eb;
+}
+
+.projectionContent {
+  background: #f9fafb;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 1024px) {
+  .transferContent {
+    grid-template-columns: 1fr;
+  }
+
+  .talentGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .compositionGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .tabNavigation {
+    overflow-x: auto;
+    padding: 0 1rem;
+    gap: 1rem;
+  }
+
+  .tabLabel {
+    display: none;
+  }
+
+  .summaryGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .chartsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .headerActions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .actionButton {
+    width: 100%;
+  }
+}
