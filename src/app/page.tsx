@@ -405,54 +405,54 @@ export default function Home() {
   }
  ];
 
- const toggleTask = (taskId: string) => {
-  setTasks(tasks.map(task => 
-   task.id === taskId ? { ...task, completed: !task.completed } : task
-  ));
- };
+  const toggleTask = (taskId: string) => {
+    setTasks(tasks.map(task => 
+      task.id === taskId ? { ...task, completed: !task.completed } : task
+    ));
+  };
 
- const handleStaffClick = (staff: Staff) => {
-  setSelectedStaff(staff);
-  setShowModal(true);
- };
+  const handleStaffClick = (staff: Staff) => {
+    setSelectedStaff(staff);
+    setShowModal(true);
+  };
 
- const getStatusBadgeClass = (status: string) => {
-  switch (status) {
-   case 'excellent': return 'bg-green-100 text-green-800 border border-green-300';
-   case 'good': return 'bg-blue-100 text-blue-800 border border-blue-300';
-   case 'average': return 'bg-yellow-100 text-yellow-800 border border-yellow-300';
-   case 'poor': return 'bg-red-100 text-red-800 border border-red-300';
-   default: return 'bg-gray-100 text-gray-800 border border-gray-300';
-  }
- };
+  const getStatusBadgeClass = (status: string) => {
+    switch (status) {
+      case 'excellent': return 'bg-green-100 text-green-800 border border-green-300';
+      case 'good': return 'bg-blue-100 text-blue-800 border border-blue-300';
+      case 'average': return 'bg-yellow-100 text-yellow-800 border border-yellow-300';
+      case 'poor': return 'bg-red-100 text-red-800 border border-red-300';
+      default: return 'bg-gray-100 text-gray-800 border border-gray-300';
+    }
+  };
 
- const getPriorityBadgeClass = (priority: string) => {
-  switch (priority) {
-   case 'emergency': return 'bg-red-100 text-red-800 border border-red-300';
-   case 'high': return 'bg-orange-100 text-orange-800 border border-orange-300';
-   case 'medium': return 'bg-blue-100 text-blue-800 border border-blue-300';
-   case 'normal': return 'bg-green-100 text-green-800 border border-green-300';
-   default: return 'bg-gray-100 text-gray-800 border border-gray-300';
-  }
- };
+  const getPriorityBadgeClass = (priority: string) => {
+    switch (priority) {
+      case 'emergency': return 'bg-red-100 text-red-800 border border-red-300';
+      case 'high': return 'bg-orange-100 text-orange-800 border border-orange-300';
+      case 'medium': return 'bg-blue-100 text-blue-800 border border-blue-300';
+      case 'normal': return 'bg-green-100 text-green-800 border border-green-300';
+      default: return 'bg-gray-100 text-gray-800 border border-gray-300';
+    }
+  };
 
- const getAlertTypeClass = (type: string) => {
-  switch (type) {
-   case 'critical': return 'border-l-red-500 bg-red-50';
-   case 'warning': return 'border-l-yellow-500 bg-yellow-50';
-   case 'info': return 'border-l-blue-500 bg-blue-50';
-   default: return 'border-l-gray-500 bg-gray-50';
-  }
- };
+  const getAlertTypeClass = (type: string) => {
+    switch (type) {
+      case 'critical': return 'border-l-red-500 bg-red-50';
+      case 'warning': return 'border-l-yellow-500 bg-yellow-50';
+      case 'info': return 'border-l-blue-500 bg-blue-50';
+      default: return 'border-l-gray-500 bg-gray-50';
+    }
+  };
 
- const getAlertButtonClass = (type: string) => {
-  switch (type) {
-   case 'critical': return 'bg-red-500 hover:bg-red-600 text-white';
-   case 'warning': return 'bg-yellow-500 hover:bg-yellow-600 text-white';
-   case 'info': return 'bg-blue-500 hover:bg-blue-600 text-white';
-   default: return 'bg-gray-500 hover:bg-gray-600 text-white';
-  }
- };
+  const getAlertButtonClass = (type: string) => {
+    switch (type) {
+      case 'critical': return 'bg-red-500 hover:bg-red-600 text-white';
+      case 'warning': return 'bg-yellow-500 hover:bg-yellow-600 text-white';
+      case 'info': return 'bg-blue-500 hover:bg-blue-600 text-white';
+      default: return 'bg-gray-500 hover:bg-gray-600 text-white';
+    }
+  };
 
   return (
   <div className="min-h-screen bg-white">
