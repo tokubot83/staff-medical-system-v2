@@ -68,31 +68,31 @@ export function ActionCenter({ facility }: ActionCenterProps) {
   // 施設でのフィルタリング（実際の実装では、職員の所属施設で判断）
   const actionItems = facility === 'all' ? allActionItems : allActionItems.slice(0, 3);
 
-  const getTypeIcon = (type: string) => {
-    const icons = {
+  const getTypeIcon = (type: 'urgent' | 'warning' | 'info') => {
+    const icons: Record<'urgent' | 'warning' | 'info', string> = {
       urgent: '🚨',
       warning: '⚠️',
       info: 'ℹ️'
     };
-    return icons[type] || 'ℹ️';
+    return icons[type];
   };
 
-  const getTypeColor = (type: string) => {
-    const colors = {
-      urgent: 'border-red-500 bg-red-50',
-      warning: 'border-yellow-500 bg-yellow-50',
-      info: 'border-blue-500 bg-blue-50'
+  const getTypeColor = (type: 'urgent' | 'warning' | 'info') => {
+    const colors: Record<'urgent' | 'warning' | 'info', string> = {
+      urgent: 'border-l-red-500 bg-red-50',
+      warning: 'border-l-yellow-500 bg-yellow-50',
+      info: 'border-l-blue-500 bg-blue-50'
     };
-    return colors[type] || 'border-gray-500 bg-gray-50';
+    return colors[type];
   };
 
-  const getButtonColor = (type: string) => {
-    const colors = {
+  const getButtonColor = (type: 'urgent' | 'warning' | 'info') => {
+    const colors: Record<'urgent' | 'warning' | 'info', string> = {
       urgent: 'bg-red-500 hover:bg-red-600',
       warning: 'bg-yellow-500 hover:bg-yellow-600',
       info: 'bg-blue-500 hover:bg-blue-600'
     };
-    return colors[type] || 'bg-gray-500 hover:bg-gray-600';
+    return colors[type];
   };
 
   const urgentCount = actionItems.filter(item => item.type === 'urgent').length;
