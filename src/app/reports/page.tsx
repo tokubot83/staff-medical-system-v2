@@ -26,6 +26,28 @@ export default function ReportsPage() {
             </p>
           </div>
 
+          {/* クイックアクセス */}
+          <div className="mb-8 bg-white rounded-lg shadow-md p-6">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">クイックアクセス</h3>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+              <Link href="/metrics/basic" className="flex items-center justify-center bg-green-50 hover:bg-green-100 border border-green-200 rounded-lg p-3 transition-colors">
+                <span className="text-green-700 font-medium">基本指標</span>
+              </Link>
+              <Link href="/metrics/quality" className="flex items-center justify-center bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg p-3 transition-colors">
+                <span className="text-blue-700 font-medium">人材の質</span>
+              </Link>
+              <Link href="/metrics/growth" className="flex items-center justify-center bg-purple-50 hover:bg-purple-100 border border-purple-200 rounded-lg p-3 transition-colors">
+                <span className="text-purple-700 font-medium">人材の成長</span>
+              </Link>
+              <Link href="/metrics/risk" className="flex items-center justify-center bg-yellow-50 hover:bg-yellow-100 border border-yellow-200 rounded-lg p-3 transition-colors">
+                <span className="text-yellow-700 font-medium">リスク管理</span>
+              </Link>
+              <Link href="/metrics/efficiency" className="flex items-center justify-center bg-red-50 hover:bg-red-100 border border-red-200 rounded-lg p-3 transition-colors">
+                <span className="text-red-700 font-medium">組織効率</span>
+              </Link>
+            </div>
+          </div>
+
         {/* 施設選択 */}
         <div className="mb-8">
           <FacilitySelector
