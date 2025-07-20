@@ -588,7 +588,7 @@ export default function Home() {
         }`}
         onClick={() => setActiveAlertTab('personal')}
        >
-        👤 個人版
+        👤 職員
        </button>
        <button
         className={`flex-1 py-2 px-3 rounded-md text-sm font-semibold transition-colors ${
@@ -598,7 +598,7 @@ export default function Home() {
         }`}
         onClick={() => setActiveAlertTab('department')}
        >
-        🏢 部署版
+        🏢 部署
        </button>
       </div>
 
@@ -655,7 +655,7 @@ export default function Home() {
         }`}
         onClick={() => setActiveSuccessTab('personal')}
        >
-        👤 個人版
+        👤 職員
        </button>
        <button
         className={`flex-1 py-2 px-3 rounded-md text-sm font-semibold transition-colors ${
@@ -665,7 +665,7 @@ export default function Home() {
         }`}
         onClick={() => setActiveSuccessTab('department')}
        >
-        🏢 部署版
+        🏢 部署
        </button>
       </div>
 
@@ -991,7 +991,7 @@ export default function Home() {
            }`}
            onClick={() => setActiveAlertTab('personal')}
           >
-           👤 個人レベル
+           👤 職員
           </button>
           <button
            className={`flex-1 py-2 px-3 rounded-md text-sm font-semibold transition-colors ${
@@ -1001,7 +1001,7 @@ export default function Home() {
            }`}
            onClick={() => setActiveAlertTab('department')}
           >
-           🏢 部署レベル
+           🏢 部署
           </button>
          </div>
 
@@ -1063,7 +1063,7 @@ export default function Home() {
            }`}
            onClick={() => setActiveSuccessTab('personal')}
           >
-           👤 個人表彰
+           👤 職員
           </button>
           <button
            className={`flex-1 py-2 px-3 rounded-md text-sm font-semibold transition-colors ${
@@ -1073,7 +1073,7 @@ export default function Home() {
            }`}
            onClick={() => setActiveSuccessTab('department')}
           >
-           🏢 部署成果
+           🏢 部署
           </button>
          </div>
 
