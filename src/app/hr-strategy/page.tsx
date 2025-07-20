@@ -173,14 +173,14 @@ function StrategyDashboard() {
           <div className={styles.chartCard}>
             <h3>スキルマトリクス</h3>
             <div className={styles.chartPlaceholder}>
-              <div style={{ padding: '20px' }}>
-                {skillData.map((item, index) => (
-                  <div key={index} style={{ marginBottom: '15px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
-                      <span>{item.skill}</span>
-                      <span>{item.count}名 ({item.percentage}%)</span>
+              <div style={{ padding: '20px', width: '100%' }}>
+                {skillData.slice(0, 8).map((item, index) => (
+                  <div key={index} style={{ marginBottom: '12px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px', gap: '10px' }}>
+                      <span style={{ fontSize: '0.875rem', color: '#374151', minWidth: '120px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.skill}</span>
+                      <span style={{ fontSize: '0.75rem', color: '#6b7280', whiteSpace: 'nowrap' }}>{item.count}名 ({item.percentage}%)</span>
                     </div>
-                    <div style={{ height: '8px', backgroundColor: '#f0f0f0', borderRadius: '4px', overflow: 'hidden' }}>
+                    <div style={{ height: '6px', backgroundColor: '#f0f0f0', borderRadius: '3px', overflow: 'hidden' }}>
                       <div 
                         style={{ 
                           width: `${item.percentage}%`,
@@ -192,6 +192,11 @@ function StrategyDashboard() {
                     </div>
                   </div>
                 ))}
+                {skillData.length > 8 && (
+                  <p style={{ textAlign: 'center', color: '#9ca3af', marginTop: '10px', fontSize: '0.875rem' }}>
+                    他 {skillData.length - 8} 件のスキル
+                  </p>
+                )}
               </div>
             </div>
           </div>
