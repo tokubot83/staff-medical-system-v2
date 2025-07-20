@@ -65,14 +65,60 @@ const demoStaffData = [
   { id: 10, name: '加藤 健太', department: '総務課', position: '一般職', performance: 'C', yearsOfService: 1, skills: ['事務処理', 'データ入力'], transferWish: false },
 ]
 
-const demoDepartments = [
-  { name: '看護部', staffCount: 450, transferIn: 8, transferOut: 12, vacancyRate: 7.5 },
-  { name: 'リハビリテーション科', staffCount: 85, transferIn: 3, transferOut: 2, vacancyRate: 15.3 },
-  { name: '薬剤部', staffCount: 45, transferIn: 2, transferOut: 3, vacancyRate: 4.4 },
-  { name: '医事課', staffCount: 65, transferIn: 5, transferOut: 4, vacancyRate: 6.2 },
-  { name: '栄養課', staffCount: 35, transferIn: 1, transferOut: 2, vacancyRate: 8.6 },
-  { name: '総務課', staffCount: 55, transferIn: 4, transferOut: 3, vacancyRate: 3.6 },
+// 系列施設のデータ構造
+const facilityTypes = {
+  '急性期病院': { characteristics: ['救急対応', '高度医療', '集中治療'], workload: '高' },
+  '回復期病院': { characteristics: ['リハビリ強化', '在宅復帰支援'], workload: '中' },
+  '慢性期病院': { characteristics: ['長期療養', '緩和ケア'], workload: '中' },
+  '介護施設': { characteristics: ['生活支援', '認知症ケア'], workload: '中' },
+  'クリニック': { characteristics: ['外来診療', '地域密着'], workload: '低' },
+}
+
+// 系列施設データ
+const demoFacilities = [
+  { id: 'main', name: '本院', type: '急性期病院', location: '東京都中央区' },
+  { id: 'branch1', name: '東病院', type: '回復期病院', location: '東京都江東区' },
+  { id: 'branch2', name: '西病院', type: '慢性期病院', location: '東京都世田谷区' },
+  { id: 'care1', name: '介護老人保健施設さくら', type: '介護施設', location: '東京都杉並区' },
+  { id: 'clinic1', name: '駅前クリニック', type: 'クリニック', location: '東京都新宿区' },
 ]
+
+// 施設別の部署データ（職種別の人員状況）
+const facilityDepartments = {
+  'main': [
+    { name: '看護部', staffCount: 450, transferIn: 8, transferOut: 12, vacancyRate: 7.5 },
+    { name: 'リハビリテーション科', staffCount: 85, transferIn: 3, transferOut: 2, vacancyRate: 15.3 },
+    { name: '薬剤部', staffCount: 45, transferIn: 2, transferOut: 3, vacancyRate: 4.4 },
+    { name: '医事課', staffCount: 65, transferIn: 5, transferOut: 4, vacancyRate: 6.2 },
+    { name: '栄養課', staffCount: 35, transferIn: 1, transferOut: 2, vacancyRate: 8.6 },
+    { name: '総務課', staffCount: 55, transferIn: 4, transferOut: 3, vacancyRate: 3.6 },
+  ],
+  'branch1': [
+    { name: '看護部', staffCount: 180, transferIn: 5, transferOut: 3, vacancyRate: 5.0 },
+    { name: 'リハビリテーション科', staffCount: 120, transferIn: 8, transferOut: 2, vacancyRate: 8.3 },
+    { name: '薬剤部', staffCount: 25, transferIn: 1, transferOut: 1, vacancyRate: 12.0 },
+    { name: '医事課', staffCount: 30, transferIn: 2, transferOut: 1, vacancyRate: 3.3 },
+    { name: '栄養課', staffCount: 20, transferIn: 0, transferOut: 1, vacancyRate: 15.0 },
+  ],
+  'branch2': [
+    { name: '看護部', staffCount: 220, transferIn: 3, transferOut: 5, vacancyRate: 9.1 },
+    { name: 'リハビリテーション科', staffCount: 45, transferIn: 2, transferOut: 1, vacancyRate: 6.7 },
+    { name: '薬剤部', staffCount: 20, transferIn: 0, transferOut: 2, vacancyRate: 20.0 },
+    { name: '医事課', staffCount: 25, transferIn: 1, transferOut: 1, vacancyRate: 4.0 },
+    { name: '栄養課', staffCount: 25, transferIn: 1, transferOut: 0, vacancyRate: 0.0 },
+  ],
+  'care1': [
+    { name: '看護部', staffCount: 80, transferIn: 2, transferOut: 3, vacancyRate: 11.3 },
+    { name: 'リハビリテーション科', staffCount: 35, transferIn: 1, transferOut: 0, vacancyRate: 2.9 },
+    { name: '栄養課', staffCount: 15, transferIn: 1, transferOut: 0, vacancyRate: 0.0 },
+  ],
+  'clinic1': [
+    { name: '看護部', staffCount: 25, transferIn: 1, transferOut: 2, vacancyRate: 16.0 },
+    { name: '医事課', staffCount: 10, transferIn: 0, transferOut: 0, vacancyRate: 0.0 },
+  ],
+}
+
+const demoDepartments = facilityDepartments['main']
 
 // 戦略ダッシュボードタブ
 function StrategyDashboard() {
@@ -282,33 +328,68 @@ function TransferPlanning() {
           <h3>マッチング結果</h3>
           <div className={styles.matchingResults}>
             {selectedStaff ? (
-              demoDepartments
-                .filter(dept => dept.name !== selectedStaff.department)
-                .map((dept) => {
-                  const matchScore = Math.floor(60 + Math.random() * 40)
-                  return (
-                    <div key={dept.name} className={styles.matchCard}>
-                      <div className={styles.matchScore}>{matchScore}%</div>
+              <>
+                <h4 style={{ marginBottom: '15px', fontSize: '1.1em' }}>
+                  {selectedStaff.name}さん（{selectedStaff.department}）の異動候補
+                </h4>
+                {demoFacilities
+                  .filter(facility => facility.id !== 'main') // 本院以外の施設
+                  .map((facility) => {
+                    // 該当施設の同一職種部署を取得
+                    const targetDept = facilityDepartments[facility.id]?.find(
+                      dept => dept.name === selectedStaff.department
+                    )
+                    
+                    if (!targetDept) return null // 同じ職種がない施設はスキップ
+                    
+                    // マッチングスコアの計算（人員不足度、施設特性、距離などを考慮）
+                    const baseScore = 70
+                    const vacancyBonus = targetDept.vacancyRate > 10 ? 20 : targetDept.vacancyRate > 5 ? 10 : 0
+                    const workloadAdjust = facilityTypes[facility.type].workload === '低' ? 5 : 0
+                    const matchScore = Math.min(baseScore + vacancyBonus + workloadAdjust, 95)
+                    
+                    return {
+                      facility,
+                      targetDept,
+                      matchScore,
+                      reasons: [
+                        `${targetDept.name}で${targetDept.vacancyRate.toFixed(1)}%の人員不足`,
+                        ...facilityTypes[facility.type].characteristics.slice(0, 2).map(char => `${char}の経験が積める`),
+                        workloadAdjust > 0 && 'ワークライフバランスの改善',
+                      ].filter(Boolean)
+                    }
+                  })
+                  .filter(Boolean)
+                  .sort((a, b) => b.matchScore - a.matchScore)
+                  .slice(0, 3)
+                  .map((match) => (
+                    <div key={match.facility.id} className={styles.matchCard}>
+                      <div className={styles.matchScore}>{match.matchScore}%</div>
                       <div className={styles.matchInfo}>
-                        <h4>{dept.name}</h4>
-                        <p>スキルマッチ度: {matchScore > 80 ? '高' : matchScore > 60 ? '中' : '低'}</p>
-                        <p>部署ニーズ: {dept.vacancyRate > 10 ? '緊急' : dept.vacancyRate > 5 ? '通常' : '低'}</p>
+                        <h4>{match.facility.name}</h4>
+                        <p style={{ color: '#666', fontSize: '0.9em' }}>
+                          {match.facility.type} / {match.facility.location}
+                        </p>
+                        <p>部署: {match.targetDept.name}</p>
+                        <p style={{ 
+                          color: match.targetDept.vacancyRate > 10 ? '#e74c3c' : '#27ae60',
+                          fontWeight: 'bold'
+                        }}>
+                          人員充足率: {(100 - match.targetDept.vacancyRate).toFixed(1)}%
+                        </p>
                         <ul className={styles.matchReasons}>
-                          {selectedStaff.skills.map((skill, idx) => (
-                            <li key={idx}>{skill}が活用可能</li>
+                          {match.reasons.map((reason, idx) => (
+                            <li key={idx}>{reason}</li>
                           ))}
-                          {dept.vacancyRate > 10 && <li>人材不足の解消に貢献</li>}
                         </ul>
                       </div>
+                      <button className={styles.detailButton} style={{ marginTop: '10px' }}>
+                        詳細を確認
+                      </button>
                     </div>
-                  )
-                })
-                .sort((a, b) => {
-                  const scoreA = Math.floor(60 + Math.random() * 40)
-                  const scoreB = Math.floor(60 + Math.random() * 40)
-                  return scoreB - scoreA
-                })
-                .slice(0, 3)
+                  ))
+                }
+              </>
             ) : (
               <p style={{ textAlign: 'center', color: '#666' }}>職員を選択してください</p>
             )}
@@ -316,23 +397,36 @@ function TransferPlanning() {
         </div>
 
         <div className={styles.rightPanel}>
-          <h3>部署別異動希望者</h3>
+          <h3>系列施設の人員状況</h3>
           <div className={styles.departmentList}>
-            {demoDepartments.map((dept) => (
-              <div key={dept.name} className={styles.departmentItem}>
-                <h4>{dept.name}</h4>
-                <div className={styles.wishList}>
-                  <p>異動希望者: {dept.transferOut}名</p>
-                  <p>受入希望: {dept.transferIn}名</p>
-                  <p style={{ 
-                    color: dept.vacancyRate > 10 ? '#e74c3c' : dept.vacancyRate > 5 ? '#f39c12' : '#27ae60',
-                    fontWeight: 'bold'
-                  }}>
-                    欠員率: {dept.vacancyRate.toFixed(1)}%
-                  </p>
+            {demoFacilities.map((facility) => {
+              const departments = facilityDepartments[facility.id] || []
+              const avgVacancyRate = departments.length > 0 
+                ? departments.reduce((sum, dept) => sum + dept.vacancyRate, 0) / departments.length 
+                : 0
+              
+              return (
+                <div key={facility.id} className={styles.departmentItem} style={{ marginBottom: '15px' }}>
+                  <h4>{facility.name}</h4>
+                  <p style={{ fontSize: '0.85em', color: '#666' }}>{facility.type}</p>
+                  <div className={styles.wishList}>
+                    <p>総職員数: {departments.reduce((sum, dept) => sum + dept.staffCount, 0)}名</p>
+                    <p>異動希望: {departments.reduce((sum, dept) => sum + dept.transferOut, 0)}名</p>
+                    <p style={{ 
+                      color: avgVacancyRate > 10 ? '#e74c3c' : avgVacancyRate > 5 ? '#f39c12' : '#27ae60',
+                      fontWeight: 'bold'
+                    }}>
+                      平均充足率: {(100 - avgVacancyRate).toFixed(1)}%
+                    </p>
+                    {departments.filter(dept => dept.vacancyRate > 10).length > 0 && (
+                      <p style={{ fontSize: '0.85em', color: '#e74c3c' }}>
+                        要員不足: {departments.filter(dept => dept.vacancyRate > 10).map(dept => dept.name).join(', ')}
+                      </p>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       </div>
