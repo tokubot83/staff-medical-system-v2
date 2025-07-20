@@ -488,6 +488,32 @@ export default function Home() {
     </div>
    </header>
 
+   {/* Navigation */}
+   <nav className="bg-gray-800 text-white shadow-md">
+    <div className="max-w-7xl mx-auto px-4">
+     <div className="flex items-center h-12">
+      <div className="flex space-x-1">
+       <Link href="/" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
+        ダッシュボード
+       </Link>
+       <Link href="/staff" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
+        職員カルテ
+       </Link>
+       <Link href="/metrics" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
+        メトリクス
+       </Link>
+       <Link href="/reports" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
+        レポート
+       </Link>
+       <Link href="/hr-strategy" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400 flex items-center gap-1">
+        <span>🎯</span>
+        <span>人材戦略</span>
+       </Link>
+      </div>
+     </div>
+    </div>
+   </nav>
+
    {/* アクションセンター */}
    <div className="bg-white">
     <div className="max-w-7xl mx-auto p-5">
