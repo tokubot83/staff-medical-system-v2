@@ -66,7 +66,7 @@ const demoStaffData = [
 ]
 
 // 系列施設のデータ構造
-const facilityTypes = {
+const facilityTypes: Record<string, { characteristics: string[]; workload: string }> = {
   '急性期病院': { characteristics: ['救急対応', '高度医療', '集中治療'], workload: '高' },
   '回復期病院': { characteristics: ['リハビリ強化', '在宅復帰支援'], workload: '中' },
   '慢性期病院': { characteristics: ['長期療養', '緩和ケア'], workload: '中' },
@@ -84,7 +84,13 @@ const demoFacilities = [
 ]
 
 // 施設別の部署データ（職種別の人員状況）
-const facilityDepartments = {
+const facilityDepartments: Record<string, Array<{
+  name: string
+  staffCount: number
+  transferIn: number
+  transferOut: number
+  vacancyRate: number
+}>> = {
   'main': [
     { name: '看護部', staffCount: 450, transferIn: 8, transferOut: 12, vacancyRate: 7.5 },
     { name: 'リハビリテーション科', staffCount: 85, transferIn: 3, transferOut: 2, vacancyRate: 15.3 },
@@ -354,12 +360,12 @@ function TransferPlanning() {
                       matchScore,
                       reasons: [
                         `${targetDept.name}で${targetDept.vacancyRate.toFixed(1)}%の人員不足`,
-                        ...facilityTypes[facility.type].characteristics.slice(0, 2).map(char => `${char}の経験が積める`),
+                        ...facilityTypes[facility.type].characteristics.slice(0, 2).map((char: string) => `${char}の経験が積める`),
                         workloadAdjust > 0 && 'ワークライフバランスの改善',
                       ].filter(Boolean)
                     }
                   })
-                  .filter(Boolean)
+                  .filter((match): match is NonNullable<typeof match> => match !== null)
                   .sort((a, b) => b.matchScore - a.matchScore)
                   .slice(0, 3)
                   .map((match) => (
