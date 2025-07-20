@@ -1036,9 +1036,9 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
                     max: 5,
                     ticks: {
                       stepSize: 1,
-                      callback: function(value) {
+                      callback: function(value: string | number) {
                         const levels = ['', 'レベルⅠ', 'レベルⅡ', 'レベルⅢ', 'レベルⅣ', 'レベルⅤ'];
-                        return levels[value] || '';
+                        return levels[Number(value)] || '';
                       }
                     }
                   }
@@ -1046,7 +1046,7 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
                 plugins: {
                   tooltip: {
                     callbacks: {
-                      label: function(context) {
+                      label: function(context: any) {
                         const levels = ['', 'レベルⅠ', 'レベルⅡ', 'レベルⅢ', 'レベルⅣ', 'レベルⅤ'];
                         return levels[context.parsed.y] || '';
                       }
