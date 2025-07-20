@@ -1,3 +1,12 @@
+// レポートカテゴリの列挙型
+export enum ReportCategory {
+  BASIC = 'basic',
+  QUALITY = 'quality',
+  GROWTH = 'growth',
+  RISK = 'risk',
+  EFFICIENCY = 'efficiency'
+}
+
 // レポートの型定義
 export interface Report {
   id: string;

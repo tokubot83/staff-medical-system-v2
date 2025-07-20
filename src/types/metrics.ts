@@ -1,3 +1,39 @@
+import { ReportCategory } from './reports';
+
+// メトリクスの詳細データ
+export interface Metric {
+  name: string;
+  value: number;
+  unit: string;
+  trend: 'up' | 'down' | 'stable';
+}
+
+// 部署データ
+export interface DepartmentMetrics {
+  name: string;
+  metrics: Metric[];
+}
+
+// 施設データ
+export interface FacilityMetrics {
+  facilityName: string;
+  departments: DepartmentMetrics[];
+}
+
+// カテゴリメトリクス
+export interface CategoryMetrics {
+  id: string;
+  category: ReportCategory;
+  mainMetric: {
+    value: number;
+    unit: string;
+    trend: 'up' | 'down' | 'stable';
+    change?: number;
+  };
+  subMetrics: Metric[];
+  facilityData: FacilityMetrics[];
+}
+
 export interface MetricData {
   label: string;
   value: string | number;
@@ -16,16 +52,6 @@ export interface DepartmentData {
 export interface FacilityData {
   name: string;
   departments: DepartmentData[];
-}
-
-export interface CategoryMetrics {
-  categoryName: string;
-  description: string;
-  icon: string;
-  color: string;
-  mainMetric: MetricData;
-  subMetrics: MetricData[];
-  facilities: FacilityData[];
 }
 
 // 基本指標
