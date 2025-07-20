@@ -1162,7 +1162,13 @@ export default function Home() {
 
         {/* 職員リストエリア */}
         <div className="border-t-2 border-gray-200 pt-6 mt-6">
-         <h4 className="text-md font-semibold text-gray-700 mb-4">職員一覧</h4>
+         <div className="flex justify-between items-center mb-4">
+          <h4 className="text-md font-semibold text-gray-700">職員一覧</h4>
+          <Link href="/staff-cards" className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center gap-1 hover:underline">
+           詳細を見る
+           <span className="text-lg">→</span>
+          </Link>
+         </div>
          <div className="space-y-3">
           {filterStaffByFacility(Object.values(staffDatabase), selectedFacility).slice(0, 6).map((staff) => {
            return (
