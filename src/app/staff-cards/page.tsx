@@ -137,7 +137,7 @@ function StaffListTab({ filteredStaff, searchTerm, setSearchTerm, selectedFacili
           >
             <option value="all">全施設</option>
             <option value="小原病院">小原病院</option>
-            <option value="立髪診療所">立髪診療所</option>
+            <option value="立神リハビリテーション温泉病院">立神リハビリテーション温泉病院</option>
           </select>
           <select 
             value={selectedDepartment} 
@@ -145,12 +145,18 @@ function StaffListTab({ filteredStaff, searchTerm, setSearchTerm, selectedFacili
             className={styles.filterSelect}
           >
             <option value="all">全部署</option>
-            <option value="外科病棟">外科病棟</option>
-            <option value="内科病棟">内科病棟</option>
-            <option value="救急科">救急科</option>
-            <option value="地域包括ケア病棟">地域包括ケア病棟</option>
+            <option value="内科">内科</option>
+            <option value="リハビリテーション科">リハビリテーション科</option>
+            <option value="第１病棟">第１病棟</option>
             <option value="外来">外来</option>
-            <option value="緩和ケア病棟">緩和ケア病棟</option>
+            <option value="介護医療院">介護医療院</option>
+            <option value="リハビリテーション部門">リハビリテーション部門</option>
+            <option value="放射線部門">放射線部門</option>
+            <option value="検査部門">検査部門</option>
+            <option value="栄養部門">栄養部門</option>
+            <option value="薬剤部門">薬剤部門</option>
+            <option value="総務課">総務課</option>
+            <option value="医事課">医事課</option>
           </select>
         </div>
       </div>
