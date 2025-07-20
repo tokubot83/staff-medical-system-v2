@@ -7,10 +7,10 @@ import styles from './Evaluation.module.css'
 
 const tabs = [
   { id: 'dashboard', label: '評価ダッシュボード', icon: '📊' },
-  { id: 'process', label: '評価プロセス管理', icon: '🔄' },
-  { id: 'criteria', label: '評価基準設定', icon: '📋' },
   { id: 'execution', label: '評価実施', icon: '✍️' },
   { id: 'analysis', label: '分析・レポート', icon: '📈' },
+  { id: 'process', label: '評価プロセス管理', icon: '🔄' },
+  { id: 'criteria', label: '評価基準設定', icon: '📋' },
 ]
 
 interface EvaluationData {
