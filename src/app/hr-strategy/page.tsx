@@ -76,8 +76,8 @@ const demoDepartments = [
 
 // 戦略ダッシュボードタブ
 function StrategyDashboard() {
-  const [departmentData, setDepartmentData] = useState([])
-  const [skillData, setSkillData] = useState([])
+  const [departmentData, setDepartmentData] = useState<Array<{name: string, count: number, color: string}>>([])
+  const [skillData, setSkillData] = useState<Array<{skill: string, count: number, percentage: string}>>([])
 
   useEffect(() => {
     // 部署別人材分布データの集計
@@ -89,7 +89,7 @@ function StrategyDashboard() {
     setDepartmentData(deptCounts)
 
     // スキル分布の集計
-    const skillCounts = {}
+    const skillCounts: {[key: string]: number} = {}
     demoStaffData.forEach(staff => {
       staff.skills.forEach(skill => {
         skillCounts[skill] = (skillCounts[skill] || 0) + 1
@@ -203,7 +203,7 @@ function StrategyDashboard() {
 
 // 異動プランニングタブ
 function TransferPlanning() {
-  const [selectedStaff, setSelectedStaff] = useState(null)
+  const [selectedStaff, setSelectedStaff] = useState<typeof demoStaffData[0] | null>(null)
   const [selectedDepartment, setSelectedDepartment] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
   const [filterType, setFilterType] = useState('all')
@@ -519,7 +519,17 @@ function TalentManagement() {
 
 // 組織最適化タブ
 function OrganizationOptimization() {
-  const [analysisResult, setAnalysisResult] = useState(null)
+  const [analysisResult, setAnalysisResult] = useState<{
+    timestamp: string
+    recommendations: Array<{
+      priority: string
+      title: string
+      description: string
+      expectedEffect: string
+      risk: string
+      affectedStaff: number
+    }>
+  } | null>(null)
   
   const runOptimizationAnalysis = () => {
     // シミュレーション結果を生成
