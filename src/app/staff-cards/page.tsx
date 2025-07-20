@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import CommonHeader from '@/components/CommonHeader'
 import Link from 'next/link'
-import { staffDatabase } from '../data/staffData'
+import { staffDatabase } from '../data/staffData.js'
 import styles from './StaffCards.module.css'
 
 const tabs = [
