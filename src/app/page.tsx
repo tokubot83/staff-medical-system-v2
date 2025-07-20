@@ -454,7 +454,7 @@ export default function Home() {
   }
  };
 
- return (
+  return (
   <div className="min-h-screen bg-white">
    {/* Header */}
    <header className="bg-gray-700 text-white p-5 border-b">
