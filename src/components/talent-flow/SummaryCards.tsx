@@ -35,7 +35,14 @@ export function SummaryCards({ facility }: SummaryCardsProps) {
 
   const data = getData();
 
-  const cards = [
+  const cards: Array<{
+    icon: string;
+    title: string;
+    count: number;
+    change: string;
+    changeType: 'positive' | 'negative' | 'warning' | 'neutral';
+    color: 'blue' | 'red' | 'yellow' | 'gray';
+  }> = [
     {
       icon: '📥',
       title: '新入職員',
@@ -70,24 +77,24 @@ export function SummaryCards({ facility }: SummaryCardsProps) {
     }
   ];
 
-  const getCardColorClasses = (color: string) => {
-    const colorMap = {
+  const getCardColorClasses = (color: 'blue' | 'red' | 'yellow' | 'gray') => {
+    const colorMap: Record<'blue' | 'red' | 'yellow' | 'gray', string> = {
       blue: 'border-t-blue-500 hover:border-blue-300',
       red: 'border-t-red-500 hover:border-red-300',
       yellow: 'border-t-yellow-500 hover:border-yellow-300',
       gray: 'border-t-gray-500 hover:border-gray-300'
     };
-    return colorMap[color] || colorMap.gray;
+    return colorMap[color];
   };
 
-  const getChangeColorClass = (type: string) => {
-    const typeMap = {
+  const getChangeColorClass = (type: 'positive' | 'negative' | 'warning' | 'neutral') => {
+    const typeMap: Record<'positive' | 'negative' | 'warning' | 'neutral', string> = {
       positive: 'text-green-600',
       negative: 'text-red-600',
       warning: 'text-yellow-600',
       neutral: 'text-gray-600'
     };
-    return typeMap[type] || typeMap.neutral;
+    return typeMap[type];
   };
 
   return (
