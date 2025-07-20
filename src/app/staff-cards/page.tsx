@@ -14,19 +14,40 @@ const tabs = [
   { id: 'training', label: '🎓 研修記録', icon: '🎓' },
 ]
 
+interface Staff {
+  id: string
+  name: string
+  age: number
+  gender: string
+  position: string
+  department: string
+  facility: string
+  experience: number
+  certifications: string[]
+  qualifications: string[]
+  averageScore: number
+  mentalHealth: string
+  physicalHealth: string
+  trainings: Array<{
+    name: string
+    date: string
+    status: string
+  }>
+}
+
 export default function StaffCardsPage() {
   const [activeTab, setActiveTab] = useState('list')
-  const [selectedStaff, setSelectedStaff] = useState(null)
+  const [selectedStaff, setSelectedStaff] = useState<Staff | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedFacility, setSelectedFacility] = useState('all')
   const [selectedDepartment, setSelectedDepartment] = useState('all')
 
-  const handleStaffSelect = (staff) => {
+  const handleStaffSelect = (staff: Staff) => {
     setSelectedStaff(staff)
     setActiveTab('detail')
   }
 
-  const filteredStaff = Object.values(staffDatabase).filter(staff => {
+  const filteredStaff = Object.values(staffDatabase).filter((staff: any) => {
     const matchesSearch = staff.name.includes(searchTerm) || staff.id.includes(searchTerm)
     const matchesFacility = selectedFacility === 'all' || staff.facility === selectedFacility
     const matchesDepartment = selectedDepartment === 'all' || staff.department === selectedDepartment
