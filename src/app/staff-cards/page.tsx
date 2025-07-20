@@ -160,7 +160,7 @@ function StaffListTab({ filteredStaff, searchTerm, setSearchTerm, selectedFacili
       </div>
 
       <div className={styles.staffGrid}>
-        {filteredStaff.map((staff) => (
+        {filteredStaff.map((staff: any) => (
           <div key={staff.id} className={styles.staffCard} onClick={() => onStaffSelect(staff)}>
             <div className={styles.cardHeader}>
               <div className={`${styles.avatar} ${staff.avatar}`}>
@@ -297,7 +297,7 @@ function StaffDetailTab({ selectedStaff, onBackToList }: StaffDetailTabProps) {
           <div className={styles.sectionCard}>
             <h3>スキル・資格</h3>
             <div className={styles.skillGrid}>
-              {selectedStaff.skills?.map((skill, index) => (
+              {selectedStaff.skills?.map((skill: any, index: number) => (
                 <div key={index} className={styles.skillItem}>
                   <span className={styles.skillName}>{skill.name}</span>
                   <div className={styles.skillBar}>
