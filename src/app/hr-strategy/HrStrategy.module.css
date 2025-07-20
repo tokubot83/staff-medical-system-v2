@@ -1,54 +1,61 @@
 .container {
-  min-height: calc(100vh - 100px);
-  background-color: #f3f4f6;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
 /* タブナビゲーション */
 .tabNavigation {
-  background-color: white;
-  border-bottom: 1px solid #e5e7eb;
   display: flex;
-  padding: 0 2rem;
-  gap: 2rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+  overflow: hidden;
 }
 
 .tabButton {
-  padding: 1rem 1.5rem;
+  flex: 1;
+  padding: 16px 24px;
+  background: transparent;
   border: none;
-  background: none;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 1rem;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
   color: #6b7280;
-  border-bottom: 3px solid transparent;
   transition: all 0.2s;
+  border-bottom: 3px solid transparent;
 }
 
 .tabButton:hover {
-  color: #374151;
+  background: #f9fafb;
+  color: #3b82f6;
 }
 
 .tabButton.active {
-  color: #1f2937;
+  color: #3b82f6;
+  background: #eff6ff;
   border-bottom-color: #3b82f6;
-  font-weight: 600;
 }
 
 .tabIcon {
-  font-size: 1.2rem;
+  font-size: 18px;
 }
 
 .tabLabel {
-  font-size: 0.95rem;
+  font-size: 14px;
 }
 
 .tabContent {
-  padding: 2rem;
-  max-width: 1400px;
-  margin: 0 auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 24px;
+  min-height: 600px;
 }
 
 /* 戦略ダッシュボード */
