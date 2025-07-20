@@ -2,8 +2,9 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { CategoryMetrics, MetricData, DataAnalysis } from '@/types/metrics';
+import { CategoryMetrics, DataAnalysis } from '@/types/metrics';
 import CommonHeader from '@/components/CommonHeader';
+import { getCategoryInfo } from '@/utils/reportCategories';
 
 interface MetricsLayoutProps {
   metrics: CategoryMetrics;
@@ -11,14 +12,22 @@ interface MetricsLayoutProps {
 }
 
 export default function MetricsLayout({ metrics, aiAnalysis }: MetricsLayoutProps) {
-  const getTrendClass = (trend?: { isPositive: boolean }) => {
-    if (!trend) return 'text-gray-600';
-    return trend.isPositive ? 'text-green-600' : 'text-red-600';
+  const categoryInfo = getCategoryInfo(metrics.category);
+
+  const getTrendClass = (trend: 'up' | 'down' | 'stable') => {
+    switch (trend) {
+      case 'up': return 'text-green-600';
+      case 'down': return 'text-red-600';
+      default: return 'text-gray-600';
+    }
   };
 
-  const getTrendIcon = (trend?: { isPositive: boolean }) => {
-    if (!trend) return '';
-    return trend.isPositive ? '↑' : '↓';
+  const getTrendIcon = (trend: 'up' | 'down' | 'stable') => {
+    switch (trend) {
+      case 'up': return '↑';
+      case 'down': return '↓';
+      default: return '―';
+    }
   };
 
   const getPriorityClass = (priority: string) => {
@@ -34,7 +43,7 @@ export default function MetricsLayout({ metrics, aiAnalysis }: MetricsLayoutProp
   return (
     <div className="min-h-screen bg-gray-50">
       <CommonHeader 
-        title={metrics.categoryName}
+        title={categoryInfo.name}
         showBackButton={true}
         backUrl="/"
         backText="ダッシュボードに戻る"
@@ -44,30 +53,29 @@ export default function MetricsLayout({ metrics, aiAnalysis }: MetricsLayoutProp
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-5 py-4">
           <div className="flex items-center gap-3">
-            <div className={`text-3xl border-4 ${metrics.color} bg-white text-gray-700 rounded-xl p-3`}>
-              {metrics.icon}
+            <div className={`text-3xl border-4 ${categoryInfo.color} bg-white text-gray-700 rounded-xl p-3`}>
+              {categoryInfo.icon}
             </div>
-            <p className="text-gray-600">{metrics.description}</p>
+            <p className="text-gray-600">{categoryInfo.description}</p>
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto p-5">
         {/* メイン指標 */}
-        <div className={`bg-white rounded-xl p-6 shadow-sm border-t-4 ${metrics.color} mb-6`}>
+        <div className={`bg-white rounded-xl p-6 shadow-sm border-t-4 ${categoryInfo.color} mb-6`}>
           <div className="flex justify-between items-center">
             <div>
-              <h2 className="text-lg font-semibold text-gray-600 mb-2">{metrics.mainMetric.label}</h2>
+              <h2 className="text-lg font-semibold text-gray-600 mb-2">主要指標</h2>
               <div className="flex items-baseline gap-2">
                 <span className="text-4xl font-bold text-gray-800">
                   {metrics.mainMetric.value}
                   {metrics.mainMetric.unit}
                 </span>
-                {metrics.mainMetric.trend && (
-                  <span className={`text-sm font-semibold ${getTrendClass(metrics.mainMetric.trend)}`}>
-                    {getTrendIcon(metrics.mainMetric.trend)} {metrics.mainMetric.trend.value}
-                  </span>
-                )}
+                <span className={`text-sm font-semibold ${getTrendClass(metrics.mainMetric.trend)}`}>
+                  {getTrendIcon(metrics.mainMetric.trend)}
+                  {metrics.mainMetric.change && ` ${metrics.mainMetric.change}%`}
+                </span>
               </div>
             </div>
           </div>
@@ -77,16 +85,14 @@ export default function MetricsLayout({ metrics, aiAnalysis }: MetricsLayoutProp
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
           {metrics.subMetrics.map((metric, index) => (
             <div key={index} className="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
-              <div className="text-sm text-gray-600 mb-1">{metric.label}</div>
+              <div className="text-sm text-gray-600 mb-1">{metric.name}</div>
               <div className="text-2xl font-bold text-gray-800">
                 {metric.value}
                 {metric.unit}
               </div>
-              {metric.trend && (
-                <div className={`text-xs font-semibold mt-1 ${getTrendClass(metric.trend)}`}>
-                  {getTrendIcon(metric.trend)} {metric.trend.value}
-                </div>
-              )}
+              <div className={`text-xs font-semibold mt-1 ${getTrendClass(metric.trend)}`}>
+                {getTrendIcon(metric.trend)}
+              </div>
             </div>
           ))}
         </div>
@@ -98,11 +104,11 @@ export default function MetricsLayout({ metrics, aiAnalysis }: MetricsLayoutProp
           </div>
           
           <div className="p-6">
-            {metrics.facilities.map((facility, facilityIndex) => (
+            {metrics.facilityData.map((facility, facilityIndex) => (
               <div key={facilityIndex} className="mb-8 last:mb-0">
                 <h3 className="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
                   <span className="text-2xl">🏢</span>
-                  {facility.name}
+                  {facility.facilityName}
                 </h3>
                 
                 <div className="overflow-x-auto">
@@ -112,7 +118,7 @@ export default function MetricsLayout({ metrics, aiAnalysis }: MetricsLayoutProp
                         <th className="text-left py-3 px-4 font-semibold text-gray-600">部署</th>
                         {facility.departments[0]?.metrics.map((metric, index) => (
                           <th key={index} className="text-left py-3 px-4 font-semibold text-gray-600">
-                            {metric.label}
+                            {metric.name}
                           </th>
                         ))}
                       </tr>
@@ -128,11 +134,9 @@ export default function MetricsLayout({ metrics, aiAnalysis }: MetricsLayoutProp
                                   {metric.value}
                                   {metric.unit}
                                 </span>
-                                {metric.trend && (
-                                  <span className={`text-xs ${getTrendClass(metric.trend)}`}>
-                                    {getTrendIcon(metric.trend)}
-                                  </span>
-                                )}
+                                <span className={`text-xs ${getTrendClass(metric.trend)}`}>
+                                  {getTrendIcon(metric.trend)}
+                                </span>
                               </div>
                             </td>
                           ))}
