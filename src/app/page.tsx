@@ -706,6 +706,7 @@ export default function Home() {
        </div>
       </div>
      </div>
+    </div>
 
      {/* 人材フロー */}
      <TalentFlowSection />
@@ -771,7 +772,7 @@ export default function Home() {
        </div>
       </div>
      </div>
-
+    </div>
 
      {/* モーダル */}
      {showModal && selectedStaff && (
