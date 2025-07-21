@@ -734,22 +734,96 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
         </div>
       </div>
 
-      <div className={styles.interviewSummary}>
-        <div className={styles.summaryCard}>
-          <div className={styles.summaryValue}>12回</div>
-          <div className={styles.summaryLabel}>年間面談回数</div>
+      <div className={styles.interviewSummaryEnhanced}>
+        <div className={styles.summaryMainCard}>
+          <div className={styles.summaryCardHeader}>
+            <span className={styles.summaryIcon}>📊</span>
+            <h3>面談実績サマリー</h3>
+          </div>
+          <div className={styles.summaryMainMetrics}>
+            <div className={styles.metricCircle}>
+              <div className={styles.circleProgress}>
+                <svg className={styles.progressRing} viewBox="0 0 120 120">
+                  <circle cx="60" cy="60" r="54" fill="none" stroke="#e5e7eb" strokeWidth="12" />
+                  <circle cx="60" cy="60" r="54" fill="none" stroke="#3b82f6" strokeWidth="12" 
+                    strokeDasharray={`${2 * Math.PI * 54}`} 
+                    strokeDashoffset={`${2 * Math.PI * 54 * (1 - 0.95)}`}
+                    transform="rotate(-90 60 60)" />
+                </svg>
+                <div className={styles.circleContent}>
+                  <div className={styles.circleValue}>95%</div>
+                  <div className={styles.circleLabel}>目標達成率</div>
+                </div>
+              </div>
+              <div className={styles.metricDetails}>
+                <div className={styles.detailItem}>
+                  <span className={styles.detailIcon}>↗️</span>
+                  <span className={styles.detailText}>前月比 +8%</span>
+                </div>
+                <div className={styles.detailItem}>
+                  <span className={styles.detailIcon}>🎯</span>
+                  <span className={styles.detailText}>年間目標達成見込み</span>
+                </div>
+              </div>
+            </div>
+            <div className={styles.metricsGrid}>
+              <div className={styles.metricCardEnhanced}>
+                <div className={styles.metricHeader}>
+                  <span className={styles.metricIcon}>💬</span>
+                  <span className={styles.metricTrend}>+2</span>
+                </div>
+                <div className={styles.metricValue}>12回</div>
+                <div className={styles.metricLabel}>年間面談回数</div>
+                <div className={styles.metricProgress}>
+                  <div className={styles.progressBar}>
+                    <div className={styles.progressFill} style={{ width: '100%' }}></div>
+                  </div>
+                  <span className={styles.progressText}>目標達成</span>
+                </div>
+              </div>
+              <div className={styles.metricCardEnhanced}>
+                <div className={styles.metricHeader}>
+                  <span className={styles.metricIcon}>⭐</span>
+                  <span className={styles.metricTrend}>+0.3</span>
+                </div>
+                <div className={styles.metricValue}>4.5/5.0</div>
+                <div className={styles.metricLabel}>面談満足度</div>
+                <div className={styles.ratingStars}>
+                  <span className={styles.starFilled}>★★★★</span>
+                  <span className={styles.starHalf}>★</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className={styles.summaryCard}>
-          <div className={styles.summaryValue}>4.5/5.0</div>
-          <div className={styles.summaryLabel}>面談満足度</div>
-        </div>
-        <div className={styles.summaryCard}>
-          <div className={styles.summaryValue}>95%</div>
-          <div className={styles.summaryLabel}>目標達成率</div>
-        </div>
-        <div className={styles.summaryCard}>
-          <div className={styles.summaryValue}>2週間後</div>
-          <div className={styles.summaryLabel}>次回面談</div>
+        
+        <div className={styles.summarySubCards}>
+          <div className={styles.nextSessionCard}>
+            <div className={styles.cardIconWrapper}>
+              <span className={styles.cardIcon}>📅</span>
+            </div>
+            <div className={styles.cardContent}>
+              <div className={styles.cardTitle}>次回面談</div>
+              <div className={styles.cardMainInfo}>2週間後</div>
+              <div className={styles.cardSubInfo}>2025年2月4日(火) 14:00</div>
+              <button className={styles.cardAction}>日程調整</button>
+            </div>
+          </div>
+          
+          <div className={styles.recentTopicsCard}>
+            <div className={styles.cardIconWrapper}>
+              <span className={styles.cardIcon}>🔥</span>
+            </div>
+            <div className={styles.cardContent}>
+              <div className={styles.cardTitle}>直近の主要テーマ</div>
+              <div className={styles.topicsList}>
+                <span className={styles.topicTag}>キャリア相談</span>
+                <span className={styles.topicTag}>スキル向上</span>
+                <span className={styles.topicTag}>目標設定</span>
+              </div>
+              <div className={styles.cardSubInfo}>継続的な成長支援中</div>
+            </div>
+          </div>
         </div>
       </div>
 

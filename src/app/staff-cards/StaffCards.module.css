@@ -1473,6 +1473,297 @@
   margin-bottom: 24px;
 }
 
+/* 面談・指導タブの改善されたサマリー */
+.interviewSummaryEnhanced {
+  display: grid;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.summaryMainCard {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border: 1px solid #bae6fd;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.summaryCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.summaryCardHeader h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #0c4a6e;
+  margin: 0;
+}
+
+.summaryIcon {
+  font-size: 24px;
+}
+
+.summaryMainMetrics {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 32px;
+  align-items: center;
+}
+
+.metricCircle {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.circleProgress {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+
+.progressRing {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.circleContent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.circleValue {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0369a1;
+}
+
+.circleLabel {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+.metricDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.detailItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.detailIcon {
+  font-size: 16px;
+}
+
+.detailText {
+  color: #1e293b;
+  font-weight: 500;
+}
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.metricCardEnhanced {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.metricCardEnhanced:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.metricHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.metricIcon {
+  font-size: 20px;
+}
+
+.metricTrend {
+  background: #d1fae5;
+  color: #065f46;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.metricValue {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 4px;
+}
+
+.metricLabel {
+  font-size: 13px;
+  color: #64748b;
+  margin-bottom: 12px;
+}
+
+.metricProgress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.progressBar {
+  flex: 1;
+  height: 6px;
+  background: #e5e7eb;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: #3b82f6;
+  transition: width 0.3s;
+}
+
+.progressText {
+  font-size: 11px;
+  color: #22c55e;
+  font-weight: 600;
+}
+
+.ratingStars {
+  display: flex;
+  gap: 2px;
+  font-size: 16px;
+}
+
+.starFilled {
+  color: #fbbf24;
+}
+
+.starHalf {
+  color: #fbbf24;
+  opacity: 0.5;
+}
+
+.summarySubCards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.nextSessionCard,
+.recentTopicsCard {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  gap: 16px;
+  transition: all 0.2s;
+}
+
+.nextSessionCard:hover,
+.recentTopicsCard:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-color: #cbd5e1;
+}
+
+.cardIconWrapper {
+  width: 48px;
+  height: 48px;
+  background: #f0f9ff;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cardIcon {
+  font-size: 24px;
+}
+
+.cardContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cardTitle {
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.cardMainInfo {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.cardSubInfo {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.cardAction {
+  padding: 6px 12px;
+  background: #eff6ff;
+  color: #3b82f6;
+  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: fit-content;
+}
+
+.cardAction:hover {
+  background: #dbeafe;
+  border-color: #93c5fd;
+}
+
+.topicsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.topicTag {
+  padding: 4px 10px;
+  background: #fef3c7;
+  color: #92400e;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
 .summaryCard {
   background: #f9fafb;
   padding: 20px;
