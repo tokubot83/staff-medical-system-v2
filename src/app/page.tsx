@@ -572,9 +572,6 @@ export default function Home() {
            <div className="flex-1 text-sm font-medium text-gray-600">
             {task.content}
            </div>
-           <div className="text-xs font-semibold text-gray-600 bg-gray-200 px-2 py-1 rounded-full border border-gray-300">
-            {task.time}
-           </div>
           </div>
          ))}
         </div>
