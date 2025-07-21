@@ -456,19 +456,19 @@ export default function RecruitmentPage() {
               {selectedApplicant.evaluations.length > 0 && (
                 <section>
                   <h3>評価履歴</h3>
-                  {selectedApplicant.evaluations.map(eval => (
-                    <div key={eval.id} className={styles.evaluationItem}>
-                      <h4>{eval.stage === 'screening' ? '書類選考' :
-                          eval.stage === 'first-interview' ? '一次面接' :
-                          eval.stage === 'second-interview' ? '二次面接' : '最終面接'}</h4>
-                      <p>評価者: {eval.evaluatorName}</p>
-                      <p>評価: {'★'.repeat(eval.rating)}{'☆'.repeat(5 - eval.rating)}</p>
+                  {selectedApplicant.evaluations.map(evaluation => (
+                    <div key={evaluation.id} className={styles.evaluationItem}>
+                      <h4>{evaluation.stage === 'screening' ? '書類選考' :
+                          evaluation.stage === 'first-interview' ? '一次面接' :
+                          evaluation.stage === 'second-interview' ? '二次面接' : '最終面接'}</h4>
+                      <p>評価者: {evaluation.evaluatorName}</p>
+                      <p>評価: {'★'.repeat(evaluation.rating)}{'☆'.repeat(5 - evaluation.rating)}</p>
                       <p>推薦度: {
-                        eval.recommendation === 'strongly-recommend' ? '強く推薦' :
-                        eval.recommendation === 'recommend' ? '推薦' :
-                        eval.recommendation === 'neutral' ? '中立' : '非推薦'
+                        evaluation.recommendation === 'strongly-recommend' ? '強く推薦' :
+                        evaluation.recommendation === 'recommend' ? '推薦' :
+                        evaluation.recommendation === 'neutral' ? '中立' : '非推薦'
                       }</p>
-                      <p>コメント: {eval.comments}</p>
+                      <p>コメント: {evaluation.comments}</p>
                     </div>
                   ))}
                 </section>
