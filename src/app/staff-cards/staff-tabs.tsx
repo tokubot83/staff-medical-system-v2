@@ -209,6 +209,28 @@ export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
           </div>
         </div>
       </div>
+
+      <div className={styles.evaluationComments}>
+        <h3>分析コメント</h3>
+        <div className={styles.commentCard}>
+          <div className={styles.commentHeader}>
+            <span className={styles.commentAuthor}>人事部</span>
+            <span className={styles.commentDate}>2025年1月</span>
+          </div>
+          <div className={styles.commentBody}>
+            戦略適合度93%で昇進適性が高い。2025年7月の昇進に向けて、リーダーシップ研修の受講を推奨。
+          </div>
+        </div>
+        <div className={styles.commentCard}>
+          <div className={styles.commentHeader}>
+            <span className={styles.commentAuthor}>経営企画部</span>
+            <span className={styles.commentDate}>2025年1月</span>
+          </div>
+          <div className={styles.commentBody}>
+            ROI 340%の投資効果が期待でき、組織への貢献度が高い人材。戦略的な配置が望まれる。
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
@@ -950,6 +972,28 @@ export function DevelopmentTab({ selectedStaff }: { selectedStaff: any }) {
           </div>
         </div>
       </div>
+
+      <div className={styles.evaluationComments}>
+        <h3>開発コメント</h3>
+        <div className={styles.commentCard}>
+          <div className={styles.commentHeader}>
+            <span className={styles.commentAuthor}>能力開発担当</span>
+            <span className={styles.commentDate}>2025年1月</span>
+          </div>
+          <div className={styles.commentBody}>
+            技術スキルの成長率が非常に高い。マネジメントスキルの更なる向上に重点を置いた育成を推奨。
+          </div>
+        </div>
+        <div className={styles.commentCard}>
+          <div className={styles.commentHeader}>
+            <span className={styles.commentAuthor}>研修担当</span>
+            <span className={styles.commentDate}>2025年1月</span>
+          </div>
+          <div className={styles.commentBody}>
+            戦略立案能力とプロジェクト管理能力のギャップが見られる。管理職基礎研修の早期受講を推奨。
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
@@ -1175,6 +1219,28 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
             </div>
           </div>
         </div>
+
+        <div className={styles.evaluationComments}>
+          <h3>研修コメント</h3>
+          <div className={styles.commentCard}>
+            <div className={styles.commentHeader}>
+              <span className={styles.commentAuthor}>看護部教育担当</span>
+              <span className={styles.commentDate}>2025年1月</span>
+            </div>
+            <div className={styles.commentBody}>
+              JNAラダーレベルⅣの実践能力を十分に発揮。レベルⅤ達成に向けて、管理・教育分野の強化を推奨。
+            </div>
+          </div>
+          <div className={styles.commentCard}>
+            <div className={styles.commentHeader}>
+              <span className={styles.commentAuthor}>研修委員会</span>
+              <span className={styles.commentDate}>2025年1月</span>
+            </div>
+            <div className={styles.commentBody}>
+              年間研修時間156時間で目標を大幅に達成。継続教育への意欲が高く、後輩指導でも成果を上げている。
+            </div>
+          </div>
+        </div>
       </div>
     )
   }
@@ -1329,6 +1395,28 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
               <div className={styles.scheduleTitle}>コミュニケーション研修</div>
               <div className={styles.scheduleDetails}>効果的な対話とフィードバック技法</div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.evaluationComments}>
+        <h3>研修コメント</h3>
+        <div className={styles.commentCard}>
+          <div className={styles.commentHeader}>
+            <span className={styles.commentAuthor}>教育研修部</span>
+            <span className={styles.commentDate}>2025年1月</span>
+          </div>
+          <div className={styles.commentBody}>
+            年間研修目標を達成し、特に専門技術分野で顕著な成長。管理職研修への参加を推奨。
+          </div>
+        </div>
+        <div className={styles.commentCard}>
+          <div className={styles.commentHeader}>
+            <span className={styles.commentAuthor}>人材開発部</span>
+            <span className={styles.commentDate}>2025年1月</span>
+          </div>
+          <div className={styles.commentBody}>
+            研修効果測定で全項目80%以上を達成。学習内容の実践応用が確実に行われている。
           </div>
         </div>
       </div>
