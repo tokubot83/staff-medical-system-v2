@@ -636,11 +636,11 @@ export default function Home() {
         </div>
          </div>
 
-         {/* 成功・良好状態 */}
+         {/* グッドコンディション */}
          <div className="bg-gray-50 rounded-xl p-6 shadow-md border-t-4 border-blue-500 hover:shadow-lg transition-shadow">
         <div className="flex justify-between items-center mb-4">
          <h2 className="text-lg font-semibold flex items-center gap-2">
-          🌟 成功・良好状態
+          🌟 グッドコンディション
          </h2>
          <span className="bg-gray-200 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold border border-blue-200">
           7件
