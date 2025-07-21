@@ -7,6 +7,7 @@ import styles from './Evaluation.module.css'
 
 const tabs = [
   { id: 'dashboard', label: '評価ダッシュボード', icon: '📊' },
+  { id: 'staffList', label: '職員評価一覧', icon: '👥' },
   { id: 'execution', label: '評価実施', icon: '✍️' },
   { id: 'analysis', label: '分析・レポート', icon: '📈' },
   { id: 'process', label: '評価プロセス管理', icon: '🔄' },
@@ -92,6 +93,16 @@ export default function EvaluationPage() {
           {activeTab === 'dashboard' && (
             <DashboardTab 
               evaluationData={evaluationData}
+              selectedFacility={selectedFacility}
+              setSelectedFacility={setSelectedFacility}
+              selectedDepartment={selectedDepartment}
+              setSelectedDepartment={setSelectedDepartment}
+              selectedPeriod={selectedPeriod}
+              setSelectedPeriod={setSelectedPeriod}
+            />
+          )}
+          {activeTab === 'staffList' && (
+            <StaffListTab 
               selectedFacility={selectedFacility}
               setSelectedFacility={setSelectedFacility}
               selectedDepartment={selectedDepartment}
@@ -438,6 +449,192 @@ function AnalysisTab(): React.ReactElement {
           <p>評価と業績の相関関係</p>
           <button className={styles.analysisButton}>確認する</button>
         </div>
+      </div>
+    </div>
+  )
+}
+
+interface StaffListTabProps {
+  selectedFacility: string
+  setSelectedFacility: (value: string) => void
+  selectedDepartment: string
+  setSelectedDepartment: (value: string) => void
+  selectedPeriod: string
+  setSelectedPeriod: (value: string) => void
+}
+
+function StaffListTab({ 
+  selectedFacility, 
+  setSelectedFacility, 
+  selectedDepartment, 
+  setSelectedDepartment,
+  selectedPeriod,
+  setSelectedPeriod 
+}: StaffListTabProps) {
+  const [sortField, setSortField] = useState<'name' | 'evaluation' | 'department'>('name')
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
+  const [filterGrade, setFilterGrade] = useState<string>('all')
+  const [searchTerm, setSearchTerm] = useState('')
+
+  // 職員データをフィルタリング
+  const filteredStaff = Object.entries(staffDatabase).filter(([_, staff]: [string, any]) => {
+    const facilityMatch = selectedFacility === 'all' || staff.facility === selectedFacility
+    const departmentMatch = selectedDepartment === 'all' || staff.department === selectedDepartment
+    const gradeMatch = filterGrade === 'all' || staff.evaluation === filterGrade
+    const searchMatch = searchTerm === '' || 
+      staff.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      staff.staffNumber.toLowerCase().includes(searchTerm.toLowerCase())
+    
+    return facilityMatch && departmentMatch && gradeMatch && searchMatch
+  })
+
+  // ソート処理
+  const sortedStaff = [...filteredStaff].sort(([_a, a], [_b, b]) => {
+    let comparison = 0
+    
+    switch (sortField) {
+      case 'name':
+        comparison = a.name.localeCompare(b.name)
+        break
+      case 'evaluation':
+        const gradeOrder = { 'S': 4, 'A': 3, 'B': 2, 'C': 1, '': 0 }
+        const aGrade = gradeOrder[a.evaluation || ''] || 0
+        const bGrade = gradeOrder[b.evaluation || ''] || 0
+        comparison = aGrade - bGrade
+        break
+      case 'department':
+        comparison = a.department.localeCompare(b.department)
+        break
+    }
+    
+    return sortOrder === 'asc' ? comparison : -comparison
+  })
+
+  const handleSort = (field: 'name' | 'evaluation' | 'department') => {
+    if (sortField === field) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
+    } else {
+      setSortField(field)
+      setSortOrder('asc')
+    }
+  }
+
+  return (
+    <div className={styles.staffListContainer}>
+      <div className={styles.staffListHeader}>
+        <h2>職員評価一覧</h2>
+        <div className={styles.staffListFilters}>
+          <select 
+            value={selectedPeriod} 
+            onChange={(e) => setSelectedPeriod(e.target.value)}
+            className={styles.filterSelect}
+          >
+            <option value="2024-H2">2024年下期</option>
+            <option value="2024-H1">2024年上期</option>
+            <option value="2023-H2">2023年下期</option>
+          </select>
+          <select 
+            value={selectedFacility} 
+            onChange={(e) => setSelectedFacility(e.target.value)}
+            className={styles.filterSelect}
+          >
+            <option value="all">全施設</option>
+            <option value="小原病院">小原病院</option>
+            <option value="立神リハビリテーション温泉病院">立神リハビリテーション温泉病院</option>
+          </select>
+          <select 
+            value={selectedDepartment} 
+            onChange={(e) => setSelectedDepartment(e.target.value)}
+            className={styles.filterSelect}
+          >
+            <option value="all">全部署</option>
+            <option value="内科">内科</option>
+            <option value="リハビリテーション科">リハビリテーション科</option>
+            <option value="第１病棟">第１病棟</option>
+            <option value="外来">外来</option>
+          </select>
+          <select 
+            value={filterGrade} 
+            onChange={(e) => setFilterGrade(e.target.value)}
+            className={styles.filterSelect}
+          >
+            <option value="all">全評価</option>
+            <option value="S">S評価のみ</option>
+            <option value="A">A評価のみ</option>
+            <option value="B">B評価のみ</option>
+            <option value="C">C評価のみ</option>
+          </select>
+          <input
+            type="text"
+            placeholder="職員番号・氏名で検索"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className={styles.searchInput}
+          />
+        </div>
+      </div>
+
+      <div className={styles.staffTableContainer}>
+        <table className={styles.staffTable}>
+          <thead>
+            <tr>
+              <th>職員番号</th>
+              <th 
+                onClick={() => handleSort('name')}
+                className={styles.sortableHeader}
+              >
+                氏名 {sortField === 'name' && (sortOrder === 'asc' ? '▲' : '▼')}
+              </th>
+              <th>施設</th>
+              <th 
+                onClick={() => handleSort('department')}
+                className={styles.sortableHeader}
+              >
+                部署 {sortField === 'department' && (sortOrder === 'asc' ? '▲' : '▼')}
+              </th>
+              <th>職種</th>
+              <th>役職</th>
+              <th 
+                onClick={() => handleSort('evaluation')}
+                className={styles.sortableHeader}
+              >
+                評価 {sortField === 'evaluation' && (sortOrder === 'asc' ? '▲' : '▼')}
+              </th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedStaff.map(([id, staff]) => (
+              <tr key={id}>
+                <td>{staff.staffNumber}</td>
+                <td>{staff.name}</td>
+                <td>{staff.facility}</td>
+                <td>{staff.department}</td>
+                <td>{staff.occupation}</td>
+                <td>{staff.title || '-'}</td>
+                <td>
+                  <span className={`${styles.evaluationBadge} ${styles[`grade${staff.evaluation}`]}`}>
+                    {staff.evaluation || '未評価'}
+                  </span>
+                </td>
+                <td>
+                  <a href={`/staff/${id}`} className={styles.detailLink}>
+                    詳細
+                  </a>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {sortedStaff.length === 0 && (
+          <div className={styles.noData}>
+            該当する職員が見つかりません
+          </div>
+        )}
+      </div>
+
+      <div className={styles.staffListSummary}>
+        <p>表示件数: {sortedStaff.length}件</p>
       </div>
     </div>
   )
