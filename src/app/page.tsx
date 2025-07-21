@@ -506,6 +506,9 @@ export default function Home() {
          <Link href="/evaluation" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
           評価管理
          </Link>
+         <Link href="/goals" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
+          目標管理
+         </Link>
          <Link href="/hr-strategy" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
           人材戦略
          </Link>
