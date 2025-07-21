@@ -51,23 +51,29 @@ export default function HrStrategyPage() {
   )
 }
 
-// デモデータ
+// デモデータ（小原病院と立神リハビリテーション温泉病院のスタッフ）
 const demoStaffData = [
-  { id: 1, name: '山田 太郎', department: '看護部', position: '主任', performance: 'A', yearsOfService: 5, skills: ['リーダーシップ', 'チーム管理'], transferWish: true },
-  { id: 2, name: '佐藤 花子', department: '看護部', position: '主任', performance: 'S', yearsOfService: 8, skills: ['リーダーシップ', 'イノベーション'], transferWish: false },
-  { id: 3, name: '田中 美咲', department: '看護部', position: '副部長', performance: 'A', yearsOfService: 12, skills: ['戦略企画', 'チーム管理'], transferWish: false },
-  { id: 4, name: '鈴木 健一', department: 'リハビリテーション科', position: '主任', performance: 'A', yearsOfService: 7, skills: ['専門技術', 'コミュニケーション'], transferWish: false },
-  { id: 5, name: '高橋 由美', department: '薬剤部', position: '一般職', performance: 'B', yearsOfService: 3, skills: ['薬剤管理', '在庫管理'], transferWish: true },
-  { id: 6, name: '伊藤 直樹', department: '医事課', position: '主任', performance: 'A', yearsOfService: 6, skills: ['データ分析', 'プロセス改善'], transferWish: true },
-  { id: 7, name: '渡辺 陽子', department: '看護部', position: '一般職', performance: 'B', yearsOfService: 2, skills: ['患者ケア', 'チームワーク'], transferWish: false },
-  { id: 8, name: '中村 浩二', department: 'リハビリテーション科', position: '部長', performance: 'S', yearsOfService: 15, skills: ['戦略企画', 'リーダーシップ'], transferWish: false },
-  { id: 9, name: '小林 美香', department: '栄養課', position: '主任', performance: 'A', yearsOfService: 9, skills: ['栄養管理', 'チーム管理'], transferWish: true },
-  { id: 10, name: '加藤 健太', department: '総務課', position: '一般職', performance: 'C', yearsOfService: 1, skills: ['事務処理', 'データ入力'], transferWish: false },
+  // 小原病院スタッフ
+  { id: 1, name: '山田 太郎', facility: 'obara-hospital', department: '看護部', position: '主任', performance: 'A', yearsOfService: 5, skills: ['リーダーシップ', 'チーム管理'], transferWish: true },
+  { id: 2, name: '佐藤 花子', facility: 'obara-hospital', department: '看護部', position: '主任', performance: 'S', yearsOfService: 8, skills: ['リーダーシップ', 'イノベーション'], transferWish: false },
+  { id: 3, name: '田中 美咲', facility: 'obara-hospital', department: '看護部', position: '副部長', performance: 'A', yearsOfService: 12, skills: ['戦略企画', 'チーム管理'], transferWish: false },
+  { id: 4, name: '鈴木 健一', facility: 'obara-hospital', department: 'リハビリテーション科', position: '主任', performance: 'A', yearsOfService: 7, skills: ['専門技術', 'コミュニケーション'], transferWish: false },
+  { id: 5, name: '高橋 由美', facility: 'obara-hospital', department: '薬剤部', position: '一般職', performance: 'B', yearsOfService: 3, skills: ['薬剤管理', '在庫管理'], transferWish: true },
+  { id: 6, name: '伊藤 直樹', facility: 'obara-hospital', department: '医事課', position: '主任', performance: 'A', yearsOfService: 6, skills: ['データ分析', 'プロセス改善'], transferWish: true },
+  { id: 7, name: '渡辺 陽子', facility: 'obara-hospital', department: '看護部', position: '一般職', performance: 'B', yearsOfService: 2, skills: ['患者ケア', 'チームワーク'], transferWish: false },
+  { id: 8, name: '中村 浩二', facility: 'obara-hospital', department: '診療技術部', position: '部長', performance: 'S', yearsOfService: 15, skills: ['戦略企画', 'リーダーシップ'], transferWish: false },
+  { id: 9, name: '小林 美香', facility: 'obara-hospital', department: '栄養課', position: '主任', performance: 'A', yearsOfService: 9, skills: ['栄養管理', 'チーム管理'], transferWish: true },
+  { id: 10, name: '加藤 健太', facility: 'obara-hospital', department: '総務課', position: '一般職', performance: 'C', yearsOfService: 1, skills: ['事務処理', 'データ入力'], transferWish: false },
+  // 立神リハビリテーション温泉病院スタッフ
+  { id: 11, name: '吉田 明美', facility: 'tachigami-hospital', department: '看護部', position: '主任', performance: 'A', yearsOfService: 6, skills: ['慢性期ケア', 'チームワーク'], transferWish: false },
+  { id: 12, name: '木村 剛', facility: 'tachigami-hospital', department: 'リハビリテーション科', position: '主任', performance: 'S', yearsOfService: 10, skills: ['リハビリ技術', '患者指導'], transferWish: true },
+  { id: 13, name: '松本 ユキ', facility: 'tachigami-hospital', department: '介護職', position: '一般職', performance: 'B', yearsOfService: 4, skills: ['介護技術', 'コミュニケーション'], transferWish: false },
 ]
 
 // 系列施設のデータ構造
 const facilityTypes: Record<string, { characteristics: string[]; workload: string }> = {
   '急性期病院': { characteristics: ['救急対応', '高度医療', '集中治療'], workload: '高' },
+  '慢性期・リハビリテーション病院': { characteristics: ['リハビリ強化', '長期療養', '在宅復帰支援'], workload: '中' },
   '回復期病院': { characteristics: ['リハビリ強化', '在宅復帰支援'], workload: '中' },
   '慢性期病院': { characteristics: ['長期療養', '緩和ケア'], workload: '中' },
   '介護施設': { characteristics: ['生活支援', '認知症ケア'], workload: '中' },
@@ -163,7 +169,7 @@ function StrategyDashboard() {
             <div className={styles.cardIcon}>👥</div>
             <div className={styles.cardContent}>
               <h3>総職員数</h3>
-              <p className={styles.cardValue}>{demoDepartments.reduce((sum, dept) => sum + dept.staffCount, 0)}名</p>
+              <p className={styles.cardValue}>{Object.values(facilityDepartments).flat().reduce((sum, dept) => sum + dept.staffCount, 0)}名</p>
               <p className={styles.cardChange}>+5.2% (前年比)</p>
             </div>
           </div>
@@ -272,7 +278,8 @@ function TransferPlanning() {
       (filterType === 'transfer' && staff.transferWish) ||
       (filterType === 'highPerformance' && (staff.performance === 'S' || staff.performance === 'A')) ||
       (filterType === 'senior' && staff.yearsOfService >= 3)
-    return matchesSearch && matchesFilter
+    // 小原病院のスタッフのみ表示（異動元として）
+    return matchesSearch && matchesFilter && staff.facility === 'obara-hospital'
   })
 
   return (
@@ -336,10 +343,10 @@ function TransferPlanning() {
             {selectedStaff ? (
               <>
                 <h4 style={{ marginBottom: '15px', fontSize: '1.1em' }}>
-                  {selectedStaff.name}さん（{selectedStaff.department}）の異動候補
+                  {selectedStaff.name}さん（小原病院 {selectedStaff.department}）の異動候補
                 </h4>
                 {demoFacilities
-                  .filter(facility => facility.id !== 'main') // 本院以外の施設
+                  .filter(facility => facility.id !== 'obara-hospital') // 小原病院以外の施設
                   .map((facility) => {
                     // 該当施設の同一職種部署を取得
                     const targetDept = facilityDepartments[facility.id]?.find(
@@ -733,9 +740,9 @@ function OrganizationOptimization() {
                 <div style={{ padding: '20px' }}>
                   {skillBalance.map((skill, index) => (
                     <div key={index} style={{ marginBottom: '15px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
-                        <span>{skill.category}</span>
-                        <span>{skill.current}% (目標: {skill.ideal}%)</span>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px', gap: '10px' }}>
+                        <span style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{skill.category}</span>
+                        <span style={{ flexShrink: 0, fontSize: '0.875rem' }}>{skill.current}% (目標: {skill.ideal}%)</span>
                       </div>
                       <div style={{ position: 'relative', height: '20px', backgroundColor: '#f0f0f0', borderRadius: '10px', overflow: 'hidden' }}>
                         <div 
