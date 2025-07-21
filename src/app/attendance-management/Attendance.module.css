@@ -1,346 +1,431 @@
 .container {
-  min-height: 100vh;
-  background-color: #f9fafb;
-}
-
-.main {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 20px;
 }
 
-.header {
+.tabNavigation {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+  overflow: hidden;
 }
 
-.title {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #1f2937;
-}
-
-.addButton {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background-color: #3b82f6;
-  color: white;
+.tabButton {
+  flex: 1;
+  padding: 16px 24px;
+  background: transparent;
   border: none;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
-}
-
-.addButton:hover {
-  background-color: #2563eb;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-}
-
-.addIcon {
-  width: 1.25rem;
-  height: 1.25rem;
-}
-
-/* タブスタイル */
-.tabContainer {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 2rem;
-  background-color: white;
-  padding: 0.5rem;
-  border-radius: 0.75rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.tab {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background-color: transparent;
-  border: none;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
   font-weight: 500;
   color: #6b7280;
-  cursor: pointer;
   transition: all 0.2s;
+  border-bottom: 3px solid transparent;
 }
 
-.tab:hover {
-  background-color: #f3f4f6;
-  color: #4b5563;
-}
-
-.tabActive {
-  background-color: #eff6ff;
+.tabButton:hover {
+  background: #f9fafb;
   color: #3b82f6;
 }
 
+.tabButton.active {
+  color: #3b82f6;
+  background: #eff6ff;
+  border-bottom-color: #3b82f6;
+}
+
 .tabIcon {
-  width: 1.25rem;
-  height: 1.25rem;
+  font-size: 18px;
 }
 
-/* フィルタースタイル */
-.filters {
+.tabLabel {
+  font-size: 14px;
+}
+
+.tabContent {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  min-height: 600px;
+}
+
+/* 日次勤怠タブ */
+.listContainer {
+  padding: 24px;
+}
+
+.searchSection {
   display: flex;
-  gap: 1rem;
-  margin-bottom: 2rem;
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
-.searchBox {
-  position: relative;
+.searchBar {
   flex: 1;
-}
-
-.searchIcon {
-  position: absolute;
-  left: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 1.25rem;
-  height: 1.25rem;
-  color: #9ca3af;
 }
 
 .searchInput {
   width: 100%;
-  padding: 0.75rem 1rem 0.75rem 3rem;
-  background-color: white;
+  padding: 12px 16px;
   border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  color: #1f2937;
-  transition: all 0.2s;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.2s;
 }
 
 .searchInput:focus {
   outline: none;
   border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.filters {
+  display: flex;
+  gap: 12px;
 }
 
 .filterSelect {
-  padding: 0.75rem 1rem;
-  background-color: white;
+  padding: 12px 16px;
   border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  color: #1f2937;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: border-color 0.2s;
 }
 
 .filterSelect:focus {
   outline: none;
   border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-/* タブコンテンツ */
-.tabContent {
-  animation: fadeIn 0.3s ease-in;
+.listHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.listHeader h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1f2937;
 }
 
-/* 日次勤怠スタイル */
+.addButton {
+  padding: 10px 20px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.addButton:hover {
+  background: #2563eb;
+}
+
 .recordsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 20px;
 }
 
 .recordCard {
-  background-color: white;
-  border-radius: 0.75rem;
-  padding: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
   cursor: pointer;
+  transition: all 0.2s;
 }
 
 .recordCard:hover {
-  transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 
-.recordHeader {
+.cardHeader {
   display: flex;
   justify-content: space-between;
-  align-items: start;
-  margin-bottom: 1rem;
+  align-items: flex-start;
+  margin-bottom: 16px;
 }
 
-.staffName {
-  font-size: 1.125rem;
+.cardInfo h3 {
+  font-size: 16px;
   font-weight: 600;
   color: #1f2937;
-  margin-bottom: 0.25rem;
+  margin-bottom: 8px;
 }
 
-.staffInfo {
-  font-size: 0.875rem;
+.staffId {
+  font-size: 13px;
   color: #6b7280;
 }
 
 .statusBadge {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.25rem 0.75rem;
-  background-color: #f3f4f6;
-  border-radius: 1rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-}
-
-.statusIcon {
-  width: 1rem;
-  height: 1rem;
-}
-
-.recordBody {
-  border-top: 1px solid #e5e7eb;
-  padding-top: 1rem;
-}
-
-.timeInfo {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.label {
-  font-size: 0.75rem;
-  color: #6b7280;
-  margin-bottom: 0.25rem;
-}
-
-.time {
-  font-size: 1rem;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
   font-weight: 600;
-  color: #1f2937;
 }
 
-.notes {
-  background-color: #f9fafb;
-  padding: 0.75rem;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
+.cardDetails {
+  padding-top: 12px;
+  border-top: 1px solid #f3f4f6;
 }
 
-.notesLabel {
-  font-weight: 500;
-  color: #4b5563;
-  margin-bottom: 0.25rem;
-}
-
-/* 月次集計スタイル */
-.summaryList {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.summaryCard {
-  background-color: white;
-  border-radius: 0.75rem;
-  padding: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.summaryHeader {
+.detailRow {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 8px;
+  font-size: 14px;
 }
 
-.summaryHeader h3 {
-  font-size: 1.25rem;
+.detailRow:last-child {
+  margin-bottom: 0;
+}
+
+.detailLabel {
+  color: #6b7280;
+}
+
+.detailValue {
   font-weight: 600;
   color: #1f2937;
 }
 
-.month {
-  font-size: 0.875rem;
-  color: #6b7280;
-  background-color: #f3f4f6;
-  padding: 0.25rem 0.75rem;
-  border-radius: 0.5rem;
+/* 月次集計タブ */
+.recordsList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.summaryGrid {
+.monthlyItem {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.2s;
+}
+
+.monthlyItem:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.monthlyHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.monthlyInfo h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 4px;
+}
+
+.monthlyStats {
+  display: flex;
+  gap: 24px;
+}
+
+.statItem {
+  text-align: center;
+}
+
+.statLabel {
+  font-size: 12px;
+  color: #6b7280;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.statValue {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.monthlyDetails {
+  margin-top: 16px;
+}
+
+.detailGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 1rem;
+  gap: 16px;
 }
 
-.summaryItem {
-  text-align: center;
-  padding: 0.75rem;
-  background-color: #f9fafb;
-  border-radius: 0.5rem;
-}
-
-.summaryLabel {
-  font-size: 0.75rem;
-  color: #6b7280;
-  margin-bottom: 0.25rem;
-}
-
-.summaryValue {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #1f2937;
-}
-
-/* プレースホルダースタイル */
-.placeholder {
+.detailItem {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+/* 残業管理タブ */
+.overtimeContainer {
+  padding: 24px;
+}
+
+.overtimeContainer h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 24px;
+}
+
+/* 休暇管理タブ */
+.leaveContainer {
+  padding: 24px;
+}
+
+.leaveContainer h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 24px;
+}
+
+/* 設定タブ */
+.settingsContainer {
+  padding: 24px;
+}
+
+.settingsContainer h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 32px;
+}
+
+.settingsSection {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.settingsSection h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.settingsGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.settingItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.settingLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #4b5563;
+  cursor: pointer;
+}
+
+.settingLabel input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.numberInput {
+  width: 60px;
+  padding: 6px 8px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.settingsActions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 32px;
+}
+
+.saveButton {
+  padding: 10px 24px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.saveButton:hover {
+  background: #2563eb;
+}
+
+.cancelButton {
+  padding: 10px 24px;
+  background: white;
+  color: #6b7280;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancelButton:hover {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+/* 共通スタイル */
+.comingSoon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  color: #6b7280;
+  font-size: 16px;
+}
+
+.noSelection {
+  display: flex;
+  align-items: center;
   justify-content: center;
   min-height: 400px;
-  text-align: center;
   color: #6b7280;
-}
-
-.placeholderIcon {
-  width: 4rem;
-  height: 4rem;
-  margin-bottom: 1rem;
-  color: #d1d5db;
-}
-
-.placeholder h2 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #4b5563;
-  margin-bottom: 0.5rem;
-}
-
-.placeholder p {
-  font-size: 1rem;
+  font-size: 16px;
 }

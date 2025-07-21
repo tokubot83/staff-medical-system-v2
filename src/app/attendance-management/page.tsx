@@ -430,11 +430,350 @@ function LeaveTab() {
 }
 
 function SettingsTab() {
+  const [settingsData, setSettingsData] = useState({
+    notifications: {
+      reminderMinutes: 10,
+      reminderEnabled: true,
+      overtimeAlertEnabled: true,
+      reportEnabled: true
+    },
+    workingHours: {
+      standardStart: '09:00',
+      standardEnd: '18:00',
+      breakTime: 60,
+      flexEnabled: false,
+      coreTimeStart: '10:00',
+      coreTimeEnd: '15:00'
+    },
+    overtimeSettings: {
+      monthlyLimit: 45,
+      requireApproval: true,
+      alertThreshold: 36,
+      autoCalculate: true
+    },
+    leaveSettings: {
+      annualDays: 20,
+      carryOverEnabled: true,
+      maxCarryOver: 20,
+      halfDayEnabled: true,
+      hourlyEnabled: false
+    }
+  })
+
+  const handleNotificationChange = (field: string, value: boolean | number) => {
+    setSettingsData({
+      ...settingsData,
+      notifications: {
+        ...settingsData.notifications,
+        [field]: value
+      }
+    })
+  }
+
+  const handleWorkingHoursChange = (field: string, value: string | number | boolean) => {
+    setSettingsData({
+      ...settingsData,
+      workingHours: {
+        ...settingsData.workingHours,
+        [field]: value
+      }
+    })
+  }
+
+  const handleOvertimeChange = (field: string, value: boolean | number) => {
+    setSettingsData({
+      ...settingsData,
+      overtimeSettings: {
+        ...settingsData.overtimeSettings,
+        [field]: value
+      }
+    })
+  }
+
+  const handleLeaveChange = (field: string, value: boolean | number) => {
+    setSettingsData({
+      ...settingsData,
+      leaveSettings: {
+        ...settingsData.leaveSettings,
+        [field]: value
+      }
+    })
+  }
+
   return (
     <div className={styles.settingsContainer}>
-      <h2>設定</h2>
-      <div className={styles.comingSoon}>
-        <p>勤怠管理の設定機能は現在開発中です</p>
+      <h2>勤怠設定</h2>
+      
+      <div className={styles.settingsSection}>
+        <h3>通知設定</h3>
+        <div className={styles.settingsGroup}>
+          <div className={styles.settingItem}>
+            <label className={styles.settingLabel}>
+              <input
+                type="checkbox"
+                checked={settingsData.notifications.reminderEnabled}
+                onChange={(e) => handleNotificationChange('reminderEnabled', e.target.checked)}
+              />
+              出勤リマインダーを有効にする
+            </label>
+          </div>
+          
+          <div className={styles.settingItem}>
+            <label className={styles.settingLabel}>
+              リマインダー送信時間（出勤前）
+              <input
+                type="number"
+                min="5"
+                max="60"
+                value={settingsData.notifications.reminderMinutes}
+                onChange={(e) => handleNotificationChange('reminderMinutes', parseInt(e.target.value))}
+                className={styles.numberInput}
+              />
+              分前
+            </label>
+          </div>
+          
+          <div className={styles.settingItem}>
+            <label className={styles.settingLabel}>
+              <input
+                type="checkbox"
+                checked={settingsData.notifications.overtimeAlertEnabled}
+                onChange={(e) => handleNotificationChange('overtimeAlertEnabled', e.target.checked)}
+              />
+              残業時間アラートを有効にする
+            </label>
+          </div>
+          
+          <div className={styles.settingItem}>
+            <label className={styles.settingLabel}>
+              <input
+                type="checkbox"
+                checked={settingsData.notifications.reportEnabled}
+                onChange={(e) => handleNotificationChange('reportEnabled', e.target.checked)}
+              />
+              月次レポートを自動送信する
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.settingsSection}>
+        <h3>勤務時間設定</h3>
+        <div className={styles.settingsGroup}>
+          <div className={styles.settingItem}>
+            <label className={styles.settingLabel}>
+              標準勤務開始時刻
+              <input
+                type="time"
+                value={settingsData.workingHours.standardStart}
+                onChange={(e) => handleWorkingHoursChange('standardStart', e.target.value)}
+                className={styles.numberInput}
+                style={{ width: 'auto' }}
+              />
+            </label>
+          </div>
+          
+          <div className={styles.settingItem}>
+            <label className={styles.settingLabel}>
+              標準勤務終了時刻
+              <input
+                type="time"
+                value={settingsData.workingHours.standardEnd}
+                onChange={(e) => handleWorkingHoursChange('standardEnd', e.target.value)}
+                className={styles.numberInput}
+                style={{ width: 'auto' }}
+              />
+            </label>
+          </div>
+          
+          <div className={styles.settingItem}>
+            <label className={styles.settingLabel}>
+              休憩時間
+              <input
+                type="number"
+                min="0"
+                max="120"
+                value={settingsData.workingHours.breakTime}
+                onChange={(e) => handleWorkingHoursChange('breakTime', parseInt(e.target.value))}
+                className={styles.numberInput}
+              />
+              分
+            </label>
+          </div>
+          
+          <div className={styles.settingItem}>
+            <label className={styles.settingLabel}>
+              <input
+                type="checkbox"
+                checked={settingsData.workingHours.flexEnabled}
+                onChange={(e) => handleWorkingHoursChange('flexEnabled', e.target.checked)}
+              />
+              フレックスタイム制を有効にする
+            </label>
+          </div>
+          
+          {settingsData.workingHours.flexEnabled && (
+            <>
+              <div className={styles.settingItem}>
+                <label className={styles.settingLabel}>
+                  コアタイム開始
+                  <input
+                    type="time"
+                    value={settingsData.workingHours.coreTimeStart}
+                    onChange={(e) => handleWorkingHoursChange('coreTimeStart', e.target.value)}
+                    className={styles.numberInput}
+                    style={{ width: 'auto' }}
+                  />
+                </label>
+              </div>
+              
+              <div className={styles.settingItem}>
+                <label className={styles.settingLabel}>
+                  コアタイム終了
+                  <input
+                    type="time"
+                    value={settingsData.workingHours.coreTimeEnd}
+                    onChange={(e) => handleWorkingHoursChange('coreTimeEnd', e.target.value)}
+                    className={styles.numberInput}
+                    style={{ width: 'auto' }}
+                  />
+                </label>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+
+      <div className={styles.settingsSection}>
+        <h3>残業管理設定</h3>
+        <div className={styles.settingsGroup}>
+          <div className={styles.settingItem}>
+            <label className={styles.settingLabel}>
+              月間残業時間上限
+              <input
+                type="number"
+                min="0"
+                max="100"
+                value={settingsData.overtimeSettings.monthlyLimit}
+                onChange={(e) => handleOvertimeChange('monthlyLimit', parseInt(e.target.value))}
+                className={styles.numberInput}
+              />
+              時間
+            </label>
+          </div>
+          
+          <div className={styles.settingItem}>
+            <label className={styles.settingLabel}>
+              <input
+                type="checkbox"
+                checked={settingsData.overtimeSettings.requireApproval}
+                onChange={(e) => handleOvertimeChange('requireApproval', e.target.checked)}
+              />
+              残業には事前承認を必要とする
+            </label>
+          </div>
+          
+          <div className={styles.settingItem}>
+            <label className={styles.settingLabel}>
+              アラート通知閾値
+              <input
+                type="number"
+                min="0"
+                max="100"
+                value={settingsData.overtimeSettings.alertThreshold}
+                onChange={(e) => handleOvertimeChange('alertThreshold', parseInt(e.target.value))}
+                className={styles.numberInput}
+              />
+              時間
+            </label>
+          </div>
+          
+          <div className={styles.settingItem}>
+            <label className={styles.settingLabel}>
+              <input
+                type="checkbox"
+                checked={settingsData.overtimeSettings.autoCalculate}
+                onChange={(e) => handleOvertimeChange('autoCalculate', e.target.checked)}
+              />
+              残業時間を自動計算する
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.settingsSection}>
+        <h3>休暇設定</h3>
+        <div className={styles.settingsGroup}>
+          <div className={styles.settingItem}>
+            <label className={styles.settingLabel}>
+              年次有給休暇日数
+              <input
+                type="number"
+                min="0"
+                max="40"
+                value={settingsData.leaveSettings.annualDays}
+                onChange={(e) => handleLeaveChange('annualDays', parseInt(e.target.value))}
+                className={styles.numberInput}
+              />
+              日
+            </label>
+          </div>
+          
+          <div className={styles.settingItem}>
+            <label className={styles.settingLabel}>
+              <input
+                type="checkbox"
+                checked={settingsData.leaveSettings.carryOverEnabled}
+                onChange={(e) => handleLeaveChange('carryOverEnabled', e.target.checked)}
+              />
+              有給休暇の繰越を許可する
+            </label>
+          </div>
+          
+          {settingsData.leaveSettings.carryOverEnabled && (
+            <div className={styles.settingItem}>
+              <label className={styles.settingLabel}>
+                最大繰越日数
+                <input
+                  type="number"
+                  min="0"
+                  max="40"
+                  value={settingsData.leaveSettings.maxCarryOver}
+                  onChange={(e) => handleLeaveChange('maxCarryOver', parseInt(e.target.value))}
+                  className={styles.numberInput}
+                />
+                日
+              </label>
+            </div>
+          )}
+          
+          <div className={styles.settingItem}>
+            <label className={styles.settingLabel}>
+              <input
+                type="checkbox"
+                checked={settingsData.leaveSettings.halfDayEnabled}
+                onChange={(e) => handleLeaveChange('halfDayEnabled', e.target.checked)}
+              />
+              半日休暇を許可する
+            </label>
+          </div>
+          
+          <div className={styles.settingItem}>
+            <label className={styles.settingLabel}>
+              <input
+                type="checkbox"
+                checked={settingsData.leaveSettings.hourlyEnabled}
+                onChange={(e) => handleLeaveChange('hourlyEnabled', e.target.checked)}
+              />
+              時間単位休暇を許可する
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.settingsActions}>
+        <button className={styles.saveButton}>設定を保存</button>
+        <button className={styles.cancelButton}>キャンセル</button>
       </div>
     </div>
   )
