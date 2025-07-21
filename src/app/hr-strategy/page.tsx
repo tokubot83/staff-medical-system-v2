@@ -81,14 +81,13 @@ const facilityTypes: Record<string, { characteristics: string[]; workload: strin
   'クリニック': { characteristics: ['外来診療', '地域密着'], workload: '低' },
 }
 
-// 系列施設データ
-const demoFacilities = [
-  { id: 'main', name: '本院', type: '急性期病院', location: '東京都中央区' },
-  { id: 'branch1', name: '東病院', type: '回復期病院', location: '東京都江東区' },
-  { id: 'branch2', name: '西病院', type: '慢性期病院', location: '東京都世田谷区' },
-  { id: 'care1', name: '介護老人保健施設さくら', type: '介護施設', location: '東京都杉並区' },
-  { id: 'clinic1', name: '駅前クリニック', type: 'クリニック', location: '東京都新宿区' },
-]
+// 系列施設データ（実際の施設データを使用）
+const demoFacilities = facilities.map(facility => ({
+  id: facility.id,
+  name: facility.name,
+  type: facility.type,
+  location: facility.location
+}))
 
 // 施設別の部署データ（職種別の人員状況）
 const facilityDepartments: Record<string, Array<{
@@ -98,40 +97,28 @@ const facilityDepartments: Record<string, Array<{
   transferOut: number
   vacancyRate: number
 }>> = {
-  'main': [
-    { name: '看護部', staffCount: 450, transferIn: 8, transferOut: 12, vacancyRate: 7.5 },
-    { name: 'リハビリテーション科', staffCount: 85, transferIn: 3, transferOut: 2, vacancyRate: 15.3 },
-    { name: '薬剤部', staffCount: 45, transferIn: 2, transferOut: 3, vacancyRate: 4.4 },
-    { name: '医事課', staffCount: 65, transferIn: 5, transferOut: 4, vacancyRate: 6.2 },
-    { name: '栄養課', staffCount: 35, transferIn: 1, transferOut: 2, vacancyRate: 8.6 },
-    { name: '総務課', staffCount: 55, transferIn: 4, transferOut: 3, vacancyRate: 3.6 },
+  'obara-hospital': [
+    { name: '看護部', staffCount: 180, transferIn: 8, transferOut: 12, vacancyRate: 7.5 },
+    { name: 'リハビリテーション科', staffCount: 40, transferIn: 3, transferOut: 2, vacancyRate: 15.3 },
+    { name: '薬剤部', staffCount: 15, transferIn: 2, transferOut: 3, vacancyRate: 4.4 },
+    { name: '医事課', staffCount: 25, transferIn: 5, transferOut: 4, vacancyRate: 6.2 },
+    { name: '栄養課', staffCount: 20, transferIn: 1, transferOut: 2, vacancyRate: 8.6 },
+    { name: '総務課', staffCount: 25, transferIn: 4, transferOut: 3, vacancyRate: 3.6 },
+    { name: '診療技術部', staffCount: 65, transferIn: 3, transferOut: 2, vacancyRate: 5.0 },
+    { name: '地域医療連携室', staffCount: 15, transferIn: 1, transferOut: 1, vacancyRate: 3.3 },
   ],
-  'branch1': [
-    { name: '看護部', staffCount: 180, transferIn: 5, transferOut: 3, vacancyRate: 5.0 },
-    { name: 'リハビリテーション科', staffCount: 120, transferIn: 8, transferOut: 2, vacancyRate: 8.3 },
-    { name: '薬剤部', staffCount: 25, transferIn: 1, transferOut: 1, vacancyRate: 12.0 },
-    { name: '医事課', staffCount: 30, transferIn: 2, transferOut: 1, vacancyRate: 3.3 },
-    { name: '栄養課', staffCount: 20, transferIn: 0, transferOut: 1, vacancyRate: 15.0 },
-  ],
-  'branch2': [
-    { name: '看護部', staffCount: 220, transferIn: 3, transferOut: 5, vacancyRate: 9.1 },
-    { name: 'リハビリテーション科', staffCount: 45, transferIn: 2, transferOut: 1, vacancyRate: 6.7 },
-    { name: '薬剤部', staffCount: 20, transferIn: 0, transferOut: 2, vacancyRate: 20.0 },
-    { name: '医事課', staffCount: 25, transferIn: 1, transferOut: 1, vacancyRate: 4.0 },
-    { name: '栄養課', staffCount: 25, transferIn: 1, transferOut: 0, vacancyRate: 0.0 },
-  ],
-  'care1': [
-    { name: '看護部', staffCount: 80, transferIn: 2, transferOut: 3, vacancyRate: 11.3 },
-    { name: 'リハビリテーション科', staffCount: 35, transferIn: 1, transferOut: 0, vacancyRate: 2.9 },
-    { name: '栄養課', staffCount: 15, transferIn: 1, transferOut: 0, vacancyRate: 0.0 },
-  ],
-  'clinic1': [
-    { name: '看護部', staffCount: 25, transferIn: 1, transferOut: 2, vacancyRate: 16.0 },
-    { name: '医事課', staffCount: 10, transferIn: 0, transferOut: 0, vacancyRate: 0.0 },
+  'tachigami-hospital': [
+    { name: '看護部', staffCount: 65, transferIn: 5, transferOut: 3, vacancyRate: 5.0 },
+    { name: 'リハビリテーション科', staffCount: 35, transferIn: 8, transferOut: 2, vacancyRate: 8.3 },
+    { name: '薬剤部', staffCount: 5, transferIn: 1, transferOut: 1, vacancyRate: 12.0 },
+    { name: '医事課', staffCount: 10, transferIn: 2, transferOut: 1, vacancyRate: 3.3 },
+    { name: '栄養課', staffCount: 8, transferIn: 0, transferOut: 1, vacancyRate: 15.0 },
+    { name: '総務課', staffCount: 10, transferIn: 1, transferOut: 0, vacancyRate: 0.0 },
+    { name: '介護職', staffCount: 35, transferIn: 4, transferOut: 5, vacancyRate: 11.3 },
   ],
 }
 
-const demoDepartments = facilityDepartments['main']
+const demoDepartments = facilityDepartments['obara-hospital']
 
 // 戦略ダッシュボードタブ
 function StrategyDashboard() {
