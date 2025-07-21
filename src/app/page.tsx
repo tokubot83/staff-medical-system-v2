@@ -535,11 +535,11 @@ export default function Home() {
        
         {/* 最優先エリア */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-         {/* 今日のタスク */}
+         {/* 本日のタスク */}
          <div className="bg-gray-50 rounded-xl p-6 shadow-md border-t-4 border-green-500 hover:shadow-lg transition-shadow">
         <div className="flex justify-between items-center mb-4">
          <h2 className="text-lg font-semibold flex items-center gap-2">
-          📅 今日のタスク
+          📅 本日のタスク
          </h2>
          <span className="bg-gray-200 text-green-800 px-3 py-1 rounded-full text-sm font-semibold border border-green-200">
           {tasks.filter(t => !t.completed).length}件
