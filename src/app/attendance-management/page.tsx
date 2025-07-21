@@ -3,23 +3,15 @@
 import React, { useState } from 'react'
 import CommonHeader from '@/components/CommonHeader'
 import styles from './Attendance.module.css'
-import {
-  CalendarIcon,
-  ClockIcon,
-  ChartBarIcon,
-  DocumentTextIcon,
-  CogIcon,
-  MagnifyingGlassIcon,
-  PlusIcon,
-  CheckCircleIcon,
-  ExclamationCircleIcon,
-  XCircleIcon
-} from '@heroicons/react/24/outline'
 
-// タブタイプの定義
-type TabType = 'daily' | 'monthly' | 'overtime' | 'leave' | 'settings'
+const tabs = [
+  { id: 'daily', label: '日次勤怠', icon: '📅' },
+  { id: 'monthly', label: '月次集計', icon: '📊' },
+  { id: 'overtime', label: '残業管理', icon: '⏰' },
+  { id: 'leave', label: '休暇管理', icon: '🏖️' },
+  { id: 'settings', label: '設定', icon: '⚙️' },
+]
 
-// 勤怠記録の型定義
 interface AttendanceRecord {
   id: string
   employeeId: string
@@ -34,7 +26,6 @@ interface AttendanceRecord {
   department: string
 }
 
-// 月次集計の型定義
 interface MonthlyStats {
   employeeId: string
   employeeName: string
@@ -48,117 +39,108 @@ interface MonthlyStats {
   leaveUsed: number
 }
 
-// ダミーデータ
-const attendanceData: AttendanceRecord[] = [
-  {
-    id: '1',
-    employeeId: 'EMP001',
-    employeeName: '田中太郎',
-    date: '2024-01-15',
-    checkIn: '09:00',
-    checkOut: '18:00',
-    breakTime: 60,
-    workingHours: 8,
-    overtimeHours: 0,
-    status: 'normal',
-    department: '看護部'
-  },
-  {
-    id: '2',
-    employeeId: 'EMP002',
-    employeeName: '佐藤花子',
-    date: '2024-01-15',
-    checkIn: '09:15',
-    checkOut: '18:30',
-    breakTime: 60,
-    workingHours: 8.25,
-    overtimeHours: 0.5,
-    status: 'late',
-    department: 'リハビリ科'
-  },
-  {
-    id: '3',
-    employeeId: 'EMP003',
-    employeeName: '鈴木一郎',
-    date: '2024-01-15',
-    checkIn: '08:45',
-    checkOut: '17:45',
-    breakTime: 60,
-    workingHours: 8,
-    overtimeHours: 0,
-    status: 'early',
-    department: '事務部'
-  }
-]
-
-const monthlyData: MonthlyStats[] = [
-  {
-    employeeId: 'EMP001',
-    employeeName: '田中太郎',
-    department: '看護部',
-    workingDays: 22,
-    totalHours: 176,
-    overtimeHours: 8,
-    lateCount: 0,
-    earlyCount: 0,
-    absentCount: 0,
-    leaveUsed: 2
-  },
-  {
-    employeeId: 'EMP002',
-    employeeName: '佐藤花子',
-    department: 'リハビリ科',
-    workingDays: 21,
-    totalHours: 170,
-    overtimeHours: 12,
-    lateCount: 3,
-    earlyCount: 0,
-    absentCount: 1,
-    leaveUsed: 3
-  }
-]
-
-export default function AttendanceManagement() {
-  const [activeTab, setActiveTab] = useState<TabType>('daily')
+export default function AttendancePage() {
+  const [activeTab, setActiveTab] = useState('daily')
   const [searchTerm, setSearchTerm] = useState('')
+  const [selectedFacility, setSelectedFacility] = useState('all')
+  const [selectedDepartment, setSelectedDepartment] = useState('all')
 
-  // タブ設定
-  const tabs = [
-    { id: 'daily' as TabType, label: '日次勤怠', icon: CalendarIcon },
-    { id: 'monthly' as TabType, label: '月次集計', icon: ChartBarIcon },
-    { id: 'overtime' as TabType, label: '残業管理', icon: ClockIcon },
-    { id: 'leave' as TabType, label: '休暇管理', icon: DocumentTextIcon },
-    { id: 'settings' as TabType, label: '設定', icon: CogIcon }
+  const attendanceData: AttendanceRecord[] = [
+    {
+      id: '1',
+      employeeId: 'EMP001',
+      employeeName: '田中太郎',
+      date: '2024-01-15',
+      checkIn: '09:00',
+      checkOut: '18:00',
+      breakTime: 60,
+      workingHours: 8,
+      overtimeHours: 0,
+      status: 'normal',
+      department: '看護部'
+    },
+    {
+      id: '2',
+      employeeId: 'EMP002',
+      employeeName: '佐藤花子',
+      date: '2024-01-15',
+      checkIn: '09:15',
+      checkOut: '18:30',
+      breakTime: 60,
+      workingHours: 8.25,
+      overtimeHours: 0.5,
+      status: 'late',
+      department: 'リハビリ科'
+    },
+    {
+      id: '3',
+      employeeId: 'EMP003',
+      employeeName: '鈴木一郎',
+      date: '2024-01-15',
+      checkIn: '08:45',
+      checkOut: '17:45',
+      breakTime: 60,
+      workingHours: 8,
+      overtimeHours: 0,
+      status: 'early',
+      department: '事務部'
+    }
   ]
 
-  // 検索フィルタリング
-  const filteredAttendanceData = attendanceData.filter(record =>
-    record.employeeName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    record.employeeId.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  const monthlyData: MonthlyStats[] = [
+    {
+      employeeId: 'EMP001',
+      employeeName: '田中太郎',
+      department: '看護部',
+      workingDays: 22,
+      totalHours: 176,
+      overtimeHours: 8,
+      lateCount: 0,
+      earlyCount: 0,
+      absentCount: 0,
+      leaveUsed: 2
+    },
+    {
+      employeeId: 'EMP002',
+      employeeName: '佐藤花子',
+      department: 'リハビリ科',
+      workingDays: 21,
+      totalHours: 170,
+      overtimeHours: 12,
+      lateCount: 3,
+      earlyCount: 0,
+      absentCount: 1,
+      leaveUsed: 3
+    }
+  ]
 
-  const filteredMonthlyData = monthlyData.filter(record =>
-    record.employeeName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    record.employeeId.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  const filteredAttendanceData = attendanceData.filter((record) => {
+    const matchesSearch = record.employeeName.includes(searchTerm) || record.employeeId.includes(searchTerm)
+    const matchesDepartment = selectedDepartment === 'all' || record.department === selectedDepartment
+    return matchesSearch && matchesDepartment
+  })
 
-  // ステータスアイコンの取得
-  const getStatusIcon = (status: AttendanceRecord['status']) => {
+  const filteredMonthlyData = monthlyData.filter((record) => {
+    const matchesSearch = record.employeeName.includes(searchTerm) || record.employeeId.includes(searchTerm)
+    const matchesDepartment = selectedDepartment === 'all' || record.department === selectedDepartment
+    return matchesSearch && matchesDepartment
+  })
+
+  const getStatusColor = (status: AttendanceRecord['status']) => {
     switch (status) {
       case 'normal':
-        return <CheckCircleIcon className={styles.statusIcon} style={{ color: '#10b981' }} />
+        return '#10b981'
       case 'late':
-        return <ExclamationCircleIcon className={styles.statusIcon} style={{ color: '#f59e0b' }} />
+        return '#f59e0b'
       case 'early':
-        return <ExclamationCircleIcon className={styles.statusIcon} style={{ color: '#3b82f6' }} />
+        return '#3b82f6'
       case 'absent':
-        return <XCircleIcon className={styles.statusIcon} style={{ color: '#ef4444' }} />
+        return '#ef4444'
       default:
-        return null
+        return '#6b7280'
     }
   }
 
-  // ステータス名の取得
   const getStatusText = (status: AttendanceRecord['status']) => {
     switch (status) {
       case 'normal': return '正常'
@@ -169,201 +151,291 @@ export default function AttendanceManagement() {
     }
   }
 
-  // 日次勤怠タブの内容
-  const renderDailyTab = () => (
-    <div className={styles.tabContent}>
-      <div className={styles.tableContainer}>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>職員ID</th>
-              <th>氏名</th>
-              <th>部署</th>
-              <th>出勤時刻</th>
-              <th>退勤時刻</th>
-              <th>勤務時間</th>
-              <th>残業時間</th>
-              <th>ステータス</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredAttendanceData.map((record) => (
-              <tr key={record.id}>
-                <td>{record.employeeId}</td>
-                <td>{record.employeeName}</td>
-                <td>{record.department}</td>
-                <td>{record.checkIn || '-'}</td>
-                <td>{record.checkOut || '-'}</td>
-                <td>{record.workingHours}h</td>
-                <td>{record.overtimeHours}h</td>
-                <td className={styles.statusCell}>
-                  {getStatusIcon(record.status)}
-                  <span>{getStatusText(record.status)}</span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  )
-
-  // 月次集計タブの内容
-  const renderMonthlyTab = () => (
-    <div className={styles.tabContent}>
-      <div className={styles.tableContainer}>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>職員ID</th>
-              <th>氏名</th>
-              <th>部署</th>
-              <th>出勤日数</th>
-              <th>総勤務時間</th>
-              <th>残業時間</th>
-              <th>遅刻回数</th>
-              <th>早退回数</th>
-              <th>欠勤回数</th>
-              <th>有給使用</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredMonthlyData.map((record) => (
-              <tr key={record.employeeId}>
-                <td>{record.employeeId}</td>
-                <td>{record.employeeName}</td>
-                <td>{record.department}</td>
-                <td>{record.workingDays}日</td>
-                <td>{record.totalHours}h</td>
-                <td>{record.overtimeHours}h</td>
-                <td>{record.lateCount}回</td>
-                <td>{record.earlyCount}回</td>
-                <td>{record.absentCount}回</td>
-                <td>{record.leaveUsed}日</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  )
-
-  // 残業管理タブの内容
-  const renderOvertimeTab = () => {
-    return (
-      <div className={styles.tabContent}>
-        <div className={styles.placeholder}>
-          <ChartBarIcon className={styles.placeholderIcon} />
-          <h2>残業管理</h2>
-          <p>残業時間の分析と管理機能は開発中です</p>
-        </div>
-      </div>
-    )
-  }
-
-  // 休暇管理タブの内容
-  const renderLeaveTab = () => {
-    return (
-      <div className={styles.tabContent}>
-        <div className={styles.placeholder}>
-          <CalendarIcon className={styles.placeholderIcon} />
-          <h2>休暇管理</h2>
-          <p>休暇申請と承認機能は開発中です</p>
-        </div>
-      </div>
-    )
-  }
-
-  // 設定タブの内容
-  const renderSettingsTab = () => {
-    return (
-      <div className={styles.tabContent}>
-        <div className={styles.placeholder}>
-          <CogIcon className={styles.placeholderIcon} />
-          <h2>設定</h2>
-          <p>勤怠管理の設定機能は開発中です</p>
-        </div>
-      </div>
-    )
-  }
-
-  // タブ内容のレンダリング
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case 'daily':
-        return renderDailyTab()
-      case 'monthly':
-        return renderMonthlyTab()
-      case 'overtime':
-        return renderOvertimeTab()
-      case 'leave':
-        return renderLeaveTab()
-      case 'settings':
-        return renderSettingsTab()
-      default:
-        return renderDailyTab()
-    }
-  }
-
   return (
-    <div className={styles.container}>
-      <CommonHeader />
-      <main className={styles.main}>
-        <div className={styles.content}>
-          <div className={styles.contentHeader}>
-            <div className={styles.header}>
-              <h1 className={styles.title}>勤怠管理</h1>
-              <button className={styles.addButton}>
-                <PlusIcon className={styles.addIcon} />
-                新規記録
-              </button>
-            </div>
-
-            <div className={styles.tabs}>
-              {tabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  className={`${styles.tab} ${activeTab === tab.id ? styles.tabActive : ''}`}
-                  onClick={() => setActiveTab(tab.id)}
-                >
-                  <tab.icon className={styles.tabIcon} />
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-
-            {(activeTab === 'daily' || activeTab === 'monthly') && (
-              <div className={styles.filters}>
-                <div className={styles.searchBox}>
-                  <MagnifyingGlassIcon className={styles.searchIcon} />
-                  <input
-                    type="text"
-                    placeholder="職員名またはIDで検索"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className={styles.searchInput}
-                  />
-                </div>
-                <select className={styles.filterSelect}>
-                  <option value="">全部署</option>
-                  <option value="看護部">看護部</option>
-                  <option value="リハビリ科">リハビリ科</option>
-                  <option value="事務部">事務部</option>
-                </select>
-                <select className={styles.filterSelect}>
-                  <option value="">全ステータス</option>
-                  <option value="normal">正常</option>
-                  <option value="late">遅刻</option>
-                  <option value="early">早退</option>
-                  <option value="absent">欠勤</option>
-                </select>
-              </div>
-            )}
-          </div>
-
-          {renderTabContent()}
+    <div>
+      <CommonHeader 
+        title="勤怠管理" 
+        showBackButton={true} 
+        backUrl="/"
+        backText="ダッシュボードに戻る"
+      />
+      
+      <div className={styles.container}>
+        <div className={styles.tabNavigation}>
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`${styles.tabButton} ${activeTab === tab.id ? styles.active : ''}`}
+            >
+              <span className={styles.tabIcon}>{tab.icon}</span>
+              <span className={styles.tabLabel}>{tab.label}</span>
+            </button>
+          ))}
         </div>
-      </main>
+
+        <div className={styles.tabContent}>
+          {activeTab === 'daily' && (
+            <DailyTab 
+              records={filteredAttendanceData}
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              selectedFacility={selectedFacility}
+              setSelectedFacility={setSelectedFacility}
+              selectedDepartment={selectedDepartment}
+              setSelectedDepartment={setSelectedDepartment}
+              getStatusColor={getStatusColor}
+              getStatusText={getStatusText}
+            />
+          )}
+          {activeTab === 'monthly' && (
+            <MonthlyTab 
+              records={filteredMonthlyData}
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              selectedDepartment={selectedDepartment}
+              setSelectedDepartment={setSelectedDepartment}
+            />
+          )}
+          {activeTab === 'overtime' && <OvertimeTab />}
+          {activeTab === 'leave' && <LeaveTab />}
+          {activeTab === 'settings' && <SettingsTab />}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+interface DailyTabProps {
+  records: AttendanceRecord[]
+  searchTerm: string
+  setSearchTerm: (value: string) => void
+  selectedFacility: string
+  setSelectedFacility: (value: string) => void
+  selectedDepartment: string
+  setSelectedDepartment: (value: string) => void
+  getStatusColor: (status: AttendanceRecord['status']) => string
+  getStatusText: (status: AttendanceRecord['status']) => string
+}
+
+function DailyTab({ 
+  records, 
+  searchTerm, 
+  setSearchTerm, 
+  selectedFacility, 
+  setSelectedFacility, 
+  selectedDepartment, 
+  setSelectedDepartment,
+  getStatusColor,
+  getStatusText
+}: DailyTabProps) {
+  return (
+    <div className={styles.listContainer}>
+      <div className={styles.searchSection}>
+        <div className={styles.searchBar}>
+          <input
+            type="text"
+            placeholder="職員名または職員IDで検索"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className={styles.searchInput}
+          />
+        </div>
+        <div className={styles.filters}>
+          <select 
+            value={selectedFacility} 
+            onChange={(e) => setSelectedFacility(e.target.value)}
+            className={styles.filterSelect}
+          >
+            <option value="all">全施設</option>
+            <option value="小原病院">小原病院</option>
+            <option value="立神リハビリテーション温泉病院">立神リハビリテーション温泉病院</option>
+          </select>
+          <select 
+            value={selectedDepartment} 
+            onChange={(e) => setSelectedDepartment(e.target.value)}
+            className={styles.filterSelect}
+          >
+            <option value="all">全部署</option>
+            <option value="看護部">看護部</option>
+            <option value="リハビリ科">リハビリ科</option>
+            <option value="事務部">事務部</option>
+            <option value="薬剤部">薬剤部</option>
+            <option value="検査部">検査部</option>
+          </select>
+        </div>
+      </div>
+
+      <div className={styles.listHeader}>
+        <h2>日次勤怠記録 ({records.length}件)</h2>
+        <button className={styles.addButton}>
+          + 新規記録
+        </button>
+      </div>
+
+      <div className={styles.recordsGrid}>
+        {records.map((record) => (
+          <div key={record.id} className={styles.recordCard}>
+            <div className={styles.cardHeader}>
+              <div className={styles.cardInfo}>
+                <h3>{record.employeeName}</h3>
+                <p className={styles.staffId}>{record.employeeId} · {record.department}</p>
+              </div>
+              <div className={styles.statusBadge} style={{ backgroundColor: getStatusColor(record.status) + '20', color: getStatusColor(record.status) }}>
+                {getStatusText(record.status)}
+              </div>
+            </div>
+            <div className={styles.cardDetails}>
+              <div className={styles.detailRow}>
+                <span className={styles.detailLabel}>出勤:</span>
+                <span className={styles.detailValue}>{record.checkIn || '-'}</span>
+              </div>
+              <div className={styles.detailRow}>
+                <span className={styles.detailLabel}>退勤:</span>
+                <span className={styles.detailValue}>{record.checkOut || '-'}</span>
+              </div>
+              <div className={styles.detailRow}>
+                <span className={styles.detailLabel}>勤務時間:</span>
+                <span className={styles.detailValue}>{record.workingHours}時間</span>
+              </div>
+              <div className={styles.detailRow}>
+                <span className={styles.detailLabel}>残業:</span>
+                <span className={styles.detailValue}>{record.overtimeHours}時間</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+interface MonthlyTabProps {
+  records: MonthlyStats[]
+  searchTerm: string
+  setSearchTerm: (value: string) => void
+  selectedDepartment: string
+  setSelectedDepartment: (value: string) => void
+}
+
+function MonthlyTab({ 
+  records, 
+  searchTerm, 
+  setSearchTerm, 
+  selectedDepartment, 
+  setSelectedDepartment 
+}: MonthlyTabProps) {
+  return (
+    <div className={styles.listContainer}>
+      <div className={styles.searchSection}>
+        <div className={styles.searchBar}>
+          <input
+            type="text"
+            placeholder="職員名または職員IDで検索"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className={styles.searchInput}
+          />
+        </div>
+        <div className={styles.filters}>
+          <select 
+            value={selectedDepartment} 
+            onChange={(e) => setSelectedDepartment(e.target.value)}
+            className={styles.filterSelect}
+          >
+            <option value="all">全部署</option>
+            <option value="看護部">看護部</option>
+            <option value="リハビリ科">リハビリ科</option>
+            <option value="事務部">事務部</option>
+            <option value="薬剤部">薬剤部</option>
+            <option value="検査部">検査部</option>
+          </select>
+        </div>
+      </div>
+
+      <div className={styles.listHeader}>
+        <h2>月次勤怠集計</h2>
+      </div>
+
+      <div className={styles.recordsList}>
+        {records.map((record) => (
+          <div key={record.employeeId} className={styles.monthlyItem}>
+            <div className={styles.monthlyHeader}>
+              <div className={styles.monthlyInfo}>
+                <h3>{record.employeeName}</h3>
+                <p className={styles.staffId}>{record.employeeId} · {record.department}</p>
+              </div>
+              <div className={styles.monthlyStats}>
+                <div className={styles.statItem}>
+                  <span className={styles.statLabel}>出勤日数</span>
+                  <span className={styles.statValue}>{record.workingDays}日</span>
+                </div>
+                <div className={styles.statItem}>
+                  <span className={styles.statLabel}>総勤務時間</span>
+                  <span className={styles.statValue}>{record.totalHours}h</span>
+                </div>
+              </div>
+            </div>
+            <div className={styles.monthlyDetails}>
+              <div className={styles.detailGrid}>
+                <div className={styles.detailItem}>
+                  <span className={styles.detailLabel}>残業時間:</span>
+                  <span className={styles.detailValue}>{record.overtimeHours}時間</span>
+                </div>
+                <div className={styles.detailItem}>
+                  <span className={styles.detailLabel}>遅刻:</span>
+                  <span className={styles.detailValue}>{record.lateCount}回</span>
+                </div>
+                <div className={styles.detailItem}>
+                  <span className={styles.detailLabel}>早退:</span>
+                  <span className={styles.detailValue}>{record.earlyCount}回</span>
+                </div>
+                <div className={styles.detailItem}>
+                  <span className={styles.detailLabel}>欠勤:</span>
+                  <span className={styles.detailValue}>{record.absentCount}回</span>
+                </div>
+                <div className={styles.detailItem}>
+                  <span className={styles.detailLabel}>有給使用:</span>
+                  <span className={styles.detailValue}>{record.leaveUsed}日</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function OvertimeTab() {
+  return (
+    <div className={styles.overtimeContainer}>
+      <h2>残業管理</h2>
+      <div className={styles.comingSoon}>
+        <p>残業時間の分析と管理機能は現在開発中です</p>
+      </div>
+    </div>
+  )
+}
+
+function LeaveTab() {
+  return (
+    <div className={styles.leaveContainer}>
+      <h2>休暇管理</h2>
+      <div className={styles.comingSoon}>
+        <p>休暇申請と承認機能は現在開発中です</p>
+      </div>
+    </div>
+  )
+}
+
+function SettingsTab() {
+  return (
+    <div className={styles.settingsContainer}>
+      <h2>設定</h2>
+      <div className={styles.comingSoon}>
+        <p>勤怠管理の設定機能は現在開発中です</p>
+      </div>
     </div>
   )
 }
