@@ -557,3 +557,109 @@
   color: #6b7280;
   font-size: 16px;
 }
+
+/* 職員評価一覧タブのスタイル */
+.staffListContainer {
+  padding: 1.5rem;
+}
+
+.staffListHeader {
+  margin-bottom: 1.5rem;
+}
+
+.staffListHeader h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.staffListFilters {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.searchInput {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  min-width: 200px;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.staffTableContainer {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
+
+.staffTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.staffTable th,
+.staffTable td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.staffTable th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+  white-space: nowrap;
+}
+
+.sortableHeader {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s;
+}
+
+.sortableHeader:hover {
+  background-color: #e9ecef;
+}
+
+.staffTable tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.evaluationBadge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.detailLink {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.detailLink:hover {
+  text-decoration: underline;
+}
+
+.staffListSummary {
+  margin-top: 1rem;
+  text-align: right;
+  color: #666;
+  font-size: 0.875rem;
+}
+
+.noData {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
