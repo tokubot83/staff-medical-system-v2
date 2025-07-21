@@ -497,7 +497,7 @@ function StaffListTab({
         comparison = a.name.localeCompare(b.name)
         break
       case 'evaluation':
-        const gradeOrder = { 'S': 4, 'A': 3, 'B': 2, 'C': 1, '': 0 }
+        const gradeOrder: Record<string, number> = { 'S': 4, 'A': 3, 'B': 2, 'C': 1, '': 0 }
         const aGrade = gradeOrder[a.evaluation || ''] || 0
         const bGrade = gradeOrder[b.evaluation || ''] || 0
         comparison = aGrade - bGrade
