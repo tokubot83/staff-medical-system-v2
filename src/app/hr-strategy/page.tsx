@@ -738,7 +738,7 @@ function OrganizationOptimization() {
             <div className={styles.compositionCard}>
               <h4>スキルバランス</h4>
               <div className={styles.analysisChart}>
-                <div style={{ padding: '20px' }}>
+                <div style={{ padding: '20px', width: '100%' }}>
                   {skillBalance.map((skill, index) => (
                     <div key={index} style={{ marginBottom: '15px' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px', gap: '10px' }}>
