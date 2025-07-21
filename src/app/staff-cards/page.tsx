@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { staffDatabase } from '../data/staffData.js'
 import styles from './StaffCards.module.css'
 import { useRouter } from 'next/navigation'
+import { convertStaffData } from './staffDataUtils'
 
 interface Staff {
   id: string
@@ -42,12 +43,14 @@ export default function StaffCardsPage() {
   const [selectedDepartment, setSelectedDepartment] = useState('all')
   const router = useRouter()
 
-  const filteredStaff = Object.values(staffDatabase).filter((staff: any) => {
-    const matchesSearch = staff.name.includes(searchTerm) || staff.id.includes(searchTerm)
-    const matchesFacility = selectedFacility === 'all' || staff.facility === selectedFacility
-    const matchesDepartment = selectedDepartment === 'all' || staff.department === selectedDepartment
-    return matchesSearch && matchesFacility && matchesDepartment
-  })
+  const filteredStaff = Object.values(staffDatabase)
+    .map((staff: any) => convertStaffData(staff))
+    .filter((staff: any) => {
+      const matchesSearch = staff.name.includes(searchTerm) || staff.id.includes(searchTerm)
+      const matchesFacility = selectedFacility === 'all' || staff.facility === selectedFacility
+      const matchesDepartment = selectedDepartment === 'all' || staff.department === selectedDepartment
+      return matchesSearch && matchesFacility && matchesDepartment
+    })
 
   const handleStaffClick = (staffId: string) => {
     router.push(`/staff-cards/${staffId}`)

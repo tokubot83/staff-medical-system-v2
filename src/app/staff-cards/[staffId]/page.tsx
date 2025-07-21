@@ -61,45 +61,14 @@ const tabs = [
   { id: 'links', label: '統合管理リンク', icon: '🔗' },
 ]
 
-interface Staff {
-  id: string
-  name: string
-  age: number
-  gender: string
-  position: string
-  department: string
-  facility: string
-  experience: number
-  certifications: string[]
-  qualifications: string[]
-  averageScore: number
-  mentalHealth: string
-  physicalHealth: string
-  trainings: Array<{
-    name: string
-    date: string
-    status: string
-  }>
-  nameInitial?: string
-  joinDate?: string
-  evaluation?: string
-  healthScore?: number
-  stressLevel?: number
-  engagement?: number
-  riskLevel?: string
-  avatar?: string
-  skills?: Array<{
-    name: string
-    level: number
-  }>
-}
+// staffData.tsのStaffDetailインターフェースを使用
 
 export default function StaffDetailPage() {
   const params = useParams()
   const staffId = params.staffId as string
   const [activeTab, setActiveTab] = useState('basic')
   
-  const selectedStaff = staffDatabase[staffId] as Staff | undefined
+  const selectedStaff = staffDatabase[staffId]
 
   if (!selectedStaff) {
     return (
@@ -165,7 +134,7 @@ export default function StaffDetailPage() {
   )
 }
 
-function BasicInfoTab({ selectedStaff }: { selectedStaff: Staff }) {
+function BasicInfoTab({ selectedStaff }: { selectedStaff: any }) {
   return (
     <div className={styles.detailContainer}>
       <div className={styles.profileSection}>
@@ -203,8 +172,8 @@ function BasicInfoTab({ selectedStaff }: { selectedStaff: Staff }) {
           </div>
           <div className={styles.metricCard}>
             <h3>健康スコア</h3>
-            <div className={styles.metricValue}>{selectedStaff.healthScore}</div>
-            <p className={styles.metricLabel}>ストレス指数: {selectedStaff.stressLevel || 48}</p>
+            <div className={styles.metricValue}>{selectedStaff.stressIndex ? 100 - selectedStaff.stressIndex : 75}</div>
+            <p className={styles.metricLabel}>ストレス指数: {selectedStaff.stressIndex || 48}</p>
           </div>
           <div className={styles.metricCard}>
             <h3>エンゲージメント</h3>
@@ -214,11 +183,12 @@ function BasicInfoTab({ selectedStaff }: { selectedStaff: Staff }) {
           <div className={styles.metricCard}>
             <h3>離職リスク</h3>
             <div className={`${styles.metricValue} ${
-              selectedStaff.riskLevel === '低' ? styles.textGreen :
-              selectedStaff.riskLevel === '中' ? styles.textYellow :
+              selectedStaff.stressIndex < 40 ? styles.textGreen :
+              selectedStaff.stressIndex < 60 ? styles.textYellow :
               styles.textRed
             }`}>
-              {selectedStaff.riskLevel}
+              {selectedStaff.stressIndex < 40 ? '低' :
+               selectedStaff.stressIndex < 60 ? '中' : '高'}
             </div>
             <p className={styles.metricLabel}>要注意度</p>
           </div>
@@ -228,7 +198,7 @@ function BasicInfoTab({ selectedStaff }: { selectedStaff: Staff }) {
           <div className={styles.sectionCard}>
             <h3>スキル・資格</h3>
             <div className={styles.skillGrid}>
-              {selectedStaff.skills?.map((skill: any, index: number) => (
+              {selectedStaff.skills?.length > 0 ? selectedStaff.skills.map((skill: any, index: number) => (
                 <div key={index} className={styles.skillItem}>
                   <span className={styles.skillName}>{skill.name}</span>
                   <div className={styles.skillBar}>
@@ -239,7 +209,7 @@ function BasicInfoTab({ selectedStaff }: { selectedStaff: Staff }) {
                   </div>
                   <span className={styles.skillLevel}>{skill.level}%</span>
                 </div>
-              )) || (
+              )) : (
                 <div className={styles.skillItem}>
                   <span className={styles.skillName}>看護技術</span>
                   <div className={styles.skillBar}>
@@ -282,7 +252,7 @@ function BasicInfoTab({ selectedStaff }: { selectedStaff: Staff }) {
   )
 }
 
-function CareerTab({ selectedStaff }: { selectedStaff: Staff }): React.ReactElement {
+function CareerTab({ selectedStaff }: { selectedStaff: any }): React.ReactElement {
   return (
     <div className={styles.careerContainer}>
       <h2>経歴・キャリア</h2>
@@ -321,7 +291,7 @@ function CareerTab({ selectedStaff }: { selectedStaff: Staff }): React.ReactElem
   )
 }
 
-function QualificationTab({ selectedStaff }: { selectedStaff: Staff }): React.ReactElement {
+function QualificationTab({ selectedStaff }: { selectedStaff: any }): React.ReactElement {
   return (
     <div className={styles.qualificationContainer}>
       <h2>資格・専門性</h2>
@@ -362,7 +332,7 @@ function QualificationTab({ selectedStaff }: { selectedStaff: Staff }): React.Re
   )
 }
 
-function AchievementTab({ selectedStaff }: { selectedStaff: Staff }): React.ReactElement {
+function AchievementTab({ selectedStaff }: { selectedStaff: any }): React.ReactElement {
   return (
     <div className={styles.achievementContainer}>
       <h2>実績・表彰</h2>
@@ -395,7 +365,7 @@ function AchievementTab({ selectedStaff }: { selectedStaff: Staff }): React.Reac
   )
 }
 
-function AttendanceTab({ selectedStaff }: { selectedStaff: Staff }): React.ReactElement {
+function AttendanceTab({ selectedStaff }: { selectedStaff: any }): React.ReactElement {
   return (
     <div className={styles.attendanceContainer}>
       <h2>勤務状況</h2>
@@ -438,7 +408,7 @@ function AttendanceTab({ selectedStaff }: { selectedStaff: Staff }): React.React
   )
 }
 
-function WellbeingTab({ selectedStaff }: { selectedStaff: Staff }): React.ReactElement {
+function WellbeingTab({ selectedStaff }: { selectedStaff: any }): React.ReactElement {
   return (
     <div className={styles.wellbeingContainer}>
       <h2>健康・ウェルビーイング</h2>
@@ -450,7 +420,7 @@ function WellbeingTab({ selectedStaff }: { selectedStaff: Staff }): React.ReactE
         </div>
         <div className={styles.metricCard}>
           <h3>ストレス指数</h3>
-          <div className={styles.metricValue}>{selectedStaff.stressLevel || 48}</div>
+          <div className={styles.metricValue}>{selectedStaff.stressIndex || 48}</div>
           <p className={styles.metricLabel}>要注意: 50以上</p>
         </div>
       </div>
@@ -480,7 +450,7 @@ function WellbeingTab({ selectedStaff }: { selectedStaff: Staff }): React.ReactE
   )
 }
 
-function ManagementLinksTab({ selectedStaff }: { selectedStaff: Staff }): React.ReactElement {
+function ManagementLinksTab({ selectedStaff }: { selectedStaff: any }): React.ReactElement {
   return (
     <div className={styles.linksContainer}>
       <h2>統合管理リンク</h2>
