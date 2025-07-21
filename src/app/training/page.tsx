@@ -26,6 +26,7 @@ const tabs = [
   { id: 'individual', label: '個人管理', icon: '👤' },
   { id: 'history', label: '受講履歴', icon: '📝' },
   { id: 'analytics', label: '分析', icon: '📈' },
+  { id: 'settings', label: '設定', icon: '⚙️' },
 ]
 
 interface TrainingProgram {
@@ -211,6 +212,7 @@ export default function TrainingPage() {
           {activeTab === 'individual' && <IndividualTab staff={mockStaff} selectedStaff={selectedStaff} setSelectedStaff={setSelectedStaff} />}
           {activeTab === 'history' && <HistoryTab />}
           {activeTab === 'analytics' && <AnalyticsTab />}
+          {activeTab === 'settings' && <SettingsTab />}
         </div>
       </div>
     </div>
@@ -935,6 +937,216 @@ function AnalyticsTab(): React.ReactElement {
             }} />
           </div>
         </div>
+      </div>
+    </div>
+  )
+}
+
+function SettingsTab(): React.ReactElement {
+  const [settingsData, setSettingsData] = useState({
+    notifications: {
+      reminderDays: 7,
+      reminderEnabled: true,
+      deadlineAlertEnabled: true,
+      completionReportEnabled: true
+    },
+    categories: [
+      { id: 1, name: '必須研修', color: '#ff6b6b' },
+      { id: 2, name: '新人研修', color: '#4ecdc4' },
+      { id: 3, name: 'スキルアップ', color: '#45b7d1' },
+      { id: 4, name: '専門研修', color: '#96ceb4' },
+      { id: 5, name: 'eラーニング', color: '#daa520' }
+    ],
+    evaluationCriteria: {
+      passingScore: 80,
+      retakeAllowed: true,
+      maxRetakes: 3,
+      certificateAutoIssue: true
+    },
+    defaultValues: {
+      duration: '2時間',
+      maxParticipants: 30,
+      reminderFrequency: 'weekly'
+    }
+  })
+
+  const handleNotificationChange = (field: string, value: boolean | number) => {
+    setSettingsData({
+      ...settingsData,
+      notifications: {
+        ...settingsData.notifications,
+        [field]: value
+      }
+    })
+  }
+
+  const handleEvaluationChange = (field: string, value: boolean | number) => {
+    setSettingsData({
+      ...settingsData,
+      evaluationCriteria: {
+        ...settingsData.evaluationCriteria,
+        [field]: value
+      }
+    })
+  }
+
+  return (
+    <div className={styles.settingsContainer}>
+      <h2>研修設定</h2>
+      
+      <div className={styles.settingsSection}>
+        <h3>通知設定</h3>
+        <div className={styles.settingsGroup}>
+          <div className={styles.settingItem}>
+            <label className={styles.settingLabel}>
+              <input
+                type="checkbox"
+                checked={settingsData.notifications.reminderEnabled}
+                onChange={(e) => handleNotificationChange('reminderEnabled', e.target.checked)}
+              />
+              リマインダー通知を有効にする
+            </label>
+          </div>
+          
+          <div className={styles.settingItem}>
+            <label className={styles.settingLabel}>
+              リマインダー送信日数（研修前）
+              <input
+                type="number"
+                min="1"
+                max="30"
+                value={settingsData.notifications.reminderDays}
+                onChange={(e) => handleNotificationChange('reminderDays', parseInt(e.target.value))}
+                className={styles.numberInput}
+              />
+              日前
+            </label>
+          </div>
+          
+          <div className={styles.settingItem}>
+            <label className={styles.settingLabel}>
+              <input
+                type="checkbox"
+                checked={settingsData.notifications.deadlineAlertEnabled}
+                onChange={(e) => handleNotificationChange('deadlineAlertEnabled', e.target.checked)}
+              />
+              期限アラートを有効にする
+            </label>
+          </div>
+          
+          <div className={styles.settingItem}>
+            <label className={styles.settingLabel}>
+              <input
+                type="checkbox"
+                checked={settingsData.notifications.completionReportEnabled}
+                onChange={(e) => handleNotificationChange('completionReportEnabled', e.target.checked)}
+              />
+              完了レポートを自動送信する
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.settingsSection}>
+        <h3>研修カテゴリー設定</h3>
+        <div className={styles.categoryList}>
+          {settingsData.categories.map(category => (
+            <div key={category.id} className={styles.categoryItem}>
+              <div 
+                className={styles.categoryColor} 
+                style={{ backgroundColor: category.color }}
+              ></div>
+              <span className={styles.categoryName}>{category.name}</span>
+              <button className={styles.editButton}>編集</button>
+            </div>
+          ))}
+          <button className={styles.addCategoryButton}>+ カテゴリーを追加</button>
+        </div>
+      </div>
+
+      <div className={styles.settingsSection}>
+        <h3>評価基準設定</h3>
+        <div className={styles.settingsGroup}>
+          <div className={styles.settingItem}>
+            <label className={styles.settingLabel}>
+              合格点
+              <input
+                type="number"
+                min="0"
+                max="100"
+                value={settingsData.evaluationCriteria.passingScore}
+                onChange={(e) => handleEvaluationChange('passingScore', parseInt(e.target.value))}
+                className={styles.numberInput}
+              />
+              点以上
+            </label>
+          </div>
+          
+          <div className={styles.settingItem}>
+            <label className={styles.settingLabel}>
+              <input
+                type="checkbox"
+                checked={settingsData.evaluationCriteria.retakeAllowed}
+                onChange={(e) => handleEvaluationChange('retakeAllowed', e.target.checked)}
+              />
+              再受講を許可する
+            </label>
+          </div>
+          
+          {settingsData.evaluationCriteria.retakeAllowed && (
+            <div className={styles.settingItem}>
+              <label className={styles.settingLabel}>
+                最大再受講回数
+                <input
+                  type="number"
+                  min="1"
+                  max="10"
+                  value={settingsData.evaluationCriteria.maxRetakes}
+                  onChange={(e) => handleEvaluationChange('maxRetakes', parseInt(e.target.value))}
+                  className={styles.numberInput}
+                />
+                回まで
+              </label>
+            </div>
+          )}
+          
+          <div className={styles.settingItem}>
+            <label className={styles.settingLabel}>
+              <input
+                type="checkbox"
+                checked={settingsData.evaluationCriteria.certificateAutoIssue}
+                onChange={(e) => handleEvaluationChange('certificateAutoIssue', e.target.checked)}
+              />
+              修了証を自動発行する
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.settingsSection}>
+        <h3>アクセス権限設定</h3>
+        <div className={styles.permissionGrid}>
+          <div className={styles.permissionItem}>
+            <h4>研修管理者</h4>
+            <p>すべての研修の作成・編集・削除が可能</p>
+            <button className={styles.manageButton}>管理者を設定</button>
+          </div>
+          <div className={styles.permissionItem}>
+            <h4>研修担当者</h4>
+            <p>担当研修の編集・受講者管理が可能</p>
+            <button className={styles.manageButton}>担当者を設定</button>
+          </div>
+          <div className={styles.permissionItem}>
+            <h4>一般ユーザー</h4>
+            <p>研修の受講・履歴確認が可能</p>
+            <button className={styles.manageButton}>権限を確認</button>
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.settingsActions}>
+        <button className={styles.saveButton}>設定を保存</button>
+        <button className={styles.cancelButton}>キャンセル</button>
       </div>
     </div>
   )
