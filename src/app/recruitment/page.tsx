@@ -1,11 +1,20 @@
 'use client';
 
 import React, { useState } from 'react';
+import CommonHeader from '@/components/CommonHeader';
 import styles from './Recruitment.module.css';
 import { jobPostings, applicants, interviewSchedules } from '@/app/data/recruitmentData';
 import { JobPosting, Applicant } from '@/types/recruitment';
 
 type TabType = 'jobPostings' | 'applicants' | 'interviews' | 'onboarding' | 'analytics';
+
+const tabs = [
+  { id: 'jobPostings', label: '求人管理', icon: '📋' },
+  { id: 'applicants', label: '応募者管理', icon: '👥' },
+  { id: 'interviews', label: '面接スケジュール', icon: '📅' },
+  { id: 'onboarding', label: '入職管理', icon: '🎯' },
+  { id: 'analytics', label: '採用分析', icon: '📊' },
+];
 
 export default function RecruitmentPage() {
   const [activeTab, setActiveTab] = useState<TabType>('jobPostings');
@@ -36,29 +45,35 @@ export default function RecruitmentPage() {
   };
 
   const renderJobPostings = () => (
-    <div className={styles.tabContent}>
-      <div className={styles.header}>
-        <h2>求人管理</h2>
-        <button className={styles.primaryButton}>新規求人作成</button>
+    <div className={styles.listContainer}>
+      <div className={styles.searchSection}>
+        <div className={styles.searchBar}>
+          <input
+            type="text"
+            placeholder="求人を検索..."
+            className={styles.searchInput}
+          />
+        </div>
+        <div className={styles.filters}>
+          <select className={styles.filterSelect}>
+            <option value="">すべての施設</option>
+            <option value="obara-hospital">小原病院</option>
+            <option value="tachigami-hospital">立神リハビリテーション温泉病院</option>
+          </select>
+          <select className={styles.filterSelect}>
+            <option value="">すべてのステータス</option>
+            <option value="active">募集中</option>
+            <option value="closed">募集終了</option>
+            <option value="draft">下書き</option>
+          </select>
+        </div>
       </div>
-      
-      <div className={styles.filterBar}>
-        <select className={styles.filterSelect}>
-          <option value="">すべての施設</option>
-          <option value="obara-hospital">小原病院</option>
-          <option value="tachigami-hospital">立神リハビリテーション温泉病院</option>
-        </select>
-        <select className={styles.filterSelect}>
-          <option value="">すべてのステータス</option>
-          <option value="active">募集中</option>
-          <option value="closed">募集終了</option>
-          <option value="draft">下書き</option>
-        </select>
-        <input 
-          type="text" 
-          placeholder="求人を検索..." 
-          className={styles.searchInput}
-        />
+
+      <div className={styles.listHeader}>
+        <h2>求人管理</h2>
+        <button className={styles.addButton}>
+          + 新規求人作成
+        </button>
       </div>
 
       <div className={styles.jobGrid}>
@@ -103,12 +118,10 @@ export default function RecruitmentPage() {
   );
 
   const renderApplicants = () => (
-    <div className={styles.tabContent}>
-      <div className={styles.header}>
+    <div className={styles.listContainer}>
+      <div className={styles.listHeader}>
         <h2>応募者管理</h2>
-        <div className={styles.headerActions}>
-          <button className={styles.secondaryButton}>エクスポート</button>
-        </div>
+        <button className={styles.secondaryButton}>エクスポート</button>
       </div>
 
       <div className={styles.applicantTable}>
@@ -171,10 +184,12 @@ export default function RecruitmentPage() {
   );
 
   const renderInterviews = () => (
-    <div className={styles.tabContent}>
-      <div className={styles.header}>
+    <div className={styles.listContainer}>
+      <div className={styles.listHeader}>
         <h2>面接スケジュール</h2>
-        <button className={styles.primaryButton}>面接予約</button>
+        <button className={styles.addButton}>
+          + 面接予約
+        </button>
       </div>
 
       <div className={styles.calendarView}>
@@ -216,10 +231,12 @@ export default function RecruitmentPage() {
   );
 
   const renderOnboarding = () => (
-    <div className={styles.tabContent}>
-      <div className={styles.header}>
+    <div className={styles.listContainer}>
+      <div className={styles.listHeader}>
         <h2>入職管理</h2>
-        <button className={styles.primaryButton}>新規入職者登録</button>
+        <button className={styles.addButton}>
+          + 新規入職者登録
+        </button>
       </div>
 
       <div className={styles.onboardingSection}>
@@ -255,10 +272,10 @@ export default function RecruitmentPage() {
   );
 
   const renderAnalytics = () => (
-    <div className={styles.tabContent}>
-      <div className={styles.header}>
+    <div className={styles.listContainer}>
+      <div className={styles.listHeader}>
         <h2>採用分析</h2>
-        <select className={styles.periodSelect}>
+        <select className={styles.filterSelect}>
           <option>過去3ヶ月</option>
           <option>過去6ヶ月</option>
           <option>過去1年</option>
@@ -349,49 +366,37 @@ export default function RecruitmentPage() {
   );
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.pageTitle}>採用管理</h1>
+    <div>
+      <CommonHeader 
+        title="採用管理" 
+        showBackButton={true} 
+        backUrl="/"
+        backText="ダッシュボードに戻る"
+      />
       
-      <div className={styles.tabs}>
-        <button 
-          className={`${styles.tab} ${activeTab === 'jobPostings' ? styles.activeTab : ''}`}
-          onClick={() => setActiveTab('jobPostings')}
-        >
-          求人管理
-        </button>
-        <button 
-          className={`${styles.tab} ${activeTab === 'applicants' ? styles.activeTab : ''}`}
-          onClick={() => setActiveTab('applicants')}
-        >
-          応募者管理
-        </button>
-        <button 
-          className={`${styles.tab} ${activeTab === 'interviews' ? styles.activeTab : ''}`}
-          onClick={() => setActiveTab('interviews')}
-        >
-          面接スケジュール
-        </button>
-        <button 
-          className={`${styles.tab} ${activeTab === 'onboarding' ? styles.activeTab : ''}`}
-          onClick={() => setActiveTab('onboarding')}
-        >
-          入職管理
-        </button>
-        <button 
-          className={`${styles.tab} ${activeTab === 'analytics' ? styles.activeTab : ''}`}
-          onClick={() => setActiveTab('analytics')}
-        >
-          採用分析
-        </button>
-      </div>
+      <div className={styles.container}>
+        <div className={styles.tabNavigation}>
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as TabType)}
+              className={`${styles.tabButton} ${activeTab === tab.id ? styles.active : ''}`}
+            >
+              <span className={styles.tabIcon}>{tab.icon}</span>
+              <span className={styles.tabLabel}>{tab.label}</span>
+            </button>
+          ))}
+        </div>
 
-      {activeTab === 'jobPostings' && renderJobPostings()}
-      {activeTab === 'applicants' && renderApplicants()}
-      {activeTab === 'interviews' && renderInterviews()}
-      {activeTab === 'onboarding' && renderOnboarding()}
-      {activeTab === 'analytics' && renderAnalytics()}
+        <div className={styles.tabContent}>
+          {activeTab === 'jobPostings' && renderJobPostings()}
+          {activeTab === 'applicants' && renderApplicants()}
+          {activeTab === 'interviews' && renderInterviews()}
+          {activeTab === 'onboarding' && renderOnboarding()}
+          {activeTab === 'analytics' && renderAnalytics()}
+        </div>
 
-      {selectedJobPosting && (
+        {selectedJobPosting && (
         <div className={styles.modal} onClick={() => setSelectedJobPosting(null)}>
           <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
             <h2>{selectedJobPosting.title}</h2>
@@ -432,9 +437,9 @@ export default function RecruitmentPage() {
             </div>
           </div>
         </div>
-      )}
+        )}
 
-      {selectedApplicant && (
+        {selectedApplicant && (
         <div className={styles.modal} onClick={() => setSelectedApplicant(null)}>
           <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
             <h2>{selectedApplicant.lastName} {selectedApplicant.firstName}</h2>
@@ -476,7 +481,8 @@ export default function RecruitmentPage() {
             </div>
           </div>
         </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
