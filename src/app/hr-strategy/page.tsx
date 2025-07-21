@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import CommonHeader from '@/components/CommonHeader'
 import styles from './HrStrategy.module.css'
+import { facilities } from '@/app/data/facilityData'
 
 // タブの定義
 const tabs = [
