@@ -684,56 +684,64 @@ function StaffTrainingDetail({ staff }: { staff: Staff }) {
         <div className={styles.chartsGrid}>
           <div className={styles.chartCard}>
             <h4>JNAキャリアラダーレベル経過</h4>
-            <Line data={jnaLadderProgressData} options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                y: {
-                  min: 0,
-                  max: 5,
-                  ticks: {
-                    stepSize: 1,
-                    callback: function(value: string | number) {
-                      const levels = ['', 'レベルⅠ', 'レベルⅡ', 'レベルⅢ', 'レベルⅣ', 'レベルⅤ'];
-                      return levels[Number(value)] || '';
+            <div className={styles.chartWrapper}>
+              <Line data={jnaLadderProgressData} options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                  y: {
+                    min: 0,
+                    max: 5,
+                    ticks: {
+                      stepSize: 1,
+                      callback: function(value: string | number) {
+                        const levels = ['', 'レベルⅠ', 'レベルⅡ', 'レベルⅢ', 'レベルⅣ', 'レベルⅤ'];
+                        return levels[Number(value)] || '';
+                      }
                     }
                   }
                 }
-              }
-            }} />
+              }} />
+            </div>
           </div>
           <div className={styles.chartCard}>
             <h4>JNA領域別研修進捗</h4>
-            <Bar data={jnaTrainingData} options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                y: {
-                  min: 0,
-                  max: 100
+            <div className={styles.chartWrapper}>
+              <Bar data={jnaTrainingData} options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                  y: {
+                    min: 0,
+                    max: 100
+                  }
                 }
-              }
-            }} />
+              }} />
+            </div>
           </div>
           <div className={styles.chartCard}>
             <h4>研修カテゴリ別実績</h4>
-            <Doughnut data={trainingParticipationData} options={{
-              responsive: true,
-              maintainAspectRatio: false
-            }} />
+            <div className={styles.chartWrapper}>
+              <Doughnut data={trainingParticipationData} options={{
+                responsive: true,
+                maintainAspectRatio: false
+              }} />
+            </div>
           </div>
           <div className={styles.chartCard}>
             <h4>研修効果測定</h4>
-            <Bar data={trainingEffectData} options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                y: {
-                  min: 0,
-                  max: 100
+            <div className={styles.chartWrapper}>
+              <Bar data={trainingEffectData} options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                  y: {
+                    min: 0,
+                    max: 100
+                  }
                 }
-              }
-            }} />
+              }} />
+            </div>
           </div>
         </div>
       </div>
@@ -764,50 +772,58 @@ function StaffTrainingDetail({ staff }: { staff: Staff }) {
       <div className={styles.chartsGrid}>
         <div className={styles.chartCard}>
           <h4>研修参加実績</h4>
-          <Doughnut data={trainingParticipationData} options={{
-            responsive: true,
-            maintainAspectRatio: false
-          }} />
+          <div className={styles.chartWrapper}>
+            <Doughnut data={trainingParticipationData} options={{
+              responsive: true,
+              maintainAspectRatio: false
+            }} />
+          </div>
         </div>
         <div className={styles.chartCard}>
           <h4>研修効果測定</h4>
-          <Bar data={trainingEffectData} options={{
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-              y: {
-                min: 0,
-                max: 100
+          <div className={styles.chartWrapper}>
+            <Bar data={trainingEffectData} options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                y: {
+                  min: 0,
+                  max: 100
+                }
               }
-            }
-          }} />
+            }} />
+          </div>
         </div>
         <div className={styles.chartCard}>
           <h4>年間研修計画進捗</h4>
-          <Bar data={annualTrainingPlanData} options={{
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-              y: {
-                beginAtZero: true,
-                max: 3
+          <div className={styles.chartWrapper}>
+            <Bar data={annualTrainingPlanData} options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  max: 3
+                }
               }
-            }
-          }} />
+            }} />
+          </div>
         </div>
         <div className={styles.chartCard}>
           <h4>研修分野別成長度</h4>
-          <Bar data={trainingGrowthByAreaData} options={{
-            responsive: true,
-            maintainAspectRatio: false,
-            indexAxis: 'y',
-            scales: {
-              x: {
-                min: 0,
-                max: 100
+          <div className={styles.chartWrapper}>
+            <Bar data={trainingGrowthByAreaData} options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              indexAxis: 'y',
+              scales: {
+                x: {
+                  min: 0,
+                  max: 100
+                }
               }
-            }
-          }} />
+            }} />
+          </div>
         </div>
       </div>
 
