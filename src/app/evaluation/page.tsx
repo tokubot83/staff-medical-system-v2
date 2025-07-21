@@ -483,7 +483,7 @@ function StaffListTab({
     const gradeMatch = filterGrade === 'all' || staff.evaluation === filterGrade
     const searchMatch = searchTerm === '' || 
       staff.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      staff.staffNumber.toLowerCase().includes(searchTerm.toLowerCase())
+      staff.employeeId.toLowerCase().includes(searchTerm.toLowerCase())
     
     return facilityMatch && departmentMatch && gradeMatch && searchMatch
   })
@@ -606,12 +606,12 @@ function StaffListTab({
           <tbody>
             {sortedStaff.map(([id, staff]) => (
               <tr key={id}>
-                <td>{staff.staffNumber}</td>
+                <td>{staff.employeeId}</td>
                 <td>{staff.name}</td>
                 <td>{staff.facility}</td>
                 <td>{staff.department}</td>
-                <td>{staff.occupation}</td>
-                <td>{staff.title || '-'}</td>
+                <td>{staff.position}</td>
+                <td>-</td>
                 <td>
                   <span className={`${styles.evaluationBadge} ${styles[`grade${staff.evaluation}`]}`}>
                     {staff.evaluation || '未評価'}
