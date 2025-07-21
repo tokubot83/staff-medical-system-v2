@@ -1177,6 +1177,98 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
           </div>
         </div>
 
+        <div className={styles.interviewSummaryEnhanced}>
+          <div className={styles.summaryMainCard}>
+            <div className={styles.summaryCardHeader}>
+              <span className={styles.summaryIcon}>📊</span>
+              <h3>JNA研修実績サマリー</h3>
+            </div>
+            <div className={styles.summaryMainMetrics}>
+              <div className={styles.metricCircle}>
+                <div className={styles.circleProgress}>
+                  <svg className={styles.progressRing} viewBox="0 0 120 120">
+                    <circle cx="60" cy="60" r="54" fill="none" stroke="#e5e7eb" strokeWidth="12" />
+                    <circle cx="60" cy="60" r="54" fill="none" stroke="#9b7cb6" strokeWidth="12" 
+                      strokeDasharray={`${2 * Math.PI * 54}`} 
+                      strokeDashoffset={`${2 * Math.PI * 54 * (1 - 0.95)}`}
+                      transform="rotate(-90 60 60)" />
+                  </svg>
+                  <div className={styles.circleContent}>
+                    <div className={styles.circleValue}>95%</div>
+                    <div className={styles.circleLabel}>技術習得率</div>
+                  </div>
+                </div>
+                <div className={styles.metricDetails}>
+                  <div className={styles.detailItem}>
+                    <span className={styles.detailIcon}>🎯</span>
+                    <span className={styles.detailText}>レベルⅣ達成</span>
+                  </div>
+                  <div className={styles.detailItem}>
+                    <span className={styles.detailIcon}>📈</span>
+                    <span className={styles.detailText}>レベルⅤまで80%</span>
+                  </div>
+                </div>
+              </div>
+              <div className={styles.metricsGrid}>
+                <div className={styles.metricCardEnhanced}>
+                  <div className={styles.metricHeader}>
+                    <span className={styles.metricIcon}>📚</span>
+                    <span className={styles.metricTrend}>+36h</span>
+                  </div>
+                  <div className={styles.metricValue}>156時間</div>
+                  <div className={styles.metricLabel}>年間研修時間</div>
+                  <div className={styles.metricProgress}>
+                    <div className={styles.progressBar}>
+                      <div className={styles.progressFill} style={{ width: '130%' }}></div>
+                    </div>
+                    <span className={styles.progressText}>目標超過</span>
+                  </div>
+                </div>
+                <div className={styles.metricCardEnhanced}>
+                  <div className={styles.metricHeader}>
+                    <span className={styles.metricIcon}>🎓</span>
+                    <span className={styles.metricTrend}>+12</span>
+                  </div>
+                  <div className={styles.metricValue}>48単位</div>
+                  <div className={styles.metricLabel}>継続教育単位</div>
+                  <div className={styles.ratingStars}>
+                    <span className={styles.starFilled}>更新まで12単位</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className={styles.summarySubCards}>
+            <div className={styles.nextSessionCard}>
+              <div className={styles.cardIconWrapper}>
+                <span className={styles.cardIcon}>📅</span>
+              </div>
+              <div className={styles.cardContent}>
+                <div className={styles.cardTitle}>次回研修</div>
+                <div className={styles.cardMainInfo}>2週間後</div>
+                <div className={styles.cardSubInfo}>高度看護実践研修</div>
+                <button className={styles.cardAction}>詳細確認</button>
+              </div>
+            </div>
+            
+            <div className={styles.recentTopicsCard}>
+              <div className={styles.cardIconWrapper}>
+                <span className={styles.cardIcon}>🔥</span>
+              </div>
+              <div className={styles.cardContent}>
+                <div className={styles.cardTitle}>重点強化領域</div>
+                <div className={styles.topicsList}>
+                  <span className={styles.topicTag}>看護管理</span>
+                  <span className={styles.topicTag}>看護研究</span>
+                  <span className={styles.topicTag}>教育指導</span>
+                </div>
+                <div className={styles.cardSubInfo}>レベルⅤ達成に向けて</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className={styles.jnaLadderSection}>
           <div className={styles.ladderProgress}>
             <h3>JNAキャリアラダー進捗</h3>
@@ -1186,25 +1278,6 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
                 <div className={styles.progressFill} style={{ width: '80%' }}></div>
               </div>
               <div className={styles.nextLevel}>レベルⅤ</div>
-            </div>
-          </div>
-
-          <div className={styles.statsGrid}>
-            <div className={styles.statCard}>
-              <div className={styles.statValue}>156時間</div>
-              <div className={styles.statLabel}>年間研修時間</div>
-            </div>
-            <div className={styles.statCard}>
-              <div className={styles.statValue}>48単位</div>
-              <div className={styles.statLabel}>継続教育単位</div>
-            </div>
-            <div className={styles.statCard}>
-              <div className={styles.statValue}>13/15</div>
-              <div className={styles.statLabel}>必須研修修了</div>
-            </div>
-            <div className={styles.statCard}>
-              <div className={styles.statValue}>95%</div>
-              <div className={styles.statLabel}>技術習得率</div>
             </div>
           </div>
         </div>
@@ -1386,18 +1459,96 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
         </div>
       </div>
 
-      <div className={styles.trainingSummary}>
-        <div className={styles.summaryCard}>
-          <div className={styles.summaryValue}>156時間</div>
-          <div className={styles.summaryLabel}>年間研修時間</div>
+      <div className={styles.interviewSummaryEnhanced}>
+        <div className={styles.summaryMainCard}>
+          <div className={styles.summaryCardHeader}>
+            <span className={styles.summaryIcon}>📊</span>
+            <h3>研修実績サマリー</h3>
+          </div>
+          <div className={styles.summaryMainMetrics}>
+            <div className={styles.metricCircle}>
+              <div className={styles.circleProgress}>
+                <svg className={styles.progressRing} viewBox="0 0 120 120">
+                  <circle cx="60" cy="60" r="54" fill="none" stroke="#e5e7eb" strokeWidth="12" />
+                  <circle cx="60" cy="60" r="54" fill="none" stroke="#3b82f6" strokeWidth="12" 
+                    strokeDasharray={`${2 * Math.PI * 54}`} 
+                    strokeDashoffset={`${2 * Math.PI * 54 * (1 - 0.92)}`}
+                    transform="rotate(-90 60 60)" />
+                </svg>
+                <div className={styles.circleContent}>
+                  <div className={styles.circleValue}>92%</div>
+                  <div className={styles.circleLabel}>修了率</div>
+                </div>
+              </div>
+              <div className={styles.metricDetails}>
+                <div className={styles.detailItem}>
+                  <span className={styles.detailIcon}>↗️</span>
+                  <span className={styles.detailText}>前年比 +15%</span>
+                </div>
+                <div className={styles.detailItem}>
+                  <span className={styles.detailIcon}>🎯</span>
+                  <span className={styles.detailText}>目標達成見込み</span>
+                </div>
+              </div>
+            </div>
+            <div className={styles.metricsGrid}>
+              <div className={styles.metricCardEnhanced}>
+                <div className={styles.metricHeader}>
+                  <span className={styles.metricIcon}>📚</span>
+                  <span className={styles.metricTrend}>+36h</span>
+                </div>
+                <div className={styles.metricValue}>156時間</div>
+                <div className={styles.metricLabel}>年間研修時間</div>
+                <div className={styles.metricProgress}>
+                  <div className={styles.progressBar}>
+                    <div className={styles.progressFill} style={{ width: '130%' }}></div>
+                  </div>
+                  <span className={styles.progressText}>目標超過</span>
+                </div>
+              </div>
+              <div className={styles.metricCardEnhanced}>
+                <div className={styles.metricHeader}>
+                  <span className={styles.metricIcon}>⭐</span>
+                  <span className={styles.metricTrend}>+0.2</span>
+                </div>
+                <div className={styles.metricValue}>4.5/5.0</div>
+                <div className={styles.metricLabel}>理解度評価</div>
+                <div className={styles.ratingStars}>
+                  <span className={styles.starFilled}>★★★★</span>
+                  <span className={styles.starHalf}>★</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className={styles.summaryCard}>
-          <div className={styles.summaryValue}>92%</div>
-          <div className={styles.summaryLabel}>修了率</div>
-        </div>
-        <div className={styles.summaryCard}>
-          <div className={styles.summaryValue}>4.5/5.0</div>
-          <div className={styles.summaryLabel}>理解度評価</div>
+        
+        <div className={styles.summarySubCards}>
+          <div className={styles.nextSessionCard}>
+            <div className={styles.cardIconWrapper}>
+              <span className={styles.cardIcon}>📅</span>
+            </div>
+            <div className={styles.cardContent}>
+              <div className={styles.cardTitle}>次回研修</div>
+              <div className={styles.cardMainInfo}>3週間後</div>
+              <div className={styles.cardSubInfo}>管理職基礎研修</div>
+              <button className={styles.cardAction}>詳細確認</button>
+            </div>
+          </div>
+          
+          <div className={styles.recentTopicsCard}>
+            <div className={styles.cardIconWrapper}>
+              <span className={styles.cardIcon}>🔥</span>
+            </div>
+            <div className={styles.cardContent}>
+              <div className={styles.cardTitle}>重点強化分野</div>
+              <div className={styles.topicsList}>
+                <span className={styles.topicTag}>リーダーシップ</span>
+                <span className={styles.topicTag}>戦略立案</span>
+                <span className={styles.topicTag}>財務知識</span>
+              </div>
+              <div className={styles.cardSubInfo}>管理職昇進に向けて</div>
+            </div>
+          </div>
         </div>
       </div>
 
