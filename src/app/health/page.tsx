@@ -472,4 +472,4 @@ function AnalyticsTab(): React.ReactElement {
       </div>
     </div>
   )
-}
+}/* Health management page */
