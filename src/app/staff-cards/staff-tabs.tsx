@@ -149,6 +149,10 @@ export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
       <div className={styles.chartGrid}>
         <div className={styles.chartContainer}>
           <h4>タブ横断的統合分析</h4>
+          <div className={`${styles.alert} ${styles.alertInfo}`}>
+            <span>📊</span>
+            <span>6つの評価軸で総合的な人材価値を可視化。全項目で目標値の90%以上を達成しており、バランスの取れた成長を示しています。</span>
+          </div>
           <div className={styles.chartWrapper}>
             <Radar data={crossTabAnalysisData} options={{
               responsive: true,
@@ -161,6 +165,10 @@ export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
         </div>
         <div className={styles.chartContainer}>
           <h4>組織内ポジショニング分析</h4>
+          <div className={`${styles.alert} ${styles.alertSuccess}`}>
+            <span>🎯</span>
+            <span>パフォーマンス92点、ポテンシャル85点で上位10%圏内。次世代リーダー候補として有望な位置にいます。</span>
+          </div>
           <div className={styles.chartWrapper}>
             <Scatter data={organizationalPositionData} options={{
               responsive: true,
@@ -177,6 +185,10 @@ export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
       <div className={styles.chartGrid}>
         <div className={styles.chartContainer}>
           <h4>昇進後パフォーマンス予測</h4>
+          <div className={`${styles.alert} ${styles.alertInfo}`}>
+            <span>📈</span>
+            <span>AIによる予測では、昇進後2年以内に管理スキル4.5到達の可能性が高い。段階的な権限委譲が効果的です。</span>
+          </div>
           <div className={styles.chartWrapper}>
             <Line data={promotionPredictionData} options={{
               responsive: true,
@@ -186,6 +198,10 @@ export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
         </div>
         <div className={styles.chartContainer}>
           <h4>リスク分析・ROI</h4>
+          <div className={`${styles.alert} ${styles.alertSuccess}`}>
+            <span>💰</span>
+            <span>6ヶ月後昇進が最適解。成功確率87%、ROI340%で投資効果が最大化。即時昇進はリスクが高く推奨しません。</span>
+          </div>
           <div className={styles.chartWrapper}>
             <Bar data={riskAnalysisData} options={{
               responsive: true,
@@ -923,6 +939,10 @@ export function DevelopmentTab({ selectedStaff }: { selectedStaff: any }) {
       <div className={styles.chartGrid}>
         <div className={styles.chartContainer}>
           <h4>スキル成長推移</h4>
+          <div className={`${styles.alert} ${styles.alertSuccess}`}>
+            <span>🚀</span>
+            <span>全スキルで着実な成長を記録。特にマネジメントスキルが前年比32%向上し、管理職への準備が順調です。</span>
+          </div>
           <div className={styles.chartWrapper}>
             <Line data={skillGrowthData} options={{
               responsive: true,
@@ -938,6 +958,10 @@ export function DevelopmentTab({ selectedStaff }: { selectedStaff: any }) {
         </div>
         <div className={styles.chartContainer}>
           <h4>スキルギャップ分析</h4>
+          <div className={`${styles.alert} ${styles.alertWarning}`}>
+            <span>🎯</span>
+            <span>戦略立案とプロジェクト管理に20ポイント以上のギャップ。実践的な経験を積む機会の提供が必要です。</span>
+          </div>
           <div className={styles.chartWrapper}>
             <Bar data={skillGapData} options={{
               responsive: true,
@@ -1150,6 +1174,10 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
           </div>
           <div className={styles.chartContainer}>
             <h4>研修カテゴリ別実績</h4>
+            <div className={`${styles.alert} ${styles.alertInfo}`}>
+              <span>📚</span>
+              <span>必須研修48時間、専門研修36時間を完了。バランス良く各分野の研修を受講し、総合的なスキルアップを図っています。</span>
+            </div>
             <div className={styles.chartWrapper}>
               <Doughnut data={trainingParticipationData} options={{
                 responsive: true,
