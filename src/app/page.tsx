@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { staffListData, staffDatabase, StaffDetail } from './data/staffData';
 import TalentFlowSection from '../components/talent-flow/TalentFlowSection';
+import HRDashboardSection from '../components/hr-dashboard/HRDashboardSection';
 
 // 型定義
 interface Staff {
@@ -718,6 +719,9 @@ export default function Home() {
 
      {/* 人材フロー */}
      <TalentFlowSection />
+
+     {/* 人事指標ダッシュボード */}
+     <HRDashboardSection />
 
      {/* 組織健康診断 */}
      <div className="bg-white">
