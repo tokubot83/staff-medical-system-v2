@@ -17,7 +17,12 @@ export interface StaffDetail {
   evaluationPeriod: string;
   nextMeeting: string;
   healthStatus: string;
+  healthScore?: number;
   stressIndex: number;
+  lastCheckupDate?: string;
+  nextCheckupDate?: string;
+  healthRisks?: string[];
+  healthRecommendations?: string[];
   engagement: number;
   overtime: number;
   paidLeaveRate: number;

@@ -175,7 +175,7 @@ function TrainingPageContent() {
         }
       }
     }
-  }, [staffIdFromUrl, tabFromUrl])
+  }, [staffIdFromUrl, tabFromUrl, mockStaff])
 
   const handleProgramSelect = (program: TrainingProgram) => {
     setSelectedProgram(program)
