@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, Suspense } from 'react'
+import React, { useState, useEffect, useMemo, Suspense } from 'react'
 import CommonHeader from '@/components/CommonHeader'
 import Link from 'next/link'
 import styles from './Training.module.css'
@@ -70,7 +70,7 @@ function TrainingPageContent() {
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [selectedRole, setSelectedRole] = useState('all')
 
-  const mockPrograms: TrainingProgram[] = [
+  const mockPrograms = useMemo<TrainingProgram[]>(() => [
     {
       id: 'TR001',
       name: '医療安全研修',
@@ -123,9 +123,9 @@ function TrainingPageContent() {
       nextSession: '2024-09-01',
       status: 'completed'
     }
-  ]
+  ], [])
 
-  const mockStaff: Staff[] = [
+  const mockStaff = useMemo<Staff[]>(() => [
     {
       id: 'ST001',
       name: '田中美咲',
@@ -160,7 +160,7 @@ function TrainingPageContent() {
       jnaLevel: 'レベルⅤ',
       continuingEducationUnits: 56
     }
-  ]
+  ], [])
 
   // URLパラメータからスタッフIDが渡された場合の処理
   useEffect(() => {

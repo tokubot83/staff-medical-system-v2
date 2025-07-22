@@ -207,8 +207,8 @@ function HistoryTab({ interviews, onInterviewSelect }: HistoryTabProps) {
             <div className={styles.historyInfo}>
               <h4>{interview.staffName} - {interview.type}</h4>
               <p className={styles.historyPurpose}>{interview.purpose}</p>
-              {interview.feedback && (
-                <p className={styles.historyFeedback}>{interview.feedback}</p>
+              {interview.feedback && interview.feedback.keyPoints && interview.feedback.keyPoints.length > 0 && (
+                <p className={styles.historyFeedback}>{interview.feedback.keyPoints[0]}</p>
               )}
             </div>
             <div className={styles.historyStatus}>
