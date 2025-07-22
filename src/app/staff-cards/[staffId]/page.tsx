@@ -601,28 +601,75 @@ function WellbeingTab({ selectedStaff }: { selectedStaff: any }): React.ReactEle
             <h3>ウェルビーイングサマリー</h3>
           </div>
           <div className={styles.summaryMainMetrics}>
-            <div className={styles.metricCircle}>
-              <div className={styles.circleProgress}>
-                <svg className={styles.progressRing} viewBox="0 0 120 120">
-                  <circle cx="60" cy="60" r="54" fill="none" stroke="#e5e7eb" strokeWidth="12" />
-                  <circle cx="60" cy="60" r="54" fill="none" stroke={stressColor} strokeWidth="12" 
-                    strokeDasharray={`${2 * Math.PI * 54}`} 
-                    strokeDashoffset={`${2 * Math.PI * 54 * (1 - stressIndex / 100)}`}
-                    transform="rotate(-90 60 60)" />
-                </svg>
-                <div className={styles.circleContent}>
-                  <div className={styles.circleValue}>{stressIndex}</div>
-                  <div className={styles.circleLabel}>ストレス指数</div>
+            <div className={styles.wellbeingThermometer}>
+              <div className={styles.thermometerContainer}>
+                <div className={styles.thermometerScale}>
+                  <div className={styles.scaleLabel} style={{ top: '0%' }}>100</div>
+                  <div className={styles.scaleLabel} style={{ top: '20%' }}>80</div>
+                  <div className={styles.scaleLabel} style={{ top: '40%' }}>60</div>
+                  <div className={styles.scaleLabel} style={{ top: '60%' }}>40</div>
+                  <div className={styles.scaleLabel} style={{ top: '80%' }}>20</div>
+                  <div className={styles.scaleLabel} style={{ top: '100%' }}>0</div>
                 </div>
+                <div className={styles.thermometerTrack}>
+                  <div className={styles.dangerZone}>
+                    <span className={styles.zoneLabel}>危険域</span>
+                  </div>
+                  <div className={styles.cautionZone}>
+                    <span className={styles.zoneLabel}>注意域</span>
+                  </div>
+                  <div className={styles.safeZone}>
+                    <span className={styles.zoneLabel}>良好域</span>
+                  </div>
+                  <div 
+                    className={styles.thermometerFill} 
+                    style={{ 
+                      height: `${stressIndex}%`,
+                      backgroundColor: stressColor
+                    }}
+                  >
+                    <div className={styles.currentValue}>
+                      <span className={styles.valueNumber}>{stressIndex}</span>
+                      <span className={styles.valueLabel}>ストレス指数</span>
+                    </div>
+                  </div>
+                </div>
+                <div className={styles.thermometerBase}></div>
               </div>
-              <div className={styles.metricDetails}>
-                <div className={styles.detailItem}>
-                  <span className={styles.detailIcon}>📊</span>
-                  <span className={styles.detailText}>状態: {stressLevel}</span>
+              <div className={styles.wellbeingStatus}>
+                <div className={styles.statusIndicator}>
+                  <div className={styles.statusIcon}>
+                    {stressIndex < 40 ? '😊' : stressIndex < 50 ? '😐' : stressIndex < 70 ? '😟' : '😰'}
+                  </div>
+                  <div className={styles.statusText}>
+                    <div className={styles.statusLevel}>{stressLevel}</div>
+                    <div className={styles.statusMessage}>
+                      {stressIndex < 40 ? '心理状態は良好です' : 
+                       stressIndex < 50 ? '軽度のストレスがあります' :
+                       stressIndex < 70 ? 'ストレスケアが必要です' :
+                       '早急な対応が必要です'}
+                    </div>
+                  </div>
                 </div>
-                <div className={styles.detailItem}>
-                  <span className={styles.detailIcon}>⚠️</span>
-                  <span className={styles.detailText}>要注意: 50以上</span>
+                <div className={styles.stressFactors}>
+                  <h4>主なストレス要因</h4>
+                  <div className={styles.factorsList}>
+                    <div className={styles.factorItem}>
+                      <span className={styles.factorIcon}>⏰</span>
+                      <span className={styles.factorText}>残業時間</span>
+                      <span className={styles.factorLevel}>中</span>
+                    </div>
+                    <div className={styles.factorItem}>
+                      <span className={styles.factorIcon}>👥</span>
+                      <span className={styles.factorText}>人間関係</span>
+                      <span className={styles.factorLevel}>低</span>
+                    </div>
+                    <div className={styles.factorItem}>
+                      <span className={styles.factorIcon}>💼</span>
+                      <span className={styles.factorText}>業務負荷</span>
+                      <span className={styles.factorLevel}>中</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

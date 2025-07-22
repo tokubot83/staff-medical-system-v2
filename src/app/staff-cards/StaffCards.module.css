@@ -2343,3 +2343,385 @@
   font-weight: 600;
   color: #1f2937;
 }
+
+/* ウェルビーイング温度計スタイル */
+.wellbeingThermometer {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+  flex: 1;
+}
+
+.thermometerContainer {
+  position: relative;
+  width: 120px;
+  height: 300px;
+}
+
+.thermometerScale {
+  position: absolute;
+  left: -40px;
+  top: 0;
+  height: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.scaleLabel {
+  position: absolute;
+  right: 100%;
+  margin-right: 8px;
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.thermometerTrack {
+  position: relative;
+  width: 60px;
+  height: 250px;
+  background: #f3f4f6;
+  border-radius: 30px 30px 50px 50px;
+  overflow: hidden;
+  margin: 0 auto;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dangerZone {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 33.33%;
+  background: rgba(239, 68, 68, 0.1);
+  border-bottom: 1px dashed rgba(239, 68, 68, 0.3);
+}
+
+.cautionZone {
+  position: absolute;
+  top: 33.33%;
+  left: 0;
+  right: 0;
+  height: 16.67%;
+  background: rgba(245, 158, 11, 0.1);
+  border-bottom: 1px dashed rgba(245, 158, 11, 0.3);
+}
+
+.safeZone {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.zoneLabel {
+  position: absolute;
+  right: 70px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+.thermometerFill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #ef4444;
+  transition: height 0.5s ease, background-color 0.5s ease;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 12px;
+}
+
+.thermometerBase {
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 80px;
+  background: inherit;
+  border-radius: 50%;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.currentValue {
+  text-align: center;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.valueNumber {
+  display: block;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.valueLabel {
+  display: block;
+  font-size: 10px;
+  margin-top: 2px;
+}
+
+.wellbeingStatus {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.statusIndicator {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.statusIcon {
+  font-size: 48px;
+  line-height: 1;
+}
+
+.statusText {
+  flex: 1;
+}
+
+.statusLevel {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 4px;
+}
+
+.statusMessage {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.stressFactors {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.stressFactors h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 16px;
+}
+
+.factorsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.factorItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.factorIcon {
+  font-size: 20px;
+  width: 24px;
+}
+
+.factorText {
+  flex: 1;
+  font-size: 14px;
+  color: #374151;
+  font-weight: 500;
+}
+
+.factorLevel {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.factorLevel[data-level="低"] {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.factorLevel[data-level="中"] {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.factorLevel[data-level="高"] {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* Interview Insights Section */
+.interviewInsightsSection {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.insightsDisplay {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.currentStatusCard {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+}
+
+.statusHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.statusIcon {
+  font-size: 24px;
+}
+
+.statusHeader h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.statusItems {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.statusItem {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s;
+}
+
+.statusItem:hover {
+  transform: translateX(4px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.itemBar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: 8px 0 0 8px;
+  transition: width 0.3s ease;
+}
+
+.itemContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-left: 12px;
+}
+
+.itemLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.itemValue {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.recommendationPanel {
+  background: #eff6ff;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #dbeafe;
+}
+
+.recommendationPanel h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 16px 0;
+}
+
+.approachList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.approachItem {
+  display: flex;
+  gap: 12px;
+  background: white;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #dbeafe;
+  transition: all 0.2s;
+}
+
+.approachItem:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.approachIcon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.approachContent {
+  flex: 1;
+}
+
+.approachContent strong {
+  display: block;
+  font-size: 14px;
+  color: #1f2937;
+  margin-bottom: 4px;
+}
+
+.approachContent p {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.5;
+}
