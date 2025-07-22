@@ -1800,6 +1800,77 @@
   font-weight: 500;
 }
 
+/* キャリア方向性セクション */
+.careerDirectionSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 20px;
+  background: #f0f9ff;
+  border-radius: 12px;
+  min-width: 140px;
+}
+
+.directionDisplay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.directionLetter {
+  font-size: 48px;
+  font-weight: 800;
+  color: #3b82f6;
+  line-height: 1;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.directionLabel {
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 600;
+  text-align: center;
+}
+
+.directionDetails {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.directionType {
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.directionBreakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.breakdownItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #4b5563;
+}
+
+.breakdownIcon {
+  font-size: 14px;
+}
+
+.breakdownLabel {
+  font-weight: 500;
+}
+
 .topicsList {
   display: flex;
   flex-wrap: wrap;
@@ -2109,4 +2180,166 @@
 .scheduleDetails {
   font-size: 14px;
   color: #6b7280;
+}
+
+/* 勤務パターン表示関連 */
+.workPatternSection {
+  display: flex;
+  gap: 24px;
+  flex: 1;
+}
+
+.patternDisplay {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.patternBars {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  height: 120px;
+  padding: 0 8px;
+}
+
+.patternBar {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.barFill {
+  width: 100%;
+  background: #3b82f6;
+  border-radius: 4px 4px 0 0;
+  transition: height 0.3s ease;
+  min-height: 4px;
+}
+
+.barLabel {
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.barValue {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-top: 4px;
+}
+
+.patternSummary {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.balanceIndicator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.balanceScore {
+  font-size: 28px;
+  font-weight: 700;
+  color: #10b981;
+  background: #d1fae5;
+  padding: 8px 16px;
+  border-radius: 8px;
+}
+
+.balanceLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.balanceDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.balanceItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.balanceIcon {
+  font-size: 16px;
+}
+
+.balanceText {
+  flex: 1;
+}
+
+/* 勤務安定性評価 */
+.attendanceReliability {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 12px;
+  min-width: 200px;
+}
+
+.reliabilityScore {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.scoreGrade {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1e40af;
+  background: #dbeafe;
+  padding: 8px 16px;
+  border-radius: 8px;
+}
+
+.scoreLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.reliabilityMetrics {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reliabilityItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.itemIcon {
+  font-size: 14px;
+  width: 20px;
+}
+
+.itemLabel {
+  color: #6b7280;
+  flex: 1;
+}
+
+.itemValue {
+  font-weight: 600;
+  color: #1f2937;
 }

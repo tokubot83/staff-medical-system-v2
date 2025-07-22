@@ -1020,26 +1020,6 @@ export function DevelopmentTab({ selectedStaff }: { selectedStaff: any }) {
     }]
   }
 
-  // キャリア方向性分析データ
-  const careerDirectionData = {
-    labels: ['専門技術向上', '管理職志向', '現状維持', 'スペシャリスト'],
-    datasets: [{
-      data: [45, 35, 5, 15],
-      backgroundColor: [
-        'rgba(0, 123, 255, 0.8)',
-        'rgba(40, 167, 69, 0.8)',
-        'rgba(108, 117, 125, 0.8)',
-        'rgba(255, 193, 7, 0.8)'
-      ],
-      borderColor: [
-        'rgba(0, 123, 255, 1)',
-        'rgba(40, 167, 69, 1)',
-        'rgba(108, 117, 125, 1)',
-        'rgba(255, 193, 7, 1)'
-      ],
-      borderWidth: 1
-    }]
-  }
 
   return (
     <div className={styles.tabContentSection}>
@@ -1055,59 +1035,42 @@ export function DevelopmentTab({ selectedStaff }: { selectedStaff: any }) {
         <div className={styles.summaryMainCard}>
           <div className={styles.summaryCardHeader}>
             <span className={styles.summaryIcon}>🎯</span>
-            <h3>キャリア開発方向性</h3>
+            <h3>能力開発サマリー</h3>
           </div>
           <div className={styles.summaryMainMetrics}>
-            <div className={styles.metricCircle}>
-              <div className={styles.circleProgress}>
-                <svg className={styles.progressRing} viewBox="0 0 120 120">
-                  <circle cx="60" cy="60" r="54" fill="none" stroke="#e5e7eb" strokeWidth="12" />
-                  <circle cx="60" cy="60" r="54" fill="none" stroke="#007bff" strokeWidth="12" 
-                    strokeDasharray={`${2 * Math.PI * 54}`} 
-                    strokeDashoffset={`${2 * Math.PI * 54 * (1 - 0.45)}`}
-                    transform="rotate(-90 60 60)" />
-                </svg>
-                <div className={styles.circleContent}>
-                  <div className={styles.circleValue}>専門技術</div>
-                  <div className={styles.circleLabel}>45% 志向</div>
-                </div>
+            <div className={styles.careerDirectionSection}>
+              <div className={styles.directionDisplay}>
+                <div className={styles.directionLetter}>T</div>
+                <div className={styles.directionLabel}>技術専門職志向</div>
               </div>
-              <div className={styles.metricDetails}>
-                <div className={styles.detailItem}>
-                  <span className={styles.detailIcon}>🔧</span>
-                  <span className={styles.detailText}>技術スペシャリスト路線</span>
-                </div>
-                <div className={styles.detailItem}>
-                  <span className={styles.detailIcon}>📈</span>
-                  <span className={styles.detailText}>管理職適性あり (35%)</span>
+              <div className={styles.directionDetails}>
+                <div className={styles.directionType}>キャリアタイプ</div>
+                <div className={styles.directionBreakdown}>
+                  <div className={styles.breakdownItem}>
+                    <span className={styles.breakdownIcon}>🔧</span>
+                    <span className={styles.breakdownLabel}>専門技術: 45%</span>
+                  </div>
+                  <div className={styles.breakdownItem}>
+                    <span className={styles.breakdownIcon}>👥</span>
+                    <span className={styles.breakdownLabel}>管理職: 35%</span>
+                  </div>
+                  <div className={styles.breakdownItem}>
+                    <span className={styles.breakdownIcon}>🎓</span>
+                    <span className={styles.breakdownLabel}>スペシャリスト: 15%</span>
+                  </div>
                 </div>
               </div>
             </div>
             <div className={styles.metricsGrid}>
               <div className={styles.metricCardEnhanced}>
-                <div className={styles.metricHeader}>
-                  <span className={styles.metricIcon}>🚀</span>
-                  <span className={styles.metricTrend}>+28%</span>
-                </div>
-                <div className={styles.metricValue}>92%</div>
-                <div className={styles.metricLabel}>スキル成長率</div>
-                <div className={styles.metricProgress}>
-                  <div className={styles.progressBar}>
-                    <div className={styles.progressFill} style={{ width: '92%' }}></div>
-                  </div>
-                  <span className={styles.progressText}>年間目標達成</span>
-                </div>
-              </div>
-              <div className={styles.metricCardEnhanced}>
-                <div className={styles.metricHeader}>
-                  <span className={styles.metricIcon}>⭐</span>
-                  <span className={styles.metricTrend}>+3</span>
-                </div>
                 <div className={styles.metricValue}>レベル4</div>
                 <div className={styles.metricLabel}>現在の到達段階</div>
-                <div className={styles.ratingStars}>
-                  <span className={styles.starFilled}>次段階まで80%</span>
-                </div>
+                <div className={styles.metricSubtext}>次段階まで 80%</div>
+              </div>
+              <div className={styles.metricCardEnhanced}>
+                <div className={styles.metricValue}>92%</div>
+                <div className={styles.metricLabel}>スキル成長率</div>
+                <div className={styles.metricSubtext}>年間目標達成</div>
               </div>
             </div>
           </div>
@@ -1145,33 +1108,6 @@ export function DevelopmentTab({ selectedStaff }: { selectedStaff: any }) {
 
       <div className={styles.chartGrid}>
         <div className={styles.chartContainer}>
-          <h4>キャリア方向性分析</h4>
-          <div className={`${styles.alert} ${styles.alertInfo}`}>
-            <span>📊</span>
-            <span>専門技術向上志向が45%で最も高く、管理職志向も35%と高い適性を示しています。バランスの取れたキャリア開発が可能です。</span>
-          </div>
-          <div className={styles.chartWrapper}>
-            <Doughnut data={careerDirectionData} options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              plugins: {
-                legend: {
-                  position: 'right'
-                },
-                tooltip: {
-                  callbacks: {
-                    label: function(context) {
-                      const label = context.label || '';
-                      const value = context.parsed || 0;
-                      return label + ': ' + value + '%';
-                    }
-                  }
-                }
-              }
-            }} />
-          </div>
-        </div>
-        <div className={styles.chartContainer}>
           <h4>スキル成長推移</h4>
           <div className={`${styles.alert} ${styles.alertSuccess}`}>
             <span>🚀</span>
@@ -1190,9 +1126,6 @@ export function DevelopmentTab({ selectedStaff }: { selectedStaff: any }) {
             }} />
           </div>
         </div>
-      </div>
-
-      <div className={styles.chartGrid}>
         <div className={styles.chartContainer}>
           <h4>スキルギャップ分析</h4>
           <div className={`${styles.alert} ${styles.alertWarning}`}>
@@ -1213,6 +1146,7 @@ export function DevelopmentTab({ selectedStaff }: { selectedStaff: any }) {
           </div>
         </div>
       </div>
+
 
       <div className={styles.developmentPlan}>
         <h3>個別開発計画</h3>

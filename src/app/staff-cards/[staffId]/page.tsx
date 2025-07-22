@@ -383,28 +383,63 @@ function AttendanceTab({ selectedStaff }: { selectedStaff: any }): React.ReactEl
             <h3>勤務実績サマリー</h3>
           </div>
           <div className={styles.summaryMainMetrics}>
-            <div className={styles.metricCircle}>
-              <div className={styles.circleProgress}>
-                <svg className={styles.progressRing} viewBox="0 0 120 120">
-                  <circle cx="60" cy="60" r="54" fill="none" stroke="#e5e7eb" strokeWidth="12" />
-                  <circle cx="60" cy="60" r="54" fill="none" stroke="#3b82f6" strokeWidth="12" 
-                    strokeDasharray={`${2 * Math.PI * 54}`} 
-                    strokeDashoffset={`${2 * Math.PI * 54 * (1 - 0.98)}`}
-                    transform="rotate(-90 60 60)" />
-                </svg>
-                <div className={styles.circleContent}>
-                  <div className={styles.circleValue}>98%</div>
-                  <div className={styles.circleLabel}>出勤率</div>
+            <div className={styles.workPatternSection}>
+              <div className={styles.patternDisplay}>
+                <div className={styles.patternBars}>
+                  <div className={styles.patternBar}>
+                    <div className={styles.barFill} style={{ height: '60%', backgroundColor: '#3b82f6' }}></div>
+                    <div className={styles.barLabel}>日勤</div>
+                    <div className={styles.barValue}>60%</div>
+                  </div>
+                  <div className={styles.patternBar}>
+                    <div className={styles.barFill} style={{ height: '35%', backgroundColor: '#8b5cf6' }}></div>
+                    <div className={styles.barLabel}>夜勤</div>
+                    <div className={styles.barValue}>35%</div>
+                  </div>
+                  <div className={styles.patternBar}>
+                    <div className={styles.barFill} style={{ height: '5%', backgroundColor: '#10b981' }}></div>
+                    <div className={styles.barLabel}>休出</div>
+                    <div className={styles.barValue}>5%</div>
+                  </div>
+                </div>
+                <div className={styles.patternSummary}>
+                  <div className={styles.balanceIndicator}>
+                    <div className={styles.balanceScore}>A+</div>
+                    <div className={styles.balanceLabel}>ワークライフバランス</div>
+                  </div>
+                  <div className={styles.balanceDetails}>
+                    <div className={styles.balanceItem}>
+                      <span className={styles.balanceIcon}>⏰</span>
+                      <span className={styles.balanceText}>定時退社率 85%</span>
+                    </div>
+                    <div className={styles.balanceItem}>
+                      <span className={styles.balanceIcon}>📅</span>
+                      <span className={styles.balanceText}>連続勤務 最大5日</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className={styles.metricDetails}>
-                <div className={styles.detailItem}>
-                  <span className={styles.detailIcon}>✅</span>
-                  <span className={styles.detailText}>遅刻・早退なし</span>
+              <div className={styles.attendanceReliability}>
+                <div className={styles.reliabilityScore}>
+                  <div className={styles.scoreGrade}>S</div>
+                  <div className={styles.scoreLabel}>勤務安定性</div>
                 </div>
-                <div className={styles.detailItem}>
-                  <span className={styles.detailIcon}>🎯</span>
-                  <span className={styles.detailText}>勤怠優良</span>
+                <div className={styles.reliabilityMetrics}>
+                  <div className={styles.reliabilityItem}>
+                    <span className={styles.itemIcon}>✅</span>
+                    <span className={styles.itemLabel}>出勤率</span>
+                    <span className={styles.itemValue}>98%</span>
+                  </div>
+                  <div className={styles.reliabilityItem}>
+                    <span className={styles.itemIcon}>🚫</span>
+                    <span className={styles.itemLabel}>遅刻</span>
+                    <span className={styles.itemValue}>0回</span>
+                  </div>
+                  <div className={styles.reliabilityItem}>
+                    <span className={styles.itemIcon}>⚡</span>
+                    <span className={styles.itemLabel}>早退</span>
+                    <span className={styles.itemValue}>2回</span>
+                  </div>
                 </div>
               </div>
             </div>
