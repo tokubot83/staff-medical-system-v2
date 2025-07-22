@@ -417,7 +417,11 @@ function CriteriaTab(): React.ReactElement {
   )
 }
 
-function ExecutionTab(): React.ReactElement {
+interface ExecutionTabProps {
+  targetStaffId?: string | null
+}
+
+function ExecutionTab({ targetStaffId }: ExecutionTabProps): React.ReactElement {
   return (
     <div className={styles.executionContainer}>
       <h2>評価実施</h2>
