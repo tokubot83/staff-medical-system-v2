@@ -2948,8 +2948,6 @@
   margin: 0;
   line-height: 1.5;
 }
-<<<<<<< HEAD
-=======
 
 /* Summary Metrics Row */
 .summaryMetricsRow {
@@ -2995,4 +2993,3 @@
     flex-direction: column;
   }
 }
->>>>>>> 1e211b9 (feat: 面談・指導タブのサマリーエリアレイアウトを大幅改善)
