@@ -634,7 +634,12 @@ function WellbeingTab({ selectedStaff }: { selectedStaff: any }): React.ReactEle
                     </div>
                   </div>
                 </div>
-                <div className={styles.thermometerBase}></div>
+                <div className={styles.thermometerBase}>
+                  <div className={styles.overallRating}>
+                    <div className={styles.ratingGrade}>{stressIndex < 40 ? 'A' : stressIndex < 50 ? 'B' : stressIndex < 70 ? 'C' : 'D'}</div>
+                    <div className={styles.ratingLabel}>総合評価</div>
+                  </div>
+                </div>
               </div>
               <div className={styles.wellbeingStatus}>
                 <div className={styles.statusIndicator}>
