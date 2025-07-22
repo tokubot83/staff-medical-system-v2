@@ -1749,6 +1749,57 @@
   border-color: #93c5fd;
 }
 
+/* 評価ランク表示のスタイル */
+.evaluationRankSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 20px;
+  background: #f0f9ff;
+  border-radius: 12px;
+  min-width: 140px;
+}
+
+.rankDisplay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.rankLetter {
+  font-size: 48px;
+  font-weight: 800;
+  color: #10b981;
+  line-height: 1;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.rankLabel {
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.rankDetails {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.rankYear {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.rankTrend {
+  font-size: 12px;
+  color: #10b981;
+  font-weight: 500;
+}
+
 .topicsList {
   display: flex;
   flex-wrap: wrap;

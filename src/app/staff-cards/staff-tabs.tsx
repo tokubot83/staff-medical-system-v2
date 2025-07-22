@@ -347,28 +347,15 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
             <h3 className={styles.headerTitle}>人事評価サマリー</h3>
           </div>
           <div className={styles.summaryMetrics}>
-            <div className={styles.progressSection}>
-              <svg className={styles.circleProgress} viewBox="0 0 120 120">
-                <circle cx="60" cy="60" r="50" fill="none" stroke="#e5e7eb" strokeWidth="10" />
-                <circle
-                  cx="60"
-                  cy="60"
-                  r="50"
-                  fill="none"
-                  stroke="#10b981"
-                  strokeWidth="10"
-                  strokeDasharray={`${2 * Math.PI * 50}`}
-                  strokeDashoffset={`${2 * Math.PI * 50 * (1 - 0.85)}`}
-                  transform="rotate(-90 60 60)"
-                  style={{ transition: 'stroke-dashoffset 0.5s ease' }}
-                />
-                <text x="60" y="55" textAnchor="middle" className={styles.progressText}>
-                  A
-                </text>
-                <text x="60" y="75" textAnchor="middle" className={styles.progressLabel}>
-                  評価
-                </text>
-              </svg>
+            <div className={styles.evaluationRankSection}>
+              <div className={styles.rankDisplay}>
+                <div className={styles.rankLetter}>A</div>
+                <div className={styles.rankLabel}>評価ランク</div>
+              </div>
+              <div className={styles.rankDetails}>
+                <div className={styles.rankYear}>2024年度</div>
+                <div className={styles.rankTrend}>↑ 前年度より向上</div>
+              </div>
             </div>
             <div className={styles.metricsGrid}>
               <div className={styles.metricCardEnhanced}>
