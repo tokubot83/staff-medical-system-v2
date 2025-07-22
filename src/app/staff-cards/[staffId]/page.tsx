@@ -367,8 +367,107 @@ function AchievementTab({ selectedStaff }: { selectedStaff: any }): React.ReactE
 
 function AttendanceTab({ selectedStaff }: { selectedStaff: any }): React.ReactElement {
   return (
-    <div className={styles.attendanceContainer}>
-      <h2>勤務状況</h2>
+    <div className={styles.tabContentSection}>
+      <div className={styles.sectionHeader}>
+        <h2>⏰ 勤務状況</h2>
+        <div className={styles.sectionActions}>
+          <button className={styles.actionButton}>勤怠詳細</button>
+          <button className={styles.actionButtonSecondary}>シフト表</button>
+        </div>
+      </div>
+
+      <div className={styles.interviewSummaryEnhanced}>
+        <div className={styles.summaryMainCard}>
+          <div className={styles.summaryCardHeader}>
+            <span className={styles.summaryIcon}>📊</span>
+            <h3>勤務実績サマリー</h3>
+          </div>
+          <div className={styles.summaryMainMetrics}>
+            <div className={styles.metricCircle}>
+              <div className={styles.circleProgress}>
+                <svg className={styles.progressRing} viewBox="0 0 120 120">
+                  <circle cx="60" cy="60" r="54" fill="none" stroke="#e5e7eb" strokeWidth="12" />
+                  <circle cx="60" cy="60" r="54" fill="none" stroke="#3b82f6" strokeWidth="12" 
+                    strokeDasharray={`${2 * Math.PI * 54}`} 
+                    strokeDashoffset={`${2 * Math.PI * 54 * (1 - 0.98)}`}
+                    transform="rotate(-90 60 60)" />
+                </svg>
+                <div className={styles.circleContent}>
+                  <div className={styles.circleValue}>98%</div>
+                  <div className={styles.circleLabel}>出勤率</div>
+                </div>
+              </div>
+              <div className={styles.metricDetails}>
+                <div className={styles.detailItem}>
+                  <span className={styles.detailIcon}>✅</span>
+                  <span className={styles.detailText}>遅刻・早退なし</span>
+                </div>
+                <div className={styles.detailItem}>
+                  <span className={styles.detailIcon}>🎯</span>
+                  <span className={styles.detailText}>勤怠優良</span>
+                </div>
+              </div>
+            </div>
+            <div className={styles.metricsGrid}>
+              <div className={styles.metricCardEnhanced}>
+                <div className={styles.metricHeader}>
+                  <span className={styles.metricIcon}>⏱️</span>
+                  <span className={styles.metricTrend}>-2.5h</span>
+                </div>
+                <div className={styles.metricValue}>15.5時間</div>
+                <div className={styles.metricLabel}>月平均残業</div>
+                <div className={styles.metricProgress}>
+                  <div className={styles.progressBar}>
+                    <div className={styles.progressFill} style={{ width: '38.75%' }}></div>
+                  </div>
+                  <span className={styles.progressText}>適正範囲内</span>
+                </div>
+              </div>
+              <div className={styles.metricCardEnhanced}>
+                <div className={styles.metricHeader}>
+                  <span className={styles.metricIcon}>🏖️</span>
+                  <span className={styles.metricTrend}>+10%</span>
+                </div>
+                <div className={styles.metricValue}>75%</div>
+                <div className={styles.metricLabel}>有給取得率</div>
+                <div className={styles.ratingStars}>
+                  <span className={styles.starFilled}>15日/20日</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div className={styles.summarySubCards}>
+          <div className={styles.nextSessionCard}>
+            <div className={styles.cardIconWrapper}>
+              <span className={styles.cardIcon}>📅</span>
+            </div>
+            <div className={styles.cardContent}>
+              <div className={styles.cardTitle}>シフト情報</div>
+              <div className={styles.cardMainInfo}>日勤中心</div>
+              <div className={styles.cardSubInfo}>日勤60% / 夜勤40%</div>
+              <button className={styles.cardAction}>シフト確認</button>
+            </div>
+          </div>
+          
+          <div className={styles.recentTopicsCard}>
+            <div className={styles.cardIconWrapper}>
+              <span className={styles.cardIcon}>📊</span>
+            </div>
+            <div className={styles.cardContent}>
+              <div className={styles.cardTitle}>勤務パターン</div>
+              <div className={styles.topicsList}>
+                <span className={styles.topicTag}>定時退社多</span>
+                <span className={styles.topicTag}>遅刻なし</span>
+                <span className={styles.topicTag}>安定勤務</span>
+              </div>
+              <div className={styles.cardSubInfo}>ワークライフバランス良好</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className={styles.metricsGrid}>
         <div className={styles.metricCard}>
           <h3>遅刻回数</h3>
@@ -381,26 +480,63 @@ function AttendanceTab({ selectedStaff }: { selectedStaff: any }): React.ReactEl
           <p className={styles.metricLabel}>過去1年間</p>
         </div>
         <div className={styles.metricCard}>
-          <h3>平均残業時間</h3>
-          <div className={styles.metricValue}>15.5時間</div>
-          <p className={styles.metricLabel}>月平均</p>
+          <h3>欠勤日数</h3>
+          <div className={styles.metricValue}>3日</div>
+          <p className={styles.metricLabel}>過去1年間</p>
         </div>
         <div className={styles.metricCard}>
-          <h3>有給取得率</h3>
-          <div className={styles.metricValue}>75%</div>
-          <p className={styles.metricLabel}>今年度</p>
+          <h3>休日出勤</h3>
+          <div className={styles.metricValue}>5日</div>
+          <p className={styles.metricLabel}>過去1年間</p>
         </div>
       </div>
+
       <div className={styles.sectionCard}>
-        <h3>シフト履歴</h3>
-        <p>日勤: 60% / 夜勤: 40%</p>
+        <h3>月別勤務状況</h3>
+        <div className={styles.monthlyAttendance}>
+          <table className={styles.attendanceTable}>
+            <thead>
+              <tr>
+                <th>月</th>
+                <th>出勤日数</th>
+                <th>残業時間</th>
+                <th>有給使用</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1月</td>
+                <td>20日</td>
+                <td>12.5時間</td>
+                <td>1日</td>
+              </tr>
+              <tr>
+                <td>12月</td>
+                <td>21日</td>
+                <td>18.0時間</td>
+                <td>2日</td>
+              </tr>
+              <tr>
+                <td>11月</td>
+                <td>22日</td>
+                <td>15.5時間</td>
+                <td>0日</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
+
       <div className={styles.sectionCard}>
         <h3>業務出張履歴</h3>
         <div className={styles.timelineList}>
           <div className={styles.timelineItem}>
             <span className={styles.timelineDate}>2024年2月</span>
             <span className={styles.timelineContent}>東京研修センター 3日間</span>
+          </div>
+          <div className={styles.timelineItem}>
+            <span className={styles.timelineDate}>2023年11月</span>
+            <span className={styles.timelineContent}>大阪本部 2日間</span>
           </div>
         </div>
       </div>
