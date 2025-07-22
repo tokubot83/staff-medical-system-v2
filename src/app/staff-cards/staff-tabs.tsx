@@ -340,23 +340,72 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
         </div>
       </div>
 
-      <div className={styles.evaluationSummary}>
-        <div className={styles.evaluationScore}>
-          <div className={styles.scoreMain}>4.5</div>
-          <div className={styles.scoreLabel}>総合評価スコア</div>
+      <div className={styles.interviewSummaryEnhanced}>
+        <div className={styles.summaryMainCard}>
+          <div className={styles.summaryHeader}>
+            <span className={styles.headerIcon}>📊</span>
+            <h3 className={styles.headerTitle}>人事評価サマリー</h3>
+          </div>
+          <div className={styles.summaryMetrics}>
+            <div className={styles.progressSection}>
+              <svg className={styles.circleProgress} viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="50" fill="none" stroke="#e5e7eb" strokeWidth="10" />
+                <circle
+                  cx="60"
+                  cy="60"
+                  r="50"
+                  fill="none"
+                  stroke="#10b981"
+                  strokeWidth="10"
+                  strokeDasharray={`${2 * Math.PI * 50}`}
+                  strokeDashoffset={`${2 * Math.PI * 50 * (1 - 0.85)}`}
+                  transform="rotate(-90 60 60)"
+                  style={{ transition: 'stroke-dashoffset 0.5s ease' }}
+                />
+                <text x="60" y="55" textAnchor="middle" className={styles.progressText}>
+                  A
+                </text>
+                <text x="60" y="75" textAnchor="middle" className={styles.progressLabel}>
+                  評価
+                </text>
+              </svg>
+            </div>
+            <div className={styles.metricsGrid}>
+              <div className={styles.metricCardEnhanced}>
+                <div className={styles.metricValue}>4.5</div>
+                <div className={styles.metricLabel}>総合評価スコア</div>
+                <div className={styles.metricSubtext}>前回比 +0.2</div>
+              </div>
+              <div className={styles.metricCardEnhanced}>
+                <div className={styles.metricValue}>2位</div>
+                <div className={styles.metricLabel}>部署内順位</div>
+                <div className={styles.metricSubtext}>15名中</div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className={styles.evaluationDetails}>
-          <div className={styles.evaluationItem}>
-            <span className={styles.evaluationLabel}>評価ランク:</span>
-            <span className={styles.evaluationValue}>A評価</span>
+        <div className={styles.summarySubCards}>
+          <div className={styles.nextSessionCard}>
+            <div className={styles.cardIcon}>🎯</div>
+            <div className={styles.cardContent}>
+              <h4>評価内訳</h4>
+              <div className={styles.sessionInfo}>
+                <div>業務遂行力: S</div>
+                <div>チームワーク: A</div>
+                <div>リーダーシップ: A</div>
+              </div>
+            </div>
           </div>
-          <div className={styles.evaluationItem}>
-            <span className={styles.evaluationLabel}>前回比:</span>
-            <span className={styles.evaluationValue}>+0.2ポイント</span>
-          </div>
-          <div className={styles.evaluationItem}>
-            <span className={styles.evaluationLabel}>部署内順位:</span>
-            <span className={styles.evaluationValue}>2位/15名</span>
+          <div className={styles.recentTopicsCard}>
+            <div className={styles.cardIcon}>📈</div>
+            <div className={styles.cardContent}>
+              <h4>評価推移</h4>
+              <div className={styles.topicTags}>
+                <span className={styles.topicTag}>3年連続A評価</span>
+                <span className={styles.topicTag}>成長率高</span>
+              </div>
+              <div className={styles.topicNote}>着実な成長を継続中</div>
+            </div>
           </div>
         </div>
       </div>
