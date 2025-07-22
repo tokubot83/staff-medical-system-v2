@@ -785,24 +785,46 @@ export function RecruitmentTab({ selectedStaff }: { selectedStaff: any }) {
       <div className={styles.recruitmentInfo}>
         <div className={styles.infoCard}>
           <h3>採用情報</h3>
-          <div className={styles.infoItem}>
-            <span className={styles.infoLabel}>入職日:</span>
-            <span className={styles.infoValue}>{selectedStaff.joinDate || '2020年4月1日'}</span>
+          <div className={styles.infoGrid}>
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>入職日:</span>
+              <span className={styles.infoValue}>{selectedStaff.joinDate || '2020年4月1日'}</span>
+            </div>
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>採用区分:</span>
+              <span className={styles.infoValue}>新卒採用</span>
+            </div>
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>採用経路:</span>
+              <span className={styles.infoValue}>大学推薦</span>
+            </div>
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>初任配属:</span>
+              <span className={styles.infoValue}>内科病棟</span>
+            </div>
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>配属履歴:</span>
+              <span className={styles.infoValue}>3部署経験</span>
+            </div>
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>採用時評価:</span>
+              <span className={styles.infoValue}>A（上位20%）</span>
+            </div>
           </div>
-          <div className={styles.infoItem}>
-            <span className={styles.infoLabel}>採用区分:</span>
-            <span className={styles.infoValue}>新卒採用</span>
-          </div>
-          <div className={styles.infoItem}>
-            <span className={styles.infoLabel}>配属履歴:</span>
-            <span className={styles.infoValue}>3部署経験</span>
+          <div className={styles.recruitmentNotes}>
+            <h4>採用時の所見</h4>
+            <p>コミュニケーション能力が高く、チーム医療への適性が高い。実習評価も優秀で、即戦力として期待できる人材。</p>
           </div>
         </div>
       </div>
 
+      <div className={styles.sectionDivider}>
+        <h3>配属適性分析</h3>
+      </div>
+
       <div className={styles.chartGrid}>
         <div className={styles.chartContainer}>
-          <h4>部署適性分析</h4>
+          <h4>部署適性スコア</h4>
           <div className={`${styles.alert} ${styles.alertInfo}`}>
             <span>🎯</span>
             <span>現在の部署適性は92%。長期的には管理部門や教育部門への適性も高い評価です。</span>
@@ -871,16 +893,125 @@ export function RecruitmentTab({ selectedStaff }: { selectedStaff: any }) {
         </div>
       </div>
 
+      <div className={styles.sectionDivider}>
+        <h3>配属履歴（時系列表示）</h3>
+      </div>
+
+      <div className={styles.assignmentHistory}>
+        <div className={styles.timeline}>
+          <div className={styles.timelineItem}>
+            <div className={styles.timelineDate}>2020年4月 - 2021年3月</div>
+            <div className={styles.timelineContent}>
+              <h4>内科病棟</h4>
+              <div className={styles.timelineDetails}>
+                <div className={styles.performanceMetrics}>
+                  <span className={styles.metric}>業務習熟度: 85%</span>
+                  <span className={styles.metric}>チーム貢献度: 90%</span>
+                  <span className={styles.metric}>患者満足度: 88%</span>
+                </div>
+                <p className={styles.timelineDescription}>
+                  新人として配属。基礎的な看護技術を習得し、1年間で一人前の看護師として成長。
+                  特に患者とのコミュニケーション能力が高く評価された。
+                </p>
+                <div className={styles.growthHighlights}>
+                  <span className={styles.highlight}>✅ プリセプター制度完了</span>
+                  <span className={styles.highlight}>✅ 夜勤独り立ち</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.timelineItem}>
+            <div className={styles.timelineDate}>2021年4月 - 2022年9月</div>
+            <div className={styles.timelineContent}>
+              <h4>外科病棟</h4>
+              <div className={styles.timelineDetails}>
+                <div className={styles.performanceMetrics}>
+                  <span className={styles.metric}>業務習熟度: 92%</span>
+                  <span className={styles.metric}>チーム貢献度: 95%</span>
+                  <span className={styles.metric}>患者満足度: 91%</span>
+                </div>
+                <p className={styles.timelineDescription}>
+                  周術期看護の専門性を習得。手術前後の患者ケアにおいて高い評価を獲得。
+                  新人指導の補助も担当し、リーダーシップの素養を見せ始める。
+                </p>
+                <div className={styles.growthHighlights}>
+                  <span className={styles.highlight}>✅ 周術期看護研修修了</span>
+                  <span className={styles.highlight}>✅ 新人指導補助担当</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.timelineItem} data-current="true">
+            <div className={styles.timelineDate}>2022年10月 - 現在</div>
+            <div className={styles.timelineContent}>
+              <h4>循環器内科病棟（現在）</h4>
+              <div className={styles.timelineDetails}>
+                <div className={styles.performanceMetrics}>
+                  <span className={styles.metric}>業務習熟度: 95%</span>
+                  <span className={styles.metric}>チーム貢献度: 98%</span>
+                  <span className={styles.metric}>患者満足度: 94%</span>
+                </div>
+                <p className={styles.timelineDescription}>
+                  専門性の高い循環器看護において卓越した能力を発揮。心臓カテーテル検査の介助も担当。
+                  チームリーダーとして若手の指導にも積極的に関わり、部署の中核的存在となっている。
+                </p>
+                <div className={styles.growthHighlights}>
+                  <span className={styles.highlight}>✅ 心臓リハビリテーション指導士取得</span>
+                  <span className={styles.highlight}>✅ チームリーダー就任</span>
+                  <span className={styles.highlight}>✅ BLS/ACLS取得</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.assignmentSummary}>
+          <h4>配属成長分析</h4>
+          <div className={styles.summaryGrid}>
+            <div className={styles.summaryItem}>
+              <span className={styles.summaryLabel}>総合成長率</span>
+              <span className={styles.summaryValue}>+156%</span>
+            </div>
+            <div className={styles.summaryItem}>
+              <span className={styles.summaryLabel}>適応速度</span>
+              <span className={styles.summaryValue}>平均6ヶ月</span>
+            </div>
+            <div className={styles.summaryItem}>
+              <span className={styles.summaryLabel}>専門性獲得</span>
+              <span className={styles.summaryValue}>3分野</span>
+            </div>
+            <div className={styles.summaryItem}>
+              <span className={styles.summaryLabel}>リーダー経験</span>
+              <span className={styles.summaryValue}>1.5年</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className={styles.recommendationSection}>
         <h3>配属推奨</h3>
-        <div className={styles.recommendationCard}>
-          <div className={styles.recommendationHeader}>
-            <span className={styles.recommendationBadge}>最適</span>
-            <span className={styles.recommendationTitle}>現部署継続</span>
+        <div className={styles.recommendationGrid}>
+          <div className={styles.recommendationCard}>
+            <div className={styles.recommendationHeader}>
+              <span className={styles.recommendationBadge}>最適</span>
+              <span className={styles.recommendationTitle}>現部署継続</span>
+            </div>
+            <div className={styles.recommendationBody}>
+              現部署での適性が非常に高く、チーム内での重要な役割を担っています。
+              主任昇進を視野に入れた育成を推奨します。
+            </div>
           </div>
-          <div className={styles.recommendationBody}>
-            現部署での適性が非常に高く、チーム内での重要な役割を担っています。
-            主任昇進を視野に入れた育成を推奨します。
+          <div className={styles.recommendationCard}>
+            <div className={styles.recommendationHeader}>
+              <span className={styles.recommendationBadge} style={{backgroundColor: '#17a2b8'}}>代替案</span>
+              <span className={styles.recommendationTitle}>ICU配属</span>
+            </div>
+            <div className={styles.recommendationBody}>
+              高度な専門性と判断力を活かせるICUへの配属も検討可能。
+              将来的な認定看護師取得を目指す場合に推奨。
+            </div>
           </div>
         </div>
       </div>
