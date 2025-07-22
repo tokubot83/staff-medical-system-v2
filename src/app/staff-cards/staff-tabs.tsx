@@ -1,8 +1,11 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Line, Bar, Radar, Scatter, Doughnut } from 'react-chartjs-2'
 import styles from './StaffCards.module.css'
+import { useRouter } from 'next/navigation'
+import { Interview } from '@/types/interview'
+import { getInterviewsByStaffId } from '@/data/mockInterviews'
 
 // 総合分析タブコンポーネント
 export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
@@ -1042,6 +1045,16 @@ export function RecruitmentTab({ selectedStaff }: { selectedStaff: any }) {
 
 // 面談・指導タブコンポーネント
 export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
+  const [staffInterviews, setStaffInterviews] = useState<Interview[]>([])
+  const router = useRouter()
+  
+  useEffect(() => {
+    if (selectedStaff?.id) {
+      const interviews = getInterviewsByStaffId(selectedStaff.id)
+      setStaffInterviews(interviews)
+    }
+  }, [selectedStaff])
+
   if (!selectedStaff) {
     return (
       <div className={styles.noDataContainer}>
@@ -1374,16 +1387,75 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
       </div>
 
       <div className={styles.interviewHistory}>
-        <h3>最近の面談記録</h3>
-        <div className={styles.historyItem}>
-          <div className={styles.historyHeader}>
-            <span className={styles.historyDate}>2025年1月10日</span>
-            <span className={styles.historyType}>定期面談</span>
+        <div className={styles.historySectionHeader}>
+          <h3>面談履歴</h3>
+          <button 
+            className={styles.viewAllButton}
+            onClick={() => router.push(`/interviews?staffId=${selectedStaff.id}`)}
+          >
+            すべて表示
+          </button>
+        </div>
+        
+        {staffInterviews.length === 0 ? (
+          <div className={styles.noInterviewsMessage}>
+            <p>面談記録がありません</p>
           </div>
-          <div className={styles.historyContent}>
-            <strong>議題:</strong> キャリアプラン相談<br />
-            <strong>内容:</strong> 主任昇進に向けた準備について。管理スキル向上のための研修参加を推奨。
+        ) : (
+          <div className={styles.interviewTimeline}>
+            {staffInterviews.slice(0, 3).map((interview) => (
+              <div key={interview.id} className={styles.timelineItem}>
+                <div className={styles.timelineMarker}>
+                  <div className={`${styles.markerDot} ${interview.status === '完了' ? styles.completed : styles.scheduled}`}></div>
+                  <div className={styles.markerLine}></div>
+                </div>
+                <div className={styles.timelineContent}>
+                  <div className={styles.timelineHeader}>
+                    <span className={styles.timelineDate}>{new Date(interview.date).toLocaleDateString('ja-JP')}</span>
+                    <span className={`${styles.timelineType} ${styles[interview.type.replace(/[^a-zA-Z]/g, '')]}`}>
+                      {interview.type}
+                    </span>
+                    <span className={`${styles.timelineStatus} ${styles[interview.status]}`}>
+                      {interview.status}
+                    </span>
+                  </div>
+                  <div className={styles.timelineBody}>
+                    <p className={styles.timelinePurpose}><strong>目的:</strong> {interview.purpose}</p>
+                    {interview.feedback && (
+                      <div className={styles.timelineFeedback}>
+                        <p><strong>主要ポイント:</strong></p>
+                        <ul>
+                          {interview.feedback.keyPoints?.slice(0, 2).map((point, idx) => (
+                            <li key={idx}>{point}</li>
+                          ))}
+                        </ul>
+                        {interview.feedback.overallSatisfaction && (
+                          <div className={styles.satisfactionBadge}>
+                            満足度: {interview.feedback.overallSatisfaction}/5
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    {interview.followUpRequired && (
+                      <div className={styles.followUpNotice}>
+                        <span className={styles.followUpIcon}>📌</span>
+                        フォローアップ予定: {interview.followUpDate}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
+        )}
+        
+        <div className={styles.interviewActions}>
+          <button 
+            className={styles.scheduleButton}
+            onClick={() => router.push(`/interviews?action=schedule&staffId=${selectedStaff.id}`)}
+          >
+            面談を予約
+          </button>
         </div>
       </div>
     </div>
@@ -1617,6 +1689,8 @@ export function DevelopmentTab({ selectedStaff }: { selectedStaff: any }) {
 
 // 教育・研修タブコンポーネント
 export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
+  const router = useRouter()
+  
   if (!selectedStaff) {
     return (
       <div className={styles.noDataContainer}>
@@ -1691,8 +1765,18 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
         <div className={styles.sectionHeader}>
           <h2>🎓 看護師教育・研修（JNAキャリアラダー）</h2>
           <div className={styles.sectionActions}>
-            <button className={styles.actionButton}>研修申込</button>
-            <button className={styles.actionButtonSecondary}>学習履歴</button>
+            <button 
+              className={styles.actionButton}
+              onClick={() => router.push(`/training?staffId=${selectedStaff.id}&tab=programs`)}
+            >
+              研修申込
+            </button>
+            <button 
+              className={styles.actionButtonSecondary}
+              onClick={() => router.push(`/training?staffId=${selectedStaff.id}&tab=history`)}
+            >
+              学習履歴
+            </button>
           </div>
         </div>
 
@@ -1976,8 +2060,18 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
       <div className={styles.sectionHeader}>
         <h2>🎓 教育・研修管理</h2>
         <div className={styles.sectionActions}>
-          <button className={styles.actionButton}>研修申込</button>
-          <button className={styles.actionButtonSecondary}>学習履歴</button>
+          <button 
+            className={styles.actionButton}
+            onClick={() => router.push(`/training?staffId=${selectedStaff.id}&tab=programs`)}
+          >
+            研修申込
+          </button>
+          <button 
+            className={styles.actionButtonSecondary}
+            onClick={() => router.push(`/training?staffId=${selectedStaff.id}&tab=history`)}
+          >
+            学習履歴
+          </button>
         </div>
       </div>
 

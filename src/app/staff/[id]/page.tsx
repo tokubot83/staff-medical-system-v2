@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
+import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import styles from './StaffDetail.module.css'
 import { staffDatabase } from '@/app/data/staffData'
@@ -758,8 +759,12 @@ function EvaluationTab({ staffData }: { staffData: any }) {
       <div className={styles.sectionHeader}>
         <h2 className={styles.sectionTitle}>📊 人事評価・考課</h2>
         <div className={styles.sectionActions}>
-          <button className={styles.sectionAction}>評価入力</button>
-          <button className={`${styles.sectionAction} ${styles.secondary}`}>過去履歴</button>
+          <Link href={`/evaluation?staffId=${staffData.id}&action=input`}>
+            <button className={styles.sectionAction}>評価入力</button>
+          </Link>
+          <Link href={`/evaluation?staffId=${staffData.id}&tab=history`}>
+            <button className={`${styles.sectionAction} ${styles.secondary}`}>過去履歴</button>
+          </Link>
         </div>
       </div>
 

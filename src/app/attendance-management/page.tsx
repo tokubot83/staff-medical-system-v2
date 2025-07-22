@@ -1,8 +1,12 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import CommonHeader from '@/components/CommonHeader'
 import styles from './Attendance.module.css'
+import { staffDatabase } from '../data/staffData.js'
+import Link from 'next/link'
+import { attendanceRecords, monthlyStats, AttendanceRecord, MonthlyStats } from '../data/attendanceData'
 
 const tabs = [
   { id: 'daily', label: '日次勤怠', icon: '📅' },
@@ -12,118 +16,41 @@ const tabs = [
   { id: 'settings', label: '設定', icon: '⚙️' },
 ]
 
-interface AttendanceRecord {
-  id: string
-  employeeId: string
-  employeeName: string
-  date: string
-  checkIn: string | null
-  checkOut: string | null
-  breakTime: number
-  workingHours: number
-  overtimeHours: number
-  status: 'normal' | 'late' | 'early' | 'absent'
-  department: string
-}
-
-interface MonthlyStats {
-  employeeId: string
-  employeeName: string
-  department: string
-  workingDays: number
-  totalHours: number
-  overtimeHours: number
-  lateCount: number
-  earlyCount: number
-  absentCount: number
-  leaveUsed: number
-}
+// AttendanceRecordとMonthlyStatsの型定義は../data/attendanceData.tsからインポート
 
 export default function AttendancePage() {
+  const searchParams = useSearchParams()
+  const staffId = searchParams.get('staffId')
   const [activeTab, setActiveTab] = useState('daily')
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedFacility, setSelectedFacility] = useState('all')
   const [selectedDepartment, setSelectedDepartment] = useState('all')
-
-  const attendanceData: AttendanceRecord[] = [
-    {
-      id: '1',
-      employeeId: 'EMP001',
-      employeeName: '田中太郎',
-      date: '2024-01-15',
-      checkIn: '09:00',
-      checkOut: '18:00',
-      breakTime: 60,
-      workingHours: 8,
-      overtimeHours: 0,
-      status: 'normal',
-      department: '看護部'
-    },
-    {
-      id: '2',
-      employeeId: 'EMP002',
-      employeeName: '佐藤花子',
-      date: '2024-01-15',
-      checkIn: '09:15',
-      checkOut: '18:30',
-      breakTime: 60,
-      workingHours: 8.25,
-      overtimeHours: 0.5,
-      status: 'late',
-      department: 'リハビリ科'
-    },
-    {
-      id: '3',
-      employeeId: 'EMP003',
-      employeeName: '鈴木一郎',
-      date: '2024-01-15',
-      checkIn: '08:45',
-      checkOut: '17:45',
-      breakTime: 60,
-      workingHours: 8,
-      overtimeHours: 0,
-      status: 'early',
-      department: '事務部'
+  
+  useEffect(() => {
+    if (staffId && staffDatabase[staffId]) {
+      const staff = staffDatabase[staffId]
+      setSearchTerm(staff.name)
+      setSelectedFacility(staff.facility || 'all')
+      setSelectedDepartment(staff.department || 'all')
     }
-  ]
+  }, [staffId])
 
-  const monthlyData: MonthlyStats[] = [
-    {
-      employeeId: 'EMP001',
-      employeeName: '田中太郎',
-      department: '看護部',
-      workingDays: 22,
-      totalHours: 176,
-      overtimeHours: 8,
-      lateCount: 0,
-      earlyCount: 0,
-      absentCount: 0,
-      leaveUsed: 2
-    },
-    {
-      employeeId: 'EMP002',
-      employeeName: '佐藤花子',
-      department: 'リハビリ科',
-      workingDays: 21,
-      totalHours: 170,
-      overtimeHours: 12,
-      lateCount: 3,
-      earlyCount: 0,
-      absentCount: 1,
-      leaveUsed: 3
-    }
-  ]
+  // 共通のデータソースから勤怠データを取得
+  const attendanceData = attendanceRecords
+  const monthlyData = monthlyStats
 
   const filteredAttendanceData = attendanceData.filter((record) => {
     const matchesSearch = record.employeeName.includes(searchTerm) || record.employeeId.includes(searchTerm)
+    const matchesFacility = selectedFacility === 'all' || record.facility === selectedFacility
     const matchesDepartment = selectedDepartment === 'all' || record.department === selectedDepartment
-    return matchesSearch && matchesDepartment
+    return matchesSearch && matchesFacility && matchesDepartment
   })
 
   const filteredMonthlyData = monthlyData.filter((record) => {
     const matchesSearch = record.employeeName.includes(searchTerm) || record.employeeId.includes(searchTerm)
+    const matchesFacility = selectedFacility === 'all' || record.facility === selectedFacility
     const matchesDepartment = selectedDepartment === 'all' || record.department === selectedDepartment
-    return matchesSearch && matchesDepartment
+    return matchesSearch && matchesFacility && matchesDepartment
   })
 
   const getStatusColor = (status: AttendanceRecord['status']) => {
@@ -286,6 +213,9 @@ function DailyTab({
               </div>
             </div>
             <div className={styles.cardDetails}>
+              <Link href={`/staff-cards/${record.employeeId}`} className={styles.viewProfileLink}>
+                職員カルテを見る →
+              </Link>
               <div className={styles.detailRow}>
                 <span className={styles.detailLabel}>出勤:</span>
                 <span className={styles.detailValue}>{record.checkIn || '-'}</span>

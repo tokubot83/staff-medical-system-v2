@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { useParams } from 'next/navigation'
 import CommonHeader from '@/components/CommonHeader'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { staffDatabase } from '../../data/staffData.js'
 import styles from '../StaffCards.module.css'
 import {
@@ -366,12 +367,14 @@ function AchievementTab({ selectedStaff }: { selectedStaff: any }): React.ReactE
 }
 
 function AttendanceTab({ selectedStaff }: { selectedStaff: any }): React.ReactElement {
+  const router = useRouter()
+  
   return (
     <div className={styles.tabContentSection}>
       <div className={styles.sectionHeader}>
         <h2>⏰ 勤務状況</h2>
         <div className={styles.sectionActions}>
-          <button className={styles.actionButton}>勤怠詳細</button>
+          <Link href={`/attendance-management?staffId=${selectedStaff.id}`} className={styles.actionButton}>勤怠詳細</Link>
           <button className={styles.actionButtonSecondary}>シフト表</button>
         </div>
       </div>

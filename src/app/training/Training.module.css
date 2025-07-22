@@ -729,12 +729,30 @@
   margin-bottom: 24px;
   padding-bottom: 16px;
   border-bottom: 2px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .detailHeader h2 {
   margin: 0;
   font-size: 24px;
   color: #333;
+}
+
+.backToCardLink {
+  color: #007bff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: color 0.2s;
+}
+
+.backToCardLink:hover {
+  color: #0056b3;
+  text-decoration: underline;
 }
 
 /* JNA Section Styles */

@@ -1,6 +1,7 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import CommonHeader from '@/components/CommonHeader'
 import { staffDatabase } from '../data/staffData.js'
 import styles from './Evaluation.module.css'
@@ -29,10 +30,26 @@ interface EvaluationData {
 }
 
 export default function EvaluationPage() {
+  const searchParams = useSearchParams()
+  const staffId = searchParams.get('staffId')
+  const action = searchParams.get('action')
+  const tab = searchParams.get('tab')
+  
   const [activeTab, setActiveTab] = useState('dashboard')
   const [selectedFacility, setSelectedFacility] = useState('all')
   const [selectedDepartment, setSelectedDepartment] = useState('all')
   const [selectedPeriod, setSelectedPeriod] = useState('2024-H2')
+  
+  // URLパラメータに基づいてタブを設定
+  useEffect(() => {
+    if (action === 'input') {
+      setActiveTab('execution')
+    } else if (tab === 'history') {
+      setActiveTab('staffList')
+    } else if (staffId && !action && !tab) {
+      setActiveTab('staffList')
+    }
+  }, [action, tab, staffId])
 
   // 評価データの集計
   const getEvaluationData = (): EvaluationData[] => {

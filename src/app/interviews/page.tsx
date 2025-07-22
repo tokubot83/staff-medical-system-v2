@@ -1,10 +1,12 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import CommonHeader from '@/components/CommonHeader'
 import Link from 'next/link'
 import { staffDatabase } from '../data/staffData.js'
 import styles from './Interviews.module.css'
+import { Interview, InterviewType, InterviewStatus } from '@/types/interview'
+import { mockInterviews, getUpcomingInterviews } from '@/data/mockInterviews'
 
 const tabs = [
   { id: 'schedule', label: '面談予定', icon: '📅' },
@@ -14,18 +16,6 @@ const tabs = [
   { id: 'settings', label: '設定', icon: '⚙️' },
 ]
 
-interface Interview {
-  id: string
-  staffId: string
-  staffName: string
-  date: string
-  time: string
-  type: string
-  status: 'scheduled' | 'completed' | 'cancelled'
-  purpose: string
-  notes?: string
-  feedback?: string
-}
 
 export default function InterviewsPage() {
   const [activeTab, setActiveTab] = useState('schedule')
@@ -33,49 +23,25 @@ export default function InterviewsPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedFacility, setSelectedFacility] = useState('all')
   const [selectedDepartment, setSelectedDepartment] = useState('all')
+  const [interviews, setInterviews] = useState<Interview[]>([])
+  const [showAddModal, setShowAddModal] = useState(false)
+  const [editingInterview, setEditingInterview] = useState<Interview | null>(null)
 
-  const mockInterviews: Interview[] = [
-    {
-      id: '1',
-      staffId: 'S001',
-      staffName: '山田太郎',
-      date: '2024-07-25',
-      time: '14:00',
-      type: '定期面談',
-      status: 'scheduled',
-      purpose: '上期評価フィードバック',
-    },
-    {
-      id: '2',
-      staffId: 'S002',
-      staffName: '佐藤花子',
-      date: '2024-07-24',
-      time: '10:00',
-      type: 'キャリア面談',
-      status: 'scheduled',
-      purpose: 'キャリアパス相談',
-    },
-    {
-      id: '3',
-      staffId: 'S003',
-      staffName: '鈴木一郎',
-      date: '2024-07-23',
-      time: '15:30',
-      type: '1on1',
-      status: 'completed',
-      purpose: '業務改善提案',
-      feedback: '積極的な改善提案があり、実施に向けて検討中',
-    },
-  ]
+  useEffect(() => {
+    setInterviews(mockInterviews)
+  }, [])
 
   const handleInterviewSelect = (interview: Interview) => {
     setSelectedInterview(interview)
     setActiveTab('feedback')
   }
 
-  const filteredInterviews = mockInterviews.filter((interview) => {
-    const matchesSearch = interview.staffName.includes(searchTerm) || interview.staffId.includes(searchTerm)
-    return matchesSearch
+  const filteredInterviews = interviews.filter((interview) => {
+    const matchesSearch = interview.staffName.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                         interview.staffId.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesFacility = selectedFacility === 'all' || interview.department === selectedFacility
+    const matchesDepartment = selectedDepartment === 'all' || interview.department === selectedDepartment
+    return matchesSearch && matchesFacility && matchesDepartment
   })
 
   return (
@@ -104,7 +70,7 @@ export default function InterviewsPage() {
         <div className={styles.tabContent}>
           {activeTab === 'schedule' && (
             <ScheduleTab 
-              interviews={filteredInterviews.filter(i => i.status === 'scheduled')}
+              interviews={filteredInterviews.filter(i => i.status === '予定')}
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
               selectedFacility={selectedFacility}
@@ -112,11 +78,12 @@ export default function InterviewsPage() {
               selectedDepartment={selectedDepartment}
               setSelectedDepartment={setSelectedDepartment}
               onInterviewSelect={handleInterviewSelect}
+              onAddClick={() => setShowAddModal(true)}
             />
           )}
           {activeTab === 'history' && (
             <HistoryTab 
-              interviews={filteredInterviews.filter(i => i.status === 'completed')}
+              interviews={filteredInterviews.filter(i => i.status === '完了')}
               onInterviewSelect={handleInterviewSelect}
             />
           )}
@@ -138,9 +105,10 @@ interface ScheduleTabProps {
   selectedDepartment: string
   setSelectedDepartment: (value: string) => void
   onInterviewSelect: (interview: Interview) => void
+  onAddClick: () => void
 }
 
-function ScheduleTab({ interviews, searchTerm, setSearchTerm, selectedFacility, setSelectedFacility, selectedDepartment, setSelectedDepartment, onInterviewSelect }: ScheduleTabProps) {
+function ScheduleTab({ interviews, searchTerm, setSearchTerm, selectedFacility, setSelectedFacility, selectedDepartment, setSelectedDepartment, onInterviewSelect, onAddClick }: ScheduleTabProps) {
   return (
     <div className={styles.listContainer}>
       <div className={styles.searchSection}>
@@ -181,7 +149,7 @@ function ScheduleTab({ interviews, searchTerm, setSearchTerm, selectedFacility, 
 
       <div className={styles.listHeader}>
         <h2>面談予定 ({interviews.length}件)</h2>
-        <button className={styles.addButton}>
+        <button className={styles.addButton} onClick={onAddClick}>
           + 新規面談を追加
         </button>
       </div>
@@ -199,6 +167,7 @@ function ScheduleTab({ interviews, searchTerm, setSearchTerm, selectedFacility, 
                 <p className={styles.staffId}>{interview.staffId}</p>
                 <p className={styles.interviewTime}>{interview.time} - {interview.type}</p>
                 <p className={styles.interviewPurpose}>{interview.purpose}</p>
+                {interview.location && <p className={styles.interviewLocation}>📍 {interview.location}</p>}
               </div>
               <div className={styles.cardActions}>
                 <button className={styles.actionButton} onClick={(e) => { e.stopPropagation(); }}>

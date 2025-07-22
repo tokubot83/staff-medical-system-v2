@@ -1,11 +1,12 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import CommonHeader from '@/components/CommonHeader'
 import Link from 'next/link'
 import styles from './Training.module.css'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title, PointElement, LineElement } from 'chart.js'
 import { Doughnut, Bar, Line } from 'react-chartjs-2'
+import { useSearchParams } from 'next/navigation'
 
 ChartJS.register(
   ArcElement,
@@ -56,8 +57,12 @@ interface Staff {
   continuingEducationUnits?: number
 }
 
-export default function TrainingPage() {
-  const [activeTab, setActiveTab] = useState('programs')
+function TrainingPageContent() {
+  const searchParams = useSearchParams()
+  const staffIdFromUrl = searchParams.get('staffId')
+  const tabFromUrl = searchParams.get('tab')
+  
+  const [activeTab, setActiveTab] = useState(tabFromUrl || 'programs')
   const [selectedProgram, setSelectedProgram] = useState<TrainingProgram | null>(null)
   const [selectedStaff, setSelectedStaff] = useState<Staff | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
@@ -156,6 +161,21 @@ export default function TrainingPage() {
       continuingEducationUnits: 56
     }
   ]
+
+  // URLパラメータからスタッフIDが渡された場合の処理
+  useEffect(() => {
+    if (staffIdFromUrl) {
+      // TODO: スタッフ情報を取得
+      const staff = mockStaff.find(s => s.id === staffIdFromUrl)
+      if (staff) {
+        setSelectedStaff(staff)
+        // 個人管理タブが指定されていない場合は、個人管理タブに切り替え
+        if (tabFromUrl === 'history' || tabFromUrl === 'individual') {
+          setActiveTab(tabFromUrl)
+        }
+      }
+    }
+  }, [staffIdFromUrl, tabFromUrl])
 
   const handleProgramSelect = (program: TrainingProgram) => {
     setSelectedProgram(program)
@@ -655,6 +675,9 @@ function StaffTrainingDetail({ staff }: { staff: Staff }) {
       <div className={styles.staffDetail}>
         <div className={styles.detailHeader}>
           <h2>🎓 {staff.name} - 看護師教育・研修（JNAキャリアラダー）</h2>
+          <Link href={`/staff-cards/${staff.id}`} className={styles.backToCardLink}>
+            職員カルテに戻る →
+          </Link>
         </div>
 
         <div className={styles.jnaSection}>
@@ -754,6 +777,9 @@ function StaffTrainingDetail({ staff }: { staff: Staff }) {
     <div className={styles.staffDetail}>
       <div className={styles.detailHeader}>
         <h2>🎓 {staff.name} - 教育・研修管理</h2>
+        <Link href={`/staff-cards/${staff.id}`} className={styles.backToCardLink}>
+          職員カルテに戻る →
+        </Link>
       </div>
 
       <div className={styles.summarySection}>
@@ -1149,5 +1175,13 @@ function SettingsTab(): React.ReactElement {
         <button className={styles.cancelButton}>キャンセル</button>
       </div>
     </div>
+  )
+}
+
+export default function TrainingPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <TrainingPageContent />
+    </Suspense>
   )
 }

@@ -1,3 +1,5 @@
+import { StaffEvaluation, EvaluationHistory } from '@/types/evaluation'
+
 // スタッフデータの型定義
 export interface StaffDetail {
   id: string;
@@ -25,7 +27,9 @@ export interface StaffDetail {
   phone: string;
   emergencyContact: string;
   address: string;
-  // 評価データ
+  // 評価データ（新形式）
+  evaluationData?: StaffEvaluation;
+  // 評価データ（旧形式・互換性のため残す）
   evaluationHistory: {
     period: string;
     overall: string;
