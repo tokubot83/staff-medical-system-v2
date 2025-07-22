@@ -2771,19 +2771,13 @@
   color: #991b1b;
 }
 
-/* Interview Insights Section */
-.interviewInsightsSection {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.insightsDisplay {
+/* Interview Insights Full Width */
+.interviewInsightsFullWidth {
   width: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.2fr 1fr;
   gap: 24px;
+  margin-bottom: 24px;
 }
 
 .currentStatusCard {
@@ -2811,59 +2805,90 @@
   margin: 0;
 }
 
-.statusItems {
+.statusItemsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.statusItem {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s;
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.statusItem {
-  position: relative;
-  display: flex;
-  align-items: center;
-  background: white;
-  border-radius: 8px;
-  padding: 12px;
-  border: 1px solid #e5e7eb;
-  transition: all 0.2s;
-}
-
 .statusItem:hover {
-  transform: translateX(4px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.itemBar {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  border-radius: 8px 0 0 8px;
-  transition: width 0.3s ease;
-}
-
-.itemContent {
+.itemHeader {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding-left: 12px;
+  gap: 8px;
+}
+
+.priorityBadge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: white;
+  text-transform: uppercase;
 }
 
 .itemLabel {
-  font-size: 14px;
-  font-weight: 500;
-  color: #374151;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1f2937;
+  flex: 1;
 }
 
-.itemValue {
-  font-size: 12px;
+.itemBarContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.itemBar {
+  flex: 1;
+  height: 20px;
+  background: #e5e7eb;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.itemBar::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.3s ease;
+}
+
+.itemPercentage {
+  font-size: 14px;
   font-weight: 600;
-  padding: 4px 12px;
-  border-radius: 20px;
-  background: #f3f4f6;
   color: #6b7280;
+  min-width: 40px;
+  text-align: right;
+}
+
+.itemDescription {
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.5;
+  margin: 0;
 }
 
 .recommendationPanel {
@@ -2922,4 +2947,22 @@
   color: #6b7280;
   margin: 0;
   line-height: 1.5;
+}
+
+/* Summary Metrics Row */
+.summaryMetricsRow {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.summaryMetricsRow .metricsGrid {
+  display: flex;
+  gap: 16px;
+}
+
+.summaryMetricsRow .summarySubCards {
+  display: flex;
+  gap: 16px;
 }
