@@ -984,6 +984,27 @@ export function DevelopmentTab({ selectedStaff }: { selectedStaff: any }) {
     }]
   }
 
+  // キャリア方向性分析データ
+  const careerDirectionData = {
+    labels: ['専門技術向上', '管理職志向', '現状維持', 'スペシャリスト'],
+    datasets: [{
+      data: [45, 35, 5, 15],
+      backgroundColor: [
+        'rgba(0, 123, 255, 0.8)',
+        'rgba(40, 167, 69, 0.8)',
+        'rgba(108, 117, 125, 0.8)',
+        'rgba(255, 193, 7, 0.8)'
+      ],
+      borderColor: [
+        'rgba(0, 123, 255, 1)',
+        'rgba(40, 167, 69, 1)',
+        'rgba(108, 117, 125, 1)',
+        'rgba(255, 193, 7, 1)'
+      ],
+      borderWidth: 1
+    }]
+  }
+
   return (
     <div className={styles.tabContentSection}>
       <div className={styles.sectionHeader}>
@@ -994,23 +1015,126 @@ export function DevelopmentTab({ selectedStaff }: { selectedStaff: any }) {
         </div>
       </div>
 
-      <div className={styles.developmentOverview}>
-        <div className={styles.overviewCard}>
-          <h3>スキル成長率</h3>
-          <div className={styles.growthRate}>+28%</div>
-          <div className={styles.growthPeriod}>過去1年間</div>
+      <div className={styles.interviewSummaryEnhanced}>
+        <div className={styles.summaryMainCard}>
+          <div className={styles.summaryCardHeader}>
+            <span className={styles.summaryIcon}>🎯</span>
+            <h3>キャリア開発方向性</h3>
+          </div>
+          <div className={styles.summaryMainMetrics}>
+            <div className={styles.metricCircle}>
+              <div className={styles.circleProgress}>
+                <svg className={styles.progressRing} viewBox="0 0 120 120">
+                  <circle cx="60" cy="60" r="54" fill="none" stroke="#e5e7eb" strokeWidth="12" />
+                  <circle cx="60" cy="60" r="54" fill="none" stroke="#007bff" strokeWidth="12" 
+                    strokeDasharray={`${2 * Math.PI * 54}`} 
+                    strokeDashoffset={`${2 * Math.PI * 54 * (1 - 0.45)}`}
+                    transform="rotate(-90 60 60)" />
+                </svg>
+                <div className={styles.circleContent}>
+                  <div className={styles.circleValue}>専門技術</div>
+                  <div className={styles.circleLabel}>45% 志向</div>
+                </div>
+              </div>
+              <div className={styles.metricDetails}>
+                <div className={styles.detailItem}>
+                  <span className={styles.detailIcon}>🔧</span>
+                  <span className={styles.detailText}>技術スペシャリスト路線</span>
+                </div>
+                <div className={styles.detailItem}>
+                  <span className={styles.detailIcon}>📈</span>
+                  <span className={styles.detailText}>管理職適性あり (35%)</span>
+                </div>
+              </div>
+            </div>
+            <div className={styles.metricsGrid}>
+              <div className={styles.metricCardEnhanced}>
+                <div className={styles.metricHeader}>
+                  <span className={styles.metricIcon}>🚀</span>
+                  <span className={styles.metricTrend}>+28%</span>
+                </div>
+                <div className={styles.metricValue}>92%</div>
+                <div className={styles.metricLabel}>スキル成長率</div>
+                <div className={styles.metricProgress}>
+                  <div className={styles.progressBar}>
+                    <div className={styles.progressFill} style={{ width: '92%' }}></div>
+                  </div>
+                  <span className={styles.progressText}>年間目標達成</span>
+                </div>
+              </div>
+              <div className={styles.metricCardEnhanced}>
+                <div className={styles.metricHeader}>
+                  <span className={styles.metricIcon}>⭐</span>
+                  <span className={styles.metricTrend}>+3</span>
+                </div>
+                <div className={styles.metricValue}>レベル4</div>
+                <div className={styles.metricLabel}>現在の到達段階</div>
+                <div className={styles.ratingStars}>
+                  <span className={styles.starFilled}>次段階まで80%</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className={styles.overviewCard}>
-          <h3>推奨開発領域</h3>
-          <ul className={styles.recommendList}>
-            <li>戦略立案能力</li>
-            <li>プロジェクト管理</li>
-            <li>財務知識</li>
-          </ul>
+        
+        <div className={styles.summarySubCards}>
+          <div className={styles.nextSessionCard}>
+            <div className={styles.cardIconWrapper}>
+              <span className={styles.cardIcon}>🎯</span>
+            </div>
+            <div className={styles.cardContent}>
+              <div className={styles.cardTitle}>推奨キャリアパス</div>
+              <div className={styles.cardMainInfo}>技術リーダー</div>
+              <div className={styles.cardSubInfo}>3-5年後の目標ポジション</div>
+              <button className={styles.cardAction}>詳細確認</button>
+            </div>
+          </div>
+          
+          <div className={styles.recentTopicsCard}>
+            <div className={styles.cardIconWrapper}>
+              <span className={styles.cardIcon}>📊</span>
+            </div>
+            <div className={styles.cardContent}>
+              <div className={styles.cardTitle}>重点開発領域</div>
+              <div className={styles.topicsList}>
+                <span className={styles.topicTag}>高度専門技術</span>
+                <span className={styles.topicTag}>プロジェクト管理</span>
+                <span className={styles.topicTag}>後輩指導</span>
+              </div>
+              <div className={styles.cardSubInfo}>次期目標達成に向けて</div>
+            </div>
+          </div>
         </div>
       </div>
 
       <div className={styles.chartGrid}>
+        <div className={styles.chartContainer}>
+          <h4>キャリア方向性分析</h4>
+          <div className={`${styles.alert} ${styles.alertInfo}`}>
+            <span>📊</span>
+            <span>専門技術向上志向が45%で最も高く、管理職志向も35%と高い適性を示しています。バランスの取れたキャリア開発が可能です。</span>
+          </div>
+          <div className={styles.chartWrapper}>
+            <Doughnut data={careerDirectionData} options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  position: 'right'
+                },
+                tooltip: {
+                  callbacks: {
+                    label: function(context) {
+                      const label = context.label || '';
+                      const value = context.parsed || 0;
+                      return label + ': ' + value + '%';
+                    }
+                  }
+                }
+              }
+            }} />
+          </div>
+        </div>
         <div className={styles.chartContainer}>
           <h4>スキル成長推移</h4>
           <div className={`${styles.alert} ${styles.alertSuccess}`}>
@@ -1030,6 +1154,9 @@ export function DevelopmentTab({ selectedStaff }: { selectedStaff: any }) {
             }} />
           </div>
         </div>
+      </div>
+
+      <div className={styles.chartGrid}>
         <div className={styles.chartContainer}>
           <h4>スキルギャップ分析</h4>
           <div className={`${styles.alert} ${styles.alertWarning}`}>
@@ -1057,8 +1184,8 @@ export function DevelopmentTab({ selectedStaff }: { selectedStaff: any }) {
           <div className={styles.timelineItem}>
             <div className={styles.timelinePeriod}>2025年Q1</div>
             <div className={styles.timelineContent}>
-              <strong>管理職基礎研修</strong>
-              <p>リーダーシップとマネジメントの基礎習得</p>
+              <strong>高度専門技術研修</strong>
+              <p>専門分野における最新技術の習得</p>
             </div>
           </div>
           <div className={styles.timelineItem}>
@@ -1066,6 +1193,13 @@ export function DevelopmentTab({ selectedStaff }: { selectedStaff: any }) {
             <div className={styles.timelineContent}>
               <strong>プロジェクト管理実践</strong>
               <p>実際のプロジェクトをリードし、実践力向上</p>
+            </div>
+          </div>
+          <div className={styles.timelineItem}>
+            <div className={styles.timelinePeriod}>2025年Q3</div>
+            <div className={styles.timelineContent}>
+              <strong>後輩指導プログラム</strong>
+              <p>メンター制度を通じた指導力強化</p>
             </div>
           </div>
         </div>
@@ -1079,16 +1213,16 @@ export function DevelopmentTab({ selectedStaff }: { selectedStaff: any }) {
             <span className={styles.commentDate}>2025年1月</span>
           </div>
           <div className={styles.commentBody}>
-            技術スキルの成長率が非常に高い。マネジメントスキルの更なる向上に重点を置いた育成を推奨。
+            専門技術への強い志向性と高い成長率を示しています。技術リーダーとしての道筋が明確で、3-5年後の昇進が期待できます。
           </div>
         </div>
         <div className={styles.commentCard}>
           <div className={styles.commentHeader}>
-            <span className={styles.commentAuthor}>研修担当</span>
+            <span className={styles.commentAuthor}>キャリアアドバイザー</span>
             <span className={styles.commentDate}>2025年1月</span>
           </div>
           <div className={styles.commentBody}>
-            戦略立案能力とプロジェクト管理能力のギャップが見られる。管理職基礎研修の早期受講を推奨。
+            技術専門職と管理職の両方に適性があります。まずは技術リーダーとして経験を積み、その後の選択肢を広げることを推奨します。
           </div>
         </div>
       </div>
