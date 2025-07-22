@@ -49,7 +49,7 @@ export default function HealthPage() {
   const [selectedDepartment, setSelectedDepartment] = useState('all')
 
   // staffData.jsから健康データを取得し、StaffHealth形式に変換
-  const staffHealthData: StaffHealth[] = staffDatabase.map(staff => ({
+  const staffHealthData: StaffHealth[] = Object.values(staffDatabase).map(staff => ({
     staffId: staff.id,
     staffName: staff.name,
     healthScore: staff.healthScore || 85,
@@ -61,7 +61,7 @@ export default function HealthPage() {
   }))
 
   // 健康記録データ（実際のアプリケーションではAPIから取得）
-  const healthRecords: HealthRecord[] = staffDatabase.flatMap(staff => [
+  const healthRecords: HealthRecord[] = Object.values(staffDatabase).flatMap(staff => [
     {
       id: `${staff.id}-checkup-1`,
       staffId: staff.id,
