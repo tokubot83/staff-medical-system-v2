@@ -2966,3 +2966,30 @@
   display: flex;
   gap: 16px;
 }
+
+
+/* Responsive adjustments */
+@media (max-width: 1400px) {
+  .interviewInsightsFullWidth {
+    grid-template-columns: 1fr;
+  }
+  
+  .statusItemsGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .summaryMetricsRow {
+    grid-template-columns: 1fr;
+  }
+  
+  .summaryMetricsRow .metricsGrid {
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .summaryMetricsRow .metricsGrid,
+  .summaryMetricsRow .summarySubCards {
+    flex-direction: column;
+  }
+}
