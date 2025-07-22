@@ -1289,17 +1289,20 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
             </div>
             <div className={styles.summaryMainMetrics}>
               <div className={styles.metricCircle}>
-                <div className={styles.circleProgress}>
-                  <svg className={styles.progressRing} viewBox="0 0 120 120">
-                    <circle cx="60" cy="60" r="54" fill="none" stroke="#e5e7eb" strokeWidth="12" />
-                    <circle cx="60" cy="60" r="54" fill="none" stroke="#9b7cb6" strokeWidth="12" 
-                      strokeDasharray={`${2 * Math.PI * 54}`} 
-                      strokeDashoffset={`${2 * Math.PI * 54 * (1 - 0.95)}`}
-                      transform="rotate(-90 60 60)" />
-                  </svg>
-                  <div className={styles.circleContent}>
-                    <div className={styles.circleValue}>95%</div>
-                    <div className={styles.circleLabel}>技術習得率</div>
+                <div className={styles.ladderLevelDisplay}>
+                  <div className={styles.currentLadderLevel}>
+                    <div className={styles.levelIndicator}>レベル</div>
+                    <div className={styles.levelNumber}>Ⅳ</div>
+                    <div className={styles.levelSubtext}>現在のラダーレベル</div>
+                  </div>
+                  <div className={styles.levelProgressBar}>
+                    <div className={styles.levelProgressFill} style={{ width: '80%' }}></div>
+                    <div className={styles.levelProgressText}>レベルⅤまで 80%</div>
+                  </div>
+                  <div className={styles.currentTrainingStatus}>
+                    <div className={styles.trainingStatusBadge}>受講中</div>
+                    <div className={styles.trainingName}>高度看護実践研修</div>
+                    <div className={styles.trainingPeriod}>2025年1月〜3月</div>
                   </div>
                 </div>
                 <div className={styles.metricDetails}>
@@ -1309,7 +1312,7 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
                   </div>
                   <div className={styles.detailItem}>
                     <span className={styles.detailIcon}>📈</span>
-                    <span className={styles.detailText}>レベルⅤまで80%</span>
+                    <span className={styles.detailText}>組織内上位20%</span>
                   </div>
                 </div>
               </div>
