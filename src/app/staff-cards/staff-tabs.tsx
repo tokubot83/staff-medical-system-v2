@@ -777,28 +777,69 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
             <h3>面談実績サマリー</h3>
           </div>
           <div className={styles.summaryMainMetrics}>
-            <div className={styles.metricCircle}>
-              <div className={styles.circleProgress}>
-                <svg className={styles.progressRing} viewBox="0 0 120 120">
-                  <circle cx="60" cy="60" r="54" fill="none" stroke="#e5e7eb" strokeWidth="12" />
-                  <circle cx="60" cy="60" r="54" fill="none" stroke="#3b82f6" strokeWidth="12" 
-                    strokeDasharray={`${2 * Math.PI * 54}`} 
-                    strokeDashoffset={`${2 * Math.PI * 54 * (1 - 0.95)}`}
-                    transform="rotate(-90 60 60)" />
-                </svg>
-                <div className={styles.circleContent}>
-                  <div className={styles.circleValue}>95%</div>
-                  <div className={styles.circleLabel}>目標達成率</div>
+            <div className={styles.interviewInsightsSection}>
+              <div className={styles.insightsDisplay}>
+                <div className={styles.currentStatusCard}>
+                  <div className={styles.statusHeader}>
+                    <span className={styles.statusIcon}>🎯</span>
+                    <h4>現在の関心事・重点課題</h4>
+                  </div>
+                  <div className={styles.statusItems}>
+                    <div className={styles.statusItem} style={{ '--priority': 1 }}>
+                      <div className={styles.itemBar} style={{ width: '90%', backgroundColor: '#ef4444' }}></div>
+                      <div className={styles.itemContent}>
+                        <span className={styles.itemLabel}>キャリアパス不安</span>
+                        <span className={styles.itemValue}>高</span>
+                      </div>
+                    </div>
+                    <div className={styles.statusItem} style={{ '--priority': 2 }}>
+                      <div className={styles.itemBar} style={{ width: '70%', backgroundColor: '#f59e0b' }}></div>
+                      <div className={styles.itemContent}>
+                        <span className={styles.itemLabel}>業務負荷調整</span>
+                        <span className={styles.itemValue}>中</span>
+                      </div>
+                    </div>
+                    <div className={styles.statusItem} style={{ '--priority': 3 }}>
+                      <div className={styles.itemBar} style={{ width: '60%', backgroundColor: '#3b82f6' }}></div>
+                      <div className={styles.itemContent}>
+                        <span className={styles.itemLabel}>スキル向上意欲</span>
+                        <span className={styles.itemValue}>中</span>
+                      </div>
+                    </div>
+                    <div className={styles.statusItem} style={{ '--priority': 4 }}>
+                      <div className={styles.itemBar} style={{ width: '40%', backgroundColor: '#10b981' }}></div>
+                      <div className={styles.itemContent}>
+                        <span className={styles.itemLabel}>人間関係改善</span>
+                        <span className={styles.itemValue}>低</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div className={styles.metricDetails}>
-                <div className={styles.detailItem}>
-                  <span className={styles.detailIcon}>↗️</span>
-                  <span className={styles.detailText}>前月比 +8%</span>
-                </div>
-                <div className={styles.detailItem}>
-                  <span className={styles.detailIcon}>🎯</span>
-                  <span className={styles.detailText}>年間目標達成見込み</span>
+                <div className={styles.recommendationPanel}>
+                  <h4>次回面談の推奨アプローチ</h4>
+                  <div className={styles.approachList}>
+                    <div className={styles.approachItem}>
+                      <span className={styles.approachIcon}>1️⃣</span>
+                      <div className={styles.approachContent}>
+                        <strong>キャリアビジョンの明確化</strong>
+                        <p>3-5年後の具体的な目標設定を支援</p>
+                      </div>
+                    </div>
+                    <div className={styles.approachItem}>
+                      <span className={styles.approachIcon}>2️⃣</span>
+                      <div className={styles.approachContent}>
+                        <strong>業務優先順位の見直し</strong>
+                        <p>効率的なタスク管理方法を一緒に検討</p>
+                      </div>
+                    </div>
+                    <div className={styles.approachItem}>
+                      <span className={styles.approachIcon}>3️⃣</span>
+                      <div className={styles.approachContent}>
+                        <strong>成長機会の提供</strong>
+                        <p>希望に沿った研修・プロジェクト参加を提案</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
