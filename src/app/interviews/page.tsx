@@ -262,7 +262,7 @@ function FeedbackTab({ selectedInterview }: FeedbackTabProps) {
             className={styles.textArea}
             placeholder="フィードバック内容を入力してください"
             rows={6}
-            defaultValue={selectedInterview.feedback}
+            defaultValue={selectedInterview.feedback?.keyPoints?.join('\n') || ''}
           />
         </div>
 
