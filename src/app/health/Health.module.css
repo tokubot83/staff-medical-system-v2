@@ -499,3 +499,47 @@
   color: #6b7280;
   font-size: 16px;
 }
+
+/* カードアクション */
+.cardActions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.viewDetailLink {
+  flex: 1;
+  padding: 8px 16px;
+  background: #10b981;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  transition: background 0.2s;
+}
+
+.viewDetailLink:hover {
+  background: #059669;
+}
+
+.checkupButton {
+  flex: 1;
+  padding: 8px 16px;
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.checkupButton:hover {
+  background: #e5e7eb;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}

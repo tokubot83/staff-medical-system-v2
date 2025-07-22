@@ -48,80 +48,50 @@ export default function HealthPage() {
   const [selectedFacility, setSelectedFacility] = useState('all')
   const [selectedDepartment, setSelectedDepartment] = useState('all')
 
-  const mockStaffHealth: StaffHealth[] = [
-    {
-      staffId: 'S001',
-      staffName: '山田太郎',
-      healthScore: 85,
-      stressIndex: 35,
-      lastCheckupDate: '2024-01-15',
-      nextCheckupDate: '2025-01-15',
-      riskFactors: ['軽度の高血圧'],
-      recommendations: ['塩分控えめの食事', '定期的な運動']
-    },
-    {
-      staffId: 'S002',
-      staffName: '佐藤花子',
-      healthScore: 92,
-      stressIndex: 28,
-      lastCheckupDate: '2024-02-20',
-      nextCheckupDate: '2025-02-20',
-      riskFactors: [],
-      recommendations: ['現状維持']
-    },
-    {
-      staffId: 'S003',
-      staffName: '鈴木一郎',
-      healthScore: 78,
-      stressIndex: 65,
-      lastCheckupDate: '2024-03-10',
-      nextCheckupDate: '2025-03-10',
-      riskFactors: ['ストレス過多', '睡眠不足'],
-      recommendations: ['ストレス管理', '休養の確保', 'カウンセリング検討']
-    },
-  ]
+  // staffData.jsから健康データを取得し、StaffHealth形式に変換
+  const staffHealthData: StaffHealth[] = staffDatabase.map(staff => ({
+    staffId: staff.id,
+    staffName: staff.name,
+    healthScore: staff.healthScore || 85,
+    stressIndex: staff.stressIndex || 40,
+    lastCheckupDate: staff.lastCheckupDate || '2024-01-15',
+    nextCheckupDate: staff.nextCheckupDate || '2025-01-15',
+    riskFactors: staff.healthRisks || [],
+    recommendations: staff.healthRecommendations || []
+  }))
 
-  const mockHealthRecords: HealthRecord[] = [
+  // 健康記録データ（実際のアプリケーションではAPIから取得）
+  const healthRecords: HealthRecord[] = staffDatabase.flatMap(staff => [
     {
-      id: '1',
-      staffId: 'S001',
-      staffName: '山田太郎',
-      date: '2024-01-15',
-      type: 'checkup',
-      healthScore: 85,
-      bloodPressure: '130/85',
+      id: `${staff.id}-checkup-1`,
+      staffId: staff.id,
+      staffName: staff.name,
+      date: staff.lastCheckupDate || '2024-01-15',
+      type: 'checkup' as const,
+      healthScore: staff.healthScore || 85,
+      bloodPressure: '120/80',
       bloodSugar: 95,
-      cholesterol: 210,
-      bmi: 24.5
+      cholesterol: 200,
+      bmi: 23.5
     },
     {
-      id: '2',
-      staffId: 'S002',
-      staffName: '佐藤花子',
+      id: `${staff.id}-stress-1`,
+      staffId: staff.id,
+      staffName: staff.name,
       date: '2024-06-10',
-      type: 'stress',
-      stressIndex: 28,
-      mentalHealthStatus: '良好',
-      consultationNotes: 'ワークライフバランスが良好に保たれている'
-    },
-    {
-      id: '3',
-      staffId: 'S003',
-      staffName: '鈴木一郎',
-      date: '2024-07-01',
-      type: 'mental',
-      stressIndex: 65,
-      mentalHealthStatus: '要観察',
-      consultationNotes: '業務負荷が高く、休息が必要。上司との面談を推奨'
-    },
-  ]
+      type: 'stress' as const,
+      stressIndex: staff.stressIndex || 40,
+      mentalHealthStatus: staff.stressIndex < 40 ? '良好' : staff.stressIndex < 70 ? '要観察' : '要対応',
+      consultationNotes: staff.stressIndex < 40 ? 'ストレス管理良好' : '業務負荷の調整を検討'
+    }
+  ])
 
   const handleStaffSelect = (staff: StaffHealth) => {
     setSelectedStaff(staff)
     setActiveTab('checkup')
   }
 
-  const filteredStaffHealth = mockStaffHealth.filter((staff) => {
+  const filteredStaffHealth = staffHealthData.filter((staff) => {
     const matchesSearch = staff.staffName.includes(searchTerm) || staff.staffId.includes(searchTerm)
     return matchesSearch
   })
@@ -178,12 +148,12 @@ export default function HealthPage() {
           )}
           {activeTab === 'checkup' && (
             <CheckupTab 
-              records={mockHealthRecords.filter(r => r.type === 'checkup')}
+              records={healthRecords.filter(r => r.type === 'checkup')}
               selectedStaff={selectedStaff}
             />
           )}
-          {activeTab === 'stress' && <StressTab records={mockHealthRecords.filter(r => r.type === 'stress')} />}
-          {activeTab === 'mental' && <MentalTab records={mockHealthRecords.filter(r => r.type === 'mental')} />}
+          {activeTab === 'stress' && <StressTab records={healthRecords.filter(r => r.type === 'stress')} />}
+          {activeTab === 'mental' && <MentalTab records={healthRecords.filter(r => r.type === 'mental')} />}
           {activeTab === 'analytics' && <AnalyticsTab />}
         </div>
       </div>
@@ -260,7 +230,7 @@ function OverviewTab({
 
       <div className={styles.healthGrid}>
         {staffHealth.map((staff) => (
-          <div key={staff.staffId} className={styles.healthCard} onClick={() => onStaffSelect(staff)}>
+          <div key={staff.staffId} className={styles.healthCard}>
             <div className={styles.cardHeader}>
               <div className={styles.cardInfo}>
                 <h3>{staff.staffName}</h3>
@@ -311,6 +281,14 @@ function OverviewTab({
                   ))}
                 </div>
               )}
+            </div>
+            <div className={styles.cardActions}>
+              <Link href={`/staff-cards/${staff.staffId}`} className={styles.viewDetailLink}>
+                職員詳細を見る
+              </Link>
+              <button className={styles.checkupButton} onClick={() => onStaffSelect(staff)}>
+                健診記録を確認
+              </button>
             </div>
           </div>
         ))}
