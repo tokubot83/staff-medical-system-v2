@@ -230,6 +230,76 @@
   padding: 24px;
 }
 
+.historyHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.historyHeader h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.historyControls {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.dateRangeFilter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dateInput {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.dateRangeSeparator {
+  color: #666;
+  font-size: 14px;
+}
+
+.sortControls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.sortSelect {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  background: white;
+}
+
+.sortOrderButton {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+
+.sortOrderButton:hover {
+  background: #f5f5f5;
+  border-color: #007bff;
+  color: #007bff;
+}
+
 .historyList {
   display: grid;
   gap: 16px;

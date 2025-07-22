@@ -3331,3 +3331,231 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Interview History Timeline Styles */
+.historySectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.historySectionHeader h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.viewAllButton {
+  padding: 6px 12px;
+  background: transparent;
+  border: 1px solid #007bff;
+  color: #007bff;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.viewAllButton:hover {
+  background: #007bff;
+  color: white;
+}
+
+.noInterviewsMessage {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.interviewTimeline {
+  position: relative;
+}
+
+.timelineItem {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.timelineMarker {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.markerDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ddd;
+  position: relative;
+  z-index: 1;
+}
+
+.markerDot.completed {
+  background: #28a745;
+}
+
+.markerDot.scheduled {
+  background: #007bff;
+}
+
+.markerLine {
+  width: 2px;
+  height: 100%;
+  background: #e0e0e0;
+  position: absolute;
+  top: 12px;
+  left: 5px;
+}
+
+.timelineItem:last-child .markerLine {
+  display: none;
+}
+
+.timelineContent {
+  flex: 1;
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.timelineHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.timelineDate {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+.timelineType {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.timelineType.定期面談 {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.timelineType.フォロー面談 {
+  background: #e8f5e9;
+  color: #388e3c;
+}
+
+.timelineType.健康相談 {
+  background: #fff3e0;
+  color: #f57c00;
+}
+
+.timelineType.キャリア相談 {
+  background: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.timelineStatus {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-left: auto;
+}
+
+.timelineStatus.完了 {
+  background: #e8f5e9;
+  color: #388e3c;
+}
+
+.timelineStatus.予定 {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.timelineBody {
+  font-size: 14px;
+  color: #333;
+  line-height: 1.6;
+}
+
+.timelinePurpose {
+  margin-bottom: 8px;
+}
+
+.timelineFeedback {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.timelineFeedback ul {
+  margin: 8px 0 0 20px;
+  padding: 0;
+}
+
+.timelineFeedback li {
+  margin-bottom: 4px;
+  color: #555;
+}
+
+.satisfactionBadge {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 4px 12px;
+  background: #ffeb3b;
+  color: #333;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.followUpNotice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 8px 12px;
+  background: #fff8e1;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #f57c00;
+}
+
+.followUpIcon {
+  font-size: 16px;
+}
+
+.interviewActions {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.scheduleButton {
+  padding: 10px 24px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.scheduleButton:hover {
+  background: #0056b3;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+}

@@ -126,11 +126,12 @@ function EvaluationPageContent() {
               setSelectedDepartment={setSelectedDepartment}
               selectedPeriod={selectedPeriod}
               setSelectedPeriod={setSelectedPeriod}
+              highlightStaffId={staffId}
             />
           )}
           {activeTab === 'process' && <ProcessTab />}
           {activeTab === 'criteria' && <CriteriaTab />}
-          {activeTab === 'execution' && <ExecutionTab />}
+          {activeTab === 'execution' && <ExecutionTab targetStaffId={staffId} />}
           {activeTab === 'analysis' && <AnalysisTab />}
         </div>
       </div>

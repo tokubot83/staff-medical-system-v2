@@ -206,6 +206,22 @@
   color: #1f2937;
 }
 
+/* 職員カルテへのリンク */
+.viewProfileLink {
+  display: inline-block;
+  color: #3b82f6;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 12px;
+  transition: color 0.2s;
+}
+
+.viewProfileLink:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
 /* 月次集計タブ */
 .recordsList {
   display: flex;

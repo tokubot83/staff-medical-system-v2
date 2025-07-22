@@ -7,6 +7,7 @@ import { staffDatabase } from '../data/staffData.js'
 import styles from './Interviews.module.css'
 import { Interview, InterviewType, InterviewStatus } from '@/types/interview'
 import { mockInterviews, getUpcomingInterviews } from '@/data/mockInterviews'
+import InterviewModal from '@/components/InterviewModal'
 
 const tabs = [
   { id: 'schedule', label: '面談予定', icon: '📅' },
@@ -26,6 +27,10 @@ export default function InterviewsPage() {
   const [interviews, setInterviews] = useState<Interview[]>([])
   const [showAddModal, setShowAddModal] = useState(false)
   const [editingInterview, setEditingInterview] = useState<Interview | null>(null)
+  const [dateRange, setDateRange] = useState<{ start: string; end: string }>({
+    start: '',
+    end: ''
+  })
 
   useEffect(() => {
     setInterviews(mockInterviews)
@@ -36,12 +41,58 @@ export default function InterviewsPage() {
     setActiveTab('feedback')
   }
 
+  const handleSaveInterview = (interviewData: Partial<Interview>) => {
+    if (editingInterview) {
+      // 編集の場合
+      setInterviews(interviews.map(i => 
+        i.id === editingInterview.id 
+          ? { ...editingInterview, ...interviewData } 
+          : i
+      ))
+    } else {
+      // 新規作成の場合
+      const newInterview: Interview = {
+        id: `INT${Date.now()}`,
+        staffId: interviewData.staffId || '',
+        staffName: interviewData.staffName || '',
+        department: interviewData.department || '内科',
+        date: interviewData.date || '',
+        time: interviewData.time || '',
+        type: interviewData.type || '定期面談',
+        status: interviewData.status || '予定',
+        purpose: interviewData.purpose || '',
+        location: interviewData.location,
+        interviewerId: interviewData.interviewerId || 'M001',
+        interviewerName: interviewData.interviewerName || '田中管理者',
+        duration: interviewData.duration,
+        notes: interviewData.notes,
+        followUpRequired: interviewData.followUpRequired,
+        followUpDate: interviewData.followUpDate,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+      setInterviews([...interviews, newInterview])
+    }
+    setShowAddModal(false)
+    setEditingInterview(null)
+  }
+
   const filteredInterviews = interviews.filter((interview) => {
     const matchesSearch = interview.staffName.toLowerCase().includes(searchTerm.toLowerCase()) || 
                          interview.staffId.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesFacility = selectedFacility === 'all' || interview.department === selectedFacility
     const matchesDepartment = selectedDepartment === 'all' || interview.department === selectedDepartment
-    return matchesSearch && matchesFacility && matchesDepartment
+    
+    // 日付フィルター
+    const matchesDateRange = (() => {
+      if (!dateRange.start && !dateRange.end) return true
+      const interviewDate = new Date(interview.date)
+      if (dateRange.start && interviewDate < new Date(dateRange.start)) return false
+      if (dateRange.end && interviewDate > new Date(dateRange.end)) return false
+      return true
+    })()
+    
+    return matchesSearch && matchesFacility && matchesDepartment && matchesDateRange
   })
 
   return (
@@ -79,12 +130,18 @@ export default function InterviewsPage() {
               setSelectedDepartment={setSelectedDepartment}
               onInterviewSelect={handleInterviewSelect}
               onAddClick={() => setShowAddModal(true)}
+              onEditClick={(interview) => {
+                setEditingInterview(interview)
+                setShowAddModal(true)
+              }}
             />
           )}
           {activeTab === 'history' && (
             <HistoryTab 
               interviews={filteredInterviews.filter(i => i.status === '完了')}
               onInterviewSelect={handleInterviewSelect}
+              dateRange={dateRange}
+              onDateRangeChange={setDateRange}
             />
           )}
           {activeTab === 'feedback' && <FeedbackTab selectedInterview={selectedInterview} />}
@@ -92,6 +149,16 @@ export default function InterviewsPage() {
           {activeTab === 'settings' && <SettingsTab />}
         </div>
       </div>
+      
+      <InterviewModal
+        isOpen={showAddModal}
+        onClose={() => {
+          setShowAddModal(false)
+          setEditingInterview(null)
+        }}
+        onSave={handleSaveInterview}
+        interview={editingInterview}
+      />
     </div>
   )
 }
@@ -106,9 +173,10 @@ interface ScheduleTabProps {
   setSelectedDepartment: (value: string) => void
   onInterviewSelect: (interview: Interview) => void
   onAddClick: () => void
+  onEditClick?: (interview: Interview) => void
 }
 
-function ScheduleTab({ interviews, searchTerm, setSearchTerm, selectedFacility, setSelectedFacility, selectedDepartment, setSelectedDepartment, onInterviewSelect, onAddClick }: ScheduleTabProps) {
+function ScheduleTab({ interviews, searchTerm, setSearchTerm, selectedFacility, setSelectedFacility, selectedDepartment, setSelectedDepartment, onInterviewSelect, onAddClick, onEditClick }: ScheduleTabProps) {
   return (
     <div className={styles.listContainer}>
       <div className={styles.searchSection}>
@@ -170,7 +238,13 @@ function ScheduleTab({ interviews, searchTerm, setSearchTerm, selectedFacility, 
                 {interview.location && <p className={styles.interviewLocation}>📍 {interview.location}</p>}
               </div>
               <div className={styles.cardActions}>
-                <button className={styles.actionButton} onClick={(e) => { e.stopPropagation(); }}>
+                <button 
+                  className={styles.actionButton} 
+                  onClick={(e) => { 
+                    e.stopPropagation();
+                    if (onEditClick) onEditClick(interview);
+                  }}
+                >
                   編集
                 </button>
                 <button className={styles.actionButton} onClick={(e) => { e.stopPropagation(); }}>
@@ -188,17 +262,75 @@ function ScheduleTab({ interviews, searchTerm, setSearchTerm, selectedFacility, 
 interface HistoryTabProps {
   interviews: Interview[]
   onInterviewSelect: (interview: Interview) => void
+  dateRange?: { start: string; end: string }
+  onDateRangeChange?: (range: { start: string; end: string }) => void
 }
 
-function HistoryTab({ interviews, onInterviewSelect }: HistoryTabProps) {
+function HistoryTab({ interviews, onInterviewSelect, dateRange, onDateRangeChange }: HistoryTabProps) {
+  const [sortBy, setSortBy] = useState<'date' | 'type' | 'staff'>('date')
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
+  
+  const sortedInterviews = [...interviews].sort((a, b) => {
+    let comparison = 0
+    switch (sortBy) {
+      case 'date':
+        comparison = new Date(a.date).getTime() - new Date(b.date).getTime()
+        break
+      case 'type':
+        comparison = a.type.localeCompare(b.type)
+        break
+      case 'staff':
+        comparison = a.staffName.localeCompare(b.staffName)
+        break
+    }
+    return sortOrder === 'asc' ? comparison : -comparison
+  })
+  
   return (
     <div className={styles.historyContainer}>
-      <div className={styles.listHeader}>
-        <h2>面談履歴</h2>
+      <div className={styles.historyHeader}>
+        <h2>面談履歴 ({interviews.length}件)</h2>
+        <div className={styles.historyControls}>
+          <div className={styles.dateRangeFilter}>
+            <input
+              type="date"
+              value={dateRange?.start || ''}
+              onChange={(e) => onDateRangeChange?.({ ...dateRange || { start: '', end: '' }, start: e.target.value })}
+              className={styles.dateInput}
+              placeholder="開始日"
+            />
+            <span className={styles.dateRangeSeparator}>〜</span>
+            <input
+              type="date"
+              value={dateRange?.end || ''}
+              onChange={(e) => onDateRangeChange?.({ ...dateRange || { start: '', end: '' }, end: e.target.value })}
+              className={styles.dateInput}
+              placeholder="終了日"
+            />
+          </div>
+          <div className={styles.sortControls}>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as 'date' | 'type' | 'staff')}
+              className={styles.sortSelect}
+            >
+              <option value="date">日付順</option>
+              <option value="type">種別順</option>
+              <option value="staff">職員順</option>
+            </select>
+            <button
+              className={styles.sortOrderButton}
+              onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+              title={sortOrder === 'asc' ? '昇順' : '降順'}
+            >
+              {sortOrder === 'asc' ? '↑' : '↓'}
+            </button>
+          </div>
+        </div>
       </div>
 
       <div className={styles.historyList}>
-        {interviews.map((interview) => (
+        {sortedInterviews.map((interview) => (
           <div key={interview.id} className={styles.historyItem} onClick={() => onInterviewSelect(interview)}>
             <div className={styles.historyDate}>
               <div className={styles.historyDateText}>{new Date(interview.date).toLocaleDateString('ja-JP')}</div>
