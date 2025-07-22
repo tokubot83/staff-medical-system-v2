@@ -85,6 +85,44 @@ export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
     }]
   }
 
+  // 健康・勤務統合分析データ
+  const healthWorkIntegrationData = {
+    datasets: [{
+      label: '健康スコア vs 生産性',
+      data: [
+        { x: 87, y: 85, r: 10 }, // 現在の状態
+        { x: 75, y: 70, r: 8 },  // 3ヶ月前
+        { x: 80, y: 78, r: 9 },  // 6ヶ月前
+      ],
+      backgroundColor: [
+        'rgba(40, 167, 69, 0.6)',
+        'rgba(255, 193, 7, 0.6)',
+        'rgba(23, 162, 184, 0.6)'
+      ]
+    }]
+  }
+
+  // 退職リスク予測データ
+  const retentionRiskData = {
+    labels: ['総合リスクスコア', '給与満足度', 'キャリア不安', '業務負荷', '成長機会', '人間関係'],
+    datasets: [{
+      label: '現在の状態',
+      data: [25, 80, 35, 40, 85, 90],
+      borderColor: '#007bff',
+      backgroundColor: 'rgba(0, 123, 255, 0.2)',
+      pointBackgroundColor: '#007bff',
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: '#007bff'
+    }, {
+      label: '警戒ライン',
+      data: [50, 50, 50, 50, 50, 50],
+      borderColor: '#dc3545',
+      backgroundColor: 'rgba(220, 53, 69, 0.1)',
+      borderDash: [5, 5]
+    }]
+  }
+
   return (
     <div className={styles.tabContentSection}>
       <div className={styles.sectionHeader}>
@@ -116,6 +154,16 @@ export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
         <div className={styles.statCard}>
           <div className={styles.statValue}>87</div>
           <div className={styles.statLabel}>総合健康スコア</div>
+        </div>
+        <div className={styles.statCard}>
+          <div className={styles.statValue}>25%</div>
+          <div className={styles.statLabel}>退職リスク</div>
+          <div className={styles.statSubtext}>低リスク</div>
+        </div>
+        <div className={styles.statCard}>
+          <div className={styles.statValue}>A+</div>
+          <div className={styles.statLabel}>WLバランス</div>
+          <div className={styles.statSubtext}>優秀</div>
         </div>
       </div>
 
@@ -219,6 +267,71 @@ export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
                   position: 'right',
                   title: { display: true, text: 'ROI(%)' },
                   grid: { drawOnChartArea: false }
+                }
+              }
+            }} />
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.chartGrid}>
+        <div className={styles.chartContainer}>
+          <h4>健康・勤務パフォーマンス相関分析</h4>
+          <div className={`${styles.alert} ${styles.alertInfo}`}>
+            <span>🏥</span>
+            <span>健康スコアと労働生産性に強い正の相関（r=0.82）。健康管理投資が生産性向上に直結しています。</span>
+          </div>
+          <div className={styles.chartWrapper}>
+            <Scatter data={healthWorkIntegrationData} options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                tooltip: {
+                  callbacks: {
+                    label: function(context) {
+                      const labels = ['現在', '3ヶ月前', '6ヶ月前'];
+                      return labels[context.dataIndex] + ': 健康 ' + context.parsed.x + ', 生産性 ' + context.parsed.y;
+                    }
+                  }
+                }
+              },
+              scales: {
+                x: {
+                  title: { display: true, text: '健康スコア' },
+                  min: 60,
+                  max: 100
+                },
+                y: {
+                  title: { display: true, text: '労働生産性' },
+                  min: 60,
+                  max: 100
+                }
+              }
+            }} />
+          </div>
+        </div>
+        <div className={styles.chartContainer}>
+          <h4>退職リスク予測分析</h4>
+          <div className={`${styles.alert} ${styles.alertSuccess}`}>
+            <span>🛡️</span>
+            <span>総合退職リスク25%（低リスク）。キャリア不安のみ要注意。適切なキャリアパス提示で更なるリスク低減可能。</span>
+          </div>
+          <div className={styles.chartWrapper}>
+            <Radar data={retentionRiskData} options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                r: {
+                  min: 0,
+                  max: 100,
+                  ticks: {
+                    stepSize: 20
+                  }
+                }
+              },
+              plugins: {
+                legend: {
+                  position: 'bottom'
                 }
               }
             }} />
