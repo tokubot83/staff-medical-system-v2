@@ -340,7 +340,7 @@ export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
       </div>
 
       <div className={styles.evaluationComments}>
-        <h3>分析コメント</h3>
+        <h3>統合分析コメント</h3>
         <div className={styles.commentCard}>
           <div className={styles.commentHeader}>
             <span className={styles.commentAuthor}>人事部</span>
@@ -357,6 +357,15 @@ export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
           </div>
           <div className={styles.commentBody}>
             ROI 340%の投資効果が期待でき、組織への貢献度が高い人材。戦略的な配置が望まれる。
+          </div>
+        </div>
+        <div className={styles.commentCard}>
+          <div className={styles.commentHeader}>
+            <span className={styles.commentAuthor}>統合分析AI</span>
+            <span className={styles.commentDate}>2025年1月</span>
+          </div>
+          <div className={styles.commentBody}>
+            健康スコアと生産性の相関係数0.82は組織内トップクラス。退職リスク25%と低く、適切なキャリアパス提示でさらなる定着率向上が期待できます。ワークライフバランスA+評価を維持しつつ、段階的な責任拡大が最適です。
           </div>
         </div>
       </div>
