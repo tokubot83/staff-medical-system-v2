@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import CommonHeader from '@/components/CommonHeader'
 import styles from './Attendance.module.css'
@@ -18,7 +18,7 @@ const tabs = [
 
 // AttendanceRecordとMonthlyStatsの型定義は../data/attendanceData.tsからインポート
 
-export default function AttendancePage() {
+function AttendanceManagementContent() {
   const searchParams = useSearchParams()
   const staffId = searchParams.get('staffId')
   const [activeTab, setActiveTab] = useState('daily')
@@ -706,5 +706,13 @@ function SettingsTab() {
         <button className={styles.cancelButton}>キャンセル</button>
       </div>
     </div>
+  )
+}
+
+export default function AttendancePage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AttendanceManagementContent />
+    </Suspense>
   )
 }

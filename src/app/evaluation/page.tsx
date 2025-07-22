@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import CommonHeader from '@/components/CommonHeader'
 import { staffDatabase } from '../data/staffData.js'
@@ -29,7 +29,7 @@ interface EvaluationData {
   }
 }
 
-export default function EvaluationPage() {
+function EvaluationPageContent() {
   const searchParams = useSearchParams()
   const staffId = searchParams.get('staffId')
   const action = searchParams.get('action')
@@ -654,5 +654,13 @@ function StaffListTab({
         <p>表示件数: {sortedStaff.length}件</p>
       </div>
     </div>
+  )
+}
+
+export default function EvaluationPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <EvaluationPageContent />
+    </Suspense>
   )
 }
