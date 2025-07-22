@@ -545,21 +545,112 @@ function AttendanceTab({ selectedStaff }: { selectedStaff: any }): React.ReactEl
 }
 
 function WellbeingTab({ selectedStaff }: { selectedStaff: any }): React.ReactElement {
+  const stressIndex = selectedStaff.stressIndex || 48
+  const stressLevel = stressIndex < 40 ? '良好' : stressIndex < 50 ? '注意' : '要対応'
+  const stressColor = stressIndex < 40 ? '#10b981' : stressIndex < 50 ? '#f59e0b' : '#ef4444'
+  
   return (
-    <div className={styles.wellbeingContainer}>
-      <h2>健康・ウェルビーイング</h2>
-      <div className={styles.metricsGrid}>
-        <div className={styles.metricCard}>
-          <h3>健康スコア</h3>
-          <div className={styles.metricValue}>{selectedStaff.healthScore}</div>
-          <p className={styles.metricLabel}>総合評価</p>
-        </div>
-        <div className={styles.metricCard}>
-          <h3>ストレス指数</h3>
-          <div className={styles.metricValue}>{selectedStaff.stressIndex || 48}</div>
-          <p className={styles.metricLabel}>要注意: 50以上</p>
+    <div className={styles.tabContentSection}>
+      <div className={styles.sectionHeader}>
+        <h2>🌿 健康・ウェルビーイング</h2>
+        <div className={styles.sectionActions}>
+          <button className={styles.actionButton}>健康診断履歴</button>
+          <button className={styles.actionButtonSecondary}>相談予約</button>
         </div>
       </div>
+
+      <div className={styles.interviewSummaryEnhanced}>
+        <div className={styles.summaryMainCard}>
+          <div className={styles.summaryCardHeader}>
+            <span className={styles.summaryIcon}>💗</span>
+            <h3>ウェルビーイングサマリー</h3>
+          </div>
+          <div className={styles.summaryMainMetrics}>
+            <div className={styles.metricCircle}>
+              <div className={styles.circleProgress}>
+                <svg className={styles.progressRing} viewBox="0 0 120 120">
+                  <circle cx="60" cy="60" r="54" fill="none" stroke="#e5e7eb" strokeWidth="12" />
+                  <circle cx="60" cy="60" r="54" fill="none" stroke={stressColor} strokeWidth="12" 
+                    strokeDasharray={`${2 * Math.PI * 54}`} 
+                    strokeDashoffset={`${2 * Math.PI * 54 * (1 - stressIndex / 100)}`}
+                    transform="rotate(-90 60 60)" />
+                </svg>
+                <div className={styles.circleContent}>
+                  <div className={styles.circleValue}>{stressIndex}</div>
+                  <div className={styles.circleLabel}>ストレス指数</div>
+                </div>
+              </div>
+              <div className={styles.metricDetails}>
+                <div className={styles.detailItem}>
+                  <span className={styles.detailIcon}>📊</span>
+                  <span className={styles.detailText}>状態: {stressLevel}</span>
+                </div>
+                <div className={styles.detailItem}>
+                  <span className={styles.detailIcon}>⚠️</span>
+                  <span className={styles.detailText}>要注意: 50以上</span>
+                </div>
+              </div>
+            </div>
+            <div className={styles.metricsGrid}>
+              <div className={styles.metricCardEnhanced}>
+                <div className={styles.metricHeader}>
+                  <span className={styles.metricIcon}>❤️</span>
+                  <span className={styles.metricTrend}>+5pt</span>
+                </div>
+                <div className={styles.metricValue}>{selectedStaff.healthScore}</div>
+                <div className={styles.metricLabel}>健康スコア</div>
+                <div className={styles.metricProgress}>
+                  <div className={styles.progressBar}>
+                    <div className={styles.progressFill} style={{ width: `${selectedStaff.healthScore}%` }}></div>
+                  </div>
+                  <span className={styles.progressText}>総合評価 A</span>
+                </div>
+              </div>
+              <div className={styles.metricCardEnhanced}>
+                <div className={styles.metricHeader}>
+                  <span className={styles.metricIcon}>🏃</span>
+                  <span className={styles.metricTrend}>維持</span>
+                </div>
+                <div className={styles.metricValue}>3回/週</div>
+                <div className={styles.metricLabel}>運動習慣</div>
+                <div className={styles.ratingStars}>
+                  <span className={styles.starFilled}>定期的な運動実施</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div className={styles.summarySubCards}>
+          <div className={styles.nextSessionCard}>
+            <div className={styles.cardIconWrapper}>
+              <span className={styles.cardIcon}>🩺</span>
+            </div>
+            <div className={styles.cardContent}>
+              <div className={styles.cardTitle}>次回健康診断</div>
+              <div className={styles.cardMainInfo}>2024年10月</div>
+              <div className={styles.cardSubInfo}>定期健康診断</div>
+              <button className={styles.cardAction}>詳細確認</button>
+            </div>
+          </div>
+          
+          <div className={styles.recentTopicsCard}>
+            <div className={styles.cardIconWrapper}>
+              <span className={styles.cardIcon}>🎯</span>
+            </div>
+            <div className={styles.cardContent}>
+              <div className={styles.cardTitle}>健康改善ポイント</div>
+              <div className={styles.topicsList}>
+                <span className={styles.topicTag}>睡眠改善</span>
+                <span className={styles.topicTag}>運動習慣継続</span>
+                <span className={styles.topicTag}>ストレス管理</span>
+              </div>
+              <div className={styles.cardSubInfo}>前回チェックより改善傾向</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className={styles.sectionCard}>
         <h3>ストレスチェック結果</h3>
         <p>前回実施: 2024年3月</p>
