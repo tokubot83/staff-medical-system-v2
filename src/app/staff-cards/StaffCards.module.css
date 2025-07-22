@@ -1666,6 +1666,56 @@
   gap: 16px;
 }
 
+.recruitmentEvaluations {
+  margin-top: 20px;
+  padding: 20px;
+  background: #fefce8;
+  border-radius: 8px;
+  border: 1px solid #fef08a;
+}
+
+.recruitmentEvaluations h4 {
+  margin: 0 0 16px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #713f12;
+}
+
+.evaluationGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.evaluationItem {
+  background: #ffffff;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #fde68a;
+}
+
+.evaluationStage {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #92400e;
+  margin-bottom: 4px;
+}
+
+.evaluationRating {
+  display: inline-block;
+  margin-left: 12px;
+  color: #f59e0b;
+  font-size: 14px;
+}
+
+.evaluationComment {
+  margin: 8px 0 0 0;
+  font-size: 13px;
+  color: #78350f;
+  line-height: 1.5;
+}
+
 /* 面談・指導タブの改善されたサマリー */
 .interviewSummaryEnhanced {
   display: grid;

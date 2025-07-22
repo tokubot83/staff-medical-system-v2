@@ -5,6 +5,7 @@ import CommonHeader from '@/components/CommonHeader';
 import styles from './Recruitment.module.css';
 import { jobPostings, applicants, interviewSchedules } from '@/app/data/recruitmentData';
 import { JobPosting, Applicant } from '@/types/recruitment';
+import { useRouter } from 'next/navigation';
 
 type TabType = 'jobPostings' | 'applicants' | 'interviews' | 'onboarding' | 'analytics';
 
@@ -20,6 +21,7 @@ export default function RecruitmentPage() {
   const [activeTab, setActiveTab] = useState<TabType>('jobPostings');
   const [selectedJobPosting, setSelectedJobPosting] = useState<JobPosting | null>(null);
   const [selectedApplicant, setSelectedApplicant] = useState<Applicant | null>(null);
+  const router = useRouter();
 
   const getStatusBadgeClass = (status: string) => {
     switch (status) {
@@ -173,6 +175,20 @@ export default function RecruitmentPage() {
                     >
                       詳細
                     </button>
+                    {applicant.status === 'offer' && (
+                      <button 
+                        className={styles.linkButton}
+                        onClick={() => {
+                          // 仮のIDで職員カルテへ遷移
+                          const staffId = `OH-NS-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 1000)).padStart(3, '0')}`;
+                          router.push(`/staff-cards/${staffId}`);
+                        }}
+                        title="職員カルテを表示"
+                        style={{marginLeft: '8px'}}
+                      >
+                        📄
+                      </button>
+                    )}
                   </td>
                 </tr>
               );
@@ -262,6 +278,18 @@ export default function RecruitmentPage() {
                   </div>
                   <button className={styles.secondaryButton}>
                     チェックリスト確認
+                  </button>
+                  <button 
+                    className={styles.primaryButton}
+                    onClick={() => {
+                      // 仮の職員IDを生成（実際にはサーバーで生成）
+                      const staffId = `OH-NS-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 1000)).padStart(3, '0')}`;
+                      alert(`職員登録を実行します\n職員ID: ${staffId}\n\n（デモのため、実際の登録処理はスキップされます）`);
+                      // 職員カルテページへ遷移
+                      router.push(`/staff-cards/${staffId}`);
+                    }}
+                  >
+                    職員として登録
                   </button>
                 </div>
               );
@@ -476,6 +504,20 @@ export default function RecruitmentPage() {
                       <p>コメント: {evaluation.comments}</p>
                     </div>
                   ))}
+                </section>
+              )}
+              {selectedApplicant.status === 'offer' && (
+                <section>
+                  <button 
+                    className={styles.primaryButton}
+                    onClick={() => {
+                      const staffId = `OH-NS-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 1000)).padStart(3, '0')}`;
+                      alert(`職員登録を実行します\n職員ID: ${staffId}\n\n（デモのため、実際の登録処理はスキップされます）`);
+                      router.push(`/staff-cards/${staffId}`);
+                    }}
+                  >
+                    職員として登録
+                  </button>
                 </section>
               )}
             </div>

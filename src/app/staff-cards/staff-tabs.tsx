@@ -815,6 +815,27 @@ export function RecruitmentTab({ selectedStaff }: { selectedStaff: any }) {
             <h4>採用時の所見</h4>
             <p>コミュニケーション能力が高く、チーム医療への適性が高い。実習評価も優秀で、即戦力として期待できる人材。</p>
           </div>
+          
+          <div className={styles.recruitmentEvaluations}>
+            <h4>採用選考評価</h4>
+            <div className={styles.evaluationGrid}>
+              <div className={styles.evaluationItem}>
+                <span className={styles.evaluationStage}>書類選考</span>
+                <span className={styles.evaluationRating}>★★★★☆</span>
+                <p className={styles.evaluationComment}>学業成績優秀、ボランティア経験豊富</p>
+              </div>
+              <div className={styles.evaluationItem}>
+                <span className={styles.evaluationStage}>一次面接</span>
+                <span className={styles.evaluationRating}>★★★★★</span>
+                <p className={styles.evaluationComment}>明朗で前向き、コミュニケーション力抜群</p>
+              </div>
+              <div className={styles.evaluationItem}>
+                <span className={styles.evaluationStage}>最終面接</span>
+                <span className={styles.evaluationRating}>★★★★★</span>
+                <p className={styles.evaluationComment}>キャリアビジョン明確、即戦力として期待</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
