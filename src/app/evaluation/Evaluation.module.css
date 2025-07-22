@@ -633,6 +633,20 @@
   background-color: #f8f9fa;
 }
 
+.highlightedRow {
+  background-color: #fff8dc !important;
+  animation: highlightFade 3s ease-in-out;
+}
+
+@keyframes highlightFade {
+  0% {
+    background-color: #fffacd;
+  }
+  100% {
+    background-color: #fff8dc;
+  }
+}
+
 .evaluationBadge {
   display: inline-block;
   padding: 0.25rem 0.75rem;

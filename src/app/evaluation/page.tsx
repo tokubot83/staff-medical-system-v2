@@ -629,7 +629,7 @@ function StaffListTab({
           </thead>
           <tbody>
             {sortedStaff.map(([id, staff]) => (
-              <tr key={id}>
+              <tr key={id} className={highlightStaffId === id ? styles.highlightedRow : ''}>
                 <td>{staff.employeeId}</td>
                 <td>{staff.name}</td>
                 <td>{staff.facility}</td>
@@ -642,7 +642,7 @@ function StaffListTab({
                   </span>
                 </td>
                 <td>
-                  <a href={`/staff-cards/${id}`} className={styles.detailLink}>
+                  <a href={`/staff/${id}`} className={styles.detailLink}>
                     詳細
                   </a>
                 </td>
