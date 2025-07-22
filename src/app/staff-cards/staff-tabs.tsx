@@ -342,56 +342,139 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
 
       <div className={styles.interviewSummaryEnhanced}>
         <div className={styles.summaryMainCard}>
-          <div className={styles.summaryHeader}>
-            <span className={styles.headerIcon}>📊</span>
-            <h3 className={styles.headerTitle}>人事評価サマリー</h3>
+          <div className={styles.summaryCardHeader}>
+            <span className={styles.summaryIcon}>📊</span>
+            <h3>人事評価サマリー</h3>
           </div>
-          <div className={styles.summaryMetrics}>
-            <div className={styles.evaluationRankSection}>
-              <div className={styles.rankDisplay}>
-                <div className={styles.rankLetter}>A</div>
-                <div className={styles.rankLabel}>評価ランク</div>
+          <div className={styles.summaryMainMetrics}>
+            <div className={styles.metricCircle}>
+              <div className={styles.ladderLevelDisplay}>
+                <div className={styles.currentLadderLevel}>
+                  <div className={styles.levelIndicator}>評価</div>
+                  <div className={styles.levelNumber}>A</div>
+                  <div className={styles.levelSubtext}>2024年度総合評価</div>
+                </div>
+                <div className={styles.levelProgressBar}>
+                  <div className={styles.levelProgressFill} style={{ width: '90%' }}></div>
+                  <div className={styles.levelProgressText}>S評価まで 90%</div>
+                </div>
+                <div className={styles.currentTrainingStatus}>
+                  <div className={styles.trainingStatusBadge}>評価期間中</div>
+                  <div className={styles.trainingName}>目標達成率 95%</div>
+                  <div className={styles.trainingPeriod}>2024年4月〜2025年3月</div>
+                </div>
               </div>
-              <div className={styles.rankDetails}>
-                <div className={styles.rankYear}>2024年度</div>
-                <div className={styles.rankTrend}>↑ 前年度より向上</div>
+              <div className={styles.metricDetails}>
+                <div className={styles.detailItem}>
+                  <span className={styles.detailIcon}>🎯</span>
+                  <span className={styles.detailText}>3年連続A評価以上</span>
+                </div>
+                <div className={styles.detailItem}>
+                  <span className={styles.detailIcon}>📈</span>
+                  <span className={styles.detailText}>成長率部署内1位</span>
+                </div>
               </div>
             </div>
             <div className={styles.metricsGrid}>
               <div className={styles.metricCardEnhanced}>
-                <div className={styles.metricValue}>4.5</div>
+                <div className={styles.metricHeader}>
+                  <span className={styles.metricIcon}>⭐</span>
+                  <span className={styles.metricTrend}>+0.2</span>
+                </div>
+                <div className={styles.metricValue}>4.5/5.0</div>
                 <div className={styles.metricLabel}>総合評価スコア</div>
-                <div className={styles.metricSubtext}>前回比 +0.2</div>
+                <div className={styles.metricProgress}>
+                  <div className={styles.progressBar}>
+                    <div className={styles.progressFill} style={{ width: '90%' }}></div>
+                  </div>
+                  <span className={styles.progressText}>優秀評価</span>
+                </div>
               </div>
               <div className={styles.metricCardEnhanced}>
-                <div className={styles.metricValue}>2位</div>
+                <div className={styles.metricHeader}>
+                  <span className={styles.metricIcon}>🏆</span>
+                  <span className={styles.metricTrend}>↑1</span>
+                </div>
+                <div className={styles.metricValue}>2位/15名</div>
                 <div className={styles.metricLabel}>部署内順位</div>
-                <div className={styles.metricSubtext}>15名中</div>
+                <div className={styles.ratingStars}>
+                  <span className={styles.starFilled}>上位13%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className={styles.evaluationBreakdown}>
+            <h4 className={styles.breakdownTitle}>評価要素別スコア（根拠）</h4>
+            <div className={styles.breakdownGrid}>
+              <div className={styles.breakdownItem}>
+                <div className={styles.breakdownHeader}>
+                  <span className={styles.breakdownLabel}>業務遂行力</span>
+                  <span className={styles.breakdownScore}>S (4.8)</span>
+                </div>
+                <div className={styles.breakdownBar}>
+                  <div className={styles.breakdownFill} style={{ width: '96%', backgroundColor: '#10b981' }}></div>
+                </div>
+                <div className={styles.breakdownNote}>目標を大幅に超過達成、品質・効率共に優秀</div>
+              </div>
+              <div className={styles.breakdownItem}>
+                <div className={styles.breakdownHeader}>
+                  <span className={styles.breakdownLabel}>チームワーク</span>
+                  <span className={styles.breakdownScore}>A (4.5)</span>
+                </div>
+                <div className={styles.breakdownBar}>
+                  <div className={styles.breakdownFill} style={{ width: '90%', backgroundColor: '#3b82f6' }}></div>
+                </div>
+                <div className={styles.breakdownNote}>部署間連携で中心的役割、後輩指導も積極的</div>
+              </div>
+              <div className={styles.breakdownItem}>
+                <div className={styles.breakdownHeader}>
+                  <span className={styles.breakdownLabel}>リーダーシップ</span>
+                  <span className={styles.breakdownScore}>A (4.3)</span>
+                </div>
+                <div className={styles.breakdownBar}>
+                  <div className={styles.breakdownFill} style={{ width: '86%', backgroundColor: '#3b82f6' }}></div>
+                </div>
+                <div className={styles.breakdownNote}>プロジェクトリーダーとして2件成功、昇進候補</div>
+              </div>
+              <div className={styles.breakdownItem}>
+                <div className={styles.breakdownHeader}>
+                  <span className={styles.breakdownLabel}>改善・革新</span>
+                  <span className={styles.breakdownScore}>A (4.4)</span>
+                </div>
+                <div className={styles.breakdownBar}>
+                  <div className={styles.breakdownFill} style={{ width: '88%', backgroundColor: '#3b82f6' }}></div>
+                </div>
+                <div className={styles.breakdownNote}>業務改善提案3件実施、効率20%向上に貢献</div>
               </div>
             </div>
           </div>
         </div>
+        
         <div className={styles.summarySubCards}>
           <div className={styles.nextSessionCard}>
-            <div className={styles.cardIcon}>🎯</div>
+            <div className={styles.cardIconWrapper}>
+              <span className={styles.cardIcon}>📅</span>
+            </div>
             <div className={styles.cardContent}>
-              <h4>評価内訳</h4>
-              <div className={styles.sessionInfo}>
-                <div>業務遂行力: S</div>
-                <div>チームワーク: A</div>
-                <div>リーダーシップ: A</div>
-              </div>
+              <div className={styles.cardTitle}>次回評価</div>
+              <div className={styles.cardMainInfo}>3ヶ月後</div>
+              <div className={styles.cardSubInfo}>2025年3月期 期末評価</div>
+              <button className={styles.cardAction}>目標確認</button>
             </div>
           </div>
+          
           <div className={styles.recentTopicsCard}>
-            <div className={styles.cardIcon}>📈</div>
+            <div className={styles.cardIconWrapper}>
+              <span className={styles.cardIcon}>🎯</span>
+            </div>
             <div className={styles.cardContent}>
-              <h4>評価推移</h4>
-              <div className={styles.topicTags}>
-                <span className={styles.topicTag}>3年連続A評価</span>
-                <span className={styles.topicTag}>成長率高</span>
+              <div className={styles.cardTitle}>重点改善領域</div>
+              <div className={styles.topicsList}>
+                <span className={styles.topicTag}>戦略的思考</span>
+                <span className={styles.topicTag}>部門間調整</span>
+                <span className={styles.topicTag}>人材育成</span>
               </div>
-              <div className={styles.topicNote}>着実な成長を継続中</div>
+              <div className={styles.cardSubInfo}>S評価達成への課題</div>
             </div>
           </div>
         </div>

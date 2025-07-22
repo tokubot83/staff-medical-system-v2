@@ -2993,3 +2993,74 @@
     flex-direction: column;
   }
 }
+
+/* Evaluation Breakdown Styles */
+.evaluationBreakdown {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.breakdownTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #e5e7eb;
+  margin-bottom: 16px;
+}
+
+.breakdownGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.breakdownItem {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.breakdownHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.breakdownLabel {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.breakdownScore {
+  font-size: 14px;
+  font-weight: 600;
+  color: #e5e7eb;
+}
+
+.breakdownBar {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.breakdownFill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.breakdownNote {
+  font-size: 11px;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .breakdownGrid {
+    grid-template-columns: 1fr;
+  }
+}
