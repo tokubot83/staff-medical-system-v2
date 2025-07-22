@@ -479,6 +479,7 @@ interface StaffListTabProps {
   setSelectedDepartment: (value: string) => void
   selectedPeriod: string
   setSelectedPeriod: (value: string) => void
+  highlightStaffId?: string | null
 }
 
 function StaffListTab({ 
@@ -487,7 +488,8 @@ function StaffListTab({
   selectedDepartment, 
   setSelectedDepartment,
   selectedPeriod,
-  setSelectedPeriod 
+  setSelectedPeriod,
+  highlightStaffId
 }: StaffListTabProps) {
   const [sortField, setSortField] = useState<'name' | 'evaluation' | 'department'>('name')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
