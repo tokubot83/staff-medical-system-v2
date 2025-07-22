@@ -642,7 +642,7 @@ function StaffListTab({
                   </span>
                 </td>
                 <td>
-                  <a href={`/staff/${id}`} className={styles.detailLink}>
+                  <a href={`/staff-cards/${id}`} className={styles.detailLink}>
                     詳細
                   </a>
                 </td>
