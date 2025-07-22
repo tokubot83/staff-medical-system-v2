@@ -785,28 +785,28 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                     <h4>現在の関心事・重点課題</h4>
                   </div>
                   <div className={styles.statusItems}>
-                    <div className={styles.statusItem} style={{ '--priority': 1 }}>
+                    <div className={styles.statusItem}>
                       <div className={styles.itemBar} style={{ width: '90%', backgroundColor: '#ef4444' }}></div>
                       <div className={styles.itemContent}>
                         <span className={styles.itemLabel}>キャリアパス不安</span>
                         <span className={styles.itemValue}>高</span>
                       </div>
                     </div>
-                    <div className={styles.statusItem} style={{ '--priority': 2 }}>
+                    <div className={styles.statusItem}>
                       <div className={styles.itemBar} style={{ width: '70%', backgroundColor: '#f59e0b' }}></div>
                       <div className={styles.itemContent}>
                         <span className={styles.itemLabel}>業務負荷調整</span>
                         <span className={styles.itemValue}>中</span>
                       </div>
                     </div>
-                    <div className={styles.statusItem} style={{ '--priority': 3 }}>
+                    <div className={styles.statusItem}>
                       <div className={styles.itemBar} style={{ width: '60%', backgroundColor: '#3b82f6' }}></div>
                       <div className={styles.itemContent}>
                         <span className={styles.itemLabel}>スキル向上意欲</span>
                         <span className={styles.itemValue}>中</span>
                       </div>
                     </div>
-                    <div className={styles.statusItem} style={{ '--priority': 4 }}>
+                    <div className={styles.statusItem}>
                       <div className={styles.itemBar} style={{ width: '40%', backgroundColor: '#10b981' }}></div>
                       <div className={styles.itemContent}>
                         <span className={styles.itemLabel}>人間関係改善</span>
@@ -1612,17 +1612,25 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
           </div>
           <div className={styles.summaryMainMetrics}>
             <div className={styles.metricCircle}>
-              <div className={styles.circleProgress}>
-                <svg className={styles.progressRing} viewBox="0 0 120 120">
-                  <circle cx="60" cy="60" r="54" fill="none" stroke="#e5e7eb" strokeWidth="12" />
-                  <circle cx="60" cy="60" r="54" fill="none" stroke="#3b82f6" strokeWidth="12" 
-                    strokeDasharray={`${2 * Math.PI * 54}`} 
-                    strokeDashoffset={`${2 * Math.PI * 54 * (1 - 0.92)}`}
-                    transform="rotate(-90 60 60)" />
-                </svg>
-                <div className={styles.circleContent}>
-                  <div className={styles.circleValue}>92%</div>
-                  <div className={styles.circleLabel}>修了率</div>
+              <div className={styles.skillLevelDisplay}>
+                <div className={styles.currentSkillStatus}>
+                  <div className={styles.skillLevelTitle}>現在のスキルレベル</div>
+                  <div className={styles.skillLevelMain}>
+                    <span className={styles.skillLevel}>中級</span>
+                    <span className={styles.skillArrow}>→</span>
+                    <span className={styles.targetLevel}>上級</span>
+                  </div>
+                  <div className={styles.skillProgressBar}>
+                    <div className={styles.skillProgressFill} style={{ width: '65%' }}></div>
+                    <div className={styles.skillProgressText}>昇格まで 35%</div>
+                  </div>
+                </div>
+                <div className={styles.currentLearningStatus}>
+                  <div className={styles.learningBadge}>受講中</div>
+                  <div className={styles.learningInfo}>
+                    <div className={styles.learningTitle}>管理職基礎研修</div>
+                    <div className={styles.learningProgress}>進捗: 3/5 モジュール完了</div>
+                  </div>
                 </div>
               </div>
               <div className={styles.metricDetails}>
