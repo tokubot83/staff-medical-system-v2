@@ -2948,3 +2948,51 @@
   margin: 0;
   line-height: 1.5;
 }
+<<<<<<< HEAD
+=======
+
+/* Summary Metrics Row */
+.summaryMetricsRow {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.summaryMetricsRow .metricsGrid {
+  display: flex;
+  gap: 16px;
+}
+
+.summaryMetricsRow .summarySubCards {
+  display: flex;
+  gap: 16px;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 1400px) {
+  .interviewInsightsFullWidth {
+    grid-template-columns: 1fr;
+  }
+  
+  .statusItemsGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .summaryMetricsRow {
+    grid-template-columns: 1fr;
+  }
+  
+  .summaryMetricsRow .metricsGrid {
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .summaryMetricsRow .metricsGrid,
+  .summaryMetricsRow .summarySubCards {
+    flex-direction: column;
+  }
+}
+>>>>>>> 1e211b9 (feat: 面談・指導タブのサマリーエリアレイアウトを大幅改善)
