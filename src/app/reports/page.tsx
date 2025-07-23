@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import FacilitySelector from '@/components/reports/FacilitySelector';
 import CommonHeader from '@/components/CommonHeader';
+import DashboardButton from '@/components/DashboardButton';
 import BasicMetricsTab from '@/components/reports/tabs/BasicMetricsTab';
 import StrategicAnalysisTab from '@/components/reports/tabs/StrategicAnalysisTab';
 import styles from './Reports.module.css';
@@ -71,6 +72,7 @@ export default function ReportsPage() {
           </ul>
         </div>
       </div>
+      <DashboardButton />
     </div>
   );
 }

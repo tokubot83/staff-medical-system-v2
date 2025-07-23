@@ -3,6 +3,7 @@
 import React, { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import CommonHeader from '@/components/CommonHeader'
+import DashboardButton from '@/components/DashboardButton'
 import { staffDatabase } from '../data/staffData.js'
 import styles from './Evaluation.module.css'
 
@@ -135,6 +136,7 @@ function EvaluationPageContent() {
           {activeTab === 'analysis' && <AnalysisTab />}
         </div>
       </div>
+      <DashboardButton />
     </div>
   )
 }

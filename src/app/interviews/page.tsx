@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import CommonHeader from '@/components/CommonHeader'
+import DashboardButton from '@/components/DashboardButton'
 import Link from 'next/link'
 import { staffDatabase } from '../data/staffData.js'
 import styles from './Interviews.module.css'
@@ -159,6 +160,7 @@ export default function InterviewsPage() {
         onSave={handleSaveInterview}
         interview={editingInterview}
       />
+      <DashboardButton />
     </div>
   )
 }

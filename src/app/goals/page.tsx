@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import CommonHeader from '@/components/CommonHeader'
+import DashboardButton from '@/components/DashboardButton'
 import Link from 'next/link'
 import { staffDatabase } from '../data/staffData.js'
 import styles from './Goals.module.css'
@@ -162,6 +163,7 @@ export default function GoalsPage() {
           {activeTab === 'settings' && <SettingsTab />}
         </div>
       </div>
+      <DashboardButton />
     </div>
   )
 }

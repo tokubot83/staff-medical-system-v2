@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { staffDatabase } from '../../data/staffData.js'
 import styles from '../StaffCards.module.css'
+import DashboardButton from '@/components/DashboardButton'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -131,6 +132,7 @@ export default function StaffDetailPage() {
           {activeTab === 'education' && <EducationTab selectedStaff={selectedStaff} />}
         </div>
       </div>
+      <DashboardButton />
     </div>
   )
 }

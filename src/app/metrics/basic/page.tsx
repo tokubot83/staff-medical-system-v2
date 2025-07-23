@@ -2,6 +2,7 @@
 
 import React from 'react'
 import MetricsLayout from '@/components/metrics/MetricsLayout'
+import DashboardButton from '@/components/DashboardButton'
 import { ReportCategory } from '@/types/reports'
 import { CategoryMetrics } from '@/types/metrics'
 
@@ -94,7 +95,12 @@ const BasicMetricsPage = () => {
     ]
   }
 
-  return <MetricsLayout metrics={mockMetrics} />
+  return (
+    <>
+      <MetricsLayout metrics={mockMetrics} />
+      <DashboardButton />
+    </>
+  )
 }
 
 export default BasicMetricsPage

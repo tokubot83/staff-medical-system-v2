@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import CommonHeader from '@/components/CommonHeader';
+import DashboardButton from '@/components/DashboardButton';
 import styles from './Recruitment.module.css';
 import { jobPostings, applicants, interviewSchedules } from '@/app/data/recruitmentData';
 import { JobPosting, Applicant } from '@/types/recruitment';
@@ -525,6 +526,7 @@ export default function RecruitmentPage() {
         </div>
         )}
       </div>
+      <DashboardButton />
     </div>
   );
 }

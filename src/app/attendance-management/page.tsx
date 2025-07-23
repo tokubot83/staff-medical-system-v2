@@ -3,6 +3,7 @@
 import React, { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import CommonHeader from '@/components/CommonHeader'
+import DashboardButton from '@/components/DashboardButton'
 import styles from './Attendance.module.css'
 import { staffDatabase } from '../data/staffData.js'
 import Link from 'next/link'
@@ -129,6 +130,7 @@ function AttendanceManagementContent() {
           {activeTab === 'settings' && <SettingsTab />}
         </div>
       </div>
+      <DashboardButton />
     </div>
   )
 }

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import CommonHeader from '@/components/CommonHeader'
+import DashboardButton from '@/components/DashboardButton'
 import styles from './HrStrategy.module.css'
 import { facilities } from '@/app/data/facilityData'
 
@@ -48,6 +49,7 @@ export default function HrStrategyPage() {
           {activeTab === 'optimization' && <OrganizationOptimization />}
         </div>
       </div>
+      <DashboardButton />
     </div>
   )
 }

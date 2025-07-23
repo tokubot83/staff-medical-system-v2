@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useMemo, Suspense } from 'react'
 import CommonHeader from '@/components/CommonHeader'
+import DashboardButton from '@/components/DashboardButton'
 import Link from 'next/link'
 import styles from './Training.module.css'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title, PointElement, LineElement } from 'chart.js'
@@ -235,6 +236,7 @@ function TrainingPageContent() {
           {activeTab === 'settings' && <SettingsTab />}
         </div>
       </div>
+      <DashboardButton />
     </div>
   )
 }

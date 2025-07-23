@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import CommonHeader from '@/components/CommonHeader'
+import DashboardButton from '@/components/DashboardButton'
 import Link from 'next/link'
 import { staffDatabase } from '../data/staffData.js'
 import styles from './Health.module.css'
@@ -157,6 +158,7 @@ export default function HealthPage() {
           {activeTab === 'analytics' && <AnalyticsTab />}
         </div>
       </div>
+      <DashboardButton />
     </div>
   )
 }
