@@ -614,7 +614,7 @@ export default function Home() {
 
         <div className="space-y-3 max-h-80 overflow-y-auto">
          {(activeAlertTab === 'personal' ? personalAlerts : departmentAlerts).map((alert) => (
-          <div key={alert.id} className={`p-3 rounded-lg border-l-4 ${getAlertTypeClass(alert.type)} hover:bg-gray-50 transition-colors cursor-pointer`}>
+          <div key={alert.id} className={`p-3 rounded-lg border-l-4 ${getAlertTypeClass(alert.type)} hover:bg-gray-50 transition-colors cursor-pointer relative`}>
            <div className="absolute text-xs text-gray-500 top-2 right-3">
             {alert.time}
            </div>
@@ -681,7 +681,7 @@ export default function Home() {
 
         <div className="space-y-3 max-h-80 overflow-y-auto">
          {(activeSuccessTab === 'personal' ? personalSuccess : departmentSuccess).map((success) => (
-          <div key={success.id} className="p-3 rounded-lg border-l-4 border-l-green-500 bg-green-50 hover:bg-gray-50 transition-colors cursor-pointer">
+          <div key={success.id} className="p-3 rounded-lg border-l-4 border-l-green-500 bg-green-50 hover:bg-gray-50 transition-colors cursor-pointer relative">
            <div className="text-xs text-gray-500 absolute top-2 right-3">
             {success.time}
            </div>
