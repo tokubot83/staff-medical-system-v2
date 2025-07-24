@@ -43,8 +43,9 @@ export default function TalentMappingTab({ selectedFacility }: TalentMappingTabP
 
   // 9ボックスグリッドの分類
   const categorizeStaff = (staff: StaffDetail) => {
-    const performance = staff.evaluation.rating;
-    const potential = staff.evaluation.growth;
+    const lastEval = staff.evaluationHistory?.[0] || { performance: 3, growth: 3 };
+    const performance = lastEval.performance / 20; // 0-100 -> 0-5
+    const potential = lastEval.growth;
 
     if (performance >= 4.5 && potential >= 4.5) return { box: 1, label: 'スター人材', color: 'bg-yellow-500' };
     if (performance >= 4.5 && potential >= 3.5) return { box: 2, label: 'ハイパフォーマー', color: 'bg-green-500' };
@@ -288,8 +289,8 @@ export default function TalentMappingTab({ selectedFacility }: TalentMappingTabP
                           <div className="text-sm text-gray-600">{staff.position}</div>
                           <div className="text-sm text-gray-500">{staff.department}</div>
                           <div className="mt-2 flex justify-between text-xs">
-                            <span>評価: {staff.evaluation.rating.toFixed(1)}</span>
-                            <span>成長性: {staff.evaluation.growth.toFixed(1)}</span>
+                            <span>評価: {(staff.evaluationHistory?.[0]?.performance / 20 || 3).toFixed(1)}</span>
+                            <span>成長性: {(staff.evaluationHistory?.[0]?.growth || 3).toFixed(1)}</span>
                           </div>
                         </div>
                       ))}

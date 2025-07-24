@@ -149,7 +149,7 @@ export default function WellbeingTab({ selectedFacility }: WellbeingTabProps) {
   // 高リスク者の特定
   const highRiskStaff = useMemo(() => {
     return filteredStaff.filter(staff => 
-      staff.health.stress > 70 || staff.health.score < 60
+      staff.stressIndex > 70 || (staff.healthScore !== undefined && staff.healthScore < 60)
     );
   }, [filteredStaff]);
 
@@ -395,8 +395,8 @@ export default function WellbeingTab({ selectedFacility }: WellbeingTabProps) {
                   <tbody className="bg-white divide-y divide-gray-200">
                     {departments.map(dept => {
                       const deptStaff = staffData.filter(s => s.department === dept);
-                      const avgStress = Math.round(deptStaff.reduce((sum, s) => sum + s.health.stress, 0) / deptStaff.length);
-                      const highRisk = deptStaff.filter(s => s.health.stress > 70).length;
+                      const avgStress = Math.round(deptStaff.reduce((sum, s) => sum + s.stressIndex, 0) / deptStaff.length);
+                      const highRisk = deptStaff.filter(s => s.stressIndex > 70).length;
                       const score = 100 - avgStress;
                       
                       return (

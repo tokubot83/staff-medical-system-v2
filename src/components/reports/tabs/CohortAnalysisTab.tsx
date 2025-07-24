@@ -121,7 +121,7 @@ export default function CohortAnalysisTab({ selectedFacility }: CohortAnalysisTa
         department: dept,
         count: deptStaff.length,
         retentionRate: 70 + Math.random() * 20,
-        avgTenure: deptStaff.reduce((sum, s) => sum + s.tenure, 0) / deptStaff.length,
+        avgTenure: deptStaff.reduce((sum, s) => sum + parseFloat(s.tenure), 0) / deptStaff.length,
         newHires: Math.floor(Math.random() * 10),
         turnover: Math.floor(Math.random() * 5)
       };
