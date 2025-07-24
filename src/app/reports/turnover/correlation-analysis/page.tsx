@@ -117,7 +117,7 @@ function CorrelationAnalysisContent() {
                           item.correlation < 0 ? 'bg-green-500' : 'bg-red-500'
                         }`}
                         style={{
-                          width: `${Math.abs(item.correlation) * 100}%`,
+                          width: `${Math.abs(item.correlation) * 50}%`,
                           marginLeft: item.correlation < 0 ? `${(1 - Math.abs(item.correlation)) * 50}%` : '50%'
                         }}
                       >
