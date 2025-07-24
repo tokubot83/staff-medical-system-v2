@@ -34,7 +34,8 @@ function WhatIfSimulationContent() {
   };
 
   const newTurnoverRate = calculateNewTurnoverRate();
-  const improvement = (currentTurnoverRate - parseFloat(newTurnoverRate)).toFixed(1);
+  const improvementValue = currentTurnoverRate - parseFloat(newTurnoverRate);
+  const improvement = improvementValue.toFixed(1);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -97,7 +98,7 @@ function WhatIfSimulationContent() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold">{Math.round(523 * improvement / 100)}名</div>
+                <div className="text-3xl font-bold">{Math.round(523 * improvementValue / 100)}名</div>
                 <p className="text-xs text-muted-foreground mt-1">
                   総職員数523名ベース
                 </p>
@@ -276,28 +277,28 @@ function WhatIfSimulationContent() {
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span>採用コスト削減</span>
-                      <span className="font-medium text-green-600">{Math.round(523 * improvement / 100 * 1.5)}百万円</span>
+                      <span className="font-medium text-green-600">{Math.round(523 * improvementValue / 100 * 1.5)}百万円</span>
                     </div>
                     <div className="flex justify-between">
                       <span>教育コスト削減</span>
-                      <span className="font-medium text-green-600">{Math.round(523 * improvement / 100 * 0.8)}百万円</span>
+                      <span className="font-medium text-green-600">{Math.round(523 * improvementValue / 100 * 0.8)}百万円</span>
                     </div>
                     <div className="flex justify-between">
                       <span>生産性向上</span>
-                      <span className="font-medium text-green-600">{Math.round(improvement * 5)}百万円</span>
+                      <span className="font-medium text-green-600">{Math.round(improvementValue * 5)}百万円</span>
                     </div>
                     <div className="flex justify-between border-t pt-2 font-semibold">
                       <span>合計効果</span>
-                      <span className="text-green-600">{Math.round(523 * improvement / 100 * 1.5 + 523 * improvement / 100 * 0.8 + improvement * 5)}百万円</span>
+                      <span className="text-green-600">{Math.round(523 * improvementValue / 100 * 1.5 + 523 * improvementValue / 100 * 0.8 + improvementValue * 5)}百万円</span>
                     </div>
                   </div>
                   
                   <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
                     <p className="text-sm font-semibold text-blue-900">
-                      ROI: {Math.round((523 * improvement / 100 * 1.5 + 523 * improvement / 100 * 0.8 + improvement * 5) / (overtimeReduction[0] * 0.5 + meetingFrequency[0] * 10 + stressReduction[0] * 0.3 + 523 * 400000 * salaryIncrease[0] / 100 / 1000000) * 100)}%
+                      ROI: {Math.round((523 * improvementValue / 100 * 1.5 + 523 * improvementValue / 100 * 0.8 + improvementValue * 5) / (overtimeReduction[0] * 0.5 + meetingFrequency[0] * 10 + stressReduction[0] * 0.3 + 523 * 400000 * salaryIncrease[0] / 100 / 1000000) * 100)}%
                     </p>
                     <p className="text-xs text-blue-700 mt-1">
-                      投資1円あたり{((523 * improvement / 100 * 1.5 + 523 * improvement / 100 * 0.8 + improvement * 5) / (overtimeReduction[0] * 0.5 + meetingFrequency[0] * 10 + stressReduction[0] * 0.3 + 523 * 400000 * salaryIncrease[0] / 100 / 1000000)).toFixed(2)}円のリターン
+                      投資1円あたり{((523 * improvementValue / 100 * 1.5 + 523 * improvementValue / 100 * 0.8 + improvementValue * 5) / (overtimeReduction[0] * 0.5 + meetingFrequency[0] * 10 + stressReduction[0] * 0.3 + 523 * 400000 * salaryIncrease[0] / 100 / 1000000)).toFixed(2)}円のリターン
                     </p>
                   </div>
                 </div>
