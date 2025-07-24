@@ -4,14 +4,22 @@
   padding: 2rem 1rem;
 }
 
+.tabNavigationWrapper {
+  margin-bottom: 2rem;
+}
+
 .tabNavigation {
   display: flex;
   gap: 0.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
   border-bottom: 2px solid #e5e7eb;
   overflow-x: auto;
   scrollbar-width: thin;
   scrollbar-color: #d1d5db #f3f4f6;
+}
+
+.tabNavigation:last-child {
+  margin-bottom: 0;
 }
 
 .tabNavigation::-webkit-scrollbar {
