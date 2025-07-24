@@ -10,6 +10,7 @@ import {
   AlertTriangle,
   Activity
 } from 'lucide-react'
+import ScrollToTopButton from '@/components/ScrollToTopButton'
 
 const turnoverCategories = [
   {
@@ -197,6 +198,7 @@ export const TurnoverAnalysisTab: React.FC<TurnoverAnalysisTabProps> = ({ select
           </div>
         ))}
       </div>
+      <ScrollToTopButton />
     </div>
   )
 }

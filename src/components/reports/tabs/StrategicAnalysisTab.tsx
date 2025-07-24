@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { allReports } from '@/types/reports';
+import ScrollToTopButton from '@/components/ScrollToTopButton';
 
 interface StrategicAnalysisTabProps {
   selectedFacility: string;
@@ -49,6 +50,7 @@ export default function StrategicAnalysisTab({ selectedFacility }: StrategicAnal
           </Link>
         ))}
       </div>
+      <ScrollToTopButton />
     </div>
   );
 }
