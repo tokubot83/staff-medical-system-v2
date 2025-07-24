@@ -7,7 +7,7 @@ import DashboardButton from '@/components/DashboardButton';
 import BasicMetricsTab from '@/components/reports/tabs/BasicMetricsTab';
 import StrategicAnalysisTab from '@/components/reports/tabs/StrategicAnalysisTab';
 import RetentionAnalysisTab from '@/components/reports/tabs/RetentionAnalysisTab';
-import { AnalystTab } from './components/AnalystTab';
+import { TurnoverAnalysisTab } from '@/components/reports/tabs/TurnoverAnalysisTab';
 import TalentMappingTab from '@/components/reports/tabs/TalentMappingTab';
 import FlowAnalysisTab from '@/components/reports/tabs/FlowAnalysisTab';
 import CohortAnalysisTab from '@/components/reports/tabs/CohortAnalysisTab';
@@ -106,10 +106,7 @@ export default function ReportsPage() {
             <RetentionAnalysisTab selectedFacility={selectedFacility} />
           )}
           {activeTab === 'analyst' && (
-            <AnalystTab 
-              staffData={staffData} 
-              facility={selectedFacility || '全施設'} 
-            />
+            <TurnoverAnalysisTab selectedFacility={selectedFacility} />
           )}
           {activeTab === 'talent' && (
             <TalentMappingTab selectedFacility={selectedFacility} />
