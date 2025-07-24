@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import { Lightbulb, Target, Clock, DollarSign, Users, CheckCircle2, AlertCircle, TrendingUp } from 'lucide-react'
+import { Lightbulb, Target, Clock, DollarSign, Users, CheckCircle2, AlertCircle, TrendingUp, Brain } from 'lucide-react'
 import { StaffDetail } from '@/app/data/staffData'
 
 interface ImprovementSuggestionsProps {
