@@ -104,22 +104,40 @@ function CorrelationAnalysisContent() {
             <h3 className="text-lg font-semibold text-gray-800 mb-4">
               離職率との相関係数
             </h3>
-            <ResponsiveContainer width="100%" height={350}>
-              <BarChart data={correlationFactors} layout="horizontal">
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis type="number" domain={[-1, 1]} />
-                <YAxis dataKey="factor" type="category" width={120} />
-                <Tooltip formatter={(value: number) => value.toFixed(2)} />
-                <Bar dataKey="correlation">
-                  {correlationFactors.map((entry, index) => (
-                    <Cell 
-                      key={`cell-${index}`} 
-                      fill={entry.type === 'positive' ? '#10B981' : '#EF4444'} 
-                    />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
+            <div className="space-y-2">
+              {correlationFactors.map((item, index) => (
+                <div key={index} className="flex items-center space-x-4">
+                  <div className="w-32 text-sm font-medium text-gray-700 text-right">
+                    {item.factor}
+                  </div>
+                  <div className="flex-1 relative">
+                    <div className="w-full bg-gray-200 rounded-full h-6">
+                      <div
+                        className={`h-6 rounded-full flex items-center justify-end pr-2 text-xs font-semibold text-white ${
+                          item.correlation < 0 ? 'bg-green-500' : 'bg-red-500'
+                        }`}
+                        style={{
+                          width: `${Math.abs(item.correlation) * 100}%`,
+                          marginLeft: item.correlation < 0 ? `${(1 - Math.abs(item.correlation)) * 50}%` : '50%'
+                        }}
+                      >
+                        {item.correlation.toFixed(2)}
+                      </div>
+                    </div>
+                    <div className="absolute inset-x-0 flex justify-center">
+                      <div className="w-px h-8 bg-gray-400 -mt-1"></div>
+                    </div>
+                  </div>
+                  <div className="w-20 text-xs text-gray-500">
+                    {item.impact}
+                  </div>
+                </div>
+              ))}
+              <div className="flex items-center justify-center mt-4 text-xs text-gray-500">
+                <span className="mr-8">← 負の相関（離職率低下）</span>
+                <span>正の相関（離職率上昇）→</span>
+              </div>
+            </div>
           </div>
 
           <div className="bg-white shadow rounded-lg p-6">
