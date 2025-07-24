@@ -72,7 +72,7 @@ export default function FlowAnalysisTab({ selectedFacility }: FlowAnalysisTabPro
     });
 
     return flows;
-  }, [staffData, timeRange]);
+  }, [staffData]);
 
   // 部署別統計
   const departmentStats = useMemo(() => {
