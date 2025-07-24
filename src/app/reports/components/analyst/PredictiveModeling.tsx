@@ -162,7 +162,7 @@ export function PredictiveModeling({ staffData }: PredictiveModelingProps) {
                 <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="z-50">
+                <SelectContent className="z-50 bg-white">
                   <SelectItem value="3months">3ヶ月後</SelectItem>
                   <SelectItem value="6months">6ヶ月後</SelectItem>
                   <SelectItem value="12months">12ヶ月後</SelectItem>
