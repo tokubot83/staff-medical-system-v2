@@ -44,30 +44,81 @@ export default function RetentionAnalysisTab({ selectedFacility }: RetentionAnal
     },
   ];
 
+  // サンプル統計データ
+  const totalRetentionRate = 87.5;
+  const avgTenure = 4.8;
+  const earlyTurnoverRate = 12.3;
+  const longTermRetention = 78.2;
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* ヘッダーセクション */}
-      <div className="bg-white p-6 rounded-lg shadow">
-        <h3 className="text-xl font-bold text-gray-800 mb-4">
-          定着分析レポート
-        </h3>
-        <p className="text-gray-600 mb-4">
-          生存分析とハザード分析を活用した高度な定着率分析により、従業員の定着パターンを可視化し、
-          退職リスクを早期に発見・予防するための戦略的インサイトを提供します。
-        </p>
-        <div className="flex items-center gap-4 text-sm text-gray-500">
-          <span className="flex items-center gap-1">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            リアルタイム更新
-          </span>
-          <span className="flex items-center gap-1">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-            </svg>
-            統計的手法による分析
-          </span>
+      <div className="flex flex-col gap-4">
+        <div>
+          <h2 className="text-2xl font-bold">定着分析</h2>
+          <p className="text-muted-foreground mt-1">
+            生存分析とハザード分析を活用した高度な定着率分析により、従業員の定着パターンを可視化し、
+            退職リスクを早期に発見・予防するための戦略的インサイトを提供します。
+          </p>
+        </div>
+
+        {/* 統計サマリーカード */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                全体定着率
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-green-600">{totalRetentionRate}%</div>
+              <p className="text-xs text-muted-foreground mt-1">
+                前年比 +2.5%
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                平均勤続年数
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{avgTenure}年</div>
+              <p className="text-xs text-muted-foreground mt-1">
+                業界平均 3.2年
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                早期離職率
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-orange-600">{earlyTurnoverRate}%</div>
+              <p className="text-xs text-muted-foreground mt-1">
+                入社1年以内
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                長期定着率
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{longTermRetention}%</div>
+              <p className="text-xs text-muted-foreground mt-1">
+                5年以上勤続
+              </p>
+            </CardContent>
+          </Card>
         </div>
       </div>
 
