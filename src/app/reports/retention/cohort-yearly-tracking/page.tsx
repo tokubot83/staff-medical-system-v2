@@ -34,7 +34,7 @@ const improvementData = [
   { metric: 'キャリア支援強化', '2020年': 0, '2021年': 5, '2022年': 15, '2023年': 20, '2024年': 35 },
 ];
 
-const departmentCohortData = {
+const departmentCohortData: Record<string, Array<{ year: string; value: number }>> = {
   看護部: [
     { year: '1年目', value: 100 },
     { year: '2年目', value: 82 },
