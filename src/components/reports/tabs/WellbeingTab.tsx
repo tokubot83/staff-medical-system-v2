@@ -7,8 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Heart, Brain, Activity, AlertCircle, TrendingUp, Shield, Smile, Users } from 'lucide-react';
-import { obaraStaffDatabase, tachigamiStaffDatabase } from '@/app/data/staffData';
-import { StaffDetail } from '@/types/staff';
+import { obaraStaffDatabase, tachigamiStaffDatabase, StaffDetail } from '@/app/data/staffData';
 
 interface WellbeingTabProps {
   selectedFacility: string;
