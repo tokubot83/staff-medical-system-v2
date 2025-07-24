@@ -156,13 +156,13 @@ export function PredictiveModeling({ staffData }: PredictiveModelingProps) {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium">予測期間</label>
+            <div className="relative">
+              <label className="text-sm font-medium mb-2 block">予測期間</label>
               <Select value={timeframe} onValueChange={setTimeframe}>
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="z-50">
                   <SelectItem value="3months">3ヶ月後</SelectItem>
                   <SelectItem value="6months">6ヶ月後</SelectItem>
                   <SelectItem value="12months">12ヶ月後</SelectItem>
