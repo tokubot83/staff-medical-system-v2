@@ -103,10 +103,10 @@ export function AnalystTab({ staffData, facility }: AnalystTabProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <ChartBar className="h-5 w-5" />
-            統計分析
+            離職要因分析
           </CardTitle>
           <CardDescription>
-            AIと機械学習を活用した組織の健康状態分析
+            AIと機械学習を活用した離職リスクの予測と要因分析
           </CardDescription>
         </CardHeader>
         <CardContent>

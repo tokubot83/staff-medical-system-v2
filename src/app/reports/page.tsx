@@ -15,7 +15,7 @@ const tabs = [
   { id: 'basic', label: '基本指標', icon: '📊' },
   { id: 'strategic', label: '戦略分析', icon: '📈' },
   { id: 'retention', label: '定着分析', icon: '🎯' },
-  { id: 'analyst', label: 'アナリスト', icon: '🧠' },
+  { id: 'analyst', label: '離職分析', icon: '📉' },
 ];
 
 export default function ReportsPage() {
