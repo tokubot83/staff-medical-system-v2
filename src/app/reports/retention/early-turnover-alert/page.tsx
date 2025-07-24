@@ -13,7 +13,7 @@ function EarlyTurnoverAlertContent() {
     <div className="min-h-screen bg-gray-50">
       <CommonHeader 
         title="早期離職アラートシステム" 
-        showBackButton={true}
+        showBackButton={false}
         backUrl="/reports"
         backText="レポートセンターに戻る"
       />

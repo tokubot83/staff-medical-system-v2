@@ -13,7 +13,7 @@ function SurvivalCurveOverallContent() {
     <div className="min-h-screen bg-gray-50">
       <CommonHeader 
         title="全体定着率推移分析" 
-        showBackButton={true}
+        showBackButton={false}
         backUrl="/reports"
         backText="レポートセンターに戻る"
       />

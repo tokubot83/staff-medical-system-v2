@@ -32,7 +32,7 @@ export default function ManagementPage() {
     <div>
       <CommonHeader 
         title="職員カルテ管理" 
-        showBackButton={true} 
+        showBackButton={false} 
         backUrl="/staff-cards"
         backText="職員一覧に戻る"
       />

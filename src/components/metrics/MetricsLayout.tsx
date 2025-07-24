@@ -44,7 +44,7 @@ export default function MetricsLayout({ metrics, aiAnalysis }: MetricsLayoutProp
     <div className="min-h-screen bg-gray-50">
       <CommonHeader 
         title={categoryInfo.name}
-        showBackButton={true}
+        showBackButton={false}
         backUrl="/"
         backText="ダッシュボードに戻る"
       />

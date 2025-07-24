@@ -77,7 +77,7 @@ export default function StaffDetailPage() {
       <div>
         <CommonHeader 
           title="職員カルテ" 
-          showBackButton={true} 
+          showBackButton={false} 
           backUrl="/staff-cards"
           backText="職員一覧に戻る"
         />
@@ -97,7 +97,7 @@ export default function StaffDetailPage() {
     <div>
       <CommonHeader 
         title={`${selectedStaff.name} - 職員カルテ`}
-        showBackButton={true} 
+        showBackButton={false} 
         backUrl="/staff-cards"
         backText="職員一覧に戻る"
       />

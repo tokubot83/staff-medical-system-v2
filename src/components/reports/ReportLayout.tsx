@@ -28,7 +28,7 @@ export default function ReportLayout({
     <div className="min-h-screen bg-gray-50">
       <CommonHeader 
         title={title}
-        showBackButton={true}
+        showBackButton={false}
         backUrl="/reports"
         backText="レポート一覧に戻る"
       />

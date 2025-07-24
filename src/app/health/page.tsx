@@ -113,7 +113,7 @@ export default function HealthPage() {
     <div>
       <CommonHeader 
         title="健康管理" 
-        showBackButton={true} 
+        showBackButton={false} 
         backUrl="/"
         backText="ダッシュボードに戻る"
       />

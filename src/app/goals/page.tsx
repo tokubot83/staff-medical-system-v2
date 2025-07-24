@@ -115,7 +115,7 @@ export default function GoalsPage() {
     <div>
       <CommonHeader 
         title="目標管理" 
-        showBackButton={true} 
+        showBackButton={false} 
         backUrl="/"
         backText="ダッシュボードに戻る"
       />

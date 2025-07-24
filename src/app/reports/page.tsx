@@ -50,7 +50,7 @@ export default function ReportsPage() {
     <div className="min-h-screen bg-gray-50">
       <CommonHeader 
         title="レポートセンター" 
-        showBackButton={true}
+        showBackButton={false}
         backUrl="/"
         backText="ダッシュボードに戻る"
       />

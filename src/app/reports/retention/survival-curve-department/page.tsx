@@ -13,7 +13,7 @@ function SurvivalCurveDepartmentContent() {
     <div className="min-h-screen bg-gray-50">
       <CommonHeader 
         title="部署別定着パターン比較" 
-        showBackButton={true}
+        showBackButton={false}
         backUrl="/reports"
         backText="レポートセンターに戻る"
       />

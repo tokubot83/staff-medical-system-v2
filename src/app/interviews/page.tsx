@@ -100,7 +100,7 @@ export default function InterviewsPage() {
     <div>
       <CommonHeader 
         title="面談管理" 
-        showBackButton={true} 
+        showBackButton={false} 
         backUrl="/"
         backText="ダッシュボードに戻る"
       />

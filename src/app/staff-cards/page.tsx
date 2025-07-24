@@ -61,7 +61,7 @@ export default function StaffCardsPage() {
     <div>
       <CommonHeader 
         title="職員カルテ" 
-        showBackButton={true} 
+        showBackButton={false} 
         backUrl="/"
         backText="ダッシュボードに戻る"
       />

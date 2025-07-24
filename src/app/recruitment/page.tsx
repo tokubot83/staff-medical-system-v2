@@ -398,7 +398,7 @@ export default function RecruitmentPage() {
     <div>
       <CommonHeader 
         title="採用管理" 
-        showBackButton={true} 
+        showBackButton={false} 
         backUrl="/"
         backText="ダッシュボードに戻る"
       />

@@ -88,7 +88,7 @@ function EvaluationPageContent() {
     <div>
       <CommonHeader 
         title="人事評価管理" 
-        showBackButton={true} 
+        showBackButton={false} 
         backUrl="/"
         backText="ダッシュボードに戻る"
       />

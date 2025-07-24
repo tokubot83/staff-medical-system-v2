@@ -13,7 +13,7 @@ function HazardCoxRegressionContent() {
     <div className="min-h-screen bg-gray-50">
       <CommonHeader 
         title="退職リスク要因分析" 
-        showBackButton={true}
+        showBackButton={false}
         backUrl="/reports"
         backText="レポートセンターに戻る"
       />

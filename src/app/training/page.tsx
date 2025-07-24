@@ -194,7 +194,7 @@ function TrainingPageContent() {
     <div>
       <CommonHeader 
         title="教育・研修管理" 
-        showBackButton={true} 
+        showBackButton={false} 
         backUrl="/"
         backText="ダッシュボードに戻る"
       />
