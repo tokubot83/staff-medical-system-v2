@@ -21,8 +21,8 @@ export default function RiskPredictionPage() {
 
   const getRiskLevel = (score: number) => {
     if (score >= 4) return { label: '高', color: 'destructive' as const }
-    if (score >= 3) return { label: '中', color: 'warning' as const }
-    return { label: '低', color: 'success' as const }
+    if (score >= 3) return { label: '中', color: 'secondary' as const }
+    return { label: '低', color: 'outline' as const }
   }
 
   const getTrendIcon = (trend: string) => {
