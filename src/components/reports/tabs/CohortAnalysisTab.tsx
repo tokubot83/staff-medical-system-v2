@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Calendar, Users, TrendingUp, TrendingDown, BarChart3, Activity } from 'lucide-react';
 import { obaraStaffDatabase, tachigamiStaffDatabase, StaffDetail } from '@/app/data/staffData';
+import ScrollToTopButton from '@/components/ScrollToTopButton';
 
 interface CohortAnalysisTabProps {
   selectedFacility: string;
@@ -436,6 +437,7 @@ export default function CohortAnalysisTab({ selectedFacility }: CohortAnalysisTa
           </div>
         </CardContent>
       </Card>
+      <ScrollToTopButton />
     </div>
   );
 }

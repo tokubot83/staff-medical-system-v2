@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { allReports } from '@/types/reports';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import ScrollToTopButton from '@/components/ScrollToTopButton';
 
 interface RetentionAnalysisTabProps {
   selectedFacility: string;
@@ -170,6 +171,7 @@ export default function RetentionAnalysisTab({ selectedFacility }: RetentionAnal
           )}
         </div>
       ))}
+      <ScrollToTopButton />
     </div>
   );
 }

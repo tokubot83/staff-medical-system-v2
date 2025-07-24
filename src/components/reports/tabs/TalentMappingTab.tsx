@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Users, Star, TrendingUp, AlertCircle, Target, Award } from 'lucide-react';
 import { obaraStaffDatabase, tachigamiStaffDatabase, StaffDetail } from '@/app/data/staffData';
+import ScrollToTopButton from '@/components/ScrollToTopButton';
 
 interface TalentMappingTabProps {
   selectedFacility: string;
@@ -348,6 +349,7 @@ export default function TalentMappingTab({ selectedFacility }: TalentMappingTabP
           </div>
         </CardContent>
       </Card>
+      <ScrollToTopButton />
     </div>
   );
 }
