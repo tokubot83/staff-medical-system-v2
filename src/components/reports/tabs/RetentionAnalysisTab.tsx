@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { allReports } from '@/types/reports';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface RetentionAnalysisTabProps {
   selectedFacility: string;

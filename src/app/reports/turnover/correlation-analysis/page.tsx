@@ -1,181 +1,260 @@
-'use client'
+'use client';
 
-import React from 'react'
-import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { ArrowLeft, GitBranch } from 'lucide-react'
+import React from 'react';
+import { useSearchParams } from 'next/navigation';
+import CommonHeader from '@/components/CommonHeader';
+import DashboardButton from '@/components/DashboardButton';
+import {
+  ScatterChart,
+  Scatter,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Cell,
+  BarChart,
+  Bar,
+  Legend
+} from 'recharts';
 
-// サンプルデータ
-const correlationData = [
-  { factor1: '残業時間', factor2: '離職率', correlation: 0.82, strength: '強い正の相関' },
-  { factor1: '有給取得率', factor2: '離職率', correlation: -0.75, strength: '強い負の相関' },
-  { factor1: '給与満足度', factor2: '離職率', correlation: -0.68, strength: '中程度の負の相関' },
-  { factor1: '研修参加率', factor2: '離職率', correlation: -0.45, strength: '弱い負の相関' },
-  { factor1: '通勤時間', factor2: '離職率', correlation: 0.35, strength: '弱い正の相関' },
-]
+const correlationFactors = [
+  { factor: '残業時間', correlation: 0.82, impact: '非常に強い', type: 'negative' },
+  { factor: '有給取得率', correlation: -0.75, impact: '強い', type: 'positive' },
+  { factor: '給与満足度', correlation: -0.68, impact: '強い', type: 'positive' },
+  { factor: '職場の人間関係', correlation: -0.65, impact: '強い', type: 'positive' },
+  { factor: '評価の公平性', correlation: -0.62, impact: '中程度', type: 'positive' },
+  { factor: '研修参加率', correlation: -0.45, impact: '中程度', type: 'positive' },
+  { factor: '通勤時間', correlation: 0.35, impact: '弱い', type: 'negative' },
+  { factor: '年齢', correlation: -0.28, impact: '弱い', type: 'positive' },
+];
+
+const scatterData = [
+  { x: 45, y: 15, name: '営業部A' },
+  { x: 50, y: 22, name: '営業部B' },
+  { x: 55, y: 28, name: '製造部A' },
+  { x: 60, y: 35, name: '製造部B' },
+  { x: 40, y: 12, name: '管理部' },
+  { x: 48, y: 18, name: 'IT部' },
+  { x: 52, y: 25, name: '物流部' },
+  { x: 38, y: 8, name: '人事部' },
+];
+
+const matrixData = [
+  { factor: '残業時間', 残業時間: 1.00, 有給取得率: -0.65, 給与満足度: -0.42, 人間関係: -0.55 },
+  { factor: '有給取得率', 残業時間: -0.65, 有給取得率: 1.00, 給与満足度: 0.48, 人間関係: 0.52 },
+  { factor: '給与満足度', 残業時間: -0.42, 有給取得率: 0.48, 給与満足度: 1.00, 人間関係: 0.35 },
+  { factor: '人間関係', 残業時間: -0.55, 有給取得率: 0.52, 給与満足度: 0.35, 人間関係: 1.00 },
+];
 
 export default function CorrelationAnalysisPage() {
-  const router = useRouter()
+  const searchParams = useSearchParams();
+  const facility = searchParams.get('facility') || '全施設';
 
   const getCorrelationColor = (value: number) => {
-    if (value > 0.7) return 'text-red-600'
-    if (value > 0.3) return 'text-orange-600'
-    if (value < -0.7) return 'text-green-600'
-    if (value < -0.3) return 'text-blue-600'
-    return 'text-gray-600'
-  }
+    const absValue = Math.abs(value);
+    if (absValue > 0.7) return '#EF4444';
+    if (absValue > 0.5) return '#F59E0B';
+    if (absValue > 0.3) return '#3B82F6';
+    return '#6B7280';
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8">
-        <Button
-          variant="ghost"
-          onClick={() => router.push('/reports')}
-          className="mb-6"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          レポートセンターに戻る
-        </Button>
+      <CommonHeader 
+        title="相関分析" 
+        showBackButton={true}
+        backUrl="/reports"
+        backText="レポートセンターに戻る"
+      />
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="bg-white shadow rounded-lg p-6 mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-gray-800">
+              離職要因の相関関係と影響度の可視化
+            </h2>
+            <span className="text-sm text-gray-500">
+              対象施設: {facility}
+            </span>
+          </div>
+          <p className="text-gray-600">
+            各種要因と離職率の相関関係を分析し、最も影響度の高い要因を特定します。
+          </p>
+        </div>
 
-        <div className="space-y-6">
-          <div>
-            <h1 className="text-3xl font-bold flex items-center gap-2">
-              <GitBranch className="h-8 w-8 text-purple-500" />
-              相関分析
-            </h1>
-            <p className="text-muted-foreground mt-2">
-              離職要因の相関関係と影響度の可視化分析
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <div className="bg-white shadow rounded-lg p-6">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              離職率との相関係数
+            </h3>
+            <ResponsiveContainer width="100%" height={350}>
+              <BarChart data={correlationFactors} layout="horizontal">
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis type="number" domain={[-1, 1]} />
+                <YAxis dataKey="factor" type="category" width={100} />
+                <Tooltip formatter={(value: number) => value.toFixed(2)} />
+                <Bar dataKey="correlation">
+                  {correlationFactors.map((entry, index) => (
+                    <Cell 
+                      key={`cell-${index}`} 
+                      fill={entry.type === 'positive' ? '#10B981' : '#EF4444'} 
+                    />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          <div className="bg-white shadow rounded-lg p-6">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              残業時間と離職率の散布図
+            </h3>
+            <ResponsiveContainer width="100%" height={350}>
+              <ScatterChart>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis 
+                  type="number" 
+                  dataKey="x" 
+                  name="平均残業時間" 
+                  unit="時間"
+                  domain={[30, 65]}
+                />
+                <YAxis 
+                  type="number" 
+                  dataKey="y" 
+                  name="離職率" 
+                  unit="%"
+                  domain={[0, 40]}
+                />
+                <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+                <Scatter name="部署別データ" data={scatterData} fill="#3B82F6">
+                  {scatterData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill="#3B82F6" />
+                  ))}
+                </Scatter>
+              </ScatterChart>
+            </ResponsiveContainer>
+            <p className="text-sm text-gray-600 mt-2">
+              相関係数: 0.82（強い正の相関）
             </p>
           </div>
+        </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
-                  分析対象要因数
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">24項目</div>
-                <p className="text-xs text-muted-foreground mt-1">前回分析から+3項目</p>
-              </CardContent>
-            </Card>
+        <div className="bg-white shadow rounded-lg p-6 mb-6">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">
+            相関マトリックス
+          </h3>
+          <div className="overflow-x-auto">
+            <table className="min-w-full">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    要因
+                  </th>
+                  <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    残業時間
+                  </th>
+                  <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    有給取得率
+                  </th>
+                  <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    給与満足度
+                  </th>
+                  <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    人間関係
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {matrixData.map((row, index) => (
+                  <tr key={index}>
+                    <td className="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {row.factor}
+                    </td>
+                    <td className="px-4 py-2 whitespace-nowrap text-sm text-center">
+                      <span style={{ color: getCorrelationColor(row.残業時間) }}>
+                        {row.残業時間.toFixed(2)}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2 whitespace-nowrap text-sm text-center">
+                      <span style={{ color: getCorrelationColor(row.有給取得率) }}>
+                        {row.有給取得率.toFixed(2)}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2 whitespace-nowrap text-sm text-center">
+                      <span style={{ color: getCorrelationColor(row.給与満足度) }}>
+                        {row.給与満足度.toFixed(2)}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2 whitespace-nowrap text-sm text-center">
+                      <span style={{ color: getCorrelationColor(row.人間関係) }}>
+                        {row.人間関係.toFixed(2)}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="mt-4 text-sm text-gray-600">
+            <p>※ 相関係数の解釈：</p>
+            <ul className="list-disc list-inside mt-1 space-y-1">
+              <li><span className="text-red-500">●</span> 0.7以上/-0.7以下：強い相関</li>
+              <li><span className="text-yellow-500">●</span> 0.4〜0.7/-0.4〜-0.7：中程度の相関</li>
+              <li><span className="text-blue-500">●</span> 0.2〜0.4/-0.2〜-0.4：弱い相関</li>
+              <li><span className="text-gray-500">●</span> 0.2未満：ほぼ無相関</li>
+            </ul>
+          </div>
+        </div>
 
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
-                  強い相関項目
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-orange-600">5項目</div>
-                <p className="text-xs text-muted-foreground mt-1">相関係数 |r| > 0.7</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
-                  データ品質スコア
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-green-600">94%</div>
-                <p className="text-xs text-muted-foreground mt-1">欠損値率 < 6%</p>
-              </CardContent>
-            </Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-white shadow rounded-lg p-6">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              主要な発見
+            </h3>
+            <div className="space-y-3">
+              <div className="border-l-4 border-red-400 pl-4">
+                <h4 className="font-semibold text-gray-700">残業時間（相関係数: 0.82）</h4>
+                <p className="text-sm text-gray-600">最も強い正の相関。月45時間を超えると離職率が急激に上昇</p>
+              </div>
+              <div className="border-l-4 border-green-400 pl-4">
+                <h4 className="font-semibold text-gray-700">有給取得率（相関係数: -0.75）</h4>
+                <p className="text-sm text-gray-600">強い負の相関。取得率70%以上で離職率が大幅に低下</p>
+              </div>
+              <div className="border-l-4 border-blue-400 pl-4">
+                <h4 className="font-semibold text-gray-700">給与満足度（相関係数: -0.68）</h4>
+                <p className="text-sm text-gray-600">中程度の負の相関。相対的な評価が重要</p>
+              </div>
+            </div>
           </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <span>離職率との相関関係</span>
-                <Badge variant="secondary">週次更新</Badge>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {correlationData.map((item, index) => (
-                  <div key={index} className="border rounded-lg p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <div>
-                        <h3 className="font-semibold">{item.factor1} × 離職率</h3>
-                        <p className="text-sm text-muted-foreground">{item.strength}</p>
-                      </div>
-                      <div className={`text-3xl font-bold ${getCorrelationColor(item.correlation)}`}>
-                        {item.correlation > 0 ? '+' : ''}{item.correlation.toFixed(2)}
-                      </div>
-                    </div>
-                    <div className="mt-2">
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div 
-                          className={`h-2 rounded-full ${
-                            item.correlation > 0 ? 'bg-red-500' : 'bg-green-500'
-                          }`}
-                          style={{ width: `${Math.abs(item.correlation) * 100}%` }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                ))}
+          <div className="bg-white shadow rounded-lg p-6">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              改善優先順位の提案
+            </h3>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between p-3 bg-red-50 rounded">
+                <span className="font-medium text-red-800">1. 残業時間削減</span>
+                <span className="text-sm text-red-600">最優先</span>
               </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>相関マトリックス（抜粋）</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="overflow-x-auto">
-                <table className="min-w-full">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="text-left p-2">要因</th>
-                      <th className="text-center p-2">残業時間</th>
-                      <th className="text-center p-2">有給取得率</th>
-                      <th className="text-center p-2">給与満足度</th>
-                      <th className="text-center p-2">研修参加率</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b">
-                      <td className="p-2 font-medium">残業時間</td>
-                      <td className="text-center p-2">1.00</td>
-                      <td className="text-center p-2 text-red-600">-0.65</td>
-                      <td className="text-center p-2 text-orange-600">-0.42</td>
-                      <td className="text-center p-2 text-orange-600">-0.38</td>
-                    </tr>
-                    <tr className="border-b">
-                      <td className="p-2 font-medium">有給取得率</td>
-                      <td className="text-center p-2 text-red-600">-0.65</td>
-                      <td className="text-center p-2">1.00</td>
-                      <td className="text-center p-2 text-blue-600">0.55</td>
-                      <td className="text-center p-2 text-blue-600">0.48</td>
-                    </tr>
-                    <tr className="border-b">
-                      <td className="p-2 font-medium">給与満足度</td>
-                      <td className="text-center p-2 text-orange-600">-0.42</td>
-                      <td className="text-center p-2 text-blue-600">0.55</td>
-                      <td className="text-center p-2">1.00</td>
-                      <td className="text-center p-2 text-gray-600">0.22</td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 font-medium">研修参加率</td>
-                      <td className="text-center p-2 text-orange-600">-0.38</td>
-                      <td className="text-center p-2 text-blue-600">0.48</td>
-                      <td className="text-center p-2 text-gray-600">0.22</td>
-                      <td className="text-center p-2">1.00</td>
-                    </tr>
-                  </tbody>
-                </table>
+              <div className="flex items-center justify-between p-3 bg-orange-50 rounded">
+                <span className="font-medium text-orange-800">2. 有給取得促進</span>
+                <span className="text-sm text-orange-600">優先</span>
               </div>
-            </CardContent>
-          </Card>
+              <div className="flex items-center justify-between p-3 bg-yellow-50 rounded">
+                <span className="font-medium text-yellow-800">3. 職場環境改善</span>
+                <span className="text-sm text-yellow-600">重要</span>
+              </div>
+              <div className="flex items-center justify-between p-3 bg-blue-50 rounded">
+                <span className="font-medium text-blue-800">4. 評価制度見直し</span>
+                <span className="text-sm text-blue-600">推奨</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+      <DashboardButton />
     </div>
-  )
+  );
 }
