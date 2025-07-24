@@ -228,7 +228,7 @@ export function RiskPrediction({ staffData }: RiskPredictionProps) {
               <div key={index} className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="font-medium">{factor.name}</span>
-                  <Badge variant={factor.coefficient > 0 ? 'destructive' : 'success'} className="text-xs">
+                  <Badge variant={factor.coefficient > 0 ? 'destructive' : 'secondary'} className="text-xs">
                     {factor.coefficient > 0 ? '正の相関' : '負の相関'}
                   </Badge>
                 </div>

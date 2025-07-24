@@ -212,7 +212,7 @@ export function ImprovementSuggestions({ staffData, statistics }: ImprovementSug
 
     // ROIスコアで並び替え
     return suggestions.sort((a, b) => b.roi - a.roi)
-  }, [statistics])
+  }, [statistics, staffData])
 
   // カテゴリ別の集計
   const categorySummary = useMemo(() => {
