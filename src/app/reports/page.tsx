@@ -1,21 +1,38 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import FacilitySelector from '@/components/reports/FacilitySelector';
 import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
 import BasicMetricsTab from '@/components/reports/tabs/BasicMetricsTab';
 import StrategicAnalysisTab from '@/components/reports/tabs/StrategicAnalysisTab';
+import RetentionAnalysisTab from '@/components/reports/tabs/RetentionAnalysisTab';
+import { AnalystTab } from './components/AnalystTab';
+import { obaraStaffDatabase, tachigamiStaffDatabase } from '@/app/data/staffData';
 import styles from './Reports.module.css';
 
 const tabs = [
   { id: 'basic', label: '基本指標', icon: '📊' },
   { id: 'strategic', label: '戦略分析', icon: '📈' },
+  { id: 'retention', label: '定着分析', icon: '🎯' },
+  { id: 'analyst', label: 'アナリスト', icon: '🧠' },
 ];
 
 export default function ReportsPage() {
   const [activeTab, setActiveTab] = useState('basic');
   const [selectedFacility, setSelectedFacility] = useState('');
+
+  // 施設に応じたスタッフデータを取得
+  const staffData = useMemo(() => {
+    if (selectedFacility === '小原病院') {
+      return Object.values(obaraStaffDatabase);
+    } else if (selectedFacility === '立神リハビリテーション温泉病院') {
+      return Object.values(tachigamiStaffDatabase);
+    } else {
+      // 全施設の場合
+      return [...Object.values(obaraStaffDatabase), ...Object.values(tachigamiStaffDatabase)];
+    }
+  }, [selectedFacility]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -56,6 +73,15 @@ export default function ReportsPage() {
           )}
           {activeTab === 'strategic' && (
             <StrategicAnalysisTab selectedFacility={selectedFacility} />
+          )}
+          {activeTab === 'retention' && (
+            <RetentionAnalysisTab selectedFacility={selectedFacility} />
+          )}
+          {activeTab === 'analyst' && (
+            <AnalystTab 
+              staffData={staffData} 
+              facility={selectedFacility || '全施設'} 
+            />
           )}
         </div>
 
