@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
@@ -47,7 +47,7 @@ const generationFactors = [
   { factor: '雇用の安定性', '20代': 60, '30代': 70, '40代': 85, '50代': 90, '60代': 95 },
 ];
 
-export default function SegmentGenerationPage() {
+function SegmentGenerationContent() {
   const searchParams = useSearchParams();
   const facility = searchParams.get('facility') || '全施設';
 
@@ -211,5 +211,13 @@ export default function SegmentGenerationPage() {
       </div>
       <DashboardButton />
     </div>
+  );
+}
+
+export default function SegmentGenerationPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
+      <SegmentGenerationContent />
+    </Suspense>
   );
 }

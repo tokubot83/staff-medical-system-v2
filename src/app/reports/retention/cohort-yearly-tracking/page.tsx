@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
@@ -73,7 +73,7 @@ const retentionMilestones = [
   { cohort: '2024年入社', '3ヶ月': 98, '6ヶ月': 96, '1年': null, '2年': null, '3年': null },
 ];
 
-export default function CohortYearlyTrackingPage() {
+function CohortYearlyTrackingContent() {
   const searchParams = useSearchParams();
   const facility = searchParams.get('facility') || '全施設';
   const [selectedDepartment, setSelectedDepartment] = useState('看護部');
@@ -282,5 +282,13 @@ export default function CohortYearlyTrackingPage() {
       </div>
       <DashboardButton />
     </div>
+  );
+}
+
+export default function CohortYearlyTrackingPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
+      <CohortYearlyTrackingContent />
+    </Suspense>
   );
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
@@ -47,7 +47,7 @@ const matrixData = [
   { factor: '人間関係', 残業時間: -0.55, 有給取得率: 0.52, 給与満足度: 0.35, 人間関係: 1.00 },
 ];
 
-export default function CorrelationAnalysisPage() {
+function CorrelationAnalysisContent() {
   const searchParams = useSearchParams();
   const facility = searchParams.get('facility') || '全施設';
 
@@ -256,5 +256,13 @@ export default function CorrelationAnalysisPage() {
       </div>
       <DashboardButton />
     </div>
+  );
+}
+
+export default function CorrelationAnalysisPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
+      <CorrelationAnalysisContent />
+    </Suspense>
   );
 }

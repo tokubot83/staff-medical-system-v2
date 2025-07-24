@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
@@ -103,7 +103,7 @@ const timelineData = [
   { phase: '導入12ヶ月', 離職率: 10, 定着率: 90, 満足度: 85 },
 ];
 
-export default function CohortInterventionEffectPage() {
+function CohortInterventionEffectContent() {
   const searchParams = useSearchParams();
   const facility = searchParams.get('facility') || '全施設';
   const [selectedMetric, setSelectedMetric] = useState('定着率');
@@ -348,5 +348,13 @@ export default function CohortInterventionEffectPage() {
       </div>
       <DashboardButton />
     </div>
+  );
+}
+
+export default function CohortInterventionEffectPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
+      <CohortInterventionEffectContent />
+    </Suspense>
   );
 }

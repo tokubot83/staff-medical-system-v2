@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
@@ -55,7 +55,7 @@ const turnoverReasons = {
   ],
 };
 
-export default function SegmentRecruitmentTypePage() {
+function SegmentRecruitmentTypeContent() {
   const searchParams = useSearchParams();
   const facility = searchParams.get('facility') || '全施設';
 
@@ -211,5 +211,13 @@ export default function SegmentRecruitmentTypePage() {
       </div>
       <DashboardButton />
     </div>
+  );
+}
+
+export default function SegmentRecruitmentTypePage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
+      <SegmentRecruitmentTypeContent />
+    </Suspense>
   );
 }

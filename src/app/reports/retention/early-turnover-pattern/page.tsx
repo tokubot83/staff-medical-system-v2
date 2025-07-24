@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
@@ -61,7 +61,7 @@ const riskFactors = [
   { factor: '給与・待遇への不満', impact: 55 },
 ];
 
-export default function EarlyTurnoverPatternPage() {
+function EarlyTurnoverPatternContent() {
   const searchParams = useSearchParams();
   const facility = searchParams.get('facility') || '全施設';
 
@@ -222,5 +222,13 @@ export default function EarlyTurnoverPatternPage() {
       </div>
       <DashboardButton />
     </div>
+  );
+}
+
+export default function EarlyTurnoverPatternPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
+      <EarlyTurnoverPatternContent />
+    </Suspense>
   );
 }
