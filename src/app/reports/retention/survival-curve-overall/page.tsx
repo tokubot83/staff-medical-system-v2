@@ -5,7 +5,6 @@ import { useSearchParams } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
-import BackToReportsButton from '@/components/BackToReportsButton';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 function SurvivalCurveOverallContent() {
@@ -157,7 +156,6 @@ function SurvivalCurveOverallContent() {
         </div>
       </div>
             <ScrollToTopButton />
-      <BackToReportsButton />
       <DashboardButton />
     </div>
   );

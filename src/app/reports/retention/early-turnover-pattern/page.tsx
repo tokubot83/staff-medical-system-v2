@@ -5,7 +5,6 @@ import { useSearchParams } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
-import BackToReportsButton from '@/components/BackToReportsButton';
 import {
   BarChart,
   Bar,
@@ -223,7 +222,6 @@ function EarlyTurnoverPatternContent() {
         </div>
       </div>
             <ScrollToTopButton />
-      <BackToReportsButton />
       <DashboardButton />
     </div>
   );

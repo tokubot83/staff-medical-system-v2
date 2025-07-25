@@ -5,7 +5,6 @@ import { useSearchParams } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
-import BackToReportsButton from '@/components/BackToReportsButton';
 
 function FactorRankingContent() {
   const searchParams = useSearchParams();
@@ -214,7 +213,6 @@ function FactorRankingContent() {
         </div>
       </div>
             <ScrollToTopButton />
-      <BackToReportsButton />
       <DashboardButton />
     </div>
   );

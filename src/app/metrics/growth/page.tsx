@@ -4,7 +4,6 @@ import React from 'react'
 import MetricsLayout from '@/components/metrics/MetricsLayout'
 import DashboardButton from '@/components/DashboardButton'
 import ScrollToTopButton from '@/components/ScrollToTopButton'
-import BackToReportsButton from '@/components/BackToReportsButton'
 import { ReportCategory } from '@/types/reports'
 import { CategoryMetrics } from '@/types/metrics'
 
@@ -98,7 +97,6 @@ const GrowthMetricsPage = () => {
     <>
       <ScrollToTopButton />
       <MetricsLayout metrics={mockMetrics} />
-      <BackToReportsButton />
       <DashboardButton />
     </>
   )
