@@ -408,11 +408,15 @@ function TalentDevelopmentReportContent() {
             ] as DataComment[]}
           />
         </section>
+
+        {/* ボタン群 */}
+        <div className="mt-8">
+          <BackToReportsButton />
+          <ScrollToTopButton />
+          <DashboardButton />
+        </div>
       </div>
     </ReportLayout>
-    <BackToReportsButton />
-    <ScrollToTopButton />
-    <DashboardButton />
   );
 }
 
