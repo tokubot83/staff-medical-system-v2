@@ -8,6 +8,8 @@ import { useRouter } from 'next/navigation'
 import { staffDatabase } from '../../data/staffData.js'
 import styles from '../StaffCards.module.css'
 import DashboardButton from '@/components/DashboardButton'
+import ScrollToTopButton from '@/components/ScrollToTopButton'
+import BackToStaffCardsButton from '@/components/BackToStaffCardsButton'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -132,6 +134,8 @@ export default function StaffDetailPage() {
           {activeTab === 'education' && <EducationTab selectedStaff={selectedStaff} />}
         </div>
       </div>
+      <ScrollToTopButton />
+      <BackToStaffCardsButton />
       <DashboardButton />
     </div>
   )
