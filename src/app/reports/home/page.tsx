@@ -157,12 +157,7 @@ export default function ReportsHomePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader 
-        title="レポートセンター" 
-        showBackButton={false}
-        backUrl="/"
-        backText="ダッシュボードに戻る"
-      />
+      <CommonHeader title="レポートセンター" />
       
       <div className={homeStyles.container}>
         {/* 施設選択 */}

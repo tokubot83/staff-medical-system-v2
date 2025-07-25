@@ -59,12 +59,7 @@ export default function StaffCardsPage() {
 
   return (
     <div>
-      <CommonHeader 
-        title="職員カルテ" 
-        showBackButton={false} 
-        backUrl="/"
-        backText="ダッシュボードに戻る"
-      />
+      <CommonHeader title="職員カルテ" />
       
       <div className={styles.container}>
         <div className={styles.searchSection}>

@@ -98,12 +98,7 @@ export default function InterviewsPage() {
 
   return (
     <div>
-      <CommonHeader 
-        title="面談管理" 
-        showBackButton={false} 
-        backUrl="/"
-        backText="ダッシュボードに戻る"
-      />
+      <CommonHeader title="面談管理" />
       
       <div className={styles.container}>
         <div className={styles.tabNavigation}>

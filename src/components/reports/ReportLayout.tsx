@@ -28,12 +28,7 @@ export default function ReportLayout({
 }: ReportLayoutProps) {
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader 
-        title={title}
-        showBackButton={false}
-        backUrl="/reports"
-        backText="レポート一覧に戻る"
-      />
+      <CommonHeader title={title} />
       <div className="py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           {/* レポート説明 */}

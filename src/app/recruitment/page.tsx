@@ -396,12 +396,7 @@ export default function RecruitmentPage() {
 
   return (
     <div>
-      <CommonHeader 
-        title="採用管理" 
-        showBackButton={false} 
-        backUrl="/"
-        backText="ダッシュボードに戻る"
-      />
+      <CommonHeader title="採用管理" />
       
       <div className={styles.container}>
         <div className={styles.tabNavigation}>

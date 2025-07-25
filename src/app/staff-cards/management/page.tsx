@@ -30,12 +30,7 @@ export default function ManagementPage() {
 
   return (
     <div>
-      <CommonHeader 
-        title="職員カルテ管理" 
-        showBackButton={false} 
-        backUrl="/staff-cards"
-        backText="職員一覧に戻る"
-      />
+      <CommonHeader title="職員カルテ管理" />
       
       <div className={styles.container}>
         <div className={styles.managementContainer}>

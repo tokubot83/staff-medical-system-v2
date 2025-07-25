@@ -113,12 +113,7 @@ export default function GoalsPage() {
 
   return (
     <div>
-      <CommonHeader 
-        title="目標管理" 
-        showBackButton={false} 
-        backUrl="/"
-        backText="ダッシュボードに戻る"
-      />
+      <CommonHeader title="目標管理" />
       
       <div className={styles.container}>
         <div className={styles.tabNavigation}>

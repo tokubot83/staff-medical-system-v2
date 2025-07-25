@@ -16,12 +16,7 @@ function PredictiveModelingContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader 
-        title="予測モデリング" 
-        showBackButton={false}
-        backUrl="/reports"
-        backText="レポートセンターに戻る"
-      />
+      <CommonHeader title="予測モデリング" />
       
       <div className="container mx-auto px-4 py-8">
         <div className="bg-white rounded-lg shadow p-6 mb-6">

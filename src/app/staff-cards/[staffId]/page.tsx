@@ -77,12 +77,7 @@ export default function StaffDetailPage() {
   if (!selectedStaff) {
     return (
       <div>
-        <CommonHeader 
-          title="職員カルテ" 
-          showBackButton={false} 
-          backUrl="/staff-cards"
-          backText="職員一覧に戻る"
-        />
+        <CommonHeader title="職員カルテ" />
         <div className={styles.container}>
           <div className={styles.noSelection}>
             <p>職員が見つかりません</p>
@@ -97,12 +92,7 @@ export default function StaffDetailPage() {
 
   return (
     <div>
-      <CommonHeader 
-        title={`${selectedStaff.name} - 職員カルテ`}
-        showBackButton={false} 
-        backUrl="/staff-cards"
-        backText="職員一覧に戻る"
-      />
+      <CommonHeader title={`${selectedStaff.name} - 職員カルテ`} />
       
       <div className={styles.container}>
         <div className={styles.tabNavigation}>

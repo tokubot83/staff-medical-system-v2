@@ -40,12 +40,7 @@ function WhatIfSimulationContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader 
-        title="What-ifシミュレーション" 
-        showBackButton={false}
-        backUrl="/reports"
-        backText="レポートセンターに戻る"
-      />
+      <CommonHeader title="What-ifシミュレーション" />
       
       <div className="container mx-auto px-4 py-8">
         <div className="bg-white rounded-lg shadow p-6 mb-6">

@@ -192,12 +192,7 @@ function TrainingPageContent() {
 
   return (
     <div>
-      <CommonHeader 
-        title="教育・研修管理" 
-        showBackButton={false} 
-        backUrl="/"
-        backText="ダッシュボードに戻る"
-      />
+      <CommonHeader title="教育・研修管理" />
       
       <div className={styles.container}>
         <div className={styles.tabNavigation}>
