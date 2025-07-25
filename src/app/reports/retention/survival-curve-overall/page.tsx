@@ -4,6 +4,7 @@ import React, { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 function SurvivalCurveOverallContent() {
   const searchParams = useSearchParams();
@@ -33,15 +34,51 @@ function SurvivalCurveOverallContent() {
             </p>
           </div>
 
-          {/* グラフプレースホルダー */}
-          <div className="bg-gray-100 rounded-lg p-8 mb-6 text-center">
-            <div className="text-gray-500 mb-4">
-              <svg className="w-24 h-24 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
-              <p className="text-lg font-medium">生存曲線グラフ</p>
-              <p className="text-sm">ここにKaplan-Meier曲線が表示されます</p>
-            </div>
+          {/* 生存曲線グラフ */}
+          <div className="mb-6">
+            <ResponsiveContainer width="100%" height={400}>
+              <LineChart
+                data={[
+                  { month: 0, rate: 100 },
+                  { month: 3, rate: 97.2 },
+                  { month: 6, rate: 94.2 },
+                  { month: 9, rate: 90.5 },
+                  { month: 12, rate: 87.5 },
+                  { month: 18, rate: 81.3 },
+                  { month: 24, rate: 76.3 },
+                  { month: 30, rate: 70.8 },
+                  { month: 36, rate: 65.3 },
+                  { month: 42, rate: 61.2 },
+                  { month: 48, rate: 57.8 },
+                  { month: 54, rate: 54.9 },
+                  { month: 60, rate: 52.1 },
+                ]}
+                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis 
+                  dataKey="month" 
+                  label={{ value: '勤続月数', position: 'insideBottomRight', offset: -10 }}
+                />
+                <YAxis 
+                  label={{ value: '定着率 (%)', angle: -90, position: 'insideLeft' }}
+                  domain={[0, 100]}
+                />
+                <Tooltip 
+                  formatter={(value) => `${value}%`}
+                  labelFormatter={(label) => `${label}ヶ月`}
+                />
+                <Legend />
+                <Line 
+                  type="stepAfter" 
+                  dataKey="rate" 
+                  stroke="#2563eb" 
+                  strokeWidth={2}
+                  name="生存率"
+                  dot={{ r: 4 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
 
           {/* 主要指標 */}
