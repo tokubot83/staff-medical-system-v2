@@ -76,7 +76,8 @@ export default function MetricsLayout({ metrics, aiAnalysis }: MetricsLayoutProp
       {/* ナビゲーションボタン */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-5 py-3">
-          <div className="flex gap-2 overflow-x-auto">
+          <div className="flex justify-between items-center">
+            <div className="flex gap-2 overflow-x-auto">
             {metricsCategories.map((category) => {
               const isActive = pathname === category.path;
               const categoryStyle = getCategoryInfo(category.category);
@@ -102,6 +103,14 @@ export default function MetricsLayout({ metrics, aiAnalysis }: MetricsLayoutProp
                 </Link>
               );
             })}
+            </div>
+            <Link
+              href="/reports/home"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-sm bg-green-500 text-white hover:bg-green-600 transition-all duration-200 whitespace-nowrap ml-4"
+            >
+              <span>←</span>
+              <span>レポートセンター一覧へ</span>
+            </Link>
           </div>
         </div>
       </div>
