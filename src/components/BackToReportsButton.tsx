@@ -14,7 +14,7 @@ export const BackToReportsButton: React.FC = () => {
       <Button
         variant="default"
         size="lg"
-        onClick={() => router.push('/reports')}
+        onClick={() => router.push('/reports/home')}
         className={styles.backButton}
       >
         <ArrowLeft className="mr-2 h-5 w-5" />
