@@ -3,7 +3,7 @@
 import React from 'react'
 import MetricsLayout from '@/components/metrics/MetricsLayout'
 import DashboardButton from '@/components/DashboardButton'
-import BackToReportsButton from '@/components/BackToReportsButton'
+import { BackToReportsButton } from '@/components/BackToReportsButton'
 import { ReportCategory } from '@/types/reports'
 import { CategoryMetrics } from '@/types/metrics'
 
