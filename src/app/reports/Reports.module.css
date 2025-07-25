@@ -4,6 +4,62 @@
   padding: 2rem 1rem;
 }
 
+/* カテゴリーヘッダー */
+.categoryHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding: 24px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.categoryInfo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.categoryIcon {
+  font-size: 48px;
+  line-height: 1;
+}
+
+.categoryTitle {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}
+
+.headerActions {
+  display: flex;
+  gap: 12px;
+}
+
+.backToHomeButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.backToHomeButton:hover {
+  background: #e5e7eb;
+  color: #1f2937;
+  transform: translateX(-2px);
+}
+
 .tabNavigationWrapper {
   margin-bottom: 2rem;
 }
@@ -62,6 +118,44 @@
 
 .tabContent {
   animation: fadeIn 0.3s ease-in-out;
+}
+
+/* レポートコンテンツ */
+.reportContent {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .categoryHeader {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+
+  .categoryInfo {
+    flex-direction: column;
+  }
+
+  .categoryIcon {
+    font-size: 36px;
+  }
+
+  .categoryTitle {
+    font-size: 24px;
+  }
+
+  .headerActions {
+    width: 100%;
+  }
+
+  .backToHomeButton {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 @keyframes fadeIn {

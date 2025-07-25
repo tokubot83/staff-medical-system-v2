@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import FacilitySelector from '@/components/reports/FacilitySelector';
 import CommonHeader from '@/components/CommonHeader';
@@ -14,36 +14,33 @@ import FlowAnalysisTab from '@/components/reports/tabs/FlowAnalysisTab';
 import CohortAnalysisTab from '@/components/reports/tabs/CohortAnalysisTab';
 import SimulationTab from '@/components/reports/tabs/SimulationTab';
 import WellbeingTab from '@/components/reports/tabs/WellbeingTab';
-import { obaraStaffDatabase, tachigamiStaffDatabase } from '@/app/data/staffData';
 import styles from './Reports.module.css';
 
-const tabs = [
-  // 1段目：基本的な分析
-  { id: 'basic', label: '基本指標', icon: '📊', row: 1 },
-  { id: 'strategic', label: '戦略分析', icon: '📈', row: 1 },
-  { id: 'retention', label: '定着分析', icon: '🎯', row: 1 },
-  { id: 'analyst', label: '離職分析', icon: '📉', row: 1 },
-  // 2段目：高度な分析
-  { id: 'talent', label: 'タレントマッピング', icon: '💎', row: 2 },
-  { id: 'flow', label: '人材フロー', icon: '🔄', row: 2 },
-  { id: 'cohort', label: 'コホート分析', icon: '📊', row: 2 },
-  { id: 'simulation', label: 'シミュレーション', icon: '🔮', row: 2 },
-  { id: 'wellbeing', label: 'ウェルビーイング', icon: '💚', row: 2 },
-];
+const categoryInfo = {
+  basic: { label: '基本指標', icon: '📊', component: BasicMetricsTab },
+  strategic: { label: '戦略分析', icon: '📈', component: StrategicAnalysisTab },
+  retention: { label: '定着分析', icon: '🎯', component: RetentionAnalysisTab },
+  analyst: { label: '離職分析', icon: '📉', component: TurnoverAnalysisTab },
+  talent: { label: 'タレントマッピング', icon: '💎', component: TalentMappingTab },
+  flow: { label: '人材フロー', icon: '🔄', component: FlowAnalysisTab },
+  cohort: { label: 'コホート分析', icon: '📊', component: CohortAnalysisTab },
+  simulation: { label: 'シミュレーション', icon: '🔮', component: SimulationTab },
+  wellbeing: { label: 'ウェルビーイング', icon: '💚', component: WellbeingTab },
+};
 
 function ReportsPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [activeTab, setActiveTab] = useState('basic');
+  const [selectedCategory, setSelectedCategory] = useState('basic');
   const [selectedFacility, setSelectedFacility] = useState('');
 
-  // URLパラメータからタブと施設を初期化
+  // URLパラメータからカテゴリーと施設を初期化
   useEffect(() => {
     const tabParam = searchParams.get('tab');
     const facilityParam = searchParams.get('facility');
     
-    if (tabParam && tabs.some(tab => tab.id === tabParam)) {
-      setActiveTab(tabParam);
+    if (tabParam && categoryInfo[tabParam as keyof typeof categoryInfo]) {
+      setSelectedCategory(tabParam);
     }
     
     if (facilityParam) {
@@ -51,55 +48,33 @@ function ReportsPageContent() {
     }
   }, [searchParams]);
 
-  // 施設に応じたスタッフデータを取得
-  const staffData = useMemo(() => {
-    if (selectedFacility === '小原病院') {
-      return Object.values(obaraStaffDatabase);
-    } else if (selectedFacility === '立神リハビリテーション温泉病院') {
-      return Object.values(tachigamiStaffDatabase);
-    } else {
-      // 全施設の場合
-      return [...Object.values(obaraStaffDatabase), ...Object.values(tachigamiStaffDatabase)];
-    }
-  }, [selectedFacility]);
+  const currentCategory = categoryInfo[selectedCategory as keyof typeof categoryInfo];
+  const CategoryComponent = currentCategory?.component;
 
   return (
     <div className="min-h-screen bg-gray-50">
       <CommonHeader 
         title="レポートセンター" 
-        showBackButton={false}
-        backUrl="/"
-        backText="ダッシュボードに戻る"
+        showBackButton={true}
+        backUrl="/reports/home"
+        backText="レポートセンターに戻る"
       />
       
       <div className={styles.container}>
-        {/* タブナビゲーション - 2段構成 */}
-        <div className={styles.tabNavigationWrapper}>
-          {/* 1段目 */}
-          <div className={styles.tabNavigation}>
-            {tabs.filter(tab => tab.row === 1).map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`${styles.tabButton} ${activeTab === tab.id ? styles.active : ''}`}
-              >
-                <span>{tab.icon}</span>
-                <span>{tab.label}</span>
-              </button>
-            ))}
+        {/* カテゴリーヘッダー */}
+        <div className={styles.categoryHeader}>
+          <div className={styles.categoryInfo}>
+            <span className={styles.categoryIcon}>{currentCategory?.icon}</span>
+            <h1 className={styles.categoryTitle}>{currentCategory?.label}</h1>
           </div>
-          {/* 2段目 */}
-          <div className={styles.tabNavigation}>
-            {tabs.filter(tab => tab.row === 2).map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`${styles.tabButton} ${activeTab === tab.id ? styles.active : ''}`}
-              >
-                <span>{tab.icon}</span>
-                <span>{tab.label}</span>
-              </button>
-            ))}
+          <div className={styles.headerActions}>
+            <button 
+              onClick={() => router.push('/reports/home')}
+              className={styles.backToHomeButton}
+            >
+              <span>←</span>
+              <span>カテゴリー一覧へ</span>
+            </button>
           </div>
         </div>
 
@@ -111,34 +86,10 @@ function ReportsPageContent() {
           />
         </div>
 
-        {/* タブコンテンツ */}
-        <div className={styles.tabContent}>
-          {activeTab === 'basic' && (
-            <BasicMetricsTab selectedFacility={selectedFacility} />
-          )}
-          {activeTab === 'strategic' && (
-            <StrategicAnalysisTab selectedFacility={selectedFacility} />
-          )}
-          {activeTab === 'retention' && (
-            <RetentionAnalysisTab selectedFacility={selectedFacility} />
-          )}
-          {activeTab === 'analyst' && (
-            <TurnoverAnalysisTab selectedFacility={selectedFacility} />
-          )}
-          {activeTab === 'talent' && (
-            <TalentMappingTab selectedFacility={selectedFacility} />
-          )}
-          {activeTab === 'flow' && (
-            <FlowAnalysisTab selectedFacility={selectedFacility} />
-          )}
-          {activeTab === 'cohort' && (
-            <CohortAnalysisTab selectedFacility={selectedFacility} />
-          )}
-          {activeTab === 'simulation' && (
-            <SimulationTab selectedFacility={selectedFacility} />
-          )}
-          {activeTab === 'wellbeing' && (
-            <WellbeingTab selectedFacility={selectedFacility} />
+        {/* レポート一覧 */}
+        <div className={styles.reportContent}>
+          {CategoryComponent && (
+            <CategoryComponent selectedFacility={selectedFacility} />
           )}
         </div>
 
