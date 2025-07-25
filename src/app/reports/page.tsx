@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import FacilitySelector from '@/components/reports/FacilitySelector';
 import CommonHeader from '@/components/CommonHeader';
@@ -31,7 +31,7 @@ const tabs = [
   { id: 'wellbeing', label: 'ウェルビーイング', icon: '💚', row: 2 },
 ];
 
-export default function ReportsPage() {
+function ReportsPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState('basic');
@@ -157,5 +157,13 @@ export default function ReportsPage() {
       </div>
       <DashboardButton />
     </div>
+  );
+}
+
+export default function ReportsPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ReportsPageContent />
+    </Suspense>
   );
 }
