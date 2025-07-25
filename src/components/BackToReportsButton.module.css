@@ -1,0 +1,42 @@
+.backButton {
+  position: fixed;
+  bottom: 120px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background-color: #10b981;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 50;
+}
+
+.backButton:hover {
+  background-color: #059669;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.icon {
+  flex-shrink: 0;
+}
+
+.text {
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .backButton {
+    bottom: 100px;
+    right: 16px;
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+}
