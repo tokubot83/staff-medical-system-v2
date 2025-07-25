@@ -63,7 +63,7 @@ const reportCategories: ReportCategory[] = [
     label: '離職分析',
     icon: '📉',
     description: '離職リスク予測と離職要因の分析',
-    path: '/reports?tab=analyst',
+    path: '/reports?tab=turnover',
     reportsCount: 5
   },
   {

@@ -21,7 +21,7 @@ const categoryInfo = {
   basic: { label: '基本指標', icon: '📊', component: BasicMetricsTab },
   strategic: { label: '戦略分析', icon: '📈', component: StrategicAnalysisTab },
   retention: { label: '定着分析', icon: '🎯', component: RetentionAnalysisTab },
-  analyst: { label: '離職分析', icon: '📉', component: TurnoverAnalysisTab },
+  turnover: { label: '離職分析', icon: '📉', component: TurnoverAnalysisTab },
   talent: { label: 'タレントマッピング', icon: '💎', component: TalentMappingTab },
   flow: { label: '人材フロー', icon: '🔄', component: FlowAnalysisTab },
   cohort: { label: 'コホート分析', icon: '📊', component: CohortAnalysisTab },
