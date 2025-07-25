@@ -68,47 +68,6 @@ export default function MetricsLayout({ metrics, aiAnalysis }: MetricsLayoutProp
         </div>
       </div>
 
-      {/* ナビゲーションボタン */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-5 py-3">
-          <div className="flex justify-between items-center">
-            <div className="flex gap-2 overflow-x-auto">
-            {metricsCategories.map((category) => {
-              const isActive = pathname === category.path;
-              const categoryStyle = getCategoryInfo(category.category);
-              
-              return (
-                <Link
-                  key={category.id}
-                  href={category.path}
-                  className={`
-                    flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-sm
-                    transition-all duration-200 whitespace-nowrap
-                    ${
-                      isActive
-                        ? `${categoryStyle.color} bg-opacity-10 border-2`
-                        : 'bg-gray-100 hover:bg-gray-200 border-2 border-transparent'
-                    }
-                  `}
-                >
-                  <span className="text-xl">{category.icon}</span>
-                  <span className={isActive ? 'font-semibold' : ''}>
-                    {category.label}
-                  </span>
-                </Link>
-              );
-            })}
-            </div>
-            <Link
-              href="/reports/home"
-              className="flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-sm bg-green-500 text-white hover:bg-green-600 transition-all duration-200 whitespace-nowrap ml-4"
-            >
-              <span>←</span>
-              <span>レポートセンター一覧へ</span>
-            </Link>
-          </div>
-        </div>
-      </div>
 
       <div className="max-w-7xl mx-auto p-5">
         {/* メイン指標 */}
