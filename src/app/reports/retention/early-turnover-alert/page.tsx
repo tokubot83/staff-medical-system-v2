@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
+import { BackToReportsButton } from '@/components/BackToReportsButton';
 
 function EarlyTurnoverAlertContent() {
   const searchParams = useSearchParams();
@@ -226,7 +227,8 @@ function EarlyTurnoverAlertContent() {
           </div>
         </div>
       </div>
-            <ScrollToTopButton />
+      <BackToReportsButton />
+      <ScrollToTopButton />
       <DashboardButton />
     </div>
   );

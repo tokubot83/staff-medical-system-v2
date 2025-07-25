@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
+import { BackToReportsButton } from '@/components/BackToReportsButton';
 import {
   ScatterChart,
   Scatter,
@@ -380,7 +381,8 @@ function CorrelationAnalysisContent() {
           </div>
         </div>
       </div>
-            <ScrollToTopButton />
+      <BackToReportsButton />
+      <ScrollToTopButton />
       <DashboardButton />
     </div>
   );

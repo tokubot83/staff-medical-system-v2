@@ -63,15 +63,6 @@ function ReportsPageContent() {
             <span className={styles.categoryIcon}>{currentCategory?.icon}</span>
             <h1 className={styles.categoryTitle}>{currentCategory?.label}</h1>
           </div>
-          <div className={styles.headerActions}>
-            <button 
-              onClick={() => router.push('/reports/home')}
-              className={styles.backToHomeButton}
-            >
-              <span>←</span>
-              <span>カテゴリー一覧へ</span>
-            </button>
-          </div>
         </div>
 
         {/* 施設選択 */}

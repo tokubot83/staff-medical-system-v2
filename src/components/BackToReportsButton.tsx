@@ -2,20 +2,24 @@
 
 import React from 'react'
 import { useRouter } from 'next/navigation'
+import { Button } from '@/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
 import styles from './BackToReportsButton.module.css'
 
-export default function BackToReportsButton() {
+export const BackToReportsButton: React.FC = () => {
   const router = useRouter()
 
-  const handleClick = () => {
-    router.push('/reports/home')
-  }
-
   return (
-    <button onClick={handleClick} className={styles.backButton}>
-      <ArrowLeft size={16} className={styles.icon} />
-      <span className={styles.text}>レポートセンター一覧へ</span>
-    </button>
+    <div className={styles.buttonContainer}>
+      <Button
+        variant="default"
+        size="lg"
+        onClick={() => router.push('/reports')}
+        className={styles.backButton}
+      >
+        <ArrowLeft className="mr-2 h-5 w-5" />
+        レポートセンター一覧へ
+      </Button>
+    </div>
   )
 }
