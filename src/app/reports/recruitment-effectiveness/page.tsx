@@ -10,7 +10,7 @@ import { generateRecruitmentComments } from '@/utils/reportComments';
 import { organizationData, getDepartmentsByType } from '@/app/data/organizationData';
 import { tachigamiOrganizationData } from '@/app/data/tachigamiOrganizationData';
 import { BackToReportsButton } from '@/components/BackToReportsButton';
-import { ScrollToTopButton } from '@/components/ScrollToTopButton';
+import ScrollToTopButton from '@/components/ScrollToTopButton';
 
 function RecruitmentEffectivenessReportContent() {
   const searchParams = useSearchParams();

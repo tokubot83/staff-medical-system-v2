@@ -8,7 +8,7 @@ import { exportToPDF } from '@/utils/pdfExport';
 import { DataCommentList, MetricWithComment } from '@/components/DataComment';
 import { generateOrganizationComments } from '@/utils/reportComments';
 import { BackToReportsButton } from '@/components/BackToReportsButton';
-import { ScrollToTopButton } from '@/components/ScrollToTopButton';
+import ScrollToTopButton from '@/components/ScrollToTopButton';
 
 function OrganizationOptimizationReportContent() {
   const searchParams = useSearchParams();

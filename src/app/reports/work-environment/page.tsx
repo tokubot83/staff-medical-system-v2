@@ -8,7 +8,7 @@ import { exportToPDF } from '@/utils/pdfExport';
 import { DataCommentList, MetricWithComment } from '@/components/DataComment';
 import { generateWorkEnvironmentComments } from '@/utils/reportComments';
 import { BackToReportsButton } from '@/components/BackToReportsButton';
-import { ScrollToTopButton } from '@/components/ScrollToTopButton';
+import ScrollToTopButton from '@/components/ScrollToTopButton';
 
 function WorkEnvironmentReportContent() {
   const searchParams = useSearchParams();
