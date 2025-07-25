@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ChevronUp } from 'lucide-react';
 import styles from './ScrollToTopButton.module.css';
 
 const ScrollToTopButton: React.FC = () => {
@@ -36,8 +35,7 @@ const ScrollToTopButton: React.FC = () => {
           onClick={scrollToTop}
           aria-label="ページトップへ戻る"
         >
-          <ChevronUp size={24} />
-          <span className={styles.text}>ページトップへ</span>
+          <span className={styles.text}>ページトップ</span>
         </button>
       )}
     </>

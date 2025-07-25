@@ -1,39 +1,35 @@
-.buttonContainer {
+.backButton {
   position: fixed;
   bottom: 80px;
   right: 20px;
-  z-index: 998;
-}
-
-.backButton {
-  background-color: #0066cc;
+  background-color: #3b82f6;
   color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  z-index: 998;
   font-size: 14px;
   font-weight: 500;
-  padding: 12px 20px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
   white-space: nowrap;
+  text-decoration: none;
+  display: inline-block;
+  min-width: fit-content;
 }
 
 .backButton:hover {
-  background-color: #0052a3;
+  background-color: #2563eb;
   transform: translateY(-2px);
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
-@media (max-width: 768px) {
-  .buttonContainer {
-    bottom: 70px;
-    right: 16px;
-  }
-  
-  .backButton {
-    padding: 10px 16px;
-    font-size: 12px;
-  }
+.backButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.text {
+  display: inline;
 }

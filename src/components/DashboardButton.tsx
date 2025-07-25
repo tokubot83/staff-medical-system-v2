@@ -5,8 +5,7 @@ import styles from './DashboardButton.module.css'
 export default function DashboardButton() {
   return (
     <Link href="/" className={styles.dashboardButton}>
-      <span className={styles.icon}>🏠</span>
-      <span className={styles.text}>ダッシュボードへ戻る</span>
+      <span className={styles.text}>ダッシュボード</span>
     </Link>
   )
 }
