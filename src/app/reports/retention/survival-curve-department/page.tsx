@@ -4,6 +4,7 @@ import React, { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 function SurvivalCurveDepartmentContent() {
   const searchParams = useSearchParams();
@@ -33,15 +34,46 @@ function SurvivalCurveDepartmentContent() {
             </p>
           </div>
 
-          {/* グラフプレースホルダー */}
-          <div className="bg-gray-100 rounded-lg p-8 mb-6 text-center">
-            <div className="text-gray-500 mb-4">
-              <svg className="w-24 h-24 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
-              </svg>
-              <p className="text-lg font-medium">部署別生存曲線</p>
-              <p className="text-sm">複数部署の定着率推移を比較表示</p>
-            </div>
+          {/* 部署別生存曲線グラフ */}
+          <div className="mb-6">
+            <ResponsiveContainer width="100%" height={400}>
+              <LineChart
+                data={[
+                  { month: 0, nursing: 100, medical: 100, rehab: 100, pharmacy: 100, nutrition: 100, admin: 100 },
+                  { month: 6, nursing: 96.8, medical: 83.2, rehab: 94.1, pharmacy: 98.2, nutrition: 78.5, admin: 92.3 },
+                  { month: 12, nursing: 92.3, medical: 75.0, rehab: 88.5, pharmacy: 95.0, nutrition: 68.2, admin: 85.7 },
+                  { month: 18, nursing: 87.5, medical: 65.8, rehab: 82.3, pharmacy: 91.2, nutrition: 58.9, admin: 79.2 },
+                  { month: 24, nursing: 83.2, medical: 58.9, rehab: 76.8, pharmacy: 87.5, nutrition: 52.3, admin: 73.5 },
+                  { month: 30, nursing: 79.8, medical: 54.2, rehab: 72.1, pharmacy: 84.3, nutrition: 48.5, admin: 69.8 },
+                  { month: 36, nursing: 78.5, medical: 52.3, rehab: 70.2, pharmacy: 82.1, nutrition: 45.5, admin: 67.8 },
+                  { month: 42, nursing: 76.2, medical: 49.8, rehab: 67.5, pharmacy: 79.8, nutrition: 42.1, admin: 65.2 },
+                  { month: 48, nursing: 73.8, medical: 47.5, rehab: 65.2, pharmacy: 77.5, nutrition: 39.8, admin: 62.5 },
+                  { month: 60, nursing: 70.5, medical: 44.2, rehab: 61.8, pharmacy: 73.2, nutrition: 35.5, admin: 58.9 },
+                ]}
+                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis 
+                  dataKey="month" 
+                  label={{ value: '勤続月数', position: 'insideBottomRight', offset: -10 }}
+                />
+                <YAxis 
+                  label={{ value: '定着率 (%)', angle: -90, position: 'insideLeft' }}
+                  domain={[0, 100]}
+                />
+                <Tooltip 
+                  formatter={(value) => `${value}%`}
+                  labelFormatter={(label) => `${label}ヶ月`}
+                />
+                <Legend />
+                <Line type="stepAfter" dataKey="nursing" stroke="#10b981" strokeWidth={2} name="看護部" />
+                <Line type="stepAfter" dataKey="medical" stroke="#f59e0b" strokeWidth={2} name="医事課" />
+                <Line type="stepAfter" dataKey="rehab" stroke="#3b82f6" strokeWidth={2} name="リハビリ部" />
+                <Line type="stepAfter" dataKey="pharmacy" stroke="#8b5cf6" strokeWidth={2} name="薬剤部" />
+                <Line type="stepAfter" dataKey="nutrition" stroke="#ef4444" strokeWidth={2} name="栄養部" />
+                <Line type="stepAfter" dataKey="admin" stroke="#6b7280" strokeWidth={2} name="総務部" />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
 
           {/* 部署別サマリー */}
