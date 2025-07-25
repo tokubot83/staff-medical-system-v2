@@ -86,12 +86,7 @@ function EvaluationPageContent() {
 
   return (
     <div>
-      <CommonHeader 
-        title="人事評価管理" 
-        showBackButton={false} 
-        backUrl="/"
-        backText="ダッシュボードに戻る"
-      />
+      <CommonHeader title="人事評価管理" />
       
       <div className={styles.container}>
         <div className={styles.tabNavigation}>

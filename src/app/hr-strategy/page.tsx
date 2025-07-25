@@ -19,12 +19,7 @@ export default function HrStrategyPage() {
 
   return (
     <div>
-      <CommonHeader 
-        title="人材戦略プランニング" 
-        showBackButton={false} 
-        backUrl="/"
-        backText="ダッシュボードに戻る"
-      />
+      <CommonHeader title="人材戦略プランニング" />
       
       <div className={styles.container}>
         {/* タブナビゲーション */}

@@ -111,12 +111,7 @@ export default function HealthPage() {
 
   return (
     <div>
-      <CommonHeader 
-        title="健康管理" 
-        showBackButton={false} 
-        backUrl="/"
-        backText="ダッシュボードに戻る"
-      />
+      <CommonHeader title="健康管理" />
       
       <div className={styles.container}>
         <div className={styles.tabNavigation}>

@@ -78,12 +78,7 @@ function CorrelationAnalysisContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader 
-        title="相関分析" 
-        showBackButton={true}
-        backUrl="/reports"
-        backText="レポートセンターに戻る"
-      />
+      <CommonHeader title="相関分析" />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white shadow rounded-lg p-6 mb-6">

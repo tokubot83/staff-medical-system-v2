@@ -54,12 +54,7 @@ function ReportsPageContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader 
-        title="レポートセンター" 
-        showBackButton={true}
-        backUrl="/reports/home"
-        backText="レポートセンターに戻る"
-      />
+      <CommonHeader title="レポートセンター" />
       
       <div className={styles.container}>
         {/* カテゴリーヘッダー */}
