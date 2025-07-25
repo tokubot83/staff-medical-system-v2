@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import FacilitySelector from '@/components/reports/FacilitySelector';
 import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
+import ScrollToTopButton from '@/components/ScrollToTopButton';
 import BasicMetricsTab from '@/components/reports/tabs/BasicMetricsTab';
 import StrategicAnalysisTab from '@/components/reports/tabs/StrategicAnalysisTab';
 import RetentionAnalysisTab from '@/components/reports/tabs/RetentionAnalysisTab';
@@ -106,6 +107,7 @@ function ReportsPageContent() {
           </ul>
         </div>
       </div>
+            <ScrollToTopButton />
       <DashboardButton />
     </div>
   );

@@ -4,6 +4,8 @@ import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ReportLayout from '@/components/reports/ReportLayout';
 import DashboardButton from '@/components/DashboardButton';
+import ScrollToTopButton from '@/components/ScrollToTopButton';
+import BackToReportsButton from '@/components/BackToReportsButton';
 import { facilities } from '@/app/data/facilityData';
 import { staffDatabase } from '@/app/data/staffData';
 import { exportToPDF } from '@/utils/pdfExport';
@@ -476,6 +478,8 @@ function TurnoverRiskReportContent() {
           />
         </section>
       </div>
+            <ScrollToTopButton />
+      <BackToReportsButton />
       <DashboardButton />
     </ReportLayout>
   );

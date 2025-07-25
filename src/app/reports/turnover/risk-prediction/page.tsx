@@ -7,6 +7,9 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { ArrowLeft, AlertTriangle, TrendingUp, Users } from 'lucide-react'
+import ScrollToTopButton from '@/components/ScrollToTopButton'
+import BackToReportsButton from '@/components/BackToReportsButton'
+import DashboardButton from '@/components/DashboardButton'
 
 // サンプルデータ
 const riskData = [
@@ -178,6 +181,9 @@ export default function RiskPredictionPage() {
           </Card>
         </div>
       </div>
+      <ScrollToTopButton />
+      <BackToReportsButton />
+      <DashboardButton />
     </div>
   )
 }
