@@ -522,7 +522,7 @@ export default function HRDashboardSection() {
 
             {/* アクションボタン */}
             <div className="mt-6 flex gap-3">
-              <Link href="/reports" className="flex-1">
+              <Link href="/reports/home" className="flex-1">
                 <button className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-200">
                   詳細レポートを見る
                 </button>

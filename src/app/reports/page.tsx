@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import FacilitySelector from '@/components/reports/FacilitySelector';
 import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
@@ -31,8 +32,24 @@ const tabs = [
 ];
 
 export default function ReportsPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState('basic');
   const [selectedFacility, setSelectedFacility] = useState('');
+
+  // URLパラメータからタブと施設を初期化
+  useEffect(() => {
+    const tabParam = searchParams.get('tab');
+    const facilityParam = searchParams.get('facility');
+    
+    if (tabParam && tabs.some(tab => tab.id === tabParam)) {
+      setActiveTab(tabParam);
+    }
+    
+    if (facilityParam) {
+      setSelectedFacility(facilityParam);
+    }
+  }, [searchParams]);
 
   // 施設に応じたスタッフデータを取得
   const staffData = useMemo(() => {
