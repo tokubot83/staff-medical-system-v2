@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
+import { BackToReportsButton } from '@/components/BackToReportsButton';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -359,7 +360,8 @@ function ImprovementSuggestionsContent() {
           </div>
         </div>
       </div>
-            <ScrollToTopButton />
+      <BackToReportsButton />
+      <ScrollToTopButton />
       <DashboardButton />
     </div>
   );
