@@ -9,6 +9,7 @@ import { DataCommentList, MetricWithComment } from '@/components/DataComment';
 import { generateOrganizationComments } from '@/utils/reportComments';
 import { BackToReportsButton } from '@/components/BackToReportsButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
+import DashboardButton from '@/components/DashboardButton';
 
 function OrganizationOptimizationReportContent() {
   const searchParams = useSearchParams();
@@ -481,9 +482,10 @@ function OrganizationOptimizationReportContent() {
           />
         </section>
       </div>
-      <BackToReportsButton />
-      <ScrollToTopButton />
     </ReportLayout>
+    <BackToReportsButton />
+    <ScrollToTopButton />
+    <DashboardButton />
   );
 }
 

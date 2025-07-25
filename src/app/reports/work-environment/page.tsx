@@ -9,6 +9,7 @@ import { DataCommentList, MetricWithComment } from '@/components/DataComment';
 import { generateWorkEnvironmentComments } from '@/utils/reportComments';
 import { BackToReportsButton } from '@/components/BackToReportsButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
+import DashboardButton from '@/components/DashboardButton';
 
 function WorkEnvironmentReportContent() {
   const searchParams = useSearchParams();
@@ -371,9 +372,10 @@ function WorkEnvironmentReportContent() {
           />
         </section>
       </div>
-      <BackToReportsButton />
-      <ScrollToTopButton />
     </ReportLayout>
+    <BackToReportsButton />
+    <ScrollToTopButton />
+    <DashboardButton />
   );
 }
 

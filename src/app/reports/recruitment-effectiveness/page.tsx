@@ -11,6 +11,7 @@ import { organizationData, getDepartmentsByType } from '@/app/data/organizationD
 import { tachigamiOrganizationData } from '@/app/data/tachigamiOrganizationData';
 import { BackToReportsButton } from '@/components/BackToReportsButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
+import DashboardButton from '@/components/DashboardButton';
 
 function RecruitmentEffectivenessReportContent() {
   const searchParams = useSearchParams();
@@ -424,9 +425,10 @@ function RecruitmentEffectivenessReportContent() {
           />
         </section>
       </div>
-      <BackToReportsButton />
-      <ScrollToTopButton />
     </ReportLayout>
+    <BackToReportsButton />
+    <ScrollToTopButton />
+    <DashboardButton />
   );
 }
 
