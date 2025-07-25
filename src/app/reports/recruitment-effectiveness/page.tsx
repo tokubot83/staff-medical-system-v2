@@ -9,6 +9,8 @@ import { DataCommentList, MetricWithComment } from '@/components/DataComment';
 import { generateRecruitmentComments } from '@/utils/reportComments';
 import { organizationData, getDepartmentsByType } from '@/app/data/organizationData';
 import { tachigamiOrganizationData } from '@/app/data/tachigamiOrganizationData';
+import { BackToReportsButton } from '@/components/BackToReportsButton';
+import { ScrollToTopButton } from '@/components/ScrollToTopButton';
 
 function RecruitmentEffectivenessReportContent() {
   const searchParams = useSearchParams();
@@ -422,6 +424,8 @@ function RecruitmentEffectivenessReportContent() {
           />
         </section>
       </div>
+      <BackToReportsButton />
+      <ScrollToTopButton />
     </ReportLayout>
   );
 }

@@ -10,6 +10,8 @@ import { DataCommentList, MetricWithComment } from '@/components/DataComment';
 import { DataComment } from '@/types/commentTypes';
 import { organizationData, getDepartmentsByType } from '@/app/data/organizationData';
 import { tachigamiOrganizationData } from '@/app/data/tachigamiOrganizationData';
+import { BackToReportsButton } from '@/components/BackToReportsButton';
+import { ScrollToTopButton } from '@/components/ScrollToTopButton';
 
 function TalentDevelopmentReportContent() {
   const searchParams = useSearchParams();
@@ -406,6 +408,8 @@ function TalentDevelopmentReportContent() {
           />
         </section>
       </div>
+      <BackToReportsButton />
+      <ScrollToTopButton />
     </ReportLayout>
   );
 }
