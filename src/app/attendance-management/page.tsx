@@ -83,9 +83,6 @@ function AttendanceManagementContent() {
     <div>
       <CommonHeader 
         title="勤怠管理" 
-        showBackButton={false} 
-        backUrl="/"
-        backText="ダッシュボードに戻る"
       />
       
       <div className={styles.container}>
