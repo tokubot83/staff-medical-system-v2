@@ -1,6 +1,6 @@
 .buttonContainer {
   position: fixed;
-  bottom: 140px;
+  bottom: 80px;
   right: 20px;
   z-index: 998;
 }
@@ -28,7 +28,7 @@
 
 @media (max-width: 768px) {
   .buttonContainer {
-    bottom: 120px;
+    bottom: 70px;
     right: 16px;
   }
   
