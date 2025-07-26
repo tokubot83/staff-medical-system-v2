@@ -10,17 +10,6 @@ export interface PDFExportOptions {
   elementId: string;
 }
 
-// 日本語フォントのBase64データ（実際のプロジェクトでは外部ファイルから読み込む）
-// ここでは代替として標準フォントを使用
-const addJapaneseFont = (doc: jsPDF) => {
-  // 実際の実装では、日本語フォント（例：NotoSansJP）のBase64データを追加
-  // doc.addFileToVFS('NotoSansJP-Regular.ttf', fontBase64);
-  // doc.addFont('NotoSansJP-Regular.ttf', 'NotoSansJP', 'normal');
-  // doc.setFont('NotoSansJP');
-  
-  // 現時点では標準フォントを使用（日本語は画像として出力）
-  doc.setFont('helvetica');
-};
 
 export const exportToPDF = async (options: PDFExportOptions) => {
   try {
@@ -43,24 +32,47 @@ export const exportToPDF = async (options: PDFExportOptions) => {
     `;
     document.body.appendChild(loadingDiv);
 
-    // 一時的にスタイルを調整（印刷用）
-    const originalStyle = element.style.cssText;
-    element.style.cssText = `
+    // ヘッダー情報を含む一時的なコンテナを作成
+    const tempContainer = document.createElement('div');
+    tempContainer.style.cssText = `
       background: white;
       padding: 20px;
       width: 1000px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     `;
 
+    // ヘッダー部分のHTML作成
+    const headerHTML = `
+      <div style="margin-bottom: 20px;">
+        <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 10px; color: #333;">${options.title}</h1>
+        ${options.facility ? `<p style="font-size: 14px; margin-bottom: 5px; color: #666;">施設: ${options.facility}</p>` : ''}
+        ${options.dateRange ? `<p style="font-size: 14px; margin-bottom: 5px; color: #666;">期間: ${options.dateRange}</p>` : ''}
+        <p style="font-size: 14px; margin-bottom: 5px; color: #666;">出力日: ${new Date().toLocaleDateString('ja-JP')}</p>
+      </div>
+    `;
+
+    // コンテンツのクローンを作成
+    const contentClone = element.cloneNode(true) as HTMLElement;
+    
+    // ヘッダーとコンテンツを結合
+    tempContainer.innerHTML = headerHTML;
+    tempContainer.appendChild(contentClone);
+    
+    // 一時的に画面外に配置
+    tempContainer.style.position = 'absolute';
+    tempContainer.style.left = '-9999px';
+    document.body.appendChild(tempContainer);
+
     // HTML要素をキャンバスに変換
-    const canvas = await html2canvas(element, {
+    const canvas = await html2canvas(tempContainer, {
       scale: 2, // 高解像度
       useCORS: true,
       logging: false,
       backgroundColor: '#ffffff'
     });
 
-    // スタイルを元に戻す
-    element.style.cssText = originalStyle;
+    // 一時的なコンテナを削除
+    document.body.removeChild(tempContainer);
 
     // PDFドキュメントの作成
     const pdf = new jsPDF({
@@ -69,33 +81,10 @@ export const exportToPDF = async (options: PDFExportOptions) => {
       format: 'a4'
     });
 
-    // 日本語フォントの設定
-    addJapaneseFont(pdf);
-
     // ページサイズの取得
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
     const margin = 10;
-
-    // ヘッダー情報の追加
-    pdf.setFontSize(20);
-    pdf.text(options.title, margin, 20);
-    
-    pdf.setFontSize(12);
-    let yPosition = 30;
-    
-    if (options.facility) {
-      pdf.text(`施設: ${options.facility}`, margin, yPosition);
-      yPosition += 7;
-    }
-    
-    if (options.dateRange) {
-      pdf.text(`期間: ${options.dateRange}`, margin, yPosition);
-      yPosition += 7;
-    }
-    
-    pdf.text(`出力日: ${new Date().toLocaleDateString('ja-JP')}`, margin, yPosition);
-    yPosition += 10;
 
     // キャンバスからイメージデータを取得
     const imgData = canvas.toDataURL('image/png');
@@ -104,7 +93,8 @@ export const exportToPDF = async (options: PDFExportOptions) => {
     const imgWidth = pageWidth - (margin * 2);
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
     
-    // 残りのスペースに画像を配置
+    // 最初のページの開始位置
+    let yPosition = margin;
     const remainingHeight = pageHeight - yPosition - margin;
     
     if (imgHeight <= remainingHeight) {
