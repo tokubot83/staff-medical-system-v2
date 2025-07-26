@@ -6,8 +6,8 @@ import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
 import FacilitySelector from '@/components/reports/FacilitySelector';
 import Link from 'next/link';
-import CategoryBackButton from '@/components/reports/CategoryBackButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
+import { BackToReportsButton } from '@/components/BackToReportsButton';
 
 const reports = [
   {
@@ -114,11 +114,6 @@ function StrategicAnalysisPageContent() {
           />
         </div>
 
-        {/* 戻るボタン */}
-        <div className="mb-6">
-          <CategoryBackButton />
-        </div>
-
         {/* レポート一覧 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {reports.map((report) => {
@@ -161,8 +156,8 @@ function StrategicAnalysisPageContent() {
           </ul>
         </div>
       </div>
-      
       <ScrollToTopButton />
+      <BackToReportsButton />
       <DashboardButton />
     </div>
   );

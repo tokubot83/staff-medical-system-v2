@@ -9,7 +9,7 @@ export const BackToReportsButton: React.FC = () => {
 
   return (
     <button
-      onClick={() => router.push('/reports/home')}
+      onClick={() => router.push('/reports')}
       className={styles.backButton}
       aria-label="レポートセンターへ戻る"
     >

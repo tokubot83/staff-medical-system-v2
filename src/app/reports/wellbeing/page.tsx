@@ -7,7 +7,7 @@ import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 import CategoryReportCard from '@/components/reports/CategoryReportCard';
-import CategoryBackButton from '@/components/reports/CategoryBackButton';
+import { BackToReportsButton } from '@/components/BackToReportsButton';
 
 export default function WellbeingCategoryPage() {
   const router = useRouter();
@@ -124,14 +124,10 @@ export default function WellbeingCategoryPage() {
             />
           ))}
         </div>
-
-        {/* レポートセンターに戻るボタン */}
-        <div className="mt-8">
-          <CategoryBackButton />
-        </div>
       </div>
       
       <ScrollToTopButton />
+      <BackToReportsButton />
       <DashboardButton />
     </div>
   );
