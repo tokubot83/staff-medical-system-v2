@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
 import FacilitySelector from '@/components/reports/FacilitySelector';
-import CategoryReportCard from '@/components/reports/CategoryReportCard';
+import ReportNavigationCard from '@/components/reports/ReportNavigationCard';
 import CategoryBackButton from '@/components/reports/CategoryBackButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 
@@ -114,7 +114,7 @@ function TurnoverPageContent() {
         {/* レポート一覧 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {reports.map((report) => (
-            <CategoryReportCard
+            <ReportNavigationCard
               key={report.id}
               report={report}
               selectedFacility={selectedFacility}
