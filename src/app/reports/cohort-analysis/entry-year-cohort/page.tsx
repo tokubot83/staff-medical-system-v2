@@ -6,7 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
-import CategoryTopButton from '@/components/reports/CategoryTopButton';
+import { CategoryTopButton } from '@/components/CategoryTopButton';
+import { BackToReportsButton } from '@/components/BackToReportsButton';
 
 function EntryYearCohortContent() {
   const searchParams = useSearchParams();
@@ -39,14 +40,12 @@ function EntryYearCohortContent() {
             </CardContent>
           </Card>
 
-          {/* カテゴリトップへ戻るボタン */}
-          <div className="mt-8">
-            <CategoryTopButton categoryPath="/reports/cohort-analysis" categoryName="コホート分析" />
-          </div>
         </div>
       </div>
       
       <ScrollToTopButton />
+      <CategoryTopButton categoryPath="/reports/cohort-analysis" categoryName="コホート分析" />
+      <BackToReportsButton />
       <DashboardButton />
     </div>
   );

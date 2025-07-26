@@ -11,7 +11,8 @@ import { obaraStaffDatabase, tachigamiStaffDatabase, StaffDetail } from '@/app/d
 import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
-import CategoryTopButton from '@/components/reports/CategoryTopButton';
+import { CategoryTopButton } from '@/components/CategoryTopButton';
+import { BackToReportsButton } from '@/components/BackToReportsButton';
 
 function TalentGridContent() {
   const searchParams = useSearchParams();
@@ -362,14 +363,12 @@ function TalentGridContent() {
             </CardContent>
           </Card>
 
-          {/* カテゴリトップへ戻るボタン */}
-          <div className="mt-8">
-            <CategoryTopButton categoryPath="/reports/talent-mapping" categoryName="タレントマッピング" />
-          </div>
         </div>
       </div>
       
       <ScrollToTopButton />
+      <CategoryTopButton categoryPath="/reports/talent-mapping" categoryName="タレントマッピング" />
+      <BackToReportsButton />
       <DashboardButton />
     </div>
   );
