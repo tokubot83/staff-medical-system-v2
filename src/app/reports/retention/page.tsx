@@ -1,11 +1,10 @@
 'use client';
 
 import React, { Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
 import FacilitySelector from '@/components/reports/FacilitySelector';
-import ReportNavigationCard from '@/components/reports/ReportNavigationCard';
 import CategoryBackButton from '@/components/reports/CategoryBackButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 
@@ -94,6 +93,7 @@ const reports = [
 
 function RetentionPageContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const selectedFacility = searchParams.get('facility') || '';
 
   return (
@@ -130,11 +130,25 @@ function RetentionPageContent() {
         {/* レポート一覧 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {reports.map((report) => (
-            <ReportNavigationCard
+            <div
               key={report.id}
-              report={report}
-              selectedFacility={selectedFacility}
-            />
+              onClick={() => {
+                const url = selectedFacility 
+                  ? `${report.path}?facility=${encodeURIComponent(selectedFacility)}`
+                  : report.path;
+                router.push(url);
+              }}
+              className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer overflow-hidden"
+            >
+              <div className={`h-2 bg-gradient-to-r ${report.gradient}`} />
+              <div className="p-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="text-3xl">{report.icon}</span>
+                  <h3 className="text-xl font-semibold">{report.title}</h3>
+                </div>
+                <p className="text-gray-600">{report.description}</p>
+              </div>
+            </div>
           ))}
         </div>
 
