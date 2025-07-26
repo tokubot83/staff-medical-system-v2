@@ -5,58 +5,50 @@ import { useSearchParams } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
 import FacilitySelector from '@/components/reports/FacilitySelector';
-import ReportNavigationCard from '@/components/reports/ReportNavigationCard';
+import Link from 'next/link';
 import CategoryBackButton from '@/components/reports/CategoryBackButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 
 const reports = [
   {
-    id: 'headcount-trends',
-    title: '職員数推移',
-    path: '/reports/basic-metrics/headcount-trends',
-    description: '職員数の月次・年次推移を可視化',
-    icon: '👥',
-    gradient: 'from-blue-500 to-blue-600'
-  },
-  {
-    id: 'composition-analysis',
-    title: '職員構成分析',
-    path: '/reports/basic-metrics/composition-analysis',
-    description: '職種・部署・年齢別の構成比を分析',
+    id: 'basic',
+    title: '基本指標',
+    path: '/metrics/basic',
+    description: '総職員数、部門別人員構成など基本的な統計データを確認します',
     icon: '📊',
-    gradient: 'from-cyan-500 to-cyan-600'
+    bgColor: 'bg-green-500'
   },
   {
-    id: 'recruitment-metrics',
-    title: '採用指標',
-    path: '/reports/basic-metrics/recruitment-metrics',
-    description: '採用数・採用率・充足率の追跡',
-    icon: '🎯',
-    gradient: 'from-green-500 to-green-600'
+    id: 'quality',
+    title: '人材の質',
+    path: '/metrics/quality',
+    description: '職員満足度、スキル評価、資格保有状況を分析します',
+    icon: '⭐',
+    bgColor: 'bg-blue-500'
   },
   {
-    id: 'turnover-metrics',
-    title: '離職指標',
-    path: '/reports/basic-metrics/turnover-metrics',
-    description: '離職率・平均勤続年数の分析',
-    icon: '📉',
-    gradient: 'from-red-500 to-red-600'
+    id: 'growth',
+    title: '人材の成長',
+    path: '/metrics/growth',
+    description: '研修受講率、スキル向上度、キャリア開発状況を確認します',
+    icon: '📈',
+    bgColor: 'bg-purple-500'
   },
   {
-    id: 'attendance-metrics',
-    title: '勤怠指標',
-    path: '/reports/basic-metrics/attendance-metrics',
-    description: '出勤率・残業時間・有給取得率',
-    icon: '⏰',
-    gradient: 'from-purple-500 to-purple-600'
+    id: 'risk',
+    title: 'リスク管理',
+    path: '/metrics/risk',
+    description: '離職リスク、コンプライアンス、要注意職員の状況を管理します',
+    icon: '⚠️',
+    bgColor: 'bg-yellow-500'
   },
   {
-    id: 'cost-metrics',
-    title: '人件費指標',
-    path: '/reports/basic-metrics/cost-metrics',
-    description: '人件費率・一人当たりコストの分析',
-    icon: '💰',
-    gradient: 'from-yellow-500 to-yellow-600'
+    id: 'efficiency',
+    title: '組織効率',
+    path: '/metrics/efficiency',
+    description: '労働生産性、業務効率、緊急対応事項を確認します',
+    icon: '⚡',
+    bgColor: 'bg-red-500'
   }
 ];
 
@@ -96,13 +88,31 @@ function BasicMetricsPageContent() {
 
         {/* レポート一覧 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {reports.map((report) => (
-            <ReportNavigationCard
-              key={report.id}
-              report={report}
-              selectedFacility={selectedFacility}
-            />
-          ))}
+          {reports.map((report) => {
+            const url = selectedFacility 
+              ? `${report.path}?facility=${encodeURIComponent(selectedFacility)}`
+              : report.path;
+            
+            return (
+              <Link key={report.id} className="block" href={url}>
+                <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 p-6 h-full">
+                  <div className="flex items-center mb-4">
+                    <div className={`${report.bgColor} text-white rounded-lg p-3 text-2xl`}>
+                      {report.icon}
+                    </div>
+                    <h3 className="ml-4 text-lg font-semibold text-gray-900">{report.title}</h3>
+                  </div>
+                  <p className="text-gray-600 text-sm mb-4">{report.description}</p>
+                  <div className="mt-auto flex items-center text-blue-600">
+                    <span className="text-sm">レポートを見る</span>
+                    <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
         </div>
 
         {/* 使い方ガイド */}

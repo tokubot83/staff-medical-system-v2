@@ -5,58 +5,82 @@ import { useSearchParams } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
 import FacilitySelector from '@/components/reports/FacilitySelector';
-import ReportNavigationCard from '@/components/reports/ReportNavigationCard';
+import Link from 'next/link';
 import CategoryBackButton from '@/components/reports/CategoryBackButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 
 const reports = [
   {
-    id: 'talent-portfolio',
-    title: 'タレントポートフォリオ',
-    path: '/reports/strategic-analysis/talent-portfolio',
-    description: '人材の能力と潜在性を可視化し戦略的配置を支援',
-    icon: '💎',
-    gradient: 'from-purple-500 to-purple-600'
+    id: 'hr-strategy',
+    title: '人事管理戦略分析',
+    path: '/reports/hr-strategy',
+    description: '組織の人事管理戦略を総合的に分析し、改善提案を提供します',
+    icon: '📊',
+    bgColor: 'bg-blue-500'
   },
   {
-    id: 'workforce-planning',
-    title: '要員計画分析',
-    path: '/reports/strategic-analysis/workforce-planning',
-    description: '将来の人材需要予測と最適な要員配置計画',
-    icon: '📈',
-    gradient: 'from-blue-500 to-blue-600'
+    id: 'work-life-balance',
+    title: 'ワークライフバランス分析',
+    path: '/reports/work-life-balance',
+    description: '職員の労働時間、休暇取得状況、ストレス指標を分析します',
+    icon: '⚖️',
+    bgColor: 'bg-green-500'
   },
   {
-    id: 'succession-risk',
-    title: '後継者リスク分析',
-    path: '/reports/strategic-analysis/succession-risk',
-    description: 'キーポジションの後継者育成状況とリスク評価',
+    id: 'talent-development',
+    title: '職種別人材育成戦略',
+    path: '/reports/talent-development',
+    description: '職種ごとの育成計画とキャリアパス分析を行います',
     icon: '🎯',
-    gradient: 'from-red-500 to-red-600'
+    bgColor: 'bg-purple-500'
   },
   {
-    id: 'skill-gap-analysis',
-    title: 'スキルギャップ分析',
-    path: '/reports/strategic-analysis/skill-gap-analysis',
-    description: '組織に必要なスキルと現状のギャップを特定',
-    icon: '🔍',
-    gradient: 'from-green-500 to-green-600'
+    id: 'organization-optimization',
+    title: '組織構造最適化分析',
+    path: '/reports/organization-optimization',
+    description: '部門別の人員配置と組織効率を分析します',
+    icon: '🏢',
+    bgColor: 'bg-indigo-500'
   },
   {
-    id: 'org-effectiveness',
-    title: '組織効率性分析',
-    path: '/reports/strategic-analysis/org-effectiveness',
-    description: '組織構造の最適性と業務効率を評価',
-    icon: '⚙️',
-    gradient: 'from-cyan-500 to-cyan-600'
+    id: 'work-environment',
+    title: '労働環境改善戦略',
+    path: '/reports/work-environment',
+    description: '職場環境の課題を特定し、改善策を提案します',
+    icon: '🌟',
+    bgColor: 'bg-yellow-500'
   },
   {
-    id: 'talent-investment-roi',
-    title: '人材投資ROI',
-    path: '/reports/strategic-analysis/talent-investment-roi',
-    description: '研修・育成投資の効果測定と費用対効果',
+    id: 'cost-optimization',
+    title: '人件費最適化分析',
+    path: '/reports/cost-optimization',
+    description: '人件費の詳細分析と最適化提案を行います',
     icon: '💰',
-    gradient: 'from-yellow-500 to-yellow-600'
+    bgColor: 'bg-red-500'
+  },
+  {
+    id: 'recruitment-effectiveness',
+    title: '採用効果分析',
+    path: '/reports/recruitment-effectiveness',
+    description: '採用活動の効果測定と改善提案を提供します',
+    icon: '🎯',
+    bgColor: 'bg-teal-500'
+  },
+  {
+    id: 'turnover-risk',
+    title: '離職リスク予測',
+    path: '/reports/turnover-risk',
+    description: 'データ分析による離職リスクの予測と対策を提案します',
+    icon: '⚠️',
+    bgColor: 'bg-orange-500'
+  },
+  {
+    id: 'skill-qualification',
+    title: 'スキル・資格管理分析',
+    path: '/reports/skill-qualification',
+    description: '職員のスキルと資格の現状分析と育成計画を策定します',
+    icon: '📜',
+    bgColor: 'bg-pink-500'
   }
 ];
 
@@ -97,13 +121,31 @@ function StrategicAnalysisPageContent() {
 
         {/* レポート一覧 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {reports.map((report) => (
-            <ReportNavigationCard
-              key={report.id}
-              report={report}
-              selectedFacility={selectedFacility}
-            />
-          ))}
+          {reports.map((report) => {
+            const url = selectedFacility 
+              ? `${report.path}?facility=${encodeURIComponent(selectedFacility)}`
+              : report.path;
+            
+            return (
+              <Link key={report.id} className="block" href={url}>
+                <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 p-6 h-full">
+                  <div className="flex items-center mb-4">
+                    <div className={`${report.bgColor} text-white rounded-lg p-3 text-2xl`}>
+                      {report.icon}
+                    </div>
+                    <h3 className="ml-4 text-lg font-semibold text-gray-900">{report.title}</h3>
+                  </div>
+                  <p className="text-gray-600 text-sm mb-4">{report.description}</p>
+                  <div className="mt-auto flex items-center text-blue-600">
+                    <span className="text-sm">レポートを見る</span>
+                    <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
         </div>
 
         {/* 使い方ガイド */}
