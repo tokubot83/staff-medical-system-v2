@@ -6,10 +6,6 @@ import FacilitySelector from '@/components/reports/FacilitySelector';
 import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
-import BasicMetricsTab from '@/components/reports/tabs/BasicMetricsTab';
-import StrategicAnalysisTab from '@/components/reports/tabs/StrategicAnalysisTab';
-import RetentionAnalysisTab from '@/components/reports/tabs/RetentionAnalysisTab';
-import { TurnoverAnalysisTab } from '@/components/reports/tabs/TurnoverAnalysisTab';
 
 const categories = [
   {
@@ -18,8 +14,8 @@ const categories = [
     icon: '📊',
     description: '職員数、構成比、採用・離職などの基本的な人事指標を確認',
     gradient: 'from-blue-500 to-cyan-500',
-    component: BasicMetricsTab,
-    hasDetailPages: false
+    path: '/reports/basic-metrics',
+    hasDetailPages: true
   },
   {
     id: 'strategic',
@@ -27,8 +23,8 @@ const categories = [
     icon: '📈',
     description: '人材戦略の立案に必要な高度な分析とインサイトを提供',
     gradient: 'from-purple-500 to-pink-500',
-    component: StrategicAnalysisTab,
-    hasDetailPages: false
+    path: '/reports/strategic-analysis',
+    hasDetailPages: true
   },
   {
     id: 'retention',
@@ -36,8 +32,8 @@ const categories = [
     icon: '🎯',
     description: '職員の定着率向上に向けた詳細な分析とアクションプランを提示',
     gradient: 'from-green-500 to-emerald-500',
-    component: RetentionAnalysisTab,
-    hasDetailPages: false
+    path: '/reports/retention',
+    hasDetailPages: true
   },
   {
     id: 'turnover',
@@ -45,8 +41,8 @@ const categories = [
     icon: '📉',
     description: '離職リスクの早期発見と予防策の立案を支援',
     gradient: 'from-red-500 to-orange-500',
-    component: TurnoverAnalysisTab,
-    hasDetailPages: false
+    path: '/reports/turnover',
+    hasDetailPages: true
   },
   {
     id: 'talent-mapping',
@@ -98,7 +94,6 @@ const categories = [
 function ReportsPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedFacility, setSelectedFacility] = useState('');
 
   // URLパラメータから施設を初期化
@@ -112,21 +107,12 @@ function ReportsPageContent() {
 
   // カテゴリクリック時の処理
   const handleCategoryClick = (category: typeof categories[0]) => {
-    if (category.hasDetailPages && category.path) {
-      // 新しいカテゴリページへ遷移
-      const url = selectedFacility 
-        ? `${category.path}?facility=${encodeURIComponent(selectedFacility)}`
-        : category.path;
-      router.push(url);
-    } else {
-      // 従来のタブ表示
-      setSelectedCategory(category.id);
-    }
+    // カテゴリページへ遷移
+    const url = selectedFacility 
+      ? `${category.path}?facility=${encodeURIComponent(selectedFacility)}`
+      : category.path;
+    router.push(url);
   };
-
-  // 選択されたカテゴリのコンポーネント
-  const selectedCategoryData = categories.find(c => c.id === selectedCategory);
-  const CategoryComponent = selectedCategoryData?.component;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -149,42 +135,25 @@ function ReportsPageContent() {
           />
         </div>
 
-        {/* カテゴリ一覧またはタブコンテンツ */}
-        {!selectedCategory ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {categories.map((category) => (
-              <div
-                key={category.id}
-                onClick={() => handleCategoryClick(category)}
-                className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer overflow-hidden"
-              >
-                <div className={`h-2 bg-gradient-to-r ${category.gradient}`} />
-                <div className="p-6">
-                  <div className="flex items-center gap-3 mb-3">
-                    <span className="text-3xl">{category.icon}</span>
-                    <h3 className="text-xl font-semibold">{category.label}</h3>
-                  </div>
-                  <p className="text-gray-600">{category.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div>
-            {/* 戻るボタン */}
-            <button
-              onClick={() => setSelectedCategory('')}
-              className="mb-6 text-blue-600 hover:text-blue-800 flex items-center gap-2"
+        {/* カテゴリ一覧 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {categories.map((category) => (
+            <div
+              key={category.id}
+              onClick={() => handleCategoryClick(category)}
+              className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer overflow-hidden"
             >
-              ← レポートカテゴリ一覧に戻る
-            </button>
-            
-            {/* タブコンテンツ */}
-            {CategoryComponent && (
-              <CategoryComponent selectedFacility={selectedFacility} />
-            )}
-          </div>
-        )}
+              <div className={`h-2 bg-gradient-to-r ${category.gradient}`} />
+              <div className="p-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="text-3xl">{category.icon}</span>
+                  <h3 className="text-xl font-semibold">{category.label}</h3>
+                </div>
+                <p className="text-gray-600">{category.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
 
         {/* 注意事項 */}
         <div className="mt-12 bg-blue-50 border border-blue-200 rounded-lg p-6">
