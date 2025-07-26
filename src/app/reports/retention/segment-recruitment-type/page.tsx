@@ -208,7 +208,7 @@ function SegmentRecruitmentTypeContent() {
         </div>
       </div>
       <BackToReportsButton />
-      <CategoryTopButton categoryPath="/reports/retention" categoryName="定着分析" />
+      <CategoryTopButton categoryPath="/reports?tab=retention" categoryName="定着分析" />
       <ScrollToTopButton />
       <DashboardButton />
     </div>

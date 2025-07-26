@@ -409,7 +409,7 @@ function RetentionStrategiesContent() {
         </div>
       </div>
       <ScrollToTopButton />
-      <CategoryTopButton categoryPath="/reports/turnover" categoryName="離職要因分析" />
+      <CategoryTopButton categoryPath="/reports/turnover-risk" categoryName="離職要因分析" />
       <BackToReportsButton />
       <DashboardButton />
     </div>
