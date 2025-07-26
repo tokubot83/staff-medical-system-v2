@@ -5,6 +5,7 @@ import MetricsLayout from '@/components/metrics/MetricsLayout'
 import DashboardButton from '@/components/DashboardButton'
 import ScrollToTopButton from '@/components/ScrollToTopButton'
 import { BackToReportsButton } from '@/components/BackToReportsButton'
+import { CategoryTopButton } from '@/components/CategoryTopButton'
 import { ReportCategory } from '@/types/reports'
 import { CategoryMetrics } from '@/types/metrics'
 
@@ -96,8 +97,9 @@ const EfficiencyMetricsPage = () => {
 
   return (
     <>
-      <ScrollToTopButton />
       <MetricsLayout metrics={mockMetrics} />
+      <ScrollToTopButton />
+      <CategoryTopButton categoryPath="/reports/basic-metrics" categoryName="基本指標" />
       <BackToReportsButton />
       <DashboardButton />
     </>
