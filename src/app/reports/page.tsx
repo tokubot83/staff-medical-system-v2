@@ -101,17 +101,9 @@ function ReportsPageContent() {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedFacility, setSelectedFacility] = useState('');
 
-  // URLパラメータからカテゴリーと施設を初期化（後方互換性のため）
+  // URLパラメータから施設を初期化
   useEffect(() => {
-    const tabParam = searchParams.get('tab');
     const facilityParam = searchParams.get('facility');
-    
-    if (tabParam) {
-      const category = categories.find(c => c.id === tabParam);
-      if (category && !category.hasDetailPages) {
-        setSelectedCategory(tabParam);
-      }
-    }
     
     if (facilityParam) {
       setSelectedFacility(facilityParam);
