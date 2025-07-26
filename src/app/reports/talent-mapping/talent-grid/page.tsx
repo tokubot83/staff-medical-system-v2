@@ -13,6 +13,7 @@ import DashboardButton from '@/components/DashboardButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { CategoryTopButton } from '@/components/CategoryTopButton';
 import { BackToReportsButton } from '@/components/BackToReportsButton';
+import { exportToPDF } from '@/utils/pdfExport';
 
 function TalentGridContent() {
   const searchParams = useSearchParams();
@@ -93,7 +94,7 @@ function TalentGridContent() {
     <div className="min-h-screen bg-gray-50">
       <CommonHeader title="9ボックスグリッド分析" />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
           {/* ヘッダー */}
           <div className="bg-white rounded-lg shadow-md p-6">
@@ -120,6 +121,18 @@ function TalentGridContent() {
                 >
                   リスト表示
                 </Button>
+                <button
+                  onClick={() => exportToPDF({
+                    title: '9ボックスグリッド分析レポート',
+                    facility: facilityParam,
+                    reportType: 'talent-grid',
+                    elementId: 'report-content',
+                    dateRange: new Date().toLocaleDateString('ja-JP')
+                  })}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm"
+                >
+                  PDFダウンロード
+                </button>
               </div>
             </div>
           </div>

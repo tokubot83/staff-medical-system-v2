@@ -8,6 +8,7 @@ import DashboardButton from '@/components/DashboardButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { CategoryTopButton } from '@/components/CategoryTopButton';
 import { BackToReportsButton } from '@/components/BackToReportsButton';
+import { exportToPDF } from '@/utils/pdfExport';
 
 function SuccessionPlanningContent() {
   const searchParams = useSearchParams();
@@ -17,15 +18,31 @@ function SuccessionPlanningContent() {
     <div className="min-h-screen bg-gray-50">
       <CommonHeader title="後継者計画" />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
           {/* ヘッダー */}
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h1 className="text-2xl font-bold">後継者計画</h1>
-            <p className="text-gray-600 mt-2">キーポジションの後継者候補を特定し、計画的な人材育成を支援</p>
-            {facilityParam && (
-              <p className="text-sm text-gray-500 mt-1">対象施設: {facilityParam}</p>
-            )}
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold">後継者計画</h1>
+                <p className="text-gray-600 mt-2">キーポジションの後継者候補を特定し、計画的な人材育成を支援</p>
+                {facilityParam && (
+                  <p className="text-sm text-gray-500 mt-1">対象施設: {facilityParam}</p>
+                )}
+              </div>
+              <button
+                onClick={() => exportToPDF({
+                  title: '後継者計画レポート',
+                  facility: facilityParam,
+                  reportType: 'succession-planning',
+                  elementId: 'report-content',
+                  dateRange: new Date().toLocaleDateString('ja-JP')
+                })}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm"
+              >
+                PDFダウンロード
+              </button>
+            </div>
           </div>
 
           {/* プレースホルダー */}

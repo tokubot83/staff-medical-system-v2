@@ -11,6 +11,7 @@ import ScrollToTopButton from '@/components/ScrollToTopButton'
 import DashboardButton from '@/components/DashboardButton'
 import { BackToReportsButton } from '@/components/BackToReportsButton'
 import { CategoryTopButton } from '@/components/CategoryTopButton'
+import { exportToPDF } from '@/utils/pdfExport'
 
 // サンプルデータ
 const riskData = [
@@ -37,7 +38,7 @@ export default function RiskPredictionPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8">
+      <div id="report-content" className="container mx-auto px-4 py-8">
         <Button
           variant="ghost"
           onClick={() => router.push('/reports')}
@@ -48,14 +49,27 @@ export default function RiskPredictionPage() {
         </Button>
 
         <div className="space-y-6">
-          <div>
-            <h1 className="text-3xl font-bold flex items-center gap-2">
-              <AlertTriangle className="h-8 w-8 text-red-500" />
-              離職リスク予測
-            </h1>
-            <p className="text-muted-foreground mt-2">
-              AIモデルによる個別職員の離職リスクスコア算出と早期警告
-            </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold flex items-center gap-2">
+                <AlertTriangle className="h-8 w-8 text-red-500" />
+                離職リスク予測
+              </h1>
+              <p className="text-muted-foreground mt-2">
+                AIモデルによる個別職員の離職リスクスコア算出と早期警告
+              </p>
+            </div>
+            <Button
+              onClick={() => exportToPDF({
+                title: '離職リスク予測レポート',
+                reportType: 'turnover-risk-prediction',
+                elementId: 'report-content',
+                dateRange: new Date().toLocaleDateString('ja-JP')
+              })}
+              className="bg-blue-600 text-white hover:bg-blue-700"
+            >
+              PDFダウンロード
+            </Button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

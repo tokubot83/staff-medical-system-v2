@@ -8,6 +8,7 @@ import DashboardButton from '@/components/DashboardButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { CategoryTopButton } from '@/components/CategoryTopButton';
 import { BackToReportsButton } from '@/components/BackToReportsButton';
+import { exportToPDF } from '@/utils/pdfExport';
 
 function GenerationAnalysisContent() {
   const searchParams = useSearchParams();
@@ -17,7 +18,7 @@ function GenerationAnalysisContent() {
     <div className="min-h-screen bg-gray-50">
       <CommonHeader title="世代別特性分析" />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
           {/* ヘッダー */}
           <div className="bg-white rounded-lg shadow-md p-6">
@@ -39,6 +40,22 @@ function GenerationAnalysisContent() {
               </div>
             </CardContent>
           </Card>
+
+          {/* アクションボタン */}
+          <div className="flex gap-4">
+            <button 
+              onClick={() => exportToPDF({
+                title: '世代別特性分析レポート',
+                facility: facilityParam || '全施設',
+                reportType: 'generation-analysis',
+                elementId: 'report-content',
+                dateRange: new Date().toLocaleDateString('ja-JP')
+              })}
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+            >
+              PDFダウンロード
+            </button>
+          </div>
 
         </div>
       </div>

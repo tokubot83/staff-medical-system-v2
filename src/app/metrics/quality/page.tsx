@@ -8,6 +8,7 @@ import ScrollToTopButton from '@/components/ScrollToTopButton'
 import { CategoryTopButton } from '@/components/CategoryTopButton'
 import { ReportCategory } from '@/types/reports'
 import { CategoryMetrics } from '@/types/metrics'
+import { exportToPDF } from '@/utils/pdfExport'
 
 const QualityMetricsPage = () => {
   const mockMetrics: CategoryMetrics = {
@@ -95,9 +96,17 @@ const QualityMetricsPage = () => {
     ]
   }
 
+  const handleExportPDF = () => {
+    exportToPDF({
+      title: '人材の質',
+      reportType: '人材の質',
+      elementId: 'report-content'
+    });
+  };
+
   return (
     <>
-      <MetricsLayout metrics={mockMetrics} />
+      <MetricsLayout metrics={mockMetrics} onExportPDF={handleExportPDF} />
       <ScrollToTopButton />
       <CategoryTopButton categoryPath="/reports/basic-metrics" categoryName="基本指標" />
       <BackToReportsButton />

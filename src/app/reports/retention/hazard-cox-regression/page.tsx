@@ -7,6 +7,7 @@ import DashboardButton from '@/components/DashboardButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { BackToReportsButton } from '@/components/BackToReportsButton';
 import { CategoryTopButton } from '@/components/CategoryTopButton';
+import { exportToPDF } from '@/utils/pdfExport';
 
 function HazardCoxRegressionContent() {
   const searchParams = useSearchParams();
@@ -16,7 +17,7 @@ function HazardCoxRegressionContent() {
     <div className="min-h-screen bg-gray-50">
       <CommonHeader title="退職リスク要因分析" />
       
-      <div className="container mx-auto px-4 py-8">
+      <div id="report-content" className="container mx-auto px-4 py-8">
         <div className="bg-white rounded-lg shadow p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-gray-800">Cox比例ハザードモデル分析</h2>
@@ -143,8 +144,17 @@ function HazardCoxRegressionContent() {
 
           {/* アクションボタン */}
           <div className="flex gap-4 mt-8">
-            <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
-              詳細分析レポート
+            <button 
+              onClick={() => exportToPDF({
+                title: 'ハザード分析（Cox回帰）レポート',
+                facility: facility,
+                reportType: 'hazard-cox-regression',
+                elementId: 'report-content',
+                dateRange: new Date().toLocaleDateString('ja-JP')
+              })}
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+            >
+              PDFダウンロード
             </button>
             <button className="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition">
               データエクスポート

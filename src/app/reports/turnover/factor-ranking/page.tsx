@@ -7,6 +7,7 @@ import DashboardButton from '@/components/DashboardButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { BackToReportsButton } from '@/components/BackToReportsButton';
 import { CategoryTopButton } from '@/components/CategoryTopButton';
+import { exportToPDF } from '@/utils/pdfExport';
 
 function FactorRankingContent() {
   const searchParams = useSearchParams();
@@ -16,13 +17,27 @@ function FactorRankingContent() {
     <div className="min-h-screen bg-gray-50">
       <CommonHeader title="離職要因ランキング" />
       
-      <div className="container mx-auto px-4 py-8">
+      <div id="report-content" className="container mx-auto px-4 py-8">
         <div className="bg-white rounded-lg shadow p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-gray-800">離職に影響する要因の重要度ランキング</h2>
-            <span className="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
-              対象施設: {facility}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
+                対象施設: {facility}
+              </span>
+              <button
+                onClick={() => exportToPDF({
+                  title: '離職要因ランキングレポート',
+                  facility: facility,
+                  reportType: 'turnover-factor-ranking',
+                  elementId: 'report-content',
+                  dateRange: new Date().toLocaleDateString('ja-JP')
+                })}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm"
+              >
+                PDFダウンロード
+              </button>
+            </div>
           </div>
           
           <div className="mb-6">

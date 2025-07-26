@@ -8,6 +8,7 @@ import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { BackToReportsButton } from '@/components/BackToReportsButton';
 import { CategoryTopButton } from '@/components/CategoryTopButton';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { exportToPDF } from '@/utils/pdfExport';
 
 function SurvivalCurveDepartmentContent() {
   const searchParams = useSearchParams();
@@ -17,7 +18,7 @@ function SurvivalCurveDepartmentContent() {
     <div className="min-h-screen bg-gray-50">
       <CommonHeader title="部署別定着パターン比較" />
       
-      <div className="container mx-auto px-4 py-8">
+      <div id="report-content" className="container mx-auto px-4 py-8">
         <div className="bg-white rounded-lg shadow p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-gray-800">部署間の生存曲線比較分析</h2>
@@ -215,8 +216,17 @@ function SurvivalCurveDepartmentContent() {
 
           {/* アクションボタン */}
           <div className="flex gap-4 mt-8">
-            <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
-              詳細レポート生成
+            <button 
+              onClick={() => exportToPDF({
+                title: '部門別定着率推移分析レポート',
+                facility: facility,
+                reportType: 'survival-curve-department',
+                elementId: 'report-content',
+                dateRange: new Date().toLocaleDateString('ja-JP')
+              })}
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+            >
+              PDFダウンロード
             </button>
             <button className="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition">
               データエクスポート

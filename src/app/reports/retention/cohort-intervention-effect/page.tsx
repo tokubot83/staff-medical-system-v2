@@ -7,6 +7,7 @@ import DashboardButton from '@/components/DashboardButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { BackToReportsButton } from '@/components/BackToReportsButton';
 import { CategoryTopButton } from '@/components/CategoryTopButton';
+import { exportToPDF } from '@/utils/pdfExport';
 import {
   LineChart,
   Line,
@@ -115,7 +116,7 @@ function CohortInterventionEffectContent() {
     <div className="min-h-screen bg-gray-50">
       <CommonHeader title="リテンション施策効果測定" />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white shadow rounded-lg p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-gray-800">
@@ -342,6 +343,25 @@ function CohortInterventionEffectContent() {
               </div>
             </div>
           </div>
+        </div>
+        
+        {/* アクションボタン */}
+        <div className="flex gap-4 mt-8">
+          <button 
+            onClick={() => exportToPDF({
+              title: 'コホート分析（介入効果）レポート',
+              facility: facility,
+              reportType: 'cohort-intervention-effect',
+              elementId: 'report-content',
+              dateRange: new Date().toLocaleDateString('ja-JP')
+            })}
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+          >
+            PDFダウンロード
+          </button>
+          <button className="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition">
+            Excelエクスポート
+          </button>
         </div>
       </div>
       <BackToReportsButton />

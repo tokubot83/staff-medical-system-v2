@@ -7,6 +7,7 @@ import DashboardButton from '@/components/DashboardButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { BackToReportsButton } from '@/components/BackToReportsButton';
 import { CategoryTopButton } from '@/components/CategoryTopButton';
+import { exportToPDF } from '@/utils/pdfExport';
 import {
   BarChart,
   Bar,
@@ -58,7 +59,7 @@ function SegmentGenerationContent() {
     <div className="min-h-screen bg-gray-50">
       <CommonHeader title="世代別定着傾向分析" />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white shadow rounded-lg p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-gray-800">
@@ -205,6 +206,25 @@ function SegmentGenerationContent() {
               </div>
             </div>
           </div>
+        </div>
+        
+        {/* アクションボタン */}
+        <div className="flex gap-4 mt-8">
+          <button 
+            onClick={() => exportToPDF({
+              title: '世代別定着傾向分析レポート',
+              facility: facility,
+              reportType: 'segment-generation',
+              elementId: 'report-content',
+              dateRange: new Date().toLocaleDateString('ja-JP')
+            })}
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+          >
+            PDFダウンロード
+          </button>
+          <button className="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition">
+            Excelエクスポート
+          </button>
         </div>
       </div>
       <BackToReportsButton />

@@ -8,6 +8,7 @@ import DashboardButton from '@/components/DashboardButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { CategoryTopButton } from '@/components/CategoryTopButton';
 import { BackToReportsButton } from '@/components/BackToReportsButton';
+import { exportToPDF } from '@/utils/pdfExport';
 
 function SkillMatrixContent() {
   const searchParams = useSearchParams();
@@ -17,15 +18,31 @@ function SkillMatrixContent() {
     <div className="min-h-screen bg-gray-50">
       <CommonHeader title="スキルマトリックス" />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
           {/* ヘッダー */}
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h1 className="text-2xl font-bold">スキルマトリックス</h1>
-            <p className="text-gray-600 mt-2">職員のスキル・資格・経験を多角的に評価し、組織の強みと改善点を可視化</p>
-            {facilityParam && (
-              <p className="text-sm text-gray-500 mt-1">対象施設: {facilityParam}</p>
-            )}
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold">スキルマトリックス</h1>
+                <p className="text-gray-600 mt-2">職員のスキル・資格・経験を多角的に評価し、組織の強みと改善点を可視化</p>
+                {facilityParam && (
+                  <p className="text-sm text-gray-500 mt-1">対象施設: {facilityParam}</p>
+                )}
+              </div>
+              <button
+                onClick={() => exportToPDF({
+                  title: 'スキルマトリックスレポート',
+                  facility: facilityParam,
+                  reportType: 'skill-matrix',
+                  elementId: 'report-content',
+                  dateRange: new Date().toLocaleDateString('ja-JP')
+                })}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm"
+              >
+                PDFダウンロード
+              </button>
+            </div>
           </div>
 
           {/* プレースホルダー */}

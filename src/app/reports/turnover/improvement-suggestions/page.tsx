@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Lightbulb, Target, TrendingUp, Clock, CheckCircle, AlertCircle } from 'lucide-react';
+import { exportToPDF } from '@/utils/pdfExport';
 
 function ImprovementSuggestionsContent() {
   const searchParams = useSearchParams();
@@ -20,13 +21,27 @@ function ImprovementSuggestionsContent() {
     <div className="min-h-screen bg-gray-50">
       <CommonHeader title="改善提案" />
       
-      <div className="container mx-auto px-4 py-8">
+      <div id="report-content" className="container mx-auto px-4 py-8">
         <div className="bg-white rounded-lg shadow p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-gray-800">AIによる離職防止施策の提案</h2>
-            <span className="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
-              対象施設: {facility}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
+                対象施設: {facility}
+              </span>
+              <button
+                onClick={() => exportToPDF({
+                  title: '改善提案レポート',
+                  facility: facility,
+                  reportType: 'improvement-suggestions',
+                  elementId: 'report-content',
+                  dateRange: new Date().toLocaleDateString('ja-JP')
+                })}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm"
+              >
+                PDFダウンロード
+              </button>
+            </div>
           </div>
           
           <div className="mb-6">

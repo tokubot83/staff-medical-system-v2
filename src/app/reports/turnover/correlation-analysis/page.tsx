@@ -7,6 +7,7 @@ import DashboardButton from '@/components/DashboardButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { BackToReportsButton } from '@/components/BackToReportsButton';
 import { CategoryTopButton } from '@/components/CategoryTopButton';
+import { exportToPDF } from '@/utils/pdfExport';
 import {
   ScatterChart,
   Scatter,
@@ -82,15 +83,29 @@ function CorrelationAnalysisContent() {
     <div className="min-h-screen bg-gray-50">
       <CommonHeader title="相関分析" />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white shadow rounded-lg p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-gray-800">
               離職要因の相関関係と影響度の可視化
             </h2>
-            <span className="text-sm text-gray-500">
-              対象施設: {facility}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-500">
+                対象施設: {facility}
+              </span>
+              <button
+                onClick={() => exportToPDF({
+                  title: '相関分析レポート',
+                  facility: facility,
+                  reportType: 'turnover-correlation-analysis',
+                  elementId: 'report-content',
+                  dateRange: new Date().toLocaleDateString('ja-JP')
+                })}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm"
+              >
+                PDFダウンロード
+              </button>
+            </div>
           </div>
           <p className="text-gray-600">
             各種要因と離職率の相関関係を分析し、最も影響度の高い要因を特定します。

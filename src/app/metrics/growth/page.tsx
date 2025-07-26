@@ -8,6 +8,7 @@ import { BackToReportsButton } from '@/components/BackToReportsButton'
 import { CategoryTopButton } from '@/components/CategoryTopButton'
 import { ReportCategory } from '@/types/reports'
 import { CategoryMetrics } from '@/types/metrics'
+import { exportToPDF } from '@/utils/pdfExport'
 
 const GrowthMetricsPage = () => {
   const mockMetrics: CategoryMetrics = {
@@ -95,9 +96,17 @@ const GrowthMetricsPage = () => {
     ]
   }
 
+  const handleExportPDF = () => {
+    exportToPDF({
+      title: '人材の成長',
+      reportType: '人材の成長',
+      elementId: 'report-content'
+    });
+  };
+
   return (
     <>
-      <MetricsLayout metrics={mockMetrics} />
+      <MetricsLayout metrics={mockMetrics} onExportPDF={handleExportPDF} />
       <ScrollToTopButton />
       <CategoryTopButton categoryPath="/reports/basic-metrics" categoryName="基本指標" />
       <BackToReportsButton />

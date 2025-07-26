@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { AlertTriangle, TrendingUp, Shield, Activity } from 'lucide-react';
+import { exportToPDF } from '@/utils/pdfExport';
 
 function HazardRiskScoreContent() {
   const searchParams = useSearchParams();
@@ -20,7 +21,7 @@ function HazardRiskScoreContent() {
     <div className="min-h-screen bg-gray-50">
       <CommonHeader title="ハザードリスクスコア分析" />
       
-      <div className="container mx-auto px-4 py-8">
+      <div id="report-content" className="container mx-auto px-4 py-8">
         <div className="bg-white rounded-lg shadow p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-gray-800">個別職員のハザードリスクスコア算出</h2>
@@ -319,8 +320,17 @@ function HazardRiskScoreContent() {
 
           {/* アクションボタン */}
           <div className="flex gap-4">
-            <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
-              個別リスクレポート
+            <button 
+              onClick={() => exportToPDF({
+                title: 'ハザードリスクスコア分析レポート',
+                facility: facility,
+                reportType: 'hazard-risk-score',
+                elementId: 'report-content',
+                dateRange: new Date().toLocaleDateString('ja-JP')
+              })}
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+            >
+              PDFダウンロード
             </button>
             <button className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition">
               高リスク者一覧出力

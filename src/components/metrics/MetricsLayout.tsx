@@ -11,9 +11,10 @@ import { ReportCategory } from '@/types/reports';
 interface MetricsLayoutProps {
   metrics: CategoryMetrics;
   aiAnalysis?: DataAnalysis;
+  onExportPDF?: () => void;
 }
 
-export default function MetricsLayout({ metrics, aiAnalysis }: MetricsLayoutProps) {
+export default function MetricsLayout({ metrics, aiAnalysis, onExportPDF }: MetricsLayoutProps) {
   const categoryInfo = getCategoryInfo(metrics.category);
   const pathname = usePathname();
 
@@ -59,17 +60,30 @@ export default function MetricsLayout({ metrics, aiAnalysis }: MetricsLayoutProp
       {/* ページ説明 */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-5 py-4">
-          <div className="flex items-center gap-3">
-            <div className={`text-3xl border-4 ${categoryInfo.color} bg-white text-gray-700 rounded-xl p-3`}>
-              {categoryInfo.icon}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className={`text-3xl border-4 ${categoryInfo.color} bg-white text-gray-700 rounded-xl p-3`}>
+                {categoryInfo.icon}
+              </div>
+              <p className="text-gray-600">{categoryInfo.description}</p>
             </div>
-            <p className="text-gray-600">{categoryInfo.description}</p>
+            {onExportPDF && (
+              <button
+                onClick={onExportPDF}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+              >
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                PDFで出力
+              </button>
+            )}
           </div>
         </div>
       </div>
 
 
-      <div className="max-w-7xl mx-auto p-5">
+      <div id="report-content" className="max-w-7xl mx-auto p-5">
         {/* メイン指標 */}
         <div className={`bg-white rounded-xl p-6 shadow-sm border-t-4 ${categoryInfo.color} mb-6`}>
           <div className="flex justify-between items-center">

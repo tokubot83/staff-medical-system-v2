@@ -8,6 +8,7 @@ import ScrollToTopButton from '@/components/ScrollToTopButton'
 import { CategoryTopButton } from '@/components/CategoryTopButton'
 import { ReportCategory } from '@/types/reports'
 import { CategoryMetrics } from '@/types/metrics'
+import { exportToPDF } from '@/utils/pdfExport'
 
 const BasicMetricsPage = () => {
   // サンプルデータ（実際のアプリケーションではAPIから取得）
@@ -100,7 +101,16 @@ const BasicMetricsPage = () => {
 
   return (
     <>
-      <MetricsLayout metrics={mockMetrics} />
+      <MetricsLayout 
+        metrics={mockMetrics} 
+        onExportPDF={() => exportToPDF({
+          title: '基本指標レポート',
+          facility: '全施設',
+          reportType: 'basic-metrics',
+          elementId: 'report-content',
+          dateRange: new Date().toLocaleDateString('ja-JP')
+        })}
+      />
       <ScrollToTopButton />
       <CategoryTopButton categoryPath="/reports/basic-metrics" categoryName="基本指標" />
       <BackToReportsButton />
