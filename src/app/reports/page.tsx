@@ -10,38 +10,107 @@ import BasicMetricsTab from '@/components/reports/tabs/BasicMetricsTab';
 import StrategicAnalysisTab from '@/components/reports/tabs/StrategicAnalysisTab';
 import RetentionAnalysisTab from '@/components/reports/tabs/RetentionAnalysisTab';
 import { TurnoverAnalysisTab } from '@/components/reports/tabs/TurnoverAnalysisTab';
-import TalentMappingTab from '@/components/reports/tabs/TalentMappingTab';
-import FlowAnalysisTab from '@/components/reports/tabs/FlowAnalysisTab';
-import CohortAnalysisTab from '@/components/reports/tabs/CohortAnalysisTab';
-import SimulationTab from '@/components/reports/tabs/SimulationTab';
-import WellbeingTab from '@/components/reports/tabs/WellbeingTab';
-import styles from './Reports.module.css';
 
-const categoryInfo = {
-  basic: { label: '基本指標', icon: '📊', component: BasicMetricsTab },
-  strategic: { label: '戦略分析', icon: '📈', component: StrategicAnalysisTab },
-  retention: { label: '定着分析', icon: '🎯', component: RetentionAnalysisTab },
-  turnover: { label: '離職分析', icon: '📉', component: TurnoverAnalysisTab },
-  talent: { label: 'タレントマッピング', icon: '💎', component: TalentMappingTab },
-  flow: { label: '人材フロー', icon: '🔄', component: FlowAnalysisTab },
-  cohort: { label: 'コホート分析', icon: '📊', component: CohortAnalysisTab },
-  simulation: { label: 'シミュレーション', icon: '🔮', component: SimulationTab },
-  wellbeing: { label: 'ウェルビーイング', icon: '💚', component: WellbeingTab },
-};
+const categories = [
+  {
+    id: 'basic',
+    label: '基本指標',
+    icon: '📊',
+    description: '職員数、構成比、採用・離職などの基本的な人事指標を確認',
+    gradient: 'from-blue-500 to-cyan-500',
+    component: BasicMetricsTab,
+    hasDetailPages: false
+  },
+  {
+    id: 'strategic',
+    label: '戦略分析',
+    icon: '📈',
+    description: '人材戦略の立案に必要な高度な分析とインサイトを提供',
+    gradient: 'from-purple-500 to-pink-500',
+    component: StrategicAnalysisTab,
+    hasDetailPages: false
+  },
+  {
+    id: 'retention',
+    label: '定着分析',
+    icon: '🎯',
+    description: '職員の定着率向上に向けた詳細な分析とアクションプランを提示',
+    gradient: 'from-green-500 to-emerald-500',
+    component: RetentionAnalysisTab,
+    hasDetailPages: false
+  },
+  {
+    id: 'turnover',
+    label: '離職分析',
+    icon: '📉',
+    description: '離職リスクの早期発見と予防策の立案を支援',
+    gradient: 'from-red-500 to-orange-500',
+    component: TurnoverAnalysisTab,
+    hasDetailPages: false
+  },
+  {
+    id: 'talent-mapping',
+    label: 'タレントマッピング',
+    icon: '💎',
+    description: '人材の可視化と戦略的な配置・育成を支援',
+    gradient: 'from-yellow-500 to-amber-500',
+    path: '/reports/talent-mapping',
+    hasDetailPages: true
+  },
+  {
+    id: 'flow-analysis',
+    label: '人材フロー',
+    icon: '🔄',
+    description: '組織内の人材の動きを分析し、最適な配置を提案',
+    gradient: 'from-indigo-500 to-purple-500',
+    path: '/reports/flow-analysis',
+    hasDetailPages: true
+  },
+  {
+    id: 'cohort-analysis',
+    label: 'コホート分析',
+    icon: '📊',
+    description: '世代・入社年次別の傾向分析と施策効果測定',
+    gradient: 'from-teal-500 to-cyan-500',
+    path: '/reports/cohort-analysis',
+    hasDetailPages: true
+  },
+  {
+    id: 'simulation',
+    label: 'シミュレーション',
+    icon: '🔮',
+    description: 'What-if分析による将来予測と最適解の探索',
+    gradient: 'from-pink-500 to-rose-500',
+    path: '/reports/simulation',
+    hasDetailPages: true
+  },
+  {
+    id: 'wellbeing',
+    label: 'ウェルビーイング',
+    icon: '💚',
+    description: '職員の心身の健康と幸福度を多角的に分析',
+    gradient: 'from-green-500 to-teal-500',
+    path: '/reports/wellbeing',
+    hasDetailPages: true
+  }
+];
 
 function ReportsPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [selectedCategory, setSelectedCategory] = useState('basic');
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedFacility, setSelectedFacility] = useState('');
 
-  // URLパラメータからカテゴリーと施設を初期化
+  // URLパラメータからカテゴリーと施設を初期化（後方互換性のため）
   useEffect(() => {
     const tabParam = searchParams.get('tab');
     const facilityParam = searchParams.get('facility');
     
-    if (tabParam && categoryInfo[tabParam as keyof typeof categoryInfo]) {
-      setSelectedCategory(tabParam);
+    if (tabParam) {
+      const category = categories.find(c => c.id === tabParam);
+      if (category && !category.hasDetailPages) {
+        setSelectedCategory(tabParam);
+      }
     }
     
     if (facilityParam) {
@@ -49,20 +118,35 @@ function ReportsPageContent() {
     }
   }, [searchParams]);
 
-  const currentCategory = categoryInfo[selectedCategory as keyof typeof categoryInfo];
-  const CategoryComponent = currentCategory?.component;
+  // カテゴリクリック時の処理
+  const handleCategoryClick = (category: typeof categories[0]) => {
+    if (category.hasDetailPages && category.path) {
+      // 新しいカテゴリページへ遷移
+      const url = selectedFacility 
+        ? `${category.path}?facility=${encodeURIComponent(selectedFacility)}`
+        : category.path;
+      router.push(url);
+    } else {
+      // 従来のタブ表示
+      setSelectedCategory(category.id);
+    }
+  };
+
+  // 選択されたカテゴリのコンポーネント
+  const selectedCategoryData = categories.find(c => c.id === selectedCategory);
+  const CategoryComponent = selectedCategoryData?.component;
 
   return (
     <div className="min-h-screen bg-gray-50">
       <CommonHeader title="レポートセンター" />
       
-      <div className={styles.container}>
-        {/* カテゴリーヘッダー */}
-        <div className={styles.categoryHeader}>
-          <div className={styles.categoryInfo}>
-            <span className={styles.categoryIcon}>{currentCategory?.icon}</span>
-            <h1 className={styles.categoryTitle}>{currentCategory?.label}</h1>
-          </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* ヘッダー */}
+        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+          <h1 className="text-2xl font-bold text-gray-900">レポートセンター</h1>
+          <p className="text-gray-600 mt-2">
+            人事データの分析とレポート生成により、データドリブンな意思決定を支援します
+          </p>
         </div>
 
         {/* 施設選択 */}
@@ -73,12 +157,42 @@ function ReportsPageContent() {
           />
         </div>
 
-        {/* レポート一覧 */}
-        <div className={styles.reportContent}>
-          {CategoryComponent && (
-            <CategoryComponent selectedFacility={selectedFacility} />
-          )}
-        </div>
+        {/* カテゴリ一覧またはタブコンテンツ */}
+        {!selectedCategory ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {categories.map((category) => (
+              <div
+                key={category.id}
+                onClick={() => handleCategoryClick(category)}
+                className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer overflow-hidden"
+              >
+                <div className={`h-2 bg-gradient-to-r ${category.gradient}`} />
+                <div className="p-6">
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="text-3xl">{category.icon}</span>
+                    <h3 className="text-xl font-semibold">{category.label}</h3>
+                  </div>
+                  <p className="text-gray-600">{category.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div>
+            {/* 戻るボタン */}
+            <button
+              onClick={() => setSelectedCategory('')}
+              className="mb-6 text-blue-600 hover:text-blue-800 flex items-center gap-2"
+            >
+              ← レポートカテゴリ一覧に戻る
+            </button>
+            
+            {/* タブコンテンツ */}
+            {CategoryComponent && (
+              <CategoryComponent selectedFacility={selectedFacility} />
+            )}
+          </div>
+        )}
 
         {/* 注意事項 */}
         <div className="mt-12 bg-blue-50 border border-blue-200 rounded-lg p-6">
