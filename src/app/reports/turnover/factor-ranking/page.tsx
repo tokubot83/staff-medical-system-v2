@@ -6,6 +6,7 @@ import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { BackToReportsButton } from '@/components/BackToReportsButton';
+import { CategoryTopButton } from '@/components/CategoryTopButton';
 
 function FactorRankingContent() {
   const searchParams = useSearchParams();
@@ -208,8 +209,9 @@ function FactorRankingContent() {
           </div>
         </div>
       </div>
-      <BackToReportsButton />
       <ScrollToTopButton />
+      <CategoryTopButton categoryPath="/reports/turnover" categoryName="離職要因分析" />
+      <BackToReportsButton />
       <DashboardButton />
     </div>
   );

@@ -6,6 +6,7 @@ import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { BackToReportsButton } from '@/components/BackToReportsButton';
+import { CategoryTopButton } from '@/components/CategoryTopButton';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Slider } from '@/components/ui/slider';
@@ -317,8 +318,9 @@ function WhatIfSimulationContent() {
           </div>
         </div>
       </div>
-      <BackToReportsButton />
       <ScrollToTopButton />
+      <CategoryTopButton categoryPath="/reports/turnover" categoryName="離職要因分析" />
+      <BackToReportsButton />
       <DashboardButton />
     </div>
   );

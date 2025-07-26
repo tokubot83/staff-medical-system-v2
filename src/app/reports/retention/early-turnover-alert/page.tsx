@@ -6,6 +6,7 @@ import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { BackToReportsButton } from '@/components/BackToReportsButton';
+import { CategoryTopButton } from '@/components/CategoryTopButton';
 
 function EarlyTurnoverAlertContent() {
   const searchParams = useSearchParams();
@@ -228,6 +229,7 @@ function EarlyTurnoverAlertContent() {
         </div>
       </div>
       <BackToReportsButton />
+      <CategoryTopButton categoryPath="/reports/retention" categoryName="定着分析" />
       <ScrollToTopButton />
       <DashboardButton />
     </div>

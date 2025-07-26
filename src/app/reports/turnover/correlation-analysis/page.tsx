@@ -6,6 +6,7 @@ import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { BackToReportsButton } from '@/components/BackToReportsButton';
+import { CategoryTopButton } from '@/components/CategoryTopButton';
 import {
   ScatterChart,
   Scatter,
@@ -381,8 +382,9 @@ function CorrelationAnalysisContent() {
           </div>
         </div>
       </div>
-      <BackToReportsButton />
       <ScrollToTopButton />
+      <CategoryTopButton categoryPath="/reports/turnover" categoryName="離職要因分析" />
+      <BackToReportsButton />
       <DashboardButton />
     </div>
   );

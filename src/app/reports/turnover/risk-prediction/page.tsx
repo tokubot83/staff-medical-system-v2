@@ -9,6 +9,8 @@ import { Progress } from '@/components/ui/progress'
 import { ArrowLeft, AlertTriangle, TrendingUp, Users } from 'lucide-react'
 import ScrollToTopButton from '@/components/ScrollToTopButton'
 import DashboardButton from '@/components/DashboardButton'
+import { BackToReportsButton } from '@/components/BackToReportsButton'
+import { CategoryTopButton } from '@/components/CategoryTopButton'
 
 // サンプルデータ
 const riskData = [
@@ -181,7 +183,8 @@ export default function RiskPredictionPage() {
         </div>
       </div>
       <ScrollToTopButton />
-      <DashboardButton />
+      <CategoryTopButton categoryPath="/reports/turnover" categoryName="離職要因分析" />
+      <BackToReportsButton />
     </div>
   )
 }

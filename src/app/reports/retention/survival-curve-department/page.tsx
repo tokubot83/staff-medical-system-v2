@@ -6,6 +6,7 @@ import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { BackToReportsButton } from '@/components/BackToReportsButton';
+import { CategoryTopButton } from '@/components/CategoryTopButton';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 function SurvivalCurveDepartmentContent() {
@@ -224,6 +225,7 @@ function SurvivalCurveDepartmentContent() {
         </div>
       </div>
       <BackToReportsButton />
+      <CategoryTopButton categoryPath="/reports/retention" categoryName="定着分析" />
       <ScrollToTopButton />
       <DashboardButton />
     </div>
