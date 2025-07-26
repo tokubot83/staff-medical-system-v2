@@ -51,7 +51,7 @@ function EntryYearCohortContent() {
                 elementId: 'report-content',
                 dateRange: new Date().toLocaleDateString('ja-JP')
               })}
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+              className="pdf-exclude bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
             >
               PDFダウンロード
             </button>

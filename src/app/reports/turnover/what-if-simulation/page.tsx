@@ -61,7 +61,7 @@ function WhatIfSimulationContent() {
                   elementId: 'report-content',
                   dateRange: new Date().toLocaleDateString('ja-JP')
                 })}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm"
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm pdf-exclude"
               >
                 PDFダウンロード
               </button>

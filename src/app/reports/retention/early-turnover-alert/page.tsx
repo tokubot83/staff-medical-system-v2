@@ -225,14 +225,14 @@ function EarlyTurnoverAlertContent() {
                 elementId: 'report-content',
                 dateRange: new Date().toLocaleDateString('ja-JP')
               })}
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+              className="pdf-exclude bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
             >
               PDFダウンロード
             </button>
             <button className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition">
               アラート一括送信
             </button>
-            <button className="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition">
+            <button className="pdf-exclude bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition">
               CSVエクスポート
             </button>
           </div>

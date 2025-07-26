@@ -66,7 +66,7 @@ export default function RiskPredictionPage() {
                 elementId: 'report-content',
                 dateRange: new Date().toLocaleDateString('ja-JP')
               })}
-              className="bg-blue-600 text-white hover:bg-blue-700"
+              className="bg-blue-600 text-white hover:bg-blue-700 pdf-exclude"
             >
               PDFダウンロード
             </Button>

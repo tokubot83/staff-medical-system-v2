@@ -54,6 +54,10 @@ export const exportToPDF = async (options: PDFExportOptions) => {
     // コンテンツのクローンを作成
     const contentClone = element.cloneNode(true) as HTMLElement;
     
+    // PDF出力時に除外する要素を削除
+    const excludeElements = contentClone.querySelectorAll('.pdf-exclude');
+    excludeElements.forEach(el => el.remove());
+    
     // ヘッダーとコンテンツを結合
     tempContainer.innerHTML = headerHTML;
     tempContainer.appendChild(contentClone);
