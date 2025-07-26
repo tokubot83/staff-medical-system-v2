@@ -383,7 +383,7 @@ function CorrelationAnalysisContent() {
         </div>
       </div>
       <ScrollToTopButton />
-      <CategoryTopButton categoryPath="/reports/turnover-risk" categoryName="離職要因分析" />
+      <CategoryTopButton categoryPath="/reports?tab=turnover" categoryName="離職要因分析" />
       <BackToReportsButton />
       <DashboardButton />
     </div>
