@@ -7,6 +7,7 @@ import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { BackToReportsButton } from '@/components/BackToReportsButton';
+import { CategoryTopButton } from '@/components/CategoryTopButton';
 
 interface ReportLayoutProps {
   title: string;
@@ -16,6 +17,8 @@ interface ReportLayoutProps {
   facility?: Facility;
   children: React.ReactNode;
   onExportPDF?: () => void;
+  categoryPath?: string;
+  categoryName?: string;
 }
 
 export default function ReportLayout({
@@ -25,7 +28,9 @@ export default function ReportLayout({
   color,
   facility,
   children,
-  onExportPDF
+  onExportPDF,
+  categoryPath,
+  categoryName
 }: ReportLayoutProps) {
   return (
     <div className="min-h-screen bg-gray-50">
@@ -88,8 +93,11 @@ export default function ReportLayout({
           </div>
         </div>
       </div>
-      <BackToReportsButton />
       <ScrollToTopButton />
+      {categoryPath && categoryName && (
+        <CategoryTopButton categoryPath={categoryPath} categoryName={categoryName} />
+      )}
+      <BackToReportsButton />
       <DashboardButton />
     </div>
   );

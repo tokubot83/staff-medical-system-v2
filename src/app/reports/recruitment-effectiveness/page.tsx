@@ -9,9 +9,6 @@ import { DataCommentList, MetricWithComment } from '@/components/DataComment';
 import { generateRecruitmentComments } from '@/utils/reportComments';
 import { organizationData, getDepartmentsByType } from '@/app/data/organizationData';
 import { tachigamiOrganizationData } from '@/app/data/tachigamiOrganizationData';
-import { BackToReportsButton } from '@/components/BackToReportsButton';
-import ScrollToTopButton from '@/components/ScrollToTopButton';
-import DashboardButton from '@/components/DashboardButton';
 
 function RecruitmentEffectivenessReportContent() {
   const searchParams = useSearchParams();
@@ -132,6 +129,8 @@ function RecruitmentEffectivenessReportContent() {
         elementId: 'report-content',
         dateRange: new Date().toLocaleDateString('ja-JP')
       })}
+      categoryPath="/reports/strategic-analysis"
+      categoryName="戦略分析"
     >
       <div id="report-content" className="p-8">
         {/* 採用概要 */}
@@ -425,12 +424,6 @@ function RecruitmentEffectivenessReportContent() {
           />
         </section>
 
-        {/* ボタン群 */}
-        <div className="mt-8">
-          <BackToReportsButton />
-          <ScrollToTopButton />
-          <DashboardButton />
-        </div>
       </div>
     </ReportLayout>
   );

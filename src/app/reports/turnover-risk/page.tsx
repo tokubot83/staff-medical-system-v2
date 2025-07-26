@@ -3,9 +3,6 @@
 import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ReportLayout from '@/components/reports/ReportLayout';
-import DashboardButton from '@/components/DashboardButton';
-import ScrollToTopButton from '@/components/ScrollToTopButton';
-import { BackToReportsButton } from '@/components/BackToReportsButton';
 import { facilities } from '@/app/data/facilityData';
 import { staffDatabase } from '@/app/data/staffData';
 import { exportToPDF } from '@/utils/pdfExport';
@@ -178,6 +175,8 @@ function TurnoverRiskReportContent() {
         elementId: 'report-content',
         dateRange: new Date().toLocaleDateString('ja-JP')
       })}
+      categoryPath="/reports/strategic-analysis"
+      categoryName="戦略分析"
     >
       <div id="report-content" className="p-8">
         {/* リスク概要 */}
@@ -478,9 +477,6 @@ function TurnoverRiskReportContent() {
           />
         </section>
       </div>
-      <BackToReportsButton />
-      <ScrollToTopButton />
-      <DashboardButton />
     </ReportLayout>
   );
 }

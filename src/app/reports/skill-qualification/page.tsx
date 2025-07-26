@@ -168,6 +168,8 @@ function SkillQualificationReportContent() {
         elementId: 'report-content',
         dateRange: new Date().toLocaleDateString('ja-JP')
       })}
+      categoryPath="/reports/strategic-analysis"
+      categoryName="戦略分析"
     >
       <div id="report-content" className="p-8">
         {/* 概要 */}

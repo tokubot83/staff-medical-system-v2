@@ -7,9 +7,6 @@ import { facilities } from '@/app/data/facilityData';
 import { exportToPDF } from '@/utils/pdfExport';
 import { DataCommentList, MetricWithComment } from '@/components/DataComment';
 import { generateOrganizationComments } from '@/utils/reportComments';
-import { BackToReportsButton } from '@/components/BackToReportsButton';
-import ScrollToTopButton from '@/components/ScrollToTopButton';
-import DashboardButton from '@/components/DashboardButton';
 
 function OrganizationOptimizationReportContent() {
   const searchParams = useSearchParams();
@@ -161,6 +158,8 @@ function OrganizationOptimizationReportContent() {
         elementId: 'report-content',
         dateRange: new Date().toLocaleDateString('ja-JP')
       })}
+      categoryPath="/reports/strategic-analysis"
+      categoryName="戦略分析"
     >
       <div id="report-content" className="p-8">
         {/* 組織概要 */}
@@ -482,12 +481,6 @@ function OrganizationOptimizationReportContent() {
           />
         </section>
 
-        {/* ボタン群 */}
-        <div className="mt-8">
-          <BackToReportsButton />
-          <ScrollToTopButton />
-          <DashboardButton />
-        </div>
       </div>
     </ReportLayout>
   );

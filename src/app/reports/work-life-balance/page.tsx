@@ -10,9 +10,6 @@ import { DataCommentList, MetricWithComment } from '@/components/DataComment';
 import { generateComments } from '@/types/commentTypes';
 import { organizationData, getDepartmentsByType } from '@/app/data/organizationData';
 import { tachigamiOrganizationData } from '@/app/data/tachigamiOrganizationData';
-import { BackToReportsButton } from '@/components/BackToReportsButton';
-import ScrollToTopButton from '@/components/ScrollToTopButton';
-import DashboardButton from '@/components/DashboardButton';
 
 function WorkLifeBalanceReportContent() {
   const searchParams = useSearchParams();
@@ -136,6 +133,8 @@ function WorkLifeBalanceReportContent() {
         elementId: 'report-content',
         dateRange: new Date().toLocaleDateString('ja-JP')
       })}
+      categoryPath="/reports/strategic-analysis"
+      categoryName="戦略分析"
     >
       <div id="report-content" className="p-8">
         {/* 概要指標 */}
@@ -394,12 +393,6 @@ function WorkLifeBalanceReportContent() {
           />
         </section>
 
-        {/* ボタン群 */}
-        <div className="mt-8">
-          <BackToReportsButton />
-          <ScrollToTopButton />
-          <DashboardButton />
-        </div>
       </div>
     </ReportLayout>
   );

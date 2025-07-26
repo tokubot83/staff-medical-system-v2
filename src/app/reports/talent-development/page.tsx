@@ -10,9 +10,6 @@ import { DataCommentList, MetricWithComment } from '@/components/DataComment';
 import { DataComment } from '@/types/commentTypes';
 import { organizationData, getDepartmentsByType } from '@/app/data/organizationData';
 import { tachigamiOrganizationData } from '@/app/data/tachigamiOrganizationData';
-import { BackToReportsButton } from '@/components/BackToReportsButton';
-import ScrollToTopButton from '@/components/ScrollToTopButton';
-import DashboardButton from '@/components/DashboardButton';
 
 function TalentDevelopmentReportContent() {
   const searchParams = useSearchParams();
@@ -186,6 +183,8 @@ function TalentDevelopmentReportContent() {
         elementId: 'report-content',
         dateRange: new Date().toLocaleDateString('ja-JP')
       })}
+      categoryPath="/reports/strategic-analysis"
+      categoryName="戦略分析"
     >
       <div id="report-content" className="p-8">
         {/* 職種別スキル分布 */}
@@ -409,12 +408,6 @@ function TalentDevelopmentReportContent() {
           />
         </section>
 
-        {/* ボタン群 */}
-        <div className="mt-8">
-          <BackToReportsButton />
-          <ScrollToTopButton />
-          <DashboardButton />
-        </div>
       </div>
     </ReportLayout>
   );

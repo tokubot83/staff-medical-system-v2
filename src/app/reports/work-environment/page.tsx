@@ -7,9 +7,6 @@ import { facilities } from '@/app/data/facilityData';
 import { exportToPDF } from '@/utils/pdfExport';
 import { DataCommentList, MetricWithComment } from '@/components/DataComment';
 import { generateWorkEnvironmentComments } from '@/utils/reportComments';
-import { BackToReportsButton } from '@/components/BackToReportsButton';
-import ScrollToTopButton from '@/components/ScrollToTopButton';
-import DashboardButton from '@/components/DashboardButton';
 
 function WorkEnvironmentReportContent() {
   const searchParams = useSearchParams();
@@ -140,6 +137,8 @@ function WorkEnvironmentReportContent() {
         elementId: 'report-content',
         dateRange: new Date().toLocaleDateString('ja-JP')
       })}
+      categoryPath="/reports/strategic-analysis"
+      categoryName="戦略分析"
     >
       <div id="report-content" className="p-8">
         {/* 環境スコア概要 */}
@@ -372,12 +371,6 @@ function WorkEnvironmentReportContent() {
           />
         </section>
 
-        {/* ボタン群 */}
-        <div className="mt-8">
-          <BackToReportsButton />
-          <ScrollToTopButton />
-          <DashboardButton />
-        </div>
       </div>
     </ReportLayout>
   );
