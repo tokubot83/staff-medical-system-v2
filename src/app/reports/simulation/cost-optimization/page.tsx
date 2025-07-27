@@ -411,8 +411,9 @@ function Content() {
                     <YAxis yAxisId="left" tickFormatter={(value) => `${(value / 100000000).toFixed(1)}億`} />
                     <YAxis yAxisId="right" orientation="right" tickFormatter={(value) => `${value.toFixed(1)}%`} />
                     <Tooltip formatter={(value, name) => {
-                      if (name === '削減率') return `${value.toFixed(1)}%`;
-                      return `¥${(value / 100000000).toFixed(2)}億`;
+                      const numValue = typeof value === 'number' ? value : parseFloat(value as string);
+                      if (name === '削減率') return `${numValue.toFixed(1)}%`;
+                      return `¥${(numValue / 100000000).toFixed(2)}億`;
                     }} />
                     <Legend />
                     <Area yAxisId="left" type="monotone" dataKey="削減額" fill="#10B981" fillOpacity={0.3} stroke="#10B981" />
@@ -445,7 +446,10 @@ function Content() {
                       stroke="#fff"
                       fill="#8884d8"
                     >
-                      <Tooltip formatter={(value) => `¥${(value / 1000000).toFixed(1)}M`} />
+                      <Tooltip formatter={(value) => {
+                        const numValue = typeof value === 'number' ? value : parseFloat(value as string);
+                        return `¥${(numValue / 1000000).toFixed(1)}M`;
+                      }} />
                     </Treemap>
                   </ResponsiveContainer>
                 </div>
@@ -466,7 +470,10 @@ function Content() {
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis type="number" tickFormatter={(value) => `${(value / 10000).toFixed(0)}万`} />
                       <YAxis dataKey="position" type="category" width={100} />
-                      <Tooltip formatter={(value) => `¥${(value / 10000).toFixed(0)}万円`} />
+                      <Tooltip formatter={(value) => {
+                        const numValue = typeof value === 'number' ? value : parseFloat(value as string);
+                        return `¥${(numValue / 10000).toFixed(0)}万円`;
+                      }} />
                       <Bar dataKey="averageCost" fill="#3B82F6">
                         {currentCostAnalysis.positionData.slice(0, 8).map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

@@ -308,7 +308,10 @@ function Content() {
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="type" />
                       <YAxis tickFormatter={(value) => `${(value / 1000000).toFixed(1)}M`} />
-                      <Tooltip formatter={(value) => `¥${value.toLocaleString()}`} />
+                      <Tooltip formatter={(value) => {
+                        const numValue = typeof value === 'number' ? value : parseFloat(value as string);
+                        return `¥${numValue.toLocaleString()}`;
+                      }} />
                       <Legend />
                       <Bar dataKey="採用費" fill="#3B82F6" />
                       <Bar dataKey="研修費" fill="#10B981" />
