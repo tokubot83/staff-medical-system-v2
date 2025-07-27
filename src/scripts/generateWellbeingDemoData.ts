@@ -168,7 +168,7 @@ function generateIndividualWellbeingData(
     dedication: randomFloat(baseEngagement - 5, baseEngagement + 15),
     absorption: randomFloat(baseEngagement - 15, baseEngagement + 5),
     overall: baseEngagement,
-    trend: Math.random() > 0.7 ? 'up' : Math.random() > 0.4 ? 'stable' : 'down'
+    trend: (Math.random() > 0.7 ? 'up' : Math.random() > 0.4 ? 'stable' : 'down') as 'up' | 'down' | 'stable'
   };
   
   // 介入プログラムの効果（30%の確率で参加）
