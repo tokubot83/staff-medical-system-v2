@@ -246,7 +246,7 @@ function Content() {
       target: value * adjustmentFactor,
       stretch: value * adjustmentFactor * 1.1
     }));
-  }, [selectedScenario]);
+  }, [selectedScenario, scenarios]);
 
   // シナリオ比較データ
   const scenarioComparison = useMemo(() => {
@@ -282,7 +282,7 @@ function Content() {
       
       return data;
     });
-  }, []);
+  }, [scenarios]);
 
   const facilities = useMemo(() => {
     const facilitySet = new Set(Object.values(staffDatabase).map(s => s.facility));

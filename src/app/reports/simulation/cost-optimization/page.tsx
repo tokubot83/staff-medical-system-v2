@@ -47,7 +47,7 @@ function Content() {
     });
 
     // 職種別の平均年収を設定（仮定値）
-    const avgSalaryByPosition = {
+    const avgSalaryByPosition: { [key: string]: number } = {
       '医師': 12000000,
       '看護師': 5000000,
       '看護補助者': 3500000,

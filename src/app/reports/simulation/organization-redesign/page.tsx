@@ -10,7 +10,8 @@ import { CategoryTopButton } from '@/components/CategoryTopButton';
 import { BackToReportsButton } from '@/components/BackToReportsButton';
 import { exportToPDF } from '@/utils/pdfExport';
 import { staffDatabase } from '@/app/data/staffData';
-import { obaraOrganizationData, tachigamiOrganizationData } from '@/app/data/organizationData';
+import { organizationData as obaraOrganizationData } from '@/app/data/organizationData';
+import { tachigamiOrganizationData } from '@/app/data/tachigamiOrganizationData';
 import {
   BarChart,
   Bar,
@@ -199,7 +200,7 @@ function Content() {
       annualSaving,
       paybackPeriod: annualSaving > 0 ? implementationCost / annualSaving : null
     };
-  }, [selectedFacility, redesignScenario, currentOrgAnalysis]);
+  }, [selectedFacility, redesignScenario, currentOrgAnalysis, redesignScenarios]);
 
   // 実施フェーズ
   const implementationPhases = [
