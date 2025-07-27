@@ -101,7 +101,7 @@ function Content() {
   }, [selectedFacility]);
 
   // 組織改編シナリオ
-  const redesignScenarios = {
+  const redesignScenarios = useMemo(() => ({
     flatten: {
       name: 'フラット化',
       description: '階層を削減し、意思決定を迅速化',
@@ -130,7 +130,7 @@ function Content() {
       benefits: ['責任の明確化', '迅速な意思決定', '部門別採算管理'],
       risks: ['重複機能の発生', '全体最適の困難', '管理部門の肥大化']
     }
-  };
+  }), [currentOrgAnalysis.totalLevels]);
 
   // 改編後の効果予測
   const redesignImpact = useMemo(() => {
@@ -200,7 +200,7 @@ function Content() {
       annualSaving,
       paybackPeriod: annualSaving > 0 ? implementationCost / annualSaving : null
     };
-  }, [redesignScenario, currentOrgAnalysis, redesignScenarios]);
+  }, [redesignScenario, currentOrgAnalysis]);
 
   // 実施フェーズ
   const implementationPhases = [

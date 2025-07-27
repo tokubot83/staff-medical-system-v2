@@ -160,7 +160,7 @@ function Content() {
     }
     
     return projections;
-  }, [selectedScenario, timeHorizon, currentState.totalStaff]);
+  }, [selectedScenario, timeHorizon, currentState.totalStaff, scenarios]);
 
   // リスク影響度分析
   const riskImpactAnalysis = useMemo(() => {
@@ -190,7 +190,7 @@ function Content() {
         category: riskScore > 60 ? 'high' : riskScore > 30 ? 'medium' : 'low'
       };
     });
-  }, [selectedRiskFactors, selectedScenario]);
+  }, [selectedRiskFactors, selectedScenario, scenarios]);
 
   // 対応策マトリックス
   const responseStrategies = useMemo(() => {

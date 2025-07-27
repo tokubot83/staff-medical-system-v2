@@ -158,7 +158,7 @@ function Content() {
       }
     };
 
-    const strategy = strategies[optimizationStrategy];
+    const strategy = strategies[optimizationStrategy as keyof typeof strategies];
     const targetSaving = currentCostAnalysis.totalCost * (targetReduction / 100);
     
     // 各施策による削減額を計算
