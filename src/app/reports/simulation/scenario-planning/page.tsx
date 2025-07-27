@@ -66,7 +66,7 @@ function Content() {
     const avgStress = staffList.reduce((sum, s) => sum + s.stressIndex, 0) / staffList.length;
     
     // 職種別構成
-    const positionComposition = {};
+    const positionComposition: { [key: string]: number } = {};
     staffList.forEach(staff => {
       const basePosition = staff.position.replace(/主任|師長|部長|科長/, '').trim();
       positionComposition[basePosition] = (positionComposition[basePosition] || 0) + 1;
@@ -127,7 +127,7 @@ function Content() {
   const scenarioProjections = useMemo(() => {
     const projections = [];
     const currentYear = new Date().getFullYear();
-    const scenario = scenarios[selectedScenario];
+    const scenario = scenarios[selectedScenario as keyof typeof scenarios];
     
     for (let i = 0; i <= timeHorizon; i++) {
       const year = currentYear + i;
@@ -165,8 +165,8 @@ function Content() {
   // リスク影響度分析
   const riskImpactAnalysis = useMemo(() => {
     return selectedRiskFactors.map(riskKey => {
-      const risk = riskFactors[riskKey];
-      const scenario = scenarios[selectedScenario];
+      const risk = riskFactors[riskKey as keyof typeof riskFactors];
+      const scenario = scenarios[selectedScenario as keyof typeof scenarios];
       
       // シナリオ別のリスク影響度調整
       let adjustedProbability = risk.probability;
@@ -194,7 +194,7 @@ function Content() {
 
   // 対応策マトリックス
   const responseStrategies = useMemo(() => {
-    const strategies = [];
+    const strategies: Array<{ risk: string; strategies: string[]; priority: string; timeline: string }> = [];
     
     riskImpactAnalysis.forEach(risk => {
       const baseStrategies = {
@@ -208,12 +208,12 @@ function Content() {
         competition: ['差別化戦略', 'サービス向上', 'マーケティング強化', '提携推進']
       };
       
-      const riskKey = Object.keys(riskFactors).find(key => riskFactors[key].name === risk.name);
-      if (riskKey && baseStrategies[riskKey]) {
+      const riskKey = Object.keys(riskFactors).find(key => riskFactors[key as keyof typeof riskFactors].name === risk.name);
+      if (riskKey && baseStrategies[riskKey as keyof typeof baseStrategies]) {
         strategies.push({
           risk: risk.name,
           priority: risk.category === 'high' ? '最優先' : risk.category === 'medium' ? '優先' : '通常',
-          strategies: baseStrategies[riskKey],
+          strategies: baseStrategies[riskKey as keyof typeof baseStrategies],
           timeline: risk.category === 'high' ? '即時対応' : risk.category === 'medium' ? '6ヶ月以内' : '1年以内'
         });
       }
@@ -221,13 +221,13 @@ function Content() {
     
     return strategies.sort((a, b) => {
       const priorityOrder = { '最優先': 0, '優先': 1, '通常': 2 };
-      return priorityOrder[a.priority] - priorityOrder[b.priority];
+      return priorityOrder[a.priority as keyof typeof priorityOrder] - priorityOrder[b.priority as keyof typeof priorityOrder];
     });
   }, [riskImpactAnalysis]);
 
   // KPI目標設定
   const kpiTargets = useMemo(() => {
-    const scenario = scenarios[selectedScenario];
+    const scenario = scenarios[selectedScenario as keyof typeof scenarios];
     const baseTargets = {
       staffRetention: 88,
       patientSatisfaction: 85,
@@ -253,10 +253,10 @@ function Content() {
     const metrics = ['スタッフ数', '患者需要', '収益性', '投資余力', '競争力'];
     
     return metrics.map(metric => {
-      const data = { metric };
+      const data: { metric: string; [key: string]: any } = { metric };
       
       Object.keys(scenarios).forEach(scenarioKey => {
-        const scenario = scenarios[scenarioKey];
+        const scenario = scenarios[scenarioKey as keyof typeof scenarios];
         let value = 50; // ベースライン
         
         switch (metric) {
@@ -381,30 +381,30 @@ function Content() {
           {/* シナリオ概要 */}
           <Card>
             <CardHeader>
-              <CardTitle>{scenarios[selectedScenario].name}の詳細</CardTitle>
+              <CardTitle>{scenarios[selectedScenario as keyof typeof scenarios].name}の詳細</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600 mb-4">{scenarios[selectedScenario].description}</p>
+              <p className="text-gray-600 mb-4">{scenarios[selectedScenario as keyof typeof scenarios].description}</p>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                 <div className="bg-gray-50 p-3 rounded">
                   <p className="text-xs text-gray-600">経済成長率</p>
-                  <p className="text-lg font-bold">{(scenarios[selectedScenario].assumptions.economicGrowth * 100).toFixed(1)}%</p>
+                  <p className="text-lg font-bold">{(scenarios[selectedScenario as keyof typeof scenarios].assumptions.economicGrowth * 100).toFixed(1)}%</p>
                 </div>
                 <div className="bg-gray-50 p-3 rounded">
                   <p className="text-xs text-gray-600">離職率</p>
-                  <p className="text-lg font-bold">{(scenarios[selectedScenario].assumptions.staffTurnover * 100).toFixed(0)}%</p>
+                  <p className="text-lg font-bold">{(scenarios[selectedScenario as keyof typeof scenarios].assumptions.staffTurnover * 100).toFixed(0)}%</p>
                 </div>
                 <div className="bg-gray-50 p-3 rounded">
                   <p className="text-xs text-gray-600">患者需要</p>
-                  <p className="text-lg font-bold">×{scenarios[selectedScenario].assumptions.patientDemand.toFixed(2)}</p>
+                  <p className="text-lg font-bold">×{scenarios[selectedScenario as keyof typeof scenarios].assumptions.patientDemand.toFixed(2)}</p>
                 </div>
                 <div className="bg-gray-50 p-3 rounded">
                   <p className="text-xs text-gray-600">技術導入率</p>
-                  <p className="text-lg font-bold">{(scenarios[selectedScenario].assumptions.technologyAdoption * 100).toFixed(0)}%</p>
+                  <p className="text-lg font-bold">{(scenarios[selectedScenario as keyof typeof scenarios].assumptions.technologyAdoption * 100).toFixed(0)}%</p>
                 </div>
                 <div className="bg-gray-50 p-3 rounded">
                   <p className="text-xs text-gray-600">診療報酬</p>
-                  <p className="text-lg font-bold">×{scenarios[selectedScenario].assumptions.reimbursementRate.toFixed(2)}</p>
+                  <p className="text-lg font-bold">×{scenarios[selectedScenario as keyof typeof scenarios].assumptions.reimbursementRate.toFixed(2)}</p>
                 </div>
               </div>
             </CardContent>
@@ -541,7 +541,7 @@ function Content() {
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-500">
                           <ul className="list-disc list-inside">
-                            {strategy.strategies.slice(0, 2).map((str, idx) => (
+                            {strategy.strategies.slice(0, 2).map((str: string, idx: number) => (
                               <li key={idx}>{str}</li>
                             ))}
                           </ul>
@@ -572,7 +572,7 @@ function Content() {
                     <Tooltip />
                     <Legend />
                     <Bar dataKey="current" fill="#94A3B8" name="現在値" />
-                    <Bar dataKey="target" fill={scenarios[selectedScenario].color} name="目標値" />
+                    <Bar dataKey="target" fill={scenarios[selectedScenario as keyof typeof scenarios].color} name="目標値" />
                     <Bar dataKey="stretch" fill="#F59E0B" name="ストレッチ目標" />
                   </BarChart>
                 </ResponsiveContainer>
@@ -642,7 +642,7 @@ function Content() {
                 facility: selectedFacility,
                 reportType: 'scenario-planning',
                 elementId: 'report-content',
-                dateRange: `${scenarios[selectedScenario].name} - ${timeHorizon}年予測`
+                dateRange: `${scenarios[selectedScenario as keyof typeof scenarios].name} - ${timeHorizon}年予測`
               })}
               className="pdf-exclude bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
             >

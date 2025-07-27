@@ -103,7 +103,7 @@ function Content() {
 
     // リスクレベル別に分類
     const riskLevels = { high: 0, medium: 0, low: 0 };
-    const departmentRisks = {};
+    const departmentRisks: { [key: string]: { total: number; risk: number } } = {};
 
     staffList.forEach(staff => {
       const riskScore = (staff.stressIndex / 100) * 0.3 + 
@@ -147,20 +147,20 @@ function Content() {
     let predictedMetrics = { ...baseline };
 
     selectedStrategies.forEach(strategyKey => {
-      const strategy = retentionStrategies[strategyKey];
+      const strategy = retentionStrategies[strategyKey as keyof typeof retentionStrategies];
       totalCost += strategy.cost;
       
       // 各施策の影響を計算
       if (strategy.impact.engagement) {
         predictedMetrics.engagement += strategy.impact.engagement;
       }
-      if (strategy.impact.stressIndex) {
+      if ('stressIndex' in strategy.impact && strategy.impact.stressIndex) {
         predictedMetrics.stressIndex += strategy.impact.stressIndex;
       }
-      if (strategy.impact.overtime) {
+      if ('overtime' in strategy.impact && strategy.impact.overtime) {
         predictedMetrics.overtime = Math.max(0, predictedMetrics.overtime + strategy.impact.overtime);
       }
-      if (strategy.impact.paidLeaveRate) {
+      if ('paidLeaveRate' in strategy.impact && strategy.impact.paidLeaveRate) {
         predictedMetrics.paidLeaveRate = Math.min(100, predictedMetrics.paidLeaveRate + strategy.impact.paidLeaveRate);
       }
     });
