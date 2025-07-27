@@ -430,7 +430,11 @@ function Content() {
               <CardContent>
                 <div className="h-80">
                   <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={strategyComparison} layout="horizontal">
+                    <BarChart 
+                      data={strategyComparison} 
+                      layout="horizontal"
+                      margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                    >
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis type="number" />
                       <YAxis dataKey="name" type="category" width={150} />

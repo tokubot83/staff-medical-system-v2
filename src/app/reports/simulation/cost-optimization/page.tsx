@@ -486,6 +486,7 @@ function Content() {
                     <BarChart 
                       data={currentCostAnalysis.positionData.slice(0, 8)}
                       layout="horizontal"
+                      margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis type="number" tickFormatter={(value) => `${(value / 10000).toFixed(0)}万`} />

@@ -239,6 +239,11 @@ function Content() {
 
   // 部門影響度分析
   const departmentImpactAnalysis = useMemo(() => {
+    // staffByDepartmentが空の場合のフォールバック
+    if (!currentOrgAnalysis.staffByDepartment || Object.keys(currentOrgAnalysis.staffByDepartment).length === 0) {
+      return [];
+    }
+    
     return Object.entries(currentOrgAnalysis.staffByDepartment).map(([dept, count]) => {
       // シナリオ別の影響度を計算
       let impactScore = 50; // ベースライン
@@ -265,7 +270,7 @@ function Content() {
       return {
         department: dept,
         staffCount: count,
-        impactScore,
+        impactScore: impactScore, // 数値であることを確実にする
         changeType: impactScore > 70 ? '大幅変更' : impactScore > 50 ? '中程度変更' : '軽微な変更'
       };
     }).sort((a, b) => b.impactScore - a.impactScore);
@@ -490,8 +495,17 @@ function Content() {
             </CardHeader>
             <CardContent>
               <div className="h-96">
+                {departmentImpactAnalysis.length === 0 ? (
+                  <div className="flex items-center justify-center h-full text-gray-500">
+                    データがありません
+                  </div>
+                ) : (
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={departmentImpactAnalysis.slice(0, 10)} layout="horizontal">
+                  <BarChart 
+                    data={departmentImpactAnalysis.slice(0, 10)} 
+                    layout="horizontal"
+                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                  >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis type="number" domain={[0, 100]} />
                     <YAxis dataKey="department" type="category" width={120} />
@@ -506,7 +520,7 @@ function Content() {
                       wrapperStyle={{ zIndex: 1000 }}
                     />
                     <Legend />
-                    <Bar dataKey="impactScore" name="影響度スコア">
+                    <Bar dataKey="impactScore" name="影響度スコア" fill="#3B82F6">
                       {departmentImpactAnalysis.slice(0, 10).map((entry, index) => (
                         <Cell 
                           key={`cell-${index}`} 
@@ -516,6 +530,7 @@ function Content() {
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>
+                )}
               </div>
               <div className="mt-4 flex items-center justify-center gap-6 text-sm">
                 <div className="flex items-center gap-2">
