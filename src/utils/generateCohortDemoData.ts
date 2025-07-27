@@ -283,10 +283,10 @@ export function generateCohortDemoData(
       nextMeeting: '2025年2月' + randomInt(1, 28) + '日',
       healthStatus: Math.random() > 0.8 ? '要注意' : '良好',
       healthScore: randomInt(70, 95),
-      stressIndex: randomInt(...genCharacteristics.stressRange),
-      engagement: randomInt(...genCharacteristics.engagementRange),
-      overtime: randomInt(...genCharacteristics.overtimeRange),
-      paidLeaveRate: randomInt(...genCharacteristics.paidLeaveRange),
+      stressIndex: randomInt(genCharacteristics.stressRange[0], genCharacteristics.stressRange[1]),
+      engagement: randomInt(genCharacteristics.engagementRange[0], genCharacteristics.engagementRange[1]),
+      overtime: randomInt(genCharacteristics.overtimeRange[0], genCharacteristics.overtimeRange[1]),
+      paidLeaveRate: randomInt(genCharacteristics.paidLeaveRange[0], genCharacteristics.paidLeaveRange[1]),
       avatar: `bg-gradient-to-r from-${['blue', 'green', 'purple', 'pink', 'indigo'][randomInt(0, 4)]}-500 to-${['blue', 'green', 'purple', 'pink', 'indigo'][randomInt(0, 4)]}-600`,
       email: `${lastName.toLowerCase()}.${firstName.toLowerCase()}@${facility === '小原病院' ? 'obara-hp' : 'tachigami-hp'}.jp`,
       phone: `080-${randomInt(1000, 9999)}-${randomInt(1000, 9999)}`,
@@ -294,30 +294,30 @@ export function generateCohortDemoData(
       address: `東京都○○区△△${randomInt(1, 9)}-${randomInt(1, 20)}-${randomInt(1, 15)}`,
       
       evaluationData: {
-        rating: randomFloat(...genCharacteristics.performanceRange),
+        rating: randomFloat(genCharacteristics.performanceRange[0], genCharacteristics.performanceRange[1]),
         performance: randomInt(70, 95),
         skill: randomInt(65, 95),
         teamwork: randomInt(70, 98),
-        growth: randomFloat(...genCharacteristics.growthRange)
+        growth: randomFloat(genCharacteristics.growthRange[0], genCharacteristics.growthRange[1])
       },
       
       evaluationHistory: [
         {
           period: '2024年下期',
           overall: evaluationGrade,
-          performance: randomFloat(...genCharacteristics.performanceRange),
+          performance: randomFloat(genCharacteristics.performanceRange[0], genCharacteristics.performanceRange[1]),
           skills: randomFloat(3.5, 4.8),
           teamwork: randomFloat(3.8, 4.9),
-          growth: randomFloat(...genCharacteristics.growthRange),
+          growth: randomFloat(genCharacteristics.growthRange[0], genCharacteristics.growthRange[1]),
           evaluator: department + ' ' + (position.includes('主任') || position.includes('長') ? '部長' : '主任')
         },
         {
           period: '2024年上期',
           overall: evaluationGrade,
-          performance: randomFloat(...genCharacteristics.performanceRange),
+          performance: randomFloat(genCharacteristics.performanceRange[0], genCharacteristics.performanceRange[1]),
           skills: randomFloat(3.4, 4.7),
           teamwork: randomFloat(3.7, 4.8),
-          growth: randomFloat(...genCharacteristics.growthRange),
+          growth: randomFloat(genCharacteristics.growthRange[0], genCharacteristics.growthRange[1]),
           evaluator: department + ' ' + (position.includes('主任') || position.includes('長') ? '部長' : '主任')
         }
       ],
