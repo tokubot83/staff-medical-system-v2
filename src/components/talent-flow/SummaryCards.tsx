@@ -7,30 +7,60 @@ interface SummaryCardsProps {
 }
 
 export function SummaryCards({ facility }: SummaryCardsProps) {
-  // 施設別のデータ（実際の実装では、APIやデータソースから取得）
+  // デモデータから実際の数値を計算
   const getData = () => {
-    const baseData = {
-      all: {
-        newEmployees: { count: 15, change: 25, trend: 'up' },
-        exitPlanned: { count: 3, change: 1, trend: 'up' },
-        highRisk: { count: 8, change: 2, trend: 'up' },
-        longAbsence: { count: 5, change: 0, trend: 'neutral' }
-      },
-      obara: {
-        newEmployees: { count: 9, change: 20, trend: 'up' },
-        exitPlanned: { count: 2, change: 1, trend: 'up' },
-        highRisk: { count: 5, change: 1, trend: 'up' },
-        longAbsence: { count: 3, change: 0, trend: 'neutral' }
-      },
-      tategami: {
-        newEmployees: { count: 6, change: 30, trend: 'up' },
-        exitPlanned: { count: 1, change: 0, trend: 'neutral' },
-        highRisk: { count: 3, change: 1, trend: 'up' },
-        longAbsence: { count: 2, change: 0, trend: 'neutral' }
+    // 施設別にフィルタリング
+    const filterByFacility = (items: any[], facilityName?: string) => {
+      if (facility === 'all') return items;
+      if (facility === 'obara') return items.filter(item => item.facility === '小原病院');
+      if (facility === 'tategami') return items.filter(item => item.facility === '立神リハビリテーション温泉病院');
+      return items;
+    };
+
+    // 新入職員数の計算
+    const newEmployeesFiltered = filterByFacility(demoNewEmployees);
+    const newEmployeesCount = newEmployeesFiltered.length;
+
+    // 退職リスク管理データの計算
+    const riskEmployeesFiltered = filterByFacility(demoRiskEmployees);
+    const exitPlannedCount = riskEmployeesFiltered.filter(e => e.category === 'exit').length;
+    const highRiskCount = riskEmployeesFiltered.filter(e => e.category === 'highRisk').length;
+    const longAbsenceCount = riskEmployeesFiltered.filter(e => e.category === 'longAbsence').length;
+
+    // 変化率の計算（デモ用の固定値）
+    const getChangeData = () => {
+      if (facility === 'all') {
+        return {
+          newEmployees: { change: 25, trend: 'up' },
+          exitPlanned: { change: 2, trend: 'up' },
+          highRisk: { change: 3, trend: 'up' },
+          longAbsence: { change: 1, trend: 'neutral' }
+        };
+      } else if (facility === 'obara') {
+        return {
+          newEmployees: { change: 20, trend: 'up' },
+          exitPlanned: { change: 1, trend: 'up' },
+          highRisk: { change: 2, trend: 'up' },
+          longAbsence: { change: 0, trend: 'neutral' }
+        };
+      } else {
+        return {
+          newEmployees: { change: 30, trend: 'up' },
+          exitPlanned: { change: 1, trend: 'up' },
+          highRisk: { change: 1, trend: 'up' },
+          longAbsence: { change: 1, trend: 'neutral' }
+        };
       }
     };
 
-    return baseData[facility];
+    const changeData = getChangeData();
+
+    return {
+      newEmployees: { count: newEmployeesCount, ...changeData.newEmployees },
+      exitPlanned: { count: exitPlannedCount, ...changeData.exitPlanned },
+      highRisk: { count: highRiskCount, ...changeData.highRisk },
+      longAbsence: { count: longAbsenceCount, ...changeData.longAbsence }
+    };
   };
 
   const data = getData();
