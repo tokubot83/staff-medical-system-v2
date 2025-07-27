@@ -1,33 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
+import { demoRiskEmployees, type RiskEmployee } from '@/app/data/demoTalentFlowData';
 
 interface RiskManagementListProps {
   facility: 'all' | 'obara' | 'tategami';
 }
 
 type RiskCategory = 'exit' | 'highRisk' | 'longAbsence' | 'retirement';
-
-interface RiskEmployee {
-  id: string;
-  name: string;
-  category: RiskCategory;
-  department: string;
-  position: string;
-  exitDate?: string;
-  handoverProgress?: number;
-  successor?: string;
-  riskScore?: number;
-  riskFactors?: string[];
-  recommendedAction?: string;
-  absencePeriod?: string;
-  returnDate?: string;
-  followUpStatus?: string;
-  retirementDate?: string;
-  reemploymentIntention?: 'yes' | 'no' | 'considering';
-  knowledgeTransferStatus?: number;
-  facility: string;
-}
 
 export function RiskManagementList({ facility }: RiskManagementListProps) {
   const [activeCategory, setActiveCategory] = useState<RiskCategory | 'all'>('all');
