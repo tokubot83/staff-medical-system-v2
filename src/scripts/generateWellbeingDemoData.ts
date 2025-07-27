@@ -115,9 +115,9 @@ function generateIndividualWellbeingData(
   
   // ストレス要因の生成
   const stressFactors = {
-    workload: randomFloat(...characteristics.stressFactors.workload) * ageAdjustment,
-    relationships: randomFloat(...characteristics.stressFactors.relationships),
-    workControl: randomFloat(...characteristics.stressFactors.workControl),
+    workload: randomFloat(characteristics.stressFactors.workload[0], characteristics.stressFactors.workload[1]) * ageAdjustment,
+    relationships: randomFloat(characteristics.stressFactors.relationships[0], characteristics.stressFactors.relationships[1]),
+    workControl: randomFloat(characteristics.stressFactors.workControl[0], characteristics.stressFactors.workControl[1]),
     reward: randomFloat(50, 80),
     workEnvironment: randomFloat(60, 85),
     change: randomFloat(40, 70)
@@ -129,9 +129,9 @@ function generateIndividualWellbeingData(
   // ウェルビーイング指標の生成（ストレスと逆相関）
   const stressImpact = (100 - avgStress) / 100;
   const wellbeingIndex = {
-    physical: randomFloat(...characteristics.wellbeingBase.physical) * stressImpact,
-    mental: randomFloat(...characteristics.wellbeingBase.mental) * stressImpact,
-    social: randomFloat(...characteristics.wellbeingBase.social),
+    physical: randomFloat(characteristics.wellbeingBase.physical[0], characteristics.wellbeingBase.physical[1]) * stressImpact,
+    mental: randomFloat(characteristics.wellbeingBase.mental[0], characteristics.wellbeingBase.mental[1]) * stressImpact,
+    social: randomFloat(characteristics.wellbeingBase.social[0], characteristics.wellbeingBase.social[1]),
     purpose: randomFloat(65, 90),
     growth: randomFloat(60, 85),
     overall: 0 // 後で計算
@@ -148,8 +148,8 @@ function generateIndividualWellbeingData(
   
   // ワークライフバランスの生成
   const workLifeBalance = {
-    workTime: randomFloat(...characteristics.workLifeBalance.workTime),
-    privateTime: randomFloat(...characteristics.workLifeBalance.privateTime),
+    workTime: randomFloat(characteristics.workLifeBalance.workTime[0], characteristics.workLifeBalance.workTime[1]),
+    privateTime: randomFloat(characteristics.workLifeBalance.privateTime[0], characteristics.workLifeBalance.privateTime[1]),
     flexibility: randomFloat(50, 75),
     familySupport: randomFloat(55, 80),
     selfCare: randomFloat(45, 70),
