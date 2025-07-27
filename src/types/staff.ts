@@ -2,12 +2,22 @@
 export interface StaffDetail {
   id: string;
   name: string;
+  nameInitial?: string;
   department: string;
   position: string;
   facility: string;
   age: number;
   joinDate: string;
   tenure: string;
+  employeeId?: string;
+  birthDate?: string;
+  evaluationPeriod?: string;
+  nextMeeting?: string;
+  avatar?: string;
+  email?: string;
+  phone?: string;
+  emergencyContact?: string;
+  address?: string;
   
   // 評価関連（文字列で保存されている可能性があるため）
   evaluation: string;
