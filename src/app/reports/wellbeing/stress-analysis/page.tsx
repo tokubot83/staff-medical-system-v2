@@ -319,9 +319,13 @@ function Content() {
                         }, { workload: 0, relationships: 0, workControl: 0, reward: 0, workEnvironment: 0, change: 0 });
                         
                         const count = posData.length;
-                        Object.keys(avgStress).forEach(key => {
-                          avgStress[key] = avgStress[key] / count;
-                        });
+                        // Average all stress factors
+                        avgStress.workload = avgStress.workload / count;
+                        avgStress.relationships = avgStress.relationships / count;
+                        avgStress.workControl = avgStress.workControl / count;
+                        avgStress.reward = avgStress.reward / count;
+                        avgStress.workEnvironment = avgStress.workEnvironment / count;
+                        avgStress.change = avgStress.change / count;
                         
                         const getHeatmapColor = (value: number) => {
                           if (value >= 70) return 'bg-red-500 text-white';
