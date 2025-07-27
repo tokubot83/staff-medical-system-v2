@@ -38,7 +38,7 @@ function Content() {
 
   // 現在の組織構造分析
   const currentOrgAnalysis = useMemo(() => {
-    const orgData = selectedFacility === '小原病院' ? obaraOrganizationData : tachigamiOrganizationData;
+    const orgDataArray = selectedFacility === '小原病院' ? obaraOrganizationData : tachigamiOrganizationData;
     const staffList = Object.values(staffDatabase).filter(staff => staff.facility === selectedFacility);
     
     // 階層レベル別の分析
@@ -46,12 +46,31 @@ function Content() {
     const departmentStats: { [key: string]: { count: number; totalStaff: number } } = {};
     const spanOfControl: { [key: string]: number } = {}; // 管理スパン
     
-    // 組織データから階層構造を分析
+    // 配列形式のデータを階層構造に変換
     interface OrgNode {
       name: string;
       type: string;
       children?: OrgNode[];
     }
+    
+    const buildHierarchy = (departments: typeof orgDataArray): OrgNode => {
+      const deptMap = new Map(departments.map(d => [d.id, { ...d, children: [] as OrgNode[] }]));
+      let root: OrgNode | null = null;
+      
+      departments.forEach(dept => {
+        const node = deptMap.get(dept.id)!;
+        if (dept.parentId) {
+          const parent = deptMap.get(dept.parentId);
+          if (parent && parent.children) {
+            parent.children.push(node);
+          }
+        } else if (dept.level === 1) {
+          root = node;
+        }
+      });
+      
+      return root || { name: 'Root', type: 'executive', children: [] };
+    };
     
     const analyzeHierarchy = (node: OrgNode, level = 1, parentPath = '') => {
       const currentPath = parentPath ? `${parentPath} > ${node.name}` : node.name;
@@ -75,10 +94,11 @@ function Content() {
       }
     };
     
-    analyzeHierarchy(orgData);
+    const orgHierarchy = buildHierarchy(orgDataArray);
+    analyzeHierarchy(orgHierarchy);
     
     // スタッフ配置の分析
-    const staffByDepartment = {};
+    const staffByDepartment: { [key: string]: number } = {};
     staffList.forEach(staff => {
       if (!staffByDepartment[staff.department]) {
         staffByDepartment[staff.department] = 0;
