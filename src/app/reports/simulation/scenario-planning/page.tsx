@@ -612,9 +612,9 @@ function Content() {
                       wrapperStyle={{ zIndex: 1000 }}
                     />
                     <Legend />
-                    <Bar dataKey="current" fill="#94A3B8" name="現在値" />
-                    <Bar dataKey="target" fill={scenarios[selectedScenario as keyof typeof scenarios].color} name="目標値" />
-                    <Bar dataKey="stretch" fill="#F59E0B" name="ストレッチ目標" />
+                    <Bar dataKey="current" fill="#94A3B8" name="現在値" isAnimationActive={false} />
+                    <Bar dataKey="target" fill={scenarios[selectedScenario as keyof typeof scenarios].color} name="目標値" isAnimationActive={false} />
+                    <Bar dataKey="stretch" fill="#F59E0B" name="ストレッチ目標" isAnimationActive={false} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>

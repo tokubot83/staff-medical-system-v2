@@ -206,7 +206,7 @@ function Content() {
   const strategyComparison = useMemo(() => {
     return Object.entries(retentionStrategies).map(([key, strategy]) => {
       const isSelected = selectedStrategies.includes(key);
-      const costPerEmployee = strategy.cost / currentTurnoverRisk.total;
+      const costPerEmployee = currentTurnoverRisk.total > 0 ? strategy.cost / currentTurnoverRisk.total : 0;
       
       // 各施策の効果スコアを計算
       let effectScore = 0;
@@ -214,11 +214,12 @@ function Content() {
         effectScore += Math.abs(value);
       });
       
+      const costInMillion = strategy.cost / 1000000;
       return {
         name: strategy.name,
-        cost: strategy.cost / 1000000, // 百万円単位
+        cost: costInMillion, // 百万円単位
         効果スコア: effectScore,
-        コスト効率: effectScore / (strategy.cost / 1000000),
+        コスト効率: costInMillion > 0 ? effectScore / costInMillion : 0,
         selected: isSelected
       };
     });
@@ -429,6 +430,11 @@ function Content() {
               </CardHeader>
               <CardContent>
                 <div className="h-80">
+                  {strategyComparison.length === 0 ? (
+                    <div className="flex items-center justify-center h-full text-gray-500">
+                      データがありません
+                    </div>
+                  ) : (
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart 
                       data={strategyComparison} 
@@ -450,10 +456,11 @@ function Content() {
                         wrapperStyle={{ zIndex: 1000 }}
                       />
                       <Legend />
-                      <Bar dataKey="効果スコア" fill="#3B82F6" />
-                      <Bar dataKey="コスト効率" fill="#10B981" />
+                      <Bar dataKey="効果スコア" fill="#3B82F6" isAnimationActive={false} />
+                      <Bar dataKey="コスト効率" fill="#10B981" isAnimationActive={false} />
                     </BarChart>
                   </ResponsiveContainer>
+                  )}
                 </div>
               </CardContent>
             </Card>

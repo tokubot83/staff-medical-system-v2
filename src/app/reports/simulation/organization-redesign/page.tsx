@@ -520,7 +520,7 @@ function Content() {
                       wrapperStyle={{ zIndex: 1000 }}
                     />
                     <Legend />
-                    <Bar dataKey="impactScore" name="影響度スコア" fill="#3B82F6">
+                    <Bar dataKey="impactScore" name="影響度スコア" fill="#3B82F6" isAnimationActive={false}>
                       {departmentImpactAnalysis.slice(0, 10).map((entry, index) => (
                         <Cell 
                           key={`cell-${index}`} 

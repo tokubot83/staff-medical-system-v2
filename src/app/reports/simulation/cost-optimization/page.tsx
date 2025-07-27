@@ -505,7 +505,7 @@ function Content() {
                         }}
                         wrapperStyle={{ zIndex: 1000 }}
                       />
-                      <Bar dataKey="averageCost" fill="#3B82F6">
+                      <Bar dataKey="averageCost" fill="#3B82F6" isAnimationActive={false}>
                         {currentCostAnalysis.positionData.slice(0, 8).map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
