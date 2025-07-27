@@ -8,7 +8,8 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Slider } from '@/components/ui/slider';
 import { Calculator, TrendingUp, Users, DollarSign, AlertTriangle, Settings } from 'lucide-react';
-import { obaraStaffDatabase, tachigamiStaffDatabase, StaffDetail } from '@/app/data/staffData';
+import { obaraStaffDatabase, tachigamiStaffDatabase } from '@/app/data/staffData';
+import { StaffDetail } from "@/types/staff";
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 
 interface SimulationTabProps {

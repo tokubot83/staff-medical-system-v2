@@ -1,4 +1,4 @@
-import { StaffDetail } from '@/app/data/staffData'
+import { StaffDetail } from '@/types/staff'
 import { 
   StaffEvaluation, 
   EvaluationHistory, 

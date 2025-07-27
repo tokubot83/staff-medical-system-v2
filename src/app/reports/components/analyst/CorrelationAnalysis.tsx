@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
 import { TrendingUp, TrendingDown, Activity } from 'lucide-react'
-import { StaffDetail } from '@/app/data/staffData'
+import { StaffDetail } from '@/types/staff'
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts'
 
 interface CorrelationAnalysisProps {

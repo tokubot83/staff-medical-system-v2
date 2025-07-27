@@ -9,7 +9,8 @@ import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { CategoryTopButton } from '@/components/CategoryTopButton';
 import { BackToReportsButton } from '@/components/BackToReportsButton';
 import { exportToPDF } from '@/utils/pdfExport';
-import { staffDatabase, StaffDetail } from '@/app/data/staffData';
+import { staffDatabase } from '@/app/data/staffData';
+import { StaffDetail } from "@/types/staff";
 
 interface SuccessionCandidate extends StaffDetail {
   readiness: string;

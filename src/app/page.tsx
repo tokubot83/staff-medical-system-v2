@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { staffListData, staffDatabase, StaffDetail } from './data/staffData';
+import { staffListData, staffDatabase } from './data/staffData';
+import { StaffDetail } from '@/types/staff';
 import TalentFlowSection from '../components/talent-flow/TalentFlowSection';
 import HRDashboardSection from '../components/hr-dashboard/HRDashboardSection';
 

@@ -6,7 +6,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Users, Star, TrendingUp, AlertCircle, Target, Award } from 'lucide-react';
-import { obaraStaffDatabase, tachigamiStaffDatabase, StaffDetail } from '@/app/data/staffData';
+import { obaraStaffDatabase, tachigamiStaffDatabase } from '@/app/data/staffData';
+import { StaffDetail } from "@/types/staff";
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 
 interface TalentMappingTabProps {

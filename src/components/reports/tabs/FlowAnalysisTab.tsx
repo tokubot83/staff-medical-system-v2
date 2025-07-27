@@ -6,7 +6,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Users, TrendingUp, TrendingDown, GitBranch, Activity } from 'lucide-react';
-import { obaraStaffDatabase, tachigamiStaffDatabase, StaffDetail } from '@/app/data/staffData';
+import { obaraStaffDatabase, tachigamiStaffDatabase } from '@/app/data/staffData';
+import { StaffDetail } from "@/types/staff";
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 
 interface FlowAnalysisTabProps {

@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
 import { Badge } from '@/components/ui/badge'
 import { Brain, TrendingUp, TrendingDown, BarChart3, Calculator } from 'lucide-react'
-import { StaffDetail } from '@/app/data/staffData'
+import { StaffDetail } from '@/types/staff'
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 
 interface PredictiveModelingProps {

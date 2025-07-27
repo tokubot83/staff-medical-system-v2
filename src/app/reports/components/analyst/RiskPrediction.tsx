@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { AlertTriangle, TrendingDown, Users, Target } from 'lucide-react'
-import { StaffDetail } from '@/app/data/staffData'
+import { StaffDetail } from '@/types/staff'
 
 interface RiskPredictionProps {
   staffData: StaffDetail[]
