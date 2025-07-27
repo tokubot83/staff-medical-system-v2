@@ -2,22 +2,22 @@
 export interface StaffDetail {
   id: string;
   name: string;
-  nameInitial?: string;
+  nameInitial: string;
   department: string;
   position: string;
   facility: string;
   age: number;
   joinDate: string;
   tenure: string;
-  employeeId?: string;
-  birthDate?: string;
-  evaluationPeriod?: string;
-  nextMeeting?: string;
-  avatar?: string;
-  email?: string;
-  phone?: string;
-  emergencyContact?: string;
-  address?: string;
+  employeeId: string;
+  birthDate: string;
+  evaluationPeriod: string;
+  nextMeeting: string;
+  avatar: string;
+  email: string;
+  phone: string;
+  emergencyContact: string;
+  address: string;
   
   // 評価関連（文字列で保存されている可能性があるため）
   evaluation: string;
@@ -42,6 +42,10 @@ export interface StaffDetail {
   healthStatus: string;
   healthScore?: number;
   stressIndex: number;
+  lastCheckupDate?: string;
+  nextCheckupDate?: string;
+  healthRisks?: string[];
+  healthRecommendations?: string[];
   health?: {
     status: 'good' | 'caution' | 'alert';
     stress: number;       // ストレス指数（0-100）
@@ -67,9 +71,9 @@ export interface StaffDetail {
     date: string;
     hours: number;
     score?: number;
-    certificate?: boolean;
-    category?: string;
-    evaluation?: string;
+    certificate: boolean;
+    category: string;
+    evaluation: string;
   }[];
   
   // 配属履歴
@@ -77,6 +81,15 @@ export interface StaffDetail {
     date: string;
     department: string;
     position: string;
-    reason?: string;
+    reason: string;
   }[];
+  
+  // 評価データ（新形式）
+  evaluationData?: {
+    rating: number;        // パフォーマンス評価（1-5）
+    performance: number;   // パフォーマンススコア（0-100）
+    skill: number;        // スキルレベル（0-100）
+    teamwork: number;     // チームワーク（0-100）
+    growth: number;       // 成長性・ポテンシャル（1-5）
+  };
 }
