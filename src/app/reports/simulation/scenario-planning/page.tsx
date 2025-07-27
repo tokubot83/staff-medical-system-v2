@@ -84,7 +84,7 @@ function Content() {
   }, [selectedFacility]);
 
   // シナリオ定義
-  const scenarios = {
+  const scenarios = useMemo(() => ({
     optimistic: {
       name: '楽観シナリオ',
       description: '経済成長・医療需要増・技術革新が進む',
@@ -121,7 +121,7 @@ function Content() {
       },
       color: '#EF4444'
     }
-  };
+  }), []);
 
   // シナリオ別予測
   const scenarioProjections = useMemo(() => {

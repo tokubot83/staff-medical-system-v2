@@ -64,8 +64,8 @@ function Content() {
     };
 
     // 部署別・職種別の人件費を計算
-    const costByDepartment = {};
-    const costByPosition = {};
+    const costByDepartment: { [key: string]: { cost: number; count: number; overtime: number } } = {};
+    const costByPosition: { [key: string]: { cost: number; count: number } } = {};
     let totalCost = 0;
     let totalOvertime = 0;
 

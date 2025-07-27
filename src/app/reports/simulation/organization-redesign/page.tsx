@@ -200,7 +200,7 @@ function Content() {
       annualSaving,
       paybackPeriod: annualSaving > 0 ? implementationCost / annualSaving : null
     };
-  }, [selectedFacility, redesignScenario, currentOrgAnalysis, redesignScenarios]);
+  }, [redesignScenario, currentOrgAnalysis, redesignScenarios]);
 
   // 実施フェーズ
   const implementationPhases = [
