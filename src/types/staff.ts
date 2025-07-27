@@ -83,13 +83,4 @@ export interface StaffDetail {
     position: string;
     reason: string;
   }[];
-  
-  // 評価データ（新形式）
-  evaluationData?: {
-    rating: number;        // パフォーマンス評価（1-5）
-    performance: number;   // パフォーマンススコア（0-100）
-    skill: number;        // スキルレベル（0-100）
-    teamwork: number;     // チームワーク（0-100）
-    growth: number;       // 成長性・ポテンシャル（1-5）
-  };
 }
