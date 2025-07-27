@@ -9,6 +9,8 @@ import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { CategoryTopButton } from '@/components/CategoryTopButton';
 import { BackToReportsButton } from '@/components/BackToReportsButton';
 import { exportToPDF } from '@/utils/pdfExport';
+import { CareerPathAnalysis } from '@/components/flow-analysis/CareerPathAnalysis';
+import { CareerProgressStats } from '@/components/flow-analysis/CareerProgressStats';
 
 function Content() {
   const searchParams = useSearchParams();
@@ -45,17 +47,26 @@ function Content() {
             </div>
           </div>
 
-          {/* プレースホルダー */}
-          <Card>
-            <CardHeader>
-              <CardTitle>キャリアパス分析分析</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-12">
-                <p className="text-gray-500">キャリアパス分析機能は開発中です</p>
-              </div>
-            </CardContent>
-          </Card>
+          {/* キャリアパス分析 */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <Card className="lg:col-span-2">
+              <CardHeader>
+                <CardTitle>職種別キャリアパス分析</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CareerPathAnalysis facility={facilityParam} />
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>キャリア進捗統計</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CareerProgressStats facility={facilityParam} />
+              </CardContent>
+            </Card>
+          </div>
 
         </div>
       </div>

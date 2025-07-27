@@ -9,6 +9,9 @@ import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { CategoryTopButton } from '@/components/CategoryTopButton';
 import { BackToReportsButton } from '@/components/BackToReportsButton';
 import { exportToPDF } from '@/utils/pdfExport';
+import { DepartmentFlowChart } from '@/components/flow-analysis/DepartmentFlowChart';
+import { DepartmentFlowStats } from '@/components/flow-analysis/DepartmentFlowStats';
+import { DepartmentStats } from '@/components/flow-analysis/DepartmentStats';
 
 function DepartmentFlowContent() {
   const searchParams = useSearchParams();
@@ -45,15 +48,34 @@ function DepartmentFlowContent() {
             </div>
           </div>
 
-          {/* プレースホルダー */}
+          {/* 部署間異動フロー統計 */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <Card className="lg:col-span-2">
+              <CardHeader>
+                <CardTitle>部署間異動フロー</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <DepartmentFlowChart facility={facilityParam} />
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>異動統計サマリー</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <DepartmentFlowStats facility={facilityParam} />
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* 部署別統計 */}
           <Card>
             <CardHeader>
-              <CardTitle>部署間異動フロー図</CardTitle>
+              <CardTitle>部署別異動統計</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-center py-12">
-                <p className="text-gray-500">部署間異動フロー分析機能は開発中です</p>
-              </div>
+              <DepartmentStats facility={facilityParam} />
             </CardContent>
           </Card>
 
