@@ -9,6 +9,7 @@ import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { CategoryTopButton } from '@/components/CategoryTopButton';
 import { BackToReportsButton } from '@/components/BackToReportsButton';
 import { exportToPDF } from '@/utils/pdfExport';
+import TalentFlowSection from '@/components/talent-flow/TalentFlowSection';
 
 function Content() {
   const searchParams = useSearchParams();
@@ -45,17 +46,10 @@ function Content() {
             </div>
           </div>
 
-          {/* プレースホルダー */}
-          <Card>
-            <CardHeader>
-              <CardTitle>人材モビリティマトリックス分析</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-12">
-                <p className="text-gray-500">人材モビリティマトリックス機能は開発中です</p>
-              </div>
-            </CardContent>
-          </Card>
+          {/* 人材フローセクション */}
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <TalentFlowSection />
+          </div>
 
         </div>
       </div>
