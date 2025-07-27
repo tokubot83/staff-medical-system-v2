@@ -158,7 +158,7 @@ function Content() {
 
   // 改編後の効果予測
   const redesignImpact = useMemo(() => {
-    const scenario = redesignScenarios[redesignScenario];
+    const scenario = redesignScenarios[redesignScenario as keyof typeof redesignScenarios];
     const baseline = currentOrgAnalysis;
     
     // シナリオ別の効果を計算
@@ -400,17 +400,17 @@ function Content() {
           {/* 改編シナリオ詳細 */}
           <Card>
             <CardHeader>
-              <CardTitle>{redesignScenarios[redesignScenario].name}シナリオ</CardTitle>
+              <CardTitle>{redesignScenarios[redesignScenario as keyof typeof redesignScenarios].name}シナリオ</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <h4 className="font-semibold text-gray-900 mb-2">概要</h4>
-                  <p className="text-gray-600 mb-4">{redesignScenarios[redesignScenario].description}</p>
+                  <p className="text-gray-600 mb-4">{redesignScenarios[redesignScenario as keyof typeof redesignScenarios].description}</p>
                   
                   <h4 className="font-semibold text-green-900 mb-2">期待効果</h4>
                   <ul className="list-disc list-inside text-sm text-green-800 space-y-1">
-                    {redesignScenarios[redesignScenario].benefits.map((benefit, index) => (
+                    {redesignScenarios[redesignScenario as keyof typeof redesignScenarios].benefits.map((benefit, index) => (
                       <li key={index}>{benefit}</li>
                     ))}
                   </ul>
@@ -419,7 +419,7 @@ function Content() {
                 <div>
                   <h4 className="font-semibold text-red-900 mb-2">リスク・課題</h4>
                   <ul className="list-disc list-inside text-sm text-red-800 space-y-1 mb-4">
-                    {redesignScenarios[redesignScenario].risks.map((risk, index) => (
+                    {redesignScenarios[redesignScenario as keyof typeof redesignScenarios].risks.map((risk, index) => (
                       <li key={index}>{risk}</li>
                     ))}
                   </ul>
@@ -648,7 +648,7 @@ function Content() {
                 facility: selectedFacility,
                 reportType: 'organization-redesign',
                 elementId: 'report-content',
-                dateRange: `シナリオ: ${redesignScenarios[redesignScenario].name}`
+                dateRange: `シナリオ: ${redesignScenarios[redesignScenario as keyof typeof redesignScenarios].name}`
               })}
               className="pdf-exclude bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
             >
