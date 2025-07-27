@@ -1,151 +1,18 @@
 'use client';
 
 import React, { useState } from 'react';
+import { demoNewEmployees, type NewEmployee } from '@/app/data/demoTalentFlowData';
 
 interface NewEmployeeListProps {
   facility: 'all' | 'obara' | 'tategami';
-}
-
-interface NewEmployee {
-  id: string;
-  name: string;
-  photo: string;
-  joinDate: string;
-  daysElapsed: number;
-  department: string;
-  position: string;
-  employmentType: string;
-  recruitmentRoute: string;
-  progress: number;
-  status: 'good' | 'warning' | 'alert';
-  statusText: string;
-  trialPeriodEnd: string;
-  trialPeriodStatus: 'good' | 'warning' | 'alert';
-  onboardingProgress: number;
-  requiredTrainingComplete: boolean;
-  mentorAssigned: boolean;
-  firstInterviewDate?: string;
-  nextInterviewDate?: string;
-  facility: string;
 }
 
 export function NewEmployeeList({ facility }: NewEmployeeListProps) {
   const [sortBy, setSortBy] = useState<'joinDate' | 'progress' | 'status'>('joinDate');
   const [filterPeriod, setFilterPeriod] = useState<'1month' | '3months' | '6months' | '1year'>('1year');
 
-  // サンプルデータ（実際の実装では、APIから取得）
-  const allEmployees: NewEmployee[] = [
-    {
-      id: 'NS-2024-101',
-      name: '山田太郎',
-      photo: '👤',
-      joinDate: '2024/7/1',
-      daysElapsed: 20,
-      department: '内科',
-      position: '研修中',
-      employmentType: '正社員',
-      recruitmentRoute: '新卒',
-      progress: 60,
-      status: 'good',
-      statusText: '順調',
-      trialPeriodEnd: '2024/9/30',
-      trialPeriodStatus: 'good',
-      onboardingProgress: 60,
-      requiredTrainingComplete: false,
-      mentorAssigned: true,
-      firstInterviewDate: '2024/7/15',
-      nextInterviewDate: '2024/8/1',
-      facility: '小原病院'
-    },
-    {
-      id: 'NS-2024-102',
-      name: '佐藤花子',
-      photo: '👤',
-      joinDate: '2024/6/15',
-      daysElapsed: 35,
-      department: '外科',
-      position: '看護師',
-      employmentType: '正社員',
-      recruitmentRoute: '中途',
-      progress: 85,
-      status: 'good',
-      statusText: '順調',
-      trialPeriodEnd: '2024/9/14',
-      trialPeriodStatus: 'good',
-      onboardingProgress: 85,
-      requiredTrainingComplete: true,
-      mentorAssigned: true,
-      firstInterviewDate: '2024/6/30',
-      nextInterviewDate: '2024/7/30',
-      facility: '小原病院'
-    },
-    {
-      id: 'NS-2024-103',
-      name: '田中一郎',
-      photo: '👤',
-      joinDate: '2024/7/10',
-      daysElapsed: 10,
-      department: 'リハビリ科',
-      position: '理学療法士',
-      employmentType: '正社員',
-      recruitmentRoute: '紹介',
-      progress: 30,
-      status: 'warning',
-      statusText: '要観察',
-      trialPeriodEnd: '2024/10/9',
-      trialPeriodStatus: 'warning',
-      onboardingProgress: 30,
-      requiredTrainingComplete: false,
-      mentorAssigned: false,
-      firstInterviewDate: undefined,
-      nextInterviewDate: '2024/7/25',
-      facility: '立神リハビリテーション温泉病院'
-    },
-    {
-      id: 'NS-2024-104',
-      name: '鈴木美咲',
-      photo: '👤',
-      joinDate: '2024/4/1',
-      daysElapsed: 110,
-      department: '地域包括ケア',
-      position: '看護師',
-      employmentType: '正社員',
-      recruitmentRoute: '新卒',
-      progress: 95,
-      status: 'good',
-      statusText: '優秀',
-      trialPeriodEnd: '2024/6/30',
-      trialPeriodStatus: 'good',
-      onboardingProgress: 95,
-      requiredTrainingComplete: true,
-      mentorAssigned: true,
-      firstInterviewDate: '2024/4/15',
-      nextInterviewDate: '2024/8/1',
-      facility: '立神リハビリテーション温泉病院'
-    },
-    {
-      id: 'NS-2024-105',
-      name: '高橋健太',
-      photo: '👤',
-      joinDate: '2024/5/15',
-      daysElapsed: 66,
-      department: '薬剤部',
-      position: '薬剤師',
-      employmentType: '正社員',
-      recruitmentRoute: '中途',
-      progress: 70,
-      status: 'good',
-      statusText: '順調',
-      trialPeriodEnd: '2024/8/14',
-      trialPeriodStatus: 'good',
-      onboardingProgress: 70,
-      requiredTrainingComplete: true,
-      mentorAssigned: true,
-      firstInterviewDate: '2024/5/30',
-      nextInterviewDate: '2024/8/15',
-      facility: '小原病院'
-    }
-  ];
+  // デモデータを使用
+  const allEmployees: NewEmployee[] = demoNewEmployees;
 
   // フィルタリング処理
   const filterByFacility = (employees: NewEmployee[]) => {

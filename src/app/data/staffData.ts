@@ -1,4 +1,5 @@
 import { StaffEvaluation, EvaluationHistory } from '@/types/evaluation'
+import { cohortDemoDatabase } from './generated/cohortDemoData'
 
 // スタッフデータの型定義
 export interface StaffDetail {
@@ -561,10 +562,11 @@ export const tachigamiStaffDatabase: Record<string, StaffDetail> = {
   },
 };
 
-// 全スタッフデータベース（両病院統合）
+// 全スタッフデータベース（両病院統合 + コホート分析用デモデータ）
 export const staffDatabase: Record<string, StaffDetail> = {
   ...obaraStaffDatabase,
-  ...tachigamiStaffDatabase
+  ...tachigamiStaffDatabase,
+  ...cohortDemoDatabase
 };
 
 // スタッフ一覧データ（ダッシュボード用）
