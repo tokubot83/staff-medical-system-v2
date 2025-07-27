@@ -108,7 +108,7 @@ function Content() {
 
     return Object.entries(strategy).map(([type, ratio]) => {
       const count = Math.round(totalRecruits * ratio);
-      const cost = costPerHire[type];
+      const cost = costPerHire[type as keyof typeof costPerHire];
       return {
         type,
         count,
