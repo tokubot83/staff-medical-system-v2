@@ -15,8 +15,6 @@ import { tachigamiOrganizationData } from '@/app/data/tachigamiOrganizationData'
 import {
   BarChart,
   Bar,
-  Sankey,
-  TreemapChart,
   XAxis,
   YAxis,
   CartesianGrid,
