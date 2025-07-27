@@ -264,7 +264,12 @@ function Content() {
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="year" />
                     <YAxis />
-                    <Tooltip />
+                    <Tooltip 
+                      formatter={(value: number) => `${value}名`}
+                      contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px' }}
+                      labelStyle={{ color: '#374151', fontWeight: 'bold' }}
+                      labelFormatter={(label) => `${label}年`}
+                    />
                     <Legend />
                     <Area type="monotone" dataKey="定年退職" stackId="1" stroke="#3B82F6" fill="#3B82F6" />
                     <Area type="monotone" dataKey="自己都合退職" stackId="1" stroke="#F59E0B" fill="#F59E0B" />
@@ -308,10 +313,14 @@ function Content() {
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="type" />
                       <YAxis tickFormatter={(value) => `${(value / 1000000).toFixed(1)}M`} />
-                      <Tooltip formatter={(value) => {
-                        const numValue = typeof value === 'number' ? value : parseFloat(value as string);
-                        return `¥${numValue.toLocaleString()}`;
-                      }} />
+                      <Tooltip 
+                        formatter={(value) => {
+                          const numValue = typeof value === 'number' ? value : parseFloat(value as string);
+                          return `¥${numValue.toLocaleString()}`;
+                        }}
+                        contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px' }}
+                        labelStyle={{ color: '#374151', fontWeight: 'bold' }}
+                      />
                       <Legend />
                       <Bar dataKey="採用費" fill="#3B82F6" />
                       <Bar dataKey="研修費" fill="#10B981" />
@@ -344,7 +353,11 @@ function Content() {
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                       </Pie>
-                      <Tooltip />
+                      <Tooltip 
+                        formatter={(value: number) => `${value}名`}
+                        contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px' }}
+                        labelStyle={{ color: '#374151', fontWeight: 'bold' }}
+                      />
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
