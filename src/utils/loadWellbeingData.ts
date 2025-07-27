@@ -1,4 +1,6 @@
 import { WellbeingData, WellbeingAggregateData, InterventionProgram } from '@/types/wellbeing';
+import { StaffDetail } from '@/types/staff';
+import { generateAllCohortDemoData } from '@/utils/generateCohortDemoData';
 
 // デモデータをインポート
 import wellbeingDemoData from '@/data/wellbeing/wellbeingDemoData.json';
@@ -90,6 +92,19 @@ export function calculateDistribution(data: WellbeingData[]) {
   });
   
   return distribution;
+}
+
+// ウェルビーイングデータとスタッフ情報を結合する関数
+export function getWellbeingWithStaffInfo(wellbeingData: WellbeingData[]): (WellbeingData & { age?: number })[] {
+  const staffData = generateAllCohortDemoData();
+  
+  return wellbeingData.map(wb => {
+    const staff = staffData.find(s => s.id === wb.staffId);
+    return {
+      ...wb,
+      age: staff?.age
+    };
+  });
 }
 
 // 平均スコアを計算する関数

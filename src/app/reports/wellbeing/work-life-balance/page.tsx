@@ -23,7 +23,7 @@ import {
   Filler
 } from 'chart.js';
 import { Bar, Line, Radar } from 'react-chartjs-2';
-import { loadWellbeingData, filterByFacility, getTrendData } from '@/utils/loadWellbeingData';
+import { loadWellbeingData, filterByFacility, getTrendData, getWellbeingWithStaffInfo } from '@/utils/loadWellbeingData';
 
 // Chart.jsの登録
 ChartJS.register(
@@ -44,12 +44,15 @@ function Content() {
   const facilityParam = searchParams.get('facility') || '';
   
   // データの読み込みとフィルタリング
-  const { individual, aggregates, trends } = useMemo(() => {
+  const { individual, aggregates, trends, individualWithAge } = useMemo(() => {
     const data = loadWellbeingData();
+    const filtered = filterByFacility(data.individual, facilityParam);
+    const withAge = getWellbeingWithStaffInfo(filtered);
     return {
-      individual: filterByFacility(data.individual, facilityParam),
+      individual: filtered,
       aggregates: data.aggregates,
-      trends: data.trends
+      trends: data.trends,
+      individualWithAge: withAge
     };
   }, [facilityParam]);
   
@@ -180,7 +183,7 @@ function Content() {
     ];
     
     const data = generations.map(gen => {
-      const genData = individual.filter(p => p.age >= gen.min && p.age <= gen.max);
+      const genData = individualWithAge.filter(p => p.age && p.age >= gen.min && p.age <= gen.max);
       if (genData.length === 0) return 0;
       
       return genData.reduce((sum, p) => sum + p.workLifeBalance.overall, 0) / genData.length;
@@ -196,7 +199,7 @@ function Content() {
         borderWidth: 1
       }]
     };
-  }, [individual]);
+  }, [individualWithAge]);
 
   return (
     <div className="min-h-screen bg-gray-50">
