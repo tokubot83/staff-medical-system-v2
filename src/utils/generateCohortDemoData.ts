@@ -187,7 +187,7 @@ const lastNames = ['佐藤', '鈴木', '高橋', '田中', '渡辺', '伊藤', '
 // スタッフデータを生成する関数
 export function generateCohortDemoData(
   positionType: keyof typeof positionTemplates,
-  facility: string,
+  facility: '小原病院' | '立神リハビリテーション温泉病院',
   count: number,
   startId: number
 ): StaffDetail[] {
