@@ -103,7 +103,7 @@ function Content() {
       flexible: { 新卒: 0.2, 中途: 0.3, パート: 0.5 }
     };
 
-    const strategy = strategies[recruitmentStrategy];
+    const strategy = strategies[recruitmentStrategy as keyof typeof strategies];
     const totalRecruits = retirementPrediction.reduce((sum, year) => sum + year.必要採用数, 0);
 
     return Object.entries(strategy).map(([type, ratio]) => {
