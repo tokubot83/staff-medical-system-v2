@@ -42,12 +42,18 @@ function Content() {
     const staffList = Object.values(staffDatabase).filter(staff => staff.facility === selectedFacility);
     
     // 階層レベル別の分析
-    const levelAnalysis = {};
-    const departmentStats = {};
-    const spanOfControl = {}; // 管理スパン
+    const levelAnalysis: { [key: number]: { count: number; positions: string[] } } = {};
+    const departmentStats: { [key: string]: { count: number; totalStaff: number } } = {};
+    const spanOfControl: { [key: string]: number } = {}; // 管理スパン
     
     // 組織データから階層構造を分析
-    const analyzeHierarchy = (node, level = 1, parentPath = '') => {
+    interface OrgNode {
+      name: string;
+      type: string;
+      children?: OrgNode[];
+    }
+    
+    const analyzeHierarchy = (node: OrgNode, level = 1, parentPath = '') => {
       const currentPath = parentPath ? `${parentPath} > ${node.name}` : node.name;
       
       if (!levelAnalysis[level]) {
