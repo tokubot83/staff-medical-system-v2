@@ -174,7 +174,9 @@ function Content() {
     
     switch (redesignScenario) {
       case 'flatten':
-        projectedMetrics.levels = scenario.targetLevels;
+        if ('targetLevels' in scenario) {
+          projectedMetrics.levels = scenario.targetLevels;
+        }
         projectedMetrics.managementRatio *= 0.7;
         projectedMetrics.efficiency += 15;
         projectedMetrics.decisionSpeed += 30;
