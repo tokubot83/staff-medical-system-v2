@@ -467,7 +467,16 @@ function Content() {
                     <Radar name="現在" dataKey="current" stroke="#EF4444" fill="#EF4444" fillOpacity={0.3} />
                     <Radar name="改編後" dataKey="projected" stroke="#10B981" fill="#10B981" fillOpacity={0.3} />
                     <Legend />
-                    <Tooltip />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: '#ffffff', 
+                        border: '1px solid #e5e7eb', 
+                        borderRadius: '6px',
+                        padding: '10px',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                      }}
+                      wrapperStyle={{ zIndex: 1000 }}
+                    />
                   </RadarChart>
                 </ResponsiveContainer>
               </div>
@@ -486,7 +495,16 @@ function Content() {
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis type="number" domain={[0, 100]} />
                     <YAxis dataKey="department" type="category" width={120} />
-                    <Tooltip />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: '#ffffff', 
+                        border: '1px solid #e5e7eb', 
+                        borderRadius: '6px',
+                        padding: '10px',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                      }}
+                      wrapperStyle={{ zIndex: 1000 }}
+                    />
                     <Legend />
                     <Bar dataKey="impactScore" name="影響度スコア">
                       {departmentImpactAnalysis.slice(0, 10).map((entry, index) => (

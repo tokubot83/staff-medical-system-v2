@@ -266,9 +266,15 @@ function Content() {
                     <YAxis />
                     <Tooltip 
                       formatter={(value: number) => `${value}名`}
-                      contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px' }}
-                      labelStyle={{ color: '#374151', fontWeight: 'bold' }}
+                      contentStyle={{ 
+                        backgroundColor: '#ffffff', 
+                        border: '1px solid #e5e7eb', 
+                        borderRadius: '6px',
+                        padding: '10px',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                      }}
                       labelFormatter={(label) => `${label}年`}
+                      wrapperStyle={{ zIndex: 1000 }}
                     />
                     <Legend />
                     <Area type="monotone" dataKey="定年退職" stackId="1" stroke="#3B82F6" fill="#3B82F6" />
@@ -318,8 +324,14 @@ function Content() {
                           const numValue = typeof value === 'number' ? value : parseFloat(value as string);
                           return `¥${numValue.toLocaleString()}`;
                         }}
-                        contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px' }}
-                        labelStyle={{ color: '#374151', fontWeight: 'bold' }}
+                        contentStyle={{ 
+                          backgroundColor: '#ffffff', 
+                          border: '1px solid #e5e7eb', 
+                          borderRadius: '6px',
+                          padding: '10px',
+                          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                        }}
+                        wrapperStyle={{ zIndex: 1000 }}
                       />
                       <Legend />
                       <Bar dataKey="採用費" fill="#3B82F6" />
@@ -355,8 +367,14 @@ function Content() {
                       </Pie>
                       <Tooltip 
                         formatter={(value: number) => `${value}名`}
-                        contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '6px' }}
-                        labelStyle={{ color: '#374151', fontWeight: 'bold' }}
+                        contentStyle={{ 
+                          backgroundColor: '#ffffff', 
+                          border: '1px solid #e5e7eb', 
+                          borderRadius: '6px',
+                          padding: '10px',
+                          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                        }}
+                        wrapperStyle={{ zIndex: 1000 }}
                       />
                     </PieChart>
                   </ResponsiveContainer>

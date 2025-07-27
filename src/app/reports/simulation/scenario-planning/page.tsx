@@ -422,7 +422,16 @@ function Content() {
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="year" />
                     <YAxis />
-                    <Tooltip />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: '#ffffff', 
+                        border: '1px solid #e5e7eb', 
+                        borderRadius: '6px',
+                        padding: '10px',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                      }}
+                      wrapperStyle={{ zIndex: 1000 }}
+                    />
                     <Legend />
                     <Line type="monotone" dataKey="staffCount" stroke="#8B5CF6" strokeWidth={2} name="スタッフ数" />
                     <Line type="monotone" dataKey="patientDemand" stroke="#3B82F6" strokeWidth={2} name="患者需要" />
@@ -452,7 +461,16 @@ function Content() {
                       <Radar name="現実的" dataKey="realistic" stroke={COLORS.realistic} fill={COLORS.realistic} fillOpacity={0.3} />
                       <Radar name="悲観" dataKey="pessimistic" stroke={COLORS.pessimistic} fill={COLORS.pessimistic} fillOpacity={0.3} />
                       <Legend />
-                      <Tooltip />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: '#ffffff', 
+                          border: '1px solid #e5e7eb', 
+                          borderRadius: '6px',
+                          padding: '10px',
+                          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                        }}
+                        wrapperStyle={{ zIndex: 1000 }}
+                      />
                     </RadarChart>
                   </ResponsiveContainer>
                 </div>
@@ -470,7 +488,17 @@ function Content() {
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="probability" domain={[0, 100]} name="発生確率" unit="%" />
                       <YAxis dataKey="impact" domain={[0, 100]} name="影響度" unit="%" />
-                      <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+                      <Tooltip 
+                        cursor={{ strokeDasharray: '3 3' }}
+                        contentStyle={{ 
+                          backgroundColor: '#ffffff', 
+                          border: '1px solid #e5e7eb', 
+                          borderRadius: '6px',
+                          padding: '10px',
+                          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                        }}
+                        wrapperStyle={{ zIndex: 1000 }}
+                      />
                       <Scatter name="リスク要因" data={riskImpactAnalysis}>
                         {riskImpactAnalysis.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={
@@ -569,7 +597,16 @@ function Content() {
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis type="number" domain={[0, 100]} />
                     <YAxis dataKey="indicator" type="category" width={120} />
-                    <Tooltip />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: '#ffffff', 
+                        border: '1px solid #e5e7eb', 
+                        borderRadius: '6px',
+                        padding: '10px',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                      }}
+                      wrapperStyle={{ zIndex: 1000 }}
+                    />
                     <Legend />
                     <Bar dataKey="current" fill="#94A3B8" name="現在値" />
                     <Bar dataKey="target" fill={scenarios[selectedScenario as keyof typeof scenarios].color} name="目標値" />

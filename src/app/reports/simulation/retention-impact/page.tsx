@@ -379,7 +379,16 @@ function Content() {
                     <XAxis dataKey="month" />
                     <YAxis yAxisId="left" />
                     <YAxis yAxisId="right" orientation="right" />
-                    <Tooltip />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: '#ffffff', 
+                        border: '1px solid #e5e7eb', 
+                        borderRadius: '6px',
+                        padding: '10px',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                      }}
+                      wrapperStyle={{ zIndex: 1000 }}
+                    />
                     <Legend />
                     <Line 
                       yAxisId="left"
@@ -425,7 +434,17 @@ function Content() {
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis type="number" />
                       <YAxis dataKey="name" type="category" width={150} />
-                      <Tooltip />
+                      <Tooltip 
+                        formatter={(value: number) => value.toFixed(1)}
+                        contentStyle={{ 
+                          backgroundColor: '#ffffff', 
+                          border: '1px solid #e5e7eb', 
+                          borderRadius: '6px',
+                          padding: '10px',
+                          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                        }}
+                        wrapperStyle={{ zIndex: 1000 }}
+                      />
                       <Legend />
                       <Bar dataKey="効果スコア" fill="#3B82F6" />
                       <Bar dataKey="コスト効率" fill="#10B981" />

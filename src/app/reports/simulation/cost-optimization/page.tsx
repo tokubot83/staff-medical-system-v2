@@ -410,11 +410,21 @@ function Content() {
                     <XAxis dataKey="year" />
                     <YAxis yAxisId="left" tickFormatter={(value) => `${(value / 100000000).toFixed(1)}億`} />
                     <YAxis yAxisId="right" orientation="right" tickFormatter={(value) => `${value.toFixed(1)}%`} />
-                    <Tooltip formatter={(value, name) => {
-                      const numValue = typeof value === 'number' ? value : parseFloat(value as string);
-                      if (name === '削減率') return `${numValue.toFixed(1)}%`;
-                      return `¥${(numValue / 100000000).toFixed(2)}億`;
-                    }} />
+                    <Tooltip 
+                      formatter={(value, name) => {
+                        const numValue = typeof value === 'number' ? value : parseFloat(value as string);
+                        if (name === '削減率') return `${numValue.toFixed(1)}%`;
+                        return `¥${(numValue / 100000000).toFixed(2)}億`;
+                      }}
+                      contentStyle={{ 
+                        backgroundColor: '#ffffff', 
+                        border: '1px solid #e5e7eb', 
+                        borderRadius: '6px',
+                        padding: '10px',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                      }}
+                      wrapperStyle={{ zIndex: 1000 }}
+                    />
                     <Legend />
                     <Area yAxisId="left" type="monotone" dataKey="削減額" fill="#10B981" fillOpacity={0.3} stroke="#10B981" />
                     <Line yAxisId="left" type="monotone" dataKey="現状維持" stroke="#EF4444" strokeWidth={2} strokeDasharray="5 5" />
@@ -446,10 +456,20 @@ function Content() {
                       stroke="#fff"
                       fill="#8884d8"
                     >
-                      <Tooltip formatter={(value) => {
-                        const numValue = typeof value === 'number' ? value : parseFloat(value as string);
-                        return `¥${(numValue / 1000000).toFixed(1)}M`;
-                      }} />
+                      <Tooltip 
+                        formatter={(value) => {
+                          const numValue = typeof value === 'number' ? value : parseFloat(value as string);
+                          return `¥${(numValue / 1000000).toFixed(1)}M`;
+                        }}
+                        contentStyle={{ 
+                          backgroundColor: '#ffffff', 
+                          border: '1px solid #e5e7eb', 
+                          borderRadius: '6px',
+                          padding: '10px',
+                          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                        }}
+                        wrapperStyle={{ zIndex: 1000 }}
+                      />
                     </Treemap>
                   </ResponsiveContainer>
                 </div>
@@ -470,10 +490,20 @@ function Content() {
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis type="number" tickFormatter={(value) => `${(value / 10000).toFixed(0)}万`} />
                       <YAxis dataKey="position" type="category" width={100} />
-                      <Tooltip formatter={(value) => {
-                        const numValue = typeof value === 'number' ? value : parseFloat(value as string);
-                        return `¥${(numValue / 10000).toFixed(0)}万円`;
-                      }} />
+                      <Tooltip 
+                        formatter={(value) => {
+                          const numValue = typeof value === 'number' ? value : parseFloat(value as string);
+                          return `¥${(numValue / 10000).toFixed(0)}万円`;
+                        }}
+                        contentStyle={{ 
+                          backgroundColor: '#ffffff', 
+                          border: '1px solid #e5e7eb', 
+                          borderRadius: '6px',
+                          padding: '10px',
+                          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                        }}
+                        wrapperStyle={{ zIndex: 1000 }}
+                      />
                       <Bar dataKey="averageCost" fill="#3B82F6">
                         {currentCostAnalysis.positionData.slice(0, 8).map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
