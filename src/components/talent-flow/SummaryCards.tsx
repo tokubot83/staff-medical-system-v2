@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { demoNewEmployees, demoRiskEmployees } from '@/app/data/demoTalentFlowData';
 
 interface SummaryCardsProps {
   facility: 'all' | 'obara' | 'tategami';
