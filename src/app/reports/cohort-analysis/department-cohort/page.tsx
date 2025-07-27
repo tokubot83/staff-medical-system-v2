@@ -81,12 +81,19 @@ function Content() {
       }
 
       const avgAge = deptStaff.reduce((sum, s) => sum + s.age, 0) / deptStaff.length;
-      const avgTenure = deptStaff.reduce((sum, s) => sum + s.yearsOfService, 0) / deptStaff.length;
-      const avgPerformance = deptStaff.reduce((sum, s) => sum + (s.performanceScore || 3), 0) / deptStaff.length;
-      const avgStress = deptStaff.reduce((sum, s) => sum + (s.stressLevel || 50), 0) / deptStaff.length;
-      const avgEngagement = deptStaff.reduce((sum, s) => sum + (s.engagementScore || 70), 0) / deptStaff.length;
-      const trainingCompletion = deptStaff.filter(s => s.trainingProgress && s.trainingProgress > 80).length / deptStaff.length * 100;
-      const leadershipPotential = deptStaff.filter(s => s.leadershipScore && s.leadershipScore > 3.5).length / deptStaff.length * 100;
+      // Calculate tenure from tenure string (e.g., "5年3ヶ月" -> 5.25)
+      const avgTenure = deptStaff.reduce((sum, s) => {
+        const tenureMatch = s.tenure.match(/(\d+)年/);
+        const years = tenureMatch ? parseInt(tenureMatch[1]) : 0;
+        return sum + years;
+      }, 0) / deptStaff.length;
+      const avgPerformance = deptStaff.reduce((sum, s) => sum + (s.evaluationData?.performance || 75), 0) / deptStaff.length;
+      const avgStress = deptStaff.reduce((sum, s) => sum + (s.stressIndex || 50), 0) / deptStaff.length;
+      const avgEngagement = deptStaff.reduce((sum, s) => sum + (s.engagement || 70), 0) / deptStaff.length;
+      // Estimate training completion based on training history
+      const trainingCompletion = deptStaff.filter(s => s.trainingHistory && s.trainingHistory.length > 3).length / deptStaff.length * 100;
+      // Estimate leadership potential based on evaluation growth score
+      const leadershipPotential = deptStaff.filter(s => s.evaluationData && s.evaluationData.growth > 3.5).length / deptStaff.length * 100;
 
       return {
         department: dept,
@@ -94,7 +101,7 @@ function Content() {
         averageAge: Math.round(avgAge),
         averageTenure: Math.round(avgTenure * 10) / 10,
         retentionRate: 85 + Math.random() * 10, // シミュレーション値
-        performanceScore: Math.round(avgPerformance * 10) / 10,
+        performanceScore: Math.round(avgPerformance / 20) / 10, // Convert 0-100 to 0-5 scale
         stressLevel: Math.round(avgStress),
         engagementScore: Math.round(avgEngagement),
         trainingCompletionRate: Math.round(trainingCompletion),
@@ -123,7 +130,7 @@ function Content() {
         metrics[0][dept] = deptData.averageAge;
         metrics[1][dept] = deptData.averageTenure;
         metrics[2][dept] = deptData.retentionRate;
-        metrics[3][dept] = deptData.performanceScore * 20; // スケール調整
+        metrics[3][dept] = deptData.performanceScore * 20; // スケール調整 (0-5 to 0-100)
         metrics[4][dept] = 100 - deptData.stressLevel; // 反転して良い方を高く
         metrics[5][dept] = deptData.engagementScore;
         metrics[6][dept] = deptData.trainingCompletionRate;
@@ -428,7 +435,7 @@ function Content() {
                               {selectedDepartments.map(dept => {
                                 const data = departmentCohortData.find(d => d.department === dept);
                                 return (
-                                  <td key={dept} className={`px-6 py-4 whitespace-nowrap text-sm text-center font-semibold ${getMetricColor(data?.performanceScore || 0 * 20, 'パフォーマンス')}`}>
+                                  <td key={dept} className={`px-6 py-4 whitespace-nowrap text-sm text-center font-semibold ${getMetricColor((data?.performanceScore || 0) * 20, 'パフォーマンス')}`}>
                                     {data?.performanceScore.toFixed(1) || '0.0'}
                                   </td>
                                 );
