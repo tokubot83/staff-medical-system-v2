@@ -58,6 +58,8 @@ export interface StaffDetail {
     hours: number;
     score?: number;
     certificate?: boolean;
+    category?: string;
+    evaluation?: string;
   }[];
   
   // 配属履歴
