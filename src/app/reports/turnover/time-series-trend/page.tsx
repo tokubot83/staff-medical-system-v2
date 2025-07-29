@@ -76,11 +76,12 @@ function TimeSeriesTrendContent() {
   const [trendData] = useState(generateTrendData());
   const [selectedView, setSelectedView] = useState('overall');
 
-  // 全体トレンドチャート
+  // 全体トレンドチャート（混合チャート用）
   const overallTrendChart = {
     labels: trendData.overall.map(d => d.month),
     datasets: [
       {
+        type: 'line' as const,
         label: '離職率 (%)',
         data: trendData.overall.map(d => d.rate),
         borderColor: 'rgb(239, 68, 68)',
@@ -89,9 +90,9 @@ function TimeSeriesTrendContent() {
         yAxisID: 'y'
       },
       {
+        type: 'bar' as const,
         label: '離職者数',
         data: trendData.overall.map(d => d.count),
-        type: 'bar' as const,
         backgroundColor: 'rgba(59, 130, 246, 0.5)',
         yAxisID: 'y1'
       }
@@ -257,7 +258,7 @@ function TimeSeriesTrendContent() {
           {selectedView === 'overall' && (
             <div>
               <h3 className="text-lg font-semibold mb-4">離職率と離職者数の推移</h3>
-              <Line data={overallTrendChart} options={chartOptions} />
+              <Bar data={overallTrendChart} options={chartOptions} />
             </div>
           )}
           
