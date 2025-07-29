@@ -11,12 +11,84 @@ import { BackToReportsButton } from '@/components/BackToReportsButton';
 
 const reports = [
   {
+    id: 'real-time-dashboard',
+    title: 'リアルタイムダッシュボード',
+    path: '/reports/basic-metrics/real-time-dashboard',
+    description: '出勤状況、シフト充足率、緊急対応力をリアルタイムで監視します',
+    icon: '📡',
+    bgColor: 'bg-green-500'
+  },
+  {
+    id: 'predictive-analytics',
+    title: '予測的人員分析',
+    path: '/reports/basic-metrics/predictive-analytics',
+    description: 'AI活用による需要予測、欠勤予測、採用必要数を分析します',
+    icon: '🔮',
+    bgColor: 'bg-purple-500'
+  },
+  {
+    id: 'diversity-inclusion',
+    title: 'ダイバーシティ＆インクルージョン',
+    path: '/reports/basic-metrics/diversity-inclusion',
+    description: '性別、年齢、国籍の多様性と障がい者雇用状況を確認します',
+    icon: '🌈',
+    bgColor: 'bg-indigo-500'
+  },
+  {
+    id: 'compliance',
+    title: 'コンプライアンス指標',
+    path: '/reports/basic-metrics/compliance',
+    description: '労働法規、資格要件、安全衛生の遵守状況を管理します',
+    icon: '⚖️',
+    bgColor: 'bg-blue-500'
+  },
+  {
+    id: 'productivity',
+    title: '生産性指標',
+    path: '/reports/basic-metrics/productivity',
+    description: '一人当たり売上、付加価値分析、イノベーション指標を確認します',
+    icon: '⚡',
+    bgColor: 'bg-yellow-500'
+  },
+  {
+    id: 'engagement',
+    title: 'エンゲージメント指標',
+    path: '/reports/basic-metrics/engagement',
+    description: '従業員満足度、eNPS、定着意向、モチベーションを測定します',
+    icon: '💗',
+    bgColor: 'bg-pink-500'
+  },
+  {
+    id: 'cost-analysis',
+    title: 'コスト分析指標',
+    path: '/reports/basic-metrics/cost-analysis',
+    description: '人件費率、採用コスト、教育投資ROI、離職コストを分析します',
+    icon: '💰',
+    bgColor: 'bg-orange-500'
+  },
+  {
+    id: 'benchmark',
+    title: 'ベンチマーク指標',
+    path: '/reports/basic-metrics/benchmark',
+    description: '業界比較、地域比較、ベストプラクティス分析を行います',
+    icon: '🏆',
+    bgColor: 'bg-cyan-500'
+  },
+  {
+    id: 'integrated-assessment',
+    title: '統合的指標アセスメント',
+    path: '/reports/basic-metrics/integrated-assessment',
+    description: 'KPI統合管理、予測アラート、バランススコアカードを提供します',
+    icon: '🎯',
+    bgColor: 'bg-red-500'
+  },
+  {
     id: 'basic',
-    title: '基本指標',
+    title: '基本統計',
     path: '/metrics/basic',
     description: '総職員数、部門別人員構成など基本的な統計データを確認します',
     icon: '📊',
-    bgColor: 'bg-green-500'
+    bgColor: 'bg-gray-500'
   },
   {
     id: 'quality',
@@ -24,7 +96,7 @@ const reports = [
     path: '/metrics/quality',
     description: '職員満足度、スキル評価、資格保有状況を分析します',
     icon: '⭐',
-    bgColor: 'bg-blue-500'
+    bgColor: 'bg-gray-500'
   },
   {
     id: 'growth',
@@ -32,7 +104,7 @@ const reports = [
     path: '/metrics/growth',
     description: '研修受講率、スキル向上度、キャリア開発状況を確認します',
     icon: '📈',
-    bgColor: 'bg-purple-500'
+    bgColor: 'bg-gray-500'
   },
   {
     id: 'risk',
@@ -40,15 +112,15 @@ const reports = [
     path: '/metrics/risk',
     description: '離職リスク、コンプライアンス、要注意職員の状況を管理します',
     icon: '⚠️',
-    bgColor: 'bg-yellow-500'
+    bgColor: 'bg-gray-500'
   },
   {
     id: 'efficiency',
     title: '組織効率',
     path: '/metrics/efficiency',
     description: '労働生産性、業務効率、緊急対応事項を確認します',
-    icon: '⚡',
-    bgColor: 'bg-red-500'
+    icon: '🚀',
+    bgColor: 'bg-gray-500'
   }
 ];
 
