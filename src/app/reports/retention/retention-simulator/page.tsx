@@ -9,7 +9,7 @@ import CategoryBackButton from '@/components/reports/CategoryBackButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 import DataComment from '@/components/DataComment';
 import { BackToReportsButton } from '@/components/BackToReportsButton';
-import { Line, Bar } from 'react-chartjs-2';
+import { Chart, Line, Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -295,7 +295,7 @@ function RetentionSimulatorContent() {
                 </div>
                 <div>
                   <h4 className="font-medium mb-2">投資対効果（ROI）</h4>
-                  <Bar data={roiChartData!} options={{
+                  <Chart type='bar' data={roiChartData!} options={{
                     scales: {
                       y: {
                         type: 'linear',
