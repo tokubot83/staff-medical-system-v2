@@ -251,15 +251,15 @@ function ExitFeedbackContent() {
                 <h3 className="text-lg font-semibold mb-4">代表的なコメント</h3>
                 <div className="space-y-4">
                   <div className="border-l-4 border-red-500 pl-4">
-                    <p className="text-sm text-gray-600 italic">"残業が多く、家族との時間が取れない"</p>
+                    <p className="text-sm text-gray-600 italic">&ldquo;残業が多く、家族との時間が取れない&rdquo;</p>
                     <p className="text-xs text-gray-500 mt-1">看護部・30代</p>
                   </div>
                   <div className="border-l-4 border-red-500 pl-4">
-                    <p className="text-sm text-gray-600 italic">"給与が他院と比較して低い"</p>
+                    <p className="text-sm text-gray-600 italic">&ldquo;給与が他院と比較して低い&rdquo;</p>
                     <p className="text-xs text-gray-500 mt-1">医療技術部・20代</p>
                   </div>
                   <div className="border-l-4 border-green-500 pl-4">
-                    <p className="text-sm text-gray-600 italic">"同僚との関係は良好だった"</p>
+                    <p className="text-sm text-gray-600 italic">&ldquo;同僚との関係は良好だった&rdquo;</p>
                     <p className="text-xs text-gray-500 mt-1">リハビリ部・40代</p>
                   </div>
                 </div>

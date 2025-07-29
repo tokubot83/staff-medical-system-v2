@@ -99,3 +99,27 @@ export const MetricWithComment: React.FC<MetricWithCommentProps> = ({
     </div>
   );
 };
+
+// シンプルなDataCommentコンポーネント（デフォルトエクスポート）
+interface SimpleDataCommentProps {
+  comment: string;
+  details?: string[];
+}
+
+const DataComment: React.FC<SimpleDataCommentProps> = ({ comment, details }) => {
+  return (
+    <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mt-8">
+      <h3 className="text-lg font-semibold text-blue-900 mb-2">分析インサイト</h3>
+      <p className="text-blue-800 mb-3">{comment}</p>
+      {details && details.length > 0 && (
+        <ul className="list-disc list-inside text-blue-700 space-y-1">
+          {details.map((detail, index) => (
+            <li key={index}>{detail}</li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
+
+export default DataComment;
