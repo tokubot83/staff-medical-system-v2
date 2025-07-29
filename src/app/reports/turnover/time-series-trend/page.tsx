@@ -320,7 +320,7 @@ function TimeSeriesTrendContent() {
         />
       </div>
       <ScrollToTopButton />
-      <CategoryBackButton categoryPath="/reports/turnover" />
+      <CategoryBackButton />
       <BackToReportsButton />
       <DashboardButton />
     </div>

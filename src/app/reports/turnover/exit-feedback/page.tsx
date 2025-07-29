@@ -387,7 +387,7 @@ function ExitFeedbackContent() {
         />
       </div>
       <ScrollToTopButton />
-      <CategoryBackButton categoryPath="/reports/turnover" />
+      <CategoryBackButton />
       <BackToReportsButton />
       <DashboardButton />
     </div>
