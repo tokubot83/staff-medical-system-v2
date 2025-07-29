@@ -85,7 +85,7 @@ const reports = [
   {
     id: 'basic',
     title: '基本統計',
-    path: '/metrics/basic',
+    path: '/reports/basic-metrics/basic-statistics',
     description: '総職員数、部門別人員構成など基本的な統計データを確認します',
     icon: '📊',
     bgColor: 'bg-gray-500'
@@ -93,7 +93,7 @@ const reports = [
   {
     id: 'quality',
     title: '人材の質',
-    path: '/metrics/quality',
+    path: '/reports/basic-metrics/talent-quality',
     description: '職員満足度、スキル評価、資格保有状況を分析します',
     icon: '⭐',
     bgColor: 'bg-gray-500'
@@ -101,7 +101,7 @@ const reports = [
   {
     id: 'growth',
     title: '人材の成長',
-    path: '/metrics/growth',
+    path: '/reports/basic-metrics/talent-growth',
     description: '研修受講率、スキル向上度、キャリア開発状況を確認します',
     icon: '📈',
     bgColor: 'bg-gray-500'
@@ -109,7 +109,7 @@ const reports = [
   {
     id: 'risk',
     title: 'リスク管理',
-    path: '/metrics/risk',
+    path: '/reports/basic-metrics/risk-management',
     description: '離職リスク、コンプライアンス、要注意職員の状況を管理します',
     icon: '⚠️',
     bgColor: 'bg-gray-500'
@@ -117,7 +117,7 @@ const reports = [
   {
     id: 'efficiency',
     title: '組織効率',
-    path: '/metrics/efficiency',
+    path: '/reports/basic-metrics/organizational-efficiency',
     description: '労働生産性、業務効率、緊急対応事項を確認します',
     icon: '🚀',
     bgColor: 'bg-gray-500'

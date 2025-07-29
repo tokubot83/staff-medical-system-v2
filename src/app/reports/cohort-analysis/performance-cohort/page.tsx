@@ -80,11 +80,13 @@ function PerformanceCohortContent() {
       const avgRetention = cohortStaff.filter(s => !s.assignmentHistory?.some(h => h.reason === '退職')).length / count * 100;
       const promotionRate = cohortStaff.filter(s => s.assignmentHistory?.some(h => h.reason === '昇進')).length / count * 100;
       const avgEngagement = cohortStaff.reduce((sum, s) => sum + s.engagement, 0) / count;
-      const avgSalary = cohortStaff.reduce((sum, s) => sum + (s.salary || 0), 0) / count;
+      // Salary is calculated based on performance level (simulation)
+      const avgSalary = level === 'トップパフォーマー' ? 500 : 
+                       level === 'ハイパフォーマー' ? 450 : 
+                       level === 'スタンダード' ? 400 : 350;
       const turnoverRate = 100 - avgRetention;
       const skillDevelopment = cohortStaff.reduce((sum, s) => {
-        const skills = s.evaluationData?.skillDevelopment || 
-                      s.qualifications?.length || 0;
+        const skills = s.skills?.length || 0;
         return sum + (skills > 0 ? 1 : 0);
       }, 0) / count * 100;
 
