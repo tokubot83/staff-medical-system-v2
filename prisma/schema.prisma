@@ -1,0 +1,288 @@
+// 医療法人厚生会 統合データベーススキーマ
+// 3つのシステム（staff-medical-system、staff-chart-system、voicedrive-v100）で共通利用
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 施設マスタ
+model Facility {
+  id        String   @id @default(cuid())
+  code      String   @unique
+  name      String
+  type      String   // hospital, clinic, nursing_home
+  address   String
+  phone     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  departments Department[]
+  employees   Employee[]
+  
+  @@map("facilities")
+}
+
+// 部署マスタ
+model Department {
+  id         String   @id @default(cuid())
+  code       String   @unique
+  name       String
+  facilityId String
+  parentId   String?  // 親部署ID（階層構造）
+  level      Int      // 階層レベル
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  facility   Facility     @relation(fields: [facilityId], references: [id])
+  parent     Department?  @relation("DepartmentHierarchy", fields: [parentId], references: [id])
+  children   Department[] @relation("DepartmentHierarchy")
+  employees  Employee[]
+  
+  @@map("departments")
+}
+
+// 役職マスタ
+model Position {
+  id           String   @id @default(cuid())
+  code         String   @unique
+  name         String
+  level        Int      // 職位レベル（権限管理用）
+  accountType  String   // CHAIRMAN, DIRECTOR, DEPARTMENT_HEAD等
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  employees Employee[]
+  
+  @@map("positions")
+}
+
+// 職員マスタ（全システム共通）
+model Employee {
+  id              String    @id @default(cuid())
+  employeeCode    String    @unique
+  name            String
+  nameKana        String
+  email           String    @unique
+  phone           String
+  emergencyPhone  String?
+  address         String?
+  birthDate       DateTime
+  gender          String
+  hireDate        DateTime
+  departmentId    String
+  positionId      String
+  facilityId      String
+  supervisorId    String?   // 上司のID
+  status          String    @default("active") // active, leave, retired
+  retiredAt       DateTime?
+  permissionLevel Int       @default(1) // 1-13の権限レベル
+  avatar          String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  // リレーション
+  department   Department    @relation(fields: [departmentId], references: [id])
+  position     Position      @relation(fields: [positionId], references: [id])
+  facility     Facility      @relation(fields: [facilityId], references: [id])
+  supervisor   Employee?     @relation("EmployeeHierarchy", fields: [supervisorId], references: [id])
+  subordinates Employee[]    @relation("EmployeeHierarchy")
+  
+  // 関連データ
+  evaluations       Evaluation[]
+  interviews        Interview[]
+  trainings         Training[]
+  healthRecords     HealthRecord[]
+  skills            EmployeeSkill[]
+  assignmentHistory AssignmentHistory[]
+  systemAccounts    SystemAccount[]
+  
+  @@index([departmentId, facilityId])
+  @@index([status])
+  @@map("employees")
+}
+
+// 評価データ
+model Evaluation {
+  id               String   @id @default(cuid())
+  employeeId       String
+  evaluatorId      String
+  period           String   // 2024上期、2024下期等
+  overallScore     String   // S, A, B, C, D
+  performanceScore Float    // 0-100
+  skillScore       Float    // 0-100
+  teamworkScore    Float    // 0-100
+  leadershipScore  Float?   // 0-100（役職者のみ）
+  growthScore      Float    // 0-100
+  comments         String?
+  status           String   @default("draft") // draft, submitted, approved
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  
+  employee  Employee @relation(fields: [employeeId], references: [id])
+  evaluator Employee @relation("EvaluatorRelation", fields: [evaluatorId], references: [id])
+  
+  @@unique([employeeId, period])
+  @@map("evaluations")
+}
+
+// 面談記録
+model Interview {
+  id               String   @id @default(cuid())
+  employeeId       String
+  interviewerId    String
+  date             DateTime
+  type             String   // regular, career, health, exit
+  topics           String[] // 話題のリスト
+  satisfaction     Float?   // 0-100
+  stressLevel      Float?   // 0-100
+  engagement       Float?   // 0-100
+  notes            String?
+  followUpRequired Boolean  @default(false)
+  nextDate         DateTime?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  
+  employee     Employee @relation(fields: [employeeId], references: [id])
+  interviewer  Employee @relation("InterviewerRelation", fields: [interviewerId], references: [id])
+  
+  @@map("interviews")
+}
+
+// 研修履歴
+model Training {
+  id              String   @id @default(cuid())
+  employeeId      String
+  trainingName    String
+  category        String   // medical, safety, management, skill
+  provider        String?  // 研修提供者
+  date            DateTime
+  hours           Float
+  score           Float?   // テストスコア
+  certificate     Boolean  @default(false)
+  certificateNo   String?
+  effectiveness   Float?   // 効果測定結果
+  expiryDate      DateTime? // 資格の有効期限
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  employee Employee @relation(fields: [employeeId], references: [id])
+  
+  @@map("trainings")
+}
+
+// 健康管理
+model HealthRecord {
+  id                  String   @id @default(cuid())
+  employeeId          String
+  checkupDate         DateTime
+  healthStatus        String   // good, caution, alert
+  healthScore         Float    // 0-100
+  stressIndex         Float    // 0-100
+  bmi                 Float?
+  bloodPressure       String?
+  risks               String[] // 健康リスク項目
+  recommendations     String[] // 推奨事項
+  nextCheckupDate     DateTime
+  occupationalDoctor  String?  // 産業医所見
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  
+  employee Employee @relation(fields: [employeeId], references: [id])
+  
+  @@map("health_records")
+}
+
+// スキル管理
+model Skill {
+  id         String   @id @default(cuid())
+  code       String   @unique
+  name       String
+  category   String   // medical, nursing, administrative, it
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  employees EmployeeSkill[]
+  
+  @@map("skills")
+}
+
+// 職員スキル（中間テーブル）
+model EmployeeSkill {
+  id           String   @id @default(cuid())
+  employeeId   String
+  skillId      String
+  level        Int      // 1-5
+  certifiedAt  DateTime?
+  certifiedBy  String?
+  expiryDate   DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  employee Employee @relation(fields: [employeeId], references: [id])
+  skill    Skill    @relation(fields: [skillId], references: [id])
+  
+  @@unique([employeeId, skillId])
+  @@map("employee_skills")
+}
+
+// 配属履歴
+model AssignmentHistory {
+  id           String   @id @default(cuid())
+  employeeId   String
+  departmentId String
+  positionId   String
+  facilityId   String
+  startDate    DateTime
+  endDate      DateTime?
+  reason       String   // promotion, transfer, reorganization
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  employee   Employee   @relation(fields: [employeeId], references: [id])
+  department Department @relation(fields: [departmentId], references: [id])
+  position   Position   @relation(fields: [positionId], references: [id])
+  facility   Facility   @relation(fields: [facilityId], references: [id])
+  
+  @@map("assignment_history")
+}
+
+// システムアカウント（各システムとの連携用）
+model SystemAccount {
+  id           String   @id @default(cuid())
+  employeeId   String
+  systemName   String   // staff-medical, staff-chart, voicedrive
+  accountId    String   // 各システムでのユーザーID
+  isActive     Boolean  @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  employee Employee @relation(fields: [employeeId], references: [id])
+  
+  @@unique([employeeId, systemName])
+  @@unique([systemName, accountId])
+  @@map("system_accounts")
+}
+
+// 監査ログ（データ変更履歴）
+model AuditLog {
+  id          String   @id @default(cuid())
+  tableName   String
+  recordId    String
+  action      String   // create, update, delete
+  userId      String
+  changes     Json     // 変更内容のJSON
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+  
+  @@index([tableName, recordId])
+  @@index([userId])
+  @@map("audit_logs")
+}
