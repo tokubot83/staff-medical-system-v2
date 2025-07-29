@@ -9,7 +9,7 @@ import CategoryBackButton from '@/components/reports/CategoryBackButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 import DataComment from '@/components/DataComment';
 import { BackToReportsButton } from '@/components/BackToReportsButton';
-import { Line, Bar } from 'react-chartjs-2';
+import { Chart, Line, Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -258,7 +258,7 @@ function TimeSeriesTrendContent() {
           {selectedView === 'overall' && (
             <div>
               <h3 className="text-lg font-semibold mb-4">離職率と離職者数の推移</h3>
-              <Bar data={overallTrendChart} options={chartOptions} />
+              <Chart type='bar' data={overallTrendChart} options={chartOptions} />
             </div>
           )}
           
