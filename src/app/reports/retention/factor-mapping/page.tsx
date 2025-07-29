@@ -155,7 +155,7 @@ function FactorMappingContent() {
         label: '影響度スコア',
         data: allFactors.slice(0, 10).map(f => f.impact),
         backgroundColor: allFactors.slice(0, 10).map(f => {
-          const colors = {
+          const colors: { [key: string]: string } = {
             '職場環境': 'rgba(239, 68, 68, 0.6)',
             '待遇・条件': 'rgba(59, 130, 246, 0.6)',
             '成長・キャリア': 'rgba(34, 197, 94, 0.6)',
