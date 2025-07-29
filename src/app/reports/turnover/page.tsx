@@ -72,6 +72,38 @@ const reports = [
     description: 'データに基づく具体的な改善アクション',
     icon: '🎯',
     gradient: 'from-teal-500 to-teal-600'
+  },
+  {
+    id: 'time-series-trend',
+    title: '時系列トレンド分析',
+    path: '/reports/turnover/time-series-trend',
+    description: '離職率の時系列変化とトレンド予測',
+    icon: '📈',
+    gradient: 'from-cyan-500 to-cyan-600'
+  },
+  {
+    id: 'cost-impact',
+    title: '離職コスト影響分析',
+    path: '/reports/turnover/cost-impact',
+    description: '離職による財務的影響とROI分析',
+    icon: '💰',
+    gradient: 'from-amber-500 to-amber-600'
+  },
+  {
+    id: 'exit-feedback',
+    title: '退職者フィードバック分析',
+    path: '/reports/turnover/exit-feedback',
+    description: '退職者の声から課題を抽出',
+    icon: '💭',
+    gradient: 'from-violet-500 to-violet-600'
+  },
+  {
+    id: 'benchmark-best-practices',
+    title: 'ベンチマーク・ベストプラクティス',
+    path: '/reports/turnover/benchmark-best-practices',
+    description: '業界トップパフォーマーとの比較',
+    icon: '🏆',
+    gradient: 'from-emerald-500 to-emerald-600'
   }
 ];
 
