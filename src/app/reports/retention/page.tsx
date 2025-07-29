@@ -88,6 +88,30 @@ const reports = [
     description: '離職要因の統計的な影響度を分析',
     icon: '📊',
     gradient: 'from-gray-500 to-gray-600'
+  },
+  {
+    id: 'factor-mapping',
+    title: '定着要因マッピング',
+    path: '/reports/retention/factor-mapping',
+    description: '定着に影響する要因を網羅的に分析',
+    icon: '🗺️',
+    gradient: 'from-cyan-500 to-cyan-600'
+  },
+  {
+    id: 'retention-simulator',
+    title: '定着シミュレーター',
+    path: '/reports/retention/retention-simulator',
+    description: '施策導入による定着率変化をシミュレーション',
+    icon: '🔮',
+    gradient: 'from-violet-500 to-violet-600'
+  },
+  {
+    id: 'turnover-contagion',
+    title: '離職連鎖分析',
+    path: '/reports/retention/turnover-contagion',
+    description: '一人の離職が周囲に与える影響を分析',
+    icon: '🔗',
+    gradient: 'from-amber-500 to-amber-600'
   }
 ];
 
