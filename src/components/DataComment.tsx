@@ -106,7 +106,7 @@ interface SimpleDataCommentProps {
   details?: string[];
 }
 
-const DataComment: React.FC<SimpleDataCommentProps> = ({ comment, details }) => {
+const SimpleDataComment: React.FC<SimpleDataCommentProps> = ({ comment, details }) => {
   return (
     <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mt-8">
       <h3 className="text-lg font-semibold text-blue-900 mb-2">分析インサイト</h3>
@@ -122,4 +122,4 @@ const DataComment: React.FC<SimpleDataCommentProps> = ({ comment, details }) => 
   );
 };
 
-export default DataComment;
+export default SimpleDataComment;
