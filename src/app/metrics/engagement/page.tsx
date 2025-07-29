@@ -36,7 +36,9 @@ import {
   Target,
   Award,
   ThumbsUp,
-  MessageCircle
+  MessageCircle,
+  CheckCircle,
+  AlertTriangle
 } from 'lucide-react'
 
 export default function EngagementMetrics() {
