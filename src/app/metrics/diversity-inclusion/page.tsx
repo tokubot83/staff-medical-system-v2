@@ -132,7 +132,7 @@ export default function DiversityInclusion() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">10%</div>
-            <Progress value={10} max={15} className="mt-2" />
+            <Progress value={(10 / 15) * 100} className="mt-2" />
             <p className="text-xs text-muted-foreground mt-1">5ヶ国から採用</p>
           </CardContent>
         </Card>
