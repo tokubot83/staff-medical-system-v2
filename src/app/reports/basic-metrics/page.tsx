@@ -83,6 +83,14 @@ const reports = [
     bgColor: 'bg-red-500'
   },
   {
+    id: 'two-axis-evaluation',
+    title: '2軸評価分析',
+    path: '/reports/two-axis-evaluation',
+    description: '施設内評価と法人内評価による多角的な人事評価分析を行います',
+    icon: '📐',
+    bgColor: 'bg-purple-600'
+  },
+  {
     id: 'basic',
     title: '基本統計',
     path: '/reports/basic-metrics/basic-statistics',
