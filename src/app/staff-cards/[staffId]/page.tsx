@@ -10,7 +10,7 @@ import styles from '../StaffCards.module.css'
 import DashboardButton from '@/components/DashboardButton'
 import ScrollToTopButton from '@/components/ScrollToTopButton'
 import BackToStaffCardsButton from '@/components/BackToStaffCardsButton'
-import { TwoAxisEvaluationCard } from '@/components/evaluation/TwoAxisEvaluationCard'
+import { TwoAxisEvaluationSummary } from '@/components/evaluation/TwoAxisEvaluationSummary'
 import { estimateTwoAxisEvaluation } from '@/utils/twoAxisEvaluationUtils'
 import {
   Chart as ChartJS,
@@ -203,7 +203,7 @@ function BasicInfoTab({ selectedStaff }: { selectedStaff: any }) {
         </div>
 
         <div style={{ marginTop: '24px', marginBottom: '24px' }}>
-          <TwoAxisEvaluationCard
+          <TwoAxisEvaluationSummary
             facilityScore={twoAxisEvaluation.facilityScore}
             corporateScore={twoAxisEvaluation.corporateScore}
             overallScore={twoAxisEvaluation.overallScore}

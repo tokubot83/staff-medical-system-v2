@@ -1,6 +1,13 @@
 import React from 'react'
 import styles from './TwoAxisEvaluationMatrix.module.css'
 
+interface TwoAxisEvaluationMatrixDisplayProps {
+  facilityScore: 'S' | 'A' | 'B' | 'C' | 'D'
+  corporateScore: 'S' | 'A' | 'B' | 'C' | 'D'
+  showGrid?: boolean
+  size?: 'small' | 'medium' | 'large'
+}
+
 interface TwoAxisEvaluationMatrixProps {
   facilityScore: 'S' | 'A' | 'B' | 'C' | 'D'
   corporateScore: 'S' | 'A' | 'B' | 'C' | 'D'
@@ -46,7 +53,7 @@ const cellColors = {
   'D': '#9E9E9E'
 }
 
-export const TwoAxisEvaluationMatrix: React.FC<TwoAxisEvaluationMatrixProps> = ({
+export const TwoAxisEvaluationMatrixDisplay: React.FC<TwoAxisEvaluationMatrixDisplayProps> = ({
   facilityScore,
   corporateScore,
   showGrid = true,

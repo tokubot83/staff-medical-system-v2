@@ -7,8 +7,8 @@ import { useRouter } from 'next/navigation'
 import { Interview } from '@/types/interview'
 import { getInterviewsByStaffId } from '@/data/mockInterviews'
 import { TwoAxisEvaluationSection } from '@/components/evaluation'
-import { TwoAxisEvaluationCard } from '@/components/evaluation/TwoAxisEvaluationCard'
-import { TwoAxisEvaluationMatrix } from '@/components/evaluation/TwoAxisEvaluationMatrix'
+import { TwoAxisEvaluationSummary } from '@/components/evaluation/TwoAxisEvaluationSummary'
+import { TwoAxisEvaluationMatrixDisplay } from '@/components/evaluation/TwoAxisEvaluationMatrix'
 import { estimateTwoAxisEvaluation } from '@/utils/twoAxisEvaluationUtils'
 
 // 総合分析タブコンポーネント
@@ -486,7 +486,7 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
           </div>
           
           <div style={{ marginBottom: '24px' }}>
-            <TwoAxisEvaluationCard
+            <TwoAxisEvaluationSummary
               facilityScore={twoAxisEvaluation.facilityScore}
               corporateScore={twoAxisEvaluation.corporateScore}
               overallScore={twoAxisEvaluation.overallScore}
@@ -738,7 +738,7 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
       {/* 2軸評価システム - 新デザイン */}
       <div className={styles.sectionCard} style={{ marginTop: '24px' }}>
         <h3>2軸評価マトリックス</h3>
-        <TwoAxisEvaluationMatrix
+        <TwoAxisEvaluationMatrixDisplay
           facilityScore={twoAxisEvaluation.facilityScore}
           corporateScore={twoAxisEvaluation.corporateScore}
           showGrid={true}
