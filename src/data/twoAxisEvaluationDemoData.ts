@@ -315,29 +315,6 @@ export const demoEvaluationAnalyses: Record<string, EvaluationAnalysis> = {
         finalEval: 'C',
       },
     ],
-    evaluationHistory: [
-      {
-        period: '2024-H2',
-        score: 78.5,
-        facilityEval: 'A',
-        corporateEval: 'B',
-        finalEval: 'A',
-      },
-      {
-        period: '2024-H1',
-        score: 76.0,
-        facilityEval: 'A',
-        corporateEval: 'C',
-        finalEval: 'B',
-      },
-      {
-        period: '2023-H2',
-        score: 73.5,
-        facilityEval: 'B',
-        corporateEval: 'C',
-        finalEval: 'C',
-      },
-    ],
     growthAnalysis: {
       scoreTrend: '上昇傾向（+2.5点）',
       strengthArea: '安定した業務遂行',
