@@ -93,8 +93,11 @@ model Employee {
   subordinates Employee[]    @relation("EmployeeHierarchy")
   
   // 関連データ
-  evaluations       Evaluation[]
-  interviews        Interview[]
+  evaluations        Evaluation[]
+  evaluatorFor       Evaluation[] @relation("EvaluatorRelation")
+  twoAxisEvaluations TwoAxisEvaluation[]
+  interviews  Interview[]
+  interviewsAsInterviewer Interview[] @relation("InterviewerRelation")
   trainings         Training[]
   healthRecords     HealthRecord[]
   skills            EmployeeSkill[]
@@ -126,8 +129,50 @@ model Evaluation {
   employee  Employee @relation(fields: [employeeId], references: [id])
   evaluator Employee @relation("EvaluatorRelation", fields: [evaluatorId], references: [id])
   
+  // 2軸評価との関連
+  twoAxisEvaluations TwoAxisEvaluation[]
+  
   @@unique([employeeId, period])
   @@map("evaluations")
+}
+
+// 2軸評価データ
+model TwoAxisEvaluation {
+  id                   String   @id @default(cuid())
+  employeeId           String
+  evaluationId         String
+  evaluationPeriod     String   // 2024-H2等
+  score                Float    // 評価シート点数 (0-100)
+  facilityRank         Int      // 施設内順位
+  facilityTotal        Int      // 施設内総数
+  facilityEvaluation   String   // S,A,B,C,D
+  facilityPercentile    Float    // 施設内パーセンタイル
+  corporateRank        Int      // 法人内順位
+  corporateTotal       Int      // 法人内総数
+  corporateEvaluation  String   // S,A,B,C,D
+  corporatePercentile  Float    // 法人内パーセンタイル
+  finalEvaluation      String   // S+,S,A+,A,B,C,D
+  jobCategory          String   // 職種（看護職、介護職等）
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  
+  employee    Employee   @relation(fields: [employeeId], references: [id])
+  evaluation  Evaluation @relation(fields: [evaluationId], references: [id])
+  
+  @@unique([employeeId, evaluationPeriod])
+  @@index([jobCategory, evaluationPeriod])
+  @@map("two_axis_evaluations")
+}
+
+// 評価マトリクス（マスタデータ）
+model EvaluationMatrix {
+  corporateEval String   // S,A,B,C,D
+  facilityEval  String   // S,A,B,C,D
+  finalEval     String   // S+,S,A+,A,B,C,D
+  description   String?  // 評価の説明
+  
+  @@id([corporateEval, facilityEval])
+  @@map("evaluation_matrix")
 }
 
 // 面談記録

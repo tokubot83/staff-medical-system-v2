@@ -6,6 +6,7 @@ import styles from './StaffCards.module.css'
 import { useRouter } from 'next/navigation'
 import { Interview } from '@/types/interview'
 import { getInterviewsByStaffId } from '@/data/mockInterviews'
+import { TwoAxisEvaluationSection } from '@/components/evaluation'
 
 // 総合分析タブコンポーネント
 export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
@@ -709,6 +710,14 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
             優れた業務遂行力とチーム協調性を持ち、後輩指導にも積極的。次期主任候補として期待。
           </div>
         </div>
+      </div>
+
+      {/* 2軸評価システム */}
+      <div className={styles.twoAxisEvaluationSection}>
+        <TwoAxisEvaluationSection 
+          employeeId={selectedStaff.id || selectedStaff.staffId || '1'}
+          employeeName={selectedStaff.name}
+        />
       </div>
     </div>
   )
