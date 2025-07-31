@@ -39,6 +39,8 @@ export default function TwoAxisEvaluationPage() {
       <ReportLayout
         title="2軸評価分析"
         description="施設内評価と法人内評価による多角的な人事評価分析"
+        icon="📊"
+        color="bg-purple-500"
       >
         <div className="space-y-6">
           {/* 検索・フィルター */}
