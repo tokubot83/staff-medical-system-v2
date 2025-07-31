@@ -174,27 +174,27 @@ export const TwoAxisEvaluationSection: React.FC<TwoAxisEvaluationSectionProps> =
         evaluation={{
           period: evaluationData.period || demoData.evaluation.period,
           score: evaluationData.score || demoData.evaluation.score,
-          facilityEval: evaluationData.facilityEvaluation?.grade || demoData.evaluation.facilityEval,
-          facilityRank: evaluationData.facilityEvaluation?.rank || demoData.evaluation.facilityRank,
-          facilityTotal: evaluationData.facilityEvaluation?.total || demoData.evaluation.facilityTotal,
-          corporateEval: evaluationData.corporateEvaluation?.grade || demoData.evaluation.corporateEval,
-          corporateRank: evaluationData.corporateEvaluation?.rank || demoData.evaluation.corporateRank,
-          corporateTotal: evaluationData.corporateEvaluation?.total || demoData.evaluation.corporateTotal,
-          finalEval: evaluationData.finalEvaluation?.grade || demoData.evaluation.finalEval,
-          description: evaluationData.finalEvaluation?.description || demoData.evaluation.description,
-          recommendation: evaluationData.finalEvaluation?.recommendation || demoData.evaluation.recommendation,
+          facilityEval: ('facilityEvaluation' in evaluationData ? evaluationData.facilityEvaluation?.grade : evaluationData.facilityEval) || demoData.evaluation.facilityEval,
+          facilityRank: ('facilityEvaluation' in evaluationData ? evaluationData.facilityEvaluation?.rank : evaluationData.facilityRank) || demoData.evaluation.facilityRank,
+          facilityTotal: ('facilityEvaluation' in evaluationData ? evaluationData.facilityEvaluation?.total : evaluationData.facilityTotal) || demoData.evaluation.facilityTotal,
+          corporateEval: ('corporateEvaluation' in evaluationData ? evaluationData.corporateEvaluation?.grade : evaluationData.corporateEval) || demoData.evaluation.corporateEval,
+          corporateRank: ('corporateEvaluation' in evaluationData ? evaluationData.corporateEvaluation?.rank : evaluationData.corporateRank) || demoData.evaluation.corporateRank,
+          corporateTotal: ('corporateEvaluation' in evaluationData ? evaluationData.corporateEvaluation?.total : evaluationData.corporateTotal) || demoData.evaluation.corporateTotal,
+          finalEval: ('finalEvaluation' in evaluationData ? evaluationData.finalEvaluation?.grade : evaluationData.finalEval) || demoData.evaluation.finalEval,
+          description: ('finalEvaluation' in evaluationData ? evaluationData.finalEvaluation?.description : evaluationData.description) || demoData.evaluation.description,
+          recommendation: ('finalEvaluation' in evaluationData ? evaluationData.finalEvaluation?.recommendation : evaluationData.recommendation) || demoData.evaluation.recommendation,
         }}
       />
 
       {/* 2軸評価の可視化 */}
       <TwoAxisVisualization
-        facilityEval={evaluationData.facilityEvaluation?.grade || demoData.evaluation.facilityEval}
-        facilityRank={evaluationData.facilityEvaluation?.rank || demoData.evaluation.facilityRank}
-        facilityTotal={evaluationData.facilityEvaluation?.total || demoData.evaluation.facilityTotal}
-        corporateEval={evaluationData.corporateEvaluation?.grade || demoData.evaluation.corporateEval}
-        corporateRank={evaluationData.corporateEvaluation?.rank || demoData.evaluation.corporateRank}
-        corporateTotal={evaluationData.corporateEvaluation?.total || demoData.evaluation.corporateTotal}
-        finalEval={evaluationData.finalEvaluation?.grade || demoData.evaluation.finalEval}
+        facilityEval={('facilityEvaluation' in evaluationData ? evaluationData.facilityEvaluation?.grade : evaluationData.facilityEval) || demoData.evaluation.facilityEval}
+        facilityRank={('facilityEvaluation' in evaluationData ? evaluationData.facilityEvaluation?.rank : evaluationData.facilityRank) || demoData.evaluation.facilityRank}
+        facilityTotal={('facilityEvaluation' in evaluationData ? evaluationData.facilityEvaluation?.total : evaluationData.facilityTotal) || demoData.evaluation.facilityTotal}
+        corporateEval={('corporateEvaluation' in evaluationData ? evaluationData.corporateEvaluation?.grade : evaluationData.corporateEval) || demoData.evaluation.corporateEval}
+        corporateRank={('corporateEvaluation' in evaluationData ? evaluationData.corporateEvaluation?.rank : evaluationData.corporateRank) || demoData.evaluation.corporateRank}
+        corporateTotal={('corporateEvaluation' in evaluationData ? evaluationData.corporateEvaluation?.total : evaluationData.corporateTotal) || demoData.evaluation.corporateTotal}
+        finalEval={('finalEvaluation' in evaluationData ? evaluationData.finalEvaluation?.grade : evaluationData.finalEval) || demoData.evaluation.finalEval}
       />
 
       {/* 評価推移 */}
