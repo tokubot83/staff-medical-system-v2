@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import CommonHeader from '@/components/CommonHeader'
-import { ReportLayout } from '@/components/reports/ReportLayout'
+import ReportLayout from '@/components/reports/ReportLayout'
 import { TwoAxisEvaluationSection } from '@/components/evaluation'
 import { Card } from '@/components/ui/card'
 import { Select } from '@/components/ui/select'
