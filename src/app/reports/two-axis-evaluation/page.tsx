@@ -17,10 +17,7 @@ export default function TwoAxisEvaluationPage() {
   const [selectedFacility, setSelectedFacility] = useState('all')
 
   // スタッフリストを配列に変換
-  const staffList = Object.entries(staffDatabase).map(([id, staff]) => ({
-    id,
-    ...staff,
-  }))
+  const staffList = Object.values(staffDatabase)
 
   // フィルタリング
   const filteredStaff = staffList.filter(staff => {
