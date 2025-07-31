@@ -257,12 +257,12 @@ export class TwoAxisEvaluationService {
       return null
     }
 
-    const evaluationHistory = employee.twoAxisEvaluations.map(eval => ({
-      period: eval.evaluationPeriod,
-      score: eval.score,
-      facilityEval: eval.facilityEvaluation as EvaluationGrade,
-      corporateEval: eval.corporateEvaluation as EvaluationGrade,
-      finalEval: eval.finalEvaluation as FinalEvaluationGrade,
+    const evaluationHistory = employee.twoAxisEvaluations.map(evaluation => ({
+      period: evaluation.evaluationPeriod,
+      score: evaluation.score,
+      facilityEval: evaluation.facilityEvaluation as EvaluationGrade,
+      corporateEval: evaluation.corporateEvaluation as EvaluationGrade,
+      finalEval: evaluation.finalEvaluation as FinalEvaluationGrade,
     }))
 
     // 成長分析
