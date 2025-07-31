@@ -10,6 +10,8 @@ import styles from '../StaffCards.module.css'
 import DashboardButton from '@/components/DashboardButton'
 import ScrollToTopButton from '@/components/ScrollToTopButton'
 import BackToStaffCardsButton from '@/components/BackToStaffCardsButton'
+import { TwoAxisEvaluationCard } from '@/components/evaluation/TwoAxisEvaluationCard'
+import { estimateTwoAxisEvaluation } from '@/utils/twoAxisEvaluationUtils'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -132,6 +134,15 @@ export default function StaffDetailPage() {
 }
 
 function BasicInfoTab({ selectedStaff }: { selectedStaff: any }) {
+  // 2軸評価データの取得または推定
+  const twoAxisEvaluation = selectedStaff.twoAxisEvaluation || estimateTwoAxisEvaluation(
+    selectedStaff.evaluation,
+    Math.floor(Math.random() * 50) + 1, // デモ用の仮の順位
+    200, // デモ用の仮の総数
+    Math.floor(Math.random() * 100) + 1, // デモ用の仮の順位
+    500 // デモ用の仮の総数
+  )
+
   return (
     <div className={styles.detailContainer}>
       <div className={styles.profileSection}>
@@ -189,6 +200,16 @@ function BasicInfoTab({ selectedStaff }: { selectedStaff: any }) {
             </div>
             <p className={styles.metricLabel}>要注意度</p>
           </div>
+        </div>
+
+        <div style={{ marginTop: '24px', marginBottom: '24px' }}>
+          <TwoAxisEvaluationCard
+            facilityScore={twoAxisEvaluation.facilityScore}
+            corporateScore={twoAxisEvaluation.corporateScore}
+            overallScore={twoAxisEvaluation.overallScore}
+            size="medium"
+            showDetails={false}
+          />
         </div>
 
         <div className={styles.detailSections}>

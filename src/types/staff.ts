@@ -28,6 +28,18 @@ export interface StaffDetail {
     teamwork: number;     // チームワーク（0-100）
     growth: number;       // 成長性・ポテンシャル（1-5）
   };
+  
+  // 2軸評価データ
+  twoAxisEvaluation?: {
+    facilityScore: 'S' | 'A' | 'B' | 'C' | 'D';      // 施設内評価
+    corporateScore: 'S' | 'A' | 'B' | 'C' | 'D';     // 法人内評価
+    overallScore: 'S+' | 'S' | 'A+' | 'A' | 'B' | 'C' | 'D';  // 総合評価
+    facilityRank?: number;    // 施設内順位
+    facilityTotal?: number;   // 施設内総人数
+    corporateRank?: number;   // 法人内順位
+    corporateTotal?: number;  // 法人内総人数
+  };
+  
   evaluationHistory: {
     period: string;
     overall: string;

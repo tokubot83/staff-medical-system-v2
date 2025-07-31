@@ -7,6 +7,9 @@ import { useRouter } from 'next/navigation'
 import { Interview } from '@/types/interview'
 import { getInterviewsByStaffId } from '@/data/mockInterviews'
 import { TwoAxisEvaluationSection } from '@/components/evaluation'
+import { TwoAxisEvaluationCard } from '@/components/evaluation/TwoAxisEvaluationCard'
+import { TwoAxisEvaluationMatrix } from '@/components/evaluation/TwoAxisEvaluationMatrix'
+import { estimateTwoAxisEvaluation } from '@/utils/twoAxisEvaluationUtils'
 
 // 総合分析タブコンポーネント
 export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
@@ -388,6 +391,15 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
   }
 
   const isNurse = selectedStaff?.position?.includes('看護師') || selectedStaff?.position?.includes('ナース')
+  
+  // 2軸評価データの取得または推定
+  const twoAxisEvaluation = selectedStaff.twoAxisEvaluation || estimateTwoAxisEvaluation(
+    selectedStaff.evaluation,
+    Math.floor(Math.random() * 50) + 1, // デモ用の仮の順位
+    200, // デモ用の仮の総数
+    Math.floor(Math.random() * 100) + 1, // デモ用の仮の順位
+    500 // デモ用の仮の総数
+  )
 
   // 評価推移データ
   const evaluationTrendData = {
@@ -472,6 +484,17 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
             <span className={styles.summaryIcon}>📊</span>
             <h3>人事評価サマリー</h3>
           </div>
+          
+          <div style={{ marginBottom: '24px' }}>
+            <TwoAxisEvaluationCard
+              facilityScore={twoAxisEvaluation.facilityScore}
+              corporateScore={twoAxisEvaluation.corporateScore}
+              overallScore={twoAxisEvaluation.overallScore}
+              size="large"
+              showDetails={true}
+            />
+          </div>
+          
           <div className={styles.summaryMainMetrics}>
             <div className={styles.metricCircle}>
               <div className={styles.ladderLevelDisplay}>
@@ -712,7 +735,18 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
         </div>
       </div>
 
-      {/* 2軸評価システム */}
+      {/* 2軸評価システム - 新デザイン */}
+      <div className={styles.sectionCard} style={{ marginTop: '24px' }}>
+        <h3>2軸評価マトリックス</h3>
+        <TwoAxisEvaluationMatrix
+          facilityScore={twoAxisEvaluation.facilityScore}
+          corporateScore={twoAxisEvaluation.corporateScore}
+          showGrid={true}
+          size="medium"
+        />
+      </div>
+      
+      {/* 2軸評価システム - 既存 */}
       <div className={styles.twoAxisEvaluationSection}>
         <TwoAxisEvaluationSection 
           employeeId={selectedStaff.id || selectedStaff.staffId || '1'}
