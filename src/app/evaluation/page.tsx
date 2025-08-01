@@ -228,7 +228,7 @@ function DashboardTab({
           <p className={styles.summaryLabel}>{totalStats.completedEvaluations}名 / {totalStats.totalStaff}名</p>
         </div>
         <div className={styles.summaryCard}>
-          <h3>従来評価分布</h3>
+          <h3>施設内評価・法人内評価・総合評価分布</h3>
           <div className={styles.distributionBars}>
             <div className={styles.distributionItem}>
               <span className={styles.distributionLabel}>S</span>
@@ -778,7 +778,7 @@ function StaffListTab({
                 onClick={() => handleSort('evaluation')}
                 className={styles.sortableHeader}
               >
-                従来評価 {sortField === 'evaluation' && (sortOrder === 'asc' ? '▲' : '▼')}
+                施設内評価・法人内評価・総合評価 {sortField === 'evaluation' && (sortOrder === 'asc' ? '▲' : '▼')}
               </th>
               <th>総合人事評価</th>
               <th>操作</th>
