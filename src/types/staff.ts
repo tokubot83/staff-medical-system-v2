@@ -1,13 +1,13 @@
-import { TwoAxisEvaluationGrade } from './two-axis-evaluation'
+import { EvaluationGrade, FinalEvaluationGrade } from './two-axis-evaluation'
 
 export interface TwoAxisEvaluationData {
-  facilityScore: TwoAxisEvaluationGrade
+  facilityScore: EvaluationGrade
   facilityRank: number
   facilityTotal: number
-  corporateScore: TwoAxisEvaluationGrade
+  corporateScore: EvaluationGrade
   corporateRank: number
   corporateTotal: number
-  overallScore: TwoAxisEvaluationGrade
+  overallScore: FinalEvaluationGrade
   evaluationDate?: string
   evaluator?: string
   comments?: string

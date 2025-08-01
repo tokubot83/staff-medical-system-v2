@@ -1,5 +1,5 @@
 import { TwoAxisEvaluationData } from '@/types/staff'
-import { TwoAxisEvaluationGrade } from '@/types/two-axis-evaluation'
+import { EvaluationGrade, FinalEvaluationGrade } from '@/types/two-axis-evaluation'
 
 // 施設別の評価分布設定
 const facilityDistribution: Record<string, { S: number, A: number, B: number, C: number, D: number }> = {
@@ -11,24 +11,22 @@ const facilityDistribution: Record<string, { S: number, A: number, B: number, C:
 const corporateDistribution = { S: 11, A: 36, B: 44, C: 7, D: 2 }
 
 // 従来評価と2軸評価のマッピングルール
-const evaluationMapping: Record<string, { facility: TwoAxisEvaluationGrade[], corporate: TwoAxisEvaluationGrade[] }> = {
-  'S': { facility: ['S+', 'S'], corporate: ['S+', 'S', 'A+'] },
-  'A': { facility: ['S', 'A+', 'A'], corporate: ['A+', 'A', 'B'] },
+const evaluationMapping: Record<string, { facility: EvaluationGrade[], corporate: EvaluationGrade[] }> = {
+  'S': { facility: ['S'], corporate: ['S', 'A'] },
+  'A': { facility: ['S', 'A'], corporate: ['A', 'B'] },
   'B': { facility: ['A', 'B'], corporate: ['B', 'C'] },
   'C': { facility: ['B', 'C'], corporate: ['C', 'D'] },
   '': { facility: ['C', 'D'], corporate: ['C', 'D'] }
 }
 
 // ランダムな順位を生成
-function generateRank(score: TwoAxisEvaluationGrade, total: number): number {
-  const scoreRanks: Record<TwoAxisEvaluationGrade, [number, number]> = {
-    'S+': [1, Math.floor(total * 0.02)],
-    'S': [Math.floor(total * 0.02) + 1, Math.floor(total * 0.10)],
-    'A+': [Math.floor(total * 0.10) + 1, Math.floor(total * 0.25)],
-    'A': [Math.floor(total * 0.25) + 1, Math.floor(total * 0.45)],
-    'B': [Math.floor(total * 0.45) + 1, Math.floor(total * 0.80)],
-    'C': [Math.floor(total * 0.80) + 1, Math.floor(total * 0.95)],
-    'D': [Math.floor(total * 0.95) + 1, total]
+function generateRank(score: EvaluationGrade, total: number): number {
+  const scoreRanks: Record<EvaluationGrade, [number, number]> = {
+    'S': [1, Math.floor(total * 0.10)],
+    'A': [Math.floor(total * 0.10) + 1, Math.floor(total * 0.30)],
+    'B': [Math.floor(total * 0.30) + 1, Math.floor(total * 0.70)],
+    'C': [Math.floor(total * 0.70) + 1, Math.floor(total * 0.90)],
+    'D': [Math.floor(total * 0.90) + 1, total]
   }
   
   const [min, max] = scoreRanks[score] || [1, total]
@@ -36,25 +34,27 @@ function generateRank(score: TwoAxisEvaluationGrade, total: number): number {
 }
 
 // 総合評価を計算
-function calculateOverallScore(facilityScore: TwoAxisEvaluationGrade, corporateScore: TwoAxisEvaluationGrade): TwoAxisEvaluationGrade {
-  const scoreMap: Record<TwoAxisEvaluationGrade, number> = {
-    'S+': 8, 'S': 7, 'A+': 6, 'A': 5, 'B': 4, 'C': 3, 'D': 2
-  }
-  const reverseMap: Record<number, TwoAxisEvaluationGrade> = {
-    8: 'S+', 7: 'S', 6: 'A+', 5: 'A', 4: 'B', 3: 'C', 2: 'D'
+function calculateOverallScore(facilityScore: EvaluationGrade, corporateScore: EvaluationGrade): FinalEvaluationGrade {
+  const scoreMap: Record<EvaluationGrade, number> = {
+    'S': 5, 'A': 4, 'B': 3, 'C': 2, 'D': 1
   }
 
   const facilityNum = scoreMap[facilityScore]
   const corporateNum = scoreMap[corporateScore]
+  const sum = facilityNum + corporateNum
   
-  // 両方が高評価の場合は高い方を採用
-  if (facilityNum >= 7 && corporateNum >= 7) {
-    return facilityNum > corporateNum ? facilityScore : corporateScore
+  // 両方がSの場合は、S+
+  if (facilityScore === 'S' && corporateScore === 'S') {
+    return 'S+'
   }
   
-  // それ以外は平均値
-  const average = Math.round((facilityNum + corporateNum) / 2)
-  return reverseMap[average] || 'B'
+  // マッピングルール
+  if (sum >= 9) return 'S'
+  if (sum >= 8) return 'A+'
+  if (sum >= 7) return 'A'
+  if (sum >= 6) return 'B'
+  if (sum >= 4) return 'C'
+  return 'D'
 }
 
 // スタッフの2軸評価データを生成
