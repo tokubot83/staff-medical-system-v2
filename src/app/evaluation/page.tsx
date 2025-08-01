@@ -86,23 +86,6 @@ function EvaluationPageContent() {
     return Object.values(data)
   }
 
-  // 2軸評価のモックデータを取得する関数
-  function getTwoAxisEvaluationMock(name: string): { facility: string; corporate: string; overall: string } | null {
-    const mockData: Record<string, { facility: string; corporate: string; overall: string }> = {
-      '田中美咲': { facility: 'B', corporate: 'A', overall: 'A' },
-      '佐藤花子': { facility: 'A', corporate: 'A', overall: 'A+' },
-      '中村恵子': { facility: 'C', corporate: 'C', overall: 'C' },
-      '小林さくら': { facility: 'B', corporate: 'B', overall: 'B' },
-      '伊藤由美': { facility: 'S', corporate: 'A', overall: 'S' },
-      '渡辺麻衣': { facility: 'B', corporate: 'B', overall: 'B' },
-      '山田太郎': { facility: 'A', corporate: 'B', overall: 'A' },
-      '高橋花子': { facility: 'C', corporate: 'B', overall: 'C' },
-      '鈴木一郎': { facility: 'B', corporate: 'C', overall: 'C' },
-      '木村洋子': { facility: 'A', corporate: 'S', overall: 'S' }
-    }
-    return mockData[name] || null
-  }
-
   const evaluationData = getEvaluationData()
 
   return (
@@ -527,6 +510,23 @@ function StaffListTab({
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
   const [filterGrade, setFilterGrade] = useState<string>('all')
   const [searchTerm, setSearchTerm] = useState('')
+
+  // 2軸評価のモックデータを取得する関数
+  function getTwoAxisEvaluationMock(name: string): { facility: string; corporate: string; overall: string } | null {
+    const mockData: Record<string, { facility: string; corporate: string; overall: string }> = {
+      '田中美咲': { facility: 'B', corporate: 'A', overall: 'A' },
+      '佐藤花子': { facility: 'A', corporate: 'A', overall: 'A+' },
+      '中村恵子': { facility: 'C', corporate: 'C', overall: 'C' },
+      '小林さくら': { facility: 'B', corporate: 'B', overall: 'B' },
+      '伊藤由美': { facility: 'S', corporate: 'A', overall: 'S' },
+      '渡辺麻衣': { facility: 'B', corporate: 'B', overall: 'B' },
+      '山田太郎': { facility: 'A', corporate: 'B', overall: 'A' },
+      '高橋花子': { facility: 'C', corporate: 'B', overall: 'C' },
+      '鈴木一郎': { facility: 'B', corporate: 'C', overall: 'C' },
+      '木村洋子': { facility: 'A', corporate: 'S', overall: 'S' }
+    }
+    return mockData[name] || null
+  }
 
   // 職員データをフィルタリング
   const filteredStaff = Object.entries(staffDatabase).filter(([_, staff]: [string, any]) => {
