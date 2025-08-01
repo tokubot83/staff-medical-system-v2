@@ -10,6 +10,8 @@ import styles from '../StaffCards.module.css'
 import DashboardButton from '@/components/DashboardButton'
 import ScrollToTopButton from '@/components/ScrollToTopButton'
 import BackToStaffCardsButton from '@/components/BackToStaffCardsButton'
+import { TwoAxisEvaluationSummary } from '@/components/evaluation/TwoAxisEvaluationSummary'
+import { estimateTwoAxisEvaluation } from '@/utils/twoAxisEvaluationUtils'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -132,6 +134,15 @@ export default function StaffDetailPage() {
 }
 
 function BasicInfoTab({ selectedStaff }: { selectedStaff: any }) {
+  // 2軸評価データの取得または推定
+  const twoAxisEvaluation = selectedStaff.twoAxisEvaluation || estimateTwoAxisEvaluation(
+    selectedStaff.evaluation,
+    Math.floor(Math.random() * 50) + 1, // デモ用の仮の順位
+    200, // デモ用の仮の総数
+    Math.floor(Math.random() * 100) + 1, // デモ用の仮の順位
+    500 // デモ用の仮の総数
+  )
+
   return (
     <div className={styles.detailContainer}>
       <div className={styles.profileSection}>
@@ -150,12 +161,13 @@ function BasicInfoTab({ selectedStaff }: { selectedStaff: any }) {
           </div>
           <div className={styles.profileStatus}>
             <div className={`${styles.statusBadge} ${
-              selectedStaff.evaluation === 'S' ? styles.statusExcellent :
-              selectedStaff.evaluation === 'A' ? styles.statusGood :
+              twoAxisEvaluation.overallScore === 'S+' || twoAxisEvaluation.overallScore === 'S' ? styles.statusExcellent :
+              twoAxisEvaluation.overallScore === 'A+' || twoAxisEvaluation.overallScore === 'A' ? styles.statusGood :
               styles.statusNormal
             }`}>
-              {selectedStaff.evaluation === 'S' ? '優秀職員' :
-               selectedStaff.evaluation === 'A' ? '高評価' :
+              {twoAxisEvaluation.overallScore === 'S+' ? '最優秀' :
+               twoAxisEvaluation.overallScore === 'S' ? '優秀' :
+               twoAxisEvaluation.overallScore === 'A+' || twoAxisEvaluation.overallScore === 'A' ? '高評価' :
                '標準'}
             </div>
           </div>
@@ -164,8 +176,8 @@ function BasicInfoTab({ selectedStaff }: { selectedStaff: any }) {
         <div className={styles.metricsGrid}>
           <div className={styles.metricCard}>
             <h3>総合評価</h3>
-            <div className={styles.metricValue}>{selectedStaff.evaluation}</div>
-            <p className={styles.metricLabel}>最新評価</p>
+            <div className={styles.metricValue}>{twoAxisEvaluation.overallScore}</div>
+            <p className={styles.metricLabel}>最新総合人事評価</p>
           </div>
           <div className={styles.metricCard}>
             <h3>健康スコア</h3>
@@ -189,6 +201,16 @@ function BasicInfoTab({ selectedStaff }: { selectedStaff: any }) {
             </div>
             <p className={styles.metricLabel}>要注意度</p>
           </div>
+        </div>
+
+        <div style={{ marginTop: '24px', marginBottom: '24px' }}>
+          <TwoAxisEvaluationSummary
+            facilityScore={twoAxisEvaluation.facilityScore}
+            corporateScore={twoAxisEvaluation.corporateScore}
+            overallScore={twoAxisEvaluation.overallScore}
+            size="medium"
+            showDetails={false}
+          />
         </div>
 
         <div className={styles.detailSections}>

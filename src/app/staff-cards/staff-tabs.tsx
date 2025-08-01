@@ -6,7 +6,9 @@ import styles from './StaffCards.module.css'
 import { useRouter } from 'next/navigation'
 import { Interview } from '@/types/interview'
 import { getInterviewsByStaffId } from '@/data/mockInterviews'
-import { TwoAxisEvaluationSection } from '@/components/evaluation'
+import { TwoAxisEvaluationSummary } from '@/components/evaluation/TwoAxisEvaluationSummary'
+import { TwoAxisEvaluationMatrixDisplay } from '@/components/evaluation/TwoAxisEvaluationMatrix'
+import { estimateTwoAxisEvaluation } from '@/utils/twoAxisEvaluationUtils'
 
 // 総合分析タブコンポーネント
 export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
@@ -369,7 +371,7 @@ export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
             <span className={styles.commentDate}>2025年1月</span>
           </div>
           <div className={styles.commentBody}>
-            健康スコアと生産性の相関係数0.82は組織内トップクラス。退職リスク25%と低く、適切なキャリアパス提示でさらなる定着率向上が期待できます。ワークライフバランスA+評価を維持しつつ、段階的な責任拡大が最適です。
+            健康スコアと生産性の相関係数0.82は組織内トップクラス。退職リスク25%と低く、適切なキャリアパス提示でさらなる定着率向上が期待できます。ワークライフバランス優秀評価を維持しつつ、段階的な責任拡大が最適です。
           </div>
         </div>
       </div>
@@ -388,6 +390,15 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
   }
 
   const isNurse = selectedStaff?.position?.includes('看護師') || selectedStaff?.position?.includes('ナース')
+  
+  // 2軸評価データの取得または推定
+  const twoAxisEvaluation = selectedStaff.twoAxisEvaluation || estimateTwoAxisEvaluation(
+    selectedStaff.evaluation,
+    Math.floor(Math.random() * 50) + 1, // デモ用の仮の順位
+    200, // デモ用の仮の総数
+    Math.floor(Math.random() * 100) + 1, // デモ用の仮の順位
+    500 // デモ用の仮の総数
+  )
 
   // 評価推移データ
   const evaluationTrendData = {
@@ -472,17 +483,28 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
             <span className={styles.summaryIcon}>📊</span>
             <h3>人事評価サマリー</h3>
           </div>
+          
+          <div style={{ marginBottom: '24px' }}>
+            <TwoAxisEvaluationSummary
+              facilityScore={twoAxisEvaluation.facilityScore}
+              corporateScore={twoAxisEvaluation.corporateScore}
+              overallScore={twoAxisEvaluation.overallScore}
+              size="large"
+              showDetails={true}
+            />
+          </div>
+          
           <div className={styles.summaryMainMetrics}>
             <div className={styles.metricCircle}>
               <div className={styles.ladderLevelDisplay}>
                 <div className={styles.currentLadderLevel}>
-                  <div className={styles.levelIndicator}>評価</div>
-                  <div className={styles.levelNumber}>A</div>
-                  <div className={styles.levelSubtext}>2024年度総合評価</div>
+                  <div className={styles.levelIndicator}>総合評価</div>
+                  <div className={styles.levelNumber}>{twoAxisEvaluation.overallScore}</div>
+                  <div className={styles.levelSubtext}>2024年度2軸評価</div>
                 </div>
                 <div className={styles.levelProgressBar}>
                   <div className={styles.levelProgressFill} style={{ width: '90%' }}></div>
-                  <div className={styles.levelProgressText}>S評価まで 90%</div>
+                  <div className={styles.levelProgressText}>最高評価まで 90%</div>
                 </div>
                 <div className={styles.currentTrainingStatus}>
                   <div className={styles.trainingStatusBadge}>評価期間中</div>
@@ -493,7 +515,7 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
               <div className={styles.metricDetails}>
                 <div className={styles.detailItem}>
                   <span className={styles.detailIcon}>🎯</span>
-                  <span className={styles.detailText}>3年連続A評価以上</span>
+                  <span className={styles.detailText}>3年連続高評価以上</span>
                 </div>
                 <div className={styles.detailItem}>
                   <span className={styles.detailIcon}>📈</span>
@@ -535,7 +557,7 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
               <div className={styles.breakdownItem}>
                 <div className={styles.breakdownHeader}>
                   <span className={styles.breakdownLabel}>業務遂行力</span>
-                  <span className={styles.breakdownScore}>S (4.8)</span>
+                  <span className={styles.breakdownScore}>優秀 (4.8)</span>
                 </div>
                 <div className={styles.breakdownBar}>
                   <div className={styles.breakdownFill} style={{ width: '96%', backgroundColor: '#10b981' }}></div>
@@ -545,7 +567,7 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
               <div className={styles.breakdownItem}>
                 <div className={styles.breakdownHeader}>
                   <span className={styles.breakdownLabel}>チームワーク</span>
-                  <span className={styles.breakdownScore}>A (4.5)</span>
+                  <span className={styles.breakdownScore}>良好 (4.5)</span>
                 </div>
                 <div className={styles.breakdownBar}>
                   <div className={styles.breakdownFill} style={{ width: '90%', backgroundColor: '#3b82f6' }}></div>
@@ -555,7 +577,7 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
               <div className={styles.breakdownItem}>
                 <div className={styles.breakdownHeader}>
                   <span className={styles.breakdownLabel}>リーダーシップ</span>
-                  <span className={styles.breakdownScore}>A (4.3)</span>
+                  <span className={styles.breakdownScore}>良好 (4.3)</span>
                 </div>
                 <div className={styles.breakdownBar}>
                   <div className={styles.breakdownFill} style={{ width: '86%', backgroundColor: '#3b82f6' }}></div>
@@ -565,7 +587,7 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
               <div className={styles.breakdownItem}>
                 <div className={styles.breakdownHeader}>
                   <span className={styles.breakdownLabel}>改善・革新</span>
-                  <span className={styles.breakdownScore}>A (4.4)</span>
+                  <span className={styles.breakdownScore}>良好 (4.4)</span>
                 </div>
                 <div className={styles.breakdownBar}>
                   <div className={styles.breakdownFill} style={{ width: '88%', backgroundColor: '#3b82f6' }}></div>
@@ -611,7 +633,7 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
           <h4>評価推移</h4>
           <div className={`${styles.alert} ${styles.alertSuccess}`}>
             <span>📈</span>
-            <span>評価が安定的に上昇中（3.8→4.3）。3年連続A評価以上を維持しています。</span>
+            <span>評価が安定的に上昇中（3.8→4.3）。3年連続高評価を維持しています。</span>
           </div>
           <div className={styles.chartWrapper}>
             <Line data={evaluationTrendData} options={{
@@ -712,11 +734,14 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
         </div>
       </div>
 
-      {/* 2軸評価システム */}
-      <div className={styles.twoAxisEvaluationSection}>
-        <TwoAxisEvaluationSection 
-          employeeId={selectedStaff.id || selectedStaff.staffId || '1'}
-          employeeName={selectedStaff.name}
+      {/* 2軸評価システム - 新デザイン */}
+      <div className={styles.sectionCard} style={{ marginTop: '24px' }}>
+        <h3>2軸評価マトリックス</h3>
+        <TwoAxisEvaluationMatrixDisplay
+          facilityScore={twoAxisEvaluation.facilityScore}
+          corporateScore={twoAxisEvaluation.corporateScore}
+          showGrid={true}
+          size="medium"
         />
       </div>
     </div>
