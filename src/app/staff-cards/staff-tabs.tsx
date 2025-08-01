@@ -9,6 +9,7 @@ import { getInterviewsByStaffId } from '@/data/mockInterviews'
 import { TwoAxisEvaluationSummaryDetailed } from '@/components/evaluation/TwoAxisEvaluationSummaryDetailed'
 import { TwoAxisEvaluationMatrixDisplay } from '@/components/evaluation/TwoAxisEvaluationMatrix'
 import { getTwoAxisEvaluationByStaffId } from '@/data/mockTwoAxisEvaluations'
+import { twoAxisColors, getTwoAxisChartOptions, calculateOverallGrade } from '@/utils/twoAxisChartUtils'
 
 // 総合分析タブコンポーネント
 export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
@@ -22,104 +23,137 @@ export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
 
   const isNurse = selectedStaff?.position?.includes('看護師') || selectedStaff?.position?.includes('ナース')
   
-  // タブ横断的統合分析チャート
+  // タブ横断的統合分析チャート（2軸評価対応）
   const crossTabAnalysisData = {
     labels: ['採用適合', '研修効果', '評価成長', '面談満足', '能力開発', '統合分析'],
     datasets: [{
-      label: '現在値',
+      label: '施設評価',
       data: [95, 88, 85, 92, 82, 87],
-      borderColor: '#007bff',
-      backgroundColor: 'rgba(0, 123, 255, 0.2)'
+      borderColor: twoAxisColors.facility.main,
+      backgroundColor: `${twoAxisColors.facility.main}33`,
+      pointBackgroundColor: twoAxisColors.facility.main,
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: twoAxisColors.facility.main
     }, {
-      label: '目標値',
-      data: [95, 95, 90, 95, 90, 93],
-      borderColor: '#28a745',
-      backgroundColor: 'rgba(40, 167, 69, 0.1)'
+      label: '法人評価',
+      data: [92, 85, 88, 90, 80, 85],
+      borderColor: twoAxisColors.corporate.main,
+      backgroundColor: `${twoAxisColors.corporate.main}33`,
+      pointBackgroundColor: twoAxisColors.corporate.main,
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: twoAxisColors.corporate.main
     }]
   }
 
-  // 組織内ポジショニング分析チャート
+  // 組織内ポジショニング分析チャート（2軸評価対応）
+  const staffEvaluation = selectedStaff.twoAxisEvaluation || { facilityScore: 92, corporateScore: 85 }
   const organizationalPositionData = {
     datasets: [{
       label: selectedStaff.name,
-      data: [{ x: 92, y: 85 }],
-      backgroundColor: '#dc3545',
-      pointRadius: 10
+      data: [{ 
+        x: staffEvaluation.facilityScore, 
+        y: staffEvaluation.corporateScore,
+        overallScore: calculateOverallGrade(staffEvaluation.facilityScore, staffEvaluation.corporateScore)
+      }],
+      backgroundColor: twoAxisColors.combined.main,
+      pointRadius: 12,
+      pointHoverRadius: 15
     }, {
       label: '同職種平均',
-      data: [{ x: 72, y: 68 }],
+      data: [{ x: 72, y: 68, overallScore: 'A' }],
       backgroundColor: '#6c757d',
-      pointRadius: 6
+      pointRadius: 8
     }, {
       label: '上位10%',
-      data: [{ x: 88, y: 82 }],
-      backgroundColor: '#28a745',
-      pointRadius: 6
+      data: [{ x: 88, y: 82, overallScore: 'S' }],
+      backgroundColor: twoAxisColors.corporate.main,
+      pointRadius: 8
     }]
   }
 
-  // 昇進後パフォーマンス予測チャート
+  // 昇進後パフォーマンス予測チャート（2軸評価対応）
   const promotionPredictionData = {
     labels: ['現在', '3ヶ月後', '6ヶ月後', '1年後', '2年後'],
     datasets: [{
-      label: '管理スキル予測',
-      data: [3.0, 3.4, 3.8, 4.2, 4.5],
-      borderColor: '#007bff',
-      backgroundColor: 'rgba(0, 123, 255, 0.1)',
-      fill: true
-    }, {
-      label: '総合評価予測',
-      data: [4.2, 4.3, 4.4, 4.5, 4.6],
-      borderColor: '#28a745',
-      backgroundColor: 'transparent'
-    }]
-  }
-
-  // リスク分析・ROIチャート
-  const riskAnalysisData = {
-    labels: ['即時昇進', '6ヶ月後昇進', '1年後昇進'],
-    datasets: [{
-      label: '成功確率(%)',
-      data: [65, 87, 95],
-      backgroundColor: '#28a745',
+      label: '施設評価予測',
+      data: [85, 86, 88, 90, 92],
+      borderColor: twoAxisColors.facility.main,
+      backgroundColor: `${twoAxisColors.facility.main}20`,
+      fill: true,
       yAxisID: 'y'
     }, {
-      label: 'ROI(%)',
-      data: [180, 340, 280],
-      backgroundColor: '#007bff',
+      label: '法人評価予測',
+      data: [82, 83, 85, 88, 90],
+      borderColor: twoAxisColors.corporate.main,
+      backgroundColor: `${twoAxisColors.corporate.main}20`,
+      fill: true,
       yAxisID: 'y1'
     }]
   }
 
-  // 健康・勤務統合分析データ
-  const healthWorkIntegrationData = {
+  // リスク分析・ROIチャート（2軸評価対応）
+  const riskAnalysisData = {
+    labels: ['即時昇進', '6ヶ月後昇進', '1年後昇進'],
     datasets: [{
-      label: '健康スコア vs 生産性',
-      data: [
-        { x: 87, y: 85, r: 10 }, // 現在の状態
-        { x: 75, y: 70, r: 8 },  // 3ヶ月前
-        { x: 80, y: 78, r: 9 },  // 6ヶ月前
-      ],
-      backgroundColor: [
-        'rgba(40, 167, 69, 0.6)',
-        'rgba(255, 193, 7, 0.6)',
-        'rgba(23, 162, 184, 0.6)'
-      ]
+      label: '施設評価での成功確率(%)',
+      data: [65, 87, 95],
+      backgroundColor: twoAxisColors.facility.main,
+      yAxisID: 'y'
+    }, {
+      label: '法人評価での成功確率(%)',
+      data: [60, 85, 92],
+      backgroundColor: twoAxisColors.corporate.main,
+      yAxisID: 'y1'
     }]
   }
 
-  // 退職リスク予測データ
+  // 健康・勤務統合分析データ（2軸評価対応）
+  const healthWorkIntegrationData = {
+    datasets: [{
+      label: '現在',
+      data: [{ 
+        x: staffEvaluation.facilityScore, 
+        y: staffEvaluation.corporateScore,
+        overallScore: calculateOverallGrade(staffEvaluation.facilityScore, staffEvaluation.corporateScore)
+      }],
+      backgroundColor: twoAxisColors.combined.main,
+      pointRadius: 15
+    }, {
+      label: '3ヶ月前',
+      data: [{ x: 80, y: 78, overallScore: 'A+' }],
+      backgroundColor: twoAxisColors.facility.light,
+      pointRadius: 12
+    }, {
+      label: '6ヶ月前',
+      data: [{ x: 75, y: 70, overallScore: 'A' }],
+      backgroundColor: twoAxisColors.corporate.light,
+      pointRadius: 10
+    }]
+  }
+
+  // 退職リスク予測データ（2軸評価対応）
   const retentionRiskData = {
     labels: ['総合リスクスコア', '給与満足度', 'キャリア不安', '業務負荷', '成長機会', '人間関係'],
     datasets: [{
-      label: '現在の状態',
+      label: '施設評価基準',
       data: [25, 80, 35, 40, 85, 90],
-      borderColor: '#007bff',
-      backgroundColor: 'rgba(0, 123, 255, 0.2)',
-      pointBackgroundColor: '#007bff',
+      borderColor: twoAxisColors.facility.main,
+      backgroundColor: `${twoAxisColors.facility.main}33`,
+      pointBackgroundColor: twoAxisColors.facility.main,
       pointBorderColor: '#fff',
       pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: '#007bff'
+      pointHoverBorderColor: twoAxisColors.facility.main
+    }, {
+      label: '法人評価基準',
+      data: [30, 75, 40, 35, 82, 88],
+      borderColor: twoAxisColors.corporate.main,
+      backgroundColor: `${twoAxisColors.corporate.main}33`,
+      pointBackgroundColor: twoAxisColors.corporate.main,
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: twoAxisColors.corporate.main
     }, {
       label: '警戒ライン',
       data: [50, 50, 50, 50, 50, 50],
@@ -208,13 +242,7 @@ export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
             <span>6つの評価軸で総合的な人材価値を可視化。全項目で目標値の90%以上を達成しており、バランスの取れた成長を示しています。</span>
           </div>
           <div className={styles.chartWrapper}>
-            <Radar data={crossTabAnalysisData} options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                r: { min: 0, max: 100 }
-              }
-            }} />
+            <Radar data={crossTabAnalysisData} options={getTwoAxisChartOptions('radar')} />
           </div>
         </div>
         <div className={styles.chartContainer}>
@@ -224,14 +252,7 @@ export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
             <span>パフォーマンス92点、ポテンシャル85点で上位10%圏内。次世代リーダー候補として有望な位置にいます。</span>
           </div>
           <div className={styles.chartWrapper}>
-            <Scatter data={organizationalPositionData} options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                x: { title: { display: true, text: 'パフォーマンス' }, min: 60, max: 100 },
-                y: { title: { display: true, text: 'ポテンシャル' }, min: 60, max: 100 }
-              }
-            }} />
+            <Scatter data={organizationalPositionData} options={getTwoAxisChartOptions('scatter')} />
           </div>
         </div>
       </div>
@@ -244,10 +265,7 @@ export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
             <span>AIによる予測では、昇進後2年以内に管理スキル4.5到達の可能性が高い。段階的な権限委譲が効果的です。</span>
           </div>
           <div className={styles.chartWrapper}>
-            <Line data={promotionPredictionData} options={{
-              responsive: true,
-              maintainAspectRatio: false
-            }} />
+            <Line data={promotionPredictionData} options={getTwoAxisChartOptions('line')} />
           </div>
         </div>
         <div className={styles.chartContainer}>
@@ -257,25 +275,7 @@ export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
             <span>6ヶ月後昇進が最適解。成功確率87%、ROI340%で投資効果が最大化。即時昇進はリスクが高く推奨しません。</span>
           </div>
           <div className={styles.chartWrapper}>
-            <Bar data={riskAnalysisData} options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                y: {
-                  type: 'linear',
-                  display: true,
-                  position: 'left',
-                  title: { display: true, text: '成功確率(%)' }
-                },
-                y1: {
-                  type: 'linear',
-                  display: true,
-                  position: 'right',
-                  title: { display: true, text: 'ROI(%)' },
-                  grid: { drawOnChartArea: false }
-                }
-              }
-            }} />
+            <Bar data={riskAnalysisData} options={getTwoAxisChartOptions('bar')} />
           </div>
         </div>
       </div>
@@ -288,32 +288,7 @@ export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
             <span>健康スコアと労働生産性に強い正の相関（r=0.82）。健康管理投資が生産性向上に直結しています。</span>
           </div>
           <div className={styles.chartWrapper}>
-            <Scatter data={healthWorkIntegrationData} options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              plugins: {
-                tooltip: {
-                  callbacks: {
-                    label: function(context) {
-                      const labels = ['現在', '3ヶ月前', '6ヶ月前'];
-                      return labels[context.dataIndex] + ': 健康 ' + context.parsed.x + ', 生産性 ' + context.parsed.y;
-                    }
-                  }
-                }
-              },
-              scales: {
-                x: {
-                  title: { display: true, text: '健康スコア' },
-                  min: 60,
-                  max: 100
-                },
-                y: {
-                  title: { display: true, text: '労働生産性' },
-                  min: 60,
-                  max: 100
-                }
-              }
-            }} />
+            <Scatter data={healthWorkIntegrationData} options={getTwoAxisChartOptions('scatter')} />
           </div>
         </div>
         <div className={styles.chartContainer}>
@@ -401,15 +376,23 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
     router.push(`/evaluation?tab=execution&staffId=${selectedStaff.id}`)
   }
 
-  // 評価推移データ
+  // 評価推移データ（2軸評価対応）
   const evaluationTrendData = {
     labels: ['2023年上期', '2023年下期', '2024年上期', '2024年下期', '2025年上期'],
     datasets: [{
-      label: '総合評価',
-      data: [3.8, 4.0, 4.2, 4.3, 4.5],
-      borderColor: '#007bff',
-      backgroundColor: 'rgba(0, 123, 255, 0.1)',
-      fill: true
+      label: '施設評価',
+      data: [76, 80, 84, 86, 90],
+      borderColor: twoAxisColors.facility.main,
+      backgroundColor: `${twoAxisColors.facility.main}20`,
+      fill: true,
+      yAxisID: 'y'
+    }, {
+      label: '法人評価',
+      data: [72, 75, 80, 82, 85],
+      borderColor: twoAxisColors.corporate.main,
+      backgroundColor: `${twoAxisColors.corporate.main}20`,
+      fill: true,
+      yAxisID: 'y1'
     }]
   }
 
@@ -540,19 +523,7 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
             <span>評価が安定的に上昇中（3.8→4.3）。3年連続高評価を維持しています。</span>
           </div>
           <div className={styles.chartWrapper}>
-            <Line data={evaluationTrendData} options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                y: {
-                  min: 1,
-                  max: 5,
-                  ticks: {
-                    stepSize: 0.5
-                  }
-                }
-              }
-            }} />
+            <Line data={evaluationTrendData} options={getTwoAxisChartOptions('line')} />
           </div>
         </div>
         <div className={styles.chartContainer}>
@@ -562,16 +533,7 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
             <span>自己評価と他者評価がほぼ一致。特にチームワークで高評価を得ています。</span>
           </div>
           <div className={styles.chartWrapper}>
-            <Radar data={multiEvaluationData} options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                r: {
-                  min: 0,
-                  max: 100
-                }
-              }
-            }} />
+            <Radar data={multiEvaluationData} options={getTwoAxisChartOptions('radar')} />
           </div>
         </div>
       </div>
@@ -584,19 +546,7 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
             <span>全項目で前年度を上回る成長。特にリーダーシップが大幅改善（+0.8ポイント）。</span>
           </div>
           <div className={styles.chartWrapper}>
-            <Bar data={evaluationGrowthData} options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                y: {
-                  min: 0,
-                  max: 5,
-                  ticks: {
-                    stepSize: 0.5
-                  }
-                }
-              }
-            }} />
+            <Bar data={evaluationGrowthData} options={getTwoAxisChartOptions('bar')} />
           </div>
         </div>
       </div>
@@ -610,16 +560,7 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
               <span>レベルⅣ認定済み。組織貢献の項目をさらに強化することでレベルⅤ達成が見込まれます。</span>
             </div>
             <div className={styles.chartWrapper}>
-              <Radar data={jnaAchievementData} options={{
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                  r: {
-                    min: 0,
-                    max: 100
-                  }
-                }
-              }} />
+              <Radar data={jnaAchievementData} options={getTwoAxisChartOptions('radar')} />
             </div>
           </div>
         </div>
@@ -662,48 +603,57 @@ export function RecruitmentTab({ selectedStaff }: { selectedStaff: any }) {
     )
   }
 
-  // 配属適性分析データ
+  // 配属適性分析データ（2軸評価対応）
   const departmentFitData = {
     labels: ['現部署', '内科', '外科', 'ICU', '救急', '外来'],
     datasets: [{
-      label: '適性スコア',
+      label: '施設適性スコア',
       data: [95, 82, 78, 88, 75, 85],
-      backgroundColor: [
-        'rgba(255, 99, 132, 0.5)',
-        'rgba(54, 162, 235, 0.5)',
-        'rgba(255, 206, 86, 0.5)',
-        'rgba(75, 192, 192, 0.5)',
-        'rgba(153, 102, 255, 0.5)',
-        'rgba(255, 159, 64, 0.5)'
-      ]
+      backgroundColor: twoAxisColors.facility.main,
+      yAxisID: 'y'
+    }, {
+      label: '法人適性スコア',
+      data: [92, 80, 75, 85, 72, 82],
+      backgroundColor: twoAxisColors.corporate.main,
+      yAxisID: 'y1'
     }]
   }
 
-  // キャリアパス予測
+  // キャリアパス予測（2軸評価対応）
   const careerPathData = {
     labels: ['現在', '1年後', '3年後', '5年後', '10年後'],
     datasets: [{
-      label: '管理職パス',
-      data: [20, 40, 70, 90, 95],
-      borderColor: '#007bff',
-      backgroundColor: 'rgba(0, 123, 255, 0.1)'
+      label: '施設キャリア予測',
+      data: [75, 80, 85, 90, 95],
+      borderColor: twoAxisColors.facility.main,
+      backgroundColor: `${twoAxisColors.facility.main}20`,
+      yAxisID: 'y'
     }, {
-      label: '専門職パス',
-      data: [20, 50, 75, 85, 90],
-      borderColor: '#28a745',
-      backgroundColor: 'rgba(40, 167, 69, 0.1)'
+      label: '法人キャリア予測',
+      data: [70, 75, 82, 88, 92],
+      borderColor: twoAxisColors.corporate.main,
+      backgroundColor: `${twoAxisColors.corporate.main}20`,
+      yAxisID: 'y1'
     }]
   }
 
-  // 採用評価成熟度データ
+  // 採用評価成熟度データ（2軸評価対応）
   const recruitmentMaturityData = {
     labels: ['採用時', '3ヶ月', '6ヶ月', '1年', '2年', '3年', '現在'],
     datasets: [{
-      label: '業務習熟度',
+      label: '施設業務習熟度',
       data: [0, 30, 55, 75, 85, 92, 95],
-      borderColor: '#007bff',
-      backgroundColor: 'rgba(0, 123, 255, 0.1)',
-      fill: true
+      borderColor: twoAxisColors.facility.main,
+      backgroundColor: `${twoAxisColors.facility.main}20`,
+      fill: true,
+      yAxisID: 'y'
+    }, {
+      label: '法人業務習熟度',
+      data: [0, 25, 50, 70, 82, 88, 92],
+      borderColor: twoAxisColors.corporate.main,
+      backgroundColor: `${twoAxisColors.corporate.main}20`,
+      fill: true,
+      yAxisID: 'y1'
     }, {
       label: '組織適応度',
       data: [0, 40, 65, 80, 88, 94, 96],
@@ -792,16 +742,7 @@ export function RecruitmentTab({ selectedStaff }: { selectedStaff: any }) {
             <span>現在の部署適性は92%。長期的には管理部門や教育部門への適性も高い評価です。</span>
           </div>
           <div className={styles.chartWrapper}>
-            <Bar data={departmentFitData} options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                y: {
-                  min: 0,
-                  max: 100
-                }
-              }
-            }} />
+            <Bar data={departmentFitData} options={getTwoAxisChartOptions('bar')} />
           </div>
         </div>
         <div className={styles.chartContainer}>
@@ -811,20 +752,7 @@ export function RecruitmentTab({ selectedStaff }: { selectedStaff: any }) {
             <span>5年後の管理職昇進確率72%。現在の成長ペースを維持すれば十分に達成可能です。</span>
           </div>
           <div className={styles.chartWrapper}>
-            <Line data={careerPathData} options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                y: {
-                  min: 0,
-                  max: 100,
-                  title: {
-                    display: true,
-                    text: '達成可能性(%)'
-                  }
-                }
-              }
-            }} />
+            <Line data={careerPathData} options={getTwoAxisChartOptions('line')} />
           </div>
         </div>
       </div>
@@ -837,20 +765,7 @@ export function RecruitmentTab({ selectedStaff }: { selectedStaff: any }) {
             <span>組織適応度が特に高く、3年でほぼ完全に成熟。優秀な成長曲線を描いています。</span>
           </div>
           <div className={styles.chartWrapper}>
-            <Line data={recruitmentMaturityData} options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                y: {
-                  min: 0,
-                  max: 100,
-                  title: {
-                    display: true,
-                    text: '成熟度(%)'
-                  }
-                }
-              }
-            }} />
+            <Line data={recruitmentMaturityData} options={getTwoAxisChartOptions('line')} />
           </div>
         </div>
       </div>
@@ -1001,68 +916,70 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
     )
   }
 
-  // 面談実施状況
+  // 面談実施状況（2軸評価対応）
   const interviewFrequencyData = {
     labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
     datasets: [{
-      label: '定期面談',
-      data: [1, 0, 1, 0, 1, 0],
-      backgroundColor: '#007bff'
+      label: '施設面談回数',
+      data: [1, 1, 1, 1, 1, 2],
+      backgroundColor: twoAxisColors.facility.main,
+      yAxisID: 'y'
     }, {
-      label: 'フォロー面談',
-      data: [0, 1, 0, 1, 0, 2],
-      backgroundColor: '#28a745'
+      label: '法人面談回数',
+      data: [0, 1, 0, 1, 0, 1],
+      backgroundColor: twoAxisColors.corporate.main,
+      yAxisID: 'y1'
     }]
   }
 
-  // 面談満足度推移
+  // 面談満足度推移（2軸評価対応）
   const satisfactionTrendData = {
     labels: ['2024年Q1', '2024年Q2', '2024年Q3', '2024年Q4', '2025年Q1'],
     datasets: [{
-      label: '面談満足度',
-      data: [3.5, 3.8, 4.0, 4.2, 4.5],
-      borderColor: '#007bff',
-      backgroundColor: 'rgba(0, 123, 255, 0.1)',
-      fill: true
+      label: '施設面談満足度',
+      data: [70, 76, 80, 84, 90],
+      borderColor: twoAxisColors.facility.main,
+      backgroundColor: `${twoAxisColors.facility.main}20`,
+      fill: true,
+      yAxisID: 'y'
+    }, {
+      label: '法人面談満足度',
+      data: [68, 72, 78, 82, 88],
+      borderColor: twoAxisColors.corporate.main,
+      backgroundColor: `${twoAxisColors.corporate.main}20`,
+      fill: true,
+      yAxisID: 'y1'
     }]
   }
 
-  // 話題分析円グラフデータ
+  // 話題分析円グラフデータ（2軸評価対応）
   const topicAnalysisData = {
-    labels: ['キャリア相談', '業務改善', '人間関係', '健康管理', 'スキル向上', 'その他'],
+    labels: ['施設話題', '法人話題'],
     datasets: [{
-      data: [35, 25, 15, 10, 10, 5],
+      data: [60, 40],
       backgroundColor: [
-        'rgba(0, 123, 255, 0.8)',
-        'rgba(40, 167, 69, 0.8)',
-        'rgba(255, 193, 7, 0.8)',
-        'rgba(220, 53, 69, 0.8)',
-        'rgba(23, 162, 184, 0.8)',
-        'rgba(108, 117, 125, 0.8)'
+        twoAxisColors.facility.main,
+        twoAxisColors.corporate.main
       ],
       borderColor: [
-        'rgba(0, 123, 255, 1)',
-        'rgba(40, 167, 69, 1)',
-        'rgba(255, 193, 7, 1)',
-        'rgba(220, 53, 69, 1)',
-        'rgba(23, 162, 184, 1)',
-        'rgba(108, 117, 125, 1)'
+        twoAxisColors.facility.dark,
+        twoAxisColors.corporate.dark
       ],
-      borderWidth: 1
+      borderWidth: 2
     }]
   }
 
-  // 指導効果測定レーダーチャート
+  // 指導効果測定レーダーチャート（2軸評価対応）
   const coachingEffectData = {
     labels: ['目標達成', 'モチベーション', 'スキル向上', '問題解決', '自己理解', '行動変容'],
     datasets: [{
-      label: '指導前',
-      data: [60, 65, 70, 55, 60, 50],
-      borderColor: 'rgba(220, 53, 69, 0.8)',
-      backgroundColor: 'rgba(220, 53, 69, 0.2)'
-    }, {
-      label: '指導後',
+      label: '施設評価基準',
       data: [85, 90, 88, 82, 85, 80],
+      borderColor: twoAxisColors.facility.main,
+      backgroundColor: `${twoAxisColors.facility.main}33`
+    }, {
+      label: '法人評価基準',
+      data: [82, 87, 85, 78, 82, 77],
       borderColor: 'rgba(40, 167, 69, 0.8)',
       backgroundColor: 'rgba(40, 167, 69, 0.2)'
     }]
@@ -1280,24 +1197,7 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
             <span>キャリア相談が35%で最多。今後の育成計画では業務改善やスキル向上の話題を増やすことを推奨します。</span>
           </div>
           <div className={styles.chartWrapper}>
-            <Doughnut data={topicAnalysisData} options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              plugins: {
-                legend: {
-                  position: 'right'
-                },
-                tooltip: {
-                  callbacks: {
-                    label: function(context) {
-                      const label = context.label || '';
-                      const value = context.parsed || 0;
-                      return label + ': ' + value + '%';
-                    }
-                  }
-                }
-              }
-            }} />
+            <Doughnut data={topicAnalysisData} options={getTwoAxisChartOptions('doughnut')} />
           </div>
         </div>
         <div className={styles.chartContainer}>
@@ -1410,38 +1310,42 @@ export function DevelopmentTab({ selectedStaff }: { selectedStaff: any }) {
     )
   }
 
-  // スキル成長推移
+  // スキル成長推移（2軸評価対応）
   const skillGrowthData = {
     labels: ['2023年', '2024年上期', '2024年下期', '2025年'],
     datasets: [{
-      label: '技術スキル',
+      label: '施設評価基準スキル',
       data: [70, 80, 85, 90],
-      borderColor: '#007bff',
-      backgroundColor: 'rgba(0, 123, 255, 0.1)'
+      borderColor: twoAxisColors.facility.main,
+      backgroundColor: `${twoAxisColors.facility.main}20`,
+      yAxisID: 'y'
     }, {
-      label: 'マネジメントスキル',
-      data: [50, 65, 75, 82],
-      borderColor: '#28a745',
-      backgroundColor: 'rgba(40, 167, 69, 0.1)'
-    }, {
-      label: 'コミュニケーション',
-      data: [75, 82, 88, 92],
-      borderColor: '#ffc107',
-      backgroundColor: 'rgba(255, 193, 7, 0.1)'
+      label: '法人評価基準スキル',
+      data: [65, 75, 82, 87],
+      borderColor: twoAxisColors.corporate.main,
+      backgroundColor: `${twoAxisColors.corporate.main}20`,
+      yAxisID: 'y1'
     }]
   }
 
-  // スキルギャップ分析
+  // スキルギャップ分析（2軸評価対応）
   const skillGapData = {
     labels: ['リーダーシップ', 'プロジェクト管理', '戦略立案', 'データ分析', '人材育成'],
     datasets: [{
-      label: '現在レベル',
+      label: '施設現在レベル',
       data: [75, 68, 60, 82, 88],
-      backgroundColor: 'rgba(54, 162, 235, 0.5)'
+      backgroundColor: twoAxisColors.facility.main,
+      yAxisID: 'y'
+    }, {
+      label: '法人現在レベル',
+      data: [70, 65, 55, 78, 85],
+      backgroundColor: twoAxisColors.corporate.main,
+      yAxisID: 'y1'
     }, {
       label: '必要レベル',
       data: [90, 85, 80, 85, 90],
-      backgroundColor: 'rgba(255, 99, 132, 0.5)'
+      backgroundColor: 'rgba(220, 53, 69, 0.3)',
+      yAxisID: 'y'
     }]
   }
 
@@ -1539,16 +1443,7 @@ export function DevelopmentTab({ selectedStaff }: { selectedStaff: any }) {
             <span>全スキルで着実な成長を記録。特にマネジメントスキルが前年比32%向上し、管理職への準備が順調です。</span>
           </div>
           <div className={styles.chartWrapper}>
-            <Line data={skillGrowthData} options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                y: {
-                  min: 0,
-                  max: 100
-                }
-              }
-            }} />
+            <Line data={skillGrowthData} options={getTwoAxisChartOptions('line')} />
           </div>
         </div>
         <div className={styles.chartContainer}>
@@ -1558,16 +1453,7 @@ export function DevelopmentTab({ selectedStaff }: { selectedStaff: any }) {
             <span>戦略立案とプロジェクト管理に20ポイント以上のギャップ。実践的な経験を積む機会の提供が必要です。</span>
           </div>
           <div className={styles.chartWrapper}>
-            <Bar data={skillGapData} options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                y: {
-                  min: 0,
-                  max: 100
-                }
-              }
-            }} />
+            <Bar data={skillGapData} options={getTwoAxisChartOptions('bar')} />
           </div>
         </div>
       </div>
@@ -1639,61 +1525,74 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
 
   const isNurse = selectedStaff?.position?.includes('看護師') || selectedStaff?.position?.includes('ナース')
 
-  // 研修参加実績
+  // 研修参加実績（2軸評価対応）
   const trainingParticipationData = {
-    labels: ['必須研修', '専門研修', 'リーダー研修', '外部研修', 'eラーニング'],
+    labels: ['施設研修', '法人研修'],
     datasets: [{
-      label: '参加時間',
-      data: [48, 36, 24, 16, 32],
+      data: [120, 36],
       backgroundColor: [
-        'rgba(255, 99, 132, 0.5)',
-        'rgba(54, 162, 235, 0.5)',
-        'rgba(255, 206, 86, 0.5)',
-        'rgba(75, 192, 192, 0.5)',
-        'rgba(153, 102, 255, 0.5)'
-      ]
+        twoAxisColors.facility.main,
+        twoAxisColors.corporate.main
+      ],
+      borderColor: [
+        twoAxisColors.facility.dark,
+        twoAxisColors.corporate.dark
+      ],
+      borderWidth: 2
     }]
   }
 
-  // 研修効果測定
+  // 研修効果測定（2軸評価対応）
   const trainingEffectData = {
     labels: ['知識習得', '実践応用', '行動変容', '成果創出'],
     datasets: [{
-      label: '達成度',
+      label: '施設達成度',
       data: [90, 85, 78, 82],
-      backgroundColor: 'rgba(75, 192, 192, 0.5)',
-      borderColor: 'rgba(75, 192, 192, 1)',
-      borderWidth: 1
+      backgroundColor: twoAxisColors.facility.main,
+      yAxisID: 'y'
+    }, {
+      label: '法人達成度',
+      data: [88, 82, 75, 80],
+      backgroundColor: twoAxisColors.corporate.main,
+      yAxisID: 'y1'
     }]
   }
 
-  // 看護師専用：JNAラダー研修進捗
+  // 看護師専用：JNAラダー研修進捗（2軸評価対応）
   const jnaTrainingData = {
     labels: ['基礎看護技術', '専門看護実践', '看護管理', '看護教育', '看護研究', '倫理実践'],
     datasets: [{
-      label: '修了率',
+      label: '施設修了率',
       data: [100, 95, 85, 88, 75, 90],
-      backgroundColor: 'rgba(155, 124, 203, 0.5)',
-      borderColor: 'rgba(155, 124, 203, 1)',
-      borderWidth: 1
+      backgroundColor: twoAxisColors.facility.main,
+      yAxisID: 'y'
+    }, {
+      label: '法人修了率',
+      data: [98, 92, 82, 85, 70, 88],
+      backgroundColor: twoAxisColors.corporate.main,
+      yAxisID: 'y1'
     }]
   }
 
-  // JNAキャリアラダーレベル経過グラフ
+  // JNAキャリアラダーレベル経過グラフ（2軸評価対応）
   const jnaLadderProgressData = {
     labels: ['2020年', '2021年', '2022年', '2023年', '2024年', '2025年(現在)'],
     datasets: [{
-      label: 'JNAラダーレベル',
-      data: [1, 2, 2, 3, 4, 4],
-      borderColor: 'rgba(155, 124, 182, 1)',
-      backgroundColor: 'rgba(155, 124, 182, 0.2)',
+      label: '施設ラダーレベル',
+      data: [50, 60, 65, 75, 85, 90],
+      borderColor: twoAxisColors.facility.main,
+      backgroundColor: `${twoAxisColors.facility.main}20`,
       fill: true,
       tension: 0.4,
-      pointRadius: 6,
-      pointHoverRadius: 8,
-      pointBackgroundColor: 'rgba(155, 124, 182, 1)',
-      pointBorderColor: '#fff',
-      pointBorderWidth: 2
+      yAxisID: 'y'
+    }, {
+      label: '法人ラダーレベル',
+      data: [45, 55, 60, 70, 80, 85],
+      borderColor: twoAxisColors.corporate.main,
+      backgroundColor: `${twoAxisColors.corporate.main}20`,
+      fill: true,
+      tension: 0.4,
+      yAxisID: 'y1'
     }]
   }
 
