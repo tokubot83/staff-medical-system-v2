@@ -6,7 +6,7 @@ import CommonHeader from '@/components/CommonHeader'
 import DashboardButton from '@/components/DashboardButton'
 import { staffDatabase } from '../data/staffData.js'
 import { TwoAxisEvaluationSummary } from '@/components/evaluation/TwoAxisEvaluationSummary'
-import { TwoAxisEvaluationMatrix } from '@/components/evaluation/TwoAxisEvaluationMatrix'
+import { TwoAxisEvaluationMatrixDisplay } from '@/components/evaluation/TwoAxisEvaluationMatrix'
 import { getEvaluationGradeColor, getEvaluationGradeLabel } from '@/types/two-axis-evaluation'
 import styles from './Evaluation.module.css'
 
@@ -891,7 +891,12 @@ function TwoAxisTab() {
       {viewMode === 'matrix' && (
         <div className={styles.matrixView}>
           <h3>2軸評価マトリックス</h3>
-          <TwoAxisEvaluationMatrix />
+          <TwoAxisEvaluationMatrixDisplay 
+            facilityScore="B" 
+            corporateScore="B" 
+            showGrid={true}
+            size="large"
+          />
         </div>
       )}
     </div>
