@@ -1,0 +1,210 @@
+.evaluationForm {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.formHeader {
+  margin-bottom: 24px;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 16px;
+}
+
+.formHeader h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 12px 0;
+}
+
+.staffInfo {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.staffName {
+  font-weight: 600;
+  color: #374151;
+  font-size: 16px;
+}
+
+.staffDetail {
+  color: #6b7280;
+}
+
+.staffId {
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+.formBody {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.evaluationSection {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.sectionLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 16px;
+  font-size: 16px;
+}
+
+.labelIcon {
+  font-size: 20px;
+}
+
+.gradeSelector {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.gradeButton {
+  padding: 8px 16px;
+  border: 2px solid;
+  border-radius: 6px;
+  background: transparent;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+
+.gradeButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.gradeButton.selected {
+  color: white;
+  transform: scale(1.05);
+}
+
+.gradeDescription {
+  color: #6b7280;
+  font-size: 14px;
+  margin: 0;
+}
+
+.resultSection {
+  background: #f3f4f6;
+  border-radius: 8px;
+  padding: 20px;
+  border: 2px solid #e5e7eb;
+}
+
+.overallResult {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.resultLabel {
+  font-weight: 600;
+  color: #374151;
+  font-size: 16px;
+}
+
+.resultGrade {
+  padding: 6px 16px;
+  border-radius: 6px;
+  color: white;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.resultDescription {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.commentSection {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.commentTextarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+}
+
+.commentTextarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.formActions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.submitButton {
+  padding: 10px 24px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.submitButton:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.cancelButton {
+  padding: 10px 24px;
+  background: white;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancelButton:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+/* グレード別の色 */
+.gradeS\+ { background-color: #9333ea; }
+.gradeS { background-color: #7c3aed; }
+.gradeA\+ { background-color: #2563eb; }
+.gradeA { background-color: #3b82f6; }
+.gradeB { background-color: #10b981; }
+.gradeC { background-color: #f59e0b; }
+.gradeD { background-color: #ef4444; }
