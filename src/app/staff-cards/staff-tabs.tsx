@@ -6,7 +6,7 @@ import styles from './StaffCards.module.css'
 import { useRouter } from 'next/navigation'
 import { Interview } from '@/types/interview'
 import { getInterviewsByStaffId } from '@/data/mockInterviews'
-import { TwoAxisEvaluationSummary } from '@/components/evaluation/TwoAxisEvaluationSummary'
+import { TwoAxisEvaluationSummaryDetailed } from '@/components/evaluation/TwoAxisEvaluationSummaryDetailed'
 import { TwoAxisEvaluationMatrixDisplay } from '@/components/evaluation/TwoAxisEvaluationMatrix'
 import { estimateTwoAxisEvaluation } from '@/utils/twoAxisEvaluationUtils'
 
@@ -485,12 +485,18 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
           </div>
           
           <div style={{ marginBottom: '24px' }}>
-            <TwoAxisEvaluationSummary
+            <TwoAxisEvaluationSummaryDetailed
               facilityScore={twoAxisEvaluation.facilityScore}
+              facilityRank={twoAxisEvaluation.facilityRank}
+              facilityTotal={twoAxisEvaluation.facilityTotal}
               corporateScore={twoAxisEvaluation.corporateScore}
+              corporateRank={twoAxisEvaluation.corporateRank}
+              corporateTotal={twoAxisEvaluation.corporateTotal}
               overallScore={twoAxisEvaluation.overallScore}
-              size="large"
-              showDetails={true}
+              description={twoAxisEvaluation.description || '優秀な職員'}
+              recommendation={twoAxisEvaluation.recommendation || '他施設との交流・研修機会の活用'}
+              strengthArea="施設内での圧倒的なパフォーマンス"
+              improvementArea="法人規模での更なる成長余地"
             />
           </div>
           

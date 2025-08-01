@@ -10,7 +10,7 @@ import styles from '../StaffCards.module.css'
 import DashboardButton from '@/components/DashboardButton'
 import ScrollToTopButton from '@/components/ScrollToTopButton'
 import BackToStaffCardsButton from '@/components/BackToStaffCardsButton'
-import { TwoAxisEvaluationSummary } from '@/components/evaluation/TwoAxisEvaluationSummary'
+import { TwoAxisEvaluationSummaryCompact } from '@/components/evaluation/TwoAxisEvaluationSummaryCompact'
 import { estimateTwoAxisEvaluation } from '@/utils/twoAxisEvaluationUtils'
 import {
   Chart as ChartJS,
@@ -204,12 +204,16 @@ function BasicInfoTab({ selectedStaff }: { selectedStaff: any }) {
         </div>
 
         <div style={{ marginTop: '24px', marginBottom: '24px' }}>
-          <TwoAxisEvaluationSummary
+          <TwoAxisEvaluationSummaryCompact
             facilityScore={twoAxisEvaluation.facilityScore}
+            facilityRank={twoAxisEvaluation.facilityRank}
+            facilityTotal={twoAxisEvaluation.facilityTotal}
             corporateScore={twoAxisEvaluation.corporateScore}
+            corporateRank={twoAxisEvaluation.corporateRank}
+            corporateTotal={twoAxisEvaluation.corporateTotal}
             overallScore={twoAxisEvaluation.overallScore}
-            size="medium"
-            showDetails={false}
+            description={twoAxisEvaluation.description || '優秀な職員'}
+            recommendation={twoAxisEvaluation.recommendation || '継続的な成長を支援'}
           />
         </div>
 
