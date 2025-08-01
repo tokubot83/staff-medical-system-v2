@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, Suspense } from 'react';
+import React, { useEffect, useState, Suspense, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ReportLayout from '@/components/reports/ReportLayout';
 import { facilities } from '@/app/data/facilityData';
@@ -10,11 +10,19 @@ import { DataCommentList, MetricWithComment } from '@/components/DataComment';
 import { generateHRStrategyComments } from '@/utils/reportComments';
 import { organizationData, getDepartmentsByType } from '@/app/data/organizationData';
 import { tachigamiOrganizationData } from '@/app/data/tachigamiOrganizationData';
+import { TwoAxisMatrixView } from '@/components/hr-strategy/TwoAxisMatrixView';
+import { TransferRecommendationList } from '@/components/hr-strategy/TransferRecommendationList';
+import { JobCategoryDistribution } from '@/components/hr-strategy/JobCategoryDistribution';
+import { generateMockTwoAxisEvaluations } from '@/data/mockHRStrategyData';
+import { generateTransferRecommendation } from '@/utils/evaluationPatternAnalyzer';
+import { JobCategory } from '@/types/hr-strategy';
 
 function HRStrategyReportContent() {
   const searchParams = useSearchParams();
   const facilityId = searchParams.get('facility');
   const [facility, setFacility] = useState<any>(null);
+  const [selectedJobCategory, setSelectedJobCategory] = useState<JobCategory | undefined>(undefined);
+  const [selectedEmployee, setSelectedEmployee] = useState<any>(null);
   
   useEffect(() => {
     if (facilityId) {
@@ -22,6 +30,29 @@ function HRStrategyReportContent() {
       setFacility(selected);
     }
   }, [facilityId]);
+
+  // 2軸評価データの取得
+  const twoAxisEvaluations = useMemo(() => {
+    const allEvaluations = generateMockTwoAxisEvaluations();
+    if (facilityId) {
+      // 施設でフィルタリング
+      return allEvaluations.filter(e => 
+        e.department === (facilityId === 'tachigami-hospital' ? 'リハビリテーション科' : '内科')
+      );
+    }
+    return allEvaluations;
+  }, [facilityId]);
+
+  // 異動推奨リストの生成
+  const transferRecommendations = useMemo(() => {
+    // 優先度の高いパターンの職員を抽出
+    const priorityPatterns = ['local-star', 'environment-mismatch', 'burnout-syndrome', 'hidden-talent', 'specialist'];
+    const recommendations = twoAxisEvaluations
+      .filter(e => priorityPatterns.includes(e.evaluationPattern))
+      .map(e => generateTransferRecommendation(e))
+      .slice(0, 10); // 上位10件
+    return recommendations;
+  }, [twoAxisEvaluations]);
 
   // ダミーデータの生成（実際の実装では施設ごとのデータを取得）
   const generateReportData = () => {
@@ -230,6 +261,55 @@ function HRStrategyReportContent() {
               </ul>
             </div>
           </div>
+        </section>
+
+        {/* 2軸評価分析セクション */}
+        <section className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">2軸評価分析</h2>
+          
+          {/* 職種選択 */}
+          <div className="mb-4">
+            <label className="text-sm font-medium text-gray-700 mr-2">職種でフィルタ:</label>
+            <select
+              className="border rounded px-3 py-1"
+              value={selectedJobCategory || 'all'}
+              onChange={(e) => setSelectedJobCategory(e.target.value === 'all' ? undefined : e.target.value as JobCategory)}
+            >
+              <option value="all">全職種</option>
+              <option value="看護師">看護師</option>
+              <option value="介護職">介護職</option>
+              <option value="医師">医師</option>
+              <option value="セラピスト">セラピスト</option>
+              <option value="事務職">事務職</option>
+              <option value="その他">その他</option>
+            </select>
+          </div>
+
+          {/* 2軸評価マトリックス */}
+          <TwoAxisMatrixView
+            evaluations={twoAxisEvaluations}
+            selectedJobCategory={selectedJobCategory}
+            onEmployeeSelect={setSelectedEmployee}
+          />
+
+          {/* 職種別分布 */}
+          <div className="mt-8">
+            <JobCategoryDistribution
+              evaluations={twoAxisEvaluations}
+              selectedCategory={selectedJobCategory}
+            />
+          </div>
+        </section>
+
+        {/* 異動・育成推奨リスト */}
+        <section className="mb-8">
+          <TransferRecommendationList
+            recommendations={transferRecommendations}
+            onActionClick={(rec, action) => {
+              console.log('Action clicked:', rec.employeeName, action);
+              // TODO: アクション処理の実装
+            }}
+          />
         </section>
 
         {/* 改善提案 */}
