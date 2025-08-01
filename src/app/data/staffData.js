@@ -278,6 +278,49 @@ exports.tachigamiStaffDatabase = {
             { date: '2020年4月1日', department: '介護医療院', position: '介護職員', reason: '新卒配属' },
         ],
     },
+    // 小原病院 - 看護部
+    'OH-NS-2022-008': {
+        id: 'OH-NS-2022-008',
+        name: '佐々木花子',
+        nameInitial: '佐',
+        position: '看護師',
+        department: '2階病棟',
+        facility: '小原病院',
+        employeeId: 'OH-NS-2022-008',
+        joinDate: '2022年4月1日',
+        tenure: '2年9ヶ月',
+        age: 26,
+        birthDate: '1998年6月25日',
+        evaluation: 'A',
+        evaluationPeriod: '2024年下期',
+        nextMeeting: '2025年3月15日',
+        healthStatus: '良好',
+        stressIndex: 45,
+        engagement: 85,
+        overtime: 18,
+        paidLeaveRate: 70,
+        avatar: 'bg-gradient-to-r from-pink-500 to-rose-600',
+        email: 'sasaki.hanako@obara-hp.jp',
+        phone: '080-9876-5432',
+        emergencyContact: '090-1234-5678（母）',
+        address: '東京都○○区△△5-6-7',
+        evaluationHistory: [
+            { period: '2024年下期', overall: 'A', performance: 4.4, skills: 4.3, teamwork: 4.6, growth: 4.5, evaluator: '2階病棟 師長' },
+            { period: '2024年上期', overall: 'B+', performance: 4.1, skills: 4.0, teamwork: 4.2, growth: 4.2, evaluator: '2階病棟 師長' },
+        ],
+        skills: [
+            { name: '看護実践能力', level: 3, category: 'JNAラダー' },
+            { name: '慢性期看護', level: 4, category: '専門技術' },
+            { name: '患者教育', level: 4, category: '支援技術' },
+        ],
+        trainingHistory: [
+            { name: '慢性期看護専門研修', date: '2024年11月', category: '専門技術', hours: 20, evaluation: '優秀', certificate: true },
+            { name: '感染管理研修', date: '2024年7月', category: '安全管理', hours: 8, evaluation: '良好', certificate: true },
+        ],
+        assignmentHistory: [
+            { date: '2022年4月1日', department: '2階病棟', position: '看護師', reason: '新卒配属' },
+        ],
+    },
 };
 // 全スタッフデータベース（両病院統合）
 exports.staffDatabase = __assign(__assign({}, exports.obaraStaffDatabase), exports.tachigamiStaffDatabase);
