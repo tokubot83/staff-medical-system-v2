@@ -177,7 +177,7 @@ function BasicInfoTab({ selectedStaff }: { selectedStaff: any }) {
           <div className={styles.metricCard}>
             <h3>総合評価</h3>
             <div className={styles.metricValue}>{twoAxisEvaluation.overallScore}</div>
-            <p className={styles.metricLabel}>最新2軸評価</p>
+            <p className={styles.metricLabel}>最新総合人事評価</p>
           </div>
           <div className={styles.metricCard}>
             <h3>健康スコア</h3>
