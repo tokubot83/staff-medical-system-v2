@@ -401,6 +401,19 @@ export function analyzeJobCategoryDistribution(
     patternCounts[e.evaluationPattern] = (patternCounts[e.evaluationPattern] || 0) + 1;
   });
 
+  // dominantPatternsを先に計算
+  const dominantPatterns = Object.entries(patternCounts)
+    .map(([pattern, count]) => ({
+      pattern: pattern as EvaluationPattern,
+      count: count!,
+      percentage: total > 0 ? (count! / total) * 100 : 0
+    }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 5);
+
+  // 職種別の推奨事項を生成
+  const recommendations = generateJobCategoryRecommendations(jobCategory, dominantPatterns);
+
   return {
     jobCategory,
     totalCount: total,
@@ -413,13 +426,54 @@ export function analyzeJobCategoryDistribution(
         percentage: total > 0 ? (count / total) * 100 : 0
       };
     }),
-    dominantPatterns: Object.entries(patternCounts)
-      .map(([pattern, count]) => ({
-        pattern: pattern as EvaluationPattern,
-        count: count!,
-        percentage: total > 0 ? (count! / total) * 100 : 0
-      }))
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 5)
+    dominantPatterns,
+    recommendations
   };
+}
+
+// 職種別の推奨事項を生成する関数
+function generateJobCategoryRecommendations(
+  jobCategory: JobCategory,
+  dominantPatterns: { pattern: EvaluationPattern; count: number; percentage: number }[]
+): string[] {
+  const recommendations: string[] = [];
+
+  switch (jobCategory) {
+    case '看護師':
+      recommendations.push('看護師のキャリアパス整備と専門性向上支援');
+      if (dominantPatterns.some(p => p.pattern === 'nurse-leadership')) {
+        recommendations.push('看護管理者育成プログラムの強化');
+      }
+      break;
+    case '介護職':
+      recommendations.push('介護技術研修の充実と資格取得支援');
+      if (dominantPatterns.some(p => p.pattern === 'care-specialist')) {
+        recommendations.push('介護スペシャリストの活用促進');
+      }
+      break;
+    case '事務職':
+      recommendations.push('業務効率化スキルの向上支援');
+      if (dominantPatterns.some(p => p.pattern === 'admin-efficiency')) {
+        recommendations.push('DX推進リーダーの育成');
+      }
+      break;
+    case '医師':
+      recommendations.push('専門医資格の取得支援と研究活動の促進');
+      break;
+    case 'セラピスト':
+      recommendations.push('専門技術の向上と他職種連携の強化');
+      break;
+    default:
+      recommendations.push('職種特性に応じた育成計画の策定');
+  }
+
+  // パターンに基づく追加推奨
+  if (dominantPatterns.some(p => p.pattern === 'environment-mismatch' && p.percentage > 20)) {
+    recommendations.push('適性に応じた配置転換の検討');
+  }
+  if (dominantPatterns.some(p => p.pattern === 'burnout-syndrome' && p.percentage > 10)) {
+    recommendations.push('メンタルヘルスケアの強化');
+  }
+
+  return recommendations;
 }
