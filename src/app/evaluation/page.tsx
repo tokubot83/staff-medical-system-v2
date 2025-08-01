@@ -5,11 +5,15 @@ import { useSearchParams } from 'next/navigation'
 import CommonHeader from '@/components/CommonHeader'
 import DashboardButton from '@/components/DashboardButton'
 import { staffDatabase } from '../data/staffData.js'
+import { TwoAxisEvaluationSummary } from '@/components/evaluation/TwoAxisEvaluationSummary'
+import { TwoAxisEvaluationMatrix } from '@/components/evaluation/TwoAxisEvaluationMatrix'
+import { getEvaluationGradeColor, getEvaluationGradeLabel } from '@/types/two-axis-evaluation'
 import styles from './Evaluation.module.css'
 
 const tabs = [
   { id: 'dashboard', label: '評価ダッシュボード', icon: '📊' },
   { id: 'staffList', label: '職員評価一覧', icon: '👥' },
+  { id: 'twoAxis', label: '総合人事評価', icon: '🎯' },
   { id: 'execution', label: '評価実施', icon: '✍️' },
   { id: 'analysis', label: '分析・レポート', icon: '📈' },
   { id: 'process', label: '評価プロセス管理', icon: '🔄' },
@@ -82,6 +86,23 @@ function EvaluationPageContent() {
     return Object.values(data)
   }
 
+  // 2軸評価のモックデータを取得する関数
+  function getTwoAxisEvaluationMock(name: string): { facility: string; corporate: string; overall: string } | null {
+    const mockData: Record<string, { facility: string; corporate: string; overall: string }> = {
+      '田中美咲': { facility: 'B', corporate: 'A', overall: 'A' },
+      '佐藤花子': { facility: 'A', corporate: 'A', overall: 'A+' },
+      '中村恵子': { facility: 'C', corporate: 'C', overall: 'C' },
+      '小林さくら': { facility: 'B', corporate: 'B', overall: 'B' },
+      '伊藤由美': { facility: 'S', corporate: 'A', overall: 'S' },
+      '渡辺麻衣': { facility: 'B', corporate: 'B', overall: 'B' },
+      '山田太郎': { facility: 'A', corporate: 'B', overall: 'A' },
+      '高橋花子': { facility: 'C', corporate: 'B', overall: 'C' },
+      '鈴木一郎': { facility: 'B', corporate: 'C', overall: 'C' },
+      '木村洋子': { facility: 'A', corporate: 'S', overall: 'S' }
+    }
+    return mockData[name] || null
+  }
+
   const evaluationData = getEvaluationData()
 
   return (
@@ -129,6 +150,7 @@ function EvaluationPageContent() {
           {activeTab === 'criteria' && <CriteriaTab />}
           {activeTab === 'execution' && <ExecutionTab targetStaffId={staffId} />}
           {activeTab === 'analysis' && <AnalysisTab />}
+          {activeTab === 'twoAxis' && <TwoAxisTab />}
         </div>
       </div>
       <DashboardButton />
@@ -266,9 +288,18 @@ function DashboardTab({
           </div>
         </div>
         <div className={styles.summaryCard}>
-          <h3>平均評価スコア</h3>
-          <div className={styles.summaryValue}>4.2</div>
-          <p className={styles.summaryLabel}>5段階評価</p>
+          <h3>総合人事評価</h3>
+          <div className={styles.twoAxisPreview}>
+            <div className={styles.twoAxisInfo}>
+              <span className={styles.infoLabel}>実施済</span>
+              <span className={styles.infoValue}>486名</span>
+            </div>
+            <div className={styles.twoAxisInfo}>
+              <span className={styles.infoLabel}>S+評価</span>
+              <span className={styles.infoValue}>12名</span>
+            </div>
+          </div>
+          <p className={styles.summaryLabel}>2軸評価システム</p>
         </div>
       </div>
 
@@ -619,32 +650,51 @@ function StaffListTab({
                 onClick={() => handleSort('evaluation')}
                 className={styles.sortableHeader}
               >
-                評価 {sortField === 'evaluation' && (sortOrder === 'asc' ? '▲' : '▼')}
+                従来評価 {sortField === 'evaluation' && (sortOrder === 'asc' ? '▲' : '▼')}
               </th>
+              <th>総合人事評価</th>
               <th>操作</th>
             </tr>
           </thead>
           <tbody>
-            {sortedStaff.map(([id, staff]) => (
-              <tr key={id} className={highlightStaffId === id ? styles.highlightedRow : ''}>
-                <td>{staff.employeeId}</td>
-                <td>{staff.name}</td>
-                <td>{staff.facility}</td>
-                <td>{staff.department}</td>
-                <td>{staff.position}</td>
-                <td>-</td>
-                <td>
-                  <span className={`${styles.evaluationBadge} ${styles[`grade${staff.evaluation}`]}`}>
-                    {staff.evaluation || '未評価'}
-                  </span>
-                </td>
-                <td>
-                  <a href={`/staff-cards/${id}`} className={styles.detailLink}>
-                    詳細
-                  </a>
-                </td>
-              </tr>
-            ))}
+            {sortedStaff.map(([id, staff]) => {
+              // モックデータとして2軸評価を設定
+              const twoAxisData = getTwoAxisEvaluationMock(staff.name)
+              return (
+                <tr key={id} className={highlightStaffId === id ? styles.highlightedRow : ''}>
+                  <td>{staff.employeeId}</td>
+                  <td>{staff.name}</td>
+                  <td>{staff.facility}</td>
+                  <td>{staff.department}</td>
+                  <td>{staff.position}</td>
+                  <td>-</td>
+                  <td>
+                    <span className={`${styles.evaluationBadge} ${styles[`grade${staff.evaluation}`]}`}>
+                      {staff.evaluation || '未評価'}
+                    </span>
+                  </td>
+                  <td>
+                    {twoAxisData ? (
+                      <div className={styles.twoAxisBadgeContainer}>
+                        <span className={styles.twoAxisBadge} style={{ backgroundColor: getEvaluationGradeColor(twoAxisData.overall) }}>
+                          {twoAxisData.overall}
+                        </span>
+                        <span className={styles.twoAxisDetail}>
+                          ({twoAxisData.facility}/{twoAxisData.corporate})
+                        </span>
+                      </div>
+                    ) : (
+                      <span className={styles.notEvaluated}>-</span>
+                    )}
+                  </td>
+                  <td>
+                    <a href={`/staff-cards/${id}`} className={styles.detailLink}>
+                      詳細
+                    </a>
+                  </td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
         {sortedStaff.length === 0 && (
@@ -657,6 +707,193 @@ function StaffListTab({
       <div className={styles.staffListSummary}>
         <p>表示件数: {sortedStaff.length}件</p>
       </div>
+    </div>
+  )
+}
+
+function TwoAxisTab() {
+  const [selectedFacility, setSelectedFacility] = useState('all')
+  const [selectedDepartment, setSelectedDepartment] = useState('all')
+  const [selectedPeriod, setSelectedPeriod] = useState('2024-H2')
+  const [viewMode, setViewMode] = useState<'summary' | 'list' | 'matrix'>('summary')
+
+  // 2軸評価データの集計（モックデータ）
+  const twoAxisStats = {
+    totalEvaluated: 486,
+    distribution: {
+      'S+': 12,
+      'S': 45,
+      'A+': 78,
+      'A': 156,
+      'B': 145,
+      'C': 38,
+      'D': 12
+    },
+    averageFacilityScore: 'B',
+    averageCorporateScore: 'B',
+    topPerformers: [
+      { name: '田中美咲', department: '地域包括ケア病棟', facility: 'B', corporate: 'A', overall: 'A' },
+      { name: '佐藤花子', department: '内科病棟', facility: 'A', corporate: 'A', overall: 'A+' },
+      { name: '伊藤由美', department: '緩和ケア病棟', facility: 'S', corporate: 'A', overall: 'S' }
+    ]
+  }
+
+  return (
+    <div className={styles.twoAxisContainer}>
+      {/* フィルター */}
+      <div className={styles.filterSection}>
+        <select 
+          value={selectedPeriod}
+          onChange={(e) => setSelectedPeriod(e.target.value)}
+          className={styles.filterSelect}
+        >
+          <option value="2024-H2">2024年下期</option>
+          <option value="2024-H1">2024年上期</option>
+          <option value="2023-H2">2023年下期</option>
+        </select>
+        <select 
+          value={selectedFacility}
+          onChange={(e) => setSelectedFacility(e.target.value)}
+          className={styles.filterSelect}
+        >
+          <option value="all">全施設</option>
+          <option value="小原病院">小原病院</option>
+          <option value="立神リハビリテーション温泉病院">立神リハビリテーション温泉病院</option>
+        </select>
+        <select 
+          value={selectedDepartment}
+          onChange={(e) => setSelectedDepartment(e.target.value)}
+          className={styles.filterSelect}
+        >
+          <option value="all">全部署</option>
+          <option value="内科">内科</option>
+          <option value="リハビリテーション科">リハビリテーション科</option>
+          <option value="第１病棟">第１病棟</option>
+          <option value="外来">外来</option>
+        </select>
+        <div className={styles.viewModeToggle}>
+          <button 
+            className={viewMode === 'summary' ? styles.active : ''}
+            onClick={() => setViewMode('summary')}
+          >
+            サマリー
+          </button>
+          <button 
+            className={viewMode === 'list' ? styles.active : ''}
+            onClick={() => setViewMode('list')}
+          >
+            一覧
+          </button>
+          <button 
+            className={viewMode === 'matrix' ? styles.active : ''}
+            onClick={() => setViewMode('matrix')}
+          >
+            マトリックス
+          </button>
+        </div>
+      </div>
+
+      {viewMode === 'summary' && (
+        <div>
+          {/* 統計サマリー */}
+          <div className={styles.summaryCards}>
+            <div className={styles.summaryCard}>
+              <h3>総合人事評価実施数</h3>
+              <div className={styles.summaryValue}>{twoAxisStats.totalEvaluated}名</div>
+              <p className={styles.summaryLabel}>2軸評価完了</p>
+            </div>
+            <div className={styles.summaryCard}>
+              <h3>評価分布</h3>
+              <div className={styles.twoAxisDistribution}>
+                {Object.entries(twoAxisStats.distribution).map(([grade, count]) => (
+                  <div key={grade} className={styles.gradeItem}>
+                    <div 
+                      className={styles.gradeBadge}
+                      style={{ backgroundColor: getEvaluationGradeColor(grade as any) }}
+                    >
+                      {grade}
+                    </div>
+                    <span className={styles.gradeCount}>{count}名</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className={styles.summaryCard}>
+              <h3>平均評価</h3>
+              <div className={styles.averageScores}>
+                <div className={styles.scoreItem}>
+                  <span className={styles.scoreLabel}>施設内</span>
+                  <span className={styles.scoreValue}>{twoAxisStats.averageFacilityScore}</span>
+                </div>
+                <div className={styles.scoreItem}>
+                  <span className={styles.scoreLabel}>法人内</span>
+                  <span className={styles.scoreValue}>{twoAxisStats.averageCorporateScore}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* トップパフォーマー */}
+          <div className={styles.topPerformersSection}>
+            <h3>トップパフォーマー</h3>
+            <div className={styles.performersList}>
+              {twoAxisStats.topPerformers.map((performer, index) => (
+                <div key={index} className={styles.performerCard}>
+                  <h4>{performer.name}</h4>
+                  <p>{performer.department}</p>
+                  <TwoAxisEvaluationSummary
+                    facilityScore={performer.facility as any}
+                    corporateScore={performer.corporate as any}
+                    overallScore={performer.overall as any}
+                    size="small"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {viewMode === 'list' && (
+        <div className={styles.twoAxisListView}>
+          {/* 2軸評価一覧表示 */}
+          <table className={styles.twoAxisTable}>
+            <thead>
+              <tr>
+                <th>職員番号</th>
+                <th>氏名</th>
+                <th>部署</th>
+                <th>施設内評価</th>
+                <th>法人内評価</th>
+                <th>総合評価</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              {/* ここに職員の2軸評価データを表示 */}
+              <tr>
+                <td>NS-2021-047</td>
+                <td>田中美咲</td>
+                <td>地域包括ケア病棟</td>
+                <td><span className={styles.gradeB}>B</span></td>
+                <td><span className={styles.gradeA}>A</span></td>
+                <td><span className={styles.gradeA}>A</span></td>
+                <td>
+                  <a href="/staff-cards/NS-2021-047" className={styles.detailLink}>詳細</a>
+                </td>
+              </tr>
+              {/* 他の職員データも同様に表示 */}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {viewMode === 'matrix' && (
+        <div className={styles.matrixView}>
+          <h3>2軸評価マトリックス</h3>
+          <TwoAxisEvaluationMatrix />
+        </div>
+      )}
     </div>
   )
 }
