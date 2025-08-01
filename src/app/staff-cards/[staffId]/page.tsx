@@ -161,12 +161,13 @@ function BasicInfoTab({ selectedStaff }: { selectedStaff: any }) {
           </div>
           <div className={styles.profileStatus}>
             <div className={`${styles.statusBadge} ${
-              selectedStaff.evaluation === 'S' ? styles.statusExcellent :
-              selectedStaff.evaluation === 'A' ? styles.statusGood :
+              twoAxisEvaluation.overallScore === 'S+' || twoAxisEvaluation.overallScore === 'S' ? styles.statusExcellent :
+              twoAxisEvaluation.overallScore === 'A+' || twoAxisEvaluation.overallScore === 'A' ? styles.statusGood :
               styles.statusNormal
             }`}>
-              {selectedStaff.evaluation === 'S' ? '優秀職員' :
-               selectedStaff.evaluation === 'A' ? '高評価' :
+              {twoAxisEvaluation.overallScore === 'S+' ? '最優秀' :
+               twoAxisEvaluation.overallScore === 'S' ? '優秀' :
+               twoAxisEvaluation.overallScore === 'A+' || twoAxisEvaluation.overallScore === 'A' ? '高評価' :
                '標準'}
             </div>
           </div>
@@ -175,8 +176,8 @@ function BasicInfoTab({ selectedStaff }: { selectedStaff: any }) {
         <div className={styles.metricsGrid}>
           <div className={styles.metricCard}>
             <h3>総合評価</h3>
-            <div className={styles.metricValue}>{selectedStaff.evaluation}</div>
-            <p className={styles.metricLabel}>最新評価</p>
+            <div className={styles.metricValue}>{twoAxisEvaluation.overallScore}</div>
+            <p className={styles.metricLabel}>最新2軸評価</p>
           </div>
           <div className={styles.metricCard}>
             <h3>健康スコア</h3>
