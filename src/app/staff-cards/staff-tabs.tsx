@@ -8,7 +8,7 @@ import { Interview } from '@/types/interview'
 import { getInterviewsByStaffId } from '@/data/mockInterviews'
 import { TwoAxisEvaluationSummaryDetailed } from '@/components/evaluation/TwoAxisEvaluationSummaryDetailed'
 import { TwoAxisEvaluationMatrixDisplay } from '@/components/evaluation/TwoAxisEvaluationMatrix'
-import { estimateTwoAxisEvaluation } from '@/utils/twoAxisEvaluationUtils'
+import { getTwoAxisEvaluationByStaffId } from '@/data/mockTwoAxisEvaluations'
 
 // 総合分析タブコンポーネント
 export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
@@ -381,6 +381,8 @@ export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
 
 // 人事評価タブコンポーネント
 export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
+  const router = useRouter()
+  
   if (!selectedStaff) {
     return (
       <div className={styles.noDataContainer}>
@@ -391,14 +393,13 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
 
   const isNurse = selectedStaff?.position?.includes('看護師') || selectedStaff?.position?.includes('ナース')
   
-  // 2軸評価データの取得または推定
-  const twoAxisEvaluation = selectedStaff.twoAxisEvaluation || estimateTwoAxisEvaluation(
-    selectedStaff.evaluation,
-    Math.floor(Math.random() * 50) + 1, // デモ用の仮の順位
-    200, // デモ用の仮の総数
-    Math.floor(Math.random() * 100) + 1, // デモ用の仮の順位
-    500 // デモ用の仮の総数
-  )
+  // 2軸評価データの取得
+  const twoAxisEvaluation = getTwoAxisEvaluationByStaffId(selectedStaff.id, selectedStaff)
+  
+  const handleEvaluationInput = () => {
+    // 評価管理ページの評価実施タブに遷移
+    router.push(`/evaluation?tab=execution&staffId=${selectedStaff.id}`)
+  }
 
   // 評価推移データ
   const evaluationTrendData = {
@@ -472,7 +473,7 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
       <div className={styles.sectionHeader}>
         <h2>📊 人事評価・成長分析</h2>
         <div className={styles.sectionActions}>
-          <button className={styles.actionButton}>評価入力</button>
+          <button className={styles.actionButton} onClick={handleEvaluationInput}>評価入力</button>
           <button className={styles.actionButtonSecondary}>評価履歴</button>
         </div>
       </div>
@@ -493,8 +494,8 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
               corporateRank={twoAxisEvaluation.corporateRank}
               corporateTotal={twoAxisEvaluation.corporateTotal}
               overallScore={twoAxisEvaluation.overallScore}
-              description={twoAxisEvaluation.description || '優秀な職員'}
-              recommendation={twoAxisEvaluation.recommendation || '他施設との交流・研修機会の活用'}
+              description={twoAxisEvaluation.comments || '優秀な職員'}
+              recommendation="他施設との交流・研修機会の活用"
               strengthArea="施設内での圧倒的なパフォーマンス"
               improvementArea="法人規模での更なる成長余地"
             />

@@ -7,7 +7,9 @@ import DashboardButton from '@/components/DashboardButton'
 import { staffDatabase } from '../data/staffData.js'
 import { TwoAxisEvaluationSummary } from '@/components/evaluation/TwoAxisEvaluationSummary'
 import { TwoAxisEvaluationMatrixDisplay } from '@/components/evaluation/TwoAxisEvaluationMatrix'
+import { TwoAxisEvaluationForm } from '@/components/evaluation/TwoAxisEvaluationForm'
 import { getEvaluationGradeColor, getEvaluationGradeLabel } from '@/types/two-axis-evaluation'
+import { getTwoAxisEvaluationByStaffId } from '@/data/mockTwoAxisEvaluations'
 import styles from './Evaluation.module.css'
 
 const tabs = [
@@ -226,7 +228,7 @@ function DashboardTab({
           <p className={styles.summaryLabel}>{totalStats.completedEvaluations}名 / {totalStats.totalStaff}名</p>
         </div>
         <div className={styles.summaryCard}>
-          <h3>評価分布</h3>
+          <h3>従来評価分布</h3>
           <div className={styles.distributionBars}>
             <div className={styles.distributionItem}>
               <span className={styles.distributionLabel}>S</span>
@@ -275,11 +277,11 @@ function DashboardTab({
           <div className={styles.twoAxisPreview}>
             <div className={styles.twoAxisInfo}>
               <span className={styles.infoLabel}>実施済</span>
-              <span className={styles.infoValue}>486名</span>
+              <span className={styles.infoValue}>{totalStats.totalStaff}名</span>
             </div>
             <div className={styles.twoAxisInfo}>
-              <span className={styles.infoLabel}>S+評価</span>
-              <span className={styles.infoValue}>12名</span>
+              <span className={styles.infoLabel}>S+/S評価</span>
+              <span className={styles.infoValue}>{Math.floor(totalStats.totalStaff * 0.12)}名</span>
             </div>
           </div>
           <p className={styles.summaryLabel}>2軸評価システム</p>
@@ -433,26 +435,168 @@ interface ExecutionTabProps {
 }
 
 function ExecutionTab({ targetStaffId }: ExecutionTabProps): React.ReactElement {
+  const [showEvaluationForm, setShowEvaluationForm] = useState(false)
+  const [selectedStaffId, setSelectedStaffId] = useState<string>('')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedFacility, setSelectedFacility] = useState('all')
+  const [selectedDepartment, setSelectedDepartment] = useState('all')
+
+  // 職員の検索と選択
+  const filteredStaff = Object.entries(staffDatabase).filter(([id, staff]: [string, any]) => {
+    const matchesSearch = searchTerm === '' || 
+      staff.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      staff.employeeId.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesFacility = selectedFacility === 'all' || staff.facility === selectedFacility
+    const matchesDepartment = selectedDepartment === 'all' || staff.department === selectedDepartment
+    return matchesSearch && matchesFacility && matchesDepartment
+  }).slice(0, 10) // 最初の10件のみ表示
+
+  const handleStartEvaluation = (staffId: string) => {
+    setSelectedStaffId(staffId)
+    setShowEvaluationForm(true)
+  }
+
+  const handleSubmitEvaluation = (evaluation: any) => {
+    // TODO: 評価データの保存処理
+    console.log('評価を保存:', selectedStaffId, evaluation)
+    alert('評価を保存しました')
+    setShowEvaluationForm(false)
+    setSelectedStaffId('')
+  }
+
+  const handleCancelEvaluation = () => {
+    setShowEvaluationForm(false)
+    setSelectedStaffId('')
+  }
+
+  const selectedStaff = staffDatabase[selectedStaffId]
+
   return (
     <div className={styles.executionContainer}>
       <h2>評価実施</h2>
-      <div className={styles.executionGrid}>
-        <div className={styles.executionCard}>
-          <h3>新規評価作成</h3>
-          <p>職員の評価を開始します</p>
-          <button className={styles.primaryButton}>評価を開始</button>
+      
+      {!showEvaluationForm ? (
+        <>
+          <div className={styles.executionGrid}>
+            <div className={styles.executionCard}>
+              <h3>新規評価作成</h3>
+              <p>職員の2軸評価を開始します</p>
+              <button 
+                className={styles.primaryButton}
+                onClick={() => setShowEvaluationForm(true)}
+              >
+                評価を開始
+              </button>
+            </div>
+            <div className={styles.executionCard}>
+              <h3>進行中の評価</h3>
+              <p>15件の評価が進行中です</p>
+              <button className={styles.secondaryButton}>一覧を見る</button>
+            </div>
+            <div className={styles.executionCard}>
+              <h3>承認待ち</h3>
+              <p>8件の評価が承認待ちです</p>
+              <button className={styles.secondaryButton}>確認する</button>
+            </div>
+          </div>
+
+          <div className={styles.recentEvaluations}>
+            <h3>最近の評価活動</h3>
+            <div className={styles.evaluationList}>
+              <div className={styles.evaluationItem}>
+                <span className={styles.evaluationDate}>2025/01/28</span>
+                <span className={styles.evaluationStaff}>田中美咲</span>
+                <span className={styles.evaluationStatus}>評価完了</span>
+                <span className={styles.evaluationGrade} style={{ backgroundColor: '#4CAF50' }}>A</span>
+              </div>
+              <div className={styles.evaluationItem}>
+                <span className={styles.evaluationDate}>2025/01/27</span>
+                <span className={styles.evaluationStaff}>佐藤花子</span>
+                <span className={styles.evaluationStatus}>承認待ち</span>
+                <span className={styles.evaluationGrade} style={{ backgroundColor: '#2196F3' }}>B</span>
+              </div>
+              <div className={styles.evaluationItem}>
+                <span className={styles.evaluationDate}>2025/01/26</span>
+                <span className={styles.evaluationStaff}>鈴木一郎</span>
+                <span className={styles.evaluationStatus}>評価中</span>
+                <span className={styles.evaluationGrade}>-</span>
+              </div>
+            </div>
+          </div>
+        </>
+      ) : (
+        <div className={styles.evaluationFormContainer}>
+          {!selectedStaffId ? (
+            <div className={styles.staffSelection}>
+              <h3>評価対象職員の選択</h3>
+              <div className={styles.searchSection}>
+                <input
+                  type="text"
+                  placeholder="職員名または職員番号で検索"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className={styles.searchInput}
+                />
+                <select
+                  value={selectedFacility}
+                  onChange={(e) => setSelectedFacility(e.target.value)}
+                  className={styles.filterSelect}
+                >
+                  <option value="all">全施設</option>
+                  <option value="小原病院">小原病院</option>
+                  <option value="立神リハビリテーション温泉病院">立神リハビリテーション温泉病院</option>
+                </select>
+                <select
+                  value={selectedDepartment}
+                  onChange={(e) => setSelectedDepartment(e.target.value)}
+                  className={styles.filterSelect}
+                >
+                  <option value="all">全部署</option>
+                  <option value="内科">内科</option>
+                  <option value="リハビリテーション科">リハビリテーション科</option>
+                  <option value="第１病棟">第１病棟</option>
+                  <option value="外来">外来</option>
+                </select>
+              </div>
+              
+              <div className={styles.staffList}>
+                {filteredStaff.map(([id, staff]) => (
+                  <div key={id} className={styles.staffListItem}>
+                    <div className={styles.staffInfo}>
+                      <span className={styles.staffName}>{staff.name}</span>
+                      <span className={styles.staffDetails}>
+                        {staff.employeeId} | {staff.facility} - {staff.department}
+                      </span>
+                    </div>
+                    <button
+                      className={styles.selectButton}
+                      onClick={() => handleStartEvaluation(id)}
+                    >
+                      選択
+                    </button>
+                  </div>
+                ))}
+              </div>
+              
+              <button
+                className={styles.cancelButton}
+                onClick={handleCancelEvaluation}
+              >
+                キャンセル
+              </button>
+            </div>
+          ) : (
+            <TwoAxisEvaluationForm
+              staffId={selectedStaffId}
+              staffName={selectedStaff.name}
+              facility={selectedStaff.facility}
+              department={selectedStaff.department}
+              onSubmit={handleSubmitEvaluation}
+              onCancel={handleCancelEvaluation}
+            />
+          )}
         </div>
-        <div className={styles.executionCard}>
-          <h3>進行中の評価</h3>
-          <p>15件の評価が進行中です</p>
-          <button className={styles.secondaryButton}>一覧を見る</button>
-        </div>
-        <div className={styles.executionCard}>
-          <h3>承認待ち</h3>
-          <p>8件の評価が承認待ちです</p>
-          <button className={styles.secondaryButton}>確認する</button>
-        </div>
-      </div>
+      )}
     </div>
   )
 }
@@ -511,22 +655,6 @@ function StaffListTab({
   const [filterGrade, setFilterGrade] = useState<string>('all')
   const [searchTerm, setSearchTerm] = useState('')
 
-  // 2軸評価のモックデータを取得する関数
-  function getTwoAxisEvaluationMock(name: string): { facility: string; corporate: string; overall: string } | null {
-    const mockData: Record<string, { facility: string; corporate: string; overall: string }> = {
-      '田中美咲': { facility: 'B', corporate: 'A', overall: 'A' },
-      '佐藤花子': { facility: 'A', corporate: 'A', overall: 'A+' },
-      '中村恵子': { facility: 'C', corporate: 'C', overall: 'C' },
-      '小林さくら': { facility: 'B', corporate: 'B', overall: 'B' },
-      '伊藤由美': { facility: 'S', corporate: 'A', overall: 'S' },
-      '渡辺麻衣': { facility: 'B', corporate: 'B', overall: 'B' },
-      '山田太郎': { facility: 'A', corporate: 'B', overall: 'A' },
-      '高橋花子': { facility: 'C', corporate: 'B', overall: 'C' },
-      '鈴木一郎': { facility: 'B', corporate: 'C', overall: 'C' },
-      '木村洋子': { facility: 'A', corporate: 'S', overall: 'S' }
-    }
-    return mockData[name] || null
-  }
 
   // 職員データをフィルタリング
   const filteredStaff = Object.entries(staffDatabase).filter(([_, staff]: [string, any]) => {
@@ -658,8 +786,8 @@ function StaffListTab({
           </thead>
           <tbody>
             {sortedStaff.map(([id, staff]) => {
-              // モックデータとして2軸評価を設定
-              const twoAxisData = getTwoAxisEvaluationMock(staff.name)
+              // 2軸評価データを取得
+              const twoAxisData = getTwoAxisEvaluationByStaffId(id, staff)
               return (
                 <tr key={id} className={highlightStaffId === id ? styles.highlightedRow : ''}>
                   <td>{staff.employeeId}</td>
@@ -674,18 +802,14 @@ function StaffListTab({
                     </span>
                   </td>
                   <td>
-                    {twoAxisData ? (
-                      <div className={styles.twoAxisBadgeContainer}>
-                        <span className={styles.twoAxisBadge} style={{ backgroundColor: getEvaluationGradeColor(twoAxisData.overall as any) }}>
-                          {twoAxisData.overall}
-                        </span>
-                        <span className={styles.twoAxisDetail}>
-                          ({twoAxisData.facility}/{twoAxisData.corporate})
-                        </span>
-                      </div>
-                    ) : (
-                      <span className={styles.notEvaluated}>-</span>
-                    )}
+                    <div className={styles.twoAxisBadgeContainer}>
+                      <span className={styles.twoAxisBadge} style={{ backgroundColor: getEvaluationGradeColor(twoAxisData.overallScore) }}>
+                        {twoAxisData.overallScore}
+                      </span>
+                      <span className={styles.twoAxisDetail}>
+                        ({twoAxisData.facilityScore}/{twoAxisData.corporateScore})
+                      </span>
+                    </div>
                   </td>
                   <td>
                     <a href={`/staff-cards/${id}`} className={styles.detailLink}>
@@ -872,14 +996,14 @@ function TwoAxisTab() {
             <tbody>
               {/* ここに職員の2軸評価データを表示 */}
               <tr>
-                <td>NS-2021-047</td>
+                <td>OH-NS-2021-001</td>
                 <td>田中美咲</td>
-                <td>地域包括ケア病棟</td>
+                <td>3階病棟</td>
                 <td><span className={styles.gradeB}>B</span></td>
                 <td><span className={styles.gradeA}>A</span></td>
                 <td><span className={styles.gradeA}>A</span></td>
                 <td>
-                  <a href="/staff-cards/NS-2021-047" className={styles.detailLink}>詳細</a>
+                  <a href="/staff-cards/OH-NS-2021-001" className={styles.detailLink}>詳細</a>
                 </td>
               </tr>
               {/* 他の職員データも同様に表示 */}
