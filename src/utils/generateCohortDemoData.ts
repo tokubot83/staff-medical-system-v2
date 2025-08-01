@@ -345,7 +345,7 @@ export function generateCohortDemoData(
     };
     
     // 昇進履歴を追加
-    if (positionIndex > 0) {
+    if (positionIndex > 0 && staff.assignmentHistory) {
       staff.assignmentHistory.push({
         date: `${joinYear + 5}年4月`,
         department: department,
@@ -353,7 +353,7 @@ export function generateCohortDemoData(
         reason: '昇進'
       });
     }
-    if (positionIndex > 1) {
+    if (positionIndex > 1 && staff.assignmentHistory) {
       staff.assignmentHistory.push({
         date: `${joinYear + 10}年4月`,
         department: department,
