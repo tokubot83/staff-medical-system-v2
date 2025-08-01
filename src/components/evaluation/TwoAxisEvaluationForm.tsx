@@ -2,8 +2,7 @@
 
 import React, { useState } from 'react'
 import styles from './TwoAxisEvaluation.module.css'
-import { getEvaluationGradeColor, getEvaluationGradeLabel } from '@/types/two-axis-evaluation'
-import { TwoAxisEvaluationGrade } from '@/types/two-axis-evaluation'
+import { getEvaluationGradeColor, getEvaluationGradeLabel, EvaluationGrade, FinalEvaluationGrade } from '@/types/two-axis-evaluation'
 
 interface TwoAxisEvaluationFormProps {
   staffId: string
@@ -11,9 +10,9 @@ interface TwoAxisEvaluationFormProps {
   facility: string
   department: string
   onSubmit: (evaluation: {
-    facilityScore: TwoAxisEvaluationGrade
-    corporateScore: TwoAxisEvaluationGrade
-    overallScore: TwoAxisEvaluationGrade
+    facilityScore: EvaluationGrade
+    corporateScore: EvaluationGrade
+    overallScore: FinalEvaluationGrade
     comments: string
   }) => void
   onCancel: () => void
@@ -27,29 +26,35 @@ export function TwoAxisEvaluationForm({
   onSubmit,
   onCancel
 }: TwoAxisEvaluationFormProps) {
-  const [facilityScore, setFacilityScore] = useState<TwoAxisEvaluationGrade>('B')
-  const [corporateScore, setCorporateScore] = useState<TwoAxisEvaluationGrade>('B')
+  const [facilityScore, setFacilityScore] = useState<EvaluationGrade>('B')
+  const [corporateScore, setCorporateScore] = useState<EvaluationGrade>('B')
   const [comments, setComments] = useState('')
 
   // 総合評価の自動計算
-  const calculateOverallScore = (): TwoAxisEvaluationGrade => {
-    const scoreMap: Record<TwoAxisEvaluationGrade, number> = {
-      'S+': 8, 'S': 7, 'A+': 6, 'A': 5, 'B': 4, 'C': 3, 'D': 2
+  const calculateOverallScore = (): FinalEvaluationGrade => {
+    const scoreMap: Record<EvaluationGrade, number> = {
+      'S': 5, 'A': 4, 'B': 3, 'C': 2, 'D': 1
     }
-    const reverseMap: Record<number, TwoAxisEvaluationGrade> = {
-      8: 'S+', 7: 'S', 6: 'A+', 5: 'A', 4: 'B', 3: 'C', 2: 'D'
+    const reverseMap: Record<number, FinalEvaluationGrade> = {
+      10: 'S+', 9: 'S', 8: 'A+', 7: 'A', 6: 'B', 5: 'C', 4: 'D'
     }
 
     const facilityNum = scoreMap[facilityScore]
     const corporateNum = scoreMap[corporateScore]
-    const average = Math.round((facilityNum + corporateNum) / 2)
+    const sum = facilityNum + corporateNum
 
-    // 特別ルール: 両方がSまたはS+の場合は、最高値を採用
-    if (facilityNum >= 7 && corporateNum >= 7) {
-      return facilityNum > corporateNum ? facilityScore : corporateScore
+    // 両方がSの場合は、S+
+    if (facilityScore === 'S' && corporateScore === 'S') {
+      return 'S+'
     }
-
-    return reverseMap[average] || 'B'
+    
+    // マッピングルール
+    if (sum >= 9) return 'S'
+    if (sum >= 8) return 'A+'
+    if (sum >= 7) return 'A'
+    if (sum >= 6) return 'B'
+    if (sum >= 4) return 'C'
+    return 'D'
   }
 
   const overallScore = calculateOverallScore()
@@ -64,7 +69,7 @@ export function TwoAxisEvaluationForm({
     })
   }
 
-  const grades: TwoAxisEvaluationGrade[] = ['S+', 'S', 'A+', 'A', 'B', 'C', 'D']
+  const grades: EvaluationGrade[] = ['S', 'A', 'B', 'C', 'D']
 
   return (
     <form onSubmit={handleSubmit} className={styles.evaluationForm}>
