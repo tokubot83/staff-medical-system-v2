@@ -134,16 +134,18 @@ function SkillMatrixContent() {
     const stats: Record<string, { count: number, totalHours: number, certificates: number }> = {};
     
     filteredStaff.forEach(staff => {
-      staff.trainingHistory.forEach(training => {
-        if (!stats[training.category]) {
-          stats[training.category] = { count: 0, totalHours: 0, certificates: 0 };
-        }
-        stats[training.category].count += 1;
-        stats[training.category].totalHours += training.hours;
-        if (training.certificate) {
-          stats[training.category].certificates += 1;
-        }
-      });
+      if (staff.trainingHistory) {
+        staff.trainingHistory.forEach(training => {
+          if (!stats[training.category]) {
+            stats[training.category] = { count: 0, totalHours: 0, certificates: 0 };
+          }
+          stats[training.category].count += 1;
+          stats[training.category].totalHours += training.hours;
+          if (training.certificate) {
+            stats[training.category].certificates += 1;
+          }
+        });
+      }
     });
     
     return Object.entries(stats)
