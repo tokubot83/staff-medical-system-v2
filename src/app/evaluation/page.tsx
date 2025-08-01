@@ -676,7 +676,7 @@ function StaffListTab({
                   <td>
                     {twoAxisData ? (
                       <div className={styles.twoAxisBadgeContainer}>
-                        <span className={styles.twoAxisBadge} style={{ backgroundColor: getEvaluationGradeColor(twoAxisData.overall) }}>
+                        <span className={styles.twoAxisBadge} style={{ backgroundColor: getEvaluationGradeColor(twoAxisData.overall as any) }}>
                           {twoAxisData.overall}
                         </span>
                         <span className={styles.twoAxisDetail}>
