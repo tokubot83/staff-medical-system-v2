@@ -143,7 +143,7 @@ export default function EvaluationTrendPage() {
       <CommonHeader title="評価推移分析" />
       
       <div className="max-w-7xl mx-auto p-6">
-        <CategoryBackButton categoryId="dual-axis" />
+        <CategoryBackButton />
         
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
           <div className="flex justify-between items-center mb-6">
