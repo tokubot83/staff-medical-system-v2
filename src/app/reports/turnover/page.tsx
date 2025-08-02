@@ -163,8 +163,113 @@ function TurnoverPageContent() {
           ))}
         </div>
 
+        {/* アセスメントパターン */}
+        <div className="mt-12 bg-blue-50 border border-blue-200 rounded-lg p-6">
+          <h3 className="text-xl font-bold text-blue-900 mb-6">
+            離職分析のアセスメントパターン
+          </h3>
+          
+          <div className="space-y-6">
+            {/* 1. 診断的アセスメント */}
+            <div className="bg-white rounded-lg p-4 border border-blue-100">
+              <h4 className="font-semibold text-blue-900 mb-2">
+                1. 診断的アセスメント（現状把握）
+              </h4>
+              <div className="text-blue-800 mb-2">
+                <span className="font-medium">推奨フロー：</span>
+                離職要因ランキング → 相関分析 → 部署別深掘り
+              </div>
+              <ul className="list-disc list-inside text-blue-700 text-sm space-y-1">
+                <li>主要な離職要因を特定</li>
+                <li>要因間の相互関係を理解</li>
+                <li>問題の大きい部署を優先対応</li>
+              </ul>
+            </div>
+
+            {/* 2. 予測的アセスメント */}
+            <div className="bg-white rounded-lg p-4 border border-blue-100">
+              <h4 className="font-semibold text-blue-900 mb-2">
+                2. 予測的アセスメント（リスク評価）
+              </h4>
+              <div className="text-blue-800 mb-2">
+                <span className="font-medium">推奨フロー：</span>
+                リスク予測 → 高リスク者特定 → 個別対応計画
+              </div>
+              <ul className="list-disc list-inside text-blue-700 text-sm space-y-1">
+                <li>AIによる離職確率計算</li>
+                <li>リスクレベル別の分類</li>
+                <li>プロアクティブな介入</li>
+              </ul>
+            </div>
+
+            {/* 3. 時系列アセスメント */}
+            <div className="bg-white rounded-lg p-4 border border-blue-100">
+              <h4 className="font-semibold text-blue-900 mb-2">
+                3. 時系列アセスメント（トレンド分析）
+              </h4>
+              <div className="text-blue-800 mb-2">
+                <span className="font-medium">推奨フロー：</span>
+                時系列トレンド → 季節性把握 → 将来予測
+              </div>
+              <ul className="list-disc list-inside text-blue-700 text-sm space-y-1">
+                <li>離職率の変化パターン認識</li>
+                <li>繁忙期・年度末等の影響評価</li>
+                <li>中長期的な人員計画への反映</li>
+              </ul>
+            </div>
+
+            {/* 4. 財務的アセスメント */}
+            <div className="bg-white rounded-lg p-4 border border-blue-100">
+              <h4 className="font-semibold text-blue-900 mb-2">
+                4. 財務的アセスメント（コスト分析）
+              </h4>
+              <div className="text-blue-800 mb-2">
+                <span className="font-medium">推奨フロー：</span>
+                コスト影響分析 → ROI計算 → 投資優先順位
+              </div>
+              <ul className="list-disc list-inside text-blue-700 text-sm space-y-1">
+                <li>離職による損失額の可視化</li>
+                <li>施策の費用対効果評価</li>
+                <li>予算配分の最適化</li>
+              </ul>
+            </div>
+
+            {/* 5. 定性的アセスメント */}
+            <div className="bg-white rounded-lg p-4 border border-blue-100">
+              <h4 className="font-semibold text-blue-900 mb-2">
+                5. 定性的アセスメント（声の分析）
+              </h4>
+              <div className="text-blue-800 mb-2">
+                <span className="font-medium">推奨フロー：</span>
+                退職者フィードバック → センチメント分析 → 改善点抽出
+              </div>
+              <ul className="list-disc list-inside text-blue-700 text-sm space-y-1">
+                <li>退職理由の本質的理解</li>
+                <li>組織文化の課題発見</li>
+                <li>具体的な改善アクション</li>
+              </ul>
+            </div>
+
+            {/* 6. 比較的アセスメント */}
+            <div className="bg-white rounded-lg p-4 border border-blue-100">
+              <h4 className="font-semibold text-blue-900 mb-2">
+                6. 比較的アセスメント（ベンチマーク）
+              </h4>
+              <div className="text-blue-800 mb-2">
+                <span className="font-medium">推奨フロー：</span>
+                業界比較 → ギャップ分析 → ベストプラクティス導入
+              </div>
+              <ul className="list-disc list-inside text-blue-700 text-sm space-y-1">
+                <li>自組織のポジション把握</li>
+                <li>改善余地の定量化</li>
+                <li>成功事例の適用検討</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
         {/* 使い方ガイド */}
-        <div className="mt-12 bg-red-50 border border-red-200 rounded-lg p-6">
+        <div className="mt-8 bg-red-50 border border-red-200 rounded-lg p-6">
           <h3 className="text-lg font-semibold text-red-900 mb-2">
             離職分析の活用方法
           </h3>
