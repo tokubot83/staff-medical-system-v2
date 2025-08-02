@@ -48,65 +48,47 @@ function PerformancePredictionContent() {
     },
     {
       name: '伊藤次郎',
-      department: 'ICU',
+      department: '救急科',
       currentScore: 65,
       predictedScore: 60,
       growthPotential: 'low',
       riskLevel: 'high',
-      keyFactors: ['モチベーション低下', '欠勤率上昇', 'フィードバック評価低'],
-      recommendedActions: ['個別面談実施', 'キャリア相談', '配置転換検討']
+      keyFactors: ['ストレス高', '研修参加率低', 'チーム連携課題'],
+      recommendedActions: ['メンタルヘルスケア', '個別面談実施', '業務負荷調整']
     }
   ];
 
-  const getPotentialColor = (potential: 'high' | 'medium' | 'low') => {
+  const getPotentialColor = (potential: string) => {
     switch (potential) {
-      case 'high':
-        return 'text-green-600 bg-green-50';
-      case 'medium':
-        return 'text-yellow-600 bg-yellow-50';
-      case 'low':
-        return 'text-red-600 bg-red-50';
+      case 'high': return 'text-green-600';
+      case 'medium': return 'text-yellow-600';
+      case 'low': return 'text-red-600';
+      default: return 'text-gray-600';
     }
   };
 
-  const getRiskColor = (risk: 'high' | 'medium' | 'low') => {
+  const getRiskColor = (risk: string) => {
     switch (risk) {
-      case 'high':
-        return 'text-red-600 bg-red-50';
-      case 'medium':
-        return 'text-yellow-600 bg-yellow-50';
-      case 'low':
-        return 'text-green-600 bg-green-50';
+      case 'high': return 'bg-red-100 text-red-800';
+      case 'medium': return 'bg-yellow-100 text-yellow-800';
+      case 'low': return 'bg-green-100 text-green-800';
+      default: return 'bg-gray-100 text-gray-800';
     }
-  };
-
-  const getScoreChange = (current: number, predicted: number) => {
-    const change = predicted - current;
-    if (change > 0) {
-      return { text: `+${change}`, color: 'text-green-600' };
-    } else if (change < 0) {
-      return { text: `${change}`, color: 'text-red-600' };
-    }
-    return { text: '±0', color: 'text-gray-600' };
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="パフォーマンス予測" />
+      <CommonHeader />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-6">
           <BackToReportsButton />
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
-          <div className="mb-6">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">パフォーマンス予測レポート</h1>
-            <p className="text-gray-600">
-              過去の評価データとAI分析により、職員の将来パフォーマンスを予測し、
-              早期の介入ポイントと成長機会を特定します。
-            </p>
-          </div>
+        <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
+          <h1 className="text-2xl font-bold text-gray-900 mb-6">
+            パフォーマンス予測分析
+          </h1>
           
           <FacilitySelector
             selectedFacility={selectedFacility}
@@ -114,113 +96,90 @@ function PerformancePredictionContent() {
           />
         </div>
 
-        {/* サマリーカード */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">高成長予測</h3>
-              <span className="text-2xl">🚀</span>
-            </div>
-            <div className="text-3xl font-bold text-green-600 mb-2">28名</div>
-            <p className="text-sm text-gray-600">全体の35%</p>
+        {/* 予測概要 */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white rounded-lg shadow p-6">
+            <h3 className="text-sm font-medium text-gray-500 mb-2">高成長予測者</h3>
+            <p className="text-3xl font-bold text-green-600">15名</p>
+            <p className="text-sm text-gray-600 mt-1">次世代リーダー候補</p>
           </div>
-
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">要注意職員</h3>
-              <span className="text-2xl">⚠️</span>
-            </div>
-            <div className="text-3xl font-bold text-red-600 mb-2">12名</div>
-            <p className="text-sm text-gray-600">早期介入推奨</p>
+          <div className="bg-white rounded-lg shadow p-6">
+            <h3 className="text-sm font-medium text-gray-500 mb-2">要支援者</h3>
+            <p className="text-3xl font-bold text-red-600">8名</p>
+            <p className="text-sm text-gray-600 mt-1">早期介入推奨</p>
           </div>
-
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">平均予測精度</h3>
-              <span className="text-2xl">🎯</span>
-            </div>
-            <div className="text-3xl font-bold text-blue-600 mb-2">89%</div>
-            <p className="text-sm text-gray-600">過去データ基準</p>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">改善可能性</h3>
-              <span className="text-2xl">📈</span>
-            </div>
-            <div className="text-3xl font-bold text-purple-600 mb-2">45名</div>
-            <p className="text-sm text-gray-600">介入効果期待大</p>
+          <div className="bg-white rounded-lg shadow p-6">
+            <h3 className="text-sm font-medium text-gray-500 mb-2">平均成長率</h3>
+            <p className="text-3xl font-bold text-blue-600">+12.5%</p>
+            <p className="text-sm text-gray-600 mt-1">6ヶ月後予測</p>
           </div>
         </div>
 
-        {/* 個人予測詳細 */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-6">個人別パフォーマンス予測</h2>
-          <div className="space-y-6">
+        {/* 個別予測リスト */}
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
+          <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-900">
+              個別パフォーマンス予測
+            </h2>
+          </div>
+          <div className="divide-y divide-gray-200">
             {predictionData.map((person, index) => (
-              <div key={index} className="border border-gray-200 rounded-lg p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900">{person.name}</h3>
-                    <p className="text-sm text-gray-600">{person.department}</p>
-                  </div>
-                  <div className="flex gap-2">
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getPotentialColor(person.growthPotential)}`}>
-                      成長性: {person.growthPotential === 'high' ? '高' : person.growthPotential === 'medium' ? '中' : '低'}
-                    </span>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getRiskColor(person.riskLevel)}`}>
-                      リスク: {person.riskLevel === 'high' ? '高' : person.riskLevel === 'medium' ? '中' : '低'}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
-                  <div>
-                    <p className="text-sm text-gray-500 mb-1">現在のスコア</p>
-                    <p className="text-2xl font-bold text-gray-900">{person.currentScore}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500 mb-1">予測スコア（6ヶ月後）</p>
-                    <div className="flex items-baseline gap-2">
-                      <p className="text-2xl font-bold text-gray-900">{person.predictedScore}</p>
-                      <span className={`text-sm font-medium ${getScoreChange(person.currentScore, person.predictedScore).color}`}>
-                        {getScoreChange(person.currentScore, person.predictedScore).text}
+              <div key={index} className="p-6">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-4 mb-3">
+                      <h3 className="text-lg font-medium text-gray-900">{person.name}</h3>
+                      <span className="text-sm text-gray-500">{person.department}</span>
+                      <span className={`px-2 py-1 text-xs font-medium rounded-full ${getRiskColor(person.riskLevel)}`}>
+                        リスク: {person.riskLevel === 'high' ? '高' : person.riskLevel === 'medium' ? '中' : '低'}
                       </span>
                     </div>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500 mb-1">信頼度</p>
-                    <div className="flex items-center gap-2">
-                      <div className="flex-1 bg-gray-200 rounded-full h-2">
-                        <div className="bg-blue-600 h-2 rounded-full" style={{ width: '85%' }}></div>
+                    
+                    {/* スコア予測 */}
+                    <div className="flex items-center gap-8 mb-4">
+                      <div>
+                        <span className="text-sm text-gray-500">現在スコア</span>
+                        <p className="text-2xl font-bold text-gray-900">{person.currentScore}</p>
                       </div>
-                      <span className="text-sm font-medium text-gray-700">85%</span>
+                      <div className="text-2xl text-gray-400">→</div>
+                      <div>
+                        <span className="text-sm text-gray-500">予測スコア（6ヶ月後）</span>
+                        <p className={`text-2xl font-bold ${person.predictedScore > person.currentScore ? 'text-green-600' : 'text-red-600'}`}>
+                          {person.predictedScore}
+                        </p>
+                      </div>
+                      <div className="ml-4">
+                        <span className={`text-lg font-medium ${getPotentialColor(person.growthPotential)}`}>
+                          成長ポテンシャル: {person.growthPotential === 'high' ? '高' : person.growthPotential === 'medium' ? '中' : '低'}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-700 mb-2">主要予測要因</h4>
-                    <ul className="space-y-1">
-                      {person.keyFactors.map((factor, idx) => (
-                        <li key={idx} className="text-sm text-gray-600 flex items-start">
-                          <span className="text-blue-500 mr-2">•</span>
-                          {factor}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-700 mb-2">推奨アクション</h4>
-                    <ul className="space-y-1">
-                      {person.recommendedActions.map((action, idx) => (
-                        <li key={idx} className="text-sm text-gray-600 flex items-start">
-                          <span className="text-green-500 mr-2">✓</span>
-                          {action}
-                        </li>
-                      ))}
-                    </ul>
+                    {/* 要因分析 */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-700 mb-2">主要要因</h4>
+                        <ul className="space-y-1">
+                          {person.keyFactors.map((factor, i) => (
+                            <li key={i} className="text-sm text-gray-600 flex items-start">
+                              <span className="mr-2">•</span>
+                              <span>{factor}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-700 mb-2">推奨アクション</h4>
+                        <ul className="space-y-1">
+                          {person.recommendedActions.map((action, i) => (
+                            <li key={i} className="text-sm text-blue-600 flex items-start">
+                              <span className="mr-2">→</span>
+                              <span>{action}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -228,51 +187,63 @@ function PerformancePredictionContent() {
           </div>
         </div>
 
-        {/* 予測モデル説明 */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">予測モデル概要</h2>
+        {/* AI予測モデル情報 */}
+        <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            AI予測モデル詳細
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-3">使用データ</h3>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li className="flex items-start">
-                  <span className="text-purple-500 mr-2">•</span>
-                  過去2年間の評価履歴
-                </li>
-                <li className="flex items-start">
-                  <span className="text-purple-500 mr-2">•</span>
-                  研修参加記録と成果
-                </li>
-                <li className="flex items-start">
-                  <span className="text-purple-500 mr-2">•</span>
-                  勤怠データとエンゲージメント指標
-                </li>
-                <li className="flex items-start">
-                  <span className="text-purple-500 mr-2">•</span>
-                  360度フィードバック結果
-                </li>
-              </ul>
+              <h3 className="text-sm font-medium text-gray-700 mb-2">予測精度</h3>
+              <div className="bg-gray-100 rounded-lg p-4">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm text-gray-600">モデル精度</span>
+                  <span className="text-lg font-bold text-green-600">87.3%</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="bg-green-600 h-2 rounded-full" style={{ width: '87.3%' }}></div>
+                </div>
+              </div>
             </div>
             <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-3">予測精度向上要因</h3>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li className="flex items-start">
-                  <span className="text-green-500 mr-2">✓</span>
-                  機械学習による継続的な精度改善
-                </li>
-                <li className="flex items-start">
-                  <span className="text-green-500 mr-2">✓</span>
-                  部門特性を考慮した個別モデル
-                </li>
-                <li className="flex items-start">
-                  <span className="text-green-500 mr-2">✓</span>
-                  外部環境要因の組み込み
-                </li>
-                <li className="flex items-start">
-                  <span className="text-green-500 mr-2">✓</span>
-                  定期的なモデル再学習
-                </li>
+              <h3 className="text-sm font-medium text-gray-700 mb-2">考慮要因</h3>
+              <ul className="text-sm text-gray-600 space-y-1">
+                <li>• 過去の評価履歴とトレンド</li>
+                <li>• 研修参加率と学習進捗</li>
+                <li>• チーム内での貢献度</li>
+                <li>• 勤怠状況と健康指標</li>
+                <li>• 組織風土との適合性</li>
               </ul>
+            </div>
+          </div>
+        </div>
+
+        {/* 組織全体の予測サマリー */}
+        <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            組織全体の予測サマリー
+          </h2>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg">
+              <div>
+                <h3 className="font-medium text-green-900">成長トレンド</h3>
+                <p className="text-sm text-green-700">6ヶ月後の組織全体のパフォーマンス向上率</p>
+              </div>
+              <span className="text-2xl font-bold text-green-600">+15.2%</span>
+            </div>
+            <div className="flex items-center justify-between p-4 bg-yellow-50 rounded-lg">
+              <div>
+                <h3 className="font-medium text-yellow-900">要注意領域</h3>
+                <p className="text-sm text-yellow-700">パフォーマンス低下リスクのある部署数</p>
+              </div>
+              <span className="text-2xl font-bold text-yellow-600">3部署</span>
+            </div>
+            <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
+              <div>
+                <h3 className="font-medium text-blue-900">育成効果</h3>
+                <p className="text-sm text-blue-700">研修・育成プログラムの予測効果</p>
+              </div>
+              <span className="text-2xl font-bold text-blue-600">ROI 320%</span>
             </div>
           </div>
         </div>
