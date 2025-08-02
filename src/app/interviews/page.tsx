@@ -340,8 +340,8 @@ function HistoryTab({ interviews, onInterviewSelect, dateRange, onDateRangeChang
             <div className={styles.historyInfo}>
               <h4>{interview.employeeName} - {interview.interviewType}</h4>
               <p className={styles.historyPurpose}>{interview.description}</p>
-              {interview.feedback && interview.feedback.keyPoints && interview.feedback.keyPoints.length > 0 && (
-                <p className={styles.historyFeedback}>{interview.feedback.keyPoints[0]}</p>
+              {interview.outcomeSummary && (
+                <p className={styles.historyFeedback}>{interview.outcomeSummary}</p>
               )}
             </div>
             <div className={styles.historyStatus}>
@@ -395,7 +395,7 @@ function FeedbackTab({ selectedInterview }: FeedbackTabProps) {
             className={styles.textArea}
             placeholder="フィードバック内容を入力してください"
             rows={6}
-            defaultValue={selectedInterview.feedback?.keyPoints?.join('\n') || ''}
+            defaultValue={selectedInterview.outcomeActionItems?.join('\n') || ''}
           />
         </div>
 
