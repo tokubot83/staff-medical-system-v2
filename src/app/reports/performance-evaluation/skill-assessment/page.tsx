@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
@@ -23,7 +23,7 @@ interface SkillData {
   growthRate: number;
 }
 
-export default function SkillAssessmentPage() {
+function SkillAssessmentContent() {
   const searchParams = useSearchParams();
   const facilityFromUrl = searchParams.get('facility');
   const [selectedFacility, setSelectedFacility] = useState(facilityFromUrl || '');
@@ -326,5 +326,13 @@ export default function SkillAssessmentPage() {
       <ScrollToTopButton />
       <DashboardButton />
     </div>
+  );
+}
+
+export default function SkillAssessmentPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SkillAssessmentContent />
+    </Suspense>
   );
 }
