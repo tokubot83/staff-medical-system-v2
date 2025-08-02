@@ -3,104 +3,152 @@ import { Interview, InterviewType, InterviewStatus } from '@/types/interview';
 export const mockInterviews: Interview[] = [
   {
     id: 'INT001',
-    staffId: 'S12345',
-    staffName: '山田太郎',
+    employeeId: 'S12345',
+    employeeName: '山田太郎',
+    employeeEmail: 'yamada@example.com',
+    facility: '小原病院',
     department: '内科',
-    date: '2024-03-15',
-    time: '10:00',
-    type: '定期面談',
-    status: '完了',
-    purpose: '年度評価と目標設定',
-    location: '会議室A',
+    position: '看護師',
+    bookingDate: '2024-03-15',
+    startTime: '10:00',
+    endTime: '11:00',
+    interviewType: 'regular_annual' as InterviewType,
+    interviewCategory: 'career_path' as any,
+    requestedTopics: ['年度評価', '目標設定'],
+    description: '年度評価と目標設定',
+    urgencyLevel: 'medium' as any,
+    status: 'completed' as InterviewStatus,
     interviewerId: 'M001',
     interviewerName: '田中管理者',
+    interviewerLevel: 6,
     duration: 60,
-    notes: '今年度の成果について詳しく話し合い、来年度の目標を設定した。',
-    feedback: {
-      overallSatisfaction: 4,
-      topics: [
-        { category: '業務成果', discussed: true, importance: 'high', notes: '目標を上回る成果' },
-        { category: 'キャリア開発', discussed: true, importance: 'medium', notes: '専門資格取得を検討' },
-        { category: '健康状態', discussed: true, importance: 'high', notes: '良好' }
-      ],
-      keyPoints: ['業務効率が20%向上', '新人教育に貢献', 'チームワークが優秀'],
-      actionItems: ['専門資格の調査', '新プロジェクトへの参加', 'メンター制度への登録'],
-      concerns: ['業務負荷の増加傾向'],
-      recommendations: ['定期的な1on1の継続', 'スキルアップ研修の受講'],
-      nextSteps: ['4月に進捗確認', '資格取得計画の作成']
-    },
-    followUpRequired: true,
-    followUpDate: '2024-04-15',
+    employeeNotes: '今年度の成果について詳しく話し合い、来年度の目標を設定した。',
+    outcomeSummary: '業務効率が20%向上し、新人教育にも貢献。来年度は専門資格取得を目指す。',
+    outcomeActionItems: ['専門資格の調査', '新プロジェクトへの参加', 'メンター制度への登録'],
+    outcomeFollowupRequired: true,
+    outcomeFollowupDate: '2024-04-15',
     createdAt: '2024-03-15T10:00:00Z',
-    updatedAt: '2024-03-15T11:00:00Z'
+    createdBy: 'system',
+    lastModified: '2024-03-15T11:00:00Z',
+    modifiedBy: 'M001'
   },
   {
     id: 'INT002',
-    staffId: 'S12346',
-    staffName: '佐藤花子',
+    employeeId: 'S12346',
+    employeeName: '佐藤花子',
+    employeeEmail: 'sato@example.com',
+    facility: '小原病院',
     department: '外科',
-    date: '2024-03-20',
-    time: '14:00',
-    type: 'フォロー面談',
-    status: '予定',
-    purpose: '復職後の状況確認',
-    location: '面談室B',
+    position: '看護師',
+    bookingDate: '2024-03-20',
+    startTime: '14:00',
+    endTime: '15:00',
+    interviewType: 'return_to_work' as InterviewType,
+    interviewCategory: 'health_safety' as any,
+    requestedTopics: ['復職後の体調', '業務量調整'],
+    description: '復職後の状況確認',
+    urgencyLevel: 'high' as any,
+    status: 'scheduled' as InterviewStatus,
     interviewerId: 'M002',
     interviewerName: '鈴木マネージャー',
+    interviewerLevel: 7,
     createdAt: '2024-03-01T10:00:00Z',
+    createdBy: 'system',
     updatedAt: '2024-03-01T10:00:00Z'
   },
   {
     id: 'INT003',
-    staffId: 'S12347',
-    staffName: '田中次郎',
-    department: '小児科',
-    date: '2024-03-10',
-    time: '16:00',
-    type: '健康相談',
-    status: '完了',
-    purpose: 'ストレスチェック後のフォロー',
-    location: 'オンライン',
-    interviewerId: 'M001',
-    interviewerName: '田中管理者',
+    employeeId: 'S12347',
+    employeeName: '鈴木一郎',
+    employeeEmail: 'suzuki@example.com',
+    facility: '立神リハビリテーション温泉病院',
+    department: '地域包括ケア病棟',
+    position: '介護士',
+    bookingDate: '2024-03-18',
+    startTime: '09:00',
+    endTime: '10:00',
+    interviewType: 'stress_care' as InterviewType,
+    interviewCategory: 'work_environment' as any,
+    requestedTopics: ['職場環境', '人間関係'],
+    description: 'ストレスチェック後のフォロー面談',
+    urgencyLevel: 'high' as any,
+    status: 'completed' as InterviewStatus,
+    interviewerId: 'M003',
+    interviewerName: '高橋カウンセラー',
+    interviewerLevel: 6,
     duration: 45,
-    notes: 'ストレスレベルが高めだったため、業務量の調整を検討',
-    feedback: {
-      overallSatisfaction: 3,
-      topics: [
-        { category: '業務負荷', discussed: true, importance: 'high', notes: '残業時間の削減が必要' },
-        { category: 'メンタルヘルス', discussed: true, importance: 'high', notes: 'カウンセリングを推奨' }
-      ],
-      keyPoints: ['業務の優先順位見直し', 'チーム内での業務分担'],
-      actionItems: ['業務量の調整', 'カウンセリング予約', '定期的な状況確認'],
-      concerns: ['慢性的な疲労', '睡眠不足'],
-      recommendations: ['産業医面談', '有給休暇の取得促進'],
-      nextSteps: ['2週間後に再面談', '業務調整の実施']
-    },
-    followUpRequired: true,
-    followUpDate: '2024-03-24',
-    createdAt: '2024-03-10T16:00:00Z',
-    updatedAt: '2024-03-10T16:45:00Z'
+    outcomeSummary: '業務負荷が高く、休息が必要。シフト調整を実施。',
+    outcomeActionItems: ['シフト見直し', '定期的な面談設定'],
+    outcomeFollowupRequired: true,
+    outcomeFollowupDate: '2024-04-01',
+    createdAt: '2024-03-10T10:00:00Z',
+    createdBy: 'system',
+    conductedAt: '2024-03-18T09:00:00Z'
+  },
+  {
+    id: 'INT004',
+    employeeId: 'S12348',
+    employeeName: '伊藤美咲',
+    employeeEmail: 'ito@example.com',
+    facility: '小原病院',
+    department: '救急科',
+    position: '医師',
+    bookingDate: '2024-03-25',
+    startTime: '16:00',
+    endTime: '17:00',
+    interviewType: 'career_development' as InterviewType,
+    interviewCategory: 'skill_development' as any,
+    requestedTopics: ['専門医資格', '研修計画'],
+    description: 'キャリア開発相談',
+    urgencyLevel: 'low' as any,
+    status: 'scheduled' as InterviewStatus,
+    interviewerId: 'M004',
+    interviewerName: '渡辺部長',
+    interviewerLevel: 8,
+    createdAt: '2024-03-05T10:00:00Z',
+    createdBy: 'S12348'
+  },
+  {
+    id: 'INT005',
+    employeeId: 'S12349',
+    employeeName: '中村健太',
+    employeeEmail: 'nakamura@example.com',
+    facility: '小原病院',
+    department: '緩和ケア病棟',
+    position: '看護師',
+    bookingDate: '2024-03-22',
+    startTime: '13:00',
+    endTime: '14:00',
+    interviewType: 'new_employee_monthly' as InterviewType,
+    interviewCategory: 'training' as any,
+    requestedTopics: ['業務習得状況', '研修進捗'],
+    description: '新入職員月次面談（3ヶ月目）',
+    urgencyLevel: 'medium' as any,
+    status: 'scheduled' as InterviewStatus,
+    interviewerId: 'M005',
+    interviewerName: '小林主任',
+    interviewerLevel: 6,
+    createdAt: '2024-03-01T10:00:00Z',
+    createdBy: 'system'
   }
 ];
 
+export function getUpcomingInterviews(days: number = 7): Interview[] {
+  const today = new Date();
+  const futureDate = new Date(today.getTime() + days * 24 * 60 * 60 * 1000);
+  
+  return mockInterviews.filter(interview => {
+    const interviewDate = new Date(interview.bookingDate);
+    return interview.status === 'scheduled' && 
+           interviewDate >= today && 
+           interviewDate <= futureDate;
+  });
+}
+
 export function getInterviewsByStaffId(staffId: string): Interview[] {
-  return mockInterviews.filter(interview => interview.staffId === staffId);
+  return mockInterviews.filter(interview => interview.employeeId === staffId);
 }
 
-export function getInterviewById(id: string): Interview | undefined {
-  return mockInterviews.find(interview => interview.id === id);
-}
-
-export function getUpcomingInterviews(): Interview[] {
-  const today = new Date().toISOString().split('T')[0];
-  return mockInterviews
-    .filter(interview => interview.status === '予定' && interview.date >= today)
-    .sort((a, b) => a.date.localeCompare(b.date));
-}
-
-export function getInterviewsByDateRange(startDate: string, endDate: string): Interview[] {
-  return mockInterviews.filter(
-    interview => interview.date >= startDate && interview.date <= endDate
-  );
+export function getInterviewsByStatus(status: InterviewStatus): Interview[] {
+  return mockInterviews.filter(interview => interview.status === status);
 }
