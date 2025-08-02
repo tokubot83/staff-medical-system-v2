@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { Interview, InterviewType, InterviewStatus } from '@/types/interview'
+import { getPermissionLevelShortName } from '@/utils/interviewPermissions'
 import styles from './InterviewModal.module.css'
 
 interface InterviewModalProps {
@@ -39,6 +40,7 @@ export default function InterviewModal({
     status: 'scheduled' as InterviewStatus,
     interviewerId: 'M001',
     interviewerName: '田中管理者',
+    interviewerLevel: 6,
     duration: 60,
     employeeNotes: ''
   })
@@ -65,6 +67,7 @@ export default function InterviewModal({
         status: 'scheduled' as InterviewStatus,
         interviewerId: 'M001',
         interviewerName: '田中管理者',
+        interviewerLevel: 6,
         duration: 60,
         employeeNotes: ''
       })
@@ -174,6 +177,29 @@ export default function InterviewModal({
               required
               placeholder="面談の目的や議題を入力"
             />
+          </div>
+
+          <div className={styles.formRow}>
+            <div className={styles.formGroup}>
+              <label>面談者</label>
+              <input
+                type="text"
+                value={formData.interviewerName || ''}
+                onChange={(e) => setFormData({ ...formData, interviewerName: e.target.value })}
+                placeholder="面談者名"
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label>面談者権限レベル</label>
+              <select
+                value={formData.interviewerLevel || 6}
+                onChange={(e) => setFormData({ ...formData, interviewerLevel: parseInt(e.target.value) })}
+              >
+                <option value={6}>レベル6 - {getPermissionLevelShortName(6)}</option>
+                <option value={7}>レベル7 - {getPermissionLevelShortName(7)}</option>
+                <option value={8}>レベル8 - {getPermissionLevelShortName(8)}</option>
+              </select>
+            </div>
           </div>
 
           <div className={styles.formRow}>
