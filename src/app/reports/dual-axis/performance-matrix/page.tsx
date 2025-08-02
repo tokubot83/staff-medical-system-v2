@@ -48,7 +48,7 @@ export default function PerformanceMatrixPage() {
     return 'low-low';
   };
 
-  const quadrantInfo = {
+  const quadrantInfo: Record<string, { label: string; color: string; bgColor: string; icon: string }> = {
     'high-high': { label: 'ハイパフォーマー', color: 'text-green-600', bgColor: 'bg-green-50', icon: '⭐' },
     'high-low': { label: '要活性化', color: 'text-yellow-600', bgColor: 'bg-yellow-50', icon: '⚡' },
     'low-high': { label: '潜在力あり', color: 'text-blue-600', bgColor: 'bg-blue-50', icon: '🌱' },
