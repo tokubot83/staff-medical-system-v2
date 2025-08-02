@@ -92,7 +92,7 @@ function PerformancePredictionContent() {
           
           <FacilitySelector
             selectedFacility={selectedFacility}
-            onChange={setSelectedFacility}
+            onFacilityChange={setSelectedFacility}
           />
         </div>
 
