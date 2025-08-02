@@ -1244,21 +1244,21 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
             {staffInterviews.slice(0, 3).map((interview) => (
               <div key={interview.id} className={styles.timelineItem}>
                 <div className={styles.timelineMarker}>
-                  <div className={`${styles.markerDot} ${interview.status === '完了' ? styles.completed : styles.scheduled}`}></div>
+                  <div className={`${styles.markerDot} ${interview.status === 'completed' ? styles.completed : styles.scheduled}`}></div>
                   <div className={styles.markerLine}></div>
                 </div>
                 <div className={styles.timelineContent}>
                   <div className={styles.timelineHeader}>
-                    <span className={styles.timelineDate}>{new Date(interview.date).toLocaleDateString('ja-JP')}</span>
-                    <span className={`${styles.timelineType} ${styles[interview.type.replace(/[^a-zA-Z]/g, '')]}`}>
-                      {interview.type}
+                    <span className={styles.timelineDate}>{new Date(interview.bookingDate).toLocaleDateString('ja-JP')}</span>
+                    <span className={`${styles.timelineType} ${styles[interview.interviewType.replace(/[^a-zA-Z]/g, '')]}`}>
+                      {interview.interviewType}
                     </span>
                     <span className={`${styles.timelineStatus} ${styles[interview.status]}`}>
                       {interview.status}
                     </span>
                   </div>
                   <div className={styles.timelineBody}>
-                    <p className={styles.timelinePurpose}><strong>目的:</strong> {interview.purpose}</p>
+                    <p className={styles.timelinePurpose}><strong>目的:</strong> {interview.description}</p>
                     {interview.feedback && (
                       <div className={styles.timelineFeedback}>
                         <p><strong>主要ポイント:</strong></p>
