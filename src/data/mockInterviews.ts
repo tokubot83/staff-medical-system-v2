@@ -53,8 +53,7 @@ export const mockInterviews: Interview[] = [
     interviewerName: '鈴木マネージャー',
     interviewerLevel: 7,
     createdAt: '2024-03-01T10:00:00Z',
-    createdBy: 'system',
-    updatedAt: '2024-03-01T10:00:00Z'
+    createdBy: 'system'
   },
   {
     id: 'INT003',
