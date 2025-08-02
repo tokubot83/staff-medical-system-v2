@@ -105,6 +105,14 @@ const reportCategories: ReportCategory[] = [
     description: '職員の健康と幸福度の総合分析',
     path: '/reports?tab=wellbeing',
     reportsCount: 4
+  },
+  {
+    id: 'dual-axis',
+    label: '2軸評価分析',
+    icon: '🎲',
+    description: 'スキルと成果の2軸で職員パフォーマンスを多角的に評価',
+    path: '/reports?tab=dual-axis',
+    reportsCount: 3
   }
 ];
 
