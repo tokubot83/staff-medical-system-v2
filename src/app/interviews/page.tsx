@@ -54,23 +54,28 @@ export default function InterviewsPage() {
       // 新規作成の場合
       const newInterview: Interview = {
         id: `INT${Date.now()}`,
-        staffId: interviewData.staffId || '',
-        staffName: interviewData.staffName || '',
+        employeeId: interviewData.employeeId || '',
+        employeeName: interviewData.employeeName || '',
+        employeeEmail: interviewData.employeeEmail || 'test@example.com',
+        facility: '小原病院',
         department: interviewData.department || '内科',
-        date: interviewData.date || '',
-        time: interviewData.time || '',
-        type: interviewData.type || '定期面談',
-        status: interviewData.status || '予定',
-        purpose: interviewData.purpose || '',
-        location: interviewData.location,
+        position: interviewData.position || '看護師',
+        bookingDate: interviewData.bookingDate || new Date().toISOString().split('T')[0],
+        startTime: interviewData.startTime || '10:00',
+        endTime: interviewData.endTime || '11:00',
+        interviewType: interviewData.interviewType || 'ad_hoc',
+        interviewCategory: interviewData.interviewCategory || 'other',
+        requestedTopics: interviewData.requestedTopics || [],
+        description: interviewData.description || '',
+        urgencyLevel: interviewData.urgencyLevel || 'medium',
+        status: interviewData.status || 'scheduled',
         interviewerId: interviewData.interviewerId || 'M001',
         interviewerName: interviewData.interviewerName || '田中管理者',
-        duration: interviewData.duration,
-        notes: interviewData.notes,
-        followUpRequired: interviewData.followUpRequired,
-        followUpDate: interviewData.followUpDate,
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        createdBy: 'system',
+        duration: interviewData.duration,
+        adminNotes: interviewData.adminNotes,
+        employeeNotes: interviewData.employeeNotes
       }
       setInterviews([...interviews, newInterview])
     }
@@ -79,15 +84,15 @@ export default function InterviewsPage() {
   }
 
   const filteredInterviews = interviews.filter((interview) => {
-    const matchesSearch = interview.staffName.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                         interview.staffId.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesSearch = interview.employeeName.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                         interview.employeeId.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesFacility = selectedFacility === 'all' || interview.department === selectedFacility
     const matchesDepartment = selectedDepartment === 'all' || interview.department === selectedDepartment
     
     // 日付フィルター
     const matchesDateRange = (() => {
       if (!dateRange.start && !dateRange.end) return true
-      const interviewDate = new Date(interview.date)
+      const interviewDate = new Date(interview.bookingDate)
       if (dateRange.start && interviewDate < new Date(dateRange.start)) return false
       if (dateRange.end && interviewDate > new Date(dateRange.end)) return false
       return true
@@ -117,7 +122,7 @@ export default function InterviewsPage() {
         <div className={styles.tabContent}>
           {activeTab === 'schedule' && (
             <ScheduleTab 
-              interviews={filteredInterviews.filter(i => i.status === '予定')}
+              interviews={filteredInterviews.filter(i => i.status === 'scheduled')}
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
               selectedFacility={selectedFacility}
@@ -134,7 +139,7 @@ export default function InterviewsPage() {
           )}
           {activeTab === 'history' && (
             <HistoryTab 
-              interviews={filteredInterviews.filter(i => i.status === '完了')}
+              interviews={filteredInterviews.filter(i => i.status === 'completed')}
               onInterviewSelect={handleInterviewSelect}
               dateRange={dateRange}
               onDateRangeChange={setDateRange}
@@ -224,15 +229,14 @@ function ScheduleTab({ interviews, searchTerm, setSearchTerm, selectedFacility, 
           <div key={interview.id} className={styles.interviewCard} onClick={() => onInterviewSelect(interview)}>
             <div className={styles.cardHeader}>
               <div className={styles.cardDate}>
-                <div className={styles.dateDay}>{new Date(interview.date).getDate()}</div>
-                <div className={styles.dateMonth}>{new Date(interview.date).toLocaleDateString('ja-JP', { month: 'short' })}</div>
+                <div className={styles.dateDay}>{new Date(interview.bookingDate).getDate()}</div>
+                <div className={styles.dateMonth}>{new Date(interview.bookingDate).toLocaleDateString('ja-JP', { month: 'short' })}</div>
               </div>
               <div className={styles.cardInfo}>
-                <h3>{interview.staffName}</h3>
-                <p className={styles.staffId}>{interview.staffId}</p>
-                <p className={styles.interviewTime}>{interview.time} - {interview.type}</p>
-                <p className={styles.interviewPurpose}>{interview.purpose}</p>
-                {interview.location && <p className={styles.interviewLocation}>📍 {interview.location}</p>}
+                <h3>{interview.employeeName}</h3>
+                <p className={styles.staffId}>{interview.employeeId}</p>
+                <p className={styles.interviewTime}>{interview.startTime} - {interview.interviewType}</p>
+                <p className={styles.interviewPurpose}>{interview.description}</p>
               </div>
               <div className={styles.cardActions}>
                 <button 
@@ -271,13 +275,13 @@ function HistoryTab({ interviews, onInterviewSelect, dateRange, onDateRangeChang
     let comparison = 0
     switch (sortBy) {
       case 'date':
-        comparison = new Date(a.date).getTime() - new Date(b.date).getTime()
+        comparison = new Date(a.bookingDate).getTime() - new Date(b.bookingDate).getTime()
         break
       case 'type':
-        comparison = a.type.localeCompare(b.type)
+        comparison = a.interviewType.localeCompare(b.interviewType)
         break
       case 'staff':
-        comparison = a.staffName.localeCompare(b.staffName)
+        comparison = a.employeeName.localeCompare(b.employeeName)
         break
     }
     return sortOrder === 'asc' ? comparison : -comparison
@@ -330,12 +334,12 @@ function HistoryTab({ interviews, onInterviewSelect, dateRange, onDateRangeChang
         {sortedInterviews.map((interview) => (
           <div key={interview.id} className={styles.historyItem} onClick={() => onInterviewSelect(interview)}>
             <div className={styles.historyDate}>
-              <div className={styles.historyDateText}>{new Date(interview.date).toLocaleDateString('ja-JP')}</div>
-              <div className={styles.historyTime}>{interview.time}</div>
+              <div className={styles.historyDateText}>{new Date(interview.bookingDate).toLocaleDateString('ja-JP')}</div>
+              <div className={styles.historyTime}>{interview.startTime}</div>
             </div>
             <div className={styles.historyInfo}>
-              <h4>{interview.staffName} - {interview.type}</h4>
-              <p className={styles.historyPurpose}>{interview.purpose}</p>
+              <h4>{interview.employeeName} - {interview.interviewType}</h4>
+              <p className={styles.historyPurpose}>{interview.description}</p>
               {interview.feedback && interview.feedback.keyPoints && interview.feedback.keyPoints.length > 0 && (
                 <p className={styles.historyFeedback}>{interview.feedback.keyPoints[0]}</p>
               )}
@@ -368,9 +372,9 @@ function FeedbackTab({ selectedInterview }: FeedbackTabProps) {
       <div className={styles.feedbackHeader}>
         <h2>面談フィードバック</h2>
         <div className={styles.interviewMeta}>
-          <span>{selectedInterview.staffName}</span>
-          <span>{new Date(selectedInterview.date).toLocaleDateString('ja-JP')}</span>
-          <span>{selectedInterview.type}</span>
+          <span>{selectedInterview.employeeName}</span>
+          <span>{new Date(selectedInterview.bookingDate).toLocaleDateString('ja-JP')}</span>
+          <span>{selectedInterview.interviewType}</span>
         </div>
       </div>
 
@@ -381,7 +385,7 @@ function FeedbackTab({ selectedInterview }: FeedbackTabProps) {
             className={styles.textArea}
             placeholder="面談の概要を入力してください"
             rows={4}
-            defaultValue={selectedInterview.notes}
+            defaultValue={selectedInterview.employeeNotes}
           />
         </div>
 

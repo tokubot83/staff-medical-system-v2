@@ -22,19 +22,25 @@ export default function InterviewModal({
   staffName
 }: InterviewModalProps) {
   const [formData, setFormData] = useState<Partial<Interview>>({
-    staffId: staffId || '',
-    staffName: staffName || '',
-    date: '',
-    time: '',
-    type: '定期面談' as InterviewType,
-    status: '予定' as InterviewStatus,
-    purpose: '',
-    location: '',
+    employeeId: staffId || '',
+    employeeName: staffName || '',
+    employeeEmail: '',
+    facility: '小原病院',
+    department: '内科',
+    position: '',
+    bookingDate: '',
+    startTime: '',
+    endTime: '',
+    interviewType: 'regular_annual' as InterviewType,
+    interviewCategory: 'other' as any,
+    requestedTopics: [],
+    description: '',
+    urgencyLevel: 'medium' as any,
+    status: 'scheduled' as InterviewStatus,
     interviewerId: 'M001',
     interviewerName: '田中管理者',
     duration: 60,
-    notes: '',
-    followUpRequired: false
+    employeeNotes: ''
   })
 
   useEffect(() => {
@@ -42,12 +48,21 @@ export default function InterviewModal({
       setFormData(interview)
     } else {
       setFormData({
-        staffId: staffId || '',
-        staffName: staffName || '',
-        date: '',
-        time: '',
-        type: '定期面談' as InterviewType,
-        status: '予定' as InterviewStatus,
+        employeeId: staffId || '',
+        employeeName: staffName || '',
+        employeeEmail: '',
+        facility: '小原病院',
+        department: '内科',
+        position: '',
+        bookingDate: '',
+        startTime: '',
+        endTime: '',
+        interviewType: 'regular_annual' as InterviewType,
+        interviewCategory: 'other' as any,
+        requestedTopics: [],
+        description: '',
+        urgencyLevel: 'medium' as any,
+        status: 'scheduled' as InterviewStatus,
         purpose: '',
         location: '',
         interviewerId: 'M001',
@@ -83,8 +98,8 @@ export default function InterviewModal({
               <label>職員名</label>
               <input
                 type="text"
-                value={formData.staffName}
-                onChange={(e) => setFormData({ ...formData, staffName: e.target.value })}
+                value={formData.employeeName || ''}
+                onChange={(e) => setFormData({ ...formData, employeeName: e.target.value })}
                 required
                 placeholder="職員名を入力"
               />
@@ -93,8 +108,8 @@ export default function InterviewModal({
               <label>職員ID</label>
               <input
                 type="text"
-                value={formData.staffId}
-                onChange={(e) => setFormData({ ...formData, staffId: e.target.value })}
+                value={formData.employeeId || ''}
+                onChange={(e) => setFormData({ ...formData, employeeId: e.target.value })}
                 required
                 placeholder="職員IDを入力"
               />
@@ -106,8 +121,8 @@ export default function InterviewModal({
               <label>日付</label>
               <input
                 type="date"
-                value={formData.date}
-                onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                value={formData.bookingDate || ''}
+                onChange={(e) => setFormData({ ...formData, bookingDate: e.target.value })}
                 required
               />
             </div>
@@ -115,8 +130,8 @@ export default function InterviewModal({
               <label>時間</label>
               <input
                 type="time"
-                value={formData.time}
-                onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                value={formData.startTime || ''}
+                onChange={(e) => setFormData({ ...formData, startTime: e.target.value })}
                 required
               />
             </div>
@@ -126,15 +141,16 @@ export default function InterviewModal({
             <div className={styles.formGroup}>
               <label>面談種別</label>
               <select
-                value={formData.type}
-                onChange={(e) => setFormData({ ...formData, type: e.target.value as InterviewType })}
+                value={formData.interviewType || 'regular_annual'}
+                onChange={(e) => setFormData({ ...formData, interviewType: e.target.value as InterviewType })}
                 required
               >
-                <option value="定期面談">定期面談</option>
-                <option value="フォロー面談">フォロー面談</option>
-                <option value="健康相談">健康相談</option>
-                <option value="キャリア相談">キャリア相談</option>
-                <option value="その他">その他</option>
+                <option value="new_employee_monthly">新入職員月次面談</option>
+                <option value="regular_annual">一般職員年次面談</option>
+                <option value="management_biannual">管理職半年面談</option>
+                <option value="career_development">キャリア開発面談</option>
+                <option value="stress_care">ストレスケア面談</option>
+                <option value="ad_hoc">随時面談</option>
               </select>
             </div>
             <div className={styles.formGroup}>
@@ -144,10 +160,10 @@ export default function InterviewModal({
                 onChange={(e) => setFormData({ ...formData, status: e.target.value as InterviewStatus })}
                 required
               >
-                <option value="予定">予定</option>
-                <option value="完了">完了</option>
-                <option value="キャンセル">キャンセル</option>
-                <option value="延期">延期</option>
+                <option value="scheduled">予定</option>
+                <option value="completed">完了</option>
+                <option value="cancelled">キャンセル</option>
+                <option value="postponed">延期</option>
               </select>
             </div>
           </div>
@@ -156,8 +172,8 @@ export default function InterviewModal({
             <label>目的・議題</label>
             <input
               type="text"
-              value={formData.purpose}
-              onChange={(e) => setFormData({ ...formData, purpose: e.target.value })}
+              value={formData.description || ''}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               required
               placeholder="面談の目的や議題を入力"
             />
