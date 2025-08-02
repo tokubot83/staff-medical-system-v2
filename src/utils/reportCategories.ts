@@ -103,12 +103,6 @@ export const strategicCategoryInfoMap: Record<string, CategoryInfo> = {
     description: '各種基本指標の統計データ',
     icon: '📊',
     color: 'bg-gray-500'
-  },
-  'dual-axis': {
-    name: '2軸評価分析',
-    description: 'スキルと成果の2軸で職員パフォーマンスを多角的に評価・分析',
-    icon: '🎲',
-    color: 'bg-cyan-500'
   }
 };
 

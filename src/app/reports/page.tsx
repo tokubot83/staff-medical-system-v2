@@ -88,6 +88,15 @@ const categories = [
     gradient: 'from-green-500 to-teal-500',
     path: '/reports/wellbeing',
     hasDetailPages: true
+  },
+  {
+    id: 'performance-evaluation',
+    label: '人事評価分析',
+    icon: '🎲',
+    description: 'スキルと成果の2軸評価など多角的な人事評価分析',
+    gradient: 'from-cyan-500 to-blue-500',
+    path: '/reports/performance-evaluation',
+    hasDetailPages: true
   }
 ];
 
