@@ -6,6 +6,7 @@ import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { BackToReportsButton } from '@/components/BackToReportsButton';
+import { CategoryTopButton } from '@/components/CategoryTopButton';
 import FacilitySelector from '@/components/reports/FacilitySelector';
 
 interface PredictionData {
@@ -263,6 +264,8 @@ function PerformancePredictionContent() {
       </div>
 
       <ScrollToTopButton />
+      <CategoryTopButton categoryPath="/reports/performance-evaluation" categoryName="人事評価分析" />
+      <BackToReportsButton />
       <DashboardButton />
     </div>
   );
