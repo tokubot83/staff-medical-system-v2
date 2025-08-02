@@ -63,13 +63,10 @@ export default function InterviewModal({
         description: '',
         urgencyLevel: 'medium' as any,
         status: 'scheduled' as InterviewStatus,
-        purpose: '',
-        location: '',
         interviewerId: 'M001',
         interviewerName: '田中管理者',
         duration: 60,
-        notes: '',
-        followUpRequired: false
+        employeeNotes: ''
       })
     }
   }, [interview, staffId, staffName])
@@ -184,9 +181,10 @@ export default function InterviewModal({
               <label>場所</label>
               <input
                 type="text"
-                value={formData.location}
-                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                value={''}
+                onChange={(e) => {}}
                 placeholder="会議室A、オンライン等"
+                disabled
               />
             </div>
             <div className={styles.formGroup}>
@@ -204,8 +202,8 @@ export default function InterviewModal({
           <div className={styles.formGroup}>
             <label>備考・メモ</label>
             <textarea
-              value={formData.notes}
-              onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+              value={formData.employeeNotes || ''}
+              onChange={(e) => setFormData({ ...formData, employeeNotes: e.target.value })}
               rows={3}
               placeholder="事前準備事項や注意事項など"
             />
@@ -215,20 +213,20 @@ export default function InterviewModal({
             <label className={styles.checkboxLabel}>
               <input
                 type="checkbox"
-                checked={formData.followUpRequired}
-                onChange={(e) => setFormData({ ...formData, followUpRequired: e.target.checked })}
+                checked={formData.outcomeFollowupRequired || false}
+                onChange={(e) => setFormData({ ...formData, outcomeFollowupRequired: e.target.checked })}
               />
               フォローアップが必要
             </label>
           </div>
 
-          {formData.followUpRequired && (
+          {formData.outcomeFollowupRequired && (
             <div className={styles.formGroup}>
               <label>フォローアップ予定日</label>
               <input
                 type="date"
-                value={formData.followUpDate || ''}
-                onChange={(e) => setFormData({ ...formData, followUpDate: e.target.value })}
+                value={formData.outcomeFollowupDate || ''}
+                onChange={(e) => setFormData({ ...formData, outcomeFollowupDate: e.target.value })}
               />
             </div>
           )}
