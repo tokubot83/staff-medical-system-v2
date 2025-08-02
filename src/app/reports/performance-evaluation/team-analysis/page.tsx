@@ -2,7 +2,10 @@
 
 import React, { useState, useMemo } from 'react'
 import CommonHeader from '@/components/CommonHeader'
-import ReportLayout from '@/components/reports/ReportLayout'
+import DashboardButton from '@/components/DashboardButton'
+import ScrollToTopButton from '@/components/ScrollToTopButton'
+import { CategoryTopButton } from '@/components/CategoryTopButton'
+import { BackToReportsButton } from '@/components/BackToReportsButton'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Users, TrendingUp, AlertCircle } from 'lucide-react'
@@ -113,15 +116,18 @@ export default function TeamAnalysisPage() {
   }
 
   return (
-    <>
+    <div className="min-h-screen bg-gray-50">
       <CommonHeader title="チーム位置づけ分析" />
-      <ReportLayout
-        title="チーム位置づけ分析"
-        description="チーム内での各メンバーの相対的な位置づけを分析"
-        icon="👥"
-        color="bg-blue-500"
-      >
+      
+      <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
+          {/* ヘッダー */}
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h1 className="text-2xl font-bold">チーム位置づけ分析</h1>
+            <p className="text-gray-600 mt-2">チーム内での各メンバーの相対的な位置づけを分析</p>
+          </div>
+
+          <div className="space-y-6">
           {/* フィルター */}
           <Card className="p-6">
             <h3 className="text-lg font-bold mb-4">フィルター</h3>
@@ -298,8 +304,14 @@ export default function TeamAnalysisPage() {
               </div>
             </Card>
           ))}
+          </div>
         </div>
-      </ReportLayout>
-    </>
+      </div>
+      
+      <ScrollToTopButton />
+      <CategoryTopButton categoryPath="/reports/performance-evaluation" categoryName="人事評価分析" />
+      <BackToReportsButton />
+      <DashboardButton />
+    </div>
   )
 }

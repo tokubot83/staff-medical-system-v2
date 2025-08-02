@@ -2,7 +2,10 @@
 
 import React, { useState, useMemo } from 'react'
 import CommonHeader from '@/components/CommonHeader'
-import ReportLayout from '@/components/reports/ReportLayout'
+import DashboardButton from '@/components/DashboardButton'
+import ScrollToTopButton from '@/components/ScrollToTopButton'
+import { CategoryTopButton } from '@/components/CategoryTopButton'
+import { BackToReportsButton } from '@/components/BackToReportsButton'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { staffDatabase } from '@/app/data/staffData'
@@ -97,15 +100,18 @@ export default function PerformanceMatrixPage() {
   }
 
   return (
-    <>
+    <div className="min-h-screen bg-gray-50">
       <CommonHeader title="位置づけマトリクス" />
-      <ReportLayout
-        title="位置づけマトリクス"
-        description="施設内評価と法人内評価による職員の位置づけを可視化"
-        icon="📊"
-        color="bg-purple-500"
-      >
+      
+      <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
+          {/* ヘッダー */}
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h1 className="text-2xl font-bold">位置づけマトリクス</h1>
+            <p className="text-gray-600 mt-2">施設内評価と法人内評価による職員の位置づけを可視化</p>
+          </div>
+
+          <div className="space-y-6">
           {/* フィルター */}
           <Card className="p-6">
             <h3 className="text-lg font-bold mb-4">フィルター</h3>
@@ -282,8 +288,14 @@ export default function PerformanceMatrixPage() {
               </table>
             </div>
           </Card>
+          </div>
         </div>
-      </ReportLayout>
-    </>
+      </div>
+      
+      <ScrollToTopButton />
+      <CategoryTopButton categoryPath="/reports/performance-evaluation" categoryName="人事評価分析" />
+      <BackToReportsButton />
+      <DashboardButton />
+    </div>
   )
 }

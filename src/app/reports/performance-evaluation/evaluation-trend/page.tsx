@@ -2,7 +2,10 @@
 
 import React, { useState, useMemo } from 'react'
 import CommonHeader from '@/components/CommonHeader'
-import ReportLayout from '@/components/reports/ReportLayout'
+import DashboardButton from '@/components/DashboardButton'
+import ScrollToTopButton from '@/components/ScrollToTopButton'
+import { CategoryTopButton } from '@/components/CategoryTopButton'
+import { BackToReportsButton } from '@/components/BackToReportsButton'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
@@ -125,15 +128,18 @@ export default function EvaluationTrendPage() {
   }, [viewMode, selectedDepartment, staffList])
 
   return (
-    <>
+    <div className="min-h-screen bg-gray-50">
       <CommonHeader title="位置づけ推移分析" />
-      <ReportLayout
-        title="位置づけ推移分析"
-        description="職員の位置づけの時系列変化を追跡・分析"
-        icon="📈"
-        color="bg-indigo-500"
-      >
+      
+      <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
+          {/* ヘッダー */}
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h1 className="text-2xl font-bold">位置づけ推移分析</h1>
+            <p className="text-gray-600 mt-2">職員の位置づけの時系列変化を追跡・分析</p>
+          </div>
+
+          <div className="space-y-6">
           {/* ビューモード選択 */}
           <Card className="p-6">
             <h3 className="text-lg font-bold mb-4">分析モード</h3>
@@ -425,8 +431,14 @@ export default function EvaluationTrendPage() {
               </Card>
             </div>
           )}
+          </div>
         </div>
-      </ReportLayout>
-    </>
+      </div>
+      
+      <ScrollToTopButton />
+      <CategoryTopButton categoryPath="/reports/performance-evaluation" categoryName="人事評価分析" />
+      <BackToReportsButton />
+      <DashboardButton />
+    </div>
   )
 }

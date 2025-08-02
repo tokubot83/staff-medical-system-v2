@@ -2,7 +2,10 @@
 
 import React, { useState, useMemo } from 'react'
 import CommonHeader from '@/components/CommonHeader'
-import ReportLayout from '@/components/reports/ReportLayout'
+import DashboardButton from '@/components/DashboardButton'
+import ScrollToTopButton from '@/components/ScrollToTopButton'
+import { CategoryTopButton } from '@/components/CategoryTopButton'
+import { BackToReportsButton } from '@/components/BackToReportsButton'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ArrowRight, Users, Shuffle, Target, AlertTriangle } from 'lucide-react'
@@ -153,15 +156,18 @@ export default function OrganizationOptimizationPage() {
   }
 
   return (
-    <>
+    <div className="min-h-screen bg-gray-50">
       <CommonHeader title="組織最適化提案" />
-      <ReportLayout
-        title="組織最適化提案"
-        description="位置づけに基づく適材適所の人材配置最適化"
-        icon="🎯"
-        color="bg-orange-500"
-      >
+      
+      <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
+          {/* ヘッダー */}
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h1 className="text-2xl font-bold">組織最適化提案</h1>
+            <p className="text-gray-600 mt-2">位置づけに基づく適材適所の人材配置最適化</p>
+          </div>
+
+          <div className="space-y-6">
           {/* シナリオ選択 */}
           <Card className="p-6">
             <h3 className="text-lg font-bold mb-4">最適化シナリオ</h3>
@@ -361,8 +367,14 @@ export default function OrganizationOptimizationPage() {
               </div>
             </div>
           </Card>
+          </div>
         </div>
-      </ReportLayout>
-    </>
+      </div>
+      
+      <ScrollToTopButton />
+      <CategoryTopButton categoryPath="/reports/performance-evaluation" categoryName="人事評価分析" />
+      <BackToReportsButton />
+      <DashboardButton />
+    </div>
   )
 }
