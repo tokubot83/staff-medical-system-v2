@@ -38,7 +38,7 @@ export default function TwoAxisEvaluationPage() {
       <CommonHeader title="2軸評価分析" />
       <ReportLayout
         title="2軸評価分析"
-        description="施設内評価と法人内評価による多角的な人事評価分析"
+        description="施設内・法人内での職員の相対的な位置づけを把握する評価システム"
         icon="📊"
         color="bg-purple-500"
       >
@@ -164,37 +164,55 @@ export default function TwoAxisEvaluationPage() {
             <h3 className="text-lg font-bold mb-3">2軸評価システムについて</h3>
             <div className="space-y-2 text-sm">
               <p>
-                2軸評価システムは、施設内での相対評価と法人全体での相対評価を組み合わせることで、
-                より公平で客観的な人事評価を実現します。
+                2軸評価システムは、職員が「施設内でどの位置にいるか」と「法人全体でどの位置にいるか」を
+                可視化し、組織内での相対的な位置づけを明確にするシステムです。
               </p>
               <div className="grid grid-cols-2 gap-4 mt-4">
                 <div>
                   <h4 className="font-semibold mb-2">施設内評価</h4>
                   <ul className="list-disc list-inside space-y-1 text-gray-700">
-                    <li>同じ施設内の同職種での相対評価</li>
-                    <li>施設規模や特性を考慮した評価</li>
-                    <li>現場でのパフォーマンスを重視</li>
+                    <li>自施設内での職員の位置づけを把握</li>
+                    <li>施設レベルでの相対的な立ち位置を可視化</li>
+                    <li>施設運営における役割・貢献度の指標</li>
                   </ul>
                 </div>
                 <div>
                   <h4 className="font-semibold mb-2">法人内評価</h4>
                   <ul className="list-disc list-inside space-y-1 text-gray-700">
-                    <li>法人全体の同職種での相対評価</li>
-                    <li>専門性や技術力の客観的評価</li>
-                    <li>キャリア開発の指標として活用</li>
+                    <li>法人全体での職員の位置づけを把握</li>
+                    <li>組織全体における相対的な立ち位置を可視化</li>
+                    <li>法人内でのキャリア形成・配置の参考指標</li>
                   </ul>
                 </div>
               </div>
               <div className="mt-4 p-3 bg-white rounded">
-                <h4 className="font-semibold mb-2">評価グレード</h4>
-                <div className="flex gap-2">
-                  <Badge style={{ backgroundColor: '#e91e63', color: 'white' }}>S+</Badge>
-                  <Badge style={{ backgroundColor: '#ff5722', color: 'white' }}>S</Badge>
-                  <Badge style={{ backgroundColor: '#ff9800', color: 'white' }}>A+</Badge>
-                  <Badge style={{ backgroundColor: '#ffc107', color: 'white' }}>A</Badge>
-                  <Badge style={{ backgroundColor: '#4caf50', color: 'white' }}>B</Badge>
-                  <Badge style={{ backgroundColor: '#2196f3', color: 'white' }}>C</Badge>
-                  <Badge style={{ backgroundColor: '#9e9e9e', color: 'white' }}>D</Badge>
+                <h4 className="font-semibold mb-2">位置づけグレード（相対的分布）</h4>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Badge style={{ backgroundColor: '#ff5722', color: 'white' }}>S</Badge>
+                    <span className="text-gray-700">上位10%（最上位層）</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge style={{ backgroundColor: '#ffc107', color: 'white' }}>A</Badge>
+                    <span className="text-gray-700">上位11-30%（上位層）</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge style={{ backgroundColor: '#4caf50', color: 'white' }}>B</Badge>
+                    <span className="text-gray-700">上位31-70%（中核層）</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge style={{ backgroundColor: '#2196f3', color: 'white' }}>C</Badge>
+                    <span className="text-gray-700">上位71-90%（育成層）</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge style={{ backgroundColor: '#9e9e9e', color: 'white' }}>D</Badge>
+                    <span className="text-gray-700">下位10%（要支援層）</span>
+                  </div>
+                </div>
+                <div className="mt-3 pt-3 border-t">
+                  <p className="text-xs text-gray-600">
+                    ※ 施設内と法人内の位置づけを組み合わせることで、職員の多面的な立ち位置が明確になります
+                  </p>
                 </div>
               </div>
             </div>

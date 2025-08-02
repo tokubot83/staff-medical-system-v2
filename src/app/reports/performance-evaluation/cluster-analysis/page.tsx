@@ -1,454 +1,386 @@
-'use client';
+'use client'
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import CommonHeader from '@/components/CommonHeader';
-import DashboardButton from '@/components/DashboardButton';
-import ScrollToTopButton from '@/components/ScrollToTopButton';
-import { CategoryTopButton } from '@/components/CategoryTopButton';
-import { BackToReportsButton } from '@/components/BackToReportsButton';
-
-interface StaffData {
-  id: string;
-  name: string;
-  department: string;
-  position: string;
-  skillScore: number;
-  resultScore: number;
-  experience: number;
-  age: number;
-  leadership: number;
-  communication: number;
-  adaptability: number;
-  cluster: string;
-}
-
-interface ClusterInfo {
-  id: string;
-  name: string;
-  description: string;
-  characteristics: string[];
-  developmentPlan: string[];
-  color: string;
-  memberCount: number;
-  avgScore: number;
-}
-
-const mockStaffData: StaffData[] = [
-  { id: '1', name: '山田太郎', department: '看護部', position: '看護師長', skillScore: 85, resultScore: 90, experience: 15, age: 42, leadership: 88, communication: 85, adaptability: 80, cluster: 'leaders' },
-  { id: '2', name: '佐藤花子', department: '看護部', position: '看護師', skillScore: 70, resultScore: 75, experience: 8, age: 32, leadership: 65, communication: 78, adaptability: 72, cluster: 'steady' },
-  { id: '3', name: '鈴木一郎', department: 'リハビリ部', position: '理学療法士', skillScore: 90, resultScore: 85, experience: 12, age: 38, leadership: 75, communication: 82, adaptability: 88, cluster: 'specialists' },
-  { id: '4', name: '田中美咲', department: '介護部', position: '介護士', skillScore: 60, resultScore: 80, experience: 5, age: 28, leadership: 70, communication: 75, adaptability: 85, cluster: 'potential' },
-  { id: '5', name: '伊藤健', department: '医事課', position: '主任', skillScore: 75, resultScore: 70, experience: 10, age: 35, leadership: 72, communication: 68, adaptability: 65, cluster: 'steady' },
-  { id: '6', name: '渡辺梨香', department: '栄養課', position: '管理栄養士', skillScore: 85, resultScore: 88, experience: 9, age: 33, leadership: 80, communication: 85, adaptability: 82, cluster: 'specialists' },
-  { id: '7', name: '高橋勇', department: '看護部', position: '看護師', skillScore: 55, resultScore: 60, experience: 3, age: 25, leadership: 50, communication: 60, adaptability: 75, cluster: 'developing' },
-  { id: '8', name: '小林由美', department: '介護部', position: '介護福祉士', skillScore: 80, resultScore: 82, experience: 7, age: 30, leadership: 78, communication: 80, adaptability: 78, cluster: 'steady' },
-  { id: '9', name: '加藤直樹', department: 'リハビリ部', position: '作業療法士', skillScore: 92, resultScore: 88, experience: 14, age: 40, leadership: 85, communication: 88, adaptability: 90, cluster: 'leaders' },
-  { id: '10', name: '中村美和', department: '看護部', position: '主任看護師', skillScore: 88, resultScore: 85, experience: 11, age: 36, leadership: 82, communication: 85, adaptability: 80, cluster: 'leaders' },
-  { id: '11', name: '松本健二', department: '医事課', position: '医事課員', skillScore: 58, resultScore: 65, experience: 4, age: 27, leadership: 55, communication: 62, adaptability: 70, cluster: 'developing' },
-  { id: '12', name: '井上恵子', department: '栄養課', position: '栄養士', skillScore: 72, resultScore: 78, experience: 6, age: 29, leadership: 68, communication: 75, adaptability: 80, cluster: 'potential' }
-];
-
-const clusterInfo: Record<string, ClusterInfo> = {
-  leaders: {
-    id: 'leaders',
-    name: 'リーダー群',
-    description: '高いスキルと実績を持つリーダー候補',
-    characteristics: ['高いスキルレベル', '優れた成果', '強いリーダーシップ', '豊富な経験'],
-    developmentPlan: ['リーダーシップ研修の実施', 'メンタリング役の任命', '戦略的プロジェクトへの参画', '後進指導の機会提供'],
-    color: '#10B981',
-    memberCount: 0,
-    avgScore: 0
-  },
-  specialists: {
-    id: 'specialists',
-    name: 'エキスパート群',
-    description: '専門性が高い技術者グループ',
-    characteristics: ['専門技術に長けている', '継続的な成果創出', '高い適応力', '技術革新への関心'],
-    developmentPlan: ['専門技術研修の強化', '学会参加支援', '新技術導入プロジェクト参画', '専門資格取得支援'],
-    color: '#3B82F6',
-    memberCount: 0,
-    avgScore: 0
-  },
-  steady: {
-    id: 'steady',
-    name: '安定稼働群',
-    description: '組織の中核を担う安定したパフォーマー',
-    characteristics: ['安定したパフォーマンス', 'チームワーク重視', '継続的な改善意識', '組織への貢献'],
-    developmentPlan: ['スキルアップ研修の実施', 'キャリア開発支援', 'チームリーダー経験の提供', '業務効率化支援'],
-    color: '#F59E0B',
-    memberCount: 0,
-    avgScore: 0
-  },
-  potential: {
-    id: 'potential',
-    name: '成長期待群',
-    description: '今後の成長が期待される若手・中堅',
-    characteristics: ['高い成長ポテンシャル', '柔軟性と適応力', '学習意欲が旺盛', '変化への対応力'],
-    developmentPlan: ['基礎研修の充実', 'OJT強化', 'ローテーション研修', 'メンター制度の活用'],
-    color: '#8B5CF6',
-    memberCount: 0,
-    avgScore: 0
-  },
-  developing: {
-    id: 'developing',
-    name: '育成重点群',
-    description: '集中的な育成が必要なグループ',
-    characteristics: ['基礎スキルの向上が必要', '経験不足', '個別指導が効果的', '成長の余地が大きい'],
-    developmentPlan: ['個別指導の強化', '基礎研修の実施', 'ペアワーク制度', '段階的な業務拡大'],
-    color: '#EF4444',
-    memberCount: 0,
-    avgScore: 0
-  }
-};
-
-// Calculate cluster statistics
-Object.keys(clusterInfo).forEach(clusterId => {
-  const members = mockStaffData.filter(staff => staff.cluster === clusterId);
-  clusterInfo[clusterId].memberCount = members.length;
-  clusterInfo[clusterId].avgScore = members.length > 0 
-    ? Math.round(members.reduce((sum, staff) => sum + (staff.skillScore + staff.resultScore) / 2, 0) / members.length)
-    : 0;
-});
+import React, { useState, useMemo } from 'react'
+import CommonHeader from '@/components/CommonHeader'
+import ReportLayout from '@/components/reports/ReportLayout'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts'
+import { Users, Target, TrendingUp, AlertCircle } from 'lucide-react'
+import { staffDatabase } from '@/app/data/staffData'
 
 export default function ClusterAnalysisPage() {
-  const router = useRouter();
-  const [selectedCluster, setSelectedCluster] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<'scatter' | 'radar'>('scatter');
-  const [analysisMode, setAnalysisMode] = useState<'performance' | 'skills'>('performance');
+  const [selectedCluster, setSelectedCluster] = useState<string | null>(null)
+  const [viewMode, setViewMode] = useState<'scatter' | 'list'>('scatter')
 
-  const filteredStaff = selectedCluster 
-    ? mockStaffData.filter(staff => staff.cluster === selectedCluster)
-    : mockStaffData;
+  // スタッフリストを配列に変換
+  const staffList = Object.values(staffDatabase)
 
-  const getScatterPosition = (staff: StaffData) => {
-    if (analysisMode === 'performance') {
+  // 各職員に位置づけデータを追加
+  const staffWithPositioning = useMemo(() => {
+    return staffList.map(staff => {
+      const facilityRank = Math.floor(Math.random() * 100) + 1
+      const corporateRank = Math.floor(Math.random() * 100) + 1
+      
+      const getGrade = (rank: number) => {
+        if (rank <= 10) return 'S'
+        if (rank <= 30) return 'A'
+        if (rank <= 70) return 'B'
+        if (rank <= 90) return 'C'
+        return 'D'
+      }
+      
+      // クラスター判定
+      let cluster = ''
+      const facilityGrade = getGrade(facilityRank)
+      const corporateGrade = getGrade(corporateRank)
+      
+      if (facilityGrade === 'S' && corporateGrade === 'S') {
+        cluster = 'スーパースター'
+      } else if ((facilityGrade === 'S' || facilityGrade === 'A') && (corporateGrade === 'S' || corporateGrade === 'A')) {
+        cluster = 'ハイパフォーマー'
+      } else if (facilityGrade === 'B' && corporateGrade === 'B') {
+        cluster = '安定層'
+      } else if ((facilityGrade === 'S' || facilityGrade === 'A') && (corporateGrade === 'C' || corporateGrade === 'D')) {
+        cluster = '施設特化型'
+      } else if ((facilityGrade === 'C' || facilityGrade === 'D') && (corporateGrade === 'S' || corporateGrade === 'A')) {
+        cluster = '広域活躍型'
+      } else if ((facilityGrade === 'C' || facilityGrade === 'D') && (corporateGrade === 'C' || corporateGrade === 'D')) {
+        cluster = '要育成層'
+      } else {
+        cluster = 'ミックス型'
+      }
+      
       return {
-        x: staff.skillScore,
-        y: 100 - staff.resultScore
-      };
-    } else {
-      return {
-        x: staff.experience * 2, // Scale experience to 0-30 range
-        y: 100 - staff.age * 1.5 // Scale age to fit in chart
-      };
+        ...staff,
+        facilityRank,
+        corporateRank,
+        facilityGrade,
+        corporateGrade,
+        cluster,
+        x: 100 - corporateRank, // X軸は法人内評価（右が高評価）
+        y: 100 - facilityRank   // Y軸は施設内評価（上が高評価）
+      }
+    })
+  }, [staffList])
+
+  // クラスター別の統計
+  const clusterStats = useMemo(() => {
+    const stats: Record<string, any> = {}
+    
+    staffWithPositioning.forEach(staff => {
+      if (!stats[staff.cluster]) {
+        stats[staff.cluster] = {
+          name: staff.cluster,
+          count: 0,
+          members: [],
+          avgFacilityRank: 0,
+          avgCorporateRank: 0,
+          departments: new Set()
+        }
+      }
+      
+      stats[staff.cluster].count++
+      stats[staff.cluster].members.push(staff)
+      stats[staff.cluster].avgFacilityRank += staff.facilityRank
+      stats[staff.cluster].avgCorporateRank += staff.corporateRank
+      if (staff.department) {
+        stats[staff.cluster].departments.add(staff.department)
+      }
+    })
+    
+    // 平均値を計算
+    Object.values(stats).forEach((cluster: any) => {
+      cluster.avgFacilityRank = (cluster.avgFacilityRank / cluster.count).toFixed(1)
+      cluster.avgCorporateRank = (cluster.avgCorporateRank / cluster.count).toFixed(1)
+      cluster.departmentCount = cluster.departments.size
+      cluster.percentage = ((cluster.count / staffWithPositioning.length) * 100).toFixed(1)
+    })
+    
+    return stats
+  }, [staffWithPositioning])
+
+  // クラスターの色を取得
+  const getClusterColor = (cluster: string) => {
+    switch (cluster) {
+      case 'スーパースター': return '#ff5722'
+      case 'ハイパフォーマー': return '#ffc107'
+      case '安定層': return '#4caf50'
+      case '施設特化型': return '#2196f3'
+      case '広域活躍型': return '#9c27b0'
+      case '要育成層': return '#9e9e9e'
+      case 'ミックス型': return '#00bcd4'
+      default: return '#607d8b'
     }
-  };
+  }
+
+  // クラスターの特徴と推奨アクション
+  const getClusterCharacteristics = (cluster: string) => {
+    switch (cluster) {
+      case 'スーパースター':
+        return {
+          description: '施設内・法人内ともに最上位層',
+          characteristics: ['次世代リーダー候補', '組織の中核人材', '高い専門性と実績'],
+          actions: ['後継者育成プログラムへの参加', '重要プロジェクトのリード', '他部門への影響力拡大']
+        }
+      case 'ハイパフォーマー':
+        return {
+          description: '両軸で高評価の優秀層',
+          characteristics: ['安定した高パフォーマンス', 'チームの主力', '信頼性が高い'],
+          actions: ['リーダーシップ研修', '専門性の更なる向上', 'メンター役の付与']
+        }
+      case '安定層':
+        return {
+          description: '組織の中核を担う標準層',
+          characteristics: ['安定した業務遂行', '組織文化の体現者', 'チームの安定剤'],
+          actions: ['スキルアップ研修', '新しい役割への挑戦', '後輩育成の機会提供']
+        }
+      case '施設特化型':
+        return {
+          description: '施設内で高評価だが法人内では標準',
+          characteristics: ['施設固有の強み', '現場での信頼が厚い', '地域特性の理解'],
+          actions: ['法人全体での活躍機会創出', '他施設との交流促進', '全社的な視点の育成']
+        }
+      case '広域活躍型':
+        return {
+          description: '法人内で高評価だが施設内では標準',
+          characteristics: ['広い視野', '他施設での成功体験', '変革の推進力'],
+          actions: ['現施設での役割明確化', 'チーム内での信頼構築', '施設特性の理解深化']
+        }
+      case '要育成層':
+        return {
+          description: '両軸で改善が必要な層',
+          characteristics: ['成長の余地が大きい', '適性の見極めが必要', 'サポートが必要'],
+          actions: ['個別育成計画の策定', '適性に合った配置転換', 'メンター制度の活用']
+        }
+      case 'ミックス型':
+        return {
+          description: '評価が混在している層',
+          characteristics: ['特定分野での強み', '成長過程にある', '潜在能力あり'],
+          actions: ['強みの明確化', '弱点の補強', 'キャリアパスの検討']
+        }
+      default:
+        return {
+          description: '',
+          characteristics: [],
+          actions: []
+        }
+    }
+  }
+
+  // カスタムツールチップ
+  const CustomTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload
+      return (
+        <div className="bg-white p-3 border rounded shadow-lg">
+          <p className="font-semibold">{data.name}</p>
+          <p className="text-sm">{data.department}</p>
+          <p className="text-sm">施設内: 上位{data.facilityRank}%</p>
+          <p className="text-sm">法人内: 上位{data.corporateRank}%</p>
+          <Badge style={{ backgroundColor: getClusterColor(data.cluster), color: 'white' }}>
+            {data.cluster}
+          </Badge>
+        </div>
+      )
+    }
+    return null
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="クラスター分析" />
-      
-      <div className="max-w-7xl mx-auto p-6">
-        <div className="mb-6 flex gap-4">
-          <BackToReportsButton />
-          <CategoryTopButton categoryPath="/reports/performance-evaluation" categoryName="人事評価分析" />
-        </div>
-        
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold">職員クラスター分析</h2>
-            <div className="flex gap-2">
-              <select
-                value={analysisMode}
-                onChange={(e) => setAnalysisMode(e.target.value as 'performance' | 'skills')}
-                className="px-4 py-2 border rounded-lg"
-              >
-                <option value="performance">パフォーマンス分析</option>
-                <option value="skills">スキル・経験分析</option>
-              </select>
-              <button
-                onClick={() => setViewMode(viewMode === 'scatter' ? 'radar' : 'scatter')}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-              >
-                {viewMode === 'scatter' ? 'レーダー表示' : '散布図表示'}
-              </button>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
-            <div className="lg:col-span-3">
-              {viewMode === 'scatter' ? (
-                <div className="relative h-[500px] border-2 border-gray-200 rounded-lg p-4">
-                  <h3 className="font-medium mb-3">
-                    {analysisMode === 'performance' ? 'パフォーマンス散布図' : 'スキル・経験散布図'}
-                  </h3>
-                  <svg width="100%" height="90%" viewBox="0 0 100 100">
-                    <line x1="10" y1="90" x2="90" y2="90" stroke="#ccc" strokeWidth="0.5" />
-                    <line x1="10" y1="10" x2="10" y2="90" stroke="#ccc" strokeWidth="0.5" />
-                    
-                    <text x="50" y="98" textAnchor="middle" fontSize="3" fill="#666">
-                      {analysisMode === 'performance' ? 'スキルスコア' : '経験年数'}
-                    </text>
-                    <text x="2" y="50" textAnchor="middle" fontSize="3" fill="#666" transform="rotate(-90 2 50)">
-                      {analysisMode === 'performance' ? '成果スコア' : '年齢'}
-                    </text>
-
-                    {filteredStaff.map(staff => {
-                      const pos = getScatterPosition(staff);
-                      const cluster = clusterInfo[staff.cluster];
-                      const isSelected = selectedCluster === null || selectedCluster === staff.cluster;
-                      
-                      return (
-                        <g key={staff.id} opacity={isSelected ? 1 : 0.3}>
-                          <circle
-                            cx={pos.x}
-                            cy={pos.y}
-                            r="3"
-                            fill={cluster.color}
-                            className="cursor-pointer hover:r-4 transition-all"
-                            onClick={() => router.push(`/staff/${staff.id}`)}
-                          />
-                          <text
-                            x={pos.x}
-                            y={pos.y - 5}
-                            textAnchor="middle"
-                            fontSize="2"
-                            fill="#333"
-                            className="pointer-events-none"
-                          >
-                            {staff.name.length > 4 ? staff.name.substring(0, 4) : staff.name}
-                          </text>
-                        </g>
-                      );
-                    })}
-                  </svg>
-                </div>
-              ) : (
-                <div className="relative h-[500px] border-2 border-gray-200 rounded-lg p-4">
-                  <h3 className="font-medium mb-3">スキルレーダーチャート (クラスター平均)</h3>
-                  <svg width="100%" height="90%" viewBox="0 0 100 100">
-                    <g transform="translate(50,50)">
-                      {/* Pentagon for 5 skills */}
-                      {[0, 1, 2, 3, 4].map(i => {
-                        const angle = (i * 72 - 90) * Math.PI / 180;
-                        const x = Math.cos(angle) * 35;
-                        const y = Math.sin(angle) * 35;
-                        return (
-                          <line
-                            key={i}
-                            x1="0"
-                            y1="0"
-                            x2={x}
-                            y2={y}
-                            stroke="#ddd"
-                            strokeWidth="0.5"
-                          />
-                        );
-                      })}
-                      
-                      {/* Concentric pentagons */}
-                      {[0.2, 0.4, 0.6, 0.8, 1.0].map(scale => (
-                        <polygon
-                          key={scale}
-                          points={[0, 1, 2, 3, 4].map(i => {
-                            const angle = (i * 72 - 90) * Math.PI / 180;
-                            const x = Math.cos(angle) * 35 * scale;
-                            const y = Math.sin(angle) * 35 * scale;
-                            return `${x},${y}`;
-                          }).join(' ')}
-                          fill="none"
-                          stroke="#ddd"
-                          strokeWidth="0.5"
-                        />
-                      ))}
-
-                      {/* Labels */}
-                      {['スキル', 'リーダーシップ', 'コミュニケーション', '適応力', '成果'].map((label, i) => {
-                        const angle = (i * 72 - 90) * Math.PI / 180;
-                        const x = Math.cos(angle) * 40;
-                        const y = Math.sin(angle) * 40;
-                        return (
-                          <text
-                            key={i}
-                            x={x}
-                            y={y}
-                            textAnchor="middle"
-                            fontSize="2.5"
-                            fill="#666"
-                          >
-                            {label}
-                          </text>
-                        );
-                      })}
-
-                      {/* Cluster data */}
-                      {Object.entries(clusterInfo).map(([clusterId, cluster]) => {
-                        if (selectedCluster && selectedCluster !== clusterId) return null;
-                        
-                        const members = mockStaffData.filter(s => s.cluster === clusterId);
-                        if (members.length === 0) return null;
-                        
-                        const avgSkill = members.reduce((sum, s) => sum + s.skillScore, 0) / members.length / 100;
-                        const avgLeadership = members.reduce((sum, s) => sum + s.leadership, 0) / members.length / 100;
-                        const avgCommunication = members.reduce((sum, s) => sum + s.communication, 0) / members.length / 100;
-                        const avgAdaptability = members.reduce((sum, s) => sum + s.adaptability, 0) / members.length / 100;
-                        const avgResult = members.reduce((sum, s) => sum + s.resultScore, 0) / members.length / 100;
-                        
-                        const values = [avgSkill, avgLeadership, avgCommunication, avgAdaptability, avgResult];
-                        
-                        return (
-                          <polygon
-                            key={clusterId}
-                            points={values.map((value, i) => {
-                              const angle = (i * 72 - 90) * Math.PI / 180;
-                              const x = Math.cos(angle) * 35 * value;
-                              const y = Math.sin(angle) * 35 * value;
-                              return `${x},${y}`;
-                            }).join(' ')}
-                            fill={cluster.color}
-                            fillOpacity="0.3"
-                            stroke={cluster.color}
-                            strokeWidth="2"
-                          />
-                        );
-                      })}
-                    </g>
-                  </svg>
-                </div>
-              )}
-            </div>
-
-            <div className="space-y-4">
-              <h3 className="font-medium">クラスター選択</h3>
-              {Object.entries(clusterInfo).map(([clusterId, cluster]) => (
-                <div
-                  key={clusterId}
-                  className={`p-4 border rounded-lg cursor-pointer transition-all ${
-                    selectedCluster === clusterId 
-                      ? 'border-blue-500 bg-blue-50' 
-                      : 'hover:bg-gray-50'
-                  }`}
-                  onClick={() => setSelectedCluster(selectedCluster === clusterId ? null : clusterId)}
-                  style={{ borderLeftColor: cluster.color, borderLeftWidth: '4px' }}
+    <>
+      <CommonHeader title="位置づけクラスター分析" />
+      <ReportLayout
+        title="位置づけクラスター分析"
+        description="位置づけパターンに基づく職員のグループ分析"
+        icon="🎯"
+        color="bg-purple-500"
+      >
+        <div className="space-y-6">
+          {/* ビューモード切替 */}
+          <Card className="p-6">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-bold">表示モード</h3>
+              <div className="flex gap-2">
+                <button
+                  className={`px-4 py-2 rounded ${viewMode === 'scatter' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+                  onClick={() => setViewMode('scatter')}
                 >
-                  <div className="flex justify-between items-start mb-2">
-                    <h4 className="font-medium text-sm">{cluster.name}</h4>
-                    <span className="text-lg font-bold">{cluster.memberCount}</span>
-                  </div>
-                  <p className="text-xs text-gray-600 mb-2">{cluster.description}</p>
-                  <div className="text-xs">
-                    <span>平均スコア: </span>
-                    <span className="font-medium">{cluster.avgScore}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {selectedCluster && (
-            <div className="mt-6">
-              <div className="bg-gray-50 rounded-lg p-6">
-                <h3 className="font-semibold text-lg mb-4">
-                  {clusterInfo[selectedCluster].name} 詳細分析
-                </h3>
-                
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="font-medium mb-3">特徴分析</h4>
-                    <ul className="space-y-2">
-                      {clusterInfo[selectedCluster].characteristics.map((char, index) => (
-                        <li key={index} className="flex items-center gap-2 text-sm">
-                          <div 
-                            className="w-3 h-3 rounded-full" 
-                            style={{ backgroundColor: clusterInfo[selectedCluster].color }}
-                          ></div>
-                          {char}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  
-                  <div>
-                    <h4 className="font-medium mb-3">推奨育成プラン</h4>
-                    <ul className="space-y-2">
-                      {clusterInfo[selectedCluster].developmentPlan.map((plan, index) => (
-                        <li key={index} className="flex items-center gap-2 text-sm">
-                          <span className="text-blue-600">•</span>
-                          {plan}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="mt-6">
-                  <h4 className="font-medium mb-3">所属メンバー</h4>
-                  <div className="overflow-x-auto">
-                    <table className="min-w-full bg-white border rounded-lg">
-                      <thead>
-                        <tr className="bg-gray-50">
-                          <th className="px-4 py-3 text-left text-sm font-medium">氏名</th>
-                          <th className="px-4 py-3 text-left text-sm font-medium">部門</th>
-                          <th className="px-4 py-3 text-left text-sm font-medium">役職</th>
-                          <th className="px-4 py-3 text-center text-sm font-medium">経験年数</th>
-                          <th className="px-4 py-3 text-center text-sm font-medium">年齢</th>
-                          <th className="px-4 py-3 text-center text-sm font-medium">スキル</th>
-                          <th className="px-4 py-3 text-center text-sm font-medium">成果</th>
-                          <th className="px-4 py-3 text-center text-sm font-medium">総合</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {mockStaffData
-                          .filter(staff => staff.cluster === selectedCluster)
-                          .map(staff => (
-                            <tr 
-                              key={staff.id} 
-                              className="border-t hover:bg-gray-50 cursor-pointer"
-                              onClick={() => router.push(`/staff/${staff.id}`)}
-                            >
-                              <td className="px-4 py-3">{staff.name}</td>
-                              <td className="px-4 py-3">{staff.department}</td>
-                              <td className="px-4 py-3">{staff.position}</td>
-                              <td className="px-4 py-3 text-center">{staff.experience}年</td>
-                              <td className="px-4 py-3 text-center">{staff.age}歳</td>
-                              <td className="px-4 py-3 text-center">{staff.skillScore}</td>
-                              <td className="px-4 py-3 text-center">{staff.resultScore}</td>
-                              <td className="px-4 py-3 text-center font-medium">
-                                {Math.round((staff.skillScore + staff.resultScore) / 2)}
-                              </td>
-                            </tr>
-                          ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+                  散布図
+                </button>
+                <button
+                  className={`px-4 py-2 rounded ${viewMode === 'list' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+                  onClick={() => setViewMode('list')}
+                >
+                  リスト
+                </button>
               </div>
             </div>
+          </Card>
+
+          {/* クラスター概要 */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {Object.values(clusterStats).map((cluster: any) => (
+              <Card 
+                key={cluster.name} 
+                className={`p-4 cursor-pointer transition-all ${
+                  selectedCluster === cluster.name ? 'ring-2 ring-blue-600' : ''
+                }`}
+                onClick={() => setSelectedCluster(cluster.name === selectedCluster ? null : cluster.name)}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <div 
+                    className="w-3 h-3 rounded-full" 
+                    style={{ backgroundColor: getClusterColor(cluster.name) }}
+                  />
+                  <h4 className="font-semibold text-sm">{cluster.name}</h4>
+                </div>
+                <p className="text-2xl font-bold">{cluster.count}名</p>
+                <p className="text-xs text-gray-600">{cluster.percentage}%</p>
+              </Card>
+            ))}
+          </div>
+
+          {/* 散布図表示 */}
+          {viewMode === 'scatter' && (
+            <Card className="p-6">
+              <h3 className="text-lg font-bold mb-4">位置づけ分布図</h3>
+              <ResponsiveContainer width="100%" height={500}>
+                <ScatterChart margin={{ top: 20, right: 20, bottom: 60, left: 60 }}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis 
+                    dataKey="x" 
+                    name="法人内評価" 
+                    domain={[0, 100]}
+                    label={{ value: '法人内評価 →', position: 'insideBottom', offset: -10 }}
+                  />
+                  <YAxis 
+                    dataKey="y" 
+                    name="施設内評価" 
+                    domain={[0, 100]}
+                    label={{ value: '施設内評価 →', position: 'insideLeft', angle: -90 }}
+                  />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Scatter 
+                    data={selectedCluster ? 
+                      staffWithPositioning.filter(s => s.cluster === selectedCluster) : 
+                      staffWithPositioning
+                    } 
+                    fill="#8884d8"
+                  >
+                    {staffWithPositioning.map((entry, index) => (
+                      <Cell 
+                        key={`cell-${index}`} 
+                        fill={getClusterColor(entry.cluster)}
+                        opacity={!selectedCluster || entry.cluster === selectedCluster ? 0.8 : 0.2}
+                      />
+                    ))}
+                  </Scatter>
+                </ScatterChart>
+              </ResponsiveContainer>
+
+              {/* 象限の説明 */}
+              <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
+                <div className="text-right pr-4">
+                  <p className="font-semibold">右上: 両軸高評価</p>
+                  <p className="text-gray-600">組織の中核人材</p>
+                </div>
+                <div>
+                  <p className="font-semibold">左上: 施設内高評価</p>
+                  <p className="text-gray-600">施設特化型人材</p>
+                </div>
+                <div className="text-right pr-4">
+                  <p className="font-semibold">右下: 法人内高評価</p>
+                  <p className="text-gray-600">広域活躍型人材</p>
+                </div>
+                <div>
+                  <p className="font-semibold">左下: 両軸要改善</p>
+                  <p className="text-gray-600">育成対象人材</p>
+                </div>
+              </div>
+            </Card>
           )}
 
-          <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-            <h4 className="font-medium mb-2">クラスター分析サマリー</h4>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-              <div>
-                <p className="text-gray-600">最大クラスター</p>
-                <p className="font-bold text-blue-600">
-                  {Object.entries(clusterInfo).reduce((max, [id, cluster]) => 
-                    cluster.memberCount > max.count ? { id, count: cluster.memberCount, name: cluster.name } : max,
-                    { id: '', count: 0, name: '' }
-                  ).name} ({Object.entries(clusterInfo).reduce((max, [id, cluster]) => 
-                    cluster.memberCount > max.count ? { id, count: cluster.memberCount, name: cluster.name } : max,
-                    { id: '', count: 0, name: '' }
-                  ).count}名)
-                </p>
-              </div>
-              <div>
-                <p className="text-gray-600">総職員数</p>
-                <p className="font-bold">{mockStaffData.length}名</p>
-              </div>
-              <div>
-                <p className="text-gray-600">平均総合スコア</p>
-                <p className="font-bold">
-                  {Math.round(mockStaffData.reduce((sum, s) => sum + (s.skillScore + s.resultScore) / 2, 0) / mockStaffData.length)}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+          {/* リスト表示 */}
+          {viewMode === 'list' && (
+            <div className="space-y-6">
+              {Object.values(clusterStats).map((cluster: any) => {
+                const characteristics = getClusterCharacteristics(cluster.name)
+                return (
+                  <Card key={cluster.name} className="p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <div>
+                        <h3 className="text-lg font-bold flex items-center gap-2">
+                          <div 
+                            className="w-4 h-4 rounded-full" 
+                            style={{ backgroundColor: getClusterColor(cluster.name) }}
+                          />
+                          {cluster.name}
+                        </h3>
+                        <p className="text-sm text-gray-600 mt-1">{characteristics.description}</p>
+                      </div>
+                      <Badge className="bg-gray-600 text-white">
+                        {cluster.count}名 ({cluster.percentage}%)
+                      </Badge>
+                    </div>
 
-      <ScrollToTopButton />
-      <DashboardButton />
-    </div>
-  );
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                      <div>
+                        <h4 className="font-semibold text-sm mb-2">特徴</h4>
+                        <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
+                          {characteristics.characteristics.map((char, idx) => (
+                            <li key={idx}>{char}</li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-sm mb-2">推奨アクション</h4>
+                        <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
+                          {characteristics.actions.map((action, idx) => (
+                            <li key={idx}>{action}</li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-sm mb-2">統計情報</h4>
+                        <p className="text-sm">平均施設内順位: 上位{cluster.avgFacilityRank}%</p>
+                        <p className="text-sm">平均法人内順位: 上位{cluster.avgCorporateRank}%</p>
+                        <p className="text-sm">所属部署数: {cluster.departmentCount}</p>
+                      </div>
+                    </div>
+
+                    {/* メンバーリスト（最初の5名） */}
+                    <div className="border-t pt-4">
+                      <h4 className="font-semibold text-sm mb-2">代表的なメンバー</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        {cluster.members.slice(0, 4).map((member: any) => (
+                          <div key={member.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                            <div>
+                              <p className="text-sm font-semibold">{member.name}</p>
+                              <p className="text-xs text-gray-600">{member.department}</p>
+                            </div>
+                            <div className="flex gap-1">
+                              <Badge style={{ backgroundColor: getClusterColor(member.facilityGrade), color: 'white' }}>
+                                施{member.facilityGrade}
+                              </Badge>
+                              <Badge style={{ backgroundColor: getClusterColor(member.corporateGrade), color: 'white' }}>
+                                法{member.corporateGrade}
+                              </Badge>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      {cluster.members.length > 4 && (
+                        <p className="text-sm text-gray-500 mt-2">他 {cluster.members.length - 4}名</p>
+                      )}
+                    </div>
+                  </Card>
+                )
+              })}
+            </div>
+          )}
+        </div>
+      </ReportLayout>
+    </>
+  )
 }

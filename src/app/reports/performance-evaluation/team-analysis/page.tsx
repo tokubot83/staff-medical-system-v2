@@ -1,312 +1,305 @@
-'use client';
+'use client'
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import CommonHeader from '@/components/CommonHeader';
-import DashboardButton from '@/components/DashboardButton';
-import ScrollToTopButton from '@/components/ScrollToTopButton';
-import { CategoryTopButton } from '@/components/CategoryTopButton';
-import { BackToReportsButton } from '@/components/BackToReportsButton';
-
-interface TeamData {
-  id: string;
-  name: string;
-  memberCount: number;
-  avgSkillScore: number;
-  avgResultScore: number;
-  skillDistribution: { low: number; medium: number; high: number };
-  resultDistribution: { low: number; medium: number; high: number };
-  topPerformers: number;
-  needsSupport: number;
-  leader: string;
-}
-
-const mockTeamData: TeamData[] = [
-  {
-    id: '1',
-    name: '看護部A病棟',
-    memberCount: 25,
-    avgSkillScore: 78,
-    avgResultScore: 82,
-    skillDistribution: { low: 3, medium: 12, high: 10 },
-    resultDistribution: { low: 2, medium: 10, high: 13 },
-    topPerformers: 8,
-    needsSupport: 3,
-    leader: '山田太郎'
-  },
-  {
-    id: '2',
-    name: '看護部B病棟',
-    memberCount: 22,
-    avgSkillScore: 72,
-    avgResultScore: 75,
-    skillDistribution: { low: 5, medium: 10, high: 7 },
-    resultDistribution: { low: 4, medium: 11, high: 7 },
-    topPerformers: 5,
-    needsSupport: 6,
-    leader: '佐藤花子'
-  },
-  {
-    id: '3',
-    name: 'リハビリテーション部',
-    memberCount: 15,
-    avgSkillScore: 85,
-    avgResultScore: 83,
-    skillDistribution: { low: 1, medium: 4, high: 10 },
-    resultDistribution: { low: 1, medium: 5, high: 9 },
-    topPerformers: 9,
-    needsSupport: 1,
-    leader: '鈴木一郎'
-  },
-  {
-    id: '4',
-    name: '介護部デイケア',
-    memberCount: 18,
-    avgSkillScore: 68,
-    avgResultScore: 78,
-    skillDistribution: { low: 6, medium: 8, high: 4 },
-    resultDistribution: { low: 3, medium: 7, high: 8 },
-    topPerformers: 4,
-    needsSupport: 5,
-    leader: '田中美咲'
-  },
-  {
-    id: '5',
-    name: '医事課',
-    memberCount: 10,
-    avgSkillScore: 74,
-    avgResultScore: 71,
-    skillDistribution: { low: 2, medium: 5, high: 3 },
-    resultDistribution: { low: 3, medium: 4, high: 3 },
-    topPerformers: 2,
-    needsSupport: 3,
-    leader: '伊藤健'
-  }
-];
+import React, { useState, useMemo } from 'react'
+import CommonHeader from '@/components/CommonHeader'
+import ReportLayout from '@/components/reports/ReportLayout'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Users, TrendingUp, AlertCircle } from 'lucide-react'
+import { staffDatabase } from '@/app/data/staffData'
 
 export default function TeamAnalysisPage() {
-  const router = useRouter();
-  const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
-  const [comparisonMode, setComparisonMode] = useState(false);
-  const [compareTeams, setCompareTeams] = useState<string[]>([]);
+  const [selectedFacility, setSelectedFacility] = useState('all')
+  const [selectedDepartment, setSelectedDepartment] = useState('all')
 
-  const handleTeamSelect = (teamId: string) => {
-    if (comparisonMode) {
-      if (compareTeams.includes(teamId)) {
-        setCompareTeams(compareTeams.filter(id => id !== teamId));
-      } else if (compareTeams.length < 2) {
-        setCompareTeams([...compareTeams, teamId]);
+  // スタッフリストを配列に変換
+  const staffList = Object.values(staffDatabase)
+
+  // 施設・部署リストを生成
+  const facilities = Array.from(new Set(staffList.map(s => s.facility).filter(Boolean)))
+  const departments = Array.from(new Set(staffList.map(s => s.department).filter(Boolean)))
+
+  // チーム（部署）ごとにグループ化
+  const teamData = useMemo(() => {
+    const teams: Record<string, any[]> = {}
+    
+    staffList.forEach(staff => {
+      if (!staff.department) return
+      if (selectedFacility !== 'all' && staff.facility !== selectedFacility) return
+      if (selectedDepartment !== 'all' && staff.department !== selectedDepartment) return
+      
+      if (!teams[staff.department]) {
+        teams[staff.department] = []
       }
-    } else {
-      setSelectedTeam(teamId === selectedTeam ? null : teamId);
-    }
-  };
+      
+      // ランダムな位置づけを生成（実際はデータベースから取得）
+      const facilityRank = Math.floor(Math.random() * 100) + 1
+      const corporateRank = Math.floor(Math.random() * 100) + 1
+      
+      const getGrade = (rank: number) => {
+        if (rank <= 10) return 'S'
+        if (rank <= 30) return 'A'
+        if (rank <= 70) return 'B'
+        if (rank <= 90) return 'C'
+        return 'D'
+      }
+      
+      teams[staff.department].push({
+        ...staff,
+        facilityRank,
+        corporateRank,
+        facilityGrade: getGrade(facilityRank),
+        corporateGrade: getGrade(corporateRank),
+      })
+    })
+    
+    return teams
+  }, [staffList, selectedFacility, selectedDepartment])
 
-  const getTeamPerformanceColor = (skillScore: number, resultScore: number) => {
-    const avg = (skillScore + resultScore) / 2;
-    if (avg >= 80) return 'text-green-600';
-    if (avg >= 70) return 'text-yellow-600';
-    return 'text-red-600';
-  };
+  // チーム分析データを計算
+  const teamAnalysis = useMemo(() => {
+    return Object.entries(teamData).map(([teamName, members]) => {
+      // グレード分布を計算
+      const gradeDistribution = {
+        facility: { S: 0, A: 0, B: 0, C: 0, D: 0 },
+        corporate: { S: 0, A: 0, B: 0, C: 0, D: 0 }
+      }
+      
+      members.forEach(member => {
+        gradeDistribution.facility[member.facilityGrade as keyof typeof gradeDistribution.facility]++
+        gradeDistribution.corporate[member.corporateGrade as keyof typeof gradeDistribution.corporate]++
+      })
+      
+      // チーム内での位置づけ順位を計算
+      const sortedByFacility = [...members].sort((a, b) => a.facilityRank - b.facilityRank)
+      const sortedByCorporate = [...members].sort((a, b) => a.corporateRank - b.corporateRank)
+      
+      sortedByFacility.forEach((member, index) => {
+        member.teamFacilityRank = index + 1
+      })
+      
+      sortedByCorporate.forEach((member, index) => {
+        member.teamCorporateRank = index + 1
+      })
+      
+      // チーム特性を判定
+      const topPerformers = members.filter(m => m.facilityGrade === 'S' || m.corporateGrade === 'S').length
+      const needSupport = members.filter(m => m.facilityGrade === 'D' || m.corporateGrade === 'D').length
+      
+      return {
+        teamName,
+        memberCount: members.length,
+        members,
+        gradeDistribution,
+        topPerformers,
+        needSupport,
+        topPerformerRatio: (topPerformers / members.length * 100).toFixed(1),
+        needSupportRatio: (needSupport / members.length * 100).toFixed(1),
+        averageFacilityRank: (members.reduce((sum, m) => sum + m.facilityRank, 0) / members.length).toFixed(1),
+        averageCorporateRank: (members.reduce((sum, m) => sum + m.corporateRank, 0) / members.length).toFixed(1),
+      }
+    })
+  }, [teamData])
+
+  const getGradeColor = (grade: string) => {
+    switch (grade) {
+      case 'S': return '#ff5722'
+      case 'A': return '#ffc107'
+      case 'B': return '#4caf50'
+      case 'C': return '#2196f3'
+      case 'D': return '#9e9e9e'
+      default: return '#9e9e9e'
+    }
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="チーム評価分析" />
-      
-      <div className="max-w-7xl mx-auto p-6">
-        <div className="mb-6 flex gap-4">
-          <BackToReportsButton />
-          <CategoryTopButton categoryPath="/reports/performance-evaluation" categoryName="人事評価分析" />
-        </div>
-        
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold">チーム別パフォーマンス分析</h2>
-            <button
-              onClick={() => {
-                setComparisonMode(!comparisonMode);
-                setCompareTeams([]);
-                setSelectedTeam(null);
-              }}
-              className={`px-4 py-2 rounded-lg transition-colors ${
-                comparisonMode 
-                  ? 'bg-blue-600 text-white' 
-                  : 'bg-gray-100 hover:bg-gray-200'
-              }`}
-            >
-              {comparisonMode ? '比較モード中' : '比較モード'}
-            </button>
-          </div>
+    <>
+      <CommonHeader title="チーム位置づけ分析" />
+      <ReportLayout
+        title="チーム位置づけ分析"
+        description="チーム内での各メンバーの相対的な位置づけを分析"
+        icon="👥"
+        color="bg-blue-500"
+      >
+        <div className="space-y-6">
+          {/* フィルター */}
+          <Card className="p-6">
+            <h3 className="text-lg font-bold mb-4">フィルター</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <select
+                className="w-full px-3 py-2 border rounded-lg"
+                value={selectedFacility}
+                onChange={(e) => setSelectedFacility(e.target.value)}
+              >
+                <option value="all">全施設</option>
+                {facilities.map(facility => (
+                  <option key={facility} value={facility}>{facility}</option>
+                ))}
+              </select>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <div className="relative h-[400px] border-2 border-gray-200 rounded-lg p-4">
-              <h3 className="font-medium mb-3">チーム配置マトリクス</h3>
-              <svg width="100%" height="90%" viewBox="0 0 100 100">
-                <line x1="50" y1="0" x2="50" y2="100" stroke="#ccc" strokeWidth="0.5" />
-                <line x1="0" y1="50" x2="100" y2="50" stroke="#ccc" strokeWidth="0.5" />
-                
-                <text x="98" y="98" textAnchor="end" fontSize="3" fill="#666">高</text>
-                <text x="2" y="98" textAnchor="start" fontSize="3" fill="#666">低</text>
-                <text x="50" y="98" textAnchor="middle" fontSize="3" fill="#666">平均スキル</text>
-                
-                <text x="2" y="4" textAnchor="start" fontSize="3" fill="#666">高</text>
-                <text x="2" y="98" textAnchor="start" fontSize="3" fill="#666" transform="rotate(-90 2 50)">低</text>
-                <text x="2" y="50" textAnchor="middle" fontSize="3" fill="#666" transform="rotate(-90 2 50)">平均成果</text>
-
-                {mockTeamData.map(team => {
-                  const isSelected = selectedTeam === team.id || compareTeams.includes(team.id);
-                  const radius = Math.sqrt(team.memberCount) * 1.5;
-                  return (
-                    <g key={team.id} opacity={!selectedTeam && !comparisonMode || isSelected ? 1 : 0.3}>
-                      <circle
-                        cx={team.avgSkillScore}
-                        cy={100 - team.avgResultScore}
-                        r={radius}
-                        fill={getTeamPerformanceColor(team.avgSkillScore, team.avgResultScore)}
-                        fillOpacity="0.3"
-                        stroke={getTeamPerformanceColor(team.avgSkillScore, team.avgResultScore)}
-                        strokeWidth="1"
-                        className="cursor-pointer hover:fill-opacity-50 transition-all"
-                        onClick={() => handleTeamSelect(team.id)}
-                      />
-                      <text
-                        x={team.avgSkillScore}
-                        y={100 - team.avgResultScore}
-                        textAnchor="middle"
-                        fontSize="2.5"
-                        fill="#333"
-                        className="pointer-events-none"
-                      >
-                        {team.name.length > 8 ? team.name.substring(0, 8) + '...' : team.name}
-                      </text>
-                    </g>
-                  );
-                })}
-              </svg>
+              <select
+                className="w-full px-3 py-2 border rounded-lg"
+                value={selectedDepartment}
+                onChange={(e) => setSelectedDepartment(e.target.value)}
+              >
+                <option value="all">全部署</option>
+                {departments.map(dept => (
+                  <option key={dept} value={dept}>{dept}</option>
+                ))}
+              </select>
             </div>
+          </Card>
 
-            <div className="space-y-4">
-              <h3 className="font-medium">チーム一覧</h3>
-              {mockTeamData.map(team => (
-                <div
-                  key={team.id}
-                  className={`p-4 border rounded-lg cursor-pointer transition-all ${
-                    selectedTeam === team.id || compareTeams.includes(team.id)
-                      ? 'border-blue-500 bg-blue-50'
-                      : 'hover:bg-gray-50'
-                  }`}
-                  onClick={() => handleTeamSelect(team.id)}
-                >
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h4 className="font-medium">{team.name}</h4>
-                      <p className="text-sm text-gray-600">リーダー: {team.leader}</p>
-                      <p className="text-sm text-gray-600">メンバー数: {team.memberCount}名</p>
-                    </div>
-                    <div className="text-right">
-                      <div className={`text-2xl font-bold ${getTeamPerformanceColor(team.avgSkillScore, team.avgResultScore)}`}>
-                        {Math.round((team.avgSkillScore + team.avgResultScore) / 2)}
-                      </div>
-                      <p className="text-xs text-gray-600">総合スコア</p>
-                    </div>
-                  </div>
-                  <div className="mt-2 flex gap-4 text-xs">
-                    <span>スキル: {team.avgSkillScore}</span>
-                    <span>成果: {team.avgResultScore}</span>
-                    <span className="text-green-600">高評価: {team.topPerformers}名</span>
-                    <span className="text-red-600">要支援: {team.needsSupport}名</span>
+          {/* チーム概要 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {teamAnalysis.map(team => (
+              <Card key={team.teamName} className="p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <h3 className="font-bold text-lg">{team.teamName}</h3>
+                    <p className="text-sm text-gray-600 mt-1">
+                      <Users className="inline h-4 w-4 mr-1" />
+                      {team.memberCount}名
+                    </p>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
 
-          {(selectedTeam || compareTeams.length > 0) && (
-            <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {(selectedTeam ? [selectedTeam] : compareTeams).map(teamId => {
-                const team = mockTeamData.find(t => t.id === teamId);
-                if (!team) return null;
-                
-                return (
-                  <div key={teamId} className="bg-gray-50 rounded-lg p-6">
-                    <h3 className="font-semibold text-lg mb-4">{team.name}の詳細分析</h3>
-                    
-                    <div className="grid grid-cols-2 gap-4 mb-4">
-                      <div className="bg-white p-4 rounded">
-                        <p className="text-sm text-gray-600">平均スキルスコア</p>
-                        <p className="text-2xl font-bold">{team.avgSkillScore}</p>
-                      </div>
-                      <div className="bg-white p-4 rounded">
-                        <p className="text-sm text-gray-600">平均成果スコア</p>
-                        <p className="text-2xl font-bold">{team.avgResultScore}</p>
-                      </div>
-                    </div>
-
-                    <div className="space-y-3">
-                      <div>
-                        <p className="text-sm font-medium mb-1">スキル分布</p>
-                        <div className="flex gap-2">
-                          <div className="flex-1 bg-red-100 p-2 rounded text-center">
-                            <p className="text-xs">低</p>
-                            <p className="font-bold">{team.skillDistribution.low}</p>
+                {/* グレード分布 */}
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-sm font-semibold mb-2">施設内評価分布</p>
+                    <div className="flex gap-1">
+                      {(['S', 'A', 'B', 'C', 'D'] as const).map(grade => (
+                        <div
+                          key={grade}
+                          className="flex-1 text-center"
+                          title={`${grade}: ${team.gradeDistribution.facility[grade]}名`}
+                        >
+                          <div
+                            className="h-8 flex items-end justify-center"
+                            style={{
+                              backgroundColor: getGradeColor(grade),
+                              height: `${Math.max(8, team.gradeDistribution.facility[grade] / team.memberCount * 100)}px`
+                            }}
+                          >
+                            <span className="text-xs text-white font-semibold">
+                              {team.gradeDistribution.facility[grade] > 0 && team.gradeDistribution.facility[grade]}
+                            </span>
                           </div>
-                          <div className="flex-1 bg-yellow-100 p-2 rounded text-center">
-                            <p className="text-xs">中</p>
-                            <p className="font-bold">{team.skillDistribution.medium}</p>
-                          </div>
-                          <div className="flex-1 bg-green-100 p-2 rounded text-center">
-                            <p className="text-xs">高</p>
-                            <p className="font-bold">{team.skillDistribution.high}</p>
-                          </div>
+                          <div className="text-xs mt-1">{grade}</div>
                         </div>
-                      </div>
-
-                      <div>
-                        <p className="text-sm font-medium mb-1">成果分布</p>
-                        <div className="flex gap-2">
-                          <div className="flex-1 bg-red-100 p-2 rounded text-center">
-                            <p className="text-xs">低</p>
-                            <p className="font-bold">{team.resultDistribution.low}</p>
-                          </div>
-                          <div className="flex-1 bg-yellow-100 p-2 rounded text-center">
-                            <p className="text-xs">中</p>
-                            <p className="font-bold">{team.resultDistribution.medium}</p>
-                          </div>
-                          <div className="flex-1 bg-green-100 p-2 rounded text-center">
-                            <p className="text-xs">高</p>
-                            <p className="font-bold">{team.resultDistribution.high}</p>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="mt-4 p-3 bg-blue-50 rounded">
-                        <p className="text-sm font-medium mb-2">推奨アクション</p>
-                        <ul className="text-sm space-y-1">
-                          {team.needsSupport > 3 && (
-                            <li>• 要支援メンバーへの個別フォローアップ強化</li>
-                          )}
-                          {team.avgSkillScore < 75 && (
-                            <li>• スキルアップ研修の実施</li>
-                          )}
-                          {team.avgResultScore < 75 && (
-                            <li>• 目標設定と成果管理の見直し</li>
-                          )}
-                          {team.topPerformers >= team.memberCount * 0.3 && (
-                            <li>• 高パフォーマーのベストプラクティス共有</li>
-                          )}
-                        </ul>
-                      </div>
+                      ))}
                     </div>
                   </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      </div>
 
-      <ScrollToTopButton />
-      <DashboardButton />
-    </div>
-  );
+                  <div>
+                    <p className="text-sm font-semibold mb-2">法人内評価分布</p>
+                    <div className="flex gap-1">
+                      {(['S', 'A', 'B', 'C', 'D'] as const).map(grade => (
+                        <div
+                          key={grade}
+                          className="flex-1 text-center"
+                          title={`${grade}: ${team.gradeDistribution.corporate[grade]}名`}
+                        >
+                          <div
+                            className="h-8 flex items-end justify-center"
+                            style={{
+                              backgroundColor: getGradeColor(grade),
+                              height: `${Math.max(8, team.gradeDistribution.corporate[grade] / team.memberCount * 100)}px`
+                            }}
+                          >
+                            <span className="text-xs text-white font-semibold">
+                              {team.gradeDistribution.corporate[grade] > 0 && team.gradeDistribution.corporate[grade]}
+                            </span>
+                          </div>
+                          <div className="text-xs mt-1">{grade}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* チーム特性 */}
+                <div className="mt-4 pt-4 border-t space-y-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="flex items-center gap-1">
+                      <TrendingUp className="h-4 w-4 text-green-600" />
+                      トップ層
+                    </span>
+                    <span className="font-semibold">{team.topPerformers}名 ({team.topPerformerRatio}%)</span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="flex items-center gap-1">
+                      <AlertCircle className="h-4 w-4 text-orange-600" />
+                      要支援層
+                    </span>
+                    <span className="font-semibold">{team.needSupport}名 ({team.needSupportRatio}%)</span>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+
+          {/* 詳細分析 */}
+          {teamAnalysis.map(team => (
+            <Card key={team.teamName} className="p-6">
+              <h3 className="text-lg font-bold mb-4">{team.teamName} - メンバー詳細</h3>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-4 py-2 text-left">職員名</th>
+                      <th className="px-4 py-2 text-left">職位</th>
+                      <th className="px-4 py-2 text-center">施設内評価</th>
+                      <th className="px-4 py-2 text-center">チーム内順位</th>
+                      <th className="px-4 py-2 text-center">法人内評価</th>
+                      <th className="px-4 py-2 text-center">チーム内順位</th>
+                      <th className="px-4 py-2 text-center">特性</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {team.members
+                      .sort((a, b) => a.teamFacilityRank - b.teamFacilityRank)
+                      .map((member) => (
+                        <tr key={member.id} className="border-b hover:bg-gray-50">
+                          <td className="px-4 py-2">{member.name}</td>
+                          <td className="px-4 py-2">{member.position || '-'}</td>
+                          <td className="px-4 py-2 text-center">
+                            <Badge style={{ backgroundColor: getGradeColor(member.facilityGrade), color: 'white' }}>
+                              {member.facilityGrade}
+                            </Badge>
+                          </td>
+                          <td className="px-4 py-2 text-center">
+                            {member.teamFacilityRank}/{team.memberCount}位
+                          </td>
+                          <td className="px-4 py-2 text-center">
+                            <Badge style={{ backgroundColor: getGradeColor(member.corporateGrade), color: 'white' }}>
+                              {member.corporateGrade}
+                            </Badge>
+                          </td>
+                          <td className="px-4 py-2 text-center">
+                            {member.teamCorporateRank}/{team.memberCount}位
+                          </td>
+                          <td className="px-4 py-2 text-center">
+                            {member.facilityGrade === 'S' || member.corporateGrade === 'S' ? (
+                              <Badge className="bg-green-600 text-white">エース</Badge>
+                            ) : member.facilityGrade === 'D' || member.corporateGrade === 'D' ? (
+                              <Badge className="bg-orange-600 text-white">要支援</Badge>
+                            ) : member.teamFacilityRank <= 3 ? (
+                              <Badge className="bg-blue-600 text-white">チーム上位</Badge>
+                            ) : (
+                              <Badge className="bg-gray-400 text-white">標準</Badge>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </ReportLayout>
+    </>
+  )
 }

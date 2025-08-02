@@ -1,377 +1,368 @@
-'use client';
+'use client'
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import CommonHeader from '@/components/CommonHeader';
-import DashboardButton from '@/components/DashboardButton';
-import ScrollToTopButton from '@/components/ScrollToTopButton';
-import { CategoryTopButton } from '@/components/CategoryTopButton';
-import { BackToReportsButton } from '@/components/BackToReportsButton';
-
-interface OptimizationScenario {
-  id: string;
-  name: string;
-  description: string;
-  changes: {
-    type: 'reallocation' | 'hiring' | 'training' | 'restructure';
-    department: string;
-    details: string;
-    cost: number;
-    timeframe: string;
-  }[];
-  expectedResults: {
-    efficiency: number;
-    satisfaction: number;
-    costSaving: number;
-    riskLevel: 'low' | 'medium' | 'high';
-  };
-}
-
-interface CurrentState {
-  department: string;
-  currentStaff: number;
-  optimalStaff: number;
-  efficiency: number;
-  workload: number;
-  cost: number;
-}
-
-const mockCurrentState: CurrentState[] = [
-  { department: '看護部', currentStaff: 120, optimalStaff: 115, efficiency: 78, workload: 85, cost: 450000000 },
-  { department: 'リハビリ部', currentStaff: 35, optimalStaff: 40, efficiency: 85, workload: 92, cost: 120000000 },
-  { department: '介護部', currentStaff: 80, optimalStaff: 85, efficiency: 72, workload: 88, cost: 320000000 },
-  { department: '医事課', currentStaff: 25, optimalStaff: 22, efficiency: 74, workload: 75, cost: 80000000 },
-  { department: '栄養課', currentStaff: 18, optimalStaff: 18, efficiency: 80, workload: 80, cost: 60000000 }
-];
-
-const mockScenarios: OptimizationScenario[] = [
-  {
-    id: '1',
-    name: 'バランス調整案',
-    description: '部門間での人員再配置による効率化',
-    changes: [
-      { type: 'reallocation', department: '看護部', details: '5名をリハビリ部・介護部に異動', cost: 2000000, timeframe: '3ヶ月' },
-      { type: 'training', department: 'リハビリ部', details: '新規スタッフ研修プログラム', cost: 1500000, timeframe: '2ヶ月' },
-      { type: 'reallocation', department: '医事課', details: '3名を他部門に異動', cost: 500000, timeframe: '1ヶ月' }
-    ],
-    expectedResults: {
-      efficiency: 82,
-      satisfaction: 80,
-      costSaving: 15000000,
-      riskLevel: 'low'
-    }
-  },
-  {
-    id: '2',
-    name: '技能向上重点案',
-    description: '既存スタッフのスキルアップによる生産性向上',
-    changes: [
-      { type: 'training', department: '全部門', details: '包括的研修プログラム実施', cost: 8000000, timeframe: '6ヶ月' },
-      { type: 'restructure', department: '看護部', details: 'チーム制の導入', cost: 3000000, timeframe: '4ヶ月' },
-      { type: 'training', department: '介護部', details: '専門技術研修強化', cost: 5000000, timeframe: '5ヶ月' }
-    ],
-    expectedResults: {
-      efficiency: 88,
-      satisfaction: 85,
-      costSaving: 25000000,
-      riskLevel: 'medium'
-    }
-  },
-  {
-    id: '3',
-    name: '段階的改革案',
-    description: '組織構造の抜本的見直し',
-    changes: [
-      { type: 'restructure', department: '全組織', details: 'フラット組織への移行', cost: 12000000, timeframe: '12ヶ月' },
-      { type: 'hiring', department: 'リハビリ部', details: '専門職5名増員', cost: 15000000, timeframe: '6ヶ月' },
-      { type: 'training', department: '全部門', details: 'リーダーシップ開発', cost: 6000000, timeframe: '8ヶ月' }
-    ],
-    expectedResults: {
-      efficiency: 92,
-      satisfaction: 88,
-      costSaving: 40000000,
-      riskLevel: 'high'
-    }
-  }
-];
+import React, { useState, useMemo } from 'react'
+import CommonHeader from '@/components/CommonHeader'
+import ReportLayout from '@/components/reports/ReportLayout'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { ArrowRight, Users, Shuffle, Target, AlertTriangle } from 'lucide-react'
+import { staffDatabase } from '@/app/data/staffData'
 
 export default function OrganizationOptimizationPage() {
-  const router = useRouter();
-  const [selectedScenario, setSelectedScenario] = useState<string | null>(null);
-  const [simulationStep, setSimulationStep] = useState(0);
-  const [showComparison, setShowComparison] = useState(false);
+  const [selectedScenario, setSelectedScenario] = useState<'balance' | 'growth' | 'stability'>('balance')
+  const [showDetails, setShowDetails] = useState(false)
 
-  const getRiskColor = (risk: string) => {
-    switch (risk) {
-      case 'low': return 'text-green-600 bg-green-50';
-      case 'medium': return 'text-yellow-600 bg-yellow-50';
-      case 'high': return 'text-red-600 bg-red-50';
-      default: return 'text-gray-600 bg-gray-50';
+  // スタッフリストを配列に変換
+  const staffList = Object.values(staffDatabase)
+
+  // 各職員に位置づけデータを追加
+  const staffWithPositioning = useMemo(() => {
+    return staffList.map(staff => {
+      const facilityRank = Math.floor(Math.random() * 100) + 1
+      const corporateRank = Math.floor(Math.random() * 100) + 1
+      
+      const getGrade = (rank: number) => {
+        if (rank <= 10) return 'S'
+        if (rank <= 30) return 'A'
+        if (rank <= 70) return 'B'
+        if (rank <= 90) return 'C'
+        return 'D'
+      }
+      
+      return {
+        ...staff,
+        facilityRank,
+        corporateRank,
+        facilityGrade: getGrade(facilityRank),
+        corporateGrade: getGrade(corporateRank),
+        positioningScore: (100 - facilityRank) * 0.5 + (100 - corporateRank) * 0.5
+      }
+    })
+  }, [staffList])
+
+  // 配置転換候補の特定
+  const identifyReallocationCandidates = useMemo(() => {
+    const candidates = {
+      highPotential: [] as any[], // 法人内高評価だが施設内低評価
+      underutilized: [] as any[], // 施設内高評価だが法人内低評価
+      needSupport: [] as any[], // 両方低評価
+      overqualified: [] as any[] // 両方高評価だが職位が低い
     }
-  };
 
-  const getChangeTypeIcon = (type: string) => {
-    switch (type) {
-      case 'reallocation': return '↔️';
-      case 'hiring': return '➕';
-      case 'training': return '🎓';
-      case 'restructure': return '🔄';
-      default: return '📋';
+    staffWithPositioning.forEach(staff => {
+      // 高ポテンシャル（他施設で活躍の可能性）
+      if ((staff.corporateGrade === 'S' || staff.corporateGrade === 'A') && 
+          (staff.facilityGrade === 'C' || staff.facilityGrade === 'D')) {
+        candidates.highPotential.push({
+          ...staff,
+          reason: '法人内では高評価だが、現施設では低評価',
+          recommendation: '他施設への異動を検討'
+        })
+      }
+      
+      // 活用不足（現施設でより重要な役割を）
+      if ((staff.facilityGrade === 'S' || staff.facilityGrade === 'A') && 
+          (staff.corporateGrade === 'C' || staff.corporateGrade === 'D')) {
+        candidates.underutilized.push({
+          ...staff,
+          reason: '施設内では高評価だが、法人全体では低評価',
+          recommendation: '現施設でのより重要な役割付与を検討'
+        })
+      }
+      
+      // 要支援（育成や配置転換が必要）
+      if (staff.facilityGrade === 'D' && staff.corporateGrade === 'D') {
+        candidates.needSupport.push({
+          ...staff,
+          reason: '施設内・法人内ともに低評価',
+          recommendation: '育成プログラムまたは適性に合った部署への配置転換'
+        })
+      }
+      
+      // 過小評価（昇進候補）
+      if (staff.facilityGrade === 'S' && staff.corporateGrade === 'S' && 
+          (!staff.position || staff.position.includes('一般'))) {
+        candidates.overqualified.push({
+          ...staff,
+          reason: '両軸で高評価だが職位が低い',
+          recommendation: 'リーダー職への昇進を検討'
+        })
+      }
+    })
+
+    return candidates
+  }, [staffWithPositioning])
+
+  // シナリオ別の最適化提案
+  const optimizationProposal = useMemo(() => {
+    const departments = Array.from(new Set(staffList.map(s => s.department).filter(Boolean)))
+    
+    switch (selectedScenario) {
+      case 'balance':
+        // バランス重視：各部門の位置づけ分布を均等化
+        return departments.map(dept => {
+          const deptStaff = staffWithPositioning.filter(s => s.department === dept)
+          const avgScore = deptStaff.reduce((sum, s) => sum + s.positioningScore, 0) / deptStaff.length
+          
+          return {
+            department: dept,
+            currentAvgScore: avgScore.toFixed(1),
+            targetAvgScore: '50.0',
+            requiredActions: avgScore < 45 ? '上位人材の配置' : avgScore > 55 ? '育成対象者の配置' : '現状維持',
+            priority: Math.abs(avgScore - 50) > 10 ? 'high' : 'low'
+          }
+        })
+        
+      case 'growth':
+        // 成長重視：高ポテンシャル人材の戦略的配置
+        return departments.map(dept => {
+          const needGrowth = dept.includes('新規') || dept.includes('開発')
+          return {
+            department: dept,
+            currentState: '現状分析中',
+            targetState: needGrowth ? '高ポテンシャル人材を重点配置' : '安定運営',
+            requiredActions: needGrowth ? 'S/A評価人材を優先配置' : '現状維持',
+            priority: needGrowth ? 'high' : 'medium'
+          }
+        })
+        
+      case 'stability':
+        // 安定重視：リスク最小化の配置
+        return departments.map(dept => {
+          const criticalDept = dept.includes('医療') || dept.includes('看護')
+          return {
+            department: dept,
+            riskLevel: criticalDept ? 'high' : 'medium',
+            targetState: '安定した人材配置',
+            requiredActions: criticalDept ? 'ベテラン層を中心に配置' : 'バランスよく配置',
+            priority: criticalDept ? 'high' : 'low'
+          }
+        })
     }
-  };
+  }, [selectedScenario, staffList, staffWithPositioning])
 
-  const simulateScenario = (scenario: OptimizationScenario) => {
-    setSelectedScenario(scenario.id);
-    setSimulationStep(1);
-  };
+  const getGradeColor = (grade: string) => {
+    switch (grade) {
+      case 'S': return '#ff5722'
+      case 'A': return '#ffc107'
+      case 'B': return '#4caf50'
+      case 'C': return '#2196f3'
+      case 'D': return '#9e9e9e'
+      default: return '#9e9e9e'
+    }
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="組織最適化シミュレーション" />
-      
-      <div className="max-w-7xl mx-auto p-6">
-        <div className="mb-6 flex gap-4">
-          <BackToReportsButton />
-          <CategoryTopButton categoryPath="/reports/performance-evaluation" categoryName="人事評価分析" />
-        </div>
-        
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold">組織最適化分析</h2>
-            <button
-              onClick={() => setShowComparison(!showComparison)}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-            >
-              {showComparison ? '詳細表示' : '比較表示'}
-            </button>
-          </div>
-
-          <div className="mb-6">
-            <h3 className="font-semibold text-lg mb-4">現状分析</h3>
-            <div className="overflow-x-auto">
-              <table className="min-w-full bg-white border rounded-lg">
-                <thead>
-                  <tr className="bg-gray-50">
-                    <th className="px-4 py-3 text-left text-sm font-medium">部門</th>
-                    <th className="px-4 py-3 text-center text-sm font-medium">現在人数</th>
-                    <th className="px-4 py-3 text-center text-sm font-medium">最適人数</th>
-                    <th className="px-4 py-3 text-center text-sm font-medium">差異</th>
-                    <th className="px-4 py-3 text-center text-sm font-medium">効率性</th>
-                    <th className="px-4 py-3 text-center text-sm font-medium">負荷率</th>
-                    <th className="px-4 py-3 text-center text-sm font-medium">年間コスト(千万円)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {mockCurrentState.map(state => (
-                    <tr key={state.department} className="border-t">
-                      <td className="px-4 py-3 font-medium">{state.department}</td>
-                      <td className="px-4 py-3 text-center">{state.currentStaff}</td>
-                      <td className="px-4 py-3 text-center">{state.optimalStaff}</td>
-                      <td className="px-4 py-3 text-center">
-                        <span className={`font-medium ${
-                          state.currentStaff > state.optimalStaff ? 'text-red-600' : 
-                          state.currentStaff < state.optimalStaff ? 'text-yellow-600' : 
-                          'text-green-600'
-                        }`}>
-                          {state.currentStaff - state.optimalStaff > 0 ? '+' : ''}{state.currentStaff - state.optimalStaff}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-center">{state.efficiency}%</td>
-                      <td className="px-4 py-3 text-center">
-                        <span className={`${
-                          state.workload > 90 ? 'text-red-600' : 
-                          state.workload > 80 ? 'text-yellow-600' : 
-                          'text-green-600'
-                        }`}>
-                          {state.workload}%
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-center">{Math.round(state.cost / 10000000)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+    <>
+      <CommonHeader title="組織最適化提案" />
+      <ReportLayout
+        title="組織最適化提案"
+        description="位置づけに基づく適材適所の人材配置最適化"
+        icon="🎯"
+        color="bg-orange-500"
+      >
+        <div className="space-y-6">
+          {/* シナリオ選択 */}
+          <Card className="p-6">
+            <h3 className="text-lg font-bold mb-4">最適化シナリオ</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <button
+                className={`p-4 rounded-lg border-2 transition-all ${
+                  selectedScenario === 'balance' 
+                    ? 'border-blue-600 bg-blue-50' 
+                    : 'border-gray-300 hover:border-gray-400'
+                }`}
+                onClick={() => setSelectedScenario('balance')}
+              >
+                <Target className="h-8 w-8 mb-2 mx-auto text-blue-600" />
+                <h4 className="font-semibold">バランス重視</h4>
+                <p className="text-sm text-gray-600 mt-1">
+                  各部門の位置づけ分布を均等化
+                </p>
+              </button>
+              
+              <button
+                className={`p-4 rounded-lg border-2 transition-all ${
+                  selectedScenario === 'growth' 
+                    ? 'border-green-600 bg-green-50' 
+                    : 'border-gray-300 hover:border-gray-400'
+                }`}
+                onClick={() => setSelectedScenario('growth')}
+              >
+                <Shuffle className="h-8 w-8 mb-2 mx-auto text-green-600" />
+                <h4 className="font-semibold">成長重視</h4>
+                <p className="text-sm text-gray-600 mt-1">
+                  高ポテンシャル人材の戦略配置
+                </p>
+              </button>
+              
+              <button
+                className={`p-4 rounded-lg border-2 transition-all ${
+                  selectedScenario === 'stability' 
+                    ? 'border-orange-600 bg-orange-50' 
+                    : 'border-gray-300 hover:border-gray-400'
+                }`}
+                onClick={() => setSelectedScenario('stability')}
+              >
+                <Users className="h-8 w-8 mb-2 mx-auto text-orange-600" />
+                <h4 className="font-semibold">安定重視</h4>
+                <p className="text-sm text-gray-600 mt-1">
+                  リスク最小化の人材配置
+                </p>
+              </button>
             </div>
+          </Card>
+
+          {/* 配置転換候補 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Card className="p-6">
+              <h4 className="font-semibold mb-3 flex items-center gap-2">
+                <span className="w-3 h-3 bg-purple-600 rounded-full"></span>
+                高ポテンシャル人材
+              </h4>
+              <p className="text-3xl font-bold">{identifyReallocationCandidates.highPotential.length}</p>
+              <p className="text-sm text-gray-600 mt-1">他施設で活躍の可能性</p>
+            </Card>
+            
+            <Card className="p-6">
+              <h4 className="font-semibold mb-3 flex items-center gap-2">
+                <span className="w-3 h-3 bg-blue-600 rounded-full"></span>
+                活用不足人材
+              </h4>
+              <p className="text-3xl font-bold">{identifyReallocationCandidates.underutilized.length}</p>
+              <p className="text-sm text-gray-600 mt-1">より重要な役割付与を</p>
+            </Card>
+            
+            <Card className="p-6">
+              <h4 className="font-semibold mb-3 flex items-center gap-2">
+                <span className="w-3 h-3 bg-green-600 rounded-full"></span>
+                昇進候補者
+              </h4>
+              <p className="text-3xl font-bold">{identifyReallocationCandidates.overqualified.length}</p>
+              <p className="text-sm text-gray-600 mt-1">リーダー職への推薦</p>
+            </Card>
+            
+            <Card className="p-6">
+              <h4 className="font-semibold mb-3 flex items-center gap-2">
+                <span className="w-3 h-3 bg-orange-600 rounded-full"></span>
+                要支援者
+              </h4>
+              <p className="text-3xl font-bold">{identifyReallocationCandidates.needSupport.length}</p>
+              <p className="text-sm text-gray-600 mt-1">育成・配置転換が必要</p>
+            </Card>
           </div>
 
-          {!showComparison ? (
-            <div>
-              <h3 className="font-semibold text-lg mb-4">最適化シナリオ</h3>
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {mockScenarios.map(scenario => (
-                  <div key={scenario.id} className="border rounded-lg p-6 hover:shadow-md transition-shadow">
-                    <div className="mb-4">
-                      <h4 className="font-semibold text-lg mb-2">{scenario.name}</h4>
-                      <p className="text-sm text-gray-600 mb-3">{scenario.description}</p>
-                      <div className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getRiskColor(scenario.expectedResults.riskLevel)}`}>
-                        リスク: {scenario.expectedResults.riskLevel === 'low' ? '低' : scenario.expectedResults.riskLevel === 'medium' ? '中' : '高'}
+          {/* 部門別最適化提案 */}
+          <Card className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold">部門別最適化提案</h3>
+              <button
+                className="text-blue-600 hover:underline"
+                onClick={() => setShowDetails(!showDetails)}
+              >
+                {showDetails ? '簡易表示' : '詳細表示'}
+              </button>
+            </div>
+            
+            <div className="space-y-3">
+              {optimizationProposal.map((proposal: any, index) => (
+                <div
+                  key={index}
+                  className={`p-4 rounded-lg border ${
+                    proposal.priority === 'high' ? 'border-red-300 bg-red-50' : 'border-gray-300 bg-gray-50'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-semibold">{proposal.department}</h4>
+                    {proposal.priority === 'high' && (
+                      <Badge className="bg-red-600 text-white">優先対応</Badge>
+                    )}
+                  </div>
+                  
+                  <div className="mt-2 text-sm">
+                    <p className="text-gray-600">
+                      推奨アクション: <span className="font-semibold">{proposal.requiredActions}</span>
+                    </p>
+                    {showDetails && (
+                      <div className="mt-2 pt-2 border-t">
+                        {Object.entries(proposal).map(([key, value]) => {
+                          if (key !== 'department' && key !== 'priority' && key !== 'requiredActions') {
+                            return (
+                              <p key={key} className="text-xs">
+                                {key}: {value as string}
+                              </p>
+                            )
+                          }
+                          return null
+                        })}
                       </div>
-                    </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
 
-                    <div className="space-y-3 mb-4">
-                      {scenario.changes.map((change, index) => (
-                        <div key={index} className="bg-gray-50 p-3 rounded">
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="text-lg">{getChangeTypeIcon(change.type)}</span>
-                            <span className="font-medium text-sm">{change.department}</span>
-                          </div>
-                          <p className="text-sm text-gray-600">{change.details}</p>
-                          <div className="flex justify-between text-xs text-gray-500 mt-1">
-                            <span>費用: {(change.cost / 10000).toLocaleString()}万円</span>
-                            <span>期間: {change.timeframe}</span>
-                          </div>
+          {/* 具体的な配置転換提案 */}
+          <Card className="p-6">
+            <h3 className="text-lg font-bold mb-4">配置転換提案（上位5件）</h3>
+            <div className="space-y-4">
+              {[...identifyReallocationCandidates.highPotential, ...identifyReallocationCandidates.overqualified]
+                .slice(0, 5)
+                .map((candidate, index) => (
+                  <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded">
+                    <div className="flex-1">
+                      <p className="font-semibold">{candidate.name}</p>
+                      <p className="text-sm text-gray-600">
+                        {candidate.department} / {candidate.position || '一般職員'}
+                      </p>
+                      <p className="text-sm mt-1">{candidate.reason}</p>
+                    </div>
+                    
+                    <div className="flex items-center gap-4">
+                      <div className="text-center">
+                        <p className="text-xs text-gray-600">現在</p>
+                        <div className="flex gap-1">
+                          <Badge style={{ backgroundColor: getGradeColor(candidate.facilityGrade), color: 'white' }}>
+                            施設{candidate.facilityGrade}
+                          </Badge>
+                          <Badge style={{ backgroundColor: getGradeColor(candidate.corporateGrade), color: 'white' }}>
+                            法人{candidate.corporateGrade}
+                          </Badge>
                         </div>
-                      ))}
-                    </div>
-
-                    <div className="space-y-2 mb-4">
-                      <h5 className="font-medium text-sm mb-2">期待効果</h5>
-                      <div className="flex justify-between text-sm">
-                        <span>効率性向上:</span>
-                        <span className="font-medium text-green-600">+{scenario.expectedResults.efficiency}%</span>
                       </div>
-                      <div className="flex justify-between text-sm">
-                        <span>満足度向上:</span>
-                        <span className="font-medium text-blue-600">+{scenario.expectedResults.satisfaction}%</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span>年間コスト削減:</span>
-                        <span className="font-medium text-purple-600">{(scenario.expectedResults.costSaving / 10000).toLocaleString()}万円</span>
+                      
+                      <ArrowRight className="h-5 w-5 text-gray-400" />
+                      
+                      <div className="text-right">
+                        <p className="text-xs text-gray-600">提案</p>
+                        <p className="text-sm font-semibold text-blue-600">
+                          {candidate.recommendation}
+                        </p>
                       </div>
                     </div>
-
-                    <button
-                      onClick={() => simulateScenario(scenario)}
-                      className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                    >
-                      シミュレーション実行
-                    </button>
                   </div>
                 ))}
-              </div>
             </div>
-          ) : (
-            <div>
-              <h3 className="font-semibold text-lg mb-4">シナリオ比較</h3>
-              <div className="overflow-x-auto">
-                <table className="min-w-full bg-white border rounded-lg">
-                  <thead>
-                    <tr className="bg-gray-50">
-                      <th className="px-4 py-3 text-left text-sm font-medium">項目</th>
-                      <th className="px-4 py-3 text-center text-sm font-medium">現状</th>
-                      {mockScenarios.map(scenario => (
-                        <th key={scenario.id} className="px-4 py-3 text-center text-sm font-medium">
-                          {scenario.name}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-t">
-                      <td className="px-4 py-3 font-medium">平均効率性</td>
-                      <td className="px-4 py-3 text-center">
-                        {Math.round(mockCurrentState.reduce((sum, s) => sum + s.efficiency, 0) / mockCurrentState.length)}%
-                      </td>
-                      {mockScenarios.map(scenario => (
-                        <td key={scenario.id} className="px-4 py-3 text-center text-green-600 font-medium">
-                          {scenario.expectedResults.efficiency}%
-                        </td>
-                      ))}
-                    </tr>
-                    <tr className="border-t">
-                      <td className="px-4 py-3 font-medium">職員満足度</td>
-                      <td className="px-4 py-3 text-center">75%</td>
-                      {mockScenarios.map(scenario => (
-                        <td key={scenario.id} className="px-4 py-3 text-center text-blue-600 font-medium">
-                          {scenario.expectedResults.satisfaction}%
-                        </td>
-                      ))}
-                    </tr>
-                    <tr className="border-t">
-                      <td className="px-4 py-3 font-medium">年間コスト削減</td>
-                      <td className="px-4 py-3 text-center">-</td>
-                      {mockScenarios.map(scenario => (
-                        <td key={scenario.id} className="px-4 py-3 text-center text-purple-600 font-medium">
-                          {(scenario.expectedResults.costSaving / 10000).toLocaleString()}万円
-                        </td>
-                      ))}
-                    </tr>
-                    <tr className="border-t">
-                      <td className="px-4 py-3 font-medium">実装コスト</td>
-                      <td className="px-4 py-3 text-center">-</td>
-                      {mockScenarios.map(scenario => (
-                        <td key={scenario.id} className="px-4 py-3 text-center text-orange-600 font-medium">
-                          {(scenario.changes.reduce((sum, c) => sum + c.cost, 0) / 10000).toLocaleString()}万円
-                        </td>
-                      ))}
-                    </tr>
-                    <tr className="border-t">
-                      <td className="px-4 py-3 font-medium">リスクレベル</td>
-                      <td className="px-4 py-3 text-center">-</td>
-                      {mockScenarios.map(scenario => (
-                        <td key={scenario.id} className="px-4 py-3 text-center">
-                          <span className={`px-2 py-1 rounded-full text-xs ${getRiskColor(scenario.expectedResults.riskLevel)}`}>
-                            {scenario.expectedResults.riskLevel === 'low' ? '低' : scenario.expectedResults.riskLevel === 'medium' ? '中' : '高'}
-                          </span>
-                        </td>
-                      ))}
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
+          </Card>
 
-          {selectedScenario && simulationStep > 0 && (
-            <div className="mt-6 p-6 bg-blue-50 rounded-lg">
-              <h3 className="font-semibold text-lg mb-4">シミュレーション結果</h3>
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="bg-white p-4 rounded">
-                    <h4 className="font-medium text-green-600">効率性改善</h4>
-                    <p className="text-2xl font-bold">
-                      +{mockScenarios.find(s => s.id === selectedScenario)?.expectedResults.efficiency}%
-                    </p>
-                  </div>
-                  <div className="bg-white p-4 rounded">
-                    <h4 className="font-medium text-blue-600">満足度向上</h4>
-                    <p className="text-2xl font-bold">
-                      +{mockScenarios.find(s => s.id === selectedScenario)?.expectedResults.satisfaction}%
-                    </p>
-                  </div>
-                  <div className="bg-white p-4 rounded">
-                    <h4 className="font-medium text-purple-600">年間削減額</h4>
-                    <p className="text-2xl font-bold">
-                      {((mockScenarios.find(s => s.id === selectedScenario)?.expectedResults.costSaving || 0) / 10000).toLocaleString()}万円
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="mt-4">
-                  <button
-                    onClick={() => {
-                      setSelectedScenario(null);
-                      setSimulationStep(0);
-                    }}
-                    className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 mr-2"
-                  >
-                    リセット
-                  </button>
-                  <button
-                    onClick={() => router.push('/reports/performance-evaluation')}
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                  >
-                    計画書作成
-                  </button>
-                </div>
+          {/* 実施時の注意事項 */}
+          <Card className="p-6 bg-yellow-50 border-yellow-300">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="h-6 w-6 text-yellow-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <h4 className="font-semibold mb-2">実施時の注意事項</h4>
+                <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
+                  <li>配置転換は本人の意向を十分に確認した上で実施してください</li>
+                  <li>急激な変更は組織の安定性を損なう可能性があります</li>
+                  <li>育成計画と併せて段階的に実施することを推奨します</li>
+                  <li>定期的に効果測定を行い、必要に応じて調整してください</li>
+                </ul>
               </div>
             </div>
-          )}
+          </Card>
         </div>
-      </div>
-
-      <ScrollToTopButton />
-      <DashboardButton />
-    </div>
-  );
+      </ReportLayout>
+    </>
+  )
 }

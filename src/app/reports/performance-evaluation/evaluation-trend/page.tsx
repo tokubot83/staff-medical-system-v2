@@ -1,543 +1,432 @@
-'use client';
+'use client'
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import CommonHeader from '@/components/CommonHeader';
-import DashboardButton from '@/components/DashboardButton';
-import ScrollToTopButton from '@/components/ScrollToTopButton';
-import { CategoryTopButton } from '@/components/CategoryTopButton';
-import { BackToReportsButton } from '@/components/BackToReportsButton';
-
-interface TrendData {
-  period: string;
-  date: string;
-  avgSkillScore: number;
-  avgResultScore: number;
-  totalStaff: number;
-  newHires: number;
-  departures: number;
-  promotions: number;
-  satisfaction: number;
-  efficiency: number;
-}
-
-interface DepartmentTrend {
-  department: string;
-  data: TrendData[];
-  color: string;
-}
-
-const mockTrendData: TrendData[] = [
-  {
-    period: '2024-01',
-    date: '2024年1月',
-    avgSkillScore: 75,
-    avgResultScore: 78,
-    totalStaff: 268,
-    newHires: 8,
-    departures: 5,
-    promotions: 3,
-    satisfaction: 72,
-    efficiency: 78
-  },
-  {
-    period: '2024-02',
-    date: '2024年2月',
-    avgSkillScore: 76,
-    avgResultScore: 79,
-    totalStaff: 271,
-    newHires: 6,
-    departures: 3,
-    promotions: 2,
-    satisfaction: 73,
-    efficiency: 79
-  },
-  {
-    period: '2024-03',
-    date: '2024年3月',
-    avgSkillScore: 77,
-    avgResultScore: 80,
-    totalStaff: 274,
-    newHires: 7,
-    departures: 4,
-    promotions: 5,
-    satisfaction: 75,
-    efficiency: 81
-  },
-  {
-    period: '2024-04',
-    date: '2024年4月',
-    avgSkillScore: 78,
-    avgResultScore: 81,
-    totalStaff: 278,
-    newHires: 12,
-    departures: 8,
-    promotions: 4,
-    satisfaction: 76,
-    efficiency: 82
-  },
-  {
-    period: '2024-05',
-    date: '2024年5月',
-    avgSkillScore: 79,
-    avgResultScore: 82,
-    totalStaff: 282,
-    newHires: 9,
-    departures: 5,
-    promotions: 6,
-    satisfaction: 78,
-    efficiency: 84
-  },
-  {
-    period: '2024-06',
-    date: '2024年6月',
-    avgSkillScore: 80,
-    avgResultScore: 83,
-    totalStaff: 286,
-    newHires: 7,
-    departures: 3,
-    promotions: 8,
-    satisfaction: 80,
-    efficiency: 85
-  }
-];
-
-const mockDepartmentTrends: DepartmentTrend[] = [
-  {
-    department: '看護部',
-    color: '#3B82F6',
-    data: [
-      { period: '2024-01', date: '2024年1月', avgSkillScore: 76, avgResultScore: 80, totalStaff: 118, newHires: 3, departures: 2, promotions: 1, satisfaction: 70, efficiency: 76 },
-      { period: '2024-02', date: '2024年2月', avgSkillScore: 77, avgResultScore: 81, totalStaff: 119, newHires: 2, departures: 1, promotions: 1, satisfaction: 72, efficiency: 77 },
-      { period: '2024-03', date: '2024年3月', avgSkillScore: 78, avgResultScore: 82, totalStaff: 120, newHires: 3, departures: 2, promotions: 2, satisfaction: 74, efficiency: 78 },
-      { period: '2024-04', date: '2024年4月', avgSkillScore: 78, avgResultScore: 82, totalStaff: 121, newHires: 4, departures: 3, promotions: 2, satisfaction: 75, efficiency: 79 },
-      { period: '2024-05', date: '2024年5月', avgSkillScore: 79, avgResultScore: 83, totalStaff: 122, newHires: 3, departures: 2, promotions: 3, satisfaction: 77, efficiency: 80 },
-      { period: '2024-06', date: '2024年6月', avgSkillScore: 78, avgResultScore: 82, totalStaff: 120, newHires: 2, departures: 4, promotions: 2, satisfaction: 78, efficiency: 78 }
-    ]
-  },
-  {
-    department: 'リハビリ部',
-    color: '#10B981',
-    data: [
-      { period: '2024-01', date: '2024年1月', avgSkillScore: 83, avgResultScore: 81, totalStaff: 33, newHires: 1, departures: 0, promotions: 0, satisfaction: 82, efficiency: 88 },
-      { period: '2024-02', date: '2024年2月', avgSkillScore: 84, avgResultScore: 82, totalStaff: 34, newHires: 1, departures: 0, promotions: 0, satisfaction: 83, efficiency: 89 },
-      { period: '2024-03', date: '2024年3月', avgSkillScore: 85, avgResultScore: 83, totalStaff: 35, newHires: 1, departures: 0, promotions: 1, satisfaction: 84, efficiency: 90 },
-      { period: '2024-04', date: '2024年4月', avgSkillScore: 85, avgResultScore: 83, totalStaff: 35, newHires: 2, departures: 2, promotions: 0, satisfaction: 85, efficiency: 91 },
-      { period: '2024-05', date: '2024年5月', avgSkillScore: 86, avgResultScore: 84, totalStaff: 35, newHires: 1, departures: 1, promotions: 1, satisfaction: 85, efficiency: 92 },
-      { period: '2024-06', date: '2024年6月', avgSkillScore: 85, avgResultScore: 83, totalStaff: 35, newHires: 1, departures: 1, promotions: 2, satisfaction: 85, efficiency: 92 }
-    ]
-  },
-  {
-    department: '介護部',
-    color: '#F59E0B',
-    data: [
-      { period: '2024-01', date: '2024年1月', avgSkillScore: 70, avgResultScore: 76, totalStaff: 78, newHires: 3, departures: 2, promotions: 1, satisfaction: 68, efficiency: 72 },
-      { period: '2024-02', date: '2024年2月', avgSkillScore: 71, avgResultScore: 77, totalStaff: 79, newHires: 2, departures: 1, promotions: 0, satisfaction: 69, efficiency: 73 },
-      { period: '2024-03', date: '2024年3月', avgSkillScore: 72, avgResultScore: 78, totalStaff: 80, newHires: 2, departures: 1, promotions: 1, satisfaction: 71, efficiency: 75 },
-      { period: '2024-04', date: '2024年4月', avgSkillScore: 72, avgResultScore: 78, totalStaff: 82, newHires: 4, departures: 2, promotions: 1, satisfaction: 72, efficiency: 76 },
-      { period: '2024-05', date: '2024年5月', avgSkillScore: 73, avgResultScore: 79, totalStaff: 85, newHires: 4, departures: 1, promotions: 1, satisfaction: 74, efficiency: 78 },
-      { period: '2024-06', date: '2024年6月', avgSkillScore: 72, avgResultScore: 78, totalStaff: 80, newHires: 2, departures: 7, promotions: 1, satisfaction: 72, efficiency: 78 }
-    ]
-  }
-];
+import React, { useState, useMemo } from 'react'
+import CommonHeader from '@/components/CommonHeader'
+import ReportLayout from '@/components/reports/ReportLayout'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { TrendingUp, TrendingDown, Minus, Search } from 'lucide-react'
+import { staffDatabase } from '@/app/data/staffData'
 
 export default function EvaluationTrendPage() {
-  const router = useRouter();
-  const [selectedPeriod, setSelectedPeriod] = useState<string>('all');
-  const [selectedMetric, setSelectedMetric] = useState<string>('skill');
-  const [viewMode, setViewMode] = useState<'overall' | 'department'>('overall');
-  const [selectedDepartments, setSelectedDepartments] = useState<string[]>(['看護部', 'リハビリ部', '介護部']);
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>('')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedDepartment, setSelectedDepartment] = useState('all')
+  const [viewMode, setViewMode] = useState<'individual' | 'department' | 'overview'>('individual')
 
-  const periods = ['all', '2024-01', '2024-02', '2024-03', '2024-04', '2024-05', '2024-06'];
-  const metrics = [
-    { key: 'skill', label: 'スキルスコア' },
-    { key: 'result', label: '成果スコア' },
-    { key: 'satisfaction', label: '満足度' },
-    { key: 'efficiency', label: '効率性' }
-  ];
+  // スタッフリストを配列に変換
+  const staffList = Object.values(staffDatabase)
 
-  const filteredData = selectedPeriod === 'all' ? mockTrendData : mockTrendData.filter(d => d.period === selectedPeriod);
+  // 部署リストを生成
+  const departments = Array.from(new Set(staffList.map(s => s.department).filter(Boolean)))
 
-  const calculateTrend = (data: TrendData[], metric: string) => {
-    if (data.length < 2) return 0;
-    const latest = data[data.length - 1];
-    const previous = data[data.length - 2];
+  // フィルタリング
+  const filteredStaff = staffList.filter(staff => {
+    const matchesSearch = staff.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         staff.employeeId?.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesDepartment = selectedDepartment === 'all' || staff.department === selectedDepartment
     
-    let latestValue = 0;
-    let previousValue = 0;
-    
-    switch (metric) {
-      case 'skill':
-        latestValue = latest.avgSkillScore;
-        previousValue = previous.avgSkillScore;
-        break;
-      case 'result':
-        latestValue = latest.avgResultScore;
-        previousValue = previous.avgResultScore;
-        break;
-      case 'satisfaction':
-        latestValue = latest.satisfaction;
-        previousValue = previous.satisfaction;
-        break;
-      case 'efficiency':
-        latestValue = latest.efficiency;
-        previousValue = previous.efficiency;
-        break;
+    return matchesSearch && matchesDepartment
+  })
+
+  // 評価推移データを生成（実際の実装では履歴データから取得）
+  const generateTrendData = (staffId: string) => {
+    const quarters = ['2023-Q1', '2023-Q2', '2023-Q3', '2023-Q4', '2024-Q1', '2024-Q2']
+    return quarters.map(quarter => {
+      // ランダムだが前の値から大きく変わらないように
+      const baseRank = 40 + Math.random() * 30
+      const facilityRank = Math.max(1, Math.min(100, baseRank + (Math.random() - 0.5) * 10))
+      const corporateRank = Math.max(1, Math.min(100, baseRank + (Math.random() - 0.5) * 15))
+      
+      return {
+        quarter,
+        facilityRank: Math.round(facilityRank),
+        corporateRank: Math.round(corporateRank),
+        facilityGrade: getGrade(facilityRank),
+        corporateGrade: getGrade(corporateRank)
+      }
+    })
+  }
+
+  const getGrade = (rank: number) => {
+    if (rank <= 10) return 'S'
+    if (rank <= 30) return 'A'
+    if (rank <= 70) return 'B'
+    if (rank <= 90) return 'C'
+    return 'D'
+  }
+
+  const getGradeColor = (grade: string) => {
+    switch (grade) {
+      case 'S': return '#ff5722'
+      case 'A': return '#ffc107'
+      case 'B': return '#4caf50'
+      case 'C': return '#2196f3'
+      case 'D': return '#9e9e9e'
+      default: return '#9e9e9e'
     }
-    
-    return ((latestValue - previousValue) / previousValue * 100);
-  };
+  }
 
-  const toggleDepartment = (dept: string) => {
-    if (selectedDepartments.includes(dept)) {
-      setSelectedDepartments(selectedDepartments.filter(d => d !== dept));
-    } else {
-      setSelectedDepartments([...selectedDepartments, dept]);
+  // 選択された職員の推移データ
+  const selectedStaffTrend = useMemo(() => {
+    if (!selectedEmployeeId) return null
+    return generateTrendData(selectedEmployeeId)
+  }, [selectedEmployeeId])
+
+  // トレンド分析
+  const analyzeTrend = (data: any[]) => {
+    if (!data || data.length < 2) return null
+    
+    const lastTwo = data.slice(-2)
+    const facilityChange = lastTwo[0].facilityRank - lastTwo[1].facilityRank
+    const corporateChange = lastTwo[0].corporateRank - lastTwo[1].corporateRank
+    
+    return {
+      facilityTrend: facilityChange > 3 ? 'up' : facilityChange < -3 ? 'down' : 'stable',
+      corporateTrend: corporateChange > 3 ? 'up' : corporateChange < -3 ? 'down' : 'stable',
+      facilityChange,
+      corporateChange
     }
-  };
+  }
+
+  // 部門全体の推移データ
+  const departmentTrendData = useMemo(() => {
+    if (viewMode !== 'department' || selectedDepartment === 'all') return []
+    
+    const quarters = ['2023-Q1', '2023-Q2', '2023-Q3', '2023-Q4', '2024-Q1', '2024-Q2']
+    const deptStaff = staffList.filter(s => s.department === selectedDepartment)
+    
+    return quarters.map(quarter => {
+      let totalS = 0, totalA = 0, totalB = 0, totalC = 0, totalD = 0
+      
+      deptStaff.forEach(() => {
+        const rank = Math.random() * 100
+        const grade = getGrade(rank)
+        switch (grade) {
+          case 'S': totalS++; break
+          case 'A': totalA++; break
+          case 'B': totalB++; break
+          case 'C': totalC++; break
+          case 'D': totalD++; break
+        }
+      })
+      
+      const total = deptStaff.length
+      return {
+        quarter,
+        S: (totalS / total * 100).toFixed(1),
+        A: (totalA / total * 100).toFixed(1),
+        B: (totalB / total * 100).toFixed(1),
+        C: (totalC / total * 100).toFixed(1),
+        D: (totalD / total * 100).toFixed(1)
+      }
+    })
+  }, [viewMode, selectedDepartment, staffList])
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="評価トレンド分析" />
-      
-      <div className="max-w-7xl mx-auto p-6">
-        <div className="mb-6 flex gap-4">
-          <BackToReportsButton />
-          <CategoryTopButton categoryPath="/reports/performance-evaluation" categoryName="人事評価分析" />
-        </div>
-        
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold">評価推移分析</h2>
+    <>
+      <CommonHeader title="位置づけ推移分析" />
+      <ReportLayout
+        title="位置づけ推移分析"
+        description="職員の位置づけの時系列変化を追跡・分析"
+        icon="📈"
+        color="bg-indigo-500"
+      >
+        <div className="space-y-6">
+          {/* ビューモード選択 */}
+          <Card className="p-6">
+            <h3 className="text-lg font-bold mb-4">分析モード</h3>
             <div className="flex gap-2">
-              <select
-                value={selectedPeriod}
-                onChange={(e) => setSelectedPeriod(e.target.value)}
-                className="px-4 py-2 border rounded-lg"
-              >
-                {periods.map(period => (
-                  <option key={period} value={period}>
-                    {period === 'all' ? '全期間' : `${period.slice(5)}月`}
-                  </option>
-                ))}
-              </select>
-              <select
-                value={selectedMetric}
-                onChange={(e) => setSelectedMetric(e.target.value)}
-                className="px-4 py-2 border rounded-lg"
-              >
-                {metrics.map(metric => (
-                  <option key={metric.key} value={metric.key}>
-                    {metric.label}
-                  </option>
-                ))}
-              </select>
               <button
-                onClick={() => setViewMode(viewMode === 'overall' ? 'department' : 'overall')}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                className={`px-4 py-2 rounded ${viewMode === 'individual' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+                onClick={() => setViewMode('individual')}
               >
-                {viewMode === 'overall' ? '部門別表示' : '全体表示'}
+                個人分析
+              </button>
+              <button
+                className={`px-4 py-2 rounded ${viewMode === 'department' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+                onClick={() => setViewMode('department')}
+              >
+                部門分析
+              </button>
+              <button
+                className={`px-4 py-2 rounded ${viewMode === 'overview' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+                onClick={() => setViewMode('overview')}
+              >
+                全体概況
               </button>
             </div>
-          </div>
+          </Card>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <h3 className="text-sm font-medium text-blue-600">平均スキルスコア</h3>
-              <div className="flex items-end gap-2">
-                <span className="text-2xl font-bold">{mockTrendData[mockTrendData.length - 1].avgSkillScore}</span>
-                <span className={`text-sm ${calculateTrend(mockTrendData, 'skill') >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  {calculateTrend(mockTrendData, 'skill') >= 0 ? '↗' : '↘'} {Math.abs(calculateTrend(mockTrendData, 'skill')).toFixed(1)}%
-                </span>
-              </div>
-            </div>
-            <div className="bg-green-50 p-4 rounded-lg">
-              <h3 className="text-sm font-medium text-green-600">平均成果スコア</h3>
-              <div className="flex items-end gap-2">
-                <span className="text-2xl font-bold">{mockTrendData[mockTrendData.length - 1].avgResultScore}</span>
-                <span className={`text-sm ${calculateTrend(mockTrendData, 'result') >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  {calculateTrend(mockTrendData, 'result') >= 0 ? '↗' : '↘'} {Math.abs(calculateTrend(mockTrendData, 'result')).toFixed(1)}%
-                </span>
-              </div>
-            </div>
-            <div className="bg-yellow-50 p-4 rounded-lg">
-              <h3 className="text-sm font-medium text-yellow-600">満足度</h3>
-              <div className="flex items-end gap-2">
-                <span className="text-2xl font-bold">{mockTrendData[mockTrendData.length - 1].satisfaction}</span>
-                <span className={`text-sm ${calculateTrend(mockTrendData, 'satisfaction') >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  {calculateTrend(mockTrendData, 'satisfaction') >= 0 ? '↗' : '↘'} {Math.abs(calculateTrend(mockTrendData, 'satisfaction')).toFixed(1)}%
-                </span>
-              </div>
-            </div>
-            <div className="bg-purple-50 p-4 rounded-lg">
-              <h3 className="text-sm font-medium text-purple-600">効率性</h3>
-              <div className="flex items-end gap-2">
-                <span className="text-2xl font-bold">{mockTrendData[mockTrendData.length - 1].efficiency}</span>
-                <span className={`text-sm ${calculateTrend(mockTrendData, 'efficiency') >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  {calculateTrend(mockTrendData, 'efficiency') >= 0 ? '↗' : '↘'} {Math.abs(calculateTrend(mockTrendData, 'efficiency')).toFixed(1)}%
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="relative h-[400px] border-2 border-gray-200 rounded-lg p-4">
-              <h3 className="font-medium mb-3">
-                {viewMode === 'overall' ? '全体トレンド' : '部門別トレンド'} - {metrics.find(m => m.key === selectedMetric)?.label}
-              </h3>
-              <svg width="100%" height="90%" viewBox="0 0 100 100">
-                <line x1="10" y1="90" x2="90" y2="90" stroke="#ccc" strokeWidth="0.5" />
-                <line x1="10" y1="10" x2="10" y2="90" stroke="#ccc" strokeWidth="0.5" />
-                
-                {mockTrendData.map((_, index) => (
-                  <line
-                    key={index}
-                    x1={10 + (index * 13.33)}
-                    y1="90"
-                    x2={10 + (index * 13.33)}
-                    y2="85"
-                    stroke="#ccc"
-                    strokeWidth="0.5"
-                  />
-                ))}
-                
-                {mockTrendData.map((point, index) => (
-                  <text
-                    key={index}
-                    x={10 + (index * 13.33)}
-                    y="95"
-                    textAnchor="middle"
-                    fontSize="2.5"
-                    fill="#666"
-                    transform={`rotate(-45 ${10 + (index * 13.33)} 95)`}
+          {/* 個人分析モード */}
+          {viewMode === 'individual' && (
+            <>
+              <Card className="p-6">
+                <h3 className="text-lg font-bold mb-4">職員検索</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                    <input
+                      type="text"
+                      placeholder="職員名・職員IDで検索"
+                      className="w-full pl-10 pr-3 py-2 border rounded-lg"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
+                  
+                  <select
+                    className="w-full px-3 py-2 border rounded-lg"
+                    value={selectedDepartment}
+                    onChange={(e) => setSelectedDepartment(e.target.value)}
                   >
-                    {point.period.slice(5)}月
-                  </text>
-                ))}
+                    <option value="all">全部署</option>
+                    {departments.map(dept => (
+                      <option key={dept} value={dept}>{dept}</option>
+                    ))}
+                  </select>
 
-                {viewMode === 'overall' ? (
-                  <>
-                    {mockTrendData.map((point, index) => {
-                      if (index === 0) return null;
-                      const prevPoint = mockTrendData[index - 1];
-                      const x1 = 10 + ((index - 1) * 13.33);
-                      const x2 = 10 + (index * 13.33);
-                      
-                      let y1 = 0, y2 = 0;
-                      switch (selectedMetric) {
-                        case 'skill':
-                          y1 = 90 - (prevPoint.avgSkillScore / 100 * 70);
-                          y2 = 90 - (point.avgSkillScore / 100 * 70);
-                          break;
-                        case 'result':
-                          y1 = 90 - (prevPoint.avgResultScore / 100 * 70);
-                          y2 = 90 - (point.avgResultScore / 100 * 70);
-                          break;
-                        case 'satisfaction':
-                          y1 = 90 - (prevPoint.satisfaction / 100 * 70);
-                          y2 = 90 - (point.satisfaction / 100 * 70);
-                          break;
-                        case 'efficiency':
-                          y1 = 90 - (prevPoint.efficiency / 100 * 70);
-                          y2 = 90 - (point.efficiency / 100 * 70);
-                          break;
-                      }
-                      
-                      return (
-                        <line
-                          key={index}
-                          x1={x1}
-                          y1={y1}
-                          x2={x2}
-                          y2={y2}
-                          stroke="#3B82F6"
-                          strokeWidth="2"
-                        />
-                      );
-                    })}
-                    
-                    {mockTrendData.map((point, index) => {
-                      let y = 0, value = 0;
-                      switch (selectedMetric) {
-                        case 'skill':
-                          y = 90 - (point.avgSkillScore / 100 * 70);
-                          value = point.avgSkillScore;
-                          break;
-                        case 'result':
-                          y = 90 - (point.avgResultScore / 100 * 70);
-                          value = point.avgResultScore;
-                          break;
-                        case 'satisfaction':
-                          y = 90 - (point.satisfaction / 100 * 70);
-                          value = point.satisfaction;
-                          break;
-                        case 'efficiency':
-                          y = 90 - (point.efficiency / 100 * 70);
-                          value = point.efficiency;
-                          break;
-                      }
-                      
-                      return (
-                        <g key={index}>
-                          <circle
-                            cx={10 + (index * 13.33)}
-                            cy={y}
-                            r="2"
-                            fill="#3B82F6"
-                          />
-                          <text
-                            x={10 + (index * 13.33)}
-                            y={y - 3}
-                            textAnchor="middle"
-                            fontSize="2.5"
-                            fill="#333"
-                          >
-                            {value}
-                          </text>
-                        </g>
-                      );
-                    })}
-                  </>
-                ) : (
-                  mockDepartmentTrends
-                    .filter(dept => selectedDepartments.includes(dept.department))
-                    .map(dept => (
-                      <g key={dept.department}>
-                        {dept.data.map((point, index) => {
-                          if (index === 0) return null;
-                          const prevPoint = dept.data[index - 1];
-                          const x1 = 10 + ((index - 1) * 13.33);
-                          const x2 = 10 + (index * 13.33);
-                          
-                          let y1 = 0, y2 = 0;
-                          switch (selectedMetric) {
-                            case 'skill':
-                              y1 = 90 - (prevPoint.avgSkillScore / 100 * 70);
-                              y2 = 90 - (point.avgSkillScore / 100 * 70);
-                              break;
-                            case 'result':
-                              y1 = 90 - (prevPoint.avgResultScore / 100 * 70);
-                              y2 = 90 - (point.avgResultScore / 100 * 70);
-                              break;
-                            case 'satisfaction':
-                              y1 = 90 - (prevPoint.satisfaction / 100 * 70);
-                              y2 = 90 - (point.satisfaction / 100 * 70);
-                              break;
-                            case 'efficiency':
-                              y1 = 90 - (prevPoint.efficiency / 100 * 70);
-                              y2 = 90 - (point.efficiency / 100 * 70);
-                              break;
-                          }
-                          
-                          return (
-                            <line
-                              key={`${dept.department}-${index}`}
-                              x1={x1}
-                              y1={y1}
-                              x2={x2}
-                              y2={y2}
-                              stroke={dept.color}
-                              strokeWidth="2"
-                            />
-                          );
-                        })}
-                        
-                        {dept.data.map((point, index) => {
-                          let y = 0;
-                          switch (selectedMetric) {
-                            case 'skill':
-                              y = 90 - (point.avgSkillScore / 100 * 70);
-                              break;
-                            case 'result':
-                              y = 90 - (point.avgResultScore / 100 * 70);
-                              break;
-                            case 'satisfaction':
-                              y = 90 - (point.satisfaction / 100 * 70);
-                              break;
-                            case 'efficiency':
-                              y = 90 - (point.efficiency / 100 * 70);
-                              break;
-                          }
-                          
-                          return (
-                            <circle
-                              key={`${dept.department}-point-${index}`}
-                              cx={10 + (index * 13.33)}
-                              cy={y}
-                              r="2"
-                              fill={dept.color}
-                            />
-                          );
-                        })}
-                      </g>
-                    ))
-                )}
-              </svg>
-            </div>
-
-            <div className="space-y-4">
-              {viewMode === 'department' && (
-                <div>
-                  <h3 className="font-medium mb-3">表示部門</h3>
-                  {mockDepartmentTrends.map(dept => (
-                    <label key={dept.department} className="flex items-center gap-2 mb-2">
-                      <input
-                        type="checkbox"
-                        checked={selectedDepartments.includes(dept.department)}
-                        onChange={() => toggleDepartment(dept.department)}
-                        className="w-4 h-4"
-                      />
-                      <div className="w-4 h-4 rounded" style={{ backgroundColor: dept.color }}></div>
-                      <span>{dept.department}</span>
-                    </label>
-                  ))}
+                  <button
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    onClick={() => setSearchTerm('')}
+                  >
+                    クリア
+                  </button>
                 </div>
-              )}
 
-              <div>
-                <h3 className="font-medium mb-3">月次変動データ</h3>
-                <div className="overflow-x-auto max-h-[300px]">
-                  <table className="min-w-full text-sm">
-                    <thead>
-                      <tr className="bg-gray-50">
-                        <th className="px-3 py-2 text-left">月</th>
-                        <th className="px-3 py-2 text-center">入職</th>
-                        <th className="px-3 py-2 text-center">退職</th>
-                        <th className="px-3 py-2 text-center">昇進</th>
-                        <th className="px-3 py-2 text-center">総人数</th>
+                {/* 職員リスト */}
+                <div className="mt-6 max-h-64 overflow-y-auto">
+                  <table className="w-full">
+                    <thead className="bg-gray-50 sticky top-0">
+                      <tr>
+                        <th className="px-4 py-2 text-left">職員名</th>
+                        <th className="px-4 py-2 text-left">部署</th>
+                        <th className="px-4 py-2 text-left">職位</th>
+                        <th className="px-4 py-2"></th>
                       </tr>
                     </thead>
                     <tbody>
-                      {mockTrendData.map(data => (
-                        <tr key={data.period} className="border-t">
-                          <td className="px-3 py-2">{data.date.slice(5)}</td>
-                          <td className="px-3 py-2 text-center text-green-600">+{data.newHires}</td>
-                          <td className="px-3 py-2 text-center text-red-600">-{data.departures}</td>
-                          <td className="px-3 py-2 text-center text-blue-600">+{data.promotions}</td>
-                          <td className="px-3 py-2 text-center font-medium">{data.totalStaff}</td>
+                      {filteredStaff.slice(0, 10).map((staff) => (
+                        <tr
+                          key={staff.id}
+                          className={`border-b hover:bg-gray-50 cursor-pointer ${
+                            selectedEmployeeId === staff.id ? 'bg-blue-50' : ''
+                          }`}
+                          onClick={() => setSelectedEmployeeId(staff.id)}
+                        >
+                          <td className="px-4 py-2">{staff.name}</td>
+                          <td className="px-4 py-2">{staff.department || '-'}</td>
+                          <td className="px-4 py-2">{staff.position || '-'}</td>
+                          <td className="px-4 py-2">
+                            <button
+                              className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setSelectedEmployeeId(staff.id)
+                              }}
+                            >
+                              選択
+                            </button>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
-              </div>
+              </Card>
 
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <h4 className="font-medium mb-2">トレンド分析</h4>
-                <ul className="text-sm space-y-1">
-                  <li>• 平均スキルスコア: 6ヶ月で{mockTrendData[mockTrendData.length - 1].avgSkillScore - mockTrendData[0].avgSkillScore}ポイント上昇</li>
-                  <li>• 職員満足度: 継続的な改善傾向</li>
-                  <li>• 人員規模: {mockTrendData[mockTrendData.length - 1].totalStaff - mockTrendData[0].totalStaff}名の増員</li>
-                  <li>• 効率性: 顕著な向上傾向</li>
-                </ul>
-              </div>
+              {/* 個人の推移グラフ */}
+              {selectedEmployeeId && selectedStaffTrend && (
+                <Card className="p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-bold">
+                      {staffDatabase[selectedEmployeeId]?.name}の位置づけ推移
+                    </h3>
+                    {(() => {
+                      const trend = analyzeTrend(selectedStaffTrend)
+                      return trend && (
+                        <div className="flex gap-4">
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm">施設内:</span>
+                            {trend.facilityTrend === 'up' ? (
+                              <TrendingUp className="h-5 w-5 text-green-600" />
+                            ) : trend.facilityTrend === 'down' ? (
+                              <TrendingDown className="h-5 w-5 text-red-600" />
+                            ) : (
+                              <Minus className="h-5 w-5 text-gray-600" />
+                            )}
+                            <span className="text-sm font-semibold">
+                              {Math.abs(trend.facilityChange)}%
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm">法人内:</span>
+                            {trend.corporateTrend === 'up' ? (
+                              <TrendingUp className="h-5 w-5 text-green-600" />
+                            ) : trend.corporateTrend === 'down' ? (
+                              <TrendingDown className="h-5 w-5 text-red-600" />
+                            ) : (
+                              <Minus className="h-5 w-5 text-gray-600" />
+                            )}
+                            <span className="text-sm font-semibold">
+                              {Math.abs(trend.corporateChange)}%
+                            </span>
+                          </div>
+                        </div>
+                      )
+                    })()}
+                  </div>
+
+                  <ResponsiveContainer width="100%" height={300}>
+                    <LineChart data={selectedStaffTrend}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="quarter" />
+                      <YAxis domain={[0, 100]} ticks={[0, 20, 40, 60, 80, 100]} />
+                      <Tooltip 
+                        formatter={(value: any) => `上位${value}%`}
+                        labelFormatter={(label) => `評価期間: ${label}`}
+                      />
+                      <Legend />
+                      <Line 
+                        type="monotone" 
+                        dataKey="facilityRank" 
+                        name="施設内順位" 
+                        stroke="#2196f3" 
+                        strokeWidth={2}
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="corporateRank" 
+                        name="法人内順位" 
+                        stroke="#4caf50" 
+                        strokeWidth={2}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+
+                  {/* グレード推移 */}
+                  <div className="mt-6">
+                    <h4 className="font-semibold mb-3">グレード推移</h4>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-sm text-gray-600 mb-2">施設内評価</p>
+                        <div className="flex gap-2">
+                          {selectedStaffTrend.map((data, index) => (
+                            <div key={index} className="text-center">
+                              <Badge style={{ backgroundColor: getGradeColor(data.facilityGrade), color: 'white' }}>
+                                {data.facilityGrade}
+                              </Badge>
+                              <div className="text-xs mt-1">{data.quarter.split('-')[1]}</div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600 mb-2">法人内評価</p>
+                        <div className="flex gap-2">
+                          {selectedStaffTrend.map((data, index) => (
+                            <div key={index} className="text-center">
+                              <Badge style={{ backgroundColor: getGradeColor(data.corporateGrade), color: 'white' }}>
+                                {data.corporateGrade}
+                              </Badge>
+                              <div className="text-xs mt-1">{data.quarter.split('-')[1]}</div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              )}
+            </>
+          )}
+
+          {/* 部門分析モード */}
+          {viewMode === 'department' && (
+            <>
+              <Card className="p-6">
+                <h3 className="text-lg font-bold mb-4">部門選択</h3>
+                <select
+                  className="w-full px-3 py-2 border rounded-lg"
+                  value={selectedDepartment}
+                  onChange={(e) => setSelectedDepartment(e.target.value)}
+                >
+                  <option value="all">部門を選択してください</option>
+                  {departments.map(dept => (
+                    <option key={dept} value={dept}>{dept}</option>
+                  ))}
+                </select>
+              </Card>
+
+              {selectedDepartment !== 'all' && departmentTrendData.length > 0 && (
+                <Card className="p-6">
+                  <h3 className="text-lg font-bold mb-4">{selectedDepartment} - 位置づけ分布推移</h3>
+                  <ResponsiveContainer width="100%" height={400}>
+                    <LineChart data={departmentTrendData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="quarter" />
+                      <YAxis domain={[0, 100]} />
+                      <Tooltip formatter={(value: any) => `${value}%`} />
+                      <Legend />
+                      <Line type="monotone" dataKey="S" name="S評価" stroke="#ff5722" strokeWidth={2} />
+                      <Line type="monotone" dataKey="A" name="A評価" stroke="#ffc107" strokeWidth={2} />
+                      <Line type="monotone" dataKey="B" name="B評価" stroke="#4caf50" strokeWidth={2} />
+                      <Line type="monotone" dataKey="C" name="C評価" stroke="#2196f3" strokeWidth={2} />
+                      <Line type="monotone" dataKey="D" name="D評価" stroke="#9e9e9e" strokeWidth={2} />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </Card>
+              )}
+            </>
+          )}
+
+          {/* 全体概況モード */}
+          {viewMode === 'overview' && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card className="p-6">
+                <h3 className="text-lg font-bold mb-4">位置づけ向上者</h3>
+                <div className="space-y-3">
+                  {filteredStaff.slice(0, 5).map(staff => (
+                    <div key={staff.id} className="flex items-center justify-between p-3 bg-green-50 rounded">
+                      <div>
+                        <p className="font-semibold">{staff.name}</p>
+                        <p className="text-sm text-gray-600">{staff.department}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <TrendingUp className="h-5 w-5 text-green-600" />
+                        <span className="text-sm font-semibold text-green-600">
+                          +{Math.floor(Math.random() * 20 + 5)}%
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+
+              <Card className="p-6">
+                <h3 className="text-lg font-bold mb-4">要注意（位置づけ低下）</h3>
+                <div className="space-y-3">
+                  {filteredStaff.slice(5, 10).map(staff => (
+                    <div key={staff.id} className="flex items-center justify-between p-3 bg-red-50 rounded">
+                      <div>
+                        <p className="font-semibold">{staff.name}</p>
+                        <p className="text-sm text-gray-600">{staff.department}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <TrendingDown className="h-5 w-5 text-red-600" />
+                        <span className="text-sm font-semibold text-red-600">
+                          -{Math.floor(Math.random() * 15 + 5)}%
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Card>
             </div>
-          </div>
+          )}
         </div>
-      </div>
-
-      <ScrollToTopButton />
-      <DashboardButton />
-    </div>
-  );
+      </ReportLayout>
+    </>
+  )
 }

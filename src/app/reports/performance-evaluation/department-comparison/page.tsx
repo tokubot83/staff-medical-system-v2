@@ -1,432 +1,361 @@
-'use client';
+'use client'
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import CommonHeader from '@/components/CommonHeader';
-import DashboardButton from '@/components/DashboardButton';
-import ScrollToTopButton from '@/components/ScrollToTopButton';
-import { CategoryTopButton } from '@/components/CategoryTopButton';
-import { BackToReportsButton } from '@/components/BackToReportsButton';
-
-interface DepartmentData {
-  id: string;
-  name: string;
-  memberCount: number;
-  avgSkillScore: number;
-  avgResultScore: number;
-  budget: number;
-  efficiency: number;
-  satisfaction: number;
-  turnoverRate: number;
-  monthlyTrend: { month: string; skill: number; result: number }[];
-}
-
-const mockDepartmentData: DepartmentData[] = [
-  {
-    id: '1',
-    name: '看護部',
-    memberCount: 120,
-    avgSkillScore: 78,
-    avgResultScore: 82,
-    budget: 450000000,
-    efficiency: 85,
-    satisfaction: 78,
-    turnoverRate: 12,
-    monthlyTrend: [
-      { month: '1月', skill: 76, result: 80 },
-      { month: '2月', skill: 77, result: 81 },
-      { month: '3月', skill: 78, result: 82 },
-      { month: '4月', skill: 78, result: 82 },
-      { month: '5月', skill: 79, result: 83 },
-      { month: '6月', skill: 78, result: 82 }
-    ]
-  },
-  {
-    id: '2',
-    name: 'リハビリ部',
-    memberCount: 35,
-    avgSkillScore: 85,
-    avgResultScore: 83,
-    budget: 120000000,
-    efficiency: 92,
-    satisfaction: 85,
-    turnoverRate: 8,
-    monthlyTrend: [
-      { month: '1月', skill: 83, result: 81 },
-      { month: '2月', skill: 84, result: 82 },
-      { month: '3月', skill: 85, result: 83 },
-      { month: '4月', skill: 85, result: 83 },
-      { month: '5月', skill: 86, result: 84 },
-      { month: '6月', skill: 85, result: 83 }
-    ]
-  },
-  {
-    id: '3',
-    name: '介護部',
-    memberCount: 80,
-    avgSkillScore: 72,
-    avgResultScore: 78,
-    budget: 320000000,
-    efficiency: 78,
-    satisfaction: 72,
-    turnoverRate: 18,
-    monthlyTrend: [
-      { month: '1月', skill: 70, result: 76 },
-      { month: '2月', skill: 71, result: 77 },
-      { month: '3月', skill: 72, result: 78 },
-      { month: '4月', skill: 72, result: 78 },
-      { month: '5月', skill: 73, result: 79 },
-      { month: '6月', skill: 72, result: 78 }
-    ]
-  },
-  {
-    id: '4',
-    name: '医事課',
-    memberCount: 25,
-    avgSkillScore: 74,
-    avgResultScore: 71,
-    budget: 80000000,
-    efficiency: 82,
-    satisfaction: 70,
-    turnoverRate: 15,
-    monthlyTrend: [
-      { month: '1月', skill: 72, result: 69 },
-      { month: '2月', skill: 73, result: 70 },
-      { month: '3月', skill: 74, result: 71 },
-      { month: '4月', skill: 74, result: 71 },
-      { month: '5月', skill: 75, result: 72 },
-      { month: '6月', skill: 74, result: 71 }
-    ]
-  },
-  {
-    id: '5',
-    name: '栄養課',
-    memberCount: 18,
-    avgSkillScore: 80,
-    avgResultScore: 85,
-    budget: 60000000,
-    efficiency: 88,
-    satisfaction: 82,
-    turnoverRate: 10,
-    monthlyTrend: [
-      { month: '1月', skill: 78, result: 83 },
-      { month: '2月', skill: 79, result: 84 },
-      { month: '3月', skill: 80, result: 85 },
-      { month: '4月', skill: 80, result: 85 },
-      { month: '5月', skill: 81, result: 86 },
-      { month: '6月', skill: 80, result: 85 }
-    ]
-  }
-];
+import React, { useState, useMemo } from 'react'
+import CommonHeader from '@/components/CommonHeader'
+import ReportLayout from '@/components/reports/ReportLayout'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
+import { Building2, Users, TrendingUp, AlertCircle } from 'lucide-react'
+import { staffDatabase } from '@/app/data/staffData'
 
 export default function DepartmentComparisonPage() {
-  const router = useRouter();
-  const [selectedMetric, setSelectedMetric] = useState<string>('performance');
-  const [compareDepartments, setCompareDepartments] = useState<string[]>([]);
-  const [viewMode, setViewMode] = useState<'table' | 'chart'>('table');
+  const [selectedFacility, setSelectedFacility] = useState('all')
+  const [viewMode, setViewMode] = useState<'distribution' | 'average' | 'detail'>('distribution')
 
-  const metrics = [
-    { key: 'performance', label: '総合パフォーマンス', getValue: (dept: DepartmentData) => (dept.avgSkillScore + dept.avgResultScore) / 2 },
-    { key: 'efficiency', label: '効率性', getValue: (dept: DepartmentData) => dept.efficiency },
-    { key: 'satisfaction', label: '満足度', getValue: (dept: DepartmentData) => dept.satisfaction },
-    { key: 'turnover', label: '離職率', getValue: (dept: DepartmentData) => dept.turnoverRate, reverse: true }
-  ];
+  // スタッフリストを配列に変換
+  const staffList = Object.values(staffDatabase)
 
-  const currentMetric = metrics.find(m => m.key === selectedMetric) || metrics[0];
-  
-  const sortedDepartments = [...mockDepartmentData].sort((a, b) => {
-    const aValue = currentMetric.getValue(a);
-    const bValue = currentMetric.getValue(b);
-    return currentMetric.reverse ? aValue - bValue : bValue - aValue;
-  });
+  // 施設リストを生成
+  const facilities = Array.from(new Set(staffList.map(s => s.facility).filter(Boolean)))
 
-  const handleDepartmentToggle = (deptId: string) => {
-    if (compareDepartments.includes(deptId)) {
-      setCompareDepartments(compareDepartments.filter(id => id !== deptId));
-    } else if (compareDepartments.length < 3) {
-      setCompareDepartments([...compareDepartments, deptId]);
+  // 部門ごとの位置づけデータを計算
+  const departmentData = useMemo(() => {
+    const deptMap: Record<string, any> = {}
+    
+    staffList.forEach(staff => {
+      if (!staff.department) return
+      if (selectedFacility !== 'all' && staff.facility !== selectedFacility) return
+      
+      if (!deptMap[staff.department]) {
+        deptMap[staff.department] = {
+          name: staff.department,
+          staff: [],
+          gradeDistribution: {
+            facility: { S: 0, A: 0, B: 0, C: 0, D: 0 },
+            corporate: { S: 0, A: 0, B: 0, C: 0, D: 0 }
+          }
+        }
+      }
+      
+      // ランダムな位置づけを生成（実際はデータベースから取得）
+      const facilityRank = Math.floor(Math.random() * 100) + 1
+      const corporateRank = Math.floor(Math.random() * 100) + 1
+      
+      const getGrade = (rank: number) => {
+        if (rank <= 10) return 'S'
+        if (rank <= 30) return 'A'
+        if (rank <= 70) return 'B'
+        if (rank <= 90) return 'C'
+        return 'D'
+      }
+      
+      const facilityGrade = getGrade(facilityRank)
+      const corporateGrade = getGrade(corporateRank)
+      
+      deptMap[staff.department].staff.push({
+        ...staff,
+        facilityRank,
+        corporateRank,
+        facilityGrade,
+        corporateGrade,
+      })
+      
+      deptMap[staff.department].gradeDistribution.facility[facilityGrade]++
+      deptMap[staff.department].gradeDistribution.corporate[corporateGrade]++
+    })
+    
+    // 各部門の統計を計算
+    Object.values(deptMap).forEach((dept: any) => {
+      dept.totalStaff = dept.staff.length
+      dept.topPerformers = dept.staff.filter((s: any) => s.facilityGrade === 'S' || s.corporateGrade === 'S').length
+      dept.needSupport = dept.staff.filter((s: any) => s.facilityGrade === 'D' || s.corporateGrade === 'D').length
+      dept.topPerformerRatio = (dept.topPerformers / dept.totalStaff * 100).toFixed(1)
+      dept.needSupportRatio = (dept.needSupport / dept.totalStaff * 100).toFixed(1)
+      dept.averageFacilityRank = dept.staff.reduce((sum: number, s: any) => sum + s.facilityRank, 0) / dept.totalStaff
+      dept.averageCorporateRank = dept.staff.reduce((sum: number, s: any) => sum + s.corporateRank, 0) / dept.totalStaff
+      
+      // 位置づけバランススコア（S,Aが多くC,Dが少ないほど高い）
+      const facilityScore = (dept.gradeDistribution.facility.S * 3 + dept.gradeDistribution.facility.A * 2 + dept.gradeDistribution.facility.B) / dept.totalStaff
+      const corporateScore = (dept.gradeDistribution.corporate.S * 3 + dept.gradeDistribution.corporate.A * 2 + dept.gradeDistribution.corporate.B) / dept.totalStaff
+      dept.balanceScore = ((facilityScore + corporateScore) / 2).toFixed(2)
+    })
+    
+    return Object.values(deptMap)
+  }, [staffList, selectedFacility])
+
+  const getGradeColor = (grade: string) => {
+    switch (grade) {
+      case 'S': return '#ff5722'
+      case 'A': return '#ffc107'
+      case 'B': return '#4caf50'
+      case 'C': return '#2196f3'
+      case 'D': return '#9e9e9e'
+      default: return '#9e9e9e'
     }
-  };
+  }
 
-  const getMetricColor = (value: number, metric: string) => {
-    if (metric === 'turnover') {
-      if (value <= 10) return 'text-green-600';
-      if (value <= 15) return 'text-yellow-600';
-      return 'text-red-600';
-    } else {
-      if (value >= 80) return 'text-green-600';
-      if (value >= 70) return 'text-yellow-600';
-      return 'text-red-600';
-    }
-  };
+  // グラフ用データの準備
+  const chartData = departmentData.map(dept => ({
+    name: dept.name,
+    トップ層: parseFloat(dept.topPerformerRatio),
+    標準層: 100 - parseFloat(dept.topPerformerRatio) - parseFloat(dept.needSupportRatio),
+    要支援層: parseFloat(dept.needSupportRatio),
+    バランススコア: parseFloat(dept.balanceScore)
+  }))
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="部門間比較分析" />
-      
-      <div className="max-w-7xl mx-auto p-6">
-        <div className="mb-6 flex gap-4">
-          <BackToReportsButton />
-          <CategoryTopButton categoryPath="/reports/performance-evaluation" categoryName="人事評価分析" />
-        </div>
-        
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold">部門パフォーマンス比較</h2>
-            <div className="flex gap-2">
-              <select
-                value={selectedMetric}
-                onChange={(e) => setSelectedMetric(e.target.value)}
-                className="px-4 py-2 border rounded-lg"
-              >
-                {metrics.map(metric => (
-                  <option key={metric.key} value={metric.key}>
-                    {metric.label}
-                  </option>
-                ))}
-              </select>
-              <button
-                onClick={() => setViewMode(viewMode === 'table' ? 'chart' : 'table')}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-              >
-                {viewMode === 'table' ? 'チャート表示' : 'テーブル表示'}
-              </button>
+    <>
+      <CommonHeader title="部門別位置づけ分析" />
+      <ReportLayout
+        title="部門別位置づけ分析"
+        description="部門ごとの職員の位置づけ分布を比較・分析"
+        icon="🏢"
+        color="bg-green-500"
+      >
+        <div className="space-y-6">
+          {/* フィルター */}
+          <Card className="p-6">
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex-1">
+                <h3 className="text-lg font-bold mb-4">フィルター</h3>
+                <select
+                  className="w-full px-3 py-2 border rounded-lg"
+                  value={selectedFacility}
+                  onChange={(e) => setSelectedFacility(e.target.value)}
+                >
+                  <option value="all">全施設</option>
+                  {facilities.map(facility => (
+                    <option key={facility} value={facility}>{facility}</option>
+                  ))}
+                </select>
+              </div>
+              
+              <div className="flex-1">
+                <h3 className="text-lg font-bold mb-4">表示モード</h3>
+                <div className="flex gap-2">
+                  <button
+                    className={`px-4 py-2 rounded ${viewMode === 'distribution' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+                    onClick={() => setViewMode('distribution')}
+                  >
+                    分布
+                  </button>
+                  <button
+                    className={`px-4 py-2 rounded ${viewMode === 'average' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+                    onClick={() => setViewMode('average')}
+                  >
+                    平均
+                  </button>
+                  <button
+                    className={`px-4 py-2 rounded ${viewMode === 'detail' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+                    onClick={() => setViewMode('detail')}
+                  >
+                    詳細
+                  </button>
+                </div>
+              </div>
             </div>
+          </Card>
+
+          {/* サマリーカード */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">分析対象部門数</p>
+                  <p className="text-2xl font-bold">{departmentData.length}</p>
+                </div>
+                <Building2 className="h-8 w-8 text-blue-600" />
+              </div>
+            </Card>
+            
+            <Card className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">最高バランススコア</p>
+                  <p className="text-2xl font-bold">
+                    {Math.max(...departmentData.map(d => parseFloat(d.balanceScore))).toFixed(2)}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {departmentData.find(d => d.balanceScore === Math.max(...departmentData.map(d => parseFloat(d.balanceScore))).toFixed(2))?.name}
+                  </p>
+                </div>
+                <TrendingUp className="h-8 w-8 text-green-600" />
+              </div>
+            </Card>
+            
+            <Card className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">要支援層が多い部門</p>
+                  <p className="text-2xl font-bold">
+                    {departmentData.filter(d => parseFloat(d.needSupportRatio) > 20).length}
+                  </p>
+                  <p className="text-xs text-gray-500">20%以上</p>
+                </div>
+                <AlertCircle className="h-8 w-8 text-orange-600" />
+              </div>
+            </Card>
           </div>
 
-          {viewMode === 'table' ? (
-            <div className="overflow-x-auto">
-              <table className="min-w-full bg-white border rounded-lg">
-                <thead>
-                  <tr className="bg-gray-50">
-                    <th className="px-4 py-3 text-left text-sm font-medium">順位</th>
-                    <th className="px-4 py-3 text-left text-sm font-medium">部門名</th>
-                    <th className="px-4 py-3 text-center text-sm font-medium">人数</th>
-                    <th className="px-4 py-3 text-center text-sm font-medium">スキル</th>
-                    <th className="px-4 py-3 text-center text-sm font-medium">成果</th>
-                    <th className="px-4 py-3 text-center text-sm font-medium">効率性</th>
-                    <th className="px-4 py-3 text-center text-sm font-medium">満足度</th>
-                    <th className="px-4 py-3 text-center text-sm font-medium">離職率(%)</th>
-                    <th className="px-4 py-3 text-center text-sm font-medium">予算(千万円)</th>
-                    <th className="px-4 py-3 text-center text-sm font-medium">比較</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {sortedDepartments.map((dept, index) => (
-                    <tr key={dept.id} className="border-t hover:bg-gray-50">
-                      <td className="px-4 py-3 text-center font-bold text-lg">{index + 1}</td>
-                      <td className="px-4 py-3 font-medium">{dept.name}</td>
-                      <td className="px-4 py-3 text-center">{dept.memberCount}</td>
-                      <td className="px-4 py-3 text-center">{dept.avgSkillScore}</td>
-                      <td className="px-4 py-3 text-center">{dept.avgResultScore}</td>
-                      <td className="px-4 py-3 text-center">
-                        <span className={getMetricColor(dept.efficiency, 'efficiency')}>
-                          {dept.efficiency}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-center">
-                        <span className={getMetricColor(dept.satisfaction, 'satisfaction')}>
-                          {dept.satisfaction}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-center">
-                        <span className={getMetricColor(dept.turnoverRate, 'turnover')}>
-                          {dept.turnoverRate}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-center">{Math.round(dept.budget / 10000000)}</td>
-                      <td className="px-4 py-3 text-center">
-                        <input
-                          type="checkbox"
-                          checked={compareDepartments.includes(dept.id)}
-                          onChange={() => handleDepartmentToggle(dept.id)}
-                          disabled={!compareDepartments.includes(dept.id) && compareDepartments.length >= 3}
-                          className="w-4 h-4"
-                        />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <div className="relative h-[400px] border-2 border-gray-200 rounded-lg p-4">
-              <h3 className="font-medium mb-3">{currentMetric.label}比較チャート</h3>
-              <svg width="100%" height="90%" viewBox="0 0 100 100">
-                <line x1="10" y1="90" x2="90" y2="90" stroke="#ccc" strokeWidth="0.5" />
-                <line x1="10" y1="10" x2="10" y2="90" stroke="#ccc" strokeWidth="0.5" />
-                
-                {sortedDepartments.map((dept, index) => {
-                  const value = currentMetric.getValue(dept);
-                  const maxValue = Math.max(...sortedDepartments.map(d => currentMetric.getValue(d)));
-                  const height = (value / maxValue) * 70;
-                  const x = 15 + (index * 15);
-                  
-                  return (
-                    <g key={dept.id}>
-                      <rect
-                        x={x}
-                        y={90 - height}
-                        width="10"
-                        height={height}
-                        fill={getMetricColor(value, selectedMetric).replace('text-', '')}
-                        className="cursor-pointer hover:opacity-75"
-                        onClick={() => handleDepartmentToggle(dept.id)}
-                      />
-                      <text
-                        x={x + 5}
-                        y={95}
-                        textAnchor="middle"
-                        fontSize="2.5"
-                        fill="#333"
-                        transform={`rotate(-45 ${x + 5} 95)`}
-                      >
-                        {dept.name}
-                      </text>
-                      <text
-                        x={x + 5}
-                        y={90 - height - 2}
-                        textAnchor="middle"
-                        fontSize="2.5"
-                        fill="#333"
-                      >
-                        {Math.round(value)}
-                      </text>
-                    </g>
-                  );
-                })}
-              </svg>
+          {/* メインビュー */}
+          {viewMode === 'distribution' && (
+            <Card className="p-6">
+              <h3 className="text-lg font-bold mb-4">部門別位置づけ分布</h3>
+              <ResponsiveContainer width="100%" height={400}>
+                <BarChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="トップ層" stackId="a" fill="#ff5722" />
+                  <Bar dataKey="標準層" stackId="a" fill="#4caf50" />
+                  <Bar dataKey="要支援層" stackId="a" fill="#9e9e9e" />
+                </BarChart>
+              </ResponsiveContainer>
+            </Card>
+          )}
+
+          {viewMode === 'average' && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card className="p-6">
+                <h3 className="text-lg font-bold mb-4">平均位置づけ（施設内）</h3>
+                <div className="space-y-3">
+                  {departmentData
+                    .sort((a, b) => a.averageFacilityRank - b.averageFacilityRank)
+                    .map((dept, index) => (
+                      <div key={dept.name} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold">{index + 1}.</span>
+                          <span>{dept.name}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-32 bg-gray-200 rounded-full h-2">
+                            <div
+                              className="bg-blue-600 h-2 rounded-full"
+                              style={{ width: `${100 - dept.averageFacilityRank}%` }}
+                            />
+                          </div>
+                          <span className="text-sm font-semibold">上位{dept.averageFacilityRank.toFixed(1)}%</span>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </Card>
+
+              <Card className="p-6">
+                <h3 className="text-lg font-bold mb-4">平均位置づけ（法人内）</h3>
+                <div className="space-y-3">
+                  {departmentData
+                    .sort((a, b) => a.averageCorporateRank - b.averageCorporateRank)
+                    .map((dept, index) => (
+                      <div key={dept.name} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold">{index + 1}.</span>
+                          <span>{dept.name}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-32 bg-gray-200 rounded-full h-2">
+                            <div
+                              className="bg-green-600 h-2 rounded-full"
+                              style={{ width: `${100 - dept.averageCorporateRank}%` }}
+                            />
+                          </div>
+                          <span className="text-sm font-semibold">上位{dept.averageCorporateRank.toFixed(1)}%</span>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </Card>
             </div>
           )}
 
-          {compareDepartments.length > 0 && (
-            <div className="mt-6">
-              <h3 className="font-semibold text-lg mb-4">詳細比較 ({compareDepartments.length}部門選択中)</h3>
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {compareDepartments.map(deptId => {
-                  const dept = mockDepartmentData.find(d => d.id === deptId);
-                  if (!dept) return null;
-                  
-                  return (
-                    <div key={deptId} className="bg-gray-50 rounded-lg p-6">
-                      <div className="flex justify-between items-center mb-4">
-                        <h4 className="font-semibold text-lg">{dept.name}</h4>
-                        <button
-                          onClick={() => handleDepartmentToggle(deptId)}
-                          className="text-red-600 hover:text-red-800"
-                        >
-                          ×
-                        </button>
+          {viewMode === 'detail' && (
+            <div className="space-y-4">
+              {departmentData
+                .sort((a, b) => parseFloat(b.balanceScore) - parseFloat(a.balanceScore))
+                .map(dept => (
+                  <Card key={dept.name} className="p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <div>
+                        <h3 className="font-bold text-lg">{dept.name}</h3>
+                        <p className="text-sm text-gray-600 mt-1">
+                          <Users className="inline h-4 w-4 mr-1" />
+                          {dept.totalStaff}名 | バランススコア: {dept.balanceScore}
+                        </p>
                       </div>
-                      
-                      <div className="space-y-3">
-                        <div className="flex justify-between">
-                          <span>メンバー数:</span>
-                          <span className="font-medium">{dept.memberCount}名</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>平均スキル:</span>
-                          <span className="font-medium">{dept.avgSkillScore}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>平均成果:</span>
-                          <span className="font-medium">{dept.avgResultScore}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>効率性:</span>
-                          <span className={`font-medium ${getMetricColor(dept.efficiency, 'efficiency')}`}>
-                            {dept.efficiency}
-                          </span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>満足度:</span>
-                          <span className={`font-medium ${getMetricColor(dept.satisfaction, 'satisfaction')}`}>
-                            {dept.satisfaction}
-                          </span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>離職率:</span>
-                          <span className={`font-medium ${getMetricColor(dept.turnoverRate, 'turnover')}`}>
-                            {dept.turnoverRate}%
-                          </span>
+                      <Badge className="bg-purple-600 text-white">
+                        上位{dept.averageFacilityRank.toFixed(0)}% / {dept.averageCorporateRank.toFixed(0)}%
+                      </Badge>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-sm font-semibold mb-2">施設内評価分布</p>
+                        <div className="flex gap-1">
+                          {(['S', 'A', 'B', 'C', 'D'] as const).map(grade => (
+                            <div key={grade} className="flex-1 text-center">
+                              <div
+                                className="h-16 flex items-end justify-center rounded"
+                                style={{
+                                  backgroundColor: getGradeColor(grade),
+                                  height: `${Math.max(16, dept.gradeDistribution.facility[grade] / dept.totalStaff * 100)}px`
+                                }}
+                              >
+                                <span className="text-xs text-white font-semibold mb-1">
+                                  {dept.gradeDistribution.facility[grade]}
+                                </span>
+                              </div>
+                              <div className="text-xs mt-1">{grade}</div>
+                            </div>
+                          ))}
                         </div>
                       </div>
 
-                      <div className="mt-4 pt-4 border-t">
-                        <h5 className="font-medium mb-2">6ヶ月トレンド</h5>
-                        <div className="relative h-[100px]">
-                          <svg width="100%" height="100%" viewBox="0 0 100 100">
-                            <line x1="0" y1="90" x2="100" y2="90" stroke="#ccc" strokeWidth="1" />
-                            <line x1="10" y1="0" x2="10" y2="90" stroke="#ccc" strokeWidth="1" />
-                            
-                            {dept.monthlyTrend.map((point, index) => {
-                              if (index === 0) return null;
-                              const prevPoint = dept.monthlyTrend[index - 1];
-                              const x1 = 10 + ((index - 1) * 15);
-                              const x2 = 10 + (index * 15);
-                              const y1 = 90 - (prevPoint.skill / 100 * 80);
-                              const y2 = 90 - (point.skill / 100 * 80);
-                              
-                              return (
-                                <line
-                                  key={`skill-${index}`}
-                                  x1={x1}
-                                  y1={y1}
-                                  x2={x2}
-                                  y2={y2}
-                                  stroke="#3B82F6"
-                                  strokeWidth="2"
-                                />
-                              );
-                            })}
-                            
-                            {dept.monthlyTrend.map((point, index) => (
-                              <circle
-                                key={`skill-point-${index}`}
-                                cx={10 + (index * 15)}
-                                cy={90 - (point.skill / 100 * 80)}
-                                r="2"
-                                fill="#3B82F6"
-                              />
-                            ))}
-                          </svg>
+                      <div>
+                        <p className="text-sm font-semibold mb-2">法人内評価分布</p>
+                        <div className="flex gap-1">
+                          {(['S', 'A', 'B', 'C', 'D'] as const).map(grade => (
+                            <div key={grade} className="flex-1 text-center">
+                              <div
+                                className="h-16 flex items-end justify-center rounded"
+                                style={{
+                                  backgroundColor: getGradeColor(grade),
+                                  height: `${Math.max(16, dept.gradeDistribution.corporate[grade] / dept.totalStaff * 100)}px`
+                                }}
+                              >
+                                <span className="text-xs text-white font-semibold mb-1">
+                                  {dept.gradeDistribution.corporate[grade]}
+                                </span>
+                              </div>
+                              <div className="text-xs mt-1">{grade}</div>
+                            </div>
+                          ))}
                         </div>
                       </div>
                     </div>
-                  );
-                })}
-              </div>
+
+                    <div className="mt-4 pt-4 border-t flex justify-around text-center">
+                      <div>
+                        <p className="text-2xl font-bold text-green-600">{dept.topPerformers}</p>
+                        <p className="text-xs text-gray-600">トップ層 ({dept.topPerformerRatio}%)</p>
+                      </div>
+                      <div>
+                        <p className="text-2xl font-bold text-blue-600">{dept.totalStaff - dept.topPerformers - dept.needSupport}</p>
+                        <p className="text-xs text-gray-600">標準層</p>
+                      </div>
+                      <div>
+                        <p className="text-2xl font-bold text-orange-600">{dept.needSupport}</p>
+                        <p className="text-xs text-gray-600">要支援層 ({dept.needSupportRatio}%)</p>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
             </div>
           )}
-
-          <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-            <h4 className="font-medium mb-2">分析サマリー</h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
-              <div>
-                <p className="text-gray-600">最高パフォーマンス部門</p>
-                <p className="font-bold text-green-600">
-                  {sortedDepartments[0]?.name} ({Math.round(currentMetric.getValue(sortedDepartments[0]))})
-                </p>
-              </div>
-              <div>
-                <p className="text-gray-600">総職員数</p>
-                <p className="font-bold">{mockDepartmentData.reduce((sum, d) => sum + d.memberCount, 0)}名</p>
-              </div>
-              <div>
-                <p className="text-gray-600">平均満足度</p>
-                <p className="font-bold">{Math.round(mockDepartmentData.reduce((sum, d) => sum + d.satisfaction, 0) / mockDepartmentData.length)}</p>
-              </div>
-              <div>
-                <p className="text-gray-600">全体離職率</p>
-                <p className="font-bold">{Math.round(mockDepartmentData.reduce((sum, d) => sum + d.turnoverRate, 0) / mockDepartmentData.length)}%</p>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
-
-      <ScrollToTopButton />
-      <DashboardButton />
-    </div>
-  );
+      </ReportLayout>
+    </>
+  )
 }
