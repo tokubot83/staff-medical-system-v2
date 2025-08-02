@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
-import CategoryBackButton from '@/components/reports/CategoryBackButton';
+import { CategoryTopButton } from '@/components/CategoryTopButton';
+import { BackToReportsButton } from '@/components/BackToReportsButton';
 
 interface StaffData {
   id: string;
@@ -139,7 +140,10 @@ export default function ClusterAnalysisPage() {
       <CommonHeader title="クラスター分析" />
       
       <div className="max-w-7xl mx-auto p-6">
-        <CategoryBackButton />
+        <div className="mb-6 flex gap-4">
+          <BackToReportsButton />
+          <CategoryTopButton categoryPath="/reports/performance-evaluation" categoryName="人事評価分析" />
+        </div>
         
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
           <div className="flex justify-between items-center mb-6">
