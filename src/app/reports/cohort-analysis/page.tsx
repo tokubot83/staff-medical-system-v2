@@ -203,6 +203,32 @@ export default function CohortAnalysisCategoryPage() {
             />
           ))}
         </div>
+
+        {/* アセスメントパターン */}
+        <div className="mt-12 bg-blue-50 border border-blue-200 rounded-lg p-6">
+          <h3 className="text-xl font-bold text-blue-900 mb-6">
+            世代別追跡アセスメント
+          </h3>
+          
+          <div className="bg-white rounded-lg p-4 border border-blue-100">
+            <div className="text-blue-800 mb-3">
+              <span className="font-medium">推奨フロー：</span>
+              入社年次コホート → 部署別コホート → 世代分析 → 施策効果測定
+            </div>
+            <ul className="list-disc list-inside text-blue-700 space-y-1">
+              <li>入社時期による定着パターンの違い</li>
+              <li>部署間での成功要因の比較</li>
+              <li>ジェネレーション特性の理解</li>
+              <li>過去施策の長期的効果検証</li>
+            </ul>
+          </div>
+
+          <div className="mt-4 text-blue-800 text-sm">
+            <p className="font-medium">
+              コホート分析により、特定グループの長期的な変化を追跡し、組織の人材戦略に活かすことができます。
+            </p>
+          </div>
+        </div>
       </div>
       
       <ScrollToTopButton />

@@ -98,6 +98,32 @@ export default function FlowAnalysisCategoryPage() {
             />
           ))}
         </div>
+
+        {/* アセスメントパターン */}
+        <div className="mt-12 bg-blue-50 border border-blue-200 rounded-lg p-6">
+          <h3 className="text-xl font-bold text-blue-900 mb-6">
+            人材流動性アセスメント
+          </h3>
+          
+          <div className="bg-white rounded-lg p-4 border border-blue-100">
+            <div className="text-blue-800 mb-3">
+              <span className="font-medium">推奨フロー：</span>
+              部署間フロー → キャリアパス分析 → モビリティマトリックス
+            </div>
+            <ul className="list-disc list-inside text-blue-700 space-y-1">
+              <li>組織内の人材移動パターン把握</li>
+              <li>キャリア成長経路の可視化</li>
+              <li>異動による能力開発効果</li>
+              <li>適材適所の実現度評価</li>
+            </ul>
+          </div>
+
+          <div className="mt-4 text-blue-800 text-sm">
+            <p className="font-medium">
+              人材フローの分析により、組織の活性化と職員の成長機会の創出を実現できます。
+            </p>
+          </div>
+        </div>
       </div>
       
       <ScrollToTopButton />

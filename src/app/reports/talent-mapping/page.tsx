@@ -98,6 +98,32 @@ export default function TalentMappingCategoryPage() {
             />
           ))}
         </div>
+
+        {/* アセスメントパターン */}
+        <div className="mt-12 bg-blue-50 border border-blue-200 rounded-lg p-6">
+          <h3 className="text-xl font-bold text-blue-900 mb-6">
+            戦略的人材配置アセスメント
+          </h3>
+          
+          <div className="bg-white rounded-lg p-4 border border-blue-100">
+            <div className="text-blue-800 mb-3">
+              <span className="font-medium">推奨フロー：</span>
+              9ボックスグリッド → スキルマトリックス → 後継者計画
+            </div>
+            <ul className="list-disc list-inside text-blue-700 space-y-1">
+              <li>高ポテンシャル人材の特定と戦略的配置</li>
+              <li>組織全体のスキル現状把握とギャップ分析</li>
+              <li>キーポジションの後継者育成計画</li>
+              <li>人材ポートフォリオの最適化</li>
+            </ul>
+          </div>
+
+          <div className="mt-4 text-blue-800 text-sm">
+            <p className="font-medium">
+              タレントマッピングにより、組織の人材資産を可視化し、戦略的な人材活用と育成を実現できます。
+            </p>
+          </div>
+        </div>
       </div>
       
       <ScrollToTopButton />

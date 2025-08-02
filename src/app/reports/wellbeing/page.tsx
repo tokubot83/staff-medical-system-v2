@@ -124,6 +124,32 @@ export default function WellbeingCategoryPage() {
             />
           ))}
         </div>
+
+        {/* アセスメントパターン */}
+        <div className="mt-12 bg-blue-50 border border-blue-200 rounded-lg p-6">
+          <h3 className="text-xl font-bold text-blue-900 mb-6">
+            総合的ウェルビーイング評価アセスメント
+          </h3>
+          
+          <div className="bg-white rounded-lg p-4 border border-blue-100">
+            <div className="text-blue-800 mb-3">
+              <span className="font-medium">推奨フロー：</span>
+              ウェルビーイング総合指標 → ストレス要因分析 → エンゲージメント調査 → 介入プログラム効果測定
+            </div>
+            <ul className="list-disc list-inside text-blue-700 space-y-1">
+              <li>多面的な健康・幸福度の現状把握</li>
+              <li>ストレス要因の特定と早期介入</li>
+              <li>組織へのコミットメント測定</li>
+              <li>ウェルビーイング向上施策の効果検証</li>
+            </ul>
+          </div>
+
+          <div className="mt-4 text-blue-800 text-sm">
+            <p className="font-medium">
+              包括的なウェルビーイング分析により、職員の心身の健康と組織パフォーマンスの向上を実現できます。
+            </p>
+          </div>
+        </div>
       </div>
       
       <ScrollToTopButton />

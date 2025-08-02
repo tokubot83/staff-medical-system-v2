@@ -125,6 +125,32 @@ export default function SimulationCategoryPage() {
             />
           ))}
         </div>
+
+        {/* アセスメントパターン */}
+        <div className="mt-12 bg-blue-50 border border-blue-200 rounded-lg p-6">
+          <h3 className="text-xl font-bold text-blue-900 mb-6">
+            戦略的意思決定支援アセスメント
+          </h3>
+          
+          <div className="bg-white rounded-lg p-4 border border-blue-100">
+            <div className="text-blue-800 mb-3">
+              <span className="font-medium">推奨フロー：</span>
+              採用計画シミュレーション → リテンション施策効果予測 → 組織改編シミュレーション → シナリオプランニング
+            </div>
+            <ul className="list-disc list-inside text-blue-700 space-y-1">
+              <li>将来の人員需要予測と最適採用計画</li>
+              <li>施策効果の事前評価とROI算出</li>
+              <li>組織変更による影響の事前分析</li>
+              <li>複数シナリオでのリスク評価</li>
+            </ul>
+          </div>
+
+          <div className="mt-4 text-blue-800 text-sm">
+            <p className="font-medium">
+              What-ifシミュレーションにより、データに基づく戦略的意思決定とリスク最小化を実現できます。
+            </p>
+          </div>
+        </div>
       </div>
       
       <ScrollToTopButton />

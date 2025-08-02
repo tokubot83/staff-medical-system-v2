@@ -143,17 +143,30 @@ function StrategicAnalysisPageContent() {
           })}
         </div>
 
-        {/* 使い方ガイド */}
-        <div className="mt-12 bg-purple-50 border border-purple-200 rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-purple-900 mb-2">
-            戦略分析の活用方法
+        {/* アセスメントパターン */}
+        <div className="mt-12 bg-blue-50 border border-blue-200 rounded-lg p-6">
+          <h3 className="text-xl font-bold text-blue-900 mb-6">
+            戦略的人材分析アセスメント
           </h3>
-          <ul className="list-disc list-inside text-purple-800 space-y-1">
-            <li>中長期的な人材戦略の立案に活用できます</li>
-            <li>組織の競争力強化に必要な施策を特定できます</li>
-            <li>人材投資の優先順位付けが可能になります</li>
-            <li>経営戦略と人材戦略の整合性を確保できます</li>
-          </ul>
+          
+          <div className="bg-white rounded-lg p-4 border border-blue-100">
+            <div className="text-blue-800 mb-3">
+              <span className="font-medium">推奨フロー：</span>
+              人事管理戦略 → スキル・資格管理 → 採用効果分析 → 組織構造最適化
+            </div>
+            <ul className="list-disc list-inside text-blue-700 space-y-1">
+              <li>中長期的な人材戦略の立案とKPI設定</li>
+              <li>組織の競争力強化に必要な施策特定</li>
+              <li>人材投資の優先順位付けとROI評価</li>
+              <li>経営戦略と人材戦略の整合性確保</li>
+            </ul>
+          </div>
+
+          <div className="mt-4 text-blue-800 text-sm">
+            <p className="font-medium">
+              戦略分析により、データに基づく人材マネジメントと持続的な組織成長を実現できます。
+            </p>
+          </div>
         </div>
       </div>
       <ScrollToTopButton />

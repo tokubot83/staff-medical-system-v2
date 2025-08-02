@@ -190,17 +190,30 @@ function BasicMetricsPageContent() {
           })}
         </div>
 
-        {/* 使い方ガイド */}
+        {/* アセスメントパターン */}
         <div className="mt-12 bg-blue-50 border border-blue-200 rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-blue-900 mb-2">
-            基本指標の活用方法
+          <h3 className="text-xl font-bold text-blue-900 mb-6">
+            基本指標モニタリングアセスメント
           </h3>
-          <ul className="list-disc list-inside text-blue-800 space-y-1">
-            <li>定期的にモニタリングすることで、組織の健全性を把握できます</li>
-            <li>前年同期比や他施設との比較により、課題を早期発見できます</li>
-            <li>採用計画や人員配置の最適化に活用できます</li>
-            <li>経営層への報告資料として活用できます</li>
-          </ul>
+          
+          <div className="bg-white rounded-lg p-4 border border-blue-100">
+            <div className="text-blue-800 mb-3">
+              <span className="font-medium">推奨フロー：</span>
+              リアルタイムダッシュボード → 基本統計 → エンゲージメント指標 → 統合的指標アセスメント
+            </div>
+            <ul className="list-disc list-inside text-blue-700 space-y-1">
+              <li>組織の現状を数値で定期的にモニタリング</li>
+              <li>前年同期比や他施設との比較分析</li>
+              <li>経営判断の基礎となるデータ提供</li>
+              <li>採用計画や人員配置の最適化支援</li>
+            </ul>
+          </div>
+
+          <div className="mt-4 text-blue-800 text-sm">
+            <p className="font-medium">
+              基本指標の継続的なモニタリングにより、組織の健全性を把握し、戦略的な経営判断を支援できます。
+            </p>
+          </div>
         </div>
       </div>
       <ScrollToTopButton />
