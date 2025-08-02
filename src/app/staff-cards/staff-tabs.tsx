@@ -1259,25 +1259,26 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                   </div>
                   <div className={styles.timelineBody}>
                     <p className={styles.timelinePurpose}><strong>目的:</strong> {interview.description}</p>
-                    {interview.feedback && (
+                    {interview.outcomeSummary && (
                       <div className={styles.timelineFeedback}>
-                        <p><strong>主要ポイント:</strong></p>
-                        <ul>
-                          {interview.feedback.keyPoints?.slice(0, 2).map((point, idx) => (
-                            <li key={idx}>{point}</li>
-                          ))}
-                        </ul>
-                        {interview.feedback.overallSatisfaction && (
-                          <div className={styles.satisfactionBadge}>
-                            満足度: {interview.feedback.overallSatisfaction}/5
-                          </div>
+                        <p><strong>面談結果:</strong></p>
+                        <p>{interview.outcomeSummary}</p>
+                        {interview.outcomeActionItems && interview.outcomeActionItems.length > 0 && (
+                          <>
+                            <p><strong>アクションアイテム:</strong></p>
+                            <ul>
+                              {interview.outcomeActionItems.slice(0, 2).map((item, idx) => (
+                                <li key={idx}>{item}</li>
+                              ))}
+                            </ul>
+                          </>
                         )}
                       </div>
                     )}
-                    {interview.followUpRequired && (
+                    {interview.outcomeFollowupRequired && (
                       <div className={styles.followUpNotice}>
                         <span className={styles.followUpIcon}>📌</span>
-                        フォローアップ予定: {interview.followUpDate}
+                        フォローアップ予定: {interview.outcomeFollowupDate}
                       </div>
                     )}
                   </div>
