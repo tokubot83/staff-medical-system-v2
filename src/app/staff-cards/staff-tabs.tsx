@@ -16,6 +16,7 @@ import { InterviewRecords } from '@/components/interview/InterviewRecords'
 import { DashboardTabContent } from '@/components/interview/DashboardTabContent'
 import { AnalyticsTabContent } from '@/components/interview/AnalyticsTabContent'
 import { getCareerInfoByStaffId, saveCareerInfo } from '@/utils/careerInfoUtils'
+import { EvaluationRecords } from '@/components/evaluation/EvaluationRecords'
 
 // 総合分析タブコンポーネント
 export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
@@ -577,44 +578,51 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
       {activeEvaluationTab === 'records' && (
         <div>
           {/* 評価記録タブ - 過去の評価記録一覧 */}
-          <div className={styles.evaluationRecords}>
-            <h3>評価記録一覧</h3>
-            <div className={styles.recordsList}>
-              <div className={styles.recordItem}>
-                <div className={styles.recordDate}>2025年1月期</div>
-                <div className={styles.recordContent}>
-                  <div className={styles.recordScores}>
-                    <span className={styles.recordScore}>施設評価: 90点</span>
-                    <span className={styles.recordScore}>法人評価: 85点</span>
-                    <span className={styles.recordOverall}>総合: A+</span>
-                  </div>
-                  <div className={styles.recordSummary}>優れた業務遂行力とチーム協調性を発揮。次期主任候補として期待。</div>
-                </div>
-              </div>
-              <div className={styles.recordItem}>
-                <div className={styles.recordDate}>2024年7月期</div>
-                <div className={styles.recordContent}>
-                  <div className={styles.recordScores}>
-                    <span className={styles.recordScore}>施設評価: 86点</span>
-                    <span className={styles.recordScore}>法人評価: 82点</span>
-                    <span className={styles.recordOverall}>総合: A</span>
-                  </div>
-                  <div className={styles.recordSummary}>着実な成長を示し、特にリーダーシップ能力が向上。</div>
-                </div>
-              </div>
-              <div className={styles.recordItem}>
-                <div className={styles.recordDate}>2024年1月期</div>
-                <div className={styles.recordContent}>
-                  <div className={styles.recordScores}>
-                    <span className={styles.recordScore}>施設評価: 84点</span>
-                    <span className={styles.recordScore}>法人評価: 80点</span>
-                    <span className={styles.recordOverall}>総合: A</span>
-                  </div>
-                  <div className={styles.recordSummary}>専門性の向上が顕著。後輩指導にも積極的に取り組む。</div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <EvaluationRecords 
+            records={[
+              {
+                id: '1',
+                date: '2025-01-15',
+                period: '2025年1月期',
+                facilityScore: 90,
+                corporateScore: 85,
+                overallGrade: 'A+',
+                evaluator: '田中部長',
+                summary: '優れた業務遂行力とチーム協調性を発揮。次期主任候補として期待。',
+                strengths: ['コミュニケーション力', 'リーダーシップ', '問題解決力', '専門性'],
+                improvements: ['戦略的思考', '部門間調整', '人材育成'],
+                nextGoals: ['プロジェクトマネジメント能力の向上', '部下指導力の強化']
+              },
+              {
+                id: '2',
+                date: '2024-07-15',
+                period: '2024年7月期',
+                facilityScore: 86,
+                corporateScore: 82,
+                overallGrade: 'A',
+                evaluator: '田中部長',
+                summary: '着実な成長を示し、特にリーダーシップ能力が向上。',
+                strengths: ['業務知識', 'チームワーク', '継続的改善'],
+                improvements: ['視野の拡大', '他部門理解'],
+                nextGoals: ['管理職スキルの習得']
+              },
+              {
+                id: '3',
+                date: '2024-01-15',
+                period: '2024年1月期',
+                facilityScore: 84,
+                corporateScore: 80,
+                overallGrade: 'A',
+                evaluator: '田中部長',
+                summary: '専門性の向上が顕著。後輩指導にも積極的に取り組む。',
+                strengths: ['専門技術', '指導力', '責任感'],
+                improvements: ['プレゼンテーション力', '交渉力'],
+                nextGoals: ['チームリーダーへの挑戦']
+              }
+            ]}
+            staffId={selectedStaff.id}
+            onNewEvaluation={handleEvaluationInput}
+          />
         </div>
       )}
 
