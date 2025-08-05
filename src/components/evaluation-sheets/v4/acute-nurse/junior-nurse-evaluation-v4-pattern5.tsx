@@ -46,7 +46,7 @@ export default function JuniorNurseEvaluationV4Pattern5() {
   };
 
   // 貢献度評価の計算（各25点満点）
-  const calculateContributionScore = (percentile) => {
+  const calculateContributionScore = (percentile: number) => {
     if (percentile <= 10) return 25;
     if (percentile <= 20) return 22.5;
     if (percentile <= 30) return 20;
