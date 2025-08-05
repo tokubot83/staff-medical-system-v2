@@ -10,6 +10,9 @@ import { TwoAxisEvaluationSummaryDetailed } from '@/components/evaluation/TwoAxi
 import { TwoAxisEvaluationMatrixDisplay } from '@/components/evaluation/TwoAxisEvaluationMatrix'
 import { getTwoAxisEvaluationByStaffId } from '@/data/mockTwoAxisEvaluations'
 import { twoAxisColors, getTwoAxisChartOptions, calculateOverallGrade } from '@/utils/twoAxisChartUtils'
+import { CareerInfoSection } from '@/components/interview/CareerInfoSection'
+import { InterviewRecords } from '@/components/interview/InterviewRecords'
+import { getCareerInfoByStaffId, saveCareerInfo } from '@/utils/careerInfoUtils'
 
 // 総合分析タブコンポーネント
 export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
@@ -899,12 +902,16 @@ export function RecruitmentTab({ selectedStaff }: { selectedStaff: any }) {
 // 面談・指導タブコンポーネント
 export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
   const [staffInterviews, setStaffInterviews] = useState<Interview[]>([])
+  const [staffCareerInfo, setStaffCareerInfo] = useState(null)
   const router = useRouter()
   
   useEffect(() => {
     if (selectedStaff?.id) {
       const interviews = getInterviewsByStaffId(selectedStaff.id)
       setStaffInterviews(interviews)
+      // 職歴情報を取得（実際の実装では適切なAPIから取得）
+      const careerInfo = getCareerInfoByStaffId(selectedStaff.id)
+      setStaffCareerInfo(careerInfo)
     }
   }, [selectedStaff])
 
@@ -914,6 +921,17 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
         <p>職員を選択してください</p>
       </div>
     )
+  }
+
+  const handleCareerInfoSave = (data: any) => {
+    // 職歴情報を保存（実際の実装ではAPIを呼び出す）
+    saveCareerInfo(selectedStaff.id, data)
+    setStaffCareerInfo(data)
+  }
+
+  const handleNewInterview = () => {
+    // 新規面談作成画面へ遷移（実装は要調整）
+    router.push(`/interviews/new?staffId=${selectedStaff.id}`)
   }
 
   // 面談実施状況（2軸評価対応）
@@ -985,17 +1003,35 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
     }]
   }
 
+  // 初回面談判定
+  const isFirstInterview = staffInterviews.length === 0
+
   return (
     <div className={styles.tabContentSection}>
       <div className={styles.sectionHeader}>
         <h2>💬 面談・指導記録</h2>
         <div className={styles.sectionActions}>
-          <button className={styles.actionButton}>面談予約</button>
+          <button className={styles.actionButton} onClick={handleNewInterview}>面談予約</button>
           <button className={styles.actionButtonSecondary}>記録作成</button>
         </div>
       </div>
 
-      <div className={styles.interviewSummaryEnhanced}>
+      {/* 職歴情報セクション（常に表示） */}
+      <CareerInfoSection 
+        data={staffCareerInfo}
+        editable={true}
+        isFirstTime={isFirstInterview}
+        onSave={handleCareerInfoSave}
+      />
+
+      {/* 面談記録セクション */}
+      <InterviewRecords 
+        records={staffInterviews}
+        careerInfo={staffCareerInfo}
+        onNewInterview={handleNewInterview}
+      />
+
+      <div className={styles.interviewSummaryEnhanced} style={{ marginTop: '20px' }}>
         <div className={styles.summaryMainCard}>
           <div className={styles.summaryCardHeader}>
             <span className={styles.summaryIcon}>📊</span>
