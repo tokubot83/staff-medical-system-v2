@@ -905,6 +905,7 @@ export function RecruitmentTab({ selectedStaff }: { selectedStaff: any }) {
 export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
   const [staffInterviews, setStaffInterviews] = useState<Interview[]>([])
   const [staffCareerInfo, setStaffCareerInfo] = useState<any>(null)
+  const [activeInterviewTab, setActiveInterviewTab] = useState('dashboard')
   const router = useRouter()
   
   // Interview/InterviewBooking を InterviewRecord に変換する関数
@@ -1050,8 +1051,6 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
     { id: 'analytics', label: '統計・分析', icon: '📈' }
   ]
 
-  const [activeInterviewTab, setActiveInterviewTab] = useState('dashboard')
-
   // 面談管理ページへの遷移
   const handleInterviewManagement = () => {
     router.push(`/interviews?staffId=${selectedStaff.id}&tab=${activeInterviewTab}`)
@@ -1106,7 +1105,7 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
         <div>
           {/* 定期面談の記録 */}
           <InterviewRecords 
-            records={staffInterviews.filter(i => i.type === 'regular')}
+            records={staffInterviews.map(mapInterviewToRecord).filter(i => i.type === 'regular')}
             careerInfo={staffCareerInfo}
             onNewInterview={handleNewInterview}
           />
@@ -1117,7 +1116,7 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
         <div>
           {/* キャリア面談の記録 */}
           <InterviewRecords 
-            records={staffInterviews.filter(i => i.type === 'career')}
+            records={staffInterviews.map(mapInterviewToRecord).filter(i => i.type === 'career')}
             careerInfo={staffCareerInfo}
             onNewInterview={handleNewInterview}
           />
@@ -1128,7 +1127,7 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
         <div>
           {/* ストレスチェック面談の記録 */}
           <InterviewRecords 
-            records={staffInterviews.filter(i => i.type === 'stress')}
+            records={staffInterviews.map(mapInterviewToRecord).filter(i => i.type === 'stress')}
             careerInfo={staffCareerInfo}
             onNewInterview={handleNewInterview}
           />
@@ -1139,7 +1138,7 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
         <div>
           {/* 評価フィードバックの記録 */}
           <InterviewRecords 
-            records={staffInterviews.filter(i => i.type === 'evaluation')}
+            records={staffInterviews.map(mapInterviewToRecord).filter(i => i.type === 'evaluation')}
             careerInfo={staffCareerInfo}
             onNewInterview={handleNewInterview}
           />
@@ -1150,7 +1149,7 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
         <div>
           {/* その他の面談記録 */}
           <InterviewRecords 
-            records={staffInterviews.filter(i => i.type === 'other')}
+            records={staffInterviews.map(mapInterviewToRecord).filter(i => i.type === 'other')}
             careerInfo={staffCareerInfo}
             onNewInterview={handleNewInterview}
           />
@@ -1168,304 +1167,6 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
           />
         </div>
       )}
-    </div>
-  )
-}
-
-// 能力開発タブコンポーネント
-              <div className={styles.statusHeader}>
-                <span className={styles.statusIcon}>🎯</span>
-                <h4>現在の関心事・重点課題</h4>
-              </div>
-              <div className={styles.statusItemsGrid}>
-                <div className={styles.statusItem}>
-                  <div className={styles.itemHeader}>
-                    <span className={styles.priorityBadge} style={{ backgroundColor: '#ef4444' }}>高</span>
-                    <span className={styles.itemLabel}>キャリアパス不安</span>
-                  </div>
-                  <div className={styles.itemBarContainer}>
-                    <div className={styles.itemBar} style={{ width: '90%', backgroundColor: '#ef4444' }}></div>
-                    <span className={styles.itemPercentage}>90%</span>
-                  </div>
-                  <p className={styles.itemDescription}>昇進への道筋が不明確で将来像が描けない</p>
-                </div>
-                <div className={styles.statusItem}>
-                  <div className={styles.itemHeader}>
-                    <span className={styles.priorityBadge} style={{ backgroundColor: '#f59e0b' }}>中</span>
-                    <span className={styles.itemLabel}>業務負荷調整</span>
-                  </div>
-                  <div className={styles.itemBarContainer}>
-                    <div className={styles.itemBar} style={{ width: '70%', backgroundColor: '#f59e0b' }}></div>
-                    <span className={styles.itemPercentage}>70%</span>
-                  </div>
-                  <p className={styles.itemDescription}>残業時間の増加と優先順位付けに苦慮</p>
-                </div>
-                <div className={styles.statusItem}>
-                  <div className={styles.itemHeader}>
-                    <span className={styles.priorityBadge} style={{ backgroundColor: '#3b82f6' }}>中</span>
-                    <span className={styles.itemLabel}>スキル向上意欲</span>
-                  </div>
-                  <div className={styles.itemBarContainer}>
-                    <div className={styles.itemBar} style={{ width: '60%', backgroundColor: '#3b82f6' }}></div>
-                    <span className={styles.itemPercentage}>60%</span>
-                  </div>
-                  <p className={styles.itemDescription}>管理職に必要なスキルを身につけたい</p>
-                </div>
-                <div className={styles.statusItem}>
-                  <div className={styles.itemHeader}>
-                    <span className={styles.priorityBadge} style={{ backgroundColor: '#10b981' }}>低</span>
-                    <span className={styles.itemLabel}>人間関係改善</span>
-                  </div>
-                  <div className={styles.itemBarContainer}>
-                    <div className={styles.itemBar} style={{ width: '40%', backgroundColor: '#10b981' }}></div>
-                    <span className={styles.itemPercentage}>40%</span>
-                  </div>
-                  <p className={styles.itemDescription}>チーム内コミュニケーションの活性化希望</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className={styles.recommendationPanel}>
-              <h4>次回面談の推奨アプローチ</h4>
-              <div className={styles.approachList}>
-                <div className={styles.approachItem}>
-                  <span className={styles.approachIcon}>1️⃣</span>
-                  <div className={styles.approachContent}>
-                    <strong>キャリアビジョンの明確化</strong>
-                    <p>3-5年後の具体的な目標設定を支援し、必要なスキルと経験を整理</p>
-                  </div>
-                </div>
-                <div className={styles.approachItem}>
-                  <span className={styles.approachIcon}>2️⃣</span>
-                  <div className={styles.approachContent}>
-                    <strong>業務優先順位の見直し</strong>
-                    <p>現在の業務を棚卸しし、効率的なタスク管理方法を一緒に検討</p>
-                  </div>
-                </div>
-                <div className={styles.approachItem}>
-                  <span className={styles.approachIcon}>3️⃣</span>
-                  <div className={styles.approachContent}>
-                    <strong>成長機会の提供</strong>
-                    <p>管理職基礎研修への参加と、小規模プロジェクトのリーダー経験を提案</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div className={styles.summaryMetricsRow}>
-            <div className={styles.metricsGrid}>
-              <div className={styles.metricCardEnhanced}>
-                <div className={styles.metricHeader}>
-                  <span className={styles.metricIcon}>💬</span>
-                  <span className={styles.metricTrend}>+2</span>
-                </div>
-                <div className={styles.metricValue}>12回</div>
-                <div className={styles.metricLabel}>年間面談回数</div>
-                <div className={styles.metricProgress}>
-                  <div className={styles.progressBar}>
-                    <div className={styles.progressFill} style={{ width: '100%' }}></div>
-                  </div>
-                  <span className={styles.progressText}>目標達成</span>
-                </div>
-              </div>
-              <div className={styles.metricCardEnhanced}>
-                <div className={styles.metricHeader}>
-                  <span className={styles.metricIcon}>⭐</span>
-                  <span className={styles.metricTrend}>+0.3</span>
-                </div>
-                <div className={styles.metricValue}>4.5/5.0</div>
-                <div className={styles.metricLabel}>面談満足度</div>
-                <div className={styles.ratingStars}>
-                  <span className={styles.starFilled}>★★★★</span>
-                  <span className={styles.starHalf}>★</span>
-                </div>
-              </div>
-            </div>
-            
-            <div className={styles.summarySubCards}>
-              <div className={styles.nextSessionCard}>
-                <div className={styles.cardIconWrapper}>
-                  <span className={styles.cardIcon}>📅</span>
-                </div>
-                <div className={styles.cardContent}>
-                  <div className={styles.cardTitle}>次回面談</div>
-                  <div className={styles.cardMainInfo}>2週間後</div>
-                  <div className={styles.cardSubInfo}>2025年2月4日(火) 14:00</div>
-                  <button className={styles.cardAction}>日程調整</button>
-                </div>
-              </div>
-              
-              <div className={styles.recentTopicsCard}>
-                <div className={styles.cardIconWrapper}>
-                  <span className={styles.cardIcon}>🔥</span>
-                </div>
-                <div className={styles.cardContent}>
-                  <div className={styles.cardTitle}>直近の主要テーマ</div>
-                  <div className={styles.topicsList}>
-                    <span className={styles.topicTag}>キャリア相談</span>
-                    <span className={styles.topicTag}>スキル向上</span>
-                    <span className={styles.topicTag}>目標設定</span>
-                  </div>
-                  <div className={styles.cardSubInfo}>継続的な成長支援中</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className={styles.chartGrid}>
-        <div className={styles.chartContainer}>
-          <h4>面談実施状況</h4>
-          <div className={`${styles.alert} ${styles.alertWarning}`}>
-            <span>⚠️</span>
-            <span>定期面談は予定通り実施。フォロー面談の頻度を増やすことで、さらなる成長支援が可能です。</span>
-          </div>
-          <div className={styles.chartWrapper}>
-            <Bar data={interviewFrequencyData} options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                x: {
-                  stacked: true
-                },
-                y: {
-                  stacked: true
-                }
-              }
-            }} />
-          </div>
-        </div>
-        <div className={styles.chartContainer}>
-          <h4>面談満足度推移</h4>
-          <div className={`${styles.alert} ${styles.alertSuccess}`}>
-            <span>✨</span>
-            <span>満足度が継続的に向上（3.5→4.5）。職員との信頼関係が着実に構築されています。</span>
-          </div>
-          <div className={styles.chartWrapper}>
-            <Line data={satisfactionTrendData} options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                y: {
-                  min: 1,
-                  max: 5
-                }
-              }
-            }} />
-          </div>
-        </div>
-      </div>
-
-      <div className={styles.chartGrid}>
-        <div className={styles.chartContainer}>
-          <h4>話題分析</h4>
-          <div className={`${styles.alert} ${styles.alertInfo}`}>
-            <span>💡</span>
-            <span>キャリア相談が35%で最多。今後の育成計画では業務改善やスキル向上の話題を増やすことを推奨します。</span>
-          </div>
-          <div className={styles.chartWrapper}>
-            <Doughnut data={topicAnalysisData} options={getTwoAxisChartOptions('doughnut')} />
-          </div>
-        </div>
-        <div className={styles.chartContainer}>
-          <h4>指導効果測定</h4>
-          <div className={`${styles.alert} ${styles.alertSuccess}`}>
-            <span>📈</span>
-            <span>全項目で大幅改善。特にモチベーション向上が顕著（+25ポイント）。継続的な指導の成果が表れています。</span>
-          </div>
-          <div className={styles.chartWrapper}>
-            <Radar data={coachingEffectData} options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                r: {
-                  min: 0,
-                  max: 100,
-                  ticks: {
-                    stepSize: 20
-                  }
-                }
-              }
-            }} />
-          </div>
-        </div>
-      </div>
-
-      <div className={styles.interviewHistory}>
-        <div className={styles.historySectionHeader}>
-          <h3>面談履歴</h3>
-          <button 
-            className={styles.viewAllButton}
-            onClick={() => router.push(`/interviews?staffId=${selectedStaff.id}`)}
-          >
-            すべて表示
-          </button>
-        </div>
-        
-        {staffInterviews.length === 0 ? (
-          <div className={styles.noInterviewsMessage}>
-            <p>面談記録がありません</p>
-          </div>
-        ) : (
-          <div className={styles.interviewTimeline}>
-            {staffInterviews.slice(0, 3).map((interview) => (
-              <div key={interview.id} className={styles.timelineItem}>
-                <div className={styles.timelineMarker}>
-                  <div className={`${styles.markerDot} ${interview.status === 'completed' ? styles.completed : styles.scheduled}`}></div>
-                  <div className={styles.markerLine}></div>
-                </div>
-                <div className={styles.timelineContent}>
-                  <div className={styles.timelineHeader}>
-                    <span className={styles.timelineDate}>{new Date(interview.bookingDate).toLocaleDateString('ja-JP')}</span>
-                    <span className={`${styles.timelineType} ${styles[interview.interviewType.replace(/[^a-zA-Z]/g, '')]}`}>
-                      {interview.interviewType}
-                    </span>
-                    <span className={`${styles.timelineStatus} ${styles[interview.status]}`}>
-                      {interview.status}
-                    </span>
-                  </div>
-                  <div className={styles.timelineBody}>
-                    <p className={styles.timelinePurpose}><strong>目的:</strong> {interview.description}</p>
-                    {interview.outcomeSummary && (
-                      <div className={styles.timelineFeedback}>
-                        <p><strong>面談結果:</strong></p>
-                        <p>{interview.outcomeSummary}</p>
-                        {interview.outcomeActionItems && interview.outcomeActionItems.length > 0 && (
-                          <>
-                            <p><strong>アクションアイテム:</strong></p>
-                            <ul>
-                              {interview.outcomeActionItems.slice(0, 2).map((item, idx) => (
-                                <li key={idx}>{item}</li>
-                              ))}
-                            </ul>
-                          </>
-                        )}
-                      </div>
-                    )}
-                    {interview.outcomeFollowupRequired && (
-                      <div className={styles.followUpNotice}>
-                        <span className={styles.followUpIcon}>📌</span>
-                        フォローアップ予定: {interview.outcomeFollowupDate}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-        
-        <div className={styles.interviewActions}>
-          <button 
-            className={styles.scheduleButton}
-            onClick={() => router.push(`/interviews?action=schedule&staffId=${selectedStaff.id}`)}
-          >
-            面談を予約
-          </button>
-        </div>
-      </div>
     </div>
   )
 }
