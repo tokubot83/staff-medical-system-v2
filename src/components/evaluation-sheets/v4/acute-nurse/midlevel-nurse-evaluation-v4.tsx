@@ -231,7 +231,7 @@ export default function MidlevelNurseEvaluationV4() {
               <div className="space-y-6">
                 <div>
                   <h4 className="font-semibold mb-3">1. 高度看護技術の実践（12点）</h4>
-                  <RadioGroup onValueChange={(value) => handleScoreChange('clinicalSkills', value)}>
+                  <RadioGroup onValueChange={(value) => handleScoreChange('clinicalSkills', value as GradeValue)}>
                     <div className="space-y-2">
                       <div className="flex items-start space-x-2">
                         <RadioGroupItem value="S" id="clinical-s" />
@@ -269,7 +269,7 @@ export default function MidlevelNurseEvaluationV4() {
 
                 <div>
                   <h4 className="font-semibold mb-3">2. 専門知識の深化と活用（10点）</h4>
-                  <RadioGroup onValueChange={(value) => handleScoreChange('specialtyKnowledge', value)}>
+                  <RadioGroup onValueChange={(value) => handleScoreChange('specialtyKnowledge', value as GradeValue)}>
                     <div className="space-y-2">
                       <div className="flex items-start space-x-2">
                         <RadioGroupItem value="S" id="knowledge-s" />
@@ -307,7 +307,7 @@ export default function MidlevelNurseEvaluationV4() {
 
                 <div>
                   <h4 className="font-semibold mb-3">3. 患者・家族への高度なケア実践（8点）</h4>
-                  <RadioGroup onValueChange={(value) => handleScoreChange('patientCare', value)}>
+                  <RadioGroup onValueChange={(value) => handleScoreChange('patientCare', value as GradeValue)}>
                     <div className="space-y-2">
                       <div className="flex items-start space-x-2">
                         <RadioGroupItem value="S" id="care-s" />
@@ -357,7 +357,7 @@ export default function MidlevelNurseEvaluationV4() {
               <div className="space-y-6">
                 <div>
                   <h4 className="font-semibold mb-3">1. チームリーダーシップ（15点）</h4>
-                  <RadioGroup onValueChange={(value) => handleScoreChange('teamLeadership', value)}>
+                  <RadioGroup onValueChange={(value) => handleScoreChange('teamLeadership', value as GradeValue)}>
                     <div className="space-y-2">
                       <div className="flex items-start space-x-2">
                         <RadioGroupItem value="S" id="leadership-s" />
@@ -395,7 +395,7 @@ export default function MidlevelNurseEvaluationV4() {
 
                 <div>
                   <h4 className="font-semibold mb-3">2. 後輩指導・人材育成（10点）</h4>
-                  <RadioGroup onValueChange={(value) => handleScoreChange('mentoring', value)}>
+                  <RadioGroup onValueChange={(value) => handleScoreChange('mentoring', value as GradeValue)}>
                     <div className="space-y-2">
                       <div className="flex items-start space-x-2">
                         <RadioGroupItem value="S" id="mentor-s" />
@@ -433,7 +433,7 @@ export default function MidlevelNurseEvaluationV4() {
 
                 <div>
                   <h4 className="font-semibold mb-3">3. 病棟運営への貢献（10点）</h4>
-                  <RadioGroup onValueChange={(value) => handleScoreChange('operationalContribution', value)}>
+                  <RadioGroup onValueChange={(value) => handleScoreChange('operationalContribution', value as GradeValue)}>
                     <div className="space-y-2">
                       <div className="flex items-start space-x-2">
                         <RadioGroupItem value="S" id="operation-s" />
@@ -483,7 +483,7 @@ export default function MidlevelNurseEvaluationV4() {
               <div className="space-y-6">
                 <div>
                   <h4 className="font-semibold mb-3">1. 法人理念・価値観の実践（10点）</h4>
-                  <RadioGroup onValueChange={(value) => handleScoreChange('corporatePhilosophy', value)}>
+                  <RadioGroup onValueChange={(value) => handleScoreChange('corporatePhilosophy', value as GradeValue)}>
                     <div className="space-y-2">
                       <div className="flex items-start space-x-2">
                         <RadioGroupItem value="S" id="philosophy-s" />
@@ -521,7 +521,7 @@ export default function MidlevelNurseEvaluationV4() {
 
                 <div>
                   <h4 className="font-semibold mb-3">2. 他部署・他施設との連携（10点）</h4>
-                  <RadioGroup onValueChange={(value) => handleScoreChange('crossDepartment', value)}>
+                  <RadioGroup onValueChange={(value) => handleScoreChange('crossDepartment', value as GradeValue)}>
                     <div className="space-y-2">
                       <div className="flex items-start space-x-2">
                         <RadioGroupItem value="S" id="cross-s" />
@@ -559,7 +559,7 @@ export default function MidlevelNurseEvaluationV4() {
 
                 <div>
                   <h4 className="font-semibold mb-3">3. 法人全体の取り組みへの参加（10点）</h4>
-                  <RadioGroup onValueChange={(value) => handleScoreChange('corporateInitiatives', value)}>
+                  <RadioGroup onValueChange={(value) => handleScoreChange('corporateInitiatives', value as GradeValue)}>
                     <div className="space-y-2">
                       <div className="flex items-start space-x-2">
                         <RadioGroupItem value="S" id="initiatives-s" />
@@ -597,7 +597,7 @@ export default function MidlevelNurseEvaluationV4() {
 
                 <div>
                   <h4 className="font-semibold mb-3">4. イノベーション・改善提案（5点）</h4>
-                  <RadioGroup onValueChange={(value) => handleScoreChange('innovation', value)}>
+                  <RadioGroup onValueChange={(value) => handleScoreChange('innovation', value as GradeValue)}>
                     <div className="space-y-2">
                       <div className="flex items-start space-x-2">
                         <RadioGroupItem value="S" id="innovation-s" />

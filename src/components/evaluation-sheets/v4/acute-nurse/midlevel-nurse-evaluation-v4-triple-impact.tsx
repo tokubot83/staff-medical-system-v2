@@ -257,7 +257,7 @@ export default function MidlevelNurseEvaluationV4TripleImpact() {
               <div className="space-y-6">
                 <div className="border rounded-lg p-4">
                   <h4 className="font-semibold mb-3">1. 技術的成長（11点）</h4>
-                  <RadioGroup onValueChange={(value) => handleScoreChange('technicalGrowth', value)}>
+                  <RadioGroup onValueChange={(value) => handleScoreChange('technicalGrowth', value as GradeValue)}>
                     <div className="space-y-2">
                       <div className="flex items-start space-x-2">
                         <RadioGroupItem value="S" id="tech-growth-s" />
@@ -295,7 +295,7 @@ export default function MidlevelNurseEvaluationV4TripleImpact() {
 
                 <div className="border rounded-lg p-4">
                   <h4 className="font-semibold mb-3">2. 知識・視野の拡大（11点）</h4>
-                  <RadioGroup onValueChange={(value) => handleScoreChange('knowledgeExpansion', value)}>
+                  <RadioGroup onValueChange={(value) => handleScoreChange('knowledgeExpansion', value as GradeValue)}>
                     <div className="space-y-2">
                       <div className="flex items-start space-x-2">
                         <RadioGroupItem value="S" id="knowledge-s" />
@@ -333,7 +333,7 @@ export default function MidlevelNurseEvaluationV4TripleImpact() {
 
                 <div className="border rounded-lg p-4">
                   <h4 className="font-semibold mb-3">3. リーダーシップ開発（11点）</h4>
-                  <RadioGroup onValueChange={(value) => handleScoreChange('leadershipDevelopment', value)}>
+                  <RadioGroup onValueChange={(value) => handleScoreChange('leadershipDevelopment', value as GradeValue)}>
                     <div className="space-y-2">
                       <div className="flex items-start space-x-2">
                         <RadioGroupItem value="S" id="leadership-s" />
@@ -390,7 +390,7 @@ export default function MidlevelNurseEvaluationV4TripleImpact() {
                     <Badge variant="outline" className="mb-2">測定指標</Badge>
                     <p className="text-sm text-gray-600">NPS向上、感謝の声、クレーム減少率など</p>
                   </div>
-                  <RadioGroup onValueChange={(value) => handleScoreChange('patientSatisfaction', value)}>
+                  <RadioGroup onValueChange={(value) => handleScoreChange('patientSatisfaction', value as GradeValue)}>
                     <div className="space-y-2">
                       <div className="flex items-start space-x-2">
                         <RadioGroupItem value="S" id="patient-sat-s" />
@@ -432,7 +432,7 @@ export default function MidlevelNurseEvaluationV4TripleImpact() {
                     <Badge variant="outline" className="mb-2">測定指標</Badge>
                     <p className="text-sm text-gray-600">病棟KPI改善、離職率低下、チーム生産性向上など</p>
                   </div>
-                  <RadioGroup onValueChange={(value) => handleScoreChange('teamPerformance', value)}>
+                  <RadioGroup onValueChange={(value) => handleScoreChange('teamPerformance', value as GradeValue)}>
                     <div className="space-y-2">
                       <div className="flex items-start space-x-2">
                         <RadioGroupItem value="S" id="team-perf-s" />
@@ -474,7 +474,7 @@ export default function MidlevelNurseEvaluationV4TripleImpact() {
                     <Badge variant="outline" className="mb-2">測定指標</Badge>
                     <p className="text-sm text-gray-600">インシデント減少、業務時間短縮、コスト削減など</p>
                   </div>
-                  <RadioGroup onValueChange={(value) => handleScoreChange('operationalExcellence', value)}>
+                  <RadioGroup onValueChange={(value) => handleScoreChange('operationalExcellence', value as GradeValue)}>
                     <div className="space-y-2">
                       <div className="flex items-start space-x-2">
                         <RadioGroupItem value="S" id="operation-s" />
@@ -531,7 +531,7 @@ export default function MidlevelNurseEvaluationV4TripleImpact() {
                     <Badge variant="outline" className="mb-2">測定指標</Badge>
                     <p className="text-sm text-gray-600">在宅復帰率、健康教室参加者数、予防活動実績など</p>
                   </div>
-                  <RadioGroup onValueChange={(value) => handleScoreChange('communityHealth', value)}>
+                  <RadioGroup onValueChange={(value) => handleScoreChange('communityHealth', value as GradeValue)}>
                     <div className="space-y-2">
                       <div className="flex items-start space-x-2">
                         <RadioGroupItem value="S" id="community-s" />
@@ -573,7 +573,7 @@ export default function MidlevelNurseEvaluationV4TripleImpact() {
                     <Badge variant="outline" className="mb-2">測定指標</Badge>
                     <p className="text-sm text-gray-600">他施設連携数、地域ケア会議参加、連携パス運用など</p>
                   </div>
-                  <RadioGroup onValueChange={(value) => handleScoreChange('regionalCollaboration', value)}>
+                  <RadioGroup onValueChange={(value) => handleScoreChange('regionalCollaboration', value as GradeValue)}>
                     <div className="space-y-2">
                       <div className="flex items-start space-x-2">
                         <RadioGroupItem value="S" id="regional-s" />
@@ -615,7 +615,7 @@ export default function MidlevelNurseEvaluationV4TripleImpact() {
                     <Badge variant="outline" className="mb-2">測定指標</Badge>
                     <p className="text-sm text-gray-600">環境負荷削減、ダイバーシティ推進、社会的弱者支援など</p>
                   </div>
-                  <RadioGroup onValueChange={(value) => handleScoreChange('sdgsContribution', value)}>
+                  <RadioGroup onValueChange={(value) => handleScoreChange('sdgsContribution', value as GradeValue)}>
                     <div className="space-y-2">
                       <div className="flex items-start space-x-2">
                         <RadioGroupItem value="S" id="sdgs-s" />
