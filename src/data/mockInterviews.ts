@@ -1,6 +1,9 @@
 import { Interview, InterviewType, InterviewStatus } from '@/types/interview';
+import { tanakaMisakiInterviews } from './tanakaMisakiInterviews';
 
 export const mockInterviews: Interview[] = [
+  // 田中美咲さんの面談記録を追加
+  ...tanakaMisakiInterviews,
   {
     id: 'INT001',
     employeeId: 'S12345',
@@ -145,6 +148,10 @@ export function getUpcomingInterviews(days: number = 7): Interview[] {
 }
 
 export function getInterviewsByStaffId(staffId: string): Interview[] {
+  // 田中美咲さんの場合は専用データを使用
+  if (staffId === 'OH-NS-2021-001') {
+    return tanakaMisakiInterviews;
+  }
   return mockInterviews.filter(interview => interview.employeeId === staffId);
 }
 
