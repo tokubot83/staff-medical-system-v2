@@ -424,9 +424,9 @@ function InterviewSheetsTab(): React.ReactElement {
   const [selectedStaff, setSelectedStaff] = useState<any>(null)
   const [searchTerm, setSearchTerm] = useState('')
   
-  const filteredStaff = staffDatabase.filter(staff => 
-    staff.職員名.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    staff.職員ID.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredStaff = Object.values(staffDatabase).filter(staff => 
+    staff.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    staff.id.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
   return (
@@ -447,13 +447,13 @@ function InterviewSheetsTab(): React.ReactElement {
           <div className={styles.staffList}>
             {filteredStaff.slice(0, 10).map((staff) => (
               <div
-                key={staff.職員ID}
-                className={`${styles.staffItem} ${selectedStaff?.職員ID === staff.職員ID ? styles.selected : ''}`}
+                key={staff.id}
+                className={`${styles.staffItem} ${selectedStaff?.id === staff.id ? styles.selected : ''}`}
                 onClick={() => setSelectedStaff(staff)}
               >
                 <div className={styles.staffInfo}>
-                  <span className={styles.staffName}>{staff.職員名}</span>
-                  <span className={styles.staffId}>ID: {staff.職員ID}</span>
+                  <span className={styles.staffName}>{staff.name}</span>
+                  <span className={styles.staffId}>ID: {staff.id}</span>
                 </div>
                 <span className={styles.staffExperience}>経験年数: {staff.経験年数}年</span>
               </div>
@@ -464,8 +464,8 @@ function InterviewSheetsTab(): React.ReactElement {
         {selectedStaff && (
           <div className={styles.sheetSelectorSection}>
             <InterviewSheetSelector
-              staffId={selectedStaff.職員ID}
-              staffName={selectedStaff.職員名}
+              staffId={selectedStaff.id}
+              staffName={selectedStaff.name}
               yearsOfExperience={selectedStaff.経験年数}
             />
           </div>
