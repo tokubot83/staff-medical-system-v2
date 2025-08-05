@@ -35,7 +35,7 @@ export const TwoAxisEvaluationSummaryDetailed: React.FC<TwoAxisEvaluationSummary
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="flex items-center gap-2 mb-4">
         <span className="text-xl">📊</span>
-        <h3 className="text-xl font-bold">総合人事評価 - 詳細分析</h3>
+        <h3 className="text-xl font-bold">最新人事評価</h3>
       </div>
 
       <div className="grid grid-cols-3 gap-6 mb-6">

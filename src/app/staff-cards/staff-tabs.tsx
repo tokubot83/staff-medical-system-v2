@@ -498,7 +498,7 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
         <div className={styles.summaryMainCard}>
           <div className={styles.summaryCardHeader}>
             <span className={styles.summaryIcon}>📊</span>
-            <h3>人事評価サマリー</h3>
+            <h3>最新人事評価</h3>
           </div>
           
           <div style={{ marginBottom: '24px' }}>
