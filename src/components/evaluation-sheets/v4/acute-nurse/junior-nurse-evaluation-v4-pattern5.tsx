@@ -37,7 +37,7 @@ export default function JuniorNurseEvaluationV4Pattern5() {
   const [corporateRank, setCorporateRank] = useState(50);
 
   // 評価グレードから点数への変換
-  const gradeToScore = {
+  const gradeToScore: Record<string, number> = {
     'S': 1.0,
     'A': 0.85,
     'B': 0.70,
