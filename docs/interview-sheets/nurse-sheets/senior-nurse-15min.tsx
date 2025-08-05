@@ -73,15 +73,42 @@ export default function SeniorNurse15MinInterview() {
 
             <div>
               <Label>リーダーシップの自己評価</Label>
-              <RadioGroup className="grid grid-cols-5 gap-2 mt-2">
-                {[1, 2, 3, 4, 5].map((value) => (
-                  <div key={value} className="flex items-center">
-                    <RadioGroupItem value={value.toString()} id={`leadership-${value}`} />
-                    <Label htmlFor={`leadership-${value}`} className="ml-1">{value}</Label>
+              <div className="bg-gray-50 p-4 rounded-lg space-y-3">
+                <div className="grid grid-cols-6 gap-2 text-xs text-center font-medium text-gray-600 mb-2">
+                  <div></div>
+                  <div className="bg-green-100 px-2 py-1 rounded">5</div>
+                  <div className="bg-blue-100 px-2 py-1 rounded">4</div>
+                  <div className="bg-yellow-100 px-2 py-1 rounded">3</div>
+                  <div className="bg-orange-100 px-2 py-1 rounded">2</div>
+                  <div className="bg-red-100 px-2 py-1 rounded">1</div>
+                </div>
+                
+                <RadioGroup>
+                  <div className="grid grid-cols-6 gap-2 items-center">
+                    <span className="text-sm font-medium">リーダーシップの自己評価</span>
+                    <div className="flex justify-center">
+                      <RadioGroupItem value="leadership-5" id="leadership-5" className="w-4 h-4" />
+                    </div>
+                    <div className="flex justify-center">
+                      <RadioGroupItem value="leadership-4" id="leadership-4" className="w-4 h-4" />
+                    </div>
+                    <div className="flex justify-center">
+                      <RadioGroupItem value="leadership-3" id="leadership-3" className="w-4 h-4" />
+                    </div>
+                    <div className="flex justify-center">
+                      <RadioGroupItem value="leadership-2" id="leadership-2" className="w-4 h-4" />
+                    </div>
+                    <div className="flex justify-center">
+                      <RadioGroupItem value="leadership-1" id="leadership-1" className="w-4 h-4" />
+                    </div>
                   </div>
-                ))}
-              </RadioGroup>
-              <p className="text-sm text-gray-500 mt-1">1:課題多い ← → 5:非常に良い</p>
+                </RadioGroup>
+              </div>
+              
+              <div className="text-xs text-gray-600 bg-blue-50 p-3 rounded mt-3">
+                <p><strong>評価基準：</strong></p>
+                <p><span className="text-green-600 font-medium">5：</span>エキスパート　<span className="text-blue-600 font-medium">4：</span>熟練　<span className="text-yellow-600 font-medium">3：</span>一人前　<span className="text-orange-600 font-medium">2：</span>見習い　<span className="text-red-600 font-medium">1：</span>初心者</p>
+              </div>
             </div>
 
             <div>

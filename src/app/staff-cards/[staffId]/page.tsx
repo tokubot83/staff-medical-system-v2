@@ -827,20 +827,20 @@ function MindsetTab({ selectedStaff }: { selectedStaff: any }): React.ReactEleme
     updatedBy: '人事部'
   }
 
-  const careerTypeLabels = {
+  const careerTypeLabels: Record<string, string> = {
     management: '管理職志向',
     specialist: '専門職志向',
     frontline: '現場志向',
     balanced: 'バランス型'
   }
 
-  const workStyleLabels = {
+  const workStyleLabels: Record<string, string> = {
     team: 'チーム重視',
     individual: '個人重視',
     flexible: '柔軟'
   }
 
-  const valueLabels = {
+  const valueLabels: Record<string, string> = {
     patientCare: '患者ケア',
     efficiency: '効率性',
     innovation: '革新性',
@@ -848,7 +848,7 @@ function MindsetTab({ selectedStaff }: { selectedStaff: any }): React.ReactEleme
     education: '教育'
   }
 
-  const motivationLabels = {
+  const motivationLabels: Record<string, string> = {
     achievement: '達成感',
     recognition: '承認',
     growth: '成長',
