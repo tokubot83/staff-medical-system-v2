@@ -14,9 +14,19 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
+type ScoreCategory = 
+  | 'currentTechnical' 
+  | 'currentContribution' 
+  | 'innovationMindset' 
+  | 'processImprovement' 
+  | 'digitalTransformation' 
+  | 'mentoring' 
+  | 'knowledgeTransfer' 
+  | 'cultureBuilding';
+
 export default function MidlevelNurseEvaluationV4FutureValue() {
   // 評価項目の状態管理
-  const [scores, setScores] = useState({
+  const [scores, setScores] = useState<Record<ScoreCategory, number>>({
     // 現在価値（60点）
     currentTechnical: 0,
     currentContribution: 0,
@@ -35,7 +45,7 @@ export default function MidlevelNurseEvaluationV4FutureValue() {
   const [totalScore, setTotalScore] = useState(0);
 
   // 点数配分
-  const scoreWeights = {
+  const scoreWeights: Record<ScoreCategory, number> = {
     // 現在価値（60点）
     currentTechnical: 30,
     currentContribution: 30,
@@ -52,7 +62,7 @@ export default function MidlevelNurseEvaluationV4FutureValue() {
   };
 
   // 評価グレードから点数への変換
-  const gradeToScore = {
+  const gradeToScore: Record<string, number> = {
     'S': 1.0,
     'A': 0.85,
     'B': 0.70,
@@ -63,13 +73,13 @@ export default function MidlevelNurseEvaluationV4FutureValue() {
   // 合計点数の計算
   useEffect(() => {
     let total = 0;
-    Object.keys(scores).forEach(key => {
+    (Object.keys(scores) as ScoreCategory[]).forEach(key => {
       total += scores[key] * scoreWeights[key];
     });
     setTotalScore(Math.round(total * 10) / 10);
-  }, [scores]);
+  }, [scores, scoreWeights]);
 
-  const handleScoreChange = (category, grade) => {
+  const handleScoreChange = (category: ScoreCategory, grade: string) => {
     setScores(prev => ({
       ...prev,
       [category]: gradeToScore[grade] || 0

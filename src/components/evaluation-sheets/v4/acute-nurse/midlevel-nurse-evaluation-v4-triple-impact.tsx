@@ -13,9 +13,26 @@ import { InfoIcon, TrendingUp, Building2, Globe } from 'lucide-react';
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 
+// 評価カテゴリの型定義
+type ScoreCategories = {
+  technicalGrowth: number;
+  knowledgeExpansion: number;
+  leadershipDevelopment: number;
+  patientSatisfaction: number;
+  teamPerformance: number;
+  operationalExcellence: number;
+  communityHealth: number;
+  regionalCollaboration: number;
+  sdgsContribution: number;
+};
+
+type ScoreWeights = ScoreCategories;
+
+type GradeValue = 'S' | 'A' | 'B' | 'C' | 'D';
+
 export default function MidlevelNurseEvaluationV4TripleImpact() {
   // 評価項目の状態管理
-  const [scores, setScores] = useState({
+  const [scores, setScores] = useState<ScoreCategories>({
     // 個人成長（33点）
     technicalGrowth: 0,
     knowledgeExpansion: 0,
@@ -35,7 +52,7 @@ export default function MidlevelNurseEvaluationV4TripleImpact() {
   const [totalScore, setTotalScore] = useState(0);
 
   // 点数配分
-  const scoreWeights = {
+  const scoreWeights: ScoreWeights = {
     // 個人成長（33点）
     technicalGrowth: 11,
     knowledgeExpansion: 11,
@@ -53,7 +70,7 @@ export default function MidlevelNurseEvaluationV4TripleImpact() {
   };
 
   // 評価グレードから点数への変換
-  const gradeToScore = {
+  const gradeToScore: Record<GradeValue, number> = {
     'S': 1.0,
     'A': 0.85,
     'B': 0.70,
@@ -64,13 +81,13 @@ export default function MidlevelNurseEvaluationV4TripleImpact() {
   // 合計点数の計算
   useEffect(() => {
     let total = 0;
-    Object.keys(scores).forEach(key => {
+    (Object.keys(scores) as Array<keyof ScoreCategories>).forEach(key => {
       total += scores[key] * scoreWeights[key];
     });
     setTotalScore(Math.round(total * 10) / 10);
   }, [scores]);
 
-  const handleScoreChange = (category, grade) => {
+  const handleScoreChange = (category: keyof ScoreCategories, grade: GradeValue) => {
     setScores(prev => ({
       ...prev,
       [category]: gradeToScore[grade] || 0
@@ -86,7 +103,7 @@ export default function MidlevelNurseEvaluationV4TripleImpact() {
   };
 
   // 各カテゴリの合計計算
-  const calculateCategoryScore = (category) => {
+  const calculateCategoryScore = (category: 'personal' | 'facility' | 'social') => {
     switch(category) {
       case 'personal':
         return Math.round((scores.technicalGrowth * scoreWeights.technicalGrowth + 

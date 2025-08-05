@@ -12,9 +12,27 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { InfoIcon, Calculator } from 'lucide-react';
 import { Progress } from "@/components/ui/progress";
 
+// 評価カテゴリの型定義
+type ScoreCategories = {
+  clinicalSkills: number;
+  specialtyKnowledge: number;
+  patientCare: number;
+  teamLeadership: number;
+  mentoring: number;
+  operationalContribution: number;
+  corporatePhilosophy: number;
+  crossDepartment: number;
+  corporateInitiatives: number;
+  innovation: number;
+};
+
+type ScoreWeights = ScoreCategories;
+
+type GradeValue = 'S' | 'A' | 'B' | 'C' | 'D';
+
 export default function MidlevelNurseEvaluationV4() {
   // 評価項目の状態管理
-  const [scores, setScores] = useState({
+  const [scores, setScores] = useState<ScoreCategories>({
     // 技術習得（30点）
     clinicalSkills: 0,
     specialtyKnowledge: 0,
@@ -35,7 +53,7 @@ export default function MidlevelNurseEvaluationV4() {
   const [totalScore, setTotalScore] = useState(0);
 
   // 点数配分
-  const scoreWeights = {
+  const scoreWeights: ScoreWeights = {
     // 技術習得（30点）
     clinicalSkills: 12,
     specialtyKnowledge: 10,
@@ -54,7 +72,7 @@ export default function MidlevelNurseEvaluationV4() {
   };
 
   // 評価グレードから点数への変換
-  const gradeToScore = {
+  const gradeToScore: Record<GradeValue, number> = {
     'S': 1.0,   // 100%
     'A': 0.85,  // 85%
     'B': 0.70,  // 70%
@@ -65,13 +83,13 @@ export default function MidlevelNurseEvaluationV4() {
   // 合計点数の計算
   useEffect(() => {
     let total = 0;
-    Object.keys(scores).forEach(key => {
+    (Object.keys(scores) as Array<keyof ScoreCategories>).forEach(key => {
       total += scores[key] * scoreWeights[key];
     });
     setTotalScore(Math.round(total * 10) / 10);
   }, [scores]);
 
-  const handleScoreChange = (category, grade) => {
+  const handleScoreChange = (category: keyof ScoreCategories, grade: GradeValue) => {
     setScores(prev => ({
       ...prev,
       [category]: gradeToScore[grade] || 0
