@@ -24,6 +24,7 @@ interface InterviewRecordsProps {
   records: InterviewRecord[]
   careerInfo: any
   onNewInterview?: () => void
+  showTypeFilter?: boolean
 }
 
 const interviewTypeLabels = {
@@ -42,8 +43,9 @@ const interviewTypeColors = {
   other: 'bg-gray-100 text-gray-800'
 }
 
-export function InterviewRecords({ records, careerInfo, onNewInterview }: InterviewRecordsProps) {
-  const [activeTab, setActiveTab] = useState('regular')
+export function InterviewRecords({ records, careerInfo, onNewInterview, showTypeFilter = false }: InterviewRecordsProps) {
+  const [activeTab, setActiveTab] = useState('all')
+  const [selectedType, setSelectedType] = useState<string | null>(null)
   
   const recordsByType = React.useMemo(() => {
     const grouped = {
@@ -133,119 +135,61 @@ export function InterviewRecords({ records, careerInfo, onNewInterview }: Interv
         </div>
       </CardHeader>
       <CardContent>
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="regular">
-              定期面談
-              {recordsByType.regular.length > 0 && (
-                <Badge variant="secondary" className="ml-2 h-5 px-1">
-                  {recordsByType.regular.length}
-                </Badge>
-              )}
-            </TabsTrigger>
-            <TabsTrigger value="career">
-              キャリア
-              {recordsByType.career.length > 0 && (
-                <Badge variant="secondary" className="ml-2 h-5 px-1">
-                  {recordsByType.career.length}
-                </Badge>
-              )}
-            </TabsTrigger>
-            <TabsTrigger value="stress">
-              ストレス
-              {recordsByType.stress.length > 0 && (
-                <Badge variant="secondary" className="ml-2 h-5 px-1">
-                  {recordsByType.stress.length}
-                </Badge>
-              )}
-            </TabsTrigger>
-            <TabsTrigger value="evaluation">
-              評価
-              {recordsByType.evaluation.length > 0 && (
-                <Badge variant="secondary" className="ml-2 h-5 px-1">
-                  {recordsByType.evaluation.length}
-                </Badge>
-              )}
-            </TabsTrigger>
-            <TabsTrigger value="other">
-              その他
-              {recordsByType.other.length > 0 && (
-                <Badge variant="secondary" className="ml-2 h-5 px-1">
-                  {recordsByType.other.length}
-                </Badge>
-              )}
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="regular" className="mt-4">
-            {recordsByType.regular.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
-                <FileText className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                <p>定期面談の記録はありません</p>
-                <Button variant="outline" size="sm" className="mt-3" onClick={onNewInterview}>
-                  <Plus className="w-4 h-4 mr-1" />
-                  初回面談を実施
+        {showTypeFilter && (
+          <div className="flex gap-2 mb-4 flex-wrap">
+            <Button
+              variant={selectedType === null ? "default" : "outline"}
+              size="sm"
+              onClick={() => setSelectedType(null)}
+            >
+              全て ({records.length})
+            </Button>
+            {Object.entries(interviewTypeLabels).map(([type, label]) => {
+              const count = recordsByType[type as keyof typeof recordsByType].length
+              return (
+                <Button
+                  key={type}
+                  variant={selectedType === type ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedType(type)}
+                  disabled={count === 0}
+                >
+                  {label} ({count})
                 </Button>
-              </div>
-            ) : (
+              )
+            })}
+          </div>
+        )}
+        
+        <div>
+          {(() => {
+            const filteredRecords = selectedType 
+              ? records.filter(r => r.type === selectedType)
+              : records
+            
+            if (filteredRecords.length === 0) {
+              return (
+                <div className="text-center py-8 text-gray-500">
+                  <FileText className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                  <p>面談記録はありません</p>
+                  <Button variant="outline" size="sm" className="mt-3" onClick={onNewInterview}>
+                    <Plus className="w-4 h-4 mr-1" />
+                    面談を予約
+                  </Button>
+                </div>
+              )
+            }
+            
+            return (
               <div>
-                {recordsByType.regular.map(renderInterviewCard)}
+                {filteredRecords
+                  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                  .map(renderInterviewCard)
+                }
               </div>
-            )}
-          </TabsContent>
-          
-          <TabsContent value="career" className="mt-4">
-            {recordsByType.career.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
-                <FileText className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                <p>キャリア面談の記録はありません</p>
-              </div>
-            ) : (
-              <div>
-                {recordsByType.career.map(renderInterviewCard)}
-              </div>
-            )}
-          </TabsContent>
-          
-          <TabsContent value="stress" className="mt-4">
-            {recordsByType.stress.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
-                <FileText className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                <p>ストレスチェック面談の記録はありません</p>
-              </div>
-            ) : (
-              <div>
-                {recordsByType.stress.map(renderInterviewCard)}
-              </div>
-            )}
-          </TabsContent>
-          
-          <TabsContent value="evaluation" className="mt-4">
-            {recordsByType.evaluation.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
-                <FileText className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                <p>評価フィードバックの記録はありません</p>
-              </div>
-            ) : (
-              <div>
-                {recordsByType.evaluation.map(renderInterviewCard)}
-              </div>
-            )}
-          </TabsContent>
-          
-          <TabsContent value="other" className="mt-4">
-            {recordsByType.other.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
-                <FileText className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                <p>その他の面談記録はありません</p>
-              </div>
-            ) : (
-              <div>
-                {recordsByType.other.map(renderInterviewCard)}
-              </div>
-            )}
-          </TabsContent>
-        </Tabs>
+            )
+          })()}
+        </div>
       </CardContent>
     </Card>
   )

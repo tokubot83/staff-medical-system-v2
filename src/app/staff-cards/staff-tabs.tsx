@@ -1043,11 +1043,7 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
   // タブの定義
   const interviewTabs = [
     { id: 'dashboard', label: '概要', icon: '📊' },
-    { id: 'regular', label: '定期面談', icon: '📅' },
-    { id: 'career', label: 'キャリア面談', icon: '🎯' },
-    { id: 'stress', label: 'ストレスチェック', icon: '💭' },
-    { id: 'evaluation', label: '評価フィードバック', icon: '⭐' },
-    { id: 'other', label: 'その他', icon: '📝' },
+    { id: 'records', label: '面談記録', icon: '📝' },
     { id: 'analytics', label: '統計・分析', icon: '📈' }
   ]
 
@@ -1101,57 +1097,14 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
         </div>
       )}
 
-      {activeInterviewTab === 'regular' && (
+      {activeInterviewTab === 'records' && (
         <div>
-          {/* 定期面談の記録 */}
+          {/* 全ての面談記録を統合表示 */}
           <InterviewRecords 
-            records={staffInterviews.map(mapInterviewToRecord).filter(i => i.type === 'regular')}
+            records={staffInterviews.map(mapInterviewToRecord)}
             careerInfo={staffCareerInfo}
             onNewInterview={handleNewInterview}
-          />
-        </div>
-      )}
-
-      {activeInterviewTab === 'career' && (
-        <div>
-          {/* キャリア面談の記録 */}
-          <InterviewRecords 
-            records={staffInterviews.map(mapInterviewToRecord).filter(i => i.type === 'career')}
-            careerInfo={staffCareerInfo}
-            onNewInterview={handleNewInterview}
-          />
-        </div>
-      )}
-
-      {activeInterviewTab === 'stress' && (
-        <div>
-          {/* ストレスチェック面談の記録 */}
-          <InterviewRecords 
-            records={staffInterviews.map(mapInterviewToRecord).filter(i => i.type === 'stress')}
-            careerInfo={staffCareerInfo}
-            onNewInterview={handleNewInterview}
-          />
-        </div>
-      )}
-
-      {activeInterviewTab === 'evaluation' && (
-        <div>
-          {/* 評価フィードバックの記録 */}
-          <InterviewRecords 
-            records={staffInterviews.map(mapInterviewToRecord).filter(i => i.type === 'evaluation')}
-            careerInfo={staffCareerInfo}
-            onNewInterview={handleNewInterview}
-          />
-        </div>
-      )}
-
-      {activeInterviewTab === 'other' && (
-        <div>
-          {/* その他の面談記録 */}
-          <InterviewRecords 
-            records={staffInterviews.map(mapInterviewToRecord).filter(i => i.type === 'other')}
-            careerInfo={staffCareerInfo}
-            onNewInterview={handleNewInterview}
+            showTypeFilter={true}
           />
         </div>
       )}
