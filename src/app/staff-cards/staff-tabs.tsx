@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { Line, Bar, Radar, Scatter, Doughnut } from 'react-chartjs-2'
 import styles from './StaffCards.module.css'
+import './evaluation-records.css'
 import { useRouter } from 'next/navigation'
 import { Interview } from '@/types/interview'
 import { getInterviewsByStaffId } from '@/data/mockInterviews'
@@ -362,6 +363,7 @@ export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
 // 人事評価タブコンポーネント
 export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
   const router = useRouter()
+  const [activeEvaluationTab, setActiveEvaluationTab] = useState('overview')
   
   if (!selectedStaff) {
     return (
@@ -380,6 +382,13 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
     // 評価管理ページの評価実施タブに遷移
     router.push(`/evaluation?tab=execution&staffId=${selectedStaff.id}`)
   }
+  
+  // タブの定義
+  const evaluationTabs = [
+    { id: 'overview', label: '概要', icon: '📊' },
+    { id: 'records', label: '評価記録', icon: '📝' },
+    { id: 'analytics', label: '統計・分析', icon: '📈' }
+  ]
 
   // 評価推移データ（2軸評価対応）
   const evaluationTrendData = {
@@ -465,6 +474,25 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
           <button className={styles.actionButtonSecondary}>評価履歴</button>
         </div>
       </div>
+
+      {/* タブナビゲーション */}
+      <div className={styles.tabNavigation} style={{ marginBottom: '20px' }}>
+        {evaluationTabs.map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveEvaluationTab(tab.id)}
+            className={`${styles.tabButton} ${activeEvaluationTab === tab.id ? styles.active : ''}`}
+            style={{ fontSize: '14px', padding: '8px 16px' }}
+          >
+            <span style={{ marginRight: '4px' }}>{tab.icon}</span>
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* タブコンテンツ */}
+      {activeEvaluationTab === 'overview' && (
+        <div>
 
       <div className={styles.interviewSummaryEnhanced}>
         <div className={styles.summaryMainCard}>
@@ -594,6 +622,108 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
           size="medium"
         />
       </div>
+        </div>
+      )}
+
+      {activeEvaluationTab === 'records' && (
+        <div>
+          {/* 評価記録タブ - 過去の評価記録一覧 */}
+          <div className={styles.evaluationRecords}>
+            <h3>評価記録一覧</h3>
+            <div className={styles.recordsList}>
+              <div className={styles.recordItem}>
+                <div className={styles.recordDate}>2025年1月期</div>
+                <div className={styles.recordContent}>
+                  <div className={styles.recordScores}>
+                    <span className={styles.recordScore}>施設評価: 90点</span>
+                    <span className={styles.recordScore}>法人評価: 85点</span>
+                    <span className={styles.recordOverall}>総合: A+</span>
+                  </div>
+                  <div className={styles.recordSummary}>優れた業務遂行力とチーム協調性を発揮。次期主任候補として期待。</div>
+                </div>
+              </div>
+              <div className={styles.recordItem}>
+                <div className={styles.recordDate}>2024年7月期</div>
+                <div className={styles.recordContent}>
+                  <div className={styles.recordScores}>
+                    <span className={styles.recordScore}>施設評価: 86点</span>
+                    <span className={styles.recordScore}>法人評価: 82点</span>
+                    <span className={styles.recordOverall}>総合: A</span>
+                  </div>
+                  <div className={styles.recordSummary}>着実な成長を示し、特にリーダーシップ能力が向上。</div>
+                </div>
+              </div>
+              <div className={styles.recordItem}>
+                <div className={styles.recordDate}>2024年1月期</div>
+                <div className={styles.recordContent}>
+                  <div className={styles.recordScores}>
+                    <span className={styles.recordScore}>施設評価: 84点</span>
+                    <span className={styles.recordScore}>法人評価: 80点</span>
+                    <span className={styles.recordOverall}>総合: A</span>
+                  </div>
+                  <div className={styles.recordSummary}>専門性の向上が顕著。後輩指導にも積極的に取り組む。</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeEvaluationTab === 'analytics' && (
+        <div>
+          {/* 統計・分析タブ - 現在のグラフ等 */}
+          <div className={styles.chartGrid}>
+            <div className={styles.chartContainer}>
+              <h4>評価推移</h4>
+              <div className={`${styles.alert} ${styles.alertSuccess}`}>
+                <span>📈</span>
+                <span>評価が安定的に上昇中（3.8→4.3）。3年連続高評価を維持しています。</span>
+              </div>
+              <div className={styles.chartWrapper}>
+                <Line data={evaluationTrendData} options={getTwoAxisChartOptions('line')} />
+              </div>
+            </div>
+            <div className={styles.chartContainer}>
+              <h4>多面評価分析</h4>
+              <div className={`${styles.alert} ${styles.alertInfo}`}>
+                <span>👥</span>
+                <span>自己評価と他者評価がほぼ一致。特にチームワークで高評価を得ています。</span>
+              </div>
+              <div className={styles.chartWrapper}>
+                <Radar data={multiEvaluationData} options={getTwoAxisChartOptions('radar')} />
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.chartGrid}>
+            <div className={styles.chartContainer}>
+              <h4>評価項目別成長度</h4>
+              <div className={`${styles.alert} ${styles.alertSuccess}`}>
+                <span>🌱</span>
+                <span>全項目で前年度を上回る成長。特にリーダーシップが大幅改善（+0.8ポイント）。</span>
+              </div>
+              <div className={styles.chartWrapper}>
+                <Bar data={evaluationGrowthData} options={getTwoAxisChartOptions('bar')} />
+              </div>
+            </div>
+          </div>
+
+          {isNurse && (
+            <div className={styles.nurseSpecificSection}>
+              <h3>JNAキャリアラダー評価</h3>
+              <div className={styles.chartContainer}>
+                <div className={`${styles.alert} ${styles.alertWarning}`}>
+                  <span>🎯</span>
+                  <span>レベルⅣ認定済み。組織貢献の項目をさらに強化することでレベルⅤ達成が見込まれます。</span>
+                </div>
+                <div className={styles.chartWrapper}>
+                  <Radar data={jnaAchievementData} options={getTwoAxisChartOptions('radar')} />
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }

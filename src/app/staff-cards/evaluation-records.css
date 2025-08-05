@@ -1,0 +1,64 @@
+/* 評価記録タブ用スタイル */
+.evaluationRecords {
+  margin-top: 24px;
+}
+
+.recordsList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.recordItem {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.2s;
+}
+
+.recordItem:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-color: #cbd5e1;
+}
+
+.recordDate {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.recordContent {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.recordScores {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.recordScore {
+  font-size: 14px;
+  color: #374151;
+  font-weight: 500;
+}
+
+.recordOverall {
+  background: #dbeafe;
+  color: #1e40af;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.recordSummary {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.6;
+}
