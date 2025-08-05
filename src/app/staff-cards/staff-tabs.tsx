@@ -12,6 +12,8 @@ import { getTwoAxisEvaluationByStaffId } from '@/data/mockTwoAxisEvaluations'
 import { twoAxisColors, getTwoAxisChartOptions, calculateOverallGrade } from '@/utils/twoAxisChartUtils'
 import { CareerInfoSection } from '@/components/interview/CareerInfoSection'
 import { InterviewRecords } from '@/components/interview/InterviewRecords'
+import { DashboardTabContent } from '@/components/interview/DashboardTabContent'
+import { AnalyticsTabContent } from '@/components/interview/AnalyticsTabContent'
 import { getCareerInfoByStaffId, saveCareerInfo } from '@/utils/careerInfoUtils'
 
 // 総合分析タブコンポーネント
@@ -905,6 +907,37 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
   const [staffCareerInfo, setStaffCareerInfo] = useState<any>(null)
   const router = useRouter()
   
+  // Interview/InterviewBooking を InterviewRecord に変換する関数
+  const mapInterviewToRecord = (interview: Interview): any => {
+    // InterviewTypeをInterviewRecordのtypeにマッピング
+    const typeMapping: Record<string, 'regular' | 'career' | 'stress' | 'evaluation' | 'other'> = {
+      'regular_annual': 'regular',
+      'career_development': 'career',
+      'stress_care': 'stress',
+      'performance_review': 'evaluation',
+      'new_employee_monthly': 'regular',
+      'management_biannual': 'regular',
+      'incident_followup': 'other',
+      'return_to_work': 'other',
+      'grievance': 'other',
+      'exit_interview': 'other',
+      'ad_hoc': 'other'
+    }
+    
+    return {
+      id: interview.id,
+      date: interview.conductedAt || interview.bookingDate,
+      type: typeMapping[interview.interviewType] || 'other',
+      duration: (interview.duration || 30) as 15 | 30 | 45,
+      interviewer: interview.interviewerName || '未定',
+      summary: interview.outcomeSummary || interview.description || '',
+      topics: interview.requestedTopics || [],
+      actionItems: interview.outcomeActionItems,
+      nextFollowUp: interview.outcomeFollowupDate,
+      careerInfoVersion: 1
+    }
+  }
+  
   useEffect(() => {
     if (selectedStaff?.id) {
       const interviews = getInterviewsByStaffId(selectedStaff.id)
@@ -1006,40 +1039,140 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
   // 初回面談判定
   const isFirstInterview = staffInterviews.length === 0
 
+  // タブの定義
+  const interviewTabs = [
+    { id: 'dashboard', label: '概要', icon: '📊' },
+    { id: 'regular', label: '定期面談', icon: '📅' },
+    { id: 'career', label: 'キャリア面談', icon: '🎯' },
+    { id: 'stress', label: 'ストレスチェック', icon: '💭' },
+    { id: 'evaluation', label: '評価フィードバック', icon: '⭐' },
+    { id: 'other', label: 'その他', icon: '📝' },
+    { id: 'analytics', label: '統計・分析', icon: '📈' }
+  ]
+
+  const [activeInterviewTab, setActiveInterviewTab] = useState('dashboard')
+
+  // 面談管理ページへの遷移
+  const handleInterviewManagement = () => {
+    router.push(`/interviews?staffId=${selectedStaff.id}&tab=${activeInterviewTab}`)
+  }
+
   return (
     <div className={styles.tabContentSection}>
       <div className={styles.sectionHeader}>
         <h2>💬 面談・指導記録</h2>
         <div className={styles.sectionActions}>
           <button className={styles.actionButton} onClick={handleNewInterview}>面談予約</button>
+          <button className={styles.actionButton} onClick={handleInterviewManagement}>面談管理</button>
           <button className={styles.actionButtonSecondary}>記録作成</button>
         </div>
       </div>
 
-      {/* 職歴情報セクション（常に表示） */}
-      <CareerInfoSection 
-        data={staffCareerInfo}
-        editable={true}
-        isFirstTime={isFirstInterview}
-        onSave={handleCareerInfoSave}
-      />
+      {/* タブナビゲーション */}
+      <div className={styles.tabNavigation} style={{ marginBottom: '20px' }}>
+        {interviewTabs.map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveInterviewTab(tab.id)}
+            className={`${styles.tabButton} ${activeInterviewTab === tab.id ? styles.active : ''}`}
+            style={{ fontSize: '14px', padding: '8px 16px' }}
+          >
+            <span style={{ marginRight: '4px' }}>{tab.icon}</span>
+            {tab.label}
+          </button>
+        ))}
+      </div>
 
-      {/* 面談記録セクション */}
-      <InterviewRecords 
-        records={staffInterviews}
-        careerInfo={staffCareerInfo}
-        onNewInterview={handleNewInterview}
-      />
-
-      <div className={styles.interviewSummaryEnhanced} style={{ marginTop: '20px' }}>
-        <div className={styles.summaryMainCard}>
-          <div className={styles.summaryCardHeader}>
-            <span className={styles.summaryIcon}>📊</span>
-            <h3>面談実績サマリー</h3>
-          </div>
+      {/* タブコンテンツ */}
+      {activeInterviewTab === 'dashboard' && (
+        <div>
+          {/* 職歴情報セクション（ダッシュボードのみ表示） */}
+          <CareerInfoSection 
+            data={staffCareerInfo}
+            editable={true}
+            isFirstTime={isFirstInterview}
+            onSave={handleCareerInfoSave}
+          />
           
-          <div className={styles.interviewInsightsFullWidth}>
-            <div className={styles.currentStatusCard}>
+          {/* 現在の関心事・重点課題を移動 */}
+          <DashboardTabContent 
+            selectedStaff={selectedStaff}
+            staffInterviews={staffInterviews}
+          />
+        </div>
+      )}
+
+      {activeInterviewTab === 'regular' && (
+        <div>
+          {/* 定期面談の記録 */}
+          <InterviewRecords 
+            records={staffInterviews.filter(i => i.type === 'regular')}
+            careerInfo={staffCareerInfo}
+            onNewInterview={handleNewInterview}
+          />
+        </div>
+      )}
+
+      {activeInterviewTab === 'career' && (
+        <div>
+          {/* キャリア面談の記録 */}
+          <InterviewRecords 
+            records={staffInterviews.filter(i => i.type === 'career')}
+            careerInfo={staffCareerInfo}
+            onNewInterview={handleNewInterview}
+          />
+        </div>
+      )}
+
+      {activeInterviewTab === 'stress' && (
+        <div>
+          {/* ストレスチェック面談の記録 */}
+          <InterviewRecords 
+            records={staffInterviews.filter(i => i.type === 'stress')}
+            careerInfo={staffCareerInfo}
+            onNewInterview={handleNewInterview}
+          />
+        </div>
+      )}
+
+      {activeInterviewTab === 'evaluation' && (
+        <div>
+          {/* 評価フィードバックの記録 */}
+          <InterviewRecords 
+            records={staffInterviews.filter(i => i.type === 'evaluation')}
+            careerInfo={staffCareerInfo}
+            onNewInterview={handleNewInterview}
+          />
+        </div>
+      )}
+
+      {activeInterviewTab === 'other' && (
+        <div>
+          {/* その他の面談記録 */}
+          <InterviewRecords 
+            records={staffInterviews.filter(i => i.type === 'other')}
+            careerInfo={staffCareerInfo}
+            onNewInterview={handleNewInterview}
+          />
+        </div>
+      )}
+
+      {activeInterviewTab === 'analytics' && (
+        <div>
+          {/* 統計・分析タブ */}
+          <AnalyticsTabContent 
+            interviewFrequencyData={interviewFrequencyData}
+            satisfactionTrendData={satisfactionTrendData}
+            topicAnalysisData={topicAnalysisData}
+            coachingEffectData={coachingEffectData}
+          />
+        </div>
+      )}
+    </div>
+  )
+}
+
+// 能力開発タブコンポーネント
               <div className={styles.statusHeader}>
                 <span className={styles.statusIcon}>🎯</span>
                 <h4>現在の関心事・重点課題</h4>
