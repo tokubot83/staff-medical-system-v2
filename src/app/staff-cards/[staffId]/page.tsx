@@ -54,6 +54,7 @@ ChartJS.register(
 const tabs = [
   { id: 'basic', label: '基本情報', icon: '📋' },
   { id: 'career', label: '経歴・キャリア', icon: '💼' },
+  { id: 'mindset', label: 'マインド・志向性', icon: '🧠' },
   { id: 'qualification', label: '資格・専門性', icon: '📜' },
   { id: 'achievement', label: '実績・表彰', icon: '📊' },
   { id: 'attendance', label: '勤務状況', icon: '⏰' },
@@ -113,6 +114,7 @@ export default function StaffDetailPage() {
         <div className={styles.tabContent}>
           {activeTab === 'basic' && <BasicInfoTab selectedStaff={selectedStaff} />}
           {activeTab === 'career' && <CareerTab selectedStaff={selectedStaff} />}
+          {activeTab === 'mindset' && <MindsetTab selectedStaff={selectedStaff} />}
           {activeTab === 'qualification' && <QualificationTab selectedStaff={selectedStaff} />}
           {activeTab === 'achievement' && <AchievementTab selectedStaff={selectedStaff} />}
           {activeTab === 'attendance' && <AttendanceTab selectedStaff={selectedStaff} />}
@@ -785,6 +787,287 @@ function WellbeingTab({ selectedStaff }: { selectedStaff: any }): React.ReactEle
       <div className={styles.sectionCard}>
         <h3>家族構成（参考情報）</h3>
         <p>配偶者あり、子供2人</p>
+      </div>
+    </div>
+  )
+}
+
+function MindsetTab({ selectedStaff }: { selectedStaff: any }): React.ReactElement {
+  const mindset = selectedStaff.mindset || {
+    careerOrientation: {
+      type: 'balanced',
+      vision: '患者様に寄り添える看護師として成長し続ける',
+      goals: ['認定看護師資格取得', 'チームリーダーとしてのスキル向上'],
+      desiredGrowthAreas: ['緩和ケア', 'リーダーシップ', '教育指導']
+    },
+    workApproach: {
+      style: 'team',
+      values: ['patientCare', 'quality', 'education'],
+      motivationSources: ['growth', 'contribution', 'recognition'],
+      strengths: ['コミュニケーション能力', '忍耐力', '共感力'],
+      developmentAreas: ['時間管理', 'デジタルスキル']
+    },
+    workPreferences: {
+      workStyle: 'fulltime',
+      nightShift: 'yes',
+      workLifeBalance: 'medium',
+      relocationWillingness: 'negotiable',
+      preferredDepartments: ['緩和ケア病棟', '一般病棟']
+    },
+    organizationalCommitment: {
+      mentorshipInterest: 'high',
+      projectParticipation: 'selective',
+      improvementProposals: 'occasional',
+      leadershipAspiration: true,
+      teamBuildingInterest: 'high'
+    },
+    personalInterests: ['医療倫理', '患者心理学', '音楽療法'],
+    specialCircumstances: '',
+    lastUpdated: '2024-01-15',
+    updatedBy: '人事部'
+  }
+
+  const careerTypeLabels: Record<string, string> = {
+    management: '管理職志向',
+    specialist: '専門職志向',
+    frontline: '現場志向',
+    balanced: 'バランス型'
+  }
+
+  const workStyleLabels: Record<string, string> = {
+    team: 'チーム重視',
+    individual: '個人重視',
+    flexible: '柔軟'
+  }
+
+  const valueLabels: Record<string, string> = {
+    patientCare: '患者ケア',
+    efficiency: '効率性',
+    innovation: '革新性',
+    quality: '品質',
+    education: '教育'
+  }
+
+  const motivationLabels: Record<string, string> = {
+    achievement: '達成感',
+    recognition: '承認',
+    growth: '成長',
+    contribution: '貢献',
+    stability: '安定'
+  }
+
+  return (
+    <div className={styles.tabContentSection}>
+      <div className={styles.sectionHeader}>
+        <h2>🧠 マインド・志向性</h2>
+        <div className={styles.sectionActions}>
+          <button className={styles.actionButton}>編集</button>
+          <button className={styles.actionButtonSecondary}>面談で確認</button>
+        </div>
+      </div>
+
+      <div className={styles.mindsetOverview}>
+        <div className={styles.mindsetSummaryCard}>
+          <div className={styles.mindsetType}>
+            <div className={styles.typeIcon}>
+              {mindset.careerOrientation.type === 'management' ? '👔' :
+               mindset.careerOrientation.type === 'specialist' ? '🎯' :
+               mindset.careerOrientation.type === 'frontline' ? '💉' : '⚖️'}
+            </div>
+            <div className={styles.typeInfo}>
+              <h3>{careerTypeLabels[mindset.careerOrientation.type]}</h3>
+              <p>{mindset.careerOrientation.vision}</p>
+            </div>
+          </div>
+          <div className={styles.lastUpdateInfo}>
+            <span>最終更新: {mindset.lastUpdated}</span>
+            <span>更新者: {mindset.updatedBy}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.mindsetSections}>
+        <div className={styles.sectionCard}>
+          <h3>キャリア志向</h3>
+          <div className={styles.careerInfo}>
+            <div className={styles.infoItem}>
+              <h4>キャリアビジョン</h4>
+              <p>{mindset.careerOrientation.vision}</p>
+            </div>
+            <div className={styles.infoItem}>
+              <h4>中長期目標</h4>
+              <ul className={styles.goalsList}>
+                {mindset.careerOrientation.goals.map((goal: string, index: number) => (
+                  <li key={index}>{goal}</li>
+                ))}
+              </ul>
+            </div>
+            <div className={styles.infoItem}>
+              <h4>希望する成長分野</h4>
+              <div className={styles.tagsList}>
+                {mindset.careerOrientation.desiredGrowthAreas.map((area: string, index: number) => (
+                  <span key={index} className={styles.tag}>{area}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.sectionCard}>
+          <h3>仕事への向き合い方</h3>
+          <div className={styles.workApproachGrid}>
+            <div className={styles.approachItem}>
+              <h4>ワークスタイル</h4>
+              <div className={styles.styleIndicator}>
+                <span className={styles.styleIcon}>
+                  {mindset.workApproach.style === 'team' ? '👥' : 
+                   mindset.workApproach.style === 'individual' ? '👤' : '🔄'}
+                </span>
+                <span>{workStyleLabels[mindset.workApproach.style]}</span>
+              </div>
+            </div>
+            <div className={styles.approachItem}>
+              <h4>重視する価値観</h4>
+              <div className={styles.valuesList}>
+                {mindset.workApproach.values.map((value: string, index: number) => (
+                  <span key={index} className={styles.valueTag}>
+                    {valueLabels[value as keyof typeof valueLabels]}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className={styles.approachItem}>
+              <h4>モチベーション源</h4>
+              <div className={styles.motivationList}>
+                {mindset.workApproach.motivationSources.map((source: string, index: number) => (
+                  <span key={index} className={styles.motivationTag}>
+                    {motivationLabels[source as keyof typeof motivationLabels]}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className={styles.strengthsWeaknesses}>
+            <div className={styles.strengthsSection}>
+              <h4>強み</h4>
+              <ul>
+                {mindset.workApproach.strengths.map((strength: string, index: number) => (
+                  <li key={index}>{strength}</li>
+                ))}
+              </ul>
+            </div>
+            <div className={styles.developmentSection}>
+              <h4>改善したい領域</h4>
+              <ul>
+                {mindset.workApproach.developmentAreas.map((area: string, index: number) => (
+                  <li key={index}>{area}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.sectionCard}>
+          <h3>働き方の希望</h3>
+          <div className={styles.preferencesGrid}>
+            <div className={styles.preferenceItem}>
+              <span className={styles.preferenceLabel}>勤務形態</span>
+              <span className={styles.preferenceValue}>
+                {mindset.workPreferences.workStyle === 'fulltime' ? 'フルタイム' :
+                 mindset.workPreferences.workStyle === 'parttime' ? 'パートタイム' : '柔軟対応可'}
+              </span>
+            </div>
+            <div className={styles.preferenceItem}>
+              <span className={styles.preferenceLabel}>夜勤</span>
+              <span className={styles.preferenceValue}>
+                {mindset.workPreferences.nightShift === 'yes' ? '可能' :
+                 mindset.workPreferences.nightShift === 'no' ? '不可' : '限定的に可'}
+              </span>
+            </div>
+            <div className={styles.preferenceItem}>
+              <span className={styles.preferenceLabel}>ワークライフバランス</span>
+              <span className={styles.preferenceValue}>
+                {mindset.workPreferences.workLifeBalance === 'high' ? '重視' :
+                 mindset.workPreferences.workLifeBalance === 'medium' ? '普通' : '仕事優先'}
+              </span>
+            </div>
+            <div className={styles.preferenceItem}>
+              <span className={styles.preferenceLabel}>転勤・異動</span>
+              <span className={styles.preferenceValue}>
+                {mindset.workPreferences.relocationWillingness === 'yes' ? '可能' :
+                 mindset.workPreferences.relocationWillingness === 'no' ? '不可' : '要相談'}
+              </span>
+            </div>
+          </div>
+          {mindset.workPreferences.preferredDepartments && (
+            <div className={styles.preferredDepts}>
+              <h4>希望部署</h4>
+              <div className={styles.deptsList}>
+                {mindset.workPreferences.preferredDepartments.map((dept: string, index: number) => (
+                  <span key={index} className={styles.deptTag}>{dept}</span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className={styles.sectionCard}>
+          <h3>組織への貢献意欲</h3>
+          <div className={styles.commitmentGrid}>
+            <div className={styles.commitmentItem}>
+              <h4>メンター・指導役</h4>
+              <div className={styles.commitmentLevel}>
+                <div className={styles.levelBar}>
+                  <div 
+                    className={styles.levelFill} 
+                    style={{ 
+                      width: mindset.organizationalCommitment.mentorshipInterest === 'high' ? '100%' :
+                             mindset.organizationalCommitment.mentorshipInterest === 'medium' ? '60%' : '30%'
+                    }}
+                  ></div>
+                </div>
+                <span>{mindset.organizationalCommitment.mentorshipInterest === 'high' ? '高' :
+                       mindset.organizationalCommitment.mentorshipInterest === 'medium' ? '中' : '低'}</span>
+              </div>
+            </div>
+            <div className={styles.commitmentItem}>
+              <h4>プロジェクト参加</h4>
+              <p>{mindset.organizationalCommitment.projectParticipation === 'proactive' ? '積極的' :
+                  mindset.organizationalCommitment.projectParticipation === 'selective' ? '選択的' : '受動的'}</p>
+            </div>
+            <div className={styles.commitmentItem}>
+              <h4>改善提案</h4>
+              <p>{mindset.organizationalCommitment.improvementProposals === 'frequent' ? '頻繁' :
+                  mindset.organizationalCommitment.improvementProposals === 'occasional' ? '時々' : 'まれ'}</p>
+            </div>
+            <div className={styles.commitmentItem}>
+              <h4>リーダーシップ志向</h4>
+              <p>{mindset.organizationalCommitment.leadershipAspiration ? 'あり' : 'なし'}</p>
+            </div>
+          </div>
+        </div>
+
+        {(mindset.personalInterests || mindset.specialCircumstances) && (
+          <div className={styles.sectionCard}>
+            <h3>その他の情報</h3>
+            {mindset.personalInterests && mindset.personalInterests.length > 0 && (
+              <div className={styles.infoItem}>
+                <h4>個人的な興味・関心</h4>
+                <div className={styles.interestsList}>
+                  {mindset.personalInterests.map((interest: string, index: number) => (
+                    <span key={index} className={styles.interestTag}>{interest}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+            {mindset.specialCircumstances && (
+              <div className={styles.infoItem}>
+                <h4>特別な事情</h4>
+                <p>{mindset.specialCircumstances}</p>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   )

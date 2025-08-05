@@ -101,6 +101,50 @@ export interface StaffDetail {
     reason: string
   }[]
   
+  // マインド・志向性情報
+  mindset?: {
+    // キャリア志向
+    careerOrientation: {
+      type: 'management' | 'specialist' | 'frontline' | 'balanced' // 管理職/専門職/現場/バランス型
+      vision: string // キャリアビジョン
+      goals: string[] // 中長期目標
+      desiredGrowthAreas: string[] // 希望する成長分野
+    }
+    
+    // 仕事への向き合い方
+    workApproach: {
+      style: 'team' | 'individual' | 'flexible' // チーム重視/個人重視/柔軟
+      values: ('patientCare' | 'efficiency' | 'innovation' | 'quality' | 'education')[] // 重視する価値観
+      motivationSources: ('achievement' | 'recognition' | 'growth' | 'contribution' | 'stability')[] // モチベーション源
+      strengths: string[] // 自己認識している強み
+      developmentAreas: string[] // 改善したい領域
+    }
+    
+    // 働き方の希望
+    workPreferences: {
+      workStyle: 'fulltime' | 'parttime' | 'flexible' // フルタイム/パートタイム/柔軟
+      nightShift: 'yes' | 'no' | 'limited' // 夜勤可否
+      workLifeBalance: 'high' | 'medium' | 'low' // ワークライフバランス重視度
+      relocationWillingness: 'yes' | 'no' | 'negotiable' // 転勤意向
+      preferredDepartments?: string[] // 希望部署
+    }
+    
+    // 組織への貢献意欲
+    organizationalCommitment: {
+      mentorshipInterest: 'high' | 'medium' | 'low' // メンター意欲
+      projectParticipation: 'proactive' | 'selective' | 'passive' // プロジェクト参加姿勢
+      improvementProposals: 'frequent' | 'occasional' | 'rare' // 改善提案頻度
+      leadershipAspiration: boolean // リーダーシップ志向
+      teamBuildingInterest: 'high' | 'medium' | 'low' // チームビルディングへの関心
+    }
+    
+    // その他
+    personalInterests?: string[] // 個人的な興味・関心
+    specialCircumstances?: string // 特別な事情（介護、育児等）
+    lastUpdated: string // 最終更新日
+    updatedBy: string // 更新者
+  }
+  
   [key: string]: any
 }
 
