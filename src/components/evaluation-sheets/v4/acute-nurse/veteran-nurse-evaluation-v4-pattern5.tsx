@@ -14,9 +14,15 @@ import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
 
+// Type definitions
+type TechnicalScoreCategory = 'skills' | 'knowledge' | 'patient' | 'safety';
+type EvaluatorType = 'superiorEval' | 'selfEval';
+
 export default function VeteranNurseEvaluationV4Pattern5() {
   // 評価項目の状態管理
-  const [technicalScores, setTechnicalScores] = useState({
+  const [technicalScores, setTechnicalScores] = useState<{
+    [K in EvaluatorType]: Record<string, number>
+  }>({
     superiorEval: { expertise: 0, mentoring: 0, innovation: 0, leadership: 0 },
     selfEval: { expertise: 0, mentoring: 0, innovation: 0, leadership: 0 }
   });
@@ -68,12 +74,12 @@ export default function VeteranNurseEvaluationV4Pattern5() {
     setTotalScore(Math.round((technical + facility + corporate) * 10) / 10);
   }, [technicalScores, facilityRank, corporateRank]);
 
-  const handleTechnicalScoreChange = (evaluator: string, category: string, grade: string) => {
+  const handleTechnicalScoreChange = (evaluator: EvaluatorType, category: string, grade: keyof typeof gradeToScore) => {
     setTechnicalScores(prev => ({
       ...prev,
       [evaluator]: {
         ...prev[evaluator],
-        [category]: gradeToScore[grade] || 0
+        [category]: gradeToScore[grade]
       }
     }));
   };

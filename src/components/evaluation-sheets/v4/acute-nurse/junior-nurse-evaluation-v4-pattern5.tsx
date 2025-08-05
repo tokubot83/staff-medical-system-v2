@@ -13,9 +13,16 @@ import { InfoIcon, Calculator, Award, Users, Building } from 'lucide-react';
 import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
+type TechnicalScoreCategory = 'skills' | 'knowledge' | 'patient' | 'safety';
+type EvaluatorType = 'superiorEval' | 'selfEval';
+
 export default function JuniorNurseEvaluationV4Pattern5() {
   // 評価項目の状態管理
-  const [technicalScores, setTechnicalScores] = useState({
+  const [technicalScores, setTechnicalScores] = useState<{
+    [key in EvaluatorType]: {
+      [key in TechnicalScoreCategory]: number;
+    };
+  }>({
     superiorEval: { skills: 0, knowledge: 0, patient: 0, safety: 0 },
     selfEval: { skills: 0, knowledge: 0, patient: 0, safety: 0 }
   });
@@ -67,7 +74,7 @@ export default function JuniorNurseEvaluationV4Pattern5() {
     setTotalScore(Math.round((technical + facility + corporate) * 10) / 10);
   }, [technicalScores, facilityRank, corporateRank]);
 
-  const handleTechnicalScoreChange = (evaluator: string, category: string, grade: string) => {
+  const handleTechnicalScoreChange = (evaluator: EvaluatorType, category: TechnicalScoreCategory, grade: keyof typeof gradeToScore) => {
     setTechnicalScores(prev => ({
       ...prev,
       [evaluator]: {
