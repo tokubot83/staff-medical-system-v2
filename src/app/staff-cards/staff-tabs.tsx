@@ -548,57 +548,6 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
         </div>
       </div>
 
-      <div className={styles.chartGrid}>
-        <div className={styles.chartContainer}>
-          <h4>評価推移</h4>
-          <div className={`${styles.alert} ${styles.alertSuccess}`}>
-            <span>📈</span>
-            <span>評価が安定的に上昇中（3.8→4.3）。3年連続高評価を維持しています。</span>
-          </div>
-          <div className={styles.chartWrapper}>
-            <Line data={evaluationTrendData} options={getTwoAxisChartOptions('line')} />
-          </div>
-        </div>
-        <div className={styles.chartContainer}>
-          <h4>多面評価分析</h4>
-          <div className={`${styles.alert} ${styles.alertInfo}`}>
-            <span>👥</span>
-            <span>自己評価と他者評価がほぼ一致。特にチームワークで高評価を得ています。</span>
-          </div>
-          <div className={styles.chartWrapper}>
-            <Radar data={multiEvaluationData} options={getTwoAxisChartOptions('radar')} />
-          </div>
-        </div>
-      </div>
-
-      <div className={styles.chartGrid}>
-        <div className={styles.chartContainer}>
-          <h4>評価項目別成長度</h4>
-          <div className={`${styles.alert} ${styles.alertSuccess}`}>
-            <span>🌱</span>
-            <span>全項目で前年度を上回る成長。特にリーダーシップが大幅改善（+0.8ポイント）。</span>
-          </div>
-          <div className={styles.chartWrapper}>
-            <Bar data={evaluationGrowthData} options={getTwoAxisChartOptions('bar')} />
-          </div>
-        </div>
-      </div>
-
-      {isNurse && (
-        <div className={styles.nurseSpecificSection}>
-          <h3>JNAキャリアラダー評価</h3>
-          <div className={styles.chartContainer}>
-            <div className={`${styles.alert} ${styles.alertWarning}`}>
-              <span>🎯</span>
-              <span>レベルⅣ認定済み。組織貢献の項目をさらに強化することでレベルⅤ達成が見込まれます。</span>
-            </div>
-            <div className={styles.chartWrapper}>
-              <Radar data={jnaAchievementData} options={getTwoAxisChartOptions('radar')} />
-            </div>
-          </div>
-        </div>
-      )}
-
       <div className={styles.evaluationComments}>
         <h3>評価コメント</h3>
         <div className={styles.commentCard}>
