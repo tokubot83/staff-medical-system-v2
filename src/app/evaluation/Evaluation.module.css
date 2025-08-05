@@ -887,3 +887,78 @@
 .notEvaluated {
   color: #9ca3af;
 }
+
+/* 評価シートタブ用スタイル */
+.sheetsContainer {
+  padding: 24px;
+}
+
+.sheetsContainer h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #333;
+}
+
+.sheetSelectionArea {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.staffSearchSection {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e1e8ed;
+}
+
+.staffSearchSection h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.staffList {
+  max-height: 400px;
+  overflow-y: auto;
+  margin-top: 16px;
+}
+
+.staffItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  background: white;
+  border: 1px solid #e1e8ed;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.staffItem:hover {
+  background: #f0f8ff;
+  border-color: #1890ff;
+}
+
+.staffItem.selected {
+  background: #e6f7ff;
+  border-color: #1890ff;
+  box-shadow: 0 2px 4px rgba(24, 144, 255, 0.1);
+}
+
+.staffExperience {
+  font-size: 14px;
+  color: #666;
+}
+
+.sheetSelectorSection {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e1e8ed;
+}

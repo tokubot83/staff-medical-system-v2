@@ -10,6 +10,7 @@ import { TwoAxisEvaluationMatrixDisplay } from '@/components/evaluation/TwoAxisE
 import { TwoAxisEvaluationForm } from '@/components/evaluation/TwoAxisEvaluationForm'
 import { getEvaluationGradeColor, getEvaluationGradeLabel } from '@/types/two-axis-evaluation'
 import { getTwoAxisEvaluationByStaffId } from '@/data/mockTwoAxisEvaluations'
+import EvaluationSheetSelector from '@/components/evaluation/EvaluationSheetSelector'
 import styles from './Evaluation.module.css'
 
 const tabs = [
@@ -17,6 +18,7 @@ const tabs = [
   { id: 'staffList', label: '職員評価一覧', icon: '👥' },
   { id: 'twoAxis', label: '総合人事評価', icon: '🎯' },
   { id: 'execution', label: '評価実施', icon: '✍️' },
+  { id: 'sheets', label: '評価シート', icon: '📄' },
   { id: 'analysis', label: '分析・レポート', icon: '📈' },
   { id: 'process', label: '評価プロセス管理', icon: '🔄' },
   { id: 'criteria', label: '評価基準設定', icon: '📋' },
@@ -134,6 +136,7 @@ function EvaluationPageContent() {
           {activeTab === 'process' && <ProcessTab />}
           {activeTab === 'criteria' && <CriteriaTab />}
           {activeTab === 'execution' && <ExecutionTab targetStaffId={staffId} />}
+          {activeTab === 'sheets' && <EvaluationSheetsTab />}
           {activeTab === 'analysis' && <AnalysisTab />}
           {activeTab === 'twoAxis' && <TwoAxisTab />}
         </div>
@@ -1023,6 +1026,94 @@ function TwoAxisTab() {
           />
         </div>
       )}
+    </div>
+  )
+}
+
+function EvaluationSheetsTab(): React.ReactElement {
+  const [selectedStaff, setSelectedStaff] = useState<any>(null)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedFacility, setSelectedFacility] = useState('all')
+  const [selectedDepartment, setSelectedDepartment] = useState('all')
+  
+  const filteredStaff = Object.entries(staffDatabase).filter(([_, staff]: [string, any]) => {
+    const matchesSearch = searchTerm === '' || 
+      staff.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      staff.employeeId.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesFacility = selectedFacility === 'all' || staff.facility === selectedFacility
+    const matchesDepartment = selectedDepartment === 'all' || staff.department === selectedDepartment
+    return matchesSearch && matchesFacility && matchesDepartment
+  }).slice(0, 10) // 最初の10件のみ表示
+
+  return (
+    <div className={styles.sheetsContainer}>
+      <h2>評価シート選択</h2>
+      
+      <div className={styles.sheetSelectionArea}>
+        <div className={styles.staffSearchSection}>
+          <h3>職員を選択</h3>
+          <div className={styles.searchSection}>
+            <input
+              type="text"
+              placeholder="職員名または職員番号で検索"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className={styles.searchInput}
+            />
+            <select
+              value={selectedFacility}
+              onChange={(e) => setSelectedFacility(e.target.value)}
+              className={styles.filterSelect}
+            >
+              <option value="all">全施設</option>
+              <option value="小原病院">小原病院</option>
+              <option value="立神リハビリテーション温泉病院">立神リハビリテーション温泉病院</option>
+            </select>
+            <select
+              value={selectedDepartment}
+              onChange={(e) => setSelectedDepartment(e.target.value)}
+              className={styles.filterSelect}
+            >
+              <option value="all">全部署</option>
+              <option value="内科">内科</option>
+              <option value="リハビリテーション科">リハビリテーション科</option>
+              <option value="第１病棟">第１病棟</option>
+              <option value="外来">外来</option>
+            </select>
+          </div>
+          
+          <div className={styles.staffList}>
+            {filteredStaff.map(([id, staff]) => (
+              <div
+                key={id}
+                className={`${styles.staffItem} ${selectedStaff?.employeeId === staff.employeeId ? styles.selected : ''}`}
+                onClick={() => setSelectedStaff(staff)}
+              >
+                <div className={styles.staffInfo}>
+                  <span className={styles.staffName}>{staff.name}</span>
+                  <span className={styles.staffDetails}>
+                    {staff.employeeId} | {staff.facility} - {staff.department}
+                  </span>
+                </div>
+                <span className={styles.staffExperience}>経験年数: {staff.experienceYears || 5}年</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        {selectedStaff && (
+          <div className={styles.sheetSelectorSection}>
+            <EvaluationSheetSelector
+              staffId={selectedStaff.employeeId}
+              staffName={selectedStaff.name}
+              yearsOfExperience={selectedStaff.experienceYears || 5}
+              facility={selectedStaff.facility}
+              department={selectedStaff.department}
+              position={selectedStaff.position}
+            />
+          </div>
+        )}
+      </div>
     </div>
   )
 }

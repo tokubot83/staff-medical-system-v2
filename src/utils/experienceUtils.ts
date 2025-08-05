@@ -1,9 +1,10 @@
 // 経験年数に基づく職員分類と制御のユーティリティ関数
 
-export type ExperienceLevel = 'new' | 'general' | 'senior' | 'veteran' | 'chief' | 'leader';
+export type ExperienceCategory = 'new' | 'junior' | 'midlevel' | 'senior' | 'veteran' | 'chief' | 'manager';
+export type ExperienceLevel = ExperienceCategory; // 互換性のため
 
-export interface ExperienceCategory {
-  level: ExperienceLevel;
+export interface ExperienceCategoryInfo {
+  level: ExperienceCategory;
   label: string;
   minYears: number;
   maxYears?: number;
@@ -11,7 +12,7 @@ export interface ExperienceCategory {
 }
 
 // 経験年数による職員分類定義
-export const EXPERIENCE_CATEGORIES: ExperienceCategory[] = [
+export const EXPERIENCE_CATEGORIES: ExperienceCategoryInfo[] = [
   {
     level: 'new',
     label: '新人',
@@ -20,37 +21,44 @@ export const EXPERIENCE_CATEGORIES: ExperienceCategory[] = [
     description: '1年目の新人看護師'
   },
   {
-    level: 'general',
+    level: 'junior',
     label: '一般',
     minYears: 2,
     maxYears: 3,
     description: '2-3年目の一般看護師'
   },
   {
-    level: 'senior',
+    level: 'midlevel',
     label: '中堅',
     minYears: 4,
     maxYears: 10,
     description: '4-10年目の中堅看護師'
   },
   {
+    level: 'senior',
+    label: 'シニア',
+    minYears: 11,
+    maxYears: 15,
+    description: '11-15年目のシニア看護師'
+  },
+  {
     level: 'veteran',
     label: 'ベテラン',
-    minYears: 11,
-    description: '11年目以上のベテラン看護師'
+    minYears: 16,
+    description: '16年目以上のベテラン看護師'
   }
 ];
 
 // 管理職・役職者の分類
-export const MANAGEMENT_CATEGORIES: ExperienceCategory[] = [
+export const MANAGEMENT_CATEGORIES: ExperienceCategoryInfo[] = [
   {
-    level: 'leader',
+    level: 'chief',
     label: '主任',
     minYears: 5,
     description: '主任・リーダー級'
   },
   {
-    level: 'chief',
+    level: 'manager',
     label: '師長',
     minYears: 10,
     description: '看護師長・管理職'
@@ -82,7 +90,7 @@ export function calculateExperienceYears(
 export function getExperienceLevel(
   totalYears: number,
   isManagement: boolean = false
-): ExperienceLevel {
+): ExperienceCategory {
   if (isManagement) {
     // 管理職の場合は管理職分類を優先
     for (const category of MANAGEMENT_CATEGORIES) {
@@ -107,11 +115,35 @@ export function getExperienceLevel(
 }
 
 /**
+ * 経験年数から適切なExperienceCategoryを取得
+ * @param yearsOfExperience 経験年数
+ * @param isManagement 管理職かどうか
+ * @returns ExperienceCategory
+ */
+export function getExperienceCategory(
+  yearsOfExperience: number,
+  isManagement: boolean = false
+): ExperienceCategory {
+  return getExperienceLevel(yearsOfExperience, isManagement);
+}
+
+/**
+ * ExperienceCategoryのラベルを取得
+ * @param category ExperienceCategory
+ * @returns カテゴリのラベル
+ */
+export function getExperienceCategoryLabel(category: ExperienceCategory): string {
+  const allCategories = [...EXPERIENCE_CATEGORIES, ...MANAGEMENT_CATEGORIES];
+  const categoryInfo = allCategories.find(c => c.level === category);
+  return categoryInfo?.label || '一般';
+}
+
+/**
  * 経験レベルに応じた表示項目を取得
  * @param level 経験レベル
  * @returns 表示すべき項目のリスト
  */
-export function getVisibleItemsByLevel(level: ExperienceLevel): string[] {
+export function getVisibleItemsByLevel(level: ExperienceCategory): string[] {
   const baseItems = [
     'basic_info',
     'career_info',
@@ -119,13 +151,14 @@ export function getVisibleItemsByLevel(level: ExperienceLevel): string[] {
     'work_attitude'
   ];
 
-  const itemsByLevel: Record<ExperienceLevel, string[]> = {
+  const itemsByLevel: Record<ExperienceCategory, string[]> = {
     new: [...baseItems, 'learning_progress', 'adaptation_status'],
-    general: [...baseItems, 'skill_development', 'team_contribution'],
-    senior: [...baseItems, 'leadership', 'mentoring', 'specialized_skills'],
+    junior: [...baseItems, 'skill_development', 'team_contribution'],
+    midlevel: [...baseItems, 'leadership', 'mentoring', 'specialized_skills'],
+    senior: [...baseItems, 'advanced_skills', 'project_leadership', 'cross_department_collaboration'],
     veteran: [...baseItems, 'knowledge_transfer', 'organizational_contribution', 'strategic_thinking'],
-    leader: [...baseItems, 'team_management', 'staff_development', 'operational_improvement'],
-    chief: [...baseItems, 'strategic_planning', 'budget_management', 'organizational_development']
+    chief: [...baseItems, 'team_management', 'staff_development', 'operational_improvement'],
+    manager: [...baseItems, 'strategic_planning', 'budget_management', 'organizational_development']
   };
 
   return itemsByLevel[level] || baseItems;
@@ -136,24 +169,30 @@ export function getVisibleItemsByLevel(level: ExperienceLevel): string[] {
  * @param level 経験レベル
  * @returns 評価基準の重み付け
  */
-export function getEvaluationCriteriaByLevel(level: ExperienceLevel): Record<string, number> {
-  const criteriaByLevel: Record<ExperienceLevel, Record<string, number>> = {
+export function getEvaluationCriteriaByLevel(level: ExperienceCategory): Record<string, number> {
+  const criteriaByLevel: Record<ExperienceCategory, Record<string, number>> = {
     new: {
       basic_skills: 0.4,
       learning_attitude: 0.3,
       teamwork: 0.2,
       communication: 0.1
     },
-    general: {
+    junior: {
       technical_skills: 0.3,
       problem_solving: 0.25,
       teamwork: 0.25,
       communication: 0.2
     },
-    senior: {
+    midlevel: {
       leadership: 0.3,
       technical_expertise: 0.25,
       mentoring: 0.25,
+      innovation: 0.2
+    },
+    senior: {
+      advanced_expertise: 0.3,
+      project_management: 0.25,
+      cross_team_collaboration: 0.25,
       innovation: 0.2
     },
     veteran: {
@@ -162,13 +201,13 @@ export function getEvaluationCriteriaByLevel(level: ExperienceLevel): Record<str
       organizational_impact: 0.25,
       innovation: 0.15
     },
-    leader: {
+    chief: {
       team_performance: 0.35,
       staff_development: 0.3,
       operational_efficiency: 0.2,
       communication: 0.15
     },
-    chief: {
+    manager: {
       strategic_leadership: 0.35,
       organizational_performance: 0.3,
       talent_management: 0.2,
@@ -176,7 +215,7 @@ export function getEvaluationCriteriaByLevel(level: ExperienceLevel): Record<str
     }
   };
 
-  return criteriaByLevel[level] || criteriaByLevel.general;
+  return criteriaByLevel[level] || criteriaByLevel.junior;
 }
 
 /**
@@ -187,8 +226,8 @@ export function getEvaluationCriteriaByLevel(level: ExperienceLevel): Record<str
  * @returns 編集可能かどうか
  */
 export function canEditByExperience(
-  userLevel: ExperienceLevel,
-  targetLevel: ExperienceLevel,
+  userLevel: ExperienceCategory,
+  targetLevel: ExperienceCategory,
   userRole?: string
 ): boolean {
   // 管理職は全て編集可能
@@ -197,7 +236,7 @@ export function canEditByExperience(
   }
 
   // 経験レベルの階層順
-  const levelHierarchy: ExperienceLevel[] = ['new', 'general', 'senior', 'veteran', 'leader', 'chief'];
+  const levelHierarchy: ExperienceCategory[] = ['new', 'junior', 'midlevel', 'senior', 'veteran', 'chief', 'manager'];
   
   const userIndex = levelHierarchy.indexOf(userLevel);
   const targetIndex = levelHierarchy.indexOf(targetLevel);

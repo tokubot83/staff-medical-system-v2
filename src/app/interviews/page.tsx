@@ -9,11 +9,13 @@ import styles from './Interviews.module.css'
 import { Interview, InterviewType, InterviewStatus } from '@/types/interview'
 import { mockInterviews, getUpcomingInterviews } from '@/data/mockInterviews'
 import InterviewModal from '@/components/InterviewModal'
+import InterviewSheetSelector from '@/components/interview/InterviewSheetSelector'
 
 const tabs = [
   { id: 'schedule', label: '面談予定', icon: '📅' },
   { id: 'history', label: '面談履歴', icon: '📝' },
   { id: 'feedback', label: 'フィードバック', icon: '💬' },
+  { id: 'sheets', label: '面談シート', icon: '📄' },
   { id: 'report', label: 'レポート', icon: '📊' },
   { id: 'settings', label: '設定', icon: '⚙️' },
 ]
@@ -146,6 +148,7 @@ export default function InterviewsPage() {
             />
           )}
           {activeTab === 'feedback' && <FeedbackTab selectedInterview={selectedInterview} />}
+          {activeTab === 'sheets' && <InterviewSheetsTab />}
           {activeTab === 'report' && <ReportTab />}
           {activeTab === 'settings' && <SettingsTab />}
         </div>
@@ -412,6 +415,61 @@ function FeedbackTab({ selectedInterview }: FeedbackTabProps) {
           <button className={styles.saveButton}>保存</button>
           <button className={styles.cancelButton}>キャンセル</button>
         </div>
+      </div>
+    </div>
+  )
+}
+
+function InterviewSheetsTab(): React.ReactElement {
+  const [selectedStaff, setSelectedStaff] = useState<any>(null)
+  const [searchTerm, setSearchTerm] = useState('')
+  
+  const filteredStaff = staffDatabase.filter(staff => 
+    staff.職員名.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    staff.職員ID.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+
+  return (
+    <div className={styles.sheetsContainer}>
+      <h2>面談シート選択</h2>
+      
+      <div className={styles.sheetSelectionArea}>
+        <div className={styles.staffSearchSection}>
+          <h3>職員を選択</h3>
+          <input
+            type="text"
+            placeholder="職員名または職員IDで検索"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className={styles.searchInput}
+          />
+          
+          <div className={styles.staffList}>
+            {filteredStaff.slice(0, 10).map((staff) => (
+              <div
+                key={staff.職員ID}
+                className={`${styles.staffItem} ${selectedStaff?.職員ID === staff.職員ID ? styles.selected : ''}`}
+                onClick={() => setSelectedStaff(staff)}
+              >
+                <div className={styles.staffInfo}>
+                  <span className={styles.staffName}>{staff.職員名}</span>
+                  <span className={styles.staffId}>ID: {staff.職員ID}</span>
+                </div>
+                <span className={styles.staffExperience}>経験年数: {staff.経験年数}年</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        {selectedStaff && (
+          <div className={styles.sheetSelectorSection}>
+            <InterviewSheetSelector
+              staffId={selectedStaff.職員ID}
+              staffName={selectedStaff.職員名}
+              yearsOfExperience={selectedStaff.経験年数}
+            />
+          </div>
+        )}
       </div>
     </div>
   )
