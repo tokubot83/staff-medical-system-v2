@@ -902,7 +902,7 @@ export function RecruitmentTab({ selectedStaff }: { selectedStaff: any }) {
 // 面談・指導タブコンポーネント
 export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
   const [staffInterviews, setStaffInterviews] = useState<Interview[]>([])
-  const [staffCareerInfo, setStaffCareerInfo] = useState(null)
+  const [staffCareerInfo, setStaffCareerInfo] = useState<any>(null)
   const router = useRouter()
   
   useEffect(() => {
