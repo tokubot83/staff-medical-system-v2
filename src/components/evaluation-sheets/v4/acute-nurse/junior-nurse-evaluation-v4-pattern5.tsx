@@ -696,16 +696,6 @@ export default function JuniorNurseEvaluationV4Pattern5() {
                     {totalScore}点
                   </p>
                   <p className="text-gray-600 mt-2">100点満点</p>
-                  
-                  <div className="mt-4">
-                    <span className="text-lg font-semibold">評価ランク: </span>
-                    <span className={`text-2xl font-bold ${getScoreColor(totalScore)}`}>
-                      {totalScore >= 90 ? 'S' : 
-                       totalScore >= 80 ? 'A' : 
-                       totalScore >= 70 ? 'B' : 
-                       totalScore >= 60 ? 'C' : 'D'}
-                    </span>
-                  </div>
                 </div>
 
                 {/* 評価の内訳 */}
