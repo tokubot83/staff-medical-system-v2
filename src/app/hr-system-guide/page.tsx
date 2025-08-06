@@ -297,57 +297,57 @@ export default function HRSystemGuidePage() {
               <div>
                 <h4 className="font-semibold text-gray-700 mb-3">2軸を組み合わせた総合評価</h4>
                 <div className="overflow-x-auto">
-                  <table className="border-collapse">
+                  <table className="w-full border-collapse">
                     <thead>
                       <tr>
-                        <th className="border border-gray-300 p-2 bg-gray-100 text-sm w-16">法人内＼施設内</th>
-                        <th className="border border-gray-300 p-2 bg-yellow-100 text-sm w-16">S</th>
-                        <th className="border border-gray-300 p-2 bg-green-100 text-sm w-16">A</th>
-                        <th className="border border-gray-300 p-2 bg-blue-100 text-sm w-16">B</th>
-                        <th className="border border-gray-300 p-2 bg-orange-100 text-sm w-16">C</th>
-                        <th className="border border-gray-300 p-2 bg-red-100 text-sm w-16">D</th>
+                        <th className="border border-gray-300 p-3 bg-gray-100 text-sm">法人内＼施設内</th>
+                        <th className="border border-gray-300 p-3 bg-yellow-100 text-sm">S</th>
+                        <th className="border border-gray-300 p-3 bg-green-100 text-sm">A</th>
+                        <th className="border border-gray-300 p-3 bg-blue-100 text-sm">B</th>
+                        <th className="border border-gray-300 p-3 bg-orange-100 text-sm">C</th>
+                        <th className="border border-gray-300 p-3 bg-red-100 text-sm">D</th>
                       </tr>
                     </thead>
                     <tbody className="text-center text-sm font-semibold">
                       <tr>
-                        <td className="border border-gray-300 p-2 bg-yellow-100 w-16">S</td>
-                        <td className="border border-gray-300 p-2 bg-yellow-200">S+</td>
-                        <td className="border border-gray-300 p-2 bg-yellow-100">S</td>
-                        <td className="border border-gray-300 p-2 bg-yellow-50">S</td>
-                        <td className="border border-gray-300 p-2 bg-green-100">A</td>
-                        <td className="border border-gray-300 p-2 bg-blue-100">B</td>
+                        <td className="border border-gray-300 p-3 bg-yellow-100">S</td>
+                        <td className="border border-gray-300 p-3 bg-yellow-200 text-lg">S+</td>
+                        <td className="border border-gray-300 p-3 bg-yellow-100 text-lg">S</td>
+                        <td className="border border-gray-300 p-3 bg-yellow-50 text-lg">S</td>
+                        <td className="border border-gray-300 p-3 bg-green-100 text-lg">A</td>
+                        <td className="border border-gray-300 p-3 bg-blue-100 text-lg">B</td>
                       </tr>
                       <tr>
-                        <td className="border border-gray-300 p-2 bg-green-100 w-16">A</td>
-                        <td className="border border-gray-300 p-2 bg-yellow-100">S</td>
-                        <td className="border border-gray-300 p-2 bg-green-200">A+</td>
-                        <td className="border border-gray-300 p-2 bg-green-100">A</td>
-                        <td className="border border-gray-300 p-2 bg-blue-100">B</td>
-                        <td className="border border-gray-300 p-2 bg-orange-100">C</td>
+                        <td className="border border-gray-300 p-3 bg-green-100">A</td>
+                        <td className="border border-gray-300 p-3 bg-yellow-100 text-lg">S</td>
+                        <td className="border border-gray-300 p-3 bg-green-200 text-lg">A+</td>
+                        <td className="border border-gray-300 p-3 bg-green-100 text-lg">A</td>
+                        <td className="border border-gray-300 p-3 bg-blue-100 text-lg">B</td>
+                        <td className="border border-gray-300 p-3 bg-orange-100 text-lg">C</td>
                       </tr>
                       <tr>
-                        <td className="border border-gray-300 p-2 bg-blue-100 w-16">B</td>
-                        <td className="border border-gray-300 p-2 bg-green-100">A</td>
-                        <td className="border border-gray-300 p-2 bg-green-100">A</td>
-                        <td className="border border-gray-300 p-2 bg-blue-100">B</td>
-                        <td className="border border-gray-300 p-2 bg-orange-100">C</td>
-                        <td className="border border-gray-300 p-2 bg-red-100">D</td>
+                        <td className="border border-gray-300 p-3 bg-blue-100">B</td>
+                        <td className="border border-gray-300 p-3 bg-green-100 text-lg">A</td>
+                        <td className="border border-gray-300 p-3 bg-green-100 text-lg">A</td>
+                        <td className="border border-gray-300 p-3 bg-blue-100 text-lg">B</td>
+                        <td className="border border-gray-300 p-3 bg-orange-100 text-lg">C</td>
+                        <td className="border border-gray-300 p-3 bg-red-100 text-lg">D</td>
                       </tr>
                       <tr>
-                        <td className="border border-gray-300 p-2 bg-orange-100 w-16">C</td>
-                        <td className="border border-gray-300 p-2 bg-blue-100">B</td>
-                        <td className="border border-gray-300 p-2 bg-blue-100">B</td>
-                        <td className="border border-gray-300 p-2 bg-orange-100">C</td>
-                        <td className="border border-gray-300 p-2 bg-orange-100">C</td>
-                        <td className="border border-gray-300 p-2 bg-red-100">D</td>
+                        <td className="border border-gray-300 p-3 bg-orange-100">C</td>
+                        <td className="border border-gray-300 p-3 bg-blue-100 text-lg">B</td>
+                        <td className="border border-gray-300 p-3 bg-blue-100 text-lg">B</td>
+                        <td className="border border-gray-300 p-3 bg-orange-100 text-lg">C</td>
+                        <td className="border border-gray-300 p-3 bg-orange-100 text-lg">C</td>
+                        <td className="border border-gray-300 p-3 bg-red-100 text-lg">D</td>
                       </tr>
                       <tr>
-                        <td className="border border-gray-300 p-2 bg-red-100 w-16">D</td>
-                        <td className="border border-gray-300 p-2 bg-orange-100">C</td>
-                        <td className="border border-gray-300 p-2 bg-orange-100">C</td>
-                        <td className="border border-gray-300 p-2 bg-red-100">D</td>
-                        <td className="border border-gray-300 p-2 bg-red-100">D</td>
-                        <td className="border border-gray-300 p-2 bg-red-200">D</td>
+                        <td className="border border-gray-300 p-3 bg-red-100">D</td>
+                        <td className="border border-gray-300 p-3 bg-orange-100 text-lg">C</td>
+                        <td className="border border-gray-300 p-3 bg-orange-100 text-lg">C</td>
+                        <td className="border border-gray-300 p-3 bg-red-100 text-lg">D</td>
+                        <td className="border border-gray-300 p-3 bg-red-100 text-lg">D</td>
+                        <td className="border border-gray-300 p-3 bg-red-200 text-lg">D</td>
                       </tr>
                     </tbody>
                   </table>
