@@ -1,5 +1,16 @@
 /* 面談シート印刷用スタイル */
 
+/* 印刷モード時の特別な処理 */
+body.printing-mode .print\\:hidden,
+body.printing-mode [class*="dashboardButton"],
+body.printing-mode [class*="DashboardButton"],
+body.printing-mode [class*="CommonHeader"],
+body.printing-mode nav,
+body.printing-mode header,
+body.printing-mode footer {
+  display: none !important;
+}
+
 @media print {
   /* 基本設定 */
   * {

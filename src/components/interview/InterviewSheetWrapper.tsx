@@ -25,7 +25,16 @@ export default function InterviewSheetWrapper({
   const [mode, setMode] = useState<InterviewMode>('input');
 
   const handlePrint = () => {
+    // 印刷前に body に印刷用クラスを追加
+    document.body.classList.add('printing-mode');
+    
+    // 印刷ダイアログを開く
     window.print();
+    
+    // 印刷後にクラスを削除（印刷キャンセルも含む）
+    setTimeout(() => {
+      document.body.classList.remove('printing-mode');
+    }, 100);
   };
 
   const handleSave = () => {

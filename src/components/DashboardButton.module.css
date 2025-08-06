@@ -19,6 +19,13 @@
   min-width: fit-content;
 }
 
+/* 印刷時は非表示 */
+@media print {
+  .dashboardButton {
+    display: none !important;
+  }
+}
+
 .dashboardButton:hover {
   background-color: #2563eb;
   transform: translateY(-2px);

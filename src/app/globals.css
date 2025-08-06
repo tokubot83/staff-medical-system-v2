@@ -5,6 +5,25 @@
 /* 面談シート印刷用スタイル */
 @import '../styles/interview-print.css';
 
+/* グローバル印刷用スタイル */
+@media print {
+  /* Tailwindのprint:hiddenクラスを強制的に適用 */
+  .print\:hidden {
+    display: none !important;
+  }
+  
+  /* position: fixedの要素を非表示（ダッシュボードボタン対策） */
+  [style*="position: fixed"],
+  [style*="position:fixed"] {
+    display: none !important;
+  }
+  
+  /* 固定配置の要素を非表示 */
+  .fixed {
+    display: none !important;
+  }
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
