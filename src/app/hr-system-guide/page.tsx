@@ -819,6 +819,49 @@ export default function HRSystemGuidePage() {
               </div>
             </div>
 
+            {/* 権限管理とアクセス制御 */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <h3 className="text-xl font-bold text-gray-800 mb-4">権限管理システム</h3>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="bg-gray-100">
+                      <th className="text-left p-2 font-semibold">レベル</th>
+                      <th className="text-left p-2 font-semibold">役職・部門</th>
+                      <th className="text-left p-2 font-semibold">主な権限</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b">
+                      <td className="p-2 font-medium">L1-4</td>
+                      <td className="p-2">一般職員〜課長</td>
+                      <td className="p-2 text-xs">自分の面談予約・確認のみ</td>
+                    </tr>
+                    <tr className="border-b bg-gray-50">
+                      <td className="p-2 font-medium">L5</td>
+                      <td className="p-2">戦略企画・統括管理部門</td>
+                      <td className="p-2 text-xs">予約管理、スケジュール調整</td>
+                    </tr>
+                    <tr className="border-b">
+                      <td className="p-2 font-medium">L6</td>
+                      <td className="p-2">キャリア支援部門員</td>
+                      <td className="p-2 text-xs">面談実施、記録作成</td>
+                    </tr>
+                    <tr className="border-b bg-gray-50">
+                      <td className="p-2 font-medium">L7-8</td>
+                      <td className="p-2">各部門長・統括管理部門長</td>
+                      <td className="p-2 text-xs">面談実施、統計確認</td>
+                    </tr>
+                    <tr className="border-b">
+                      <td className="p-2 font-medium">L9-10</td>
+                      <td className="p-2">部長級以上</td>
+                      <td className="p-2 text-xs">システム全体の管理</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
             {/* 面談の進め方 */}
             <div className="bg-white rounded-xl shadow-lg p-6">
               <h3 className="text-xl font-bold text-gray-800 mb-4">効果的な面談のポイント</h3>
@@ -851,7 +894,7 @@ export default function HRSystemGuidePage() {
                 <div>
                   <h4 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
                     <span className="text-green-500">👥</span>
-                    上司の心構え
+                    面談者の心構え
                   </h4>
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li className="flex items-start gap-2">
@@ -873,6 +916,41 @@ export default function HRSystemGuidePage() {
                   </ul>
                 </div>
               </div>
+              <div className="mt-4 p-3 bg-orange-50 rounded-lg">
+                <p className="text-sm font-semibold text-orange-800 mb-1">🎯 面談者について</p>
+                <p className="text-xs text-gray-700">
+                  専門の研修を受けた面談担当者が実施します。直属の上司ではありませんので、安心してお話しください。
+                </p>
+              </div>
+            </div>
+
+            {/* プライバシーとセキュリティ */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <h3 className="text-xl font-bold text-gray-800 mb-4">プライバシーと守秘義務</h3>
+              <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-r-lg mb-4">
+                <p className="text-sm font-semibold text-red-800 mb-2">🔒 厳格な情報管理</p>
+                <p className="text-xs text-gray-700">
+                  面談内容は機密性レベルに応じてアクセス制限され、個人情報保護法に準拠した管理が行われます。
+                </p>
+              </div>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h4 className="font-semibold text-gray-800 mb-2 text-sm">👤 職員の権利</h4>
+                  <ul className="text-xs text-gray-600 space-y-1">
+                    <li>• 自分の面談記録の閲覧・確認可能</li>
+                    <li>• 退職時の記録削除要求可能</li>
+                    <li>• 面談内容の録音は行わない</li>
+                  </ul>
+                </div>
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h4 className="font-semibold text-gray-800 mb-2 text-sm">🎯 情報の取り扱い</h4>
+                  <ul className="text-xs text-gray-600 space-y-1">
+                    <li>• 本人同意なく上司への個人特定情報開示は禁止</li>
+                    <li>• 組織改善に必要な情報は匿名化して共有</li>
+                    <li>• SSL/TLS暗号化通信でデータ保護</li>
+                  </ul>
+                </div>
+              </div>
             </div>
 
             {/* 面談シート */}
@@ -883,6 +961,13 @@ export default function HRSystemGuidePage() {
                   面談シートは、面談の内容を記録し、継続的な成長支援に活用するためのツールです。
                   職種や経験年数に応じて最適化されたフォーマットを用意しています。
                 </p>
+                <div className="bg-blue-50 p-3 rounded-lg">
+                  <p className="text-sm font-semibold text-blue-800 mb-1">✅ 自動選択機能</p>
+                  <p className="text-xs text-gray-700">
+                    勤続年数に基づいて適切な面談シートが自動選択されます。
+                    15分・30分・45分版から面談の目的に応じて選択可能です。
+                  </p>
+                </div>
               </div>
               <div className="grid md:grid-cols-3 gap-4">
                 <Link href="/interviews" className="block p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
@@ -897,6 +982,78 @@ export default function HRSystemGuidePage() {
                   <h4 className="font-semibold text-purple-800 mb-2">新人職員用</h4>
                   <p className="text-sm text-gray-600">成長支援重視</p>
                 </Link>
+              </div>
+            </div>
+
+            {/* システム連携と将来計画 */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <h3 className="text-xl font-bold text-gray-800 mb-4">システム連携と将来計画</h3>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-lg p-4">
+                  <h4 className="font-bold text-indigo-900 mb-3 flex items-center gap-2">
+                    <span className="text-xl">🔗</span>
+                    現在進行中の連携
+                  </h4>
+                  <ul className="text-sm text-gray-700 space-y-2">
+                    <li className="flex items-start gap-2">
+                      <span className="text-indigo-500">•</span>
+                      <div>
+                        <p className="font-semibold">VoiceDrive連携</p>
+                        <p className="text-xs text-gray-600">法人内SNSとの統合で職員からの予約を簡素化</p>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-indigo-500">•</span>
+                      <div>
+                        <p className="font-semibold">共通データベース</p>
+                        <p className="text-xs text-gray-600">データの一元管理を実現</p>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-indigo-500">•</span>
+                      <div>
+                        <p className="font-semibold">API連携基盤</p>
+                        <p className="text-xs text-gray-600">将来的なシステム間連携のための基盤構築</p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <div className="bg-gradient-to-br from-teal-50 to-teal-100 rounded-lg p-4">
+                  <h4 className="font-bold text-teal-900 mb-3 flex items-center gap-2">
+                    <span className="text-xl">🚀</span>
+                    将来の拡張予定
+                  </h4>
+                  <ul className="text-sm text-gray-700 space-y-2">
+                    <li className="flex items-start gap-2">
+                      <span className="text-teal-500">•</span>
+                      <div>
+                        <p className="font-semibold">AI分析機能</p>
+                        <p className="text-xs text-gray-600">面談内容の分析と提案</p>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-teal-500">•</span>
+                      <div>
+                        <p className="font-semibold">オンライン面談</p>
+                        <p className="text-xs text-gray-600">リモート面談の実現</p>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-teal-500">•</span>
+                      <div>
+                        <p className="font-semibold">モバイルアプリ</p>
+                        <p className="text-xs text-gray-600">いつでもどこでも予約可能</p>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-teal-500">•</span>
+                      <div>
+                        <p className="font-semibold">勤怠・人事評価連携</p>
+                        <p className="text-xs text-gray-600">シームレスな情報統合</p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
