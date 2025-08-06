@@ -15,13 +15,29 @@ interface InterviewSheetViewerProps {
 
 // v4面談シートコンポーネントの遅延読み込み
 const interviewSheetComponents = {
+  // 新人看護師
+  NewNurseUnified15Min: lazy(() => import('@/components/interview-sheets/v4/new-nurse-unified-15min')),
+  NewNurseUnified30Min: lazy(() => import('@/components/interview-sheets/v4/new-nurse-unified-30min')),
   NewNurseUnified45Min: lazy(() => import('@/components/interview-sheets/v4/new-nurse-unified-45min')),
+  // 一般看護師
   GeneralNurseUnified15Min: lazy(() => import('@/components/interview-sheets/v4/general-nurse-unified-15min')),
   GeneralNurseUnified30Min: lazy(() => import('@/components/interview-sheets/v4/general-nurse-unified-30min')),
   GeneralNurseUnified45Min: lazy(() => import('@/components/interview-sheets/v4/general-nurse-unified-45min')),
+  // シニア看護師
+  SeniorNurseUnified15Min: lazy(() => import('@/components/interview-sheets/v4/senior-nurse-unified-15min')),
+  SeniorNurseUnified30Min: lazy(() => import('@/components/interview-sheets/v4/senior-nurse-unified-30min')),
   SeniorNurseUnified45Min: lazy(() => import('@/components/interview-sheets/v4/senior-nurse-unified-45min')),
+  // ベテラン看護師
+  VeteranNurseUnified15Min: lazy(() => import('@/components/interview-sheets/v4/veteran-nurse-unified-15min')),
+  VeteranNurseUnified30Min: lazy(() => import('@/components/interview-sheets/v4/veteran-nurse-unified-30min')),
   VeteranNurseUnified45Min: lazy(() => import('@/components/interview-sheets/v4/veteran-nurse-unified-45min')),
+  // 主任看護師
+  ChiefNurseUnified15Min: lazy(() => import('@/components/interview-sheets/v4/chief-nurse-unified-15min')),
+  ChiefNurseUnified30Min: lazy(() => import('@/components/interview-sheets/v4/chief-nurse-unified-30min')),
   ChiefNurseUnified45Min: lazy(() => import('@/components/interview-sheets/v4/chief-nurse-unified-45min')),
+  // リーダー看護師
+  LeaderNurseUnified15Min: lazy(() => import('@/components/interview-sheets/v4/leader-nurse-unified-15min')),
+  LeaderNurseUnified30Min: lazy(() => import('@/components/interview-sheets/v4/leader-nurse-unified-30min')),
   LeaderNurseUnified45Min: lazy(() => import('@/components/interview-sheets/v4/leader-nurse-unified-45min'))
 };
 
