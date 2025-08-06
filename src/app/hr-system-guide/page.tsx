@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
+import SheetPreviewModal from '@/components/SheetPreviewModal';
 
 interface SheetItem {
   id: string;
@@ -27,6 +28,7 @@ export default function HRSystemGuidePage() {
   const [selectedFacility, setSelectedFacility] = useState<string>('all');
   const [selectedPosition, setSelectedPosition] = useState<string>('all');
   const [selectedExperience, setSelectedExperience] = useState<string>('all');
+  const [previewSheet, setPreviewSheet] = useState<SheetItem | null>(null);
 
   // シートデータ（実際のファイル構造に基づく）
   const sheetData: SheetItem[] = [
@@ -1444,8 +1446,9 @@ export default function HRSystemGuidePage() {
                         <div className="flex gap-2 ml-4">
                           <button
                             onClick={() => {
-                              // PDFプレビュー機能（実装予定）
-                              alert(`プレビュー機能は準備中です: ${sheet.name}`);
+                              // TSXファイルパスを生成
+                              const tsxPath = sheet.path.replace('/docs/', '').replace('.pdf', '.tsx');
+                              setPreviewSheet({ ...sheet, path: tsxPath });
                             }}
                             className="px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm"
                           >
@@ -1453,11 +1456,10 @@ export default function HRSystemGuidePage() {
                           </button>
                           <button
                             onClick={() => {
-                              // ダウンロード機能（実装予定）
-                              const link = document.createElement('a');
-                              link.href = sheet.path;
-                              link.download = sheet.name + '.pdf';
-                              link.click();
+                              // TSXファイルパスを生成してダウンロード
+                              const tsxPath = sheet.path.replace('/docs/', '').replace('.pdf', '.tsx');
+                              const downloadUrl = `/api/download-sheet?path=${encodeURIComponent(tsxPath)}&name=${encodeURIComponent(sheet.name)}`;
+                              window.open(downloadUrl, '_blank');
                             }}
                             className="px-3 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-sm"
                           >
@@ -1516,6 +1518,17 @@ export default function HRSystemGuidePage() {
           </div>
         </div>
       </div>
+      
+      {/* プレビューモーダル */}
+      {previewSheet && (
+        <SheetPreviewModal
+          isOpen={!!previewSheet}
+          onClose={() => setPreviewSheet(null)}
+          sheetName={previewSheet.name}
+          sheetPath={previewSheet.path}
+        />
+      )}
+      
       <DashboardButton />
     </div>
   );
