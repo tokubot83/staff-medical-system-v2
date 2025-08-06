@@ -6,6 +6,7 @@ import CommonHeader from '@/components/CommonHeader';
 
 export default function HRSystemGuidePage() {
   const [activeTab, setActiveTab] = useState<'evaluation' | 'interview'>('evaluation');
+  const [viewMode, setViewMode] = useState<'general' | 'formal'>('general');
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -30,8 +31,32 @@ export default function HRSystemGuidePage() {
         <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
           <h1 className="text-3xl font-bold text-gray-800 mb-4">人事制度ガイド</h1>
           <p className="text-gray-600">
-            医療法人厚生会の人事評価制度・面談制度について、職員の皆様にわかりやすくご説明します。
+            医療法人厚生会の革新的な2軸評価制度・面談制度について、職員の皆様にわかりやすくご説明します。
           </p>
+          
+          {/* 表示モード切り替え */}
+          <div className="mt-4 flex gap-2">
+            <button
+              onClick={() => setViewMode('general')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                viewMode === 'general'
+                  ? 'bg-green-500 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              📘 一般職員向け（わかりやすい説明）
+            </button>
+            <button
+              onClick={() => setViewMode('formal')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                viewMode === 'formal'
+                  ? 'bg-purple-500 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              📜 正式文書版（詳細規定）
+            </button>
+          </div>
         </div>
 
         {/* タブ切り替え */}
@@ -45,7 +70,7 @@ export default function HRSystemGuidePage() {
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              人事評価制度
+              2軸評価制度
             </button>
             <button
               onClick={() => setActiveTab('interview')}
@@ -60,172 +85,348 @@ export default function HRSystemGuidePage() {
           </div>
         </div>
 
-        {/* 人事評価制度の内容 */}
-        {activeTab === 'evaluation' && (
+        {/* 2軸評価制度の内容 */}
+        {activeTab === 'evaluation' && viewMode === 'general' && (
           <div className="space-y-6">
             {/* 概要 */}
             <div className="bg-white rounded-xl shadow-lg p-6">
               <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <span className="text-3xl">📊</span>
-                人事評価制度の概要
+                <span className="text-3xl">🎯</span>
+                革新的な2軸評価制度とは？
               </h2>
               <div className="prose max-w-none text-gray-600">
                 <p className="mb-4">
-                  当法人の人事評価制度は、職員一人ひとりの成長と組織の発展を両立させることを目的としています。
-                  公正で透明性の高い評価を通じて、職員のモチベーション向上と適切な処遇を実現します。
+                  当法人では、<span className="font-bold text-blue-600">「施設内評価」と「法人内評価」の2つの軸</span>で
+                  職員の皆様を評価する革新的な制度を導入しています。
+                </p>
+                <div className="bg-blue-50 rounded-lg p-4 mb-4">
+                  <p className="text-blue-800 font-semibold mb-2">なぜ2軸評価なの？</p>
+                  <p className="text-gray-700">
+                    小規模施設で頑張っている職員も、大規模施設で活躍している職員も、
+                    それぞれの環境での貢献と法人全体での実力の両方を公平に評価できるからです。
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* 2つの評価軸 */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <h3 className="text-xl font-bold text-gray-800 mb-4">2つの評価軸を理解しよう</h3>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="bg-green-50 rounded-lg p-5 border-2 border-green-200">
+                  <h4 className="font-bold text-green-800 mb-3 flex items-center gap-2">
+                    <span className="text-2xl">🏢</span>
+                    施設内評価
+                  </h4>
+                  <p className="text-gray-700 mb-3">
+                    あなたが働いている施設の中で、同じ職種の仲間と比べてどれくらい頑張っているかを評価します。
+                  </p>
+                  <div className="bg-white rounded p-3">
+                    <p className="text-sm font-semibold text-gray-700 mb-1">評価のポイント</p>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>• チームワーク</li>
+                      <li>• 現場での貢献度</li>
+                      <li>• リーダーシップ</li>
+                      <li>• 施設の行事・活動への参加</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="bg-blue-50 rounded-lg p-5 border-2 border-blue-200">
+                  <h4 className="font-bold text-blue-800 mb-3 flex items-center gap-2">
+                    <span className="text-2xl">🏥</span>
+                    法人内評価
+                  </h4>
+                  <p className="text-gray-700 mb-3">
+                    法人全体（全施設）の同じ職種の職員と比べて、あなたの専門スキルや能力がどのレベルかを評価します。
+                  </p>
+                  <div className="bg-white rounded p-3">
+                    <p className="text-sm font-semibold text-gray-700 mb-1">評価のポイント</p>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>• 専門技術・知識</li>
+                      <li>• 資格・研修実績</li>
+                      <li>• 法人への貢献</li>
+                      <li>• 学会発表・研究活動</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 評価ランクとマトリクス */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <h3 className="text-xl font-bold text-gray-800 mb-4">評価ランクの仕組み</h3>
+              
+              {/* 5段階評価 */}
+              <div className="mb-6">
+                <h4 className="font-semibold text-gray-700 mb-3">各軸での評価（5段階）</h4>
+                <div className="grid grid-cols-5 gap-2">
+                  <div className="text-center p-3 bg-gradient-to-b from-yellow-100 to-yellow-200 rounded-lg">
+                    <div className="text-2xl font-bold text-yellow-800">S</div>
+                    <div className="text-xs text-gray-600">上位10%</div>
+                    <div className="text-xs font-semibold">卓越</div>
+                  </div>
+                  <div className="text-center p-3 bg-gradient-to-b from-green-100 to-green-200 rounded-lg">
+                    <div className="text-2xl font-bold text-green-800">A</div>
+                    <div className="text-xs text-gray-600">上位11-30%</div>
+                    <div className="text-xs font-semibold">優秀</div>
+                  </div>
+                  <div className="text-center p-3 bg-gradient-to-b from-blue-100 to-blue-200 rounded-lg">
+                    <div className="text-2xl font-bold text-blue-800">B</div>
+                    <div className="text-xs text-gray-600">上位31-70%</div>
+                    <div className="text-xs font-semibold">標準</div>
+                  </div>
+                  <div className="text-center p-3 bg-gradient-to-b from-orange-100 to-orange-200 rounded-lg">
+                    <div className="text-2xl font-bold text-orange-800">C</div>
+                    <div className="text-xs text-gray-600">上位71-90%</div>
+                    <div className="text-xs font-semibold">要改善</div>
+                  </div>
+                  <div className="text-center p-3 bg-gradient-to-b from-red-100 to-red-200 rounded-lg">
+                    <div className="text-2xl font-bold text-red-800">D</div>
+                    <div className="text-xs text-gray-600">下位10%</div>
+                    <div className="text-xs font-semibold">要支援</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 総合評価マトリクス */}
+              <div>
+                <h4 className="font-semibold text-gray-700 mb-3">2軸を組み合わせた総合評価</h4>
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr>
+                        <th className="border border-gray-300 p-2 bg-gray-100 text-sm">法人内＼施設内</th>
+                        <th className="border border-gray-300 p-2 bg-yellow-100 text-sm">S</th>
+                        <th className="border border-gray-300 p-2 bg-green-100 text-sm">A</th>
+                        <th className="border border-gray-300 p-2 bg-blue-100 text-sm">B</th>
+                        <th className="border border-gray-300 p-2 bg-orange-100 text-sm">C</th>
+                        <th className="border border-gray-300 p-2 bg-red-100 text-sm">D</th>
+                      </tr>
+                    </thead>
+                    <tbody className="text-center text-sm font-semibold">
+                      <tr>
+                        <td className="border border-gray-300 p-2 bg-yellow-100">S</td>
+                        <td className="border border-gray-300 p-2 bg-yellow-200">S+</td>
+                        <td className="border border-gray-300 p-2 bg-yellow-100">S</td>
+                        <td className="border border-gray-300 p-2 bg-yellow-50">S</td>
+                        <td className="border border-gray-300 p-2 bg-green-100">A</td>
+                        <td className="border border-gray-300 p-2 bg-blue-100">B</td>
+                      </tr>
+                      <tr>
+                        <td className="border border-gray-300 p-2 bg-green-100">A</td>
+                        <td className="border border-gray-300 p-2 bg-yellow-100">S</td>
+                        <td className="border border-gray-300 p-2 bg-green-200">A+</td>
+                        <td className="border border-gray-300 p-2 bg-green-100">A</td>
+                        <td className="border border-gray-300 p-2 bg-blue-100">B</td>
+                        <td className="border border-gray-300 p-2 bg-orange-100">C</td>
+                      </tr>
+                      <tr>
+                        <td className="border border-gray-300 p-2 bg-blue-100">B</td>
+                        <td className="border border-gray-300 p-2 bg-green-100">A</td>
+                        <td className="border border-gray-300 p-2 bg-green-100">A</td>
+                        <td className="border border-gray-300 p-2 bg-blue-100">B</td>
+                        <td className="border border-gray-300 p-2 bg-orange-100">C</td>
+                        <td className="border border-gray-300 p-2 bg-red-100">D</td>
+                      </tr>
+                      <tr>
+                        <td className="border border-gray-300 p-2 bg-orange-100">C</td>
+                        <td className="border border-gray-300 p-2 bg-blue-100">B</td>
+                        <td className="border border-gray-300 p-2 bg-blue-100">B</td>
+                        <td className="border border-gray-300 p-2 bg-orange-100">C</td>
+                        <td className="border border-gray-300 p-2 bg-orange-100">C</td>
+                        <td className="border border-gray-300 p-2 bg-red-100">D</td>
+                      </tr>
+                      <tr>
+                        <td className="border border-gray-300 p-2 bg-red-100">D</td>
+                        <td className="border border-gray-300 p-2 bg-orange-100">C</td>
+                        <td className="border border-gray-300 p-2 bg-orange-100">C</td>
+                        <td className="border border-gray-300 p-2 bg-red-100">D</td>
+                        <td className="border border-gray-300 p-2 bg-red-100">D</td>
+                        <td className="border border-gray-300 p-2 bg-red-200">D</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <p className="text-sm text-gray-600 mt-3">
+                  最終評価は7段階（S+, S, A+, A, B, C, D）で決まります
                 </p>
               </div>
             </div>
 
-            {/* 評価の流れ */}
+            {/* 実際の評価項目 */}
             <div className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">評価の流れ</h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-4">何が評価されるの？</h3>
               <div className="space-y-4">
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold">
-                    1
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-gray-800 mb-1">目標設定（4月）</h4>
-                    <p className="text-gray-600 text-sm">
-                      年度初めに上司と相談しながら、個人目標を設定します。
-                      組織目標と連動した具体的で測定可能な目標を立てます。
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold">
-                    2
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-gray-800 mb-1">中間評価（10月）</h4>
-                    <p className="text-gray-600 text-sm">
-                      目標の進捗状況を確認し、必要に応じて軌道修正を行います。
-                      上司からのフィードバックを受け、後半期の取り組みを計画します。
-                    </p>
+                <div className="bg-purple-50 rounded-lg p-4 border-l-4 border-purple-500">
+                  <h4 className="font-semibold text-purple-800 mb-2">技術評価（50点）</h4>
+                  <p className="text-sm text-gray-700 mb-2">あなたの専門技術やスキルを360度評価で測定</p>
+                  <div className="bg-white rounded p-3">
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>• 看護技術・専門知識の実践</li>
+                      <li>• 患者さんへのケアの質</li>
+                      <li>• 医療安全への取り組み</li>
+                      <li>• チーム医療への貢献</li>
+                    </ul>
                   </div>
                 </div>
 
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold">
-                    3
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-gray-800 mb-1">年度評価（3月）</h4>
-                    <p className="text-gray-600 text-sm">
-                      1年間の成果と成長を総合的に評価します。
-                      自己評価と上司評価を突き合わせ、来年度の課題と目標を明確にします。
-                    </p>
+                <div className="bg-orange-50 rounded-lg p-4 border-l-4 border-orange-500">
+                  <h4 className="font-semibold text-orange-800 mb-2">組織貢献評価（50点）</h4>
+                  <div className="grid md:grid-cols-2 gap-3 mt-3">
+                    <div className="bg-white rounded p-3">
+                      <p className="text-sm font-semibold text-gray-700 mb-2">施設貢献（25点）</p>
+                      <ul className="text-xs text-gray-600 space-y-1">
+                        <li>• 防災訓練参加</li>
+                        <li>• 朝礼出席</li>
+                        <li>• 勉強会開催</li>
+                        <li>• 新人指導</li>
+                      </ul>
+                    </div>
+                    <div className="bg-white rounded p-3">
+                      <p className="text-sm font-semibold text-gray-700 mb-2">法人貢献（25点）</p>
+                      <ul className="text-xs text-gray-600 space-y-1">
+                        <li>• 学会発表</li>
+                        <li>• 他施設支援</li>
+                        <li>• 法人委員会参加</li>
+                        <li>• スポーツ大会参加</li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* 評価項目 */}
+            {/* 評価の活用 */}
             <div className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">評価項目</h3>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="bg-blue-50 rounded-lg p-4">
-                  <h4 className="font-semibold text-blue-800 mb-3">業績評価（50%）</h4>
-                  <ul className="space-y-2 text-sm text-gray-700">
-                    <li className="flex items-start gap-2">
-                      <span className="text-blue-500 mt-1">•</span>
-                      <span>個人目標の達成度</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-blue-500 mt-1">•</span>
-                      <span>業務の質と効率性</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-blue-500 mt-1">•</span>
-                      <span>専門スキルの発揮</span>
-                    </li>
-                  </ul>
-                </div>
-
+              <h3 className="text-xl font-bold text-gray-800 mb-4">評価はどう活用される？</h3>
+              <div className="grid md:grid-cols-2 gap-4">
                 <div className="bg-green-50 rounded-lg p-4">
-                  <h4 className="font-semibold text-green-800 mb-3">行動評価（30%）</h4>
+                  <h4 className="font-semibold text-green-800 mb-3">あなたにとってのメリット</h4>
                   <ul className="space-y-2 text-sm text-gray-700">
                     <li className="flex items-start gap-2">
-                      <span className="text-green-500 mt-1">•</span>
-                      <span>チームワークと協調性</span>
+                      <span className="text-green-500">✓</span>
+                      <span>小規模施設でも正当に評価される</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-green-500 mt-1">•</span>
-                      <span>積極性と主体性</span>
+                      <span className="text-green-500">✓</span>
+                      <span>キャリアパスが明確になる</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-green-500 mt-1">•</span>
-                      <span>コミュニケーション能力</span>
+                      <span className="text-green-500">✓</span>
+                      <span>適材適所の配置で働きやすくなる</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-500">✓</span>
+                      <span>頑張りが数値で見える化される</span>
                     </li>
                   </ul>
                 </div>
 
-                <div className="bg-purple-50 rounded-lg p-4">
-                  <h4 className="font-semibold text-purple-800 mb-3">能力評価（20%）</h4>
-                  <ul className="space-y-2 text-sm text-gray-700">
-                    <li className="flex items-start gap-2">
-                      <span className="text-purple-500 mt-1">•</span>
-                      <span>専門知識・技術の向上</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-purple-500 mt-1">•</span>
-                      <span>問題解決能力</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-purple-500 mt-1">•</span>
-                      <span>リーダーシップ（該当者）</span>
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="bg-orange-50 rounded-lg p-4">
-                  <h4 className="font-semibold text-orange-800 mb-3">職種別評価</h4>
-                  <ul className="space-y-2 text-sm text-gray-700">
-                    <li className="flex items-start gap-2">
-                      <span className="text-orange-500 mt-1">•</span>
-                      <span>看護師：JNAラダー評価</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-orange-500 mt-1">•</span>
-                      <span>医療技術職：専門技術評価</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-orange-500 mt-1">•</span>
-                      <span>事務職：業務処理能力評価</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            {/* 評価結果の活用 */}
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">評価結果の活用</h3>
-              <div className="grid md:grid-cols-3 gap-4">
-                <div className="text-center p-4 bg-gray-50 rounded-lg">
-                  <div className="text-3xl mb-2">💰</div>
-                  <h4 className="font-semibold text-gray-800 mb-1">昇給・賞与</h4>
-                  <p className="text-sm text-gray-600">評価結果に基づく適正な処遇</p>
-                </div>
-                <div className="text-center p-4 bg-gray-50 rounded-lg">
-                  <div className="text-3xl mb-2">📈</div>
-                  <h4 className="font-semibold text-gray-800 mb-1">昇進・昇格</h4>
-                  <p className="text-sm text-gray-600">キャリアアップの判断材料</p>
-                </div>
-                <div className="text-center p-4 bg-gray-50 rounded-lg">
-                  <div className="text-3xl mb-2">🎓</div>
-                  <h4 className="font-semibold text-gray-800 mb-1">教育研修</h4>
-                  <p className="text-sm text-gray-600">個別の成長支援プラン</p>
+                <div className="bg-blue-50 rounded-lg p-4">
+                  <h4 className="font-semibold text-blue-800 mb-3">評価結果の使われ方</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">💰</span>
+                      <div>
+                        <p className="font-semibold text-sm">昇給・賞与</p>
+                        <p className="text-xs text-gray-600">主に施設内評価を基準</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">📈</span>
+                      <div>
+                        <p className="font-semibold text-sm">昇進・異動</p>
+                        <p className="text-xs text-gray-600">総合評価を基準</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">🎓</span>
+                      <div>
+                        <p className="font-semibold text-sm">教育・研修</p>
+                        <p className="text-xs text-gray-600">2軸の組み合わせで個別プラン</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         )}
 
-        {/* 面談制度の内容 */}
-        {activeTab === 'interview' && (
+        {/* 2軸評価制度の正式文書版 */}
+        {activeTab === 'evaluation' && viewMode === 'formal' && (
+          <div className="space-y-6">
+            {/* 規程 */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <h2 className="text-2xl font-bold text-gray-800 mb-4">人事評価規程</h2>
+              <div className="prose max-w-none text-gray-700">
+                <h3 className="text-lg font-semibold mb-3">第1章 総則</h3>
+                <div className="ml-4 space-y-2 text-sm">
+                  <p><strong>第1条（目的）</strong></p>
+                  <p className="ml-4">
+                    本規程は、医療法人厚生会（以下「当法人」という）における職員の人事評価制度に関し、
+                    必要な事項を定めることにより、公正かつ透明性の高い人事管理を実現し、
+                    職員の能力開発及び組織の活性化を図ることを目的とする。
+                  </p>
+                  
+                  <p className="mt-4"><strong>第2条（評価の基本原則）</strong></p>
+                  <p className="ml-4">
+                    当法人の人事評価は、以下の原則に基づき実施する：<br/>
+                    (1) 2軸評価システムによる多面的評価<br/>
+                    (2) 客観的かつ定量的な評価基準の適用<br/>
+                    (3) 施設規模による不公平の排除<br/>
+                    (4) 継続的な成長支援の実現
+                  </p>
+                </div>
+
+                <h3 className="text-lg font-semibold mb-3 mt-6">第2章 2軸評価制度</h3>
+                <div className="ml-4 space-y-2 text-sm">
+                  <p><strong>第3条（評価軸の定義）</strong></p>
+                  <p className="ml-4">
+                    評価は以下の2軸により実施する：<br/>
+                    (1) 施設内評価：当該施設における同一職種内での相対評価<br/>
+                    (2) 法人内評価：法人全体における同一職種内での相対評価
+                  </p>
+                  
+                  <p className="mt-4"><strong>第4条（評価ランク）</strong></p>
+                  <p className="ml-4">
+                    各評価軸において、以下の5段階評価を適用する：<br/>
+                    S：上位10%（卓越）<br/>
+                    A：上位11-30%（優秀）<br/>
+                    B：上位31-70%（標準）<br/>
+                    C：上位71-90%（要改善）<br/>
+                    D：下位10%（要支援）
+                  </p>
+
+                  <p className="mt-4"><strong>第5条（総合評価）</strong></p>
+                  <p className="ml-4">
+                    施設内評価と法人内評価のマトリクスにより、
+                    7段階の総合評価（S+, S, A+, A, B, C, D）を決定する。
+                  </p>
+                </div>
+
+                <h3 className="text-lg font-semibold mb-3 mt-6">第3章 評価の実施</h3>
+                <div className="ml-4 space-y-2 text-sm">
+                  <p><strong>第6条（評価期間）</strong></p>
+                  <p className="ml-4">
+                    評価は年度を単位として実施し、4月1日から翌年3月31日までを評価期間とする。
+                  </p>
+                  
+                  <p className="mt-4"><strong>第7条（評価項目）</strong></p>
+                  <p className="ml-4">
+                    評価は以下の項目により構成される：<br/>
+                    (1) 技術評価（50点）：360度評価方式による専門技術の評価<br/>
+                    (2) 組織貢献評価（50点）：施設貢献（25点）及び法人貢献（25点）
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 面談制度の内容（一般職員向け） */}
+        {activeTab === 'interview' && viewMode === 'general' && (
           <div className="space-y-6">
             {/* 概要 */}
             <div className="bg-white rounded-xl shadow-lg p-6">
@@ -369,6 +570,107 @@ export default function HRSystemGuidePage() {
                   <h4 className="font-semibold text-purple-800 mb-2">新人職員用</h4>
                   <p className="text-sm text-gray-600">成長支援重視</p>
                 </Link>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 面談制度の内容（正式文書版） */}
+        {activeTab === 'interview' && viewMode === 'formal' && (
+          <div className="space-y-6">
+            {/* 面談規程 */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <h2 className="text-2xl font-bold text-gray-800 mb-4">面談制度規程</h2>
+              <div className="prose max-w-none text-gray-700">
+                <h3 className="text-lg font-semibold mb-3">第1章 総則</h3>
+                <div className="ml-4 space-y-2 text-sm">
+                  <p><strong>第1条（目的）</strong></p>
+                  <p className="ml-4">
+                    本規程は、当法人における職員面談制度に関し必要な事項を定め、
+                    上司と部下の円滑なコミュニケーションを通じて、
+                    職員の成長支援と組織の活性化を図ることを目的とする。
+                  </p>
+                  
+                  <p className="mt-4"><strong>第2条（面談の種類）</strong></p>
+                  <p className="ml-4">
+                    面談は以下の4種類とする：<br/>
+                    (1) 目標設定面談（4月）<br/>
+                    (2) 中間面談（10月）<br/>
+                    (3) 評価面談（3月）<br/>
+                    (4) 随時面談（必要時）
+                  </p>
+                </div>
+
+                <h3 className="text-lg font-semibold mb-3 mt-6">第2章 面談の実施</h3>
+                <div className="ml-4 space-y-2 text-sm">
+                  <p><strong>第3条（面談の実施者）</strong></p>
+                  <p className="ml-4">
+                    面談は原則として直属の上司が実施する。
+                    ただし、必要に応じて部門長または人事部門責任者が同席することができる。
+                  </p>
+                  
+                  <p className="mt-4"><strong>第4条（面談の記録）</strong></p>
+                  <p className="ml-4">
+                    面談実施後は、所定の面談シートに記録を残し、
+                    上司と部下双方の確認を得た上で人事部門に提出する。
+                  </p>
+
+                  <p className="mt-4"><strong>第5条（守秘義務）</strong></p>
+                  <p className="ml-4">
+                    面談で知り得た個人情報は厳格に管理し、
+                    業務上必要な範囲を超えて開示してはならない。
+                  </p>
+                </div>
+
+                <h3 className="text-lg font-semibold mb-3 mt-6">第3章 面談の活用</h3>
+                <div className="ml-4 space-y-2 text-sm">
+                  <p><strong>第6条（フィードバック）</strong></p>
+                  <p className="ml-4">
+                    面談結果は、職員の成長支援、適正配置、教育研修計画の策定等に活用する。
+                  </p>
+                  
+                  <p className="mt-4"><strong>第7条（改善措置）</strong></p>
+                  <p className="ml-4">
+                    面談により把握した課題については、
+                    速やかに改善措置を講じ、継続的なフォローアップを実施する。
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* 面談実施要領 */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <h3 className="text-xl font-bold text-gray-800 mb-4">面談実施要領</h3>
+              <div className="space-y-4 text-sm">
+                <div className="border-l-4 border-blue-500 pl-4">
+                  <h4 className="font-semibold text-gray-800 mb-2">1. 事前準備</h4>
+                  <ul className="ml-4 space-y-1 text-gray-600">
+                    <li>• 面談日時の調整（最低1週間前）</li>
+                    <li>• 面談シートの事前配布</li>
+                    <li>• 評価データ・実績資料の準備</li>
+                    <li>• プライバシーが確保できる場所の確保</li>
+                  </ul>
+                </div>
+
+                <div className="border-l-4 border-green-500 pl-4">
+                  <h4 className="font-semibold text-gray-800 mb-2">2. 面談の実施</h4>
+                  <ul className="ml-4 space-y-1 text-gray-600">
+                    <li>• 所要時間：30分～60分を目安</li>
+                    <li>• 傾聴の姿勢を保つ</li>
+                    <li>• 具体的事例に基づくフィードバック</li>
+                    <li>• 双方向のコミュニケーション</li>
+                  </ul>
+                </div>
+
+                <div className="border-l-4 border-purple-500 pl-4">
+                  <h4 className="font-semibold text-gray-800 mb-2">3. 事後フォロー</h4>
+                  <ul className="ml-4 space-y-1 text-gray-600">
+                    <li>• 面談記録の作成（3日以内）</li>
+                    <li>• 合意事項の文書化</li>
+                    <li>• 人事部への報告</li>
+                    <li>• 継続的な進捗確認</li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
