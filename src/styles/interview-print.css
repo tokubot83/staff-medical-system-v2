@@ -1,0 +1,286 @@
+/* 面談シート印刷用スタイル */
+
+@media print {
+  /* 基本設定 */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  /* ページ設定 */
+  @page {
+    size: A4;
+    margin: 15mm 10mm;
+  }
+
+  /* 不要な要素を非表示 */
+  .print\\:hidden,
+  nav,
+  header,
+  footer,
+  button,
+  .no-print {
+    display: none !important;
+  }
+
+  /* body設定 */
+  body {
+    font-size: 10pt;
+    line-height: 1.5;
+    color: #000;
+    background: white;
+  }
+
+  /* 印刷用モードの特別処理 */
+  .print-mode {
+    /* ラジオボタンを四角に変換 */
+    input[type="radio"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 12px;
+      height: 12px;
+      border: 1px solid #000;
+      border-radius: 0;
+      background: white;
+      margin-right: 4px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    input[type="radio"]:checked {
+      background: #000;
+    }
+
+    /* チェックボックスの印刷用スタイル */
+    input[type="checkbox"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 12px;
+      height: 12px;
+      border: 1px solid #000;
+      border-radius: 0;
+      background: white;
+      margin-right: 4px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    input[type="checkbox"]:checked::after {
+      content: "✓";
+      display: block;
+      text-align: center;
+      line-height: 12px;
+      font-size: 10px;
+    }
+
+    /* テキストエリアの印刷用スタイル */
+    textarea {
+      border: 1px solid #666 !important;
+      min-height: 60px !important;
+      padding: 4px !important;
+      font-size: 9pt !important;
+      resize: none !important;
+      page-break-inside: avoid;
+      background: white !important;
+    }
+
+    /* 入力フィールドの印刷用スタイル */
+    input[type="text"],
+    input[type="date"],
+    input[type="number"],
+    select {
+      border: none !important;
+      border-bottom: 1px solid #333 !important;
+      padding: 2px 0 !important;
+      background: transparent !important;
+      font-size: 9pt !important;
+    }
+  }
+
+  /* カード要素 */
+  .card,
+  [class*="Card"] {
+    border: 1px solid #ddd !important;
+    box-shadow: none !important;
+    margin-bottom: 10mm !important;
+    page-break-inside: avoid;
+  }
+
+  /* カードヘッダー */
+  .card-header,
+  [class*="CardHeader"] {
+    background: #f5f5f5 !important;
+    padding: 8px 12px !important;
+    border-bottom: 1px solid #ddd !important;
+    page-break-after: avoid;
+  }
+
+  /* カードコンテンツ */
+  .card-content,
+  [class*="CardContent"] {
+    padding: 8px 12px !important;
+  }
+
+  /* タイトル */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    margin-top: 8px !important;
+    margin-bottom: 4px !important;
+  }
+
+  h1 { font-size: 16pt !important; }
+  h2 { font-size: 14pt !important; }
+  h3 { font-size: 12pt !important; }
+  h4 { font-size: 11pt !important; }
+
+  /* テーブル */
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    page-break-inside: avoid;
+  }
+
+  th, td {
+    border: 1px solid #ddd !important;
+    padding: 4px 6px !important;
+    font-size: 9pt !important;
+  }
+
+  th {
+    background: #f5f5f5 !important;
+    font-weight: bold !important;
+  }
+
+  /* グリッドレイアウト */
+  .grid {
+    display: grid !important;
+    gap: 8px !important;
+  }
+
+  /* 評価項目の印刷用スタイル */
+  .bg-gray-50,
+  .bg-blue-50,
+  .bg-green-50,
+  .bg-yellow-50,
+  .bg-orange-50,
+  .bg-purple-50,
+  .bg-pink-50,
+  .bg-indigo-50,
+  .bg-emerald-50 {
+    background: #f9f9f9 !important;
+    border: 1px solid #ddd !important;
+    padding: 6px !important;
+    margin: 4px 0 !important;
+  }
+
+  /* ラベル */
+  label {
+    font-size: 9pt !important;
+    font-weight: 600 !important;
+    display: inline-block !important;
+    margin-bottom: 2px !important;
+  }
+
+  /* アラート */
+  .alert,
+  [role="alert"] {
+    border: 1px solid #666 !important;
+    padding: 6px !important;
+    background: #f9f9f9 !important;
+    margin: 8px 0 !important;
+  }
+
+  /* ページ区切り制御 */
+  .page-break-before {
+    page-break-before: always;
+  }
+
+  .page-break-after {
+    page-break-after: always;
+  }
+
+  .avoid-break {
+    page-break-inside: avoid;
+  }
+
+  /* セクション間のスペース */
+  .space-y-4 > * + * {
+    margin-top: 8px !important;
+  }
+
+  .space-y-6 > * + * {
+    margin-top: 12px !important;
+  }
+
+  /* 面談シート特有の調整 */
+  /* 時間配分の表示 */
+  .border-b {
+    border-bottom: 1px solid #333 !important;
+    padding-bottom: 4px !important;
+  }
+
+  /* 評価スケール */
+  .grid-cols-6 {
+    grid-template-columns: 120px repeat(5, 1fr) !important;
+  }
+
+  /* フッター情報（ページ番号など） */
+  .print-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 8pt;
+    color: #666;
+    padding: 4px;
+  }
+
+  /* 署名欄 */
+  .signature-area {
+    margin-top: 20mm;
+    border-top: 1px solid #333;
+    padding-top: 4mm;
+  }
+
+  .signature-line {
+    display: inline-block;
+    width: 60mm;
+    border-bottom: 1px solid #333;
+    margin: 0 10mm;
+  }
+
+  /* モバイルビューポートの無効化 */
+  meta[name="viewport"] {
+    content: "width=device-width, initial-scale=1.0" !important;
+  }
+}
+
+/* 印刷プレビュー用のクラス */
+.print-preview {
+  background: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  margin: 20px auto;
+  padding: 20mm 15mm;
+  width: 210mm;
+  min-height: 297mm;
+  box-sizing: border-box;
+}
+
+/* 印刷時のみ表示する要素 */
+@media screen {
+  .print-only {
+    display: none !important;
+  }
+}
+
+@media print {
+  .print-only {
+    display: block !important;
+  }
+  
+  .screen-only {
+    display: none !important;
+  }
+}

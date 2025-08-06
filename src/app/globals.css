@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 面談シート印刷用スタイル */
+@import '../styles/interview-print.css';
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

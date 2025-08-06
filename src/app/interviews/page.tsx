@@ -10,6 +10,8 @@ import { Interview, InterviewType, InterviewStatus } from '@/types/interview'
 import { mockInterviews, getUpcomingInterviews } from '@/data/mockInterviews'
 import InterviewModal from '@/components/InterviewModal'
 import InterviewSheetSelector from '@/components/interview/InterviewSheetSelector'
+import InterviewSheetWrapper from '@/components/interview/InterviewSheetWrapper'
+import { getExperienceCategory } from '@/utils/experienceUtils'
 
 const tabs = [
   { id: 'schedule', label: '面談予定', icon: '📅' },
@@ -423,54 +425,83 @@ function FeedbackTab({ selectedInterview }: FeedbackTabProps) {
 function InterviewSheetsTab(): React.ReactElement {
   const [selectedStaff, setSelectedStaff] = useState<any>(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const [selectedSheetDuration, setSelectedSheetDuration] = useState<number | null>(null)
+  const [showSheet, setShowSheet] = useState(false)
   
   const filteredStaff = Object.values(staffDatabase).filter(staff => 
     staff.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     staff.id.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
+  const handleSelectSheet = (sheetPath: string) => {
+    // パスから時間を抽出 (例: /interview-sheets/new/30 -> 30)
+    const duration = parseInt(sheetPath.split('/').pop() || '30')
+    setSelectedSheetDuration(duration)
+    setShowSheet(true)
+  }
+
   return (
     <div className={styles.sheetsContainer}>
       <h2>面談シート選択</h2>
       
-      <div className={styles.sheetSelectionArea}>
-        <div className={styles.staffSearchSection}>
-          <h3>職員を選択</h3>
-          <input
-            type="text"
-            placeholder="職員名または職員IDで検索"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className={styles.searchInput}
-          />
-          
-          <div className={styles.staffList}>
-            {filteredStaff.slice(0, 10).map((staff) => (
-              <div
-                key={staff.id}
-                className={`${styles.staffItem} ${selectedStaff?.id === staff.id ? styles.selected : ''}`}
-                onClick={() => setSelectedStaff(staff)}
-              >
-                <div className={styles.staffInfo}>
-                  <span className={styles.staffName}>{staff.name}</span>
-                  <span className={styles.staffId}>ID: {staff.id}</span>
+      {!showSheet ? (
+        <div className={styles.sheetSelectionArea}>
+          <div className={styles.staffSearchSection}>
+            <h3>職員を選択</h3>
+            <input
+              type="text"
+              placeholder="職員名または職員IDで検索"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className={styles.searchInput}
+            />
+            
+            <div className={styles.staffList}>
+              {filteredStaff.slice(0, 10).map((staff) => (
+                <div
+                  key={staff.id}
+                  className={`${styles.staffItem} ${selectedStaff?.id === staff.id ? styles.selected : ''}`}
+                  onClick={() => setSelectedStaff(staff)}
+                >
+                  <div className={styles.staffInfo}>
+                    <span className={styles.staffName}>{staff.name}</span>
+                    <span className={styles.staffId}>ID: {staff.id}</span>
+                  </div>
+                  <span className={styles.staffExperience}>経験年数: {staff.経験年数}年</span>
                 </div>
-                <span className={styles.staffExperience}>経験年数: {staff.経験年数}年</span>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
+          
+          {selectedStaff && (
+            <div className={styles.sheetSelectorSection}>
+              <InterviewSheetSelector
+                staffId={selectedStaff.id}
+                staffName={selectedStaff.name}
+                yearsOfExperience={selectedStaff.経験年数}
+                onSelectSheet={handleSelectSheet}
+              />
+            </div>
+          )}
         </div>
-        
-        {selectedStaff && (
-          <div className={styles.sheetSelectorSection}>
-            <InterviewSheetSelector
-              staffId={selectedStaff.id}
+      ) : (
+        <div className={styles.sheetViewerSection}>
+          <button
+            onClick={() => setShowSheet(false)}
+            className={styles.backButton}
+          >
+            ← 職員選択に戻る
+          </button>
+          {selectedStaff && selectedSheetDuration && (
+            <InterviewSheetWrapper
+              experienceCategory={getExperienceCategory(selectedStaff.経験年数)}
+              duration={selectedSheetDuration}
               staffName={selectedStaff.name}
               yearsOfExperience={selectedStaff.経験年数}
             />
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }
