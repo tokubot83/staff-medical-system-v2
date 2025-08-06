@@ -72,7 +72,8 @@ export const tachigamiOrganizationData: Department[] = [
     type: 'nursing',
     level: 4,
     parentId: 'tachigami-nursing',
-    head: { title: '師長' }
+    head: { title: '師長' },
+    subHead: { title: '主任' }
   },
   {
     id: 'tachigami-outpatient',
