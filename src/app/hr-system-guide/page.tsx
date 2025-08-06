@@ -907,97 +907,224 @@ export default function HRSystemGuidePage() {
           <div className="space-y-6">
             {/* 面談規程 */}
             <div className="bg-white rounded-xl shadow-lg p-6">
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">面談制度規程</h2>
+              <h2 className="text-2xl font-bold text-gray-800 mb-4">面談制度規程（v4統合面談版）</h2>
               <div className="prose max-w-none text-gray-700">
                 <h3 className="text-lg font-semibold mb-3">第1章 総則</h3>
                 <div className="ml-4 space-y-2 text-sm">
                   <p><strong>第1条（目的）</strong></p>
                   <p className="ml-4">
-                    本規程は、当法人における職員面談制度に関し必要な事項を定め、
-                    上司と部下の円滑なコミュニケーションを通じて、
-                    職員の成長支援と組織の活性化を図ることを目的とする。
+                    本規程は、当法人におけるv4統合面談制度に関し必要な事項を定め、
+                    2軸評価制度と連携した効果的な人材育成を実現することを目的とする。
                   </p>
                   
-                  <p className="mt-4"><strong>第2条（面談の種類）</strong></p>
+                  <p className="mt-4"><strong>第2条（統合面談の定義）</strong></p>
                   <p className="ml-4">
-                    面談は以下の4種類とする：<br/>
-                    (1) 目標設定面談（4月）<br/>
-                    (2) 中間面談（10月）<br/>
-                    (3) 評価面談（3月）<br/>
-                    (4) 随時面談（必要時）
+                    統合面談とは、目標設定・中間評価・年度評価を一体化した面談形式であり、
+                    職員の成長段階と必要性に応じて実施時間を選択する柔軟な面談制度とする。
+                  </p>
+
+                  <p className="mt-4"><strong>第3条（面談時間の区分）</strong></p>
+                  <p className="ml-4">
+                    面談は以下の3つの時間区分で実施する：<br/>
+                    (1) 15分面談：日常的なコミュニケーション重視<br/>
+                    (2) 30分面談：定期的な進捗確認と課題共有<br/>
+                    (3) 45分面談：詳細な評価と成長支援計画策定
                   </p>
                 </div>
 
-                <h3 className="text-lg font-semibold mb-3 mt-6">第2章 面談の実施</h3>
+                <h3 className="text-lg font-semibold mb-3 mt-6">第2章 職位別面談基準</h3>
                 <div className="ml-4 space-y-2 text-sm">
-                  <p><strong>第3条（面談の実施者）</strong></p>
+                  <p><strong>第4条（新人職員）</strong></p>
                   <p className="ml-4">
-                    面談は原則として直属の上司が実施する。
-                    ただし、必要に応じて部門長または人事部門責任者が同席することができる。
+                    新人職員（入職1年目）は、原則として45分面談を四半期ごとに実施する。
+                    成長状況に応じて、追加の15分面談を月1回実施することができる。
                   </p>
                   
-                  <p className="mt-4"><strong>第4条（面談の記録）</strong></p>
+                  <p className="mt-4"><strong>第5条（一般職員）</strong></p>
                   <p className="ml-4">
-                    面談実施後は、所定の面談シートに記録を残し、
-                    上司と部下双方の確認を得た上で人事部門に提出する。
+                    一般職員は以下の頻度で実施する：<br/>
+                    (1) 15分面談：月1回（任意）<br/>
+                    (2) 30分面談：四半期ごと<br/>
+                    (3) 45分面談：年2回（中間・年度評価時）
                   </p>
 
-                  <p className="mt-4"><strong>第5条（守秘義務）</strong></p>
+                  <p className="mt-4"><strong>第6条（中堅・シニア職員）</strong></p>
                   <p className="ml-4">
-                    面談で知り得た個人情報は厳格に管理し、
-                    業務上必要な範囲を超えて開示してはならない。
+                    中堅・シニア職員は、30分面談を四半期ごと、
+                    45分面談を年度評価時に実施する。
+                  </p>
+
+                  <p className="mt-4"><strong>第7条（管理職）</strong></p>
+                  <p className="ml-4">
+                    リーダー・主任等の管理職は、45分面談を四半期ごとに実施し、
+                    部下育成計画と組織運営について協議する。
                   </p>
                 </div>
 
-                <h3 className="text-lg font-semibold mb-3 mt-6">第3章 面談の活用</h3>
+                <h3 className="text-lg font-semibold mb-3 mt-6">第3章 2軸評価との連携</h3>
                 <div className="ml-4 space-y-2 text-sm">
-                  <p><strong>第6条（フィードバック）</strong></p>
+                  <p><strong>第8条（評価結果の活用）</strong></p>
                   <p className="ml-4">
-                    面談結果は、職員の成長支援、適正配置、教育研修計画の策定等に活用する。
+                    面談時には、2軸評価（施設内評価・法人内評価）の結果を基に、
+                    以下の事項を必ず確認する：<br/>
+                    (1) 施設内での相対的な位置づけ<br/>
+                    (2) 法人全体での専門性レベル<br/>
+                    (3) 総合評価（S+～D）と改善点<br/>
+                    (4) キャリアパスと成長目標
                   </p>
                   
-                  <p className="mt-4"><strong>第7条（改善措置）</strong></p>
+                  <p className="mt-4"><strong>第9条（フィードバック方法）</strong></p>
                   <p className="ml-4">
-                    面談により把握した課題については、
-                    速やかに改善措置を講じ、継続的なフォローアップを実施する。
+                    評価結果のフィードバックは、評価マトリクスを視覚的に示しながら、
+                    具体的な改善策と成長支援策を提示する。
+                  </p>
+                </div>
+
+                <h3 className="text-lg font-semibold mb-3 mt-6">第4章 面談シートの管理</h3>
+                <div className="ml-4 space-y-2 text-sm">
+                  <p><strong>第10条（v4統合面談シート）</strong></p>
+                  <p className="ml-4">
+                    面談は、職位と時間に応じたv4統合面談シートを使用する。
+                    シートは人事部が管理し、最新版を常に利用可能な状態に維持する。
+                  </p>
+                  
+                  <p className="mt-4"><strong>第11条（記録の保管）</strong></p>
+                  <p className="ml-4">
+                    面談記録は電子化し、人事システムで一元管理する。
+                    保管期間は5年間とし、本人の求めに応じて開示する。
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* 面談実施要領 */}
+            {/* v4統合面談実施要領 */}
             <div className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">面談実施要領</h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-4">v4統合面談実施要領</h3>
               <div className="space-y-4 text-sm">
                 <div className="border-l-4 border-blue-500 pl-4">
-                  <h4 className="font-semibold text-gray-800 mb-2">1. 事前準備</h4>
-                  <ul className="ml-4 space-y-1 text-gray-600">
-                    <li>• 面談日時の調整（最低1週間前）</li>
-                    <li>• 面談シートの事前配布</li>
-                    <li>• 評価データ・実績資料の準備</li>
-                    <li>• プライバシーが確保できる場所の確保</li>
-                  </ul>
+                  <h4 className="font-semibold text-gray-800 mb-2">1. 面談時間の選択基準</h4>
+                  <table className="ml-4 w-full text-gray-600">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="text-left py-1">状況</th>
+                        <th className="text-left py-1">推奨時間</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td className="py-1">日常的な確認・相談</td>
+                        <td className="py-1">15分</td>
+                      </tr>
+                      <tr>
+                        <td className="py-1">定期面談・進捗確認</td>
+                        <td className="py-1">30分</td>
+                      </tr>
+                      <tr>
+                        <td className="py-1">評価面談・キャリア相談</td>
+                        <td className="py-1">45分</td>
+                      </tr>
+                      <tr>
+                        <td className="py-1">問題解決・緊急対応</td>
+                        <td className="py-1">45分</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
 
                 <div className="border-l-4 border-green-500 pl-4">
-                  <h4 className="font-semibold text-gray-800 mb-2">2. 面談の実施</h4>
+                  <h4 className="font-semibold text-gray-800 mb-2">2. 2軸評価の説明方法</h4>
                   <ul className="ml-4 space-y-1 text-gray-600">
-                    <li>• 所要時間：30分～60分を目安</li>
-                    <li>• 傾聴の姿勢を保つ</li>
-                    <li>• 具体的事例に基づくフィードバック</li>
-                    <li>• 双方向のコミュニケーション</li>
+                    <li>• 評価マトリクス表を用いて視覚的に説明</li>
+                    <li>• 施設内順位：「あなたの施設での位置は上位◯%」</li>
+                    <li>• 法人内順位：「法人全体での専門性は上位◯%」</li>
+                    <li>• 総合評価の意味と今後の目標を明確化</li>
+                    <li>• 他施設への異動可能性についても言及</li>
                   </ul>
                 </div>
 
                 <div className="border-l-4 border-purple-500 pl-4">
-                  <h4 className="font-semibold text-gray-800 mb-2">3. 事後フォロー</h4>
+                  <h4 className="font-semibold text-gray-800 mb-2">3. 職位別重点項目</h4>
                   <ul className="ml-4 space-y-1 text-gray-600">
-                    <li>• 面談記録の作成（3日以内）</li>
-                    <li>• 合意事項の文書化</li>
-                    <li>• 人事部への報告</li>
-                    <li>• 継続的な進捗確認</li>
+                    <li><strong>新人：</strong>基礎技術習得、職場適応、メンタルサポート</li>
+                    <li><strong>一般：</strong>専門性向上、チーム貢献、目標達成</li>
+                    <li><strong>中堅：</strong>後輩指導、業務改善、リーダーシップ</li>
+                    <li><strong>シニア：</strong>専門性発揮、知識伝承、組織貢献</li>
+                    <li><strong>管理職：</strong>部下育成、組織運営、戦略実行</li>
                   </ul>
                 </div>
+
+                <div className="border-l-4 border-orange-500 pl-4">
+                  <h4 className="font-semibold text-gray-800 mb-2">4. 面談後のアクション</h4>
+                  <ul className="ml-4 space-y-1 text-gray-600">
+                    <li>• v4統合面談シートを3日以内に人事部提出</li>
+                    <li>• 合意した目標・改善策を文書化</li>
+                    <li>• 次回面談日程の設定（その場で決定）</li>
+                    <li>• 必要に応じて教育研修の申込み</li>
+                    <li>• 重要事項は部門長・人事部と共有</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {/* シート一覧 */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <h3 className="text-xl font-bold text-gray-800 mb-4">v4統合面談シート一覧</h3>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b-2 border-gray-300">
+                      <th className="text-left py-2">職位</th>
+                      <th className="text-left py-2">15分版</th>
+                      <th className="text-left py-2">30分版</th>
+                      <th className="text-left py-2">45分版</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b">
+                      <td className="py-2 font-semibold">新人看護師</td>
+                      <td>○</td>
+                      <td>○</td>
+                      <td>◎（推奨）</td>
+                    </tr>
+                    <tr className="border-b">
+                      <td className="py-2 font-semibold">一般看護師</td>
+                      <td>○</td>
+                      <td>◎（推奨）</td>
+                      <td>○</td>
+                    </tr>
+                    <tr className="border-b">
+                      <td className="py-2 font-semibold">中堅看護師</td>
+                      <td>-</td>
+                      <td>◎（推奨）</td>
+                      <td>○</td>
+                    </tr>
+                    <tr className="border-b">
+                      <td className="py-2 font-semibold">シニア看護師</td>
+                      <td>-</td>
+                      <td>○</td>
+                      <td>◎（推奨）</td>
+                    </tr>
+                    <tr className="border-b">
+                      <td className="py-2 font-semibold">ベテラン看護師</td>
+                      <td>-</td>
+                      <td>○</td>
+                      <td>◎（推奨）</td>
+                    </tr>
+                    <tr className="border-b">
+                      <td className="py-2 font-semibold">リーダー看護師</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>◎（必須）</td>
+                    </tr>
+                    <tr className="border-b">
+                      <td className="py-2 font-semibold">主任看護師</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>◎（必須）</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p className="text-xs text-gray-600 mt-2">◎：推奨/必須　○：利用可　-：該当なし</p>
               </div>
             </div>
           </div>
