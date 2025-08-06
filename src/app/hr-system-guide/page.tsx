@@ -210,12 +210,20 @@ export default function HRSystemGuidePage() {
                     あなたが働いている施設の中で、同じ職種の仲間と比べてどれくらい頑張っているかを評価します。
                   </p>
                   <div className="bg-white rounded p-3">
-                    <p className="text-sm font-semibold text-gray-700 mb-1">評価のポイント</p>
-                    <ul className="text-sm text-gray-600 space-y-1">
-                      <li>• チームワーク</li>
-                      <li>• 現場での貢献度</li>
-                      <li>• リーダーシップ</li>
-                      <li>• 施設の行事・活動への参加</li>
+                    <p className="text-sm font-semibold text-gray-700 mb-2">この評価で分かること</p>
+                    <ul className="text-sm text-gray-600 space-y-2">
+                      <li className="flex items-start gap-2">
+                        <span className="text-green-500 mt-0.5">✓</span>
+                        <span>施設内でのあなたの位置づけが明確になり、日々の貢献が正当に評価されます</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-green-500 mt-0.5">✓</span>
+                        <span>施設の規模に関係なく、その環境での頑張りが公平・客観的に可視化されます</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-green-500 mt-0.5">✓</span>
+                        <span>チームへの貢献度や協調性が数値化され、1年間の成長が把握できます</span>
+                      </li>
                     </ul>
                   </div>
                 </div>
@@ -229,12 +237,20 @@ export default function HRSystemGuidePage() {
                     法人全体（全施設）の同じ職種の職員と比べて、あなたの専門スキルや能力がどのレベルかを評価します。
                   </p>
                   <div className="bg-white rounded p-3">
-                    <p className="text-sm font-semibold text-gray-700 mb-1">評価のポイント</p>
-                    <ul className="text-sm text-gray-600 space-y-1">
-                      <li>• 専門技術・知識</li>
-                      <li>• 資格・研修実績</li>
-                      <li>• 法人への貢献</li>
-                      <li>• 学会発表・研究活動</li>
+                    <p className="text-sm font-semibold text-gray-700 mb-2">この評価で分かること</p>
+                    <ul className="text-sm text-gray-600 space-y-2">
+                      <li className="flex items-start gap-2">
+                        <span className="text-blue-500 mt-0.5">✓</span>
+                        <span>法人全体でのあなたの専門性レベルが明確になり、キャリアパスの参考になります</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-blue-500 mt-0.5">✓</span>
+                        <span>自分のスキルや知識が法人内でどの位置にあるか客観的に把握できます</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-blue-500 mt-0.5">✓</span>
+                        <span>異動や昇進の際の適材適所の配置に活用され、あなたの強みを活かせます</span>
+                      </li>
                     </ul>
                   </div>
                 </div>
