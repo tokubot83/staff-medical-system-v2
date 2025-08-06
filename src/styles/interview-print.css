@@ -20,7 +20,21 @@
   header,
   footer,
   button,
-  .no-print {
+  .no-print,
+  [class*="dashboardButton"],
+  [class*="DashboardButton"],
+  [class*="CommonHeader"],
+  [class*="tabNavigation"],
+  [class*="backButton"],
+  a[href="/"],
+  a[href^="/"],
+  .screen-only {
+    display: none !important;
+  }
+  
+  /* 保存ボタンなども非表示 */
+  button[type="button"],
+  button[type="submit"] {
     display: none !important;
   }
 
