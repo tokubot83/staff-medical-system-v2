@@ -33,39 +33,39 @@ export default function HRSystemGuidePage() {
   // シートデータ（実際のファイル構造に基づく）
   const sheetData: SheetItem[] = [
     // v4面談シート
-    { id: 'iv-1', name: '新人看護師45分統合面談', category: '面談シート', type: 'interview', version: 'v4', position: '看護師', experience: '新人', duration: '45分', path: '/docs/v4_interview/new-nurse-unified-45min.pdf', description: '新人看護師向けの詳細な面談シート' },
-    { id: 'iv-2', name: '一般看護師15分統合面談', category: '面談シート', type: 'interview', version: 'v4', position: '看護師', experience: '一般', duration: '15分', path: '/docs/v4_interview/general-nurse-unified-15min.pdf', description: '日常的なショート面談用' },
-    { id: 'iv-3', name: '一般看護師30分統合面談', category: '面談シート', type: 'interview', version: 'v4', position: '看護師', experience: '一般', duration: '30分', path: '/docs/v4_interview/general-nurse-unified-30min.pdf', description: '定期面談用の標準シート' },
-    { id: 'iv-4', name: '一般看護師45分統合面談', category: '面談シート', type: 'interview', version: 'v4', position: '看護師', experience: '一般', duration: '45分', path: '/docs/v4_interview/general-nurse-unified-45min.pdf', description: '詳細な評価面談用' },
-    { id: 'iv-5', name: 'リーダー看護師45分統合面談', category: '面談シート', type: 'interview', version: 'v4', position: '看護師', experience: 'リーダー', duration: '45分', path: '/docs/v4_interview/leader-nurse-unified-45min.pdf', description: 'リーダー層向け面談シート' },
-    { id: 'iv-6', name: '主任看護師45分統合面談', category: '面談シート', type: 'interview', version: 'v4', position: '看護師', experience: '主任', duration: '45分', path: '/docs/v4_interview/chief-nurse-unified-45min.pdf', description: '管理職向け面談シート' },
-    { id: 'iv-7', name: 'シニア看護師45分統合面談', category: '面談シート', type: 'interview', version: 'v4', position: '看護師', experience: 'シニア', duration: '45分', path: '/docs/v4_interview/senior-nurse-unified-45min.pdf', description: 'シニア層向け面談シート' },
-    { id: 'iv-8', name: 'ベテラン看護師45分統合面談', category: '面談シート', type: 'interview', version: 'v4', position: '看護師', experience: 'ベテラン', duration: '45分', path: '/docs/v4_interview/veteran-nurse-unified-45min.pdf', description: 'ベテラン層向け面談シート' },
+    { id: 'iv-1', name: '新人看護師45分統合面談', category: '面談シート', type: 'interview', version: 'v4', position: '看護師', experience: '新人', duration: '45分', path: 'v4_interview/new-nurse-unified-45min.tsx', description: '新人看護師向けの詳細な面談シート' },
+    { id: 'iv-2', name: '一般看護師15分統合面談', category: '面談シート', type: 'interview', version: 'v4', position: '看護師', experience: '一般', duration: '15分', path: 'v4_interview/general-nurse-unified-15min.tsx', description: '日常的なショート面談用' },
+    { id: 'iv-3', name: '一般看護師30分統合面談', category: '面談シート', type: 'interview', version: 'v4', position: '看護師', experience: '一般', duration: '30分', path: 'v4_interview/general-nurse-unified-30min.tsx', description: '定期面談用の標準シート' },
+    { id: 'iv-4', name: '一般看護師45分統合面談', category: '面談シート', type: 'interview', version: 'v4', position: '看護師', experience: '一般', duration: '45分', path: 'v4_interview/general-nurse-unified-45min.tsx', description: '詳細な評価面談用' },
+    { id: 'iv-5', name: 'リーダー看護師45分統合面談', category: '面談シート', type: 'interview', version: 'v4', position: '看護師', experience: 'リーダー', duration: '45分', path: 'v4_interview/leader-nurse-unified-45min.tsx', description: 'リーダー層向け面談シート' },
+    { id: 'iv-6', name: '主任看護師45分統合面談', category: '面談シート', type: 'interview', version: 'v4', position: '看護師', experience: '主任', duration: '45分', path: 'v4_interview/chief-nurse-unified-45min.tsx', description: '管理職向け面談シート' },
+    { id: 'iv-7', name: 'シニア看護師45分統合面談', category: '面談シート', type: 'interview', version: 'v4', position: '看護師', experience: 'シニア', duration: '45分', path: 'v4_interview/senior-nurse-unified-45min.tsx', description: 'シニア層向け面談シート' },
+    { id: 'iv-8', name: 'ベテラン看護師45分統合面談', category: '面談シート', type: 'interview', version: 'v4', position: '看護師', experience: 'ベテラン', duration: '45分', path: 'v4_interview/veteran-nurse-unified-45min.tsx', description: 'ベテラン層向け面談シート' },
 
     // v4評価シート - 急性期
-    { id: 'ev-1', name: '急性期新人看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '急性期', position: '看護師', experience: '新人', path: '/docs/v4_evaluation-sheets/acute_nurse/new-nurse.pdf', description: '急性期病棟の新人看護師評価用' },
-    { id: 'ev-2', name: '急性期一般看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '急性期', position: '看護師', experience: '一般', path: '/docs/v4_evaluation-sheets/acute_nurse/junior-nurse.pdf', description: '急性期病棟の一般看護師評価用' },
-    { id: 'ev-3', name: '急性期中堅看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '急性期', position: '看護師', experience: '中堅', path: '/docs/v4_evaluation-sheets/acute_nurse/midlevel-nurse.pdf', description: '急性期病棟の中堅看護師評価用' },
-    { id: 'ev-4', name: '急性期ベテラン看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '急性期', position: '看護師', experience: 'ベテラン', path: '/docs/v4_evaluation-sheets/acute_nurse/veteran-nurse.pdf', description: '急性期病棟のベテラン看護師評価用' },
+    { id: 'ev-1', name: '急性期新人看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '急性期', position: '看護師', experience: '新人', path: 'v4_evaluation-sheets/acute_nurse/new-nurse-evaluation-v4-pattern5.tsx', description: '急性期病棟の新人看護師評価用' },
+    { id: 'ev-2', name: '急性期一般看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '急性期', position: '看護師', experience: '一般', path: 'v4_evaluation-sheets/acute_nurse/junior-nurse-evaluation-v4-pattern5.tsx', description: '急性期病棟の一般看護師評価用' },
+    { id: 'ev-3', name: '急性期中堅看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '急性期', position: '看護師', experience: '中堅', path: 'v4_evaluation-sheets/acute_nurse/midlevel-nurse-evaluation-v4-pattern5.tsx', description: '急性期病棟の中堅看護師評価用' },
+    { id: 'ev-4', name: '急性期ベテラン看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '急性期', position: '看護師', experience: 'ベテラン', path: 'v4_evaluation-sheets/acute_nurse/veteran-nurse-evaluation-v4-pattern5.tsx', description: '急性期病棟のベテラン看護師評価用' },
     
     // v4評価シート - 慢性期
-    { id: 'ev-5', name: '慢性期新人看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '慢性期', position: '看護師', experience: '新人', path: '/docs/v4_evaluation-sheets/chronic_nurse/new-nurse.pdf', description: '慢性期病棟の新人看護師評価用' },
-    { id: 'ev-6', name: '慢性期一般看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '慢性期', position: '看護師', experience: '一般', path: '/docs/v4_evaluation-sheets/chronic_nurse/junior-nurse.pdf', description: '慢性期病棟の一般看護師評価用' },
-    { id: 'ev-7', name: '慢性期中堅看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '慢性期', position: '看護師', experience: '中堅', path: '/docs/v4_evaluation-sheets/chronic_nurse/midlevel-nurse.pdf', description: '慢性期病棟の中堅看護師評価用' },
-    { id: 'ev-8', name: '慢性期ベテラン看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '慢性期', position: '看護師', experience: 'ベテラン', path: '/docs/v4_evaluation-sheets/chronic_nurse/veteran-nurse.pdf', description: '慢性期病棟のベテラン看護師評価用' },
+    { id: 'ev-5', name: '慢性期新人看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '慢性期', position: '看護師', experience: '新人', path: 'v4_evaluation-sheets/chronic_nurse/chronic-new-nurse-evaluation-v4-pattern5.tsx', description: '慢性期病棟の新人看護師評価用' },
+    { id: 'ev-6', name: '慢性期一般看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '慢性期', position: '看護師', experience: '一般', path: 'v4_evaluation-sheets/chronic_nurse/chronic-junior-nurse-evaluation-v4-pattern5.tsx', description: '慢性期病棟の一般看護師評価用' },
+    { id: 'ev-7', name: '慢性期中堅看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '慢性期', position: '看護師', experience: '中堅', path: 'v4_evaluation-sheets/chronic_nurse/chronic-midlevel-nurse-evaluation-v4-pattern5.tsx', description: '慢性期病棟の中堅看護師評価用' },
+    { id: 'ev-8', name: '慢性期ベテラン看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '慢性期', position: '看護師', experience: 'ベテラン', path: 'v4_evaluation-sheets/chronic_nurse/chronic-veteran-nurse-evaluation-v4-pattern5.tsx', description: '慢性期病棟のベテラン看護師評価用' },
     
     // v4評価シート - 老健
-    { id: 'ev-9', name: '老健新人看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '老健', position: '看護師', experience: '新人', path: '/docs/v4_evaluation-sheets/roken_nurse/new-nurse.pdf', description: '老健施設の新人看護師評価用' },
-    { id: 'ev-10', name: '老健一般看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '老健', position: '看護師', experience: '一般', path: '/docs/v4_evaluation-sheets/roken_nurse/junior-nurse.pdf', description: '老健施設の一般看護師評価用' },
-    { id: 'ev-11', name: '老健介護士評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '老健', position: '介護士', experience: '一般', path: '/docs/v4_evaluation-sheets/roken_care-worker/care-worker.pdf', description: '老健施設の介護士評価用' },
+    { id: 'ev-9', name: '老健新人看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '老健', position: '看護師', experience: '新人', path: 'v4_evaluation-sheets/roken_nurse/roken-new-nurse-evaluation-v4-pattern5.tsx', description: '老健施設の新人看護師評価用' },
+    { id: 'ev-10', name: '老健一般看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '老健', position: '看護師', experience: '一般', path: 'v4_evaluation-sheets/roken_nurse/roken-junior-nurse-evaluation-v4-pattern5.tsx', description: '老健施設の一般看護師評価用' },
+    { id: 'ev-11', name: '老健介護士評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '老健', position: '介護士', experience: '一般', path: 'v4_evaluation-sheets/roken_care-worker/junior-care-worker-evaluation-v4-pattern5.tsx', description: '老健施設の介護士評価用' },
     
     // 准看護師評価シート
-    { id: 'ev-12', name: '急性期准看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '急性期', position: '准看護師', experience: '一般', path: '/docs/v4_evaluation-sheets/acute_assistant-nurse/assistant-nurse.pdf', description: '急性期病棟の准看護師評価用' },
-    { id: 'ev-13', name: '慢性期准看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '慢性期', position: '准看護師', experience: '一般', path: '/docs/v4_evaluation-sheets/chronic_assistant-nurse/assistant-nurse.pdf', description: '慢性期病棟の准看護師評価用' },
+    { id: 'ev-12', name: '急性期准看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '急性期', position: '准看護師', experience: '一般', path: 'v4_evaluation-sheets/acute_assistant-nurse/junior-assistant-nurse-evaluation-v4-pattern5.tsx', description: '急性期病棟の准看護師評価用' },
+    { id: 'ev-13', name: '慢性期准看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '慢性期', position: '准看護師', experience: '一般', path: 'v4_evaluation-sheets/chronic_assistant-nurse/chronic-junior-assistant-nurse-evaluation-v4-pattern5.tsx', description: '慢性期病棟の准看護師評価用' },
     
     // 看護補助者評価シート
-    { id: 'ev-14', name: '急性期看護補助者評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '急性期', position: '看護補助者', experience: '一般', path: '/docs/v4_evaluation-sheets/acute_nursing-aide/nursing-aide.pdf', description: '急性期病棟の看護補助者評価用' },
-    { id: 'ev-15', name: '慢性期看護補助者評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '慢性期', position: '看護補助者', experience: '一般', path: '/docs/v4_evaluation-sheets/chronic_nursing-aide/nursing-aide.pdf', description: '慢性期病棟の看護補助者評価用' },
+    { id: 'ev-14', name: '急性期看護補助者評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '急性期', position: '看護補助者', experience: '一般', path: 'v4_evaluation-sheets/acute_nursing-aide/junior-nursing-aide-evaluation-v4-pattern5.tsx', description: '急性期病棟の看護補助者評価用' },
+    { id: 'ev-15', name: '慢性期看護補助者評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '慢性期', position: '看護補助者', experience: '一般', path: 'v4_evaluation-sheets/chronic_nursing-aide/chronic-junior-nursing-aide-evaluation-v4-pattern5.tsx', description: '慢性期病棟の看護補助者評価用' },
   ];
 
   // フィルター処理
@@ -1446,9 +1446,8 @@ export default function HRSystemGuidePage() {
                         <div className="flex gap-2 ml-4">
                           <button
                             onClick={() => {
-                              // TSXファイルパスを生成
-                              const tsxPath = sheet.path.replace('/docs/', '').replace('.pdf', '.tsx');
-                              setPreviewSheet({ ...sheet, path: tsxPath });
+                              // TSXファイルパスはそのまま使用
+                              setPreviewSheet(sheet);
                             }}
                             className="px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm"
                           >
@@ -1456,9 +1455,8 @@ export default function HRSystemGuidePage() {
                           </button>
                           <button
                             onClick={() => {
-                              // TSXファイルパスを生成してダウンロード
-                              const tsxPath = sheet.path.replace('/docs/', '').replace('.pdf', '.tsx');
-                              const downloadUrl = `/api/download-sheet?path=${encodeURIComponent(tsxPath)}&name=${encodeURIComponent(sheet.name)}`;
+                              // TSXファイルパスをそのまま使用してダウンロード
+                              const downloadUrl = `/api/download-sheet?path=${encodeURIComponent(sheet.path)}&name=${encodeURIComponent(sheet.name)}`;
                               window.open(downloadUrl, '_blank');
                             }}
                             className="px-3 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-sm"
