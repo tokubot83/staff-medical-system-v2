@@ -109,7 +109,7 @@ export default function HRSystemGuidePage() {
         <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
           <h1 className="text-3xl font-bold text-gray-800 mb-4">人事制度ガイド</h1>
           <p className="text-gray-600">
-            医療法人厚生会の革新的な2軸評価制度・面談制度について、職員の皆様にわかりやすくご説明します。
+            医療法人厚生会の革新的な人事評価制度・面談制度について、職員の皆様にわかりやすくご説明します。
           </p>
           
           {/* 表示モード切り替え */}
@@ -148,7 +148,7 @@ export default function HRSystemGuidePage() {
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              2軸評価制度
+              人事評価制度
             </button>
             <button
               onClick={() => setActiveTab('interview')}
@@ -173,14 +173,14 @@ export default function HRSystemGuidePage() {
           </div>
         </div>
 
-        {/* 2軸評価制度の内容 */}
+        {/* 人事評価制度の内容 */}
         {activeTab === 'evaluation' && viewMode === 'general' && (
           <div className="space-y-6">
             {/* 概要 */}
             <div className="bg-white rounded-xl shadow-lg p-6">
               <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
                 <span className="text-3xl">🎯</span>
-                革新的な2軸評価制度とは？
+                革新的な人事評価制度とは？
               </h2>
               <div className="prose max-w-none text-gray-600">
                 <p className="mb-4">
@@ -442,7 +442,7 @@ export default function HRSystemGuidePage() {
           </div>
         )}
 
-        {/* 2軸評価制度の正式文書版 */}
+        {/* 人事評価制度の正式文書版 */}
         {activeTab === 'evaluation' && viewMode === 'formal' && (
           <div className="space-y-6">
             {/* 規程 */}
@@ -468,7 +468,7 @@ export default function HRSystemGuidePage() {
                   </p>
                 </div>
 
-                <h3 className="text-lg font-semibold mb-3 mt-6">第2章 2軸評価制度</h3>
+                <h3 className="text-lg font-semibold mb-3 mt-6">第2章 人事評価制度（2軸評価システム）</h3>
                 <div className="ml-4 space-y-2 text-sm">
                   <p><strong>第3条（評価軸の定義）</strong></p>
                   <p className="ml-4">
@@ -1061,7 +1061,7 @@ export default function HRSystemGuidePage() {
                   <p><strong>第1条（目的）</strong></p>
                   <p className="ml-4">
                     本規程は、当法人におけるv4統合面談制度に関し必要な事項を定め、
-                    2軸評価制度と連携した効果的な人材育成を実現することを目的とする。
+                    人事評価制度と連携した効果的な人材育成を実現することを目的とする。
                   </p>
                   
                   <p className="mt-4"><strong>第2条（統合面談の定義）</strong></p>
