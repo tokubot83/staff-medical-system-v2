@@ -12,6 +12,20 @@ export interface InterviewSheetInfo {
 export const v4InterviewSheets: Record<ExperienceCategory, InterviewSheetInfo[]> = {
   new: [
     {
+      component: 'NewNurseUnified15Min',
+      path: '/interview-sheets/v4/new-nurse-unified-15min',
+      duration: 15,
+      title: '新人看護師定期面談シート（15分版）',
+      experienceCategory: 'new'
+    },
+    {
+      component: 'NewNurseUnified30Min',
+      path: '/interview-sheets/v4/new-nurse-unified-30min',
+      duration: 30,
+      title: '新人看護師定期面談シート（30分版）',
+      experienceCategory: 'new'
+    },
+    {
       component: 'NewNurseUnified45Min',
       path: '/interview-sheets/v4/new-nurse-unified-45min',
       duration: 45,
@@ -67,6 +81,20 @@ export const v4InterviewSheets: Record<ExperienceCategory, InterviewSheetInfo[]>
   ],
   senior: [
     {
+      component: 'SeniorNurseUnified15Min',
+      path: '/interview-sheets/v4/senior-nurse-unified-15min',
+      duration: 15,
+      title: 'シニア看護師定期面談シート（15分版）',
+      experienceCategory: 'senior'
+    },
+    {
+      component: 'SeniorNurseUnified30Min',
+      path: '/interview-sheets/v4/senior-nurse-unified-30min',
+      duration: 30,
+      title: 'シニア看護師定期面談シート（30分版）',
+      experienceCategory: 'senior'
+    },
+    {
       component: 'SeniorNurseUnified45Min',
       path: '/interview-sheets/v4/senior-nurse-unified-45min',
       duration: 45,
@@ -75,6 +103,20 @@ export const v4InterviewSheets: Record<ExperienceCategory, InterviewSheetInfo[]>
     }
   ],
   veteran: [
+    {
+      component: 'VeteranNurseUnified15Min',
+      path: '/interview-sheets/v4/veteran-nurse-unified-15min',
+      duration: 15,
+      title: 'ベテラン看護師定期面談シート（15分版）',
+      experienceCategory: 'veteran'
+    },
+    {
+      component: 'VeteranNurseUnified30Min',
+      path: '/interview-sheets/v4/veteran-nurse-unified-30min',
+      duration: 30,
+      title: 'ベテラン看護師定期面談シート（30分版）',
+      experienceCategory: 'veteran'
+    },
     {
       component: 'VeteranNurseUnified45Min',
       path: '/interview-sheets/v4/veteran-nurse-unified-45min',
@@ -85,6 +127,20 @@ export const v4InterviewSheets: Record<ExperienceCategory, InterviewSheetInfo[]>
   ],
   chief: [
     {
+      component: 'ChiefNurseUnified15Min',
+      path: '/interview-sheets/v4/chief-nurse-unified-15min',
+      duration: 15,
+      title: '主任看護師定期面談シート（15分版）',
+      experienceCategory: 'chief'
+    },
+    {
+      component: 'ChiefNurseUnified30Min',
+      path: '/interview-sheets/v4/chief-nurse-unified-30min',
+      duration: 30,
+      title: '主任看護師定期面談シート（30分版）',
+      experienceCategory: 'chief'
+    },
+    {
       component: 'ChiefNurseUnified45Min',
       path: '/interview-sheets/v4/chief-nurse-unified-45min',
       duration: 45,
@@ -93,6 +149,20 @@ export const v4InterviewSheets: Record<ExperienceCategory, InterviewSheetInfo[]>
     }
   ],
   manager: [
+    {
+      component: 'LeaderNurseUnified15Min',
+      path: '/interview-sheets/v4/leader-nurse-unified-15min',
+      duration: 15,
+      title: 'リーダー看護師定期面談シート（15分版）',
+      experienceCategory: 'manager'
+    },
+    {
+      component: 'LeaderNurseUnified30Min',
+      path: '/interview-sheets/v4/leader-nurse-unified-30min',
+      duration: 30,
+      title: 'リーダー看護師定期面談シート（30分版）',
+      experienceCategory: 'manager'
+    },
     {
       component: 'LeaderNurseUnified45Min',
       path: '/interview-sheets/v4/leader-nurse-unified-45min',
