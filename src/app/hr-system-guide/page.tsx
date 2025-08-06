@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import CommonHeader from '@/components/CommonHeader';
+import DashboardButton from '@/components/DashboardButton';
 
 interface SheetItem {
   id: string;
@@ -99,19 +100,6 @@ export default function HRSystemGuidePage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <CommonHeader title="人事制度ガイド" />
-
-      {/* ナビゲーション */}
-      <nav className="bg-gray-800 text-white shadow-md">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center h-12">
-            <div className="flex space-x-1">
-              <Link href="/" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors">
-                ← ホームに戻る
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
 
       {/* メインコンテンツ */}
       <div className="max-w-7xl mx-auto p-6">
@@ -1528,6 +1516,7 @@ export default function HRSystemGuidePage() {
           </div>
         </div>
       </div>
+      <DashboardButton />
     </div>
   );
 }
