@@ -526,6 +526,9 @@ export default function Home() {
          <Link href="/reports" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
           レポート
          </Link>
+         <Link href="/hr-system-guide" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
+          制度ガイド
+         </Link>
         </div>
        </div>
       </div>
