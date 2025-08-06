@@ -13,9 +13,16 @@ import { InfoIcon, Calculator, Award, Users, Building } from 'lucide-react';
 import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
+type TechnicalScoreCategory = 'advancedSkills' | 'subLeadership' | 'advancedEducation' | 'qualityImprovement';
+type EvaluatorType = 'superiorEval' | 'selfEval';
+
 export default function VeteranNursingAideEvaluationV4Pattern5() {
   // 評価項目の状態管理
-  const [technicalScores, setTechnicalScores] = useState({
+  const [technicalScores, setTechnicalScores] = useState<{
+    [key in EvaluatorType]: {
+      [key in TechnicalScoreCategory]: number;
+    };
+  }>({
     superiorEval: { advancedSkills: 0, subLeadership: 0, advancedEducation: 0, qualityImprovement: 0 },
     selfEval: { advancedSkills: 0, subLeadership: 0, advancedEducation: 0, qualityImprovement: 0 }
   });
@@ -46,7 +53,7 @@ export default function VeteranNursingAideEvaluationV4Pattern5() {
   };
 
   // 貢献度評価の計算（各25点満点）
-  const calculateContributionScore = (percentile) => {
+  const calculateContributionScore = (percentile: number) => {
     if (percentile <= 10) return 25;
     if (percentile <= 20) return 22.5;
     if (percentile <= 30) return 20;
@@ -65,9 +72,9 @@ export default function VeteranNursingAideEvaluationV4Pattern5() {
     const facility = calculateContributionScore(facilityRank);
     const corporate = calculateContributionScore(corporateRank);
     setTotalScore(Math.round((technical + facility + corporate) * 10) / 10);
-  }, [technicalScores, facilityRank, corporateRank]);
+  }, [technicalScores, facilityRank, corporateRank, calculateTechnicalScore]);
 
-  const handleTechnicalScoreChange = (evaluator, category, grade) => {
+  const handleTechnicalScoreChange = (evaluator: EvaluatorType, category: TechnicalScoreCategory, grade: keyof typeof gradeToScore) => {
     setTechnicalScores(prev => ({
       ...prev,
       [evaluator]: {
@@ -77,7 +84,7 @@ export default function VeteranNursingAideEvaluationV4Pattern5() {
     }));
   };
 
-  const getScoreColor = (score) => {
+  const getScoreColor = (score: number) => {
     if (score >= 90) return 'text-red-600';
     if (score >= 80) return 'text-orange-600';
     if (score >= 70) return 'text-green-600';
@@ -189,7 +196,7 @@ export default function VeteranNursingAideEvaluationV4Pattern5() {
                 <div className="space-y-6">
                   <div>
                     <h5 className="font-medium mb-3">1. 高度な介護技術・専門性</h5>
-                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('superiorEval', 'advancedSkills', value)}>
+                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('superiorEval', 'advancedSkills', value as keyof typeof gradeToScore)}>
                       <div className="space-y-2">
                         <div className="flex items-start space-x-2">
                           <RadioGroupItem value="S" id="sup-advanced-s" />
@@ -227,7 +234,7 @@ export default function VeteranNursingAideEvaluationV4Pattern5() {
 
                   <div>
                     <h5 className="font-medium mb-3">2. サブリーダーシップ・調整力</h5>
-                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('superiorEval', 'subLeadership', value)}>
+                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('superiorEval', 'subLeadership', value as keyof typeof gradeToScore)}>
                       <div className="space-y-2">
                         <div className="flex items-start space-x-2">
                           <RadioGroupItem value="S" id="sup-sublead-s" />
@@ -265,7 +272,7 @@ export default function VeteranNursingAideEvaluationV4Pattern5() {
 
                   <div>
                     <h5 className="font-medium mb-3">3. 高度な教育・指導力</h5>
-                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('superiorEval', 'advancedEducation', value)}>
+                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('superiorEval', 'advancedEducation', value as keyof typeof gradeToScore)}>
                       <div className="space-y-2">
                         <div className="flex items-start space-x-2">
                           <RadioGroupItem value="S" id="sup-advedu-s" />
@@ -303,7 +310,7 @@ export default function VeteranNursingAideEvaluationV4Pattern5() {
 
                   <div>
                     <h5 className="font-medium mb-3">4. 品質向上・業務改善</h5>
-                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('superiorEval', 'qualityImprovement', value)}>
+                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('superiorEval', 'qualityImprovement', value as keyof typeof gradeToScore)}>
                       <div className="space-y-2">
                         <div className="flex items-start space-x-2">
                           <RadioGroupItem value="S" id="sup-quality-s" />
@@ -348,7 +355,7 @@ export default function VeteranNursingAideEvaluationV4Pattern5() {
                 <div className="space-y-6">
                   <div>
                     <h5 className="font-medium mb-3">1. 高度な介護技術・専門性</h5>
-                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('selfEval', 'advancedSkills', value)}>
+                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('selfEval', 'advancedSkills', value as keyof typeof gradeToScore)}>
                       <div className="space-y-2">
                         <div className="flex items-start space-x-2">
                           <RadioGroupItem value="S" id="self-advanced-s" />
@@ -386,7 +393,7 @@ export default function VeteranNursingAideEvaluationV4Pattern5() {
 
                   <div>
                     <h5 className="font-medium mb-3">2. サブリーダーシップ・調整力</h5>
-                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('selfEval', 'subLeadership', value)}>
+                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('selfEval', 'subLeadership', value as keyof typeof gradeToScore)}>
                       <div className="space-y-2">
                         <div className="flex items-start space-x-2">
                           <RadioGroupItem value="S" id="self-sublead-s" />
@@ -424,7 +431,7 @@ export default function VeteranNursingAideEvaluationV4Pattern5() {
 
                   <div>
                     <h5 className="font-medium mb-3">3. 高度な教育・指導力</h5>
-                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('selfEval', 'advancedEducation', value)}>
+                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('selfEval', 'advancedEducation', value as keyof typeof gradeToScore)}>
                       <div className="space-y-2">
                         <div className="flex items-start space-x-2">
                           <RadioGroupItem value="S" id="self-advedu-s" />
@@ -462,7 +469,7 @@ export default function VeteranNursingAideEvaluationV4Pattern5() {
 
                   <div>
                     <h5 className="font-medium mb-3">4. 品質向上・業務改善</h5>
-                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('selfEval', 'qualityImprovement', value)}>
+                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('selfEval', 'qualityImprovement', value as keyof typeof gradeToScore)}>
                       <div className="space-y-2">
                         <div className="flex items-start space-x-2">
                           <RadioGroupItem value="S" id="self-quality-s" />
