@@ -4,9 +4,97 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import CommonHeader from '@/components/CommonHeader';
 
+interface SheetItem {
+  id: string;
+  name: string;
+  category: string;
+  type: 'interview' | 'evaluation';
+  version: string;
+  facility?: string;
+  position?: string;
+  experience?: string;
+  duration?: string;
+  path: string;
+  description: string;
+}
+
 export default function HRSystemGuidePage() {
-  const [activeTab, setActiveTab] = useState<'evaluation' | 'interview'>('evaluation');
+  const [activeTab, setActiveTab] = useState<'evaluation' | 'interview' | 'sheets'>('evaluation');
   const [viewMode, setViewMode] = useState<'general' | 'formal'>('general');
+  const [sheetType, setSheetType] = useState<'all' | 'interview' | 'evaluation'>('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedFacility, setSelectedFacility] = useState<string>('all');
+  const [selectedPosition, setSelectedPosition] = useState<string>('all');
+  const [selectedExperience, setSelectedExperience] = useState<string>('all');
+
+  // シートデータ（実際のファイル構造に基づく）
+  const sheetData: SheetItem[] = [
+    // v4面談シート
+    { id: 'iv-1', name: '新人看護師45分統合面談', category: '面談シート', type: 'interview', version: 'v4', position: '看護師', experience: '新人', duration: '45分', path: '/docs/v4_interview/new-nurse-unified-45min.pdf', description: '新人看護師向けの詳細な面談シート' },
+    { id: 'iv-2', name: '一般看護師15分統合面談', category: '面談シート', type: 'interview', version: 'v4', position: '看護師', experience: '一般', duration: '15分', path: '/docs/v4_interview/general-nurse-unified-15min.pdf', description: '日常的なショート面談用' },
+    { id: 'iv-3', name: '一般看護師30分統合面談', category: '面談シート', type: 'interview', version: 'v4', position: '看護師', experience: '一般', duration: '30分', path: '/docs/v4_interview/general-nurse-unified-30min.pdf', description: '定期面談用の標準シート' },
+    { id: 'iv-4', name: '一般看護師45分統合面談', category: '面談シート', type: 'interview', version: 'v4', position: '看護師', experience: '一般', duration: '45分', path: '/docs/v4_interview/general-nurse-unified-45min.pdf', description: '詳細な評価面談用' },
+    { id: 'iv-5', name: 'リーダー看護師45分統合面談', category: '面談シート', type: 'interview', version: 'v4', position: '看護師', experience: 'リーダー', duration: '45分', path: '/docs/v4_interview/leader-nurse-unified-45min.pdf', description: 'リーダー層向け面談シート' },
+    { id: 'iv-6', name: '主任看護師45分統合面談', category: '面談シート', type: 'interview', version: 'v4', position: '看護師', experience: '主任', duration: '45分', path: '/docs/v4_interview/chief-nurse-unified-45min.pdf', description: '管理職向け面談シート' },
+    { id: 'iv-7', name: 'シニア看護師45分統合面談', category: '面談シート', type: 'interview', version: 'v4', position: '看護師', experience: 'シニア', duration: '45分', path: '/docs/v4_interview/senior-nurse-unified-45min.pdf', description: 'シニア層向け面談シート' },
+    { id: 'iv-8', name: 'ベテラン看護師45分統合面談', category: '面談シート', type: 'interview', version: 'v4', position: '看護師', experience: 'ベテラン', duration: '45分', path: '/docs/v4_interview/veteran-nurse-unified-45min.pdf', description: 'ベテラン層向け面談シート' },
+
+    // v4評価シート - 急性期
+    { id: 'ev-1', name: '急性期新人看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '急性期', position: '看護師', experience: '新人', path: '/docs/v4_evaluation-sheets/acute_nurse/new-nurse.pdf', description: '急性期病棟の新人看護師評価用' },
+    { id: 'ev-2', name: '急性期一般看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '急性期', position: '看護師', experience: '一般', path: '/docs/v4_evaluation-sheets/acute_nurse/junior-nurse.pdf', description: '急性期病棟の一般看護師評価用' },
+    { id: 'ev-3', name: '急性期中堅看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '急性期', position: '看護師', experience: '中堅', path: '/docs/v4_evaluation-sheets/acute_nurse/midlevel-nurse.pdf', description: '急性期病棟の中堅看護師評価用' },
+    { id: 'ev-4', name: '急性期ベテラン看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '急性期', position: '看護師', experience: 'ベテラン', path: '/docs/v4_evaluation-sheets/acute_nurse/veteran-nurse.pdf', description: '急性期病棟のベテラン看護師評価用' },
+    
+    // v4評価シート - 慢性期
+    { id: 'ev-5', name: '慢性期新人看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '慢性期', position: '看護師', experience: '新人', path: '/docs/v4_evaluation-sheets/chronic_nurse/new-nurse.pdf', description: '慢性期病棟の新人看護師評価用' },
+    { id: 'ev-6', name: '慢性期一般看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '慢性期', position: '看護師', experience: '一般', path: '/docs/v4_evaluation-sheets/chronic_nurse/junior-nurse.pdf', description: '慢性期病棟の一般看護師評価用' },
+    { id: 'ev-7', name: '慢性期中堅看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '慢性期', position: '看護師', experience: '中堅', path: '/docs/v4_evaluation-sheets/chronic_nurse/midlevel-nurse.pdf', description: '慢性期病棟の中堅看護師評価用' },
+    { id: 'ev-8', name: '慢性期ベテラン看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '慢性期', position: '看護師', experience: 'ベテラン', path: '/docs/v4_evaluation-sheets/chronic_nurse/veteran-nurse.pdf', description: '慢性期病棟のベテラン看護師評価用' },
+    
+    // v4評価シート - 老健
+    { id: 'ev-9', name: '老健新人看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '老健', position: '看護師', experience: '新人', path: '/docs/v4_evaluation-sheets/roken_nurse/new-nurse.pdf', description: '老健施設の新人看護師評価用' },
+    { id: 'ev-10', name: '老健一般看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '老健', position: '看護師', experience: '一般', path: '/docs/v4_evaluation-sheets/roken_nurse/junior-nurse.pdf', description: '老健施設の一般看護師評価用' },
+    { id: 'ev-11', name: '老健介護士評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '老健', position: '介護士', experience: '一般', path: '/docs/v4_evaluation-sheets/roken_care-worker/care-worker.pdf', description: '老健施設の介護士評価用' },
+    
+    // 准看護師評価シート
+    { id: 'ev-12', name: '急性期准看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '急性期', position: '准看護師', experience: '一般', path: '/docs/v4_evaluation-sheets/acute_assistant-nurse/assistant-nurse.pdf', description: '急性期病棟の准看護師評価用' },
+    { id: 'ev-13', name: '慢性期准看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '慢性期', position: '准看護師', experience: '一般', path: '/docs/v4_evaluation-sheets/chronic_assistant-nurse/assistant-nurse.pdf', description: '慢性期病棟の准看護師評価用' },
+    
+    // 看護補助者評価シート
+    { id: 'ev-14', name: '急性期看護補助者評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '急性期', position: '看護補助者', experience: '一般', path: '/docs/v4_evaluation-sheets/acute_nursing-aide/nursing-aide.pdf', description: '急性期病棟の看護補助者評価用' },
+    { id: 'ev-15', name: '慢性期看護補助者評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '慢性期', position: '看護補助者', experience: '一般', path: '/docs/v4_evaluation-sheets/chronic_nursing-aide/nursing-aide.pdf', description: '慢性期病棟の看護補助者評価用' },
+  ];
+
+  // フィルター処理
+  const filteredSheets = sheetData.filter(sheet => {
+    // テキスト検索
+    if (searchQuery && !sheet.name.toLowerCase().includes(searchQuery.toLowerCase()) && 
+        !sheet.description.toLowerCase().includes(searchQuery.toLowerCase())) {
+      return false;
+    }
+    
+    // シートタイプフィルター
+    if (sheetType !== 'all' && sheet.type !== sheetType) {
+      return false;
+    }
+    
+    // 施設フィルター
+    if (selectedFacility !== 'all' && sheet.facility !== selectedFacility) {
+      return false;
+    }
+    
+    // 職種フィルター
+    if (selectedPosition !== 'all' && sheet.position !== selectedPosition) {
+      return false;
+    }
+    
+    // 経験年数フィルター
+    if (selectedExperience !== 'all' && sheet.experience !== selectedExperience) {
+      return false;
+    }
+    
+    return true;
+  });
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -81,6 +169,16 @@ export default function HRSystemGuidePage() {
               }`}
             >
               面談制度
+            </button>
+            <button
+              onClick={() => setActiveTab('sheets')}
+              className={`flex-1 py-3 px-6 rounded-lg font-medium transition-all ${
+                activeTab === 'sheets'
+                  ? 'bg-blue-500 text-white shadow-md'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              📄 シート閲覧
             </button>
           </div>
         </div>
@@ -436,58 +534,287 @@ export default function HRSystemGuidePage() {
               </h2>
               <div className="prose max-w-none text-gray-600">
                 <p className="mb-4">
-                  面談制度は、上司と部下が定期的にコミュニケーションを取り、
-                  相互理解を深めながら個人と組織の成長を促進する重要な仕組みです。
+                  面談制度は、職員一人ひとりの声を聞き、働きやすい職場環境を作るための重要な仕組みです。
+                  上司と部下の定期的なコミュニケーションを通じて、個人のキャリア形成支援と組織全体の活性化を図ります。
+                </p>
+                <div className="bg-blue-50 rounded-lg p-4">
+                  <p className="text-blue-800 font-semibold mb-2">面談制度の3つの目的</p>
+                  <ul className="text-gray-700 space-y-1">
+                    <li>🎯 個人のキャリア形成・成長支援</li>
+                    <li>🎯 早期の問題発見と解決</li>
+                    <li>🎯 組織全体のコミュニケーション向上</li>
+                  </ul>
+                </div>
+                <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg mt-4">
+                  <p className="text-sm font-semibold text-yellow-800 mb-1">📱 VoiceDrive連携予定</p>
+                  <p className="text-xs text-gray-700">
+                    法人内SNS「VoiceDrive」と連携し、職員からも簡単に面談予約ができるようになる予定です。
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* 11種類の面談 */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <h3 className="text-xl font-bold text-gray-800 mb-4">11種類の面談体系</h3>
+              <div className="grid md:grid-cols-2 gap-4 mb-6">
+                {/* 定期面談 */}
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4">
+                  <h4 className="font-bold text-blue-900 mb-3 flex items-center gap-2">
+                    <span className="text-xl">📅</span>
+                    定期面談（必須）
+                  </h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="bg-white/80 rounded p-2">
+                      <div className="flex justify-between items-start">
+                        <span className="font-semibold text-blue-800">新入職員月次面談</span>
+                        <span className="text-xs bg-blue-200 px-2 py-1 rounded">月1回</span>
+                      </div>
+                      <p className="text-xs text-gray-600 mt-1">入職1年未満の職員対象</p>
+                    </div>
+                    <div className="bg-white/80 rounded p-2">
+                      <div className="flex justify-between items-start">
+                        <span className="font-semibold text-blue-800">一般職員年次面談</span>
+                        <span className="text-xs bg-blue-200 px-2 py-1 rounded">年1回</span>
+                      </div>
+                      <p className="text-xs text-gray-600 mt-1">全職員対象</p>
+                    </div>
+                    <div className="bg-white/80 rounded p-2">
+                      <div className="flex justify-between items-start">
+                        <span className="font-semibold text-blue-800">管理職半年面談</span>
+                        <span className="text-xs bg-blue-200 px-2 py-1 rounded">半年1回</span>
+                      </div>
+                      <p className="text-xs text-gray-600 mt-1">管理職対象</p>
+                    </div>
+                    <div className="bg-white/80 rounded p-2">
+                      <div className="flex justify-between items-start">
+                        <span className="font-semibold text-blue-800">人事評価面談</span>
+                        <span className="text-xs bg-blue-200 px-2 py-1 rounded">年2回</span>
+                      </div>
+                      <p className="text-xs text-gray-600 mt-1">全職員対象（3月・9月）</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 特別面談 */}
+                <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4">
+                  <h4 className="font-bold text-green-900 mb-3 flex items-center gap-2">
+                    <span className="text-xl">🔧</span>
+                    特別面談（随時）
+                  </h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="bg-white/80 rounded p-2">
+                      <span className="font-semibold text-green-800">復職面談</span>
+                      <p className="text-xs text-gray-600 mt-1">休職からの復職時に実施</p>
+                    </div>
+                    <div className="bg-white/80 rounded p-2">
+                      <span className="font-semibold text-green-800">インシデント後面談</span>
+                      <p className="text-xs text-gray-600 mt-1">インシデント発生後のフォロー</p>
+                    </div>
+                    <div className="bg-white/80 rounded p-2">
+                      <span className="font-semibold text-green-800">退職面談</span>
+                      <p className="text-xs text-gray-600 mt-1">退職予定者との最終面談</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* サポート面談 */}
+                <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 md:col-span-2">
+                  <h4 className="font-bold text-purple-900 mb-3 flex items-center gap-2">
+                    <span className="text-xl">💭</span>
+                    サポート面談（希望制）
+                  </h4>
+                  <div className="grid md:grid-cols-4 gap-2">
+                    <div className="bg-white/80 rounded p-2">
+                      <span className="font-semibold text-purple-800 text-sm">キャリア開発面談</span>
+                      <p className="text-xs text-gray-600 mt-1">キャリアプランの相談</p>
+                    </div>
+                    <div className="bg-white/80 rounded p-2">
+                      <span className="font-semibold text-purple-800 text-sm">ストレスケア面談</span>
+                      <p className="text-xs text-gray-600 mt-1">メンタルヘルスサポート</p>
+                    </div>
+                    <div className="bg-white/80 rounded p-2">
+                      <span className="font-semibold text-purple-800 text-sm">苦情・相談面談</span>
+                      <p className="text-xs text-gray-600 mt-1">職場の問題や悩み相談</p>
+                    </div>
+                    <div className="bg-white/80 rounded p-2">
+                      <span className="font-semibold text-purple-800 text-sm">随時面談</span>
+                      <p className="text-xs text-gray-600 mt-1">その他必要時</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 重要な注意事項 */}
+              <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg">
+                <p className="text-sm font-semibold text-yellow-800 mb-1">💡 重要なポイント</p>
+                <p className="text-xs text-gray-700">
+                  この面談は「評価」ではなく「支援」が目的です。人事評価とは完全に切り離されています（人事評価面談を除く）。
                 </p>
               </div>
             </div>
 
-            {/* 面談の種類 */}
+            {/* 13種類の相談カテゴリ */}
             <div className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">面談の種類と実施時期</h3>
-              <div className="space-y-4">
-                <div className="border-l-4 border-blue-500 pl-4 py-3 bg-blue-50 rounded-r-lg">
-                  <div className="flex justify-between items-start mb-2">
-                    <h4 className="font-semibold text-gray-800">目標設定面談</h4>
-                    <span className="text-sm bg-blue-100 text-blue-700 px-2 py-1 rounded">4月</span>
+              <h3 className="text-xl font-bold text-gray-800 mb-4">相談できる13のカテゴリ</h3>
+              <div className="grid md:grid-cols-3 gap-3">
+                <div className="bg-blue-50 rounded-lg p-3">
+                  <h4 className="font-semibold text-blue-800 text-sm mb-2">キャリア系</h4>
+                  <ul className="text-xs text-gray-600 space-y-1">
+                    <li>• キャリアパス（将来の目標）</li>
+                    <li>• スキル開発（研修・資格）</li>
+                    <li>• 昇進・昇格</li>
+                    <li>• 異動・転勤</li>
+                  </ul>
+                </div>
+                <div className="bg-green-50 rounded-lg p-3">
+                  <h4 className="font-semibold text-green-800 text-sm mb-2">職場環境系</h4>
+                  <ul className="text-xs text-gray-600 space-y-1">
+                    <li>• 職場環境（設備・制度）</li>
+                    <li>• 人間関係（チームワーク）</li>
+                    <li>• 業務負荷・ワークライフバランス</li>
+                    <li>• 健康・安全</li>
+                  </ul>
+                </div>
+                <div className="bg-purple-50 rounded-lg p-3">
+                  <h4 className="font-semibold text-purple-800 text-sm mb-2">その他</h4>
+                  <ul className="text-xs text-gray-600 space-y-1">
+                    <li>• パフォーマンス（業務改善）</li>
+                    <li>• 給与・待遇</li>
+                    <li>• 研修・教育</li>
+                    <li>• コンプライアンス</li>
+                    <li>• その他の相談</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {/* 予約と実施のルール */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <h3 className="text-xl font-bold text-gray-800 mb-4">予約と実施のルール</h3>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                    <span className="text-blue-500">📅</span>
+                    予約ルール
+                  </h4>
+                  <div className="bg-gray-50 rounded-lg p-3 space-y-2 text-sm">
+                    <div className="flex items-start gap-2">
+                      <span className="text-green-500 mt-0.5">✓</span>
+                      <div>
+                        <p className="font-medium">予約可能期間</p>
+                        <p className="text-xs text-gray-600">30日前から24時間前まで</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="text-green-500 mt-0.5">✓</span>
+                      <div>
+                        <p className="font-medium">予約回数制限</p>
+                        <p className="text-xs text-gray-600">月間最大2回（特別な事情は3回）</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="text-green-500 mt-0.5">✓</span>
+                      <div>
+                        <p className="font-medium">間隔制限</p>
+                        <p className="text-xs text-gray-600">前回面談から30日以上</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="text-green-500 mt-0.5">✓</span>
+                      <div>
+                        <p className="font-medium">面談時間</p>
+                        <p className="text-xs text-gray-600">基本30分（延長可能45分）</p>
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-sm text-gray-600">
-                    年度の個人目標を設定し、期待される役割や成果について相互確認を行います。
-                    キャリアビジョンについても話し合います。
-                  </p>
                 </div>
 
-                <div className="border-l-4 border-green-500 pl-4 py-3 bg-green-50 rounded-r-lg">
-                  <div className="flex justify-between items-start mb-2">
-                    <h4 className="font-semibold text-gray-800">中間面談</h4>
-                    <span className="text-sm bg-green-100 text-green-700 px-2 py-1 rounded">10月</span>
+                <div>
+                  <h4 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                    <span className="text-green-500">🏥</span>
+                    部署別の配慮
+                  </h4>
+                  <div className="bg-gray-50 rounded-lg p-3 space-y-2 text-sm">
+                    <div className="border-l-3 border-blue-400 pl-3">
+                      <p className="font-medium">ICU</p>
+                      <p className="text-xs text-gray-600">早い時間帯（13:40-14:20）優先</p>
+                    </div>
+                    <div className="border-l-3 border-green-400 pl-3">
+                      <p className="font-medium">救急外来</p>
+                      <p className="text-xs text-gray-600">遅い時間帯（15:30-16:10）優先</p>
+                    </div>
+                    <div className="border-l-3 border-purple-400 pl-3">
+                      <p className="font-medium">手術室</p>
+                      <p className="text-xs text-gray-600">月曜日は面談不可（手術集中日）</p>
+                    </div>
+                    <div className="border-l-3 border-orange-400 pl-3">
+                      <p className="font-medium">夜勤明け</p>
+                      <p className="text-xs text-gray-600">十分な休息後に実施</p>
+                    </div>
                   </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 予約の流れ */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <h3 className="text-xl font-bold text-gray-800 mb-4">簡単3ステップの予約方法</h3>
+              <div className="grid md:grid-cols-3 gap-4">
+                <div className="text-center">
+                  <div className="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3">
+                    <span className="text-2xl font-bold text-blue-600">1</span>
+                  </div>
+                  <h4 className="font-semibold text-gray-800 mb-2">日時選択</h4>
                   <p className="text-sm text-gray-600">
-                    目標の進捗確認とフィードバック。課題がある場合は改善策を一緒に考えます。
-                    必要に応じて目標の修正も行います。
+                    カレンダーから希望日時を選択（最大3つまで候補選択可）
                   </p>
                 </div>
-
-                <div className="border-l-4 border-purple-500 pl-4 py-3 bg-purple-50 rounded-r-lg">
-                  <div className="flex justify-between items-start mb-2">
-                    <h4 className="font-semibold text-gray-800">評価面談</h4>
-                    <span className="text-sm bg-purple-100 text-purple-700 px-2 py-1 rounded">3月</span>
+                <div className="text-center">
+                  <div className="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3">
+                    <span className="text-2xl font-bold text-green-600">2</span>
                   </div>
+                  <h4 className="font-semibold text-gray-800 mb-2">内容入力</h4>
                   <p className="text-sm text-gray-600">
-                    年度の評価結果をフィードバック。良かった点と改善点を明確にし、
-                    来年度の成長課題を設定します。
+                    面談種類・カテゴリを選択、相談内容を記入（任意）
                   </p>
                 </div>
-
-                <div className="border-l-4 border-orange-500 pl-4 py-3 bg-orange-50 rounded-r-lg">
-                  <div className="flex justify-between items-start mb-2">
-                    <h4 className="font-semibold text-gray-800">随時面談</h4>
-                    <span className="text-sm bg-orange-100 text-orange-700 px-2 py-1 rounded">必要時</span>
+                <div className="text-center">
+                  <div className="bg-purple-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3">
+                    <span className="text-2xl font-bold text-purple-600">3</span>
                   </div>
+                  <h4 className="font-semibold text-gray-800 mb-2">確認・申請</h4>
                   <p className="text-sm text-gray-600">
-                    業務上の課題、体調不良、家庭の事情など、職員または上司が必要と判断した時に実施。
-                    早期の問題解決を図ります。
+                    内容確認後に申請、自動でメール通知が送信されます
                   </p>
+                </div>
+              </div>
+            </div>
+
+            {/* リマインダー機能 */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <h3 className="text-xl font-bold text-gray-800 mb-4">自動リマインダー機能</h3>
+              <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4">
+                <p className="text-sm text-gray-700 mb-3">
+                  面談を忘れないよう、自動でリマインダーが送信されます。
+                </p>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="bg-white rounded-lg p-3">
+                    <h4 className="font-semibold text-gray-800 text-sm mb-2">定期面談のリマインダー</h4>
+                    <ul className="text-xs text-gray-600 space-y-1">
+                      <li>• 新入職員月次：14日前、7日前、3日前</li>
+                      <li>• 一般職員年次：30日前、14日前、7日前</li>
+                      <li>• その他の面談：7日前、3日前、前日</li>
+                    </ul>
+                  </div>
+                  <div className="bg-white rounded-lg p-3">
+                    <h4 className="font-semibold text-gray-800 text-sm mb-2">通知方法</h4>
+                    <ul className="text-xs text-gray-600 space-y-1">
+                      <li>• メール通知（必須）</li>
+                      <li>• システム内通知</li>
+                      <li>• 期限超過時は最大3回まで自動通知</li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
@@ -676,11 +1003,234 @@ export default function HRSystemGuidePage() {
           </div>
         )}
 
+        {/* シート閲覧セクション */}
+        {activeTab === 'sheets' && (
+          <div className="space-y-6">
+            {/* 検索・フィルターセクション */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <h2 className="text-xl font-bold text-gray-800 mb-4">シート検索・フィルター</h2>
+              
+              {/* 検索バー */}
+              <div className="mb-4">
+                <input
+                  type="text"
+                  placeholder="シート名や説明文で検索..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              {/* フィルターボタン */}
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                {/* シートタイプ */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">種類</label>
+                  <select
+                    value={sheetType}
+                    onChange={(e) => setSheetType(e.target.value as 'all' | 'interview' | 'evaluation')}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="all">すべて</option>
+                    <option value="interview">面談シート</option>
+                    <option value="evaluation">評価シート</option>
+                  </select>
+                </div>
+
+                {/* 施設タイプ */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">施設</label>
+                  <select
+                    value={selectedFacility}
+                    onChange={(e) => setSelectedFacility(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="all">すべて</option>
+                    <option value="急性期">急性期</option>
+                    <option value="慢性期">慢性期</option>
+                    <option value="老健">老健</option>
+                    <option value="グループホーム">グループホーム</option>
+                  </select>
+                </div>
+
+                {/* 職種 */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">職種</label>
+                  <select
+                    value={selectedPosition}
+                    onChange={(e) => setSelectedPosition(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="all">すべて</option>
+                    <option value="看護師">看護師</option>
+                    <option value="准看護師">准看護師</option>
+                    <option value="看護補助者">看護補助者</option>
+                    <option value="介護士">介護士</option>
+                  </select>
+                </div>
+
+                {/* 経験年数 */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">経験</label>
+                  <select
+                    value={selectedExperience}
+                    onChange={(e) => setSelectedExperience(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="all">すべて</option>
+                    <option value="新人">新人</option>
+                    <option value="一般">一般</option>
+                    <option value="中堅">中堅</option>
+                    <option value="シニア">シニア</option>
+                    <option value="ベテラン">ベテラン</option>
+                    <option value="リーダー">リーダー</option>
+                    <option value="主任">主任</option>
+                  </select>
+                </div>
+
+                {/* リセットボタン */}
+                <div className="flex items-end">
+                  <button
+                    onClick={() => {
+                      setSearchQuery('');
+                      setSheetType('all');
+                      setSelectedFacility('all');
+                      setSelectedPosition('all');
+                      setSelectedExperience('all');
+                    }}
+                    className="w-full px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                  >
+                    リセット
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* 検索結果 */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <h2 className="text-xl font-bold text-gray-800 mb-4">
+                シート一覧 ({filteredSheets.length}件)
+              </h2>
+
+              {filteredSheets.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  該当するシートが見つかりませんでした
+                </div>
+              ) : (
+                <div className="grid gap-4">
+                  {filteredSheets.map((sheet) => (
+                    <div
+                      key={sheet.id}
+                      className="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow"
+                    >
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <h3 className="text-lg font-semibold text-gray-800">
+                              {sheet.name}
+                            </h3>
+                            <span
+                              className={`px-2 py-1 text-xs rounded-full font-medium ${
+                                sheet.type === 'interview'
+                                  ? 'bg-green-100 text-green-700'
+                                  : 'bg-blue-100 text-blue-700'
+                              }`}
+                            >
+                              {sheet.type === 'interview' ? '面談' : '評価'}
+                            </span>
+                            <span className="px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded-full">
+                              {sheet.version}
+                            </span>
+                          </div>
+                          
+                          <p className="text-sm text-gray-600 mb-3">{sheet.description}</p>
+                          
+                          <div className="flex flex-wrap gap-2">
+                            {sheet.facility && (
+                              <span className="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded">
+                                {sheet.facility}
+                              </span>
+                            )}
+                            {sheet.position && (
+                              <span className="px-2 py-1 text-xs bg-orange-100 text-orange-700 rounded">
+                                {sheet.position}
+                              </span>
+                            )}
+                            {sheet.experience && (
+                              <span className="px-2 py-1 text-xs bg-yellow-100 text-yellow-700 rounded">
+                                {sheet.experience}
+                              </span>
+                            )}
+                            {sheet.duration && (
+                              <span className="px-2 py-1 text-xs bg-pink-100 text-pink-700 rounded">
+                                {sheet.duration}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        
+                        <div className="flex gap-2 ml-4">
+                          <button
+                            onClick={() => {
+                              // PDFプレビュー機能（実装予定）
+                              alert(`プレビュー機能は準備中です: ${sheet.name}`);
+                            }}
+                            className="px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm"
+                          >
+                            👁️ プレビュー
+                          </button>
+                          <button
+                            onClick={() => {
+                              // ダウンロード機能（実装予定）
+                              const link = document.createElement('a');
+                              link.href = sheet.path;
+                              link.download = sheet.name + '.pdf';
+                              link.click();
+                            }}
+                            className="px-3 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-sm"
+                          >
+                            ⬇️ ダウンロード
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* 使い方ガイド */}
+            <div className="bg-yellow-50 rounded-xl shadow-lg p-6">
+              <h3 className="text-lg font-bold text-yellow-800 mb-3">💡 シート利用ガイド</h3>
+              <div className="grid md:grid-cols-2 gap-4 text-sm text-gray-700">
+                <div>
+                  <h4 className="font-semibold text-gray-800 mb-2">面談シートの使い方</h4>
+                  <ul className="space-y-1">
+                    <li>• 面談前に該当するシートをダウンロード</li>
+                    <li>• 事前に記入できる項目は準備</li>
+                    <li>• 面談時は印刷して持参、または画面で確認</li>
+                    <li>• 面談後は人事部に提出</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-800 mb-2">評価シートの使い方</h4>
+                  <ul className="space-y-1">
+                    <li>• 評価期間前に評価項目を確認</li>
+                    <li>• 自己評価と上司評価の両方を記入</li>
+                    <li>• 2軸評価（施設内・法人内）を理解</li>
+                    <li>• 評価結果は面談でフィードバック</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* お問い合わせ */}
         <div className="bg-blue-50 rounded-xl shadow-lg p-6 mt-8">
           <h3 className="text-lg font-bold text-blue-800 mb-3">お問い合わせ</h3>
           <p className="text-gray-700 mb-4">
-            人事評価制度・面談制度に関するご質問やご相談は、人事部までお気軽にお問い合わせください。
+            人事評価制度・面談制度・各種シートに関するご質問やご相談は、人事部までお気軽にお問い合わせください。
           </p>
           <div className="flex flex-wrap gap-4">
             <div className="flex items-center gap-2">
