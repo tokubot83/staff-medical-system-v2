@@ -50,7 +50,9 @@ export default function InterviewSheetWrapper({
   return (
     <div className="space-y-4">
       {/* モード選択 */}
-      <InterviewModeSelector mode={mode} onModeChange={setMode} />
+      <div className="print:hidden">
+        <InterviewModeSelector mode={mode} onModeChange={setMode} />
+      </div>
 
       {/* アクションボタン */}
       <div className={cn(

@@ -16,12 +16,20 @@ interface EvaluationSheetViewerProps {
 
 // v4評価シートコンポーネントの遅延読み込み
 const evaluationSheetComponents = {
+  // 急性期看護師
   NewNurseEvaluationV4Pattern5: lazy(() => import('@/components/evaluation-sheets/v4/acute-nurse/new-nurse-evaluation-v4-pattern5')),
   JuniorNurseEvaluationV4Pattern5: lazy(() => import('@/components/evaluation-sheets/v4/acute-nurse/junior-nurse-evaluation-v4-pattern5')),
   MidlevelNurseEvaluationV4Pattern5: lazy(() => import('@/components/evaluation-sheets/v4/acute-nurse/midlevel-nurse-evaluation-v4-pattern5')),
   VeteranNurseEvaluationV4Pattern5: lazy(() => import('@/components/evaluation-sheets/v4/acute-nurse/veteran-nurse-evaluation-v4-pattern5')),
   WardChiefEvaluationV4Pattern5: lazy(() => import('@/components/evaluation-sheets/v4/acute-nurse/ward-chief-evaluation-v4-pattern5')),
-  WardManagerEvaluationV4Pattern5: lazy(() => import('@/components/evaluation-sheets/v4/acute-nurse/ward-manager-evaluation-v4-pattern5'))
+  WardManagerEvaluationV4Pattern5: lazy(() => import('@/components/evaluation-sheets/v4/acute-nurse/ward-manager-evaluation-v4-pattern5')),
+  
+  // 急性期看護補助者
+  NewNursingAideEvaluationV4Pattern5: lazy(() => import('@/components/evaluation-sheets/v4/acute-nursing-aide/new-nursing-aide-evaluation-v4-pattern5')),
+  JuniorNursingAideEvaluationV4Pattern5: lazy(() => import('@/components/evaluation-sheets/v4/acute-nursing-aide/junior-nursing-aide-evaluation-v4-pattern5')),
+  MidlevelNursingAideEvaluationV4Pattern5: lazy(() => import('@/components/evaluation-sheets/v4/acute-nursing-aide/midlevel-nursing-aide-evaluation-v4-pattern5')),
+  VeteranNursingAideEvaluationV4Pattern5: lazy(() => import('@/components/evaluation-sheets/v4/acute-nursing-aide/veteran-nursing-aide-evaluation-v4-pattern5')),
+  LeaderNursingAideEvaluationV4Pattern5: lazy(() => import('@/components/evaluation-sheets/v4/acute-nursing-aide/leader-nursing-aide-evaluation-v4-pattern5'))
 };
 
 export default function EvaluationSheetViewer({

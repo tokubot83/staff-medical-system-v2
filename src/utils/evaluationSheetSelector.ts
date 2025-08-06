@@ -180,9 +180,14 @@ export function getAvailableEvaluationSheets(
   facilityType?: 'acute' | 'chronic' | 'roken' | 'grouphome',
   jobType?: 'nurse' | 'assistant-nurse' | 'nursing-aide' | 'care-worker'
 ): EvaluationSheetInfo[] {
-  // 現在は急性期病棟の看護師のみ
+  // 急性期病棟の看護師
   if (!facilityType || !jobType || (facilityType === 'acute' && jobType === 'nurse')) {
     return Object.values(acuteNurseEvaluationSheets);
+  }
+  
+  // 急性期病棟の看護補助者
+  if (facilityType === 'acute' && jobType === 'nursing-aide') {
+    return Object.values(acuteNursingAideEvaluationSheets);
   }
   
   return [];

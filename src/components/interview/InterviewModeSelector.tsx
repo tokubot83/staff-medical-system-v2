@@ -44,8 +44,8 @@ export default function InterviewModeSelector({
   ];
 
   return (
-    <Card className={cn("mb-4", className)}>
-      <CardContent className="p-4">
+    <Card className={cn("mb-4 print:hidden", className)}>
+      <CardContent className="p-4 print:hidden">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <FileText className="h-5 w-5 text-gray-600" />

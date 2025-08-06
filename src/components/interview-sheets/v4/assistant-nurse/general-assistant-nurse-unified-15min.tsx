@@ -24,17 +24,17 @@ export default function GeneralAssistantNurseUnified15MinInterviewSheet() {
           <Alert className="mt-3">
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>
-              15分の短時間面談です。一般准看護師の業務遂行能力と自立度を確認し、緊急課題を特定することを目的とします。
+              15分の短時間面談です。一般准看護師の現状確認と緊急課題の把握を目的とします。
             </AlertDescription>
           </Alert>
         </CardHeader>
         <CardContent className="space-y-6 pt-6">
-          {/* 1. 業務遂行状況（5分） */}
+          {/* 1. 業務遂行状況の確認（5分） */}
           <div className="space-y-4">
-            <h3 className="font-bold text-lg border-b pb-2">1. 業務遂行状況（5分）</h3>
+            <h3 className="font-bold text-lg border-b pb-2">1. 業務遂行状況の確認（5分）</h3>
             
             <div className="bg-gray-50 p-4 rounded-lg space-y-3">
-              <Label className="text-base font-semibold">准看護業務の遂行能力</Label>
+              <Label className="text-base font-semibold">業務遂行能力</Label>
               <div className="grid grid-cols-6 gap-2 text-xs text-center font-medium text-gray-600 mb-2">
                 <div></div>
                 <div className="bg-green-100 px-2 py-1 rounded">5</div>
@@ -45,11 +45,12 @@ export default function GeneralAssistantNurseUnified15MinInterviewSheet() {
               </div>
               
               {[
-                "指示理解と実行",
-                "基本的な看護技術",
-                "患者対応・コミュニケーション",
+                "看護技術の実践",
+                "指示の理解と実行",
                 "報告・連絡・相談",
-                "看護師との連携"
+                "チーム連携",
+                "時間管理",
+                "患者対応"
               ].map((item) => (
                 <RadioGroup key={item}>
                   <div className="grid grid-cols-6 gap-2 items-center">
@@ -74,257 +75,124 @@ export default function GeneralAssistantNurseUnified15MinInterviewSheet() {
               ))}
               <div className="text-xs text-gray-600 bg-blue-50 p-3 rounded">
                 <p><strong>評価基準：</strong></p>
-                <p><span className="text-green-600 font-medium">5：</span>期待を大きく超える　<span className="text-blue-600 font-medium">4：</span>期待を超える　<span className="text-yellow-600 font-medium">3：</span>期待通り　<span className="text-orange-600 font-medium">2：</span>やや期待以下　<span className="text-red-600 font-medium">1：</span>期待以下</p>
+                <p><span className="text-green-600 font-medium">5：</span>優秀　<span className="text-blue-600 font-medium">4：</span>良好　<span className="text-yellow-600 font-medium">3：</span>標準　<span className="text-orange-600 font-medium">2：</span>要改善　<span className="text-red-600 font-medium">1：</span>要指導</p>
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label>現在の業務内容と自己評価</Label>
+              <Label>現在の業務上の課題・困りごと</Label>
               <Textarea 
-                placeholder="担当している看護補助業務、自立度、チームでの役割など簡潔に記入"
-                className="min-h-[60px]"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label>この半年で成長したと感じる点</Label>
-              <Textarea 
-                placeholder="看護技術の向上、患者対応力、チーム連携など具体的に"
+                placeholder="技術面、人間関係、業務負担など"
                 className="min-h-[60px]"
               />
             </div>
           </div>
 
-          {/* 2. 職員の現状確認（モチベーション・健康・エンゲージメント）（5分） */}
-          <div className="space-y-4 bg-green-50 p-4 rounded-lg">
-            <h3 className="font-bold text-lg border-b pb-2">2. 職員の現状確認（モチベーション・健康・エンゲージメント）（5分）</h3>
-            
-            {/* モチベーションと満足度 */}
-            <div className="bg-gray-50 p-4 rounded-lg space-y-3">
-              <Label className="text-base font-semibold">モチベーションと満足度</Label>
-              <div className="grid grid-cols-6 gap-2 text-xs text-center font-medium text-gray-600 mb-2">
-                <div></div>
-                <div className="bg-green-100 px-2 py-1 rounded">5</div>
-                <div className="bg-blue-100 px-2 py-1 rounded">4</div>
-                <div className="bg-yellow-100 px-2 py-1 rounded">3</div>
-                <div className="bg-orange-100 px-2 py-1 rounded">2</div>
-                <div className="bg-red-100 px-2 py-1 rounded">1</div>
-              </div>
-              
-              {[
-                "現在のモチベーション",
-                "職場満足度"
-              ].map((item) => (
-                <RadioGroup key={item}>
-                  <div className="grid grid-cols-6 gap-2 items-center">
-                    <span className="text-sm font-medium">{item}</span>
-                    <div className="flex justify-center">
-                      <RadioGroupItem value={`${item}-5`} id={`${item}-5`} className="w-4 h-4" />
-                    </div>
-                    <div className="flex justify-center">
-                      <RadioGroupItem value={`${item}-4`} id={`${item}-4`} className="w-4 h-4" />
-                    </div>
-                    <div className="flex justify-center">
-                      <RadioGroupItem value={`${item}-3`} id={`${item}-3`} className="w-4 h-4" />
-                    </div>
-                    <div className="flex justify-center">
-                      <RadioGroupItem value={`${item}-2`} id={`${item}-2`} className="w-4 h-4" />
-                    </div>
-                    <div className="flex justify-center">
-                      <RadioGroupItem value={`${item}-1`} id={`${item}-1`} className="w-4 h-4" />
-                    </div>
-                  </div>
-                </RadioGroup>
-              ))}
-              <div className="text-xs text-gray-600 bg-blue-50 p-3 rounded mt-3">
-                <p><strong>評価基準：</strong></p>
-                <p><span className="text-green-600 font-medium">5：</span>非常に高い/満足　<span className="text-blue-600 font-medium">4：</span>高い/満足　<span className="text-yellow-600 font-medium">3：</span>普通　<span className="text-orange-600 font-medium">2：</span>低い/やや不満　<span className="text-red-600 font-medium">1：</span>非常に低い/不満</p>
-              </div>
-            </div>
-
-            {/* 健康・ストレス・エンゲージメント */}
-            <div className="bg-gray-50 p-4 rounded-lg space-y-3">
-              <Label className="text-base font-semibold">健康・ストレス・エンゲージメント</Label>
-              <div className="grid grid-cols-6 gap-2 text-xs text-center font-medium text-gray-600 mb-2">
-                <div></div>
-                <div className="bg-green-100 px-2 py-1 rounded">5</div>
-                <div className="bg-blue-100 px-2 py-1 rounded">4</div>
-                <div className="bg-yellow-100 px-2 py-1 rounded">3</div>
-                <div className="bg-orange-100 px-2 py-1 rounded">2</div>
-                <div className="bg-red-100 px-2 py-1 rounded">1</div>
-              </div>
-              
-              {[
-                "健康状態",
-                "ストレスレベル",
-                "3年後の継続意向"
-              ].map((item) => (
-                <RadioGroup key={item}>
-                  <div className="grid grid-cols-6 gap-2 items-center">
-                    <span className="text-sm font-medium">{item}</span>
-                    <div className="flex justify-center">
-                      <RadioGroupItem value={`${item}-5`} id={`${item}-5`} className="w-4 h-4" />
-                    </div>
-                    <div className="flex justify-center">
-                      <RadioGroupItem value={`${item}-4`} id={`${item}-4`} className="w-4 h-4" />
-                    </div>
-                    <div className="flex justify-center">
-                      <RadioGroupItem value={`${item}-3`} id={`${item}-3`} className="w-4 h-4" />
-                    </div>
-                    <div className="flex justify-center">
-                      <RadioGroupItem value={`${item}-2`} id={`${item}-2`} className="w-4 h-4" />
-                    </div>
-                    <div className="flex justify-center">
-                      <RadioGroupItem value={`${item}-1`} id={`${item}-1`} className="w-4 h-4" />
-                    </div>
-                  </div>
-                </RadioGroup>
-              ))}
-              <div className="text-xs text-gray-600 bg-blue-50 p-3 rounded mt-3">
-                <p><strong>評価基準：</strong></p>
-                <p><span className="font-medium">健康状態：</span><span className="text-green-600 font-medium">5：</span>非常に良好　<span className="text-blue-600 font-medium">4：</span>良好　<span className="text-yellow-600 font-medium">3：</span>普通　<span className="text-orange-600 font-medium">2：</span>やや不調　<span className="text-red-600 font-medium">1：</span>不調</p>
-                <p><span className="font-medium">ストレス：</span><span className="text-green-600 font-medium">5：</span>非常に低い　<span className="text-blue-600 font-medium">4：</span>低い　<span className="text-yellow-600 font-medium">3：</span>普通　<span className="text-orange-600 font-medium">2：</span>高い　<span className="text-red-600 font-medium">1：</span>非常に高い</p>
-                <p><span className="font-medium">継続意向：</span><span className="text-green-600 font-medium">5：</span>ぜひ続けたい　<span className="text-blue-600 font-medium">4：</span>続けたい　<span className="text-yellow-600 font-medium">3：</span>わからない　<span className="text-orange-600 font-medium">2：</span>転職検討　<span className="text-red-600 font-medium">1：</span>転職活動中</p>
-              </div>
-            </div>
-          </div>
-
-          {/* 3. 現在の課題・必要なサポート（3分） */}
+          {/* 2. 健康・モチベーション（5分） */}
           <div className="space-y-4">
-            <h3 className="font-bold text-lg border-b pb-2">3. 現在の課題・必要なサポート（3分）</h3>
+            <h3 className="font-bold text-lg border-b pb-2">2. 健康・モチベーション（5分）</h3>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>健康状態</Label>
+                <RadioGroup>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="good" id="health-good" />
+                    <Label htmlFor="health-good">良好</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="normal" id="health-normal" />
+                    <Label htmlFor="health-normal">普通</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="concern" id="health-concern" />
+                    <Label htmlFor="health-concern">要注意</Label>
+                  </div>
+                </RadioGroup>
+              </div>
+
+              <div className="space-y-2">
+                <Label>モチベーション</Label>
+                <RadioGroup>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="high" id="motivation-high" />
+                    <Label htmlFor="motivation-high">高い</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="normal" id="motivation-normal" />
+                    <Label htmlFor="motivation-normal">普通</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="low" id="motivation-low" />
+                    <Label htmlFor="motivation-low">低い</Label>
+                  </div>
+                </RadioGroup>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label>勤務継続の意向</Label>
+              <Input placeholder="継続意向、転職検討、資格取得希望など" />
+            </div>
+          </div>
+
+          {/* 3. 今後の支援（5分） */}
+          <div className="space-y-4">
+            <h3 className="font-bold text-lg border-b pb-2">3. 今後の支援（5分）</h3>
             
             <div className="space-y-2">
-              <Label>現在困っていること・不安なこと（最重要事項）</Label>
+              <Label>必要な支援・要望</Label>
               <Textarea 
-                placeholder="技術的課題、患者対応、チーム連携で困っていることを1-2つ簡潔に記入"
+                placeholder="技術指導、業務調整、研修参加など"
                 className="min-h-[60px]"
               />
             </div>
 
             <div className="space-y-2">
-              <Label>必要なサポート（最優先のもの1つ）</Label>
-              <RadioGroup>
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="flex items-center">
-                    <RadioGroupItem value="skill-training" id="support-skill" />
-                    <Label htmlFor="support-skill" className="ml-2">技術研修・スキル向上</Label>
-                  </div>
-                  <div className="flex items-center">
-                    <RadioGroupItem value="career" id="support-career" />
-                    <Label htmlFor="support-career" className="ml-2">キャリア相談</Label>
-                  </div>
-                  <div className="flex items-center">
-                    <RadioGroupItem value="workload" id="support-workload" />
-                    <Label htmlFor="support-workload" className="ml-2">業務量調整</Label>
-                  </div>
-                  <div className="flex items-center">
-                    <RadioGroupItem value="mental" id="support-mental" />
-                    <Label htmlFor="support-mental" className="ml-2">メンタルケア</Label>
-                  </div>
-                  <div className="flex items-center">
-                    <RadioGroupItem value="team" id="support-team" />
-                    <Label htmlFor="support-team" className="ml-2">チーム環境改善</Label>
-                  </div>
-                  <div className="flex items-center">
-                    <RadioGroupItem value="certification" id="support-certification" />
-                    <Label htmlFor="support-certification" className="ml-2">看護師資格取得支援</Label>
-                  </div>
+              <Label>次回面談までの目標</Label>
+              <Textarea 
+                placeholder="具体的な目標を1-2個"
+                className="min-h-[60px]"
+              />
+            </div>
+
+            <div className="bg-yellow-50 p-4 rounded-lg">
+              <Label className="text-base font-semibold text-yellow-800">対応の優先度</Label>
+              <RadioGroup className="mt-2">
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="urgent" id="priority-urgent" />
+                  <Label htmlFor="priority-urgent" className="text-red-600">緊急</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="soon" id="priority-soon" />
+                  <Label htmlFor="priority-soon" className="text-orange-600">早期対応</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="normal" id="priority-normal" />
+                  <Label htmlFor="priority-normal">通常</Label>
                 </div>
               </RadioGroup>
-            </div>
-          </div>
-
-          {/* 4. 次回までのアクション（2分） */}
-          <div className="space-y-4">
-            <h3 className="font-bold text-lg border-b pb-2">4. 次回までのアクション（2分）</h3>
-            
-            <div className="space-y-2">
-              <Label>次回面談までの具体的目標（1つ）</Label>
-              <Textarea 
-                placeholder="1-2ヶ月で達成可能な具体的目標を記入"
-                className="min-h-[60px]"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="next-interview">次回面談予定</Label>
-                <Input type="date" id="next-interview" />
-              </div>
-              <div>
-                <Label htmlFor="follow-method">フォロー方法</Label>
-                <Input type="text" id="follow-method" placeholder="月次1on1など" />
-              </div>
             </div>
           </div>
 
           {/* 面談者所見 */}
           <div className="space-y-4 border-t pt-4">
             <h3 className="font-bold text-lg">面談者所見</h3>
-            <div className="grid grid-cols-3 gap-4">
-              <div>
-                <Label>成長度評価</Label>
-                <RadioGroup className="flex flex-col space-y-1">
-                  <div className="flex items-center">
-                    <RadioGroupItem value="excellent" id="growth-excellent" />
-                    <Label htmlFor="growth-excellent" className="ml-1 text-sm">期待以上</Label>
-                  </div>
-                  <div className="flex items-center">
-                    <RadioGroupItem value="good" id="growth-good" />
-                    <Label htmlFor="growth-good" className="ml-1 text-sm">順調</Label>
-                  </div>
-                  <div className="flex items-center">
-                    <RadioGroupItem value="needs-support" id="growth-support" />
-                    <Label htmlFor="growth-support" className="ml-1 text-sm">要支援</Label>
-                  </div>
-                </RadioGroup>
-              </div>
-              <div>
-                <Label>ポテンシャル</Label>
-                <RadioGroup className="flex flex-col space-y-1">
-                  <div className="flex items-center">
-                    <RadioGroupItem value="high" id="potential-high" />
-                    <Label htmlFor="potential-high" className="ml-1 text-sm">高</Label>
-                  </div>
-                  <div className="flex items-center">
-                    <RadioGroupItem value="medium" id="potential-medium" />
-                    <Label htmlFor="potential-medium" className="ml-1 text-sm">中</Label>
-                  </div>
-                  <div className="flex items-center">
-                    <RadioGroupItem value="low" id="potential-low" />
-                    <Label htmlFor="potential-low" className="ml-1 text-sm">低</Label>
-                  </div>
-                </RadioGroup>
-              </div>
-              <div>
-                <Label>離職リスク</Label>
-                <RadioGroup className="flex flex-col space-y-1">
-                  <div className="flex items-center">
-                    <RadioGroupItem value="low" id="risk-low" />
-                    <Label htmlFor="risk-low" className="ml-1 text-sm">低</Label>
-                  </div>
-                  <div className="flex items-center">
-                    <RadioGroupItem value="medium" id="risk-medium" />
-                    <Label htmlFor="risk-medium" className="ml-1 text-sm">中</Label>
-                  </div>
-                  <div className="flex items-center">
-                    <RadioGroupItem value="high" id="risk-high" />
-                    <Label htmlFor="risk-high" className="ml-1 text-sm">高</Label>
-                  </div>
-                </RadioGroup>
-              </div>
-            </div>
-            
             <Textarea 
-              placeholder="特記事項、看護師資格取得意向、緊急対応が必要な事項があれば記入"
+              placeholder="総合評価、特記事項など"
               className="min-h-[80px]"
             />
           </div>
 
-          {/* 保存ボタン */}
-          <div className="flex justify-end space-x-4 pt-6">
-            <Button variant="outline">一時保存</Button>
-            <Button>面談記録を保存</Button>
+          {/* 署名欄 */}
+          <div className="flex justify-between items-center border-t pt-4">
+            <div className="flex items-center space-x-4">
+              <Label>面談者署名：</Label>
+              <Input className="w-48" />
+            </div>
+            <Button className="bg-blue-600 hover:bg-blue-700">
+              面談記録を保存
+            </Button>
           </div>
         </CardContent>
       </Card>
