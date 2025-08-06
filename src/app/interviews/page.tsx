@@ -107,10 +107,12 @@ export default function InterviewsPage() {
 
   return (
     <div>
-      <CommonHeader title="面談管理" />
+      <div className="print:hidden">
+        <CommonHeader title="面談管理" />
+      </div>
       
       <div className={styles.container}>
-        <div className={styles.tabNavigation}>
+        <div className={`${styles.tabNavigation} print:hidden`}>
           {tabs.map((tab) => (
             <button
               key={tab.id}
@@ -488,7 +490,7 @@ function InterviewSheetsTab(): React.ReactElement {
         <div className={styles.sheetViewerSection}>
           <button
             onClick={() => setShowSheet(false)}
-            className={styles.backButton}
+            className={`${styles.backButton} print:hidden`}
           >
             ← 職員選択に戻る
           </button>
