@@ -134,14 +134,18 @@ export default function StaffDetailPage() {
 }
 
 function BasicInfoTab({ selectedStaff }: { selectedStaff: any }) {
-  // 2軸評価データの取得または推定
-  const twoAxisEvaluation = selectedStaff.twoAxisEvaluation || estimateTwoAxisEvaluation(
-    selectedStaff.evaluation,
-    Math.floor(Math.random() * 50) + 1, // デモ用の仮の順位
-    200, // デモ用の仮の総数
-    Math.floor(Math.random() * 100) + 1, // デモ用の仮の順位
-    500 // デモ用の仮の総数
-  )
+  // 2軸評価データの取得（デモデータ）
+  const twoAxisEvaluation = selectedStaff.twoAxisEvaluation || {
+    facilityScore: 85,
+    facilityRank: Math.floor(Math.random() * 50) + 1,
+    facilityTotal: 200,
+    corporateScore: 78,
+    corporateRank: Math.floor(Math.random() * 100) + 1,
+    corporateTotal: 500,
+    overallScore: selectedStaff.evaluation || 'B',
+    description: '優秀な職員として評価されています',
+    recommendation: '継続的な成長を支援し、リーダーシップ研修への参加を推奨'
+  }
 
   return (
     <div className={styles.detailContainer}>
@@ -204,17 +208,28 @@ function BasicInfoTab({ selectedStaff }: { selectedStaff: any }) {
         </div>
 
         <div style={{ marginTop: '24px', marginBottom: '24px' }}>
-          <TwoAxisEvaluationSummaryCompact
-            facilityScore={twoAxisEvaluation.facilityScore}
-            facilityRank={twoAxisEvaluation.facilityRank}
-            facilityTotal={twoAxisEvaluation.facilityTotal}
-            corporateScore={twoAxisEvaluation.corporateScore}
-            corporateRank={twoAxisEvaluation.corporateRank}
-            corporateTotal={twoAxisEvaluation.corporateTotal}
-            overallScore={twoAxisEvaluation.overallScore}
-            description={twoAxisEvaluation.description || '優秀な職員'}
-            recommendation={twoAxisEvaluation.recommendation || '継続的な成長を支援'}
-          />
+          <div className={styles.evaluationSummaryCompact}>
+            <div className={styles.evaluationHeader}>
+              <h4>人事評価サマリー</h4>
+              <span className={styles.evaluationGrade}>{twoAxisEvaluation.overallScore}</span>
+            </div>
+            <div className={styles.evaluationScores}>
+              <div className={styles.scoreItem}>
+                <span className={styles.scoreLabel}>施設評価</span>
+                <span className={styles.scoreValue}>{twoAxisEvaluation.facilityScore}点</span>
+                <span className={styles.scoreRank}>({twoAxisEvaluation.facilityRank}/{twoAxisEvaluation.facilityTotal}位)</span>
+              </div>
+              <div className={styles.scoreItem}>
+                <span className={styles.scoreLabel}>法人評価</span>
+                <span className={styles.scoreValue}>{twoAxisEvaluation.corporateScore}点</span>
+                <span className={styles.scoreRank}>({twoAxisEvaluation.corporateRank}/{twoAxisEvaluation.corporateTotal}位)</span>
+              </div>
+            </div>
+            <div className={styles.evaluationDescription}>
+              <p>{twoAxisEvaluation.description || '優秀な職員'}</p>
+              <p className={styles.recommendation}>{twoAxisEvaluation.recommendation || '継続的な成長を支援'}</p>
+            </div>
+          </div>
         </div>
 
         <div className={styles.detailSections}>
