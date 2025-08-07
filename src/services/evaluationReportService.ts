@@ -212,13 +212,13 @@ ${data.comments}
         
         comparisonData.push([
           facility,
-          facilityData.length,
+          facilityData.length.toString(),
           avgScore.toFixed(1),
-          gradeDistribution['S'] || 0,
-          gradeDistribution['A'] || 0,
-          gradeDistribution['B'] || 0,
-          gradeDistribution['C'] || 0,
-          gradeDistribution['D'] || 0
+          (gradeDistribution['S'] || 0).toString(),
+          (gradeDistribution['A'] || 0).toString(),
+          (gradeDistribution['B'] || 0).toString(),
+          (gradeDistribution['C'] || 0).toString(),
+          (gradeDistribution['D'] || 0).toString()
         ]);
       });
       
