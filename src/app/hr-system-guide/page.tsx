@@ -294,28 +294,16 @@ export default function HRSystemGuidePage() {
                     <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">1</div>
                     <div className="flex-1">
                       <p className="font-semibold text-gray-800">評価シートで点数化（100点満点）</p>
-<<<<<<< HEAD
-                      <p className="text-sm text-gray-600">技術評価50点（3月実施） + 組織貢献度50点（施設12.5点×2期 + 法人12.5点×2期）</p>
-=======
-<<<<<<< HEAD
-                      <p className="text-sm text-gray-600">技術評価50点（3月実施） + 施設貢献25点 + 法人貢献25点（年間相対評価）</p>
-=======
                       <p className="text-sm text-gray-600">技術評価50点 + 施設貢献25点 + 法人貢献25点</p>
                       <p className="text-xs text-gray-500 mt-1">※施設内・法人内評価とも同じ100点満点の計算式を使用</p>
->>>>>>> 03eefeb (fix: 評価マトリックスをPDF版の正式な分布に修正)
->>>>>>> preview/feature-name
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">2</div>
                     <div className="flex-1">
                       <p className="font-semibold text-gray-800">点数を順位に変換</p>
-<<<<<<< HEAD
-                      <p className="text-sm text-gray-600">職種別に施設内と法人内でそれぞれ順位を算出（相対評価）</p>
-=======
                       <p className="text-sm text-gray-600">施設内と法人内でそれぞれ同職種内で順位を算出</p>
                       <p className="text-xs text-gray-500 mt-1">※同じ100点の得点を、評価範囲の違いによって2つの順位を算出</p>
->>>>>>> 03eefeb (fix: 評価マトリックスをPDF版の正式な分布に修正)
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -462,18 +450,10 @@ export default function HRSystemGuidePage() {
                 </div>
 
                 <div className="bg-orange-50 rounded-lg p-4 border-l-4 border-orange-500">
-<<<<<<< HEAD
-                  <h4 className="font-semibold text-orange-800 mb-2">組織貢献度評価（50点）- ポイント制</h4>
-                  <div className="text-sm text-gray-700 mb-3">
-                    <p className="font-medium">年2回の賞与査定時に評価（各期25点×2期＝50点）</p>
-                    <p className="text-xs text-gray-600 mt-1">夏季（8月）：12月～5月実績 / 冬季（12月）：6月～11月実績</p>
-                  </div>
-=======
                   <h4 className="font-semibold text-orange-800 mb-2">組織貢献評価（50点）- 相対評価</h4>
->>>>>>> preview/feature-name
                   <div className="grid md:grid-cols-2 gap-3 mt-3">
                     <div className="bg-white rounded p-3">
-                      <p className="text-sm font-semibold text-gray-700 mb-2">施設貢献度（12.5点×2期＝25点）</p>
+                      <p className="text-sm font-semibold text-gray-700 mb-2">施設貢献（25点）</p>
                       <ul className="text-xs text-gray-600 space-y-1">
                         <li>• 防災訓練参加</li>
                         <li>• 朝礼出席</li>
