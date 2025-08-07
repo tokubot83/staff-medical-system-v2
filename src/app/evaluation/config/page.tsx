@@ -29,6 +29,7 @@ import {
 } from '@/data/evaluationMasterData';
 import type { FacilityType, JobCategory, MajorEvaluationItem, FacilityEvaluationConfig } from '@/types/evaluation-config';
 import { EvaluationExcelService } from '@/services/evaluationExcelService';
+import { EvaluationConfigStorage } from '@/services/evaluationConfigStorage';
 
 export default function EvaluationConfigPage() {
   const [selectedFacility, setSelectedFacility] = useState<FacilityType>('acute');
@@ -36,7 +37,13 @@ export default function EvaluationConfigPage() {
   const [isExporting, setIsExporting] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const [facilityName, setFacilityName] = useState('急性期病院A');
+  const [savedConfigs, setSavedConfigs] = useState<FacilityEvaluationConfig[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // 保存済み設定の読み込み
+  React.useEffect(() => {
+    setSavedConfigs(EvaluationConfigStorage.getAllConfigs());
+  }, []);
 
   // 選択可能な施設特化項目をフィルタリング
   const availableItems = facilitySpecificItems.filter(item => 
@@ -376,9 +383,17 @@ export default function EvaluationConfigPage() {
 
                 {/* 保存ボタン */}
                 <div className="flex justify-end gap-3 pt-4">
-                  <Button variant="outline">キャンセル</Button>
                   <Button 
-                    disabled={calculateTotalScore() !== 50}
+                    variant="outline"
+                    onClick={() => {
+                      setSelectedItems({});
+                      setFacilityName('');
+                    }}
+                  >
+                    キャンセル
+                  </Button>
+                  <Button 
+                    disabled={calculateTotalScore() !== 50 || !facilityName}
                     className="flex items-center gap-2"
                     onClick={() => {
                       const config: FacilityEvaluationConfig = {
@@ -394,7 +409,8 @@ export default function EvaluationConfigPage() {
                         configuredBy: '管理者',
                         configuredAt: new Date()
                       };
-                      console.log('Saving config:', config);
+                      EvaluationConfigStorage.saveConfig(config);
+                      setSavedConfigs(EvaluationConfigStorage.getAllConfigs());
                       alert('設定を保存しました');
                     }}
                   >
