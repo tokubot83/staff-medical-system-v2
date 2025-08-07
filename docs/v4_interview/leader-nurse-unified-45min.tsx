@@ -124,7 +124,7 @@ export default function LeaderNurseUnified45MinInterviewSheet() {
                   "倫理的課題への対応"
                 ].map((item) => (
                   <div key={item} className="flex items-center space-x-2">
-                    <Checkbox id={item} />
+                    <Checkbox className="border-2 border-gray-400" id={item} />
                     <Label htmlFor={item} className="text-sm font-normal">{item}で良好な実績あり</Label>
                   </div>
                 ))}
@@ -156,7 +156,7 @@ export default function LeaderNurseUnified45MinInterviewSheet() {
                   "他部署との連携強化"
                 ].map((item) => (
                   <div key={item} className="flex items-center space-x-2">
-                    <Checkbox id={`management-${item}`} />
+                    <Checkbox className="border-2 border-gray-400" id={`management-${item}`} />
                     <Label htmlFor={`management-${item}`} className="text-sm font-normal">{item}</Label>
                   </div>
                 ))}

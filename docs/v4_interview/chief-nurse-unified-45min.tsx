@@ -215,7 +215,7 @@ export default function ChiefNurseUnified45MinInterviewSheet() {
               <Label className="text-base font-semibold">ストレス要因の詳細</Label>
               <div className="grid grid-cols-3 gap-2">
                 <div className="flex items-center">
-                  <Checkbox className="border-2 border-gray-400" id="stress-workload" className="border-2 border-gray-400" />
+                  <Checkbox className="border-2 border-gray-400" id="stress-workload" />
                   <Label htmlFor="stress-workload" className="ml-2">業務過多</Label>
                 </div>
                 <div className="flex items-center">
