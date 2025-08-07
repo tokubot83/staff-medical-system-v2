@@ -711,6 +711,91 @@
   margin-bottom: 20px;
 }
 
+.gradeMatrix h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 16px;
+}
+
+.evaluationSteps {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stepCard {
+  flex: 1;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+}
+
+.stepNumber {
+  width: 32px;
+  height: 32px;
+  background: #3b82f6;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin: 0 auto 12px;
+}
+
+.stepCard h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+.stepCard p {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.stepArrow {
+  font-size: 24px;
+  color: #9ca3af;
+}
+
+.matrixTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+
+.matrixTable th,
+.matrixTable td {
+  border: 1px solid #e5e7eb;
+  padding: 12px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.matrixTable th {
+  background: #f3f4f6;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.matrixTable td {
+  font-weight: 600;
+}
+
+.matrixNote {
+  text-align: center;
+  font-size: 14px;
+  color: #6b7280;
+  margin-top: 16px;
+}
+
 .gradeTable {
   width: 100%;
   border-collapse: collapse;
@@ -735,11 +820,13 @@
   border-top: 1px solid #e5e7eb;
 }
 
-.gradeS { color: #dc2626; font-weight: 700; }
-.gradeA { color: #f59e0b; font-weight: 700; }
-.gradeB { color: #10b981; font-weight: 700; }
-.gradeC { color: #2563eb; font-weight: 700; }
-.gradeD { color: #6b7280; font-weight: 700; }
+.gradeSPlus { color: #e91e63; font-weight: 700; background: #fce4ec; }
+.gradeS { color: #dc2626; font-weight: 700; background: #fee2e2; }
+.gradeAPlus { color: #ff9800; font-weight: 700; background: #fff3e0; }
+.gradeA { color: #f59e0b; font-weight: 700; background: #fef3c7; }
+.gradeB { color: #10b981; font-weight: 700; background: #d1fae5; }
+.gradeC { color: #2563eb; font-weight: 700; background: #dbeafe; }
+.gradeD { color: #6b7280; font-weight: 700; background: #f3f4f6; }
 
 .integrationActions {
   display: flex;

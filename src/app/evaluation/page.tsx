@@ -482,45 +482,87 @@ export default function EvaluationManagement() {
                   </div>
                 </div>
 
-                {/* グレード判定 */}
+                {/* 2軸評価判定 */}
                 <div className={styles.gradeMatrix}>
-                  <h3>評価グレード判定基準</h3>
-                  <table className={styles.gradeTable}>
+                  <h3>2軸評価システム</h3>
+                  <div className={styles.evaluationSteps}>
+                    <div className={styles.stepCard}>
+                      <div className={styles.stepNumber}>1</div>
+                      <h4>100点満点で集計</h4>
+                      <p>技術50点 + 施設貢献25点 + 法人貢献25点</p>
+                    </div>
+                    <div className={styles.stepArrow}>→</div>
+                    <div className={styles.stepCard}>
+                      <div className={styles.stepNumber}>2</div>
+                      <h4>同職種内で順位化</h4>
+                      <p>施設内・法人内それぞれで相対評価</p>
+                    </div>
+                    <div className={styles.stepArrow}>→</div>
+                    <div className={styles.stepCard}>
+                      <div className={styles.stepNumber}>3</div>
+                      <h4>5段階評価</h4>
+                      <p>S(上位10%) A(11-30%) B(31-70%) C(71-90%) D(下位10%)</p>
+                    </div>
+                  </div>
+                  
+                  <h4 style={{ marginTop: '20px' }}>最終評価マトリックス</h4>
+                  <table className={styles.matrixTable}>
                     <thead>
                       <tr>
-                        <th>総合得点</th>
-                        <th>評価グレード</th>
-                        <th>該当割合</th>
+                        <th>法人内＼施設内</th>
+                        <th>D</th>
+                        <th>C</th>
+                        <th>B</th>
+                        <th>A</th>
+                        <th>S</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <td>90点以上</td>
                         <td className={styles.gradeS}>S</td>
-                        <td>上位10%</td>
-                      </tr>
-                      <tr>
-                        <td>80-89点</td>
                         <td className={styles.gradeA}>A</td>
-                        <td>上位30%</td>
+                        <td className={styles.gradeAPlus}>A+</td>
+                        <td className={styles.gradeS}>S</td>
+                        <td className={styles.gradeS}>S</td>
+                        <td className={styles.gradeSPlus}>S+</td>
                       </tr>
                       <tr>
-                        <td>70-79点</td>
+                        <td className={styles.gradeA}>A</td>
                         <td className={styles.gradeB}>B</td>
-                        <td>中位40%</td>
+                        <td className={styles.gradeA}>A</td>
+                        <td className={styles.gradeA}>A</td>
+                        <td className={styles.gradeAPlus}>A+</td>
+                        <td className={styles.gradeS}>S</td>
                       </tr>
                       <tr>
-                        <td>60-69点</td>
+                        <td className={styles.gradeB}>B</td>
                         <td className={styles.gradeC}>C</td>
-                        <td>下位20%</td>
+                        <td className={styles.gradeB}>B</td>
+                        <td className={styles.gradeB}>B</td>
+                        <td className={styles.gradeA}>A</td>
+                        <td className={styles.gradeAPlus}>A+</td>
                       </tr>
                       <tr>
-                        <td>60点未満</td>
+                        <td className={styles.gradeC}>C</td>
                         <td className={styles.gradeD}>D</td>
-                        <td>下位10%</td>
+                        <td className={styles.gradeC}>C</td>
+                        <td className={styles.gradeC}>C</td>
+                        <td className={styles.gradeB}>B</td>
+                        <td className={styles.gradeA}>A</td>
+                      </tr>
+                      <tr>
+                        <td className={styles.gradeD}>D</td>
+                        <td className={styles.gradeD}>D</td>
+                        <td className={styles.gradeD}>D</td>
+                        <td className={styles.gradeC}>C</td>
+                        <td className={styles.gradeC}>C</td>
+                        <td className={styles.gradeB}>B</td>
                       </tr>
                     </tbody>
                   </table>
+                  <p className={styles.matrixNote}>
+                    最終評価：7段階（S+, S, A+, A, B, C, D）
+                  </p>
                 </div>
 
                 {/* 実行ボタン */}
