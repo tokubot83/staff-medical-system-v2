@@ -50,10 +50,12 @@ export default function EvaluationAnalyticsPage() {
   const [selectedJobCategory, setSelectedJobCategory] = useState('all');
   const [summaryData, setSummaryData] = useState<EvaluationSummary[]>([]);
 
+  // Define constants at the top
+  const facilities = ['急性期病院', '慢性期病院', '老健', 'グループホーム'];
+  const jobCategories = ['看護職', '介護職', '看護補助者'];
+
   // モックデータ生成
   useEffect(() => {
-    const facilities = ['急性期病院', '慢性期病院', '老健', 'グループホーム'];
-    const jobCategories = ['看護職', '介護職', '看護補助者'];
     
     const data: EvaluationSummary[] = [];
     
@@ -130,9 +132,6 @@ export default function EvaluationAnalyticsPage() {
              grade === 'C' ? '#3b82f6' : '#9ca3af'
     };
   });
-
-  const facilities = ['急性期病院', '慢性期病院', '老健', 'グループホーム'];
-  const jobCategories = ['看護職', '介護職', '看護補助者'];
 
   return (
     <div className="container mx-auto py-10 px-4 max-w-7xl">
