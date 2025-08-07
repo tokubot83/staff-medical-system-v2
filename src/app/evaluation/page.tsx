@@ -291,8 +291,8 @@ export default function EvaluationManagement() {
                           <span>8月</span>
                         </div>
                         <div className={styles.timelineContent}>
-                          <h4>夏季賞与</h4>
-                          <p>組織貢献度（25点）</p>
+                          <h4>夏季賞与査定</h4>
+                          <p>施設貢献（12.5点）+ 法人貢献（12.5点）</p>
                         </div>
                       </div>
                       
@@ -301,8 +301,8 @@ export default function EvaluationManagement() {
                           <span>12月</span>
                         </div>
                         <div className={styles.timelineContent}>
-                          <h4>冬季賞与</h4>
-                          <p>組織貢献度（25点）</p>
+                          <h4>冬季賞与査定</h4>
+                          <p>施設貢献（12.5点）+ 法人貢献（12.5点）</p>
                         </div>
                       </div>
                       

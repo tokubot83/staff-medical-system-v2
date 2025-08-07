@@ -412,14 +412,22 @@ export class EvaluationBatchService {
    */
   private calculateFinalGrades(rankings: RankingResult[]): RankingResult[] {
     return rankings.map(ranking => {
-      // 貢献度点数の計算
-      const facilityPoints = this.percentileToPoints(ranking.facilityPercentile);
-      const corporatePoints = this.percentileToPoints(ranking.corporatePercentile);
+      // 夏季貢献度点数の計算（各12.5点満点）
+      const summerFacilityPoints = this.percentileToPoints(ranking.facilityPercentile, 12.5);
+      const summerCorporatePoints = this.percentileToPoints(ranking.corporatePercentile, 12.5);
+      
+      // 冬季貢献度点数の計算（各12.5点満点）
+      const winterFacilityPoints = this.percentileToPoints(ranking.facilityPercentile, 12.5);
+      const winterCorporatePoints = this.percentileToPoints(ranking.corporatePercentile, 12.5);
+      
+      // 年間合計
+      const totalFacilityPoints = summerFacilityPoints + winterFacilityPoints; // 最大25点
+      const totalCorporatePoints = summerCorporatePoints + winterCorporatePoints; // 最大25点
       
       // 技術評価は別途取得が必要
-      const technicalPoints = 35; // TODO: 実データから取得
+      const technicalPoints = 35; // TODO: 実データから取得（最大50点）
       
-      ranking.totalScore = technicalPoints + facilityPoints + corporatePoints;
+      ranking.totalScore = technicalPoints + totalFacilityPoints + totalCorporatePoints;
       
       return ranking;
     });
@@ -438,15 +446,17 @@ export class EvaluationBatchService {
 
   /**
    * パーセンタイルから貢献点数への変換
+   * 夏季・冬季それぞれ施設12.5点、法人12.5点の配点
    */
-  private percentileToPoints(percentile: number): number {
-    if (percentile <= 10) return 25;
-    if (percentile <= 20) return 22.5;
-    if (percentile <= 30) return 20;
-    if (percentile <= 40) return 17.5;
-    if (percentile <= 50) return 15;
-    if (percentile <= 60) return 12.5;
-    if (percentile <= 70) return 10;
+  private percentileToPoints(percentile: number, maxPoints: number = 12.5): number {
+    // 相対評価による配点（最大12.5点）
+    if (percentile <= 10) return maxPoints;  // 上位10% = 12.5点
+    if (percentile <= 20) return maxPoints * 0.9;  // 11.25点
+    if (percentile <= 30) return maxPoints * 0.8;  // 10点
+    if (percentile <= 40) return maxPoints * 0.7;  // 8.75点
+    if (percentile <= 50) return maxPoints * 0.6;  // 7.5点
+    if (percentile <= 60) return maxPoints * 0.5;  // 6.25点
+    if (percentile <= 70) return maxPoints * 0.4;  // 5点
     if (percentile <= 80) return 7.5;
     if (percentile <= 90) return 5;
     return 2.5;
