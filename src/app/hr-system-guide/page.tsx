@@ -1067,19 +1067,19 @@ export default function HRSystemGuidePage() {
           <div className="space-y-6">
             {/* 面談規程 */}
             <div className="bg-white rounded-xl shadow-lg p-6">
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">面談制度規程（v4統合面談版）</h2>
+              <h2 className="text-2xl font-bold text-gray-800 mb-4">面談制度規程</h2>
               <div className="prose max-w-none text-gray-700">
                 <h3 className="text-lg font-semibold mb-3">第1章 総則</h3>
                 <div className="ml-4 space-y-2 text-sm">
                   <p><strong>第1条（目的）</strong></p>
                   <p className="ml-4">
-                    本規程は、当法人におけるv4統合面談制度に関し必要な事項を定め、
+                    本規程は、当法人における面談制度に関し必要な事項を定め、
                     人事評価制度と連携した効果的な人材育成を実現することを目的とする。
                   </p>
                   
-                  <p className="mt-4"><strong>第2条（統合面談の定義）</strong></p>
+                  <p className="mt-4"><strong>第2条（面談の定義）</strong></p>
                   <p className="ml-4">
-                    統合面談とは、目標設定・中間評価・年度評価を一体化した面談形式であり、
+                    面談とは、目標設定・中間評価・年度評価を一体化した形式であり、
                     職員の成長段階と必要性に応じて実施時間を選択する柔軟な面談制度とする。
                   </p>
 
@@ -1142,9 +1142,9 @@ export default function HRSystemGuidePage() {
 
                 <h3 className="text-lg font-semibold mb-3 mt-6">第4章 面談シートの管理</h3>
                 <div className="ml-4 space-y-2 text-sm">
-                  <p><strong>第10条（v4統合面談シート）</strong></p>
+                  <p><strong>第10条（面談シート）</strong></p>
                   <p className="ml-4">
-                    面談は、職位と時間に応じたv4統合面談シートを使用する。
+                    面談は、職位と時間に応じた面談シートを使用する。
                     シートは人事部が管理し、最新版を常に利用可能な状態に維持する。
                   </p>
                   
@@ -1195,9 +1195,9 @@ export default function HRSystemGuidePage() {
               </div>
             </div>
 
-            {/* v4統合面談実施要領 */}
+            {/* 面談実施要領 */}
             <div className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">v4統合面談実施要領</h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-4">面談実施要領</h3>
               <div className="space-y-4 text-sm">
                 <div className="border-l-4 border-blue-500 pl-4">
                   <h4 className="font-semibold text-gray-800 mb-2">1. 面談時間の選択基準</h4>
@@ -1254,7 +1254,7 @@ export default function HRSystemGuidePage() {
                 <div className="border-l-4 border-orange-500 pl-4">
                   <h4 className="font-semibold text-gray-800 mb-2">4. 面談後のアクション</h4>
                   <ul className="ml-4 space-y-1 text-gray-600">
-                    <li>• v4統合面談シートを3日以内に人事部提出</li>
+                    <li>• 面談シートを3日以内に人事部提出</li>
                     <li>• 合意した目標・改善策を文書化</li>
                     <li>• 次回面談日程の設定（その場で決定）</li>
                     <li>• 必要に応じて教育研修の申込み</li>
@@ -1266,7 +1266,7 @@ export default function HRSystemGuidePage() {
 
             {/* シート一覧 */}
             <div className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">v4統合面談シート一覧</h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-4">面談シート一覧</h3>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
