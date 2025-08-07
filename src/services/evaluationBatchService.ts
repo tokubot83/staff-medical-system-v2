@@ -447,9 +447,11 @@ export class EvaluationBatchService {
   /**
    * パーセンタイルから貢献点数への変換
    * 夏季・冬季それぞれ施設12.5点、法人12.5点の配点
+   * 相対評価による傾斜配分
    */
   private percentileToPoints(percentile: number, maxPoints: number = 12.5): number {
     // 相対評価による配点（最大12.5点）
+    // 上位から傾斜配分
     if (percentile <= 10) return maxPoints;  // 上位10% = 12.5点
     if (percentile <= 20) return maxPoints * 0.9;  // 11.25点
     if (percentile <= 30) return maxPoints * 0.8;  // 10点
@@ -457,25 +459,27 @@ export class EvaluationBatchService {
     if (percentile <= 50) return maxPoints * 0.6;  // 7.5点
     if (percentile <= 60) return maxPoints * 0.5;  // 6.25点
     if (percentile <= 70) return maxPoints * 0.4;  // 5点
-    if (percentile <= 80) return 7.5;
-    if (percentile <= 90) return 5;
-    return 2.5;
+    if (percentile <= 80) return maxPoints * 0.3;  // 3.75点
+    if (percentile <= 90) return maxPoints * 0.2;  // 2.5点
+    return 0;  // 下位10%
   }
 
   /**
    * 最終評価グレードの決定（2軸評価マトリックス）
+   * PDFのマトリックスに基づく正確な判定
    */
   private getFinalGrade(
     corporateGrade: EvaluationGrade,
     facilityGrade: EvaluationGrade
   ): FinalEvaluationGrade {
-    // 評価マトリックスに基づく判定
+    // PDFのマトリックスに基づく判定
+    // 横軸：施設内評価、縦軸：法人内評価
     const matrix: Record<string, FinalEvaluationGrade> = {
-      'S_S': 'S+', 'S_A': 'S', 'S_B': 'S', 'S_C': 'A', 'S_D': 'B',
-      'A_S': 'S', 'A_A': 'A+', 'A_B': 'A', 'A_C': 'B', 'A_D': 'C',
-      'B_S': 'A', 'B_A': 'A', 'B_B': 'B', 'B_C': 'C', 'B_D': 'D',
-      'C_S': 'B', 'C_A': 'B', 'C_B': 'C', 'C_C': 'C', 'C_D': 'D',
-      'D_S': 'C', 'D_A': 'C', 'D_B': 'D', 'D_C': 'D', 'D_D': 'D'
+      'S_D': 'A', 'S_C': 'A+', 'S_B': 'S', 'S_A': 'S', 'S_S': 'S+',
+      'A_D': 'B', 'A_C': 'A', 'A_B': 'A', 'A_A': 'A+', 'A_S': 'S',
+      'B_D': 'C', 'B_C': 'B', 'B_B': 'B', 'B_A': 'A', 'B_S': 'A+',
+      'C_D': 'D', 'C_C': 'C', 'C_B': 'C', 'C_A': 'B', 'C_S': 'A',
+      'D_D': 'D', 'D_C': 'D', 'D_B': 'C', 'D_A': 'C', 'D_S': 'B'
     };
     
     const key = `${corporateGrade}_${facilityGrade}`;
