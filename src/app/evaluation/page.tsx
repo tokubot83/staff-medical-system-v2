@@ -22,6 +22,7 @@ const tabs = [
   { id: 'analysis', label: '分析・レポート', icon: '📈' },
   { id: 'process', label: '評価プロセス管理', icon: '🔄' },
   { id: 'criteria', label: '評価基準設定', icon: '📋' },
+  { id: 'newSystem', label: '新評価システム', icon: '🆕' },
 ]
 
 interface EvaluationData {
@@ -139,6 +140,7 @@ function EvaluationPageContent() {
           {activeTab === 'sheets' && <EvaluationSheetsTab />}
           {activeTab === 'analysis' && <AnalysisTab />}
           {activeTab === 'twoAxis' && <TwoAxisTab />}
+          {activeTab === 'newSystem' && <NewSystemTab />}
         </div>
       </div>
       <DashboardButton />
@@ -1113,6 +1115,199 @@ function EvaluationSheetsTab(): React.ReactElement {
             />
           </div>
         )}
+      </div>
+    </div>
+  )
+}
+
+function NewSystemTab() {
+  return (
+    <div className={styles.tabContent}>
+      <div className={styles.headerSection}>
+        <h2 className={styles.sectionTitle}>
+          🆕 新評価システム - 年間評価プロセス
+        </h2>
+        <p className={styles.sectionDescription}>
+          2024年度より導入された新しい評価制度に基づく評価入力・管理システム
+        </p>
+      </div>
+
+      <div className={styles.evaluationProcessTimeline}>
+        <div className={styles.timelineHeader}>
+          <h3>📅 年間評価スケジュール</h3>
+        </div>
+        <div className={styles.timelineContent}>
+          <div className={styles.timelineItem}>
+            <div className={styles.timelineDate}>8月</div>
+            <div className={styles.timelineDescription}>
+              <strong>組織貢献度査定（前期）</strong>
+              <p>12月〜5月の実績評価</p>
+            </div>
+          </div>
+          <div className={styles.timelineItem}>
+            <div className={styles.timelineDate}>12月</div>
+            <div className={styles.timelineDescription}>
+              <strong>組織貢献度査定（後期）</strong>
+              <p>6月〜11月の実績評価</p>
+            </div>
+          </div>
+          <div className={styles.timelineItem}>
+            <div className={styles.timelineDate}>3月</div>
+            <div className={styles.timelineDescription}>
+              <strong>技術評価</strong>
+              <p>年間の技術力評価</p>
+            </div>
+          </div>
+          <div className={styles.timelineItem}>
+            <div className={styles.timelineDate}>3月末</div>
+            <div className={styles.timelineDescription}>
+              <strong>統合評価実行</strong>
+              <p>最終グレード決定</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.systemLinks}>
+        <h3 className={styles.linkSectionTitle}>評価入力</h3>
+        <div className={styles.linkGrid}>
+          <a href="/evaluation/technical" className={styles.systemLinkCard}>
+            <div className={styles.linkIcon}>🎯</div>
+            <div className={styles.linkContent}>
+              <h4>技術評価入力</h4>
+              <p>年1回（3月）の技術評価を入力</p>
+              <span className={styles.linkBadge}>50点満点</span>
+            </div>
+          </a>
+          
+          <a href="/evaluation/contribution" className={styles.systemLinkCard}>
+            <div className={styles.linkIcon}>🏢</div>
+            <div className={styles.linkContent}>
+              <h4>組織貢献度査定</h4>
+              <p>半期ごとの組織貢献を評価</p>
+              <span className={styles.linkBadge}>各25点満点</span>
+            </div>
+          </a>
+          
+          <a href="/evaluation/final" className={styles.systemLinkCard}>
+            <div className={styles.linkIcon}>🏆</div>
+            <div className={styles.linkContent}>
+              <h4>年度末統合評価</h4>
+              <p>3月末の最終評価実行</p>
+              <span className={styles.linkBadge}>100点満点</span>
+            </div>
+          </a>
+        </div>
+
+        <h3 className={styles.linkSectionTitle}>管理・分析</h3>
+        <div className={styles.linkGrid}>
+          <a href="/evaluation/batch" className={styles.systemLinkCard}>
+            <div className={styles.linkIcon}>⚙️</div>
+            <div className={styles.linkContent}>
+              <h4>バッチ処理管理</h4>
+              <p>年度末一括計算処理</p>
+            </div>
+          </a>
+          
+          <a href="/evaluation/analytics" className={styles.systemLinkCard}>
+            <div className={styles.linkIcon}>📊</div>
+            <div className={styles.linkContent}>
+              <h4>評価分析</h4>
+              <p>施設別・職種別の分析</p>
+            </div>
+          </a>
+          
+          <a href="/evaluation/reports" className={styles.systemLinkCard}>
+            <div className={styles.linkIcon}>📑</div>
+            <div className={styles.linkContent}>
+              <h4>レポート出力</h4>
+              <p>PDF/Excel形式でダウンロード</p>
+            </div>
+          </a>
+          
+          <a href="/evaluation/history" className={styles.systemLinkCard}>
+            <div className={styles.linkIcon}>📚</div>
+            <div className={styles.linkContent}>
+              <h4>評価履歴</h4>
+              <p>過去の評価推移を確認</p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div className={styles.evaluationFormula}>
+        <h3>評価配点構成</h3>
+        <div className={styles.formulaDisplay}>
+          <div className={styles.formulaItem}>
+            <span className={styles.formulaLabel}>技術評価</span>
+            <span className={styles.formulaValue}>50点</span>
+          </div>
+          <span className={styles.formulaOperator}>+</span>
+          <div className={styles.formulaItem}>
+            <span className={styles.formulaLabel}>施設貢献</span>
+            <span className={styles.formulaValue}>25点</span>
+          </div>
+          <span className={styles.formulaOperator}>+</span>
+          <div className={styles.formulaItem}>
+            <span className={styles.formulaLabel}>法人貢献</span>
+            <span className={styles.formulaValue}>25点</span>
+          </div>
+          <span className={styles.formulaOperator}>=</span>
+          <div className={styles.formulaItem}>
+            <span className={styles.formulaLabel}>合計</span>
+            <span className={styles.formulaValue}>100点</span>
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.gradeMatrix}>
+        <h3>最終グレード判定</h3>
+        <table className={styles.matrixTable}>
+          <thead>
+            <tr>
+              <th>施設内評価</th>
+              <th>法人内評価</th>
+              <th>最終グレード</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>S</td>
+              <td>S</td>
+              <td className={styles.gradeS}>S+</td>
+            </tr>
+            <tr>
+              <td>S</td>
+              <td>A</td>
+              <td className={styles.gradeS}>S</td>
+            </tr>
+            <tr>
+              <td>A</td>
+              <td>A</td>
+              <td className={styles.gradeA}>A+</td>
+            </tr>
+            <tr>
+              <td>A</td>
+              <td>B</td>
+              <td className={styles.gradeA}>A</td>
+            </tr>
+            <tr>
+              <td>B</td>
+              <td>B</td>
+              <td className={styles.gradeB}>B</td>
+            </tr>
+            <tr>
+              <td>C</td>
+              <td>C</td>
+              <td className={styles.gradeC}>C</td>
+            </tr>
+            <tr>
+              <td>D</td>
+              <td>D</td>
+              <td className={styles.gradeD}>D</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   )
