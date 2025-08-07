@@ -247,11 +247,11 @@ export class EvaluationBatchService {
   ): Promise<EvaluationInputData[]> {
     const validated: EvaluationInputData[] = [];
     
-    for (const eval of evaluations) {
+    for (const evalData of evaluations) {
       // 必須項目チェック
-      if (!eval.staffId || !eval.facilityId || !eval.jobCategory) {
+      if (!evalData.staffId || !evalData.facilityId || !evalData.jobCategory) {
         result.errors.push({
-          staffId: eval.staffId,
+          staffId: evalData.staffId,
           errorType: 'MISSING_DATA',
           message: '必須データが不足しています'
         });
@@ -260,9 +260,9 @@ export class EvaluationBatchService {
       }
       
       // スコア範囲チェック
-      if (eval.technicalScore.totalScore < 0 || eval.technicalScore.totalScore > 50) {
+      if (evalData.technicalScore.totalScore < 0 || evalData.technicalScore.totalScore > 50) {
         result.errors.push({
-          staffId: eval.staffId,
+          staffId: evalData.staffId,
           errorType: 'VALIDATION_ERROR',
           message: '技術評価スコアが範囲外です'
         });
@@ -270,7 +270,7 @@ export class EvaluationBatchService {
         continue;
       }
       
-      validated.push(eval);
+      validated.push(evalData);
     }
     
     return validated;
@@ -282,14 +282,14 @@ export class EvaluationBatchService {
   private groupEvaluations(evaluations: EvaluationInputData[]): Map<string, EvaluationInputData[]> {
     const grouped = new Map<string, EvaluationInputData[]>();
     
-    for (const eval of evaluations) {
+    for (const evalData of evaluations) {
       // グループキー: 施設ID_職種
-      const key = `${eval.facilityId}_${eval.jobCategory}`;
+      const key = `${evalData.facilityId}_${evalData.jobCategory}`;
       
       if (!grouped.has(key)) {
         grouped.set(key, []);
       }
-      grouped.get(key)!.push(eval);
+      grouped.get(key)!.push(evalData);
     }
     
     return grouped;
@@ -312,9 +312,9 @@ export class EvaluationBatchService {
       });
       
       // 順位付け
-      sorted.forEach((eval, index) => {
-        rankings.set(`${eval.staffId}_facility`, index + 1);
-        rankings.set(`${eval.staffId}_facility_total`, sorted.length);
+      sorted.forEach((evalData, index) => {
+        rankings.set(`${evalData.staffId}_facility`, index + 1);
+        rankings.set(`${evalData.staffId}_facility_total`, sorted.length);
       });
     });
     
@@ -331,11 +331,11 @@ export class EvaluationBatchService {
     
     // 職種別にグループ化
     const byJobCategory = new Map<string, EvaluationInputData[]>();
-    evaluations.forEach(eval => {
-      if (!byJobCategory.has(eval.jobCategory)) {
-        byJobCategory.set(eval.jobCategory, []);
+    evaluations.forEach(evalData => {
+      if (!byJobCategory.has(evalData.jobCategory)) {
+        byJobCategory.set(evalData.jobCategory, []);
       }
-      byJobCategory.get(eval.jobCategory)!.push(eval);
+      byJobCategory.get(evalData.jobCategory)!.push(evalData);
     });
     
     // 各職種内で順位計算
@@ -346,9 +346,9 @@ export class EvaluationBatchService {
         return scoreB - scoreA;
       });
       
-      sorted.forEach((eval, index) => {
-        rankings.set(`${eval.staffId}_corporate`, index + 1);
-        rankings.set(`${eval.staffId}_corporate_total`, sorted.length);
+      sorted.forEach((evalData, index) => {
+        rankings.set(`${evalData.staffId}_corporate`, index + 1);
+        rankings.set(`${evalData.staffId}_corporate_total`, sorted.length);
       });
     });
     
