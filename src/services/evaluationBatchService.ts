@@ -651,18 +651,42 @@ export class EvaluationBatchService {
                 totalScore: Math.random() * 30 + 20
               },
               facilityContribution: {
-                committees: ['感染対策委員会'],
-                training: ['新人研修講師'],
-                improvements: ['業務改善提案'],
-                mentoring: ['プリセプター'],
-                overtime: Math.floor(Math.random() * 20)
+                summer: {
+                  committees: 8,
+                  training: 6,
+                  improvements: 7,
+                  mentoring: 9,
+                  overtime: Math.floor(Math.random() * 10),
+                  subtotal: 35 + Math.floor(Math.random() * 15)
+                },
+                winter: {
+                  committees: 7,
+                  training: 8,
+                  improvements: 6,
+                  mentoring: 8,
+                  overtime: Math.floor(Math.random() * 10),
+                  subtotal: 30 + Math.floor(Math.random() * 15)
+                },
+                yearTotal: 65 + Math.floor(Math.random() * 30)
               },
               corporateContribution: {
-                events: ['法人創立記念式典'],
-                crossFacilitySupport: [],
-                projects: ['DX推進プロジェクト'],
-                recruitment: ['看護学校説明会'],
-                publicity: []
+                summer: {
+                  events: 5,
+                  crossFacilitySupport: Math.floor(Math.random() * 10),
+                  projects: 8,
+                  recruitment: 6,
+                  publicity: 4,
+                  subtotal: 25 + Math.floor(Math.random() * 15)
+                },
+                winter: {
+                  events: 6,
+                  crossFacilitySupport: Math.floor(Math.random() * 10),
+                  projects: 7,
+                  recruitment: 5,
+                  publicity: 3,
+                  subtotal: 20 + Math.floor(Math.random() * 15)
+                },
+                yearTotal: 45 + Math.floor(Math.random() * 30)
               },
               createdAt: new Date(),
               updatedAt: new Date(),
