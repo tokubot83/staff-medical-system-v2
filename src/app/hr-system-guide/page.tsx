@@ -560,9 +560,9 @@ export default function HRSystemGuidePage() {
               </div>
             </div>
 
-            {/* 11種類の面談 */}
+            {/* 10種類の面談 */}
             <div className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">11種類の面談体系</h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-4">10種類の面談体系</h3>
               <div className="grid md:grid-cols-2 gap-4 mb-6">
                 {/* 定期面談 */}
                 <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4">
@@ -591,13 +591,6 @@ export default function HRSystemGuidePage() {
                         <span className="text-xs bg-blue-200 px-2 py-1 rounded">半年1回</span>
                       </div>
                       <p className="text-xs text-gray-600 mt-1">管理職対象</p>
-                    </div>
-                    <div className="bg-white/80 rounded p-2">
-                      <div className="flex justify-between items-start">
-                        <span className="font-semibold text-blue-800">人事評価面談</span>
-                        <span className="text-xs bg-blue-200 px-2 py-1 rounded">年2回</span>
-                      </div>
-                      <p className="text-xs text-gray-600 mt-1">全職員対象（3月・9月）</p>
                     </div>
                   </div>
                 </div>
@@ -630,7 +623,7 @@ export default function HRSystemGuidePage() {
                     <span className="text-xl">💭</span>
                     サポート面談（希望制）
                   </h4>
-                  <div className="grid md:grid-cols-4 gap-2">
+                  <div className="grid md:grid-cols-5 gap-2">
                     <div className="bg-white/80 rounded p-2">
                       <span className="font-semibold text-purple-800 text-sm">キャリア開発面談</span>
                       <p className="text-xs text-gray-600 mt-1">キャリアプランの相談</p>
@@ -644,6 +637,10 @@ export default function HRSystemGuidePage() {
                       <p className="text-xs text-gray-600 mt-1">職場の問題や悩み相談</p>
                     </div>
                     <div className="bg-white/80 rounded p-2">
+                      <span className="font-semibold text-purple-800 text-sm">評価フィードバック面談</span>
+                      <p className="text-xs text-gray-600 mt-1">評価結果の詳細説明</p>
+                    </div>
+                    <div className="bg-white/80 rounded p-2">
                       <span className="font-semibold text-purple-800 text-sm">随時面談</span>
                       <p className="text-xs text-gray-600 mt-1">その他必要時</p>
                     </div>
@@ -655,7 +652,7 @@ export default function HRSystemGuidePage() {
               <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg">
                 <p className="text-sm font-semibold text-yellow-800 mb-1">💡 重要なポイント</p>
                 <p className="text-xs text-gray-700">
-                  この面談は「評価」ではなく「支援」が目的です。人事評価とは完全に切り離されています（人事評価面談を除く）。
+                  全ての面談は「評価」ではなく「支援」が目的です。人事評価とは完全に切り離されており、職員の成長と働きやすさの向上を目指しています。
                 </p>
               </div>
             </div>
@@ -1155,6 +1152,44 @@ export default function HRSystemGuidePage() {
                   <p className="ml-4">
                     面談記録は電子化し、人事システムで一元管理する。
                     保管期間は5年間とし、本人の求めに応じて開示する。
+                  </p>
+                </div>
+
+                <h3 className="text-lg font-semibold mb-3 mt-6">第5章 面談の種別</h3>
+                <div className="ml-4 space-y-2 text-sm">
+                  <p><strong>第12条（面談の種別）</strong></p>
+                  <p className="ml-4">
+                    当法人の面談は、以下の3種別10種類とする：
+                  </p>
+                  
+                  <p className="mt-3 ml-4"><strong>1. 定期面談（3種類）</strong></p>
+                  <p className="ml-6">
+                    (1) 新入職員月次面談：入職1年未満の職員を対象に月1回実施<br/>
+                    (2) 一般職員年次面談：全職員を対象に年1回実施<br/>
+                    (3) 管理職半年面談：管理職を対象に半年1回実施
+                  </p>
+                  
+                  <p className="mt-3 ml-4"><strong>2. 特別面談（3種類）</strong></p>
+                  <p className="ml-6">
+                    (1) 復職面談：休職からの復職時に実施<br/>
+                    (2) インシデント後面談：インシデント発生後のフォローとして実施<br/>
+                    (3) 退職面談：退職予定者との最終面談
+                  </p>
+                  
+                  <p className="mt-3 ml-4"><strong>3. サポート面談（5種類）</strong></p>
+                  <p className="ml-6">
+                    (1) キャリア開発面談：キャリアプランの相談（希望者、随時）<br/>
+                    (2) ストレスケア面談：メンタルヘルスサポート（希望者、随時）<br/>
+                    (3) 苦情・相談面談：職場の問題や悩み相談（希望者、随時）<br/>
+                    (4) 評価フィードバック面談：評価結果の詳細説明（希望者、評価開示後1ヶ月以内）<br/>
+                    (5) 随時面談：その他必要時（希望者、随時）
+                  </p>
+                  
+                  <p className="mt-4"><strong>第13条（面談と評価の分離）</strong></p>
+                  <p className="ml-4">
+                    全ての面談は「支援」を目的とし、人事評価とは完全に分離して実施する。
+                    評価フィードバック面談においても、評価者ではない人事部が中立的立場から
+                    キャリア支援を中心とした建設的な対話を行うものとする。
                   </p>
                 </div>
               </div>
