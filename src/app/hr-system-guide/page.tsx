@@ -268,22 +268,22 @@ export default function HRSystemGuidePage() {
                     <div className="text-center">
                       <p className="font-bold text-lg text-blue-600">8月</p>
                       <p className="text-sm text-gray-700">夏季賞与査定</p>
-                      <p className="text-xs text-gray-600">施設12.5点+法人12.5点</p>
+                      <p className="text-xs text-gray-600">組織貢献度25点（施設12.5+法人12.5）</p>
                     </div>
                     <div className="text-center">
                       <p className="font-bold text-lg text-green-600">12月</p>
                       <p className="text-sm text-gray-700">冬季賞与査定</p>
-                      <p className="text-xs text-gray-600">施設12.5点+法人12.5点</p>
+                      <p className="text-xs text-gray-600">組織貢献度25点（施設12.5+法人12.5）</p>
                     </div>
                     <div className="text-center">
                       <p className="font-bold text-lg text-purple-600">3月</p>
                       <p className="text-sm text-gray-700">技術評価実施</p>
-                      <p className="text-xs text-gray-600">年間評価</p>
+                      <p className="text-xs text-gray-600">技術評価50点</p>
                     </div>
                     <div className="text-center">
                       <p className="font-bold text-lg text-red-600">3月末</p>
                       <p className="text-sm text-gray-700">統合評価</p>
-                      <p className="text-xs text-gray-600">最終決定</p>
+                      <p className="text-xs text-gray-600">100点満点で最終決定</p>
                     </div>
                   </div>
                 </div>
@@ -294,7 +294,7 @@ export default function HRSystemGuidePage() {
                     <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">1</div>
                     <div className="flex-1">
                       <p className="font-semibold text-gray-800">評価シートで点数化（100点満点）</p>
-                      <p className="text-sm text-gray-600">技術評価50点（3月） + 施設貢献25点（夏12.5+冬12.5） + 法人貢献25点（夏12.5+冬12.5）</p>
+                      <p className="text-sm text-gray-600">技術評価50点（3月実施） + 組織貢献度50点（施設12.5点×2期 + 法人12.5点×2期）</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -448,10 +448,14 @@ export default function HRSystemGuidePage() {
                 </div>
 
                 <div className="bg-orange-50 rounded-lg p-4 border-l-4 border-orange-500">
-                  <h4 className="font-semibold text-orange-800 mb-2">組織貢献評価（50点）- ポイント制</h4>
+                  <h4 className="font-semibold text-orange-800 mb-2">組織貢献度評価（50点）- ポイント制</h4>
+                  <div className="text-sm text-gray-700 mb-3">
+                    <p className="font-medium">年2回の賞与査定時に評価（各期25点×2期＝50点）</p>
+                    <p className="text-xs text-gray-600 mt-1">夏季（8月）：12月～5月実績 / 冬季（12月）：6月～11月実績</p>
+                  </div>
                   <div className="grid md:grid-cols-2 gap-3 mt-3">
                     <div className="bg-white rounded p-3">
-                      <p className="text-sm font-semibold text-gray-700 mb-2">施設貢献（25点）</p>
+                      <p className="text-sm font-semibold text-gray-700 mb-2">施設貢献度（12.5点×2期＝25点）</p>
                       <ul className="text-xs text-gray-600 space-y-1">
                         <li>• 防災訓練参加：5pt×回数</li>
                         <li>• 朝礼出席：3pt×回数</li>
@@ -463,7 +467,7 @@ export default function HRSystemGuidePage() {
                       </p>
                     </div>
                     <div className="bg-white rounded p-3">
-                      <p className="text-sm font-semibold text-gray-700 mb-2">法人貢献（25点）</p>
+                      <p className="text-sm font-semibold text-gray-700 mb-2">法人貢献度（12.5点×2期＝25点）</p>
                       <ul className="text-xs text-gray-600 space-y-1">
                         <li>• 学会発表：20pt×回数</li>
                         <li>• 他施設支援：20pt×日数</li>
@@ -597,11 +601,12 @@ export default function HRSystemGuidePage() {
                 <div className="ml-4 space-y-2 text-sm">
                   <p><strong>第3条（評価シートによる点数化）</strong></p>
                   <p className="ml-4">
-                    職員の評価は、以下の3要素により100点満点で採点する：<br/>
+                    職員の評価は、以下の2大要素により100点満点で採点する：<br/>
                     (1) 技術評価（50点）：360度評価により専門技術・知識を評価<br/>
                     　　・上司評価60%（30点）、自己評価40%（20点）<br/>
-                    (2) 施設貢献評価（25点）：施設内活動ポイントの相対評価<br/>
-                    (3) 法人貢献評価（25点）：法人全体活動ポイントの相対評価
+                    (2) 組織貢献度評価（50点）：年2回の賞与査定時に評価<br/>
+                    　　・施設貢献度（12.5点×2期＝25点）：施設内活動ポイントの相対評価<br/>
+                    　　・法人貢献度（12.5点×2期＝25点）：法人全体活動ポイントの相対評価
                   </p>
                   
                   <p className="mt-4"><strong>第4条（順位の算出）</strong></p>
@@ -649,7 +654,9 @@ export default function HRSystemGuidePage() {
                   <p className="ml-4">
                     評価は以下の項目により構成される：<br/>
                     (1) 技術評価（50点）：360度評価方式による専門技術の評価<br/>
-                    (2) 組織貢献評価（50点）：施設貢献（25点）及び法人貢献（25点）
+                    (2) 組織貢献度評価（50点）：年2回の賞与査定時評価<br/>
+                    　　・施設貢献度（12.5点×2期＝25点）<br/>
+                    　　・法人貢献度（12.5点×2期＝25点）
                   </p>
                 </div>
               </div>
