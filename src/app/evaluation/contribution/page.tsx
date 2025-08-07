@@ -22,6 +22,8 @@ import {
   UserCheck
 } from 'lucide-react';
 import { evaluationBatchService } from '@/services/evaluationBatchService';
+import EvaluationNavigation from '@/components/evaluation/EvaluationNavigation';
+import DashboardButton from '@/components/DashboardButton';
 
 interface ContributionScores {
   committees: number;
@@ -106,6 +108,8 @@ export default function ContributionAssessmentPage() {
 
   return (
     <div className="container mx-auto py-10 px-4 max-w-6xl">
+      <EvaluationNavigation />
+      
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">組織貢献度査定入力</h1>
         <p className="text-gray-600">賞与時期（5月・11月）に合わせた半期ごとの貢献度評価</p>
@@ -458,6 +462,8 @@ export default function ContributionAssessmentPage() {
           <p>   技術評価50点 + 施設貢献25点（夏12.5+冬12.5） + 法人貢献25点（夏12.5+冬12.5） = 100点満点</p>
         </AlertDescription>
       </Alert>
+      
+      <DashboardButton />
     </div>
   );
 }

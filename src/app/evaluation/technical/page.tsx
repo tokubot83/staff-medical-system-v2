@@ -26,6 +26,8 @@ import {
   Shield,
   Heart
 } from 'lucide-react';
+import EvaluationNavigation from '@/components/evaluation/EvaluationNavigation';
+import DashboardButton from '@/components/DashboardButton';
 
 interface TechnicalScores {
   // 基本技術
@@ -153,6 +155,8 @@ export default function TechnicalEvaluationPage() {
 
   return (
     <div className="container mx-auto py-10 px-4 max-w-7xl">
+      <EvaluationNavigation />
+      
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">技術評価（年間評価）</h1>
         <p className="text-gray-600">3月実施 - 4月～3月の年間技術評価</p>
@@ -410,6 +414,8 @@ export default function TechnicalEvaluationPage() {
           <p>• この技術評価（50点）と組織貢献度評価（50点）を合わせて100点満点で総合評価</p>
         </AlertDescription>
       </Alert>
+      
+      <DashboardButton />
     </div>
   );
 }
