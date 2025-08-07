@@ -3,11 +3,9 @@
 import React, { useState } from 'react'
 import CommonHeader from '@/components/CommonHeader'
 import ReportLayout from '@/components/reports/ReportLayout'
-import { TwoAxisEvaluationSection } from '@/components/evaluation'
 import { Card } from '@/components/ui/card'
-import { Select } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import { Search } from 'lucide-react'
+import { Search, TrendingUp, Users, Award, BarChart3 } from 'lucide-react'
 import { staffDatabase } from '@/app/data/staffData'
 
 export default function TwoAxisEvaluationPage() {
@@ -33,6 +31,9 @@ export default function TwoAxisEvaluationPage() {
   const departments = Array.from(new Set(staffList.map(s => s.department).filter(Boolean)))
   const facilities = Array.from(new Set(staffList.map(s => s.facility).filter(Boolean)))
 
+  // 選択された職員を取得
+  const selectedStaff = staffList.find(s => s.id === selectedEmployeeId)
+
   return (
     <>
       <CommonHeader title="2軸評価分析" />
@@ -51,7 +52,7 @@ export default function TwoAxisEvaluationPage() {
                 <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <input
                   type="text"
-                  placeholder="職員名・職員IDで検索"
+                  placeholder="名前または職員番号で検索"
                   className="w-full pl-10 pr-3 py-2 border rounded-lg"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -59,18 +60,7 @@ export default function TwoAxisEvaluationPage() {
               </div>
               
               <select
-                className="w-full px-3 py-2 border rounded-lg"
-                value={selectedDepartment}
-                onChange={(e) => setSelectedDepartment(e.target.value)}
-              >
-                <option value="all">全部署</option>
-                {departments.map(dept => (
-                  <option key={dept} value={dept}>{dept}</option>
-                ))}
-              </select>
-
-              <select
-                className="w-full px-3 py-2 border rounded-lg"
+                className="px-3 py-2 border rounded-lg"
                 value={selectedFacility}
                 onChange={(e) => setSelectedFacility(e.target.value)}
               >
@@ -80,145 +70,167 @@ export default function TwoAxisEvaluationPage() {
                 ))}
               </select>
 
+              <select
+                className="px-3 py-2 border rounded-lg"
+                value={selectedDepartment}
+                onChange={(e) => setSelectedDepartment(e.target.value)}
+              >
+                <option value="all">全部署</option>
+                {departments.map(dept => (
+                  <option key={dept} value={dept}>{dept}</option>
+                ))}
+              </select>
+
               <button
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
                 onClick={() => setSearchTerm('')}
               >
-                クリア
+                リセット
               </button>
-            </div>
-
-            {/* 職員リスト */}
-            <div className="mt-6 max-h-96 overflow-y-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50 sticky top-0">
-                  <tr>
-                    <th className="px-4 py-2 text-left">職員名</th>
-                    <th className="px-4 py-2 text-left">職員ID</th>
-                    <th className="px-4 py-2 text-left">部署</th>
-                    <th className="px-4 py-2 text-left">職位</th>
-                    <th className="px-4 py-2 text-left">施設</th>
-                    <th className="px-4 py-2"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredStaff.map((staff) => (
-                    <tr
-                      key={staff.id}
-                      className={`border-b hover:bg-gray-50 cursor-pointer ${
-                        selectedEmployeeId === staff.id ? 'bg-blue-50' : ''
-                      }`}
-                      onClick={() => setSelectedEmployeeId(staff.id)}
-                    >
-                      <td className="px-4 py-2">{staff.name}</td>
-                      <td className="px-4 py-2">{staff.employeeId || staff.id}</td>
-                      <td className="px-4 py-2">{staff.department || '-'}</td>
-                      <td className="px-4 py-2">{staff.position || '-'}</td>
-                      <td className="px-4 py-2">{staff.facility || '-'}</td>
-                      <td className="px-4 py-2">
-                        <button
-                          className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            setSelectedEmployeeId(staff.id)
-                          }}
-                        >
-                          選択
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              {filteredStaff.length === 0 && (
-                <div className="text-center py-8 text-gray-500">
-                  該当する職員が見つかりません
-                </div>
-              )}
             </div>
           </Card>
 
-          {/* 選択された職員の評価表示 */}
-          {selectedEmployeeId && (
-            <div className="animate-fade-in">
-              <TwoAxisEvaluationSection
-                employeeId={selectedEmployeeId}
-                employeeName={staffDatabase[selectedEmployeeId]?.name || ''}
-              />
+          {/* 職員リスト */}
+          <Card className="p-6">
+            <h3 className="text-lg font-bold mb-4">評価対象職員</h3>
+            <div className="space-y-2 max-h-64 overflow-y-auto">
+              {filteredStaff.map(staff => (
+                <div
+                  key={staff.id}
+                  className={`p-3 border rounded-lg cursor-pointer hover:bg-gray-50 ${
+                    selectedEmployeeId === staff.id ? 'bg-blue-50 border-blue-500' : ''
+                  }`}
+                  onClick={() => setSelectedEmployeeId(staff.id)}
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="font-medium">{staff.name}</span>
+                      <span className="ml-2 text-sm text-gray-500">({staff.employeeId})</span>
+                      <div className="text-sm text-gray-600">
+                        {staff.facility} - {staff.department}
+                      </div>
+                    </div>
+                    {staff.evaluation && (
+                      <Badge variant="outline">{staff.evaluation}</Badge>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
-          )}
+          </Card>
 
-          {/* 未選択時のメッセージ */}
-          {!selectedEmployeeId && (
-            <Card className="p-12 text-center">
-              <div className="text-gray-500">
-                <p className="text-lg mb-2">職員を選択してください</p>
-                <p className="text-sm">上の一覧から評価を確認したい職員を選択すると、</p>
-                <p className="text-sm">2軸評価の詳細が表示されます。</p>
+          {/* 評価詳細 */}
+          {selectedStaff && (
+            <Card className="p-6">
+              <h3 className="text-lg font-bold mb-4">2軸評価詳細</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* 施設評価 */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <Building className="h-5 w-5 text-blue-500" />
+                    <h4 className="font-semibold">施設評価</h4>
+                  </div>
+                  <div className="bg-blue-50 rounded-lg p-4">
+                    <div className="text-2xl font-bold text-blue-600">85点</div>
+                    <div className="text-sm text-gray-600">施設内順位: 12/150位</div>
+                    <div className="mt-2">
+                      <div className="text-sm text-gray-700">評価項目:</div>
+                      <ul className="text-sm text-gray-600 mt-1">
+                        <li>• 技術評価: 42/50点</li>
+                        <li>• 施設貢献度: 43/50点</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 法人評価 */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <Award className="h-5 w-5 text-green-500" />
+                    <h4 className="font-semibold">法人評価</h4>
+                  </div>
+                  <div className="bg-green-50 rounded-lg p-4">
+                    <div className="text-2xl font-bold text-green-600">78点</div>
+                    <div className="text-sm text-gray-600">法人内順位: 45/500位</div>
+                    <div className="mt-2">
+                      <div className="text-sm text-gray-700">評価項目:</div>
+                      <ul className="text-sm text-gray-600 mt-1">
+                        <li>• 技術評価: 40/50点</li>
+                        <li>• 法人貢献度: 38/50点</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 総合評価 */}
+              <div className="mt-6 bg-gray-50 rounded-lg p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <BarChart3 className="h-5 w-5 text-purple-500" />
+                    <h4 className="font-semibold">総合評価</h4>
+                  </div>
+                  <Badge className="text-lg px-3 py-1" variant="default">
+                    A
+                  </Badge>
+                </div>
+                <div className="grid grid-cols-3 gap-4 mt-4">
+                  <div>
+                    <div className="text-sm text-gray-600">総合得点</div>
+                    <div className="text-xl font-bold">163/200点</div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-gray-600">パーセンタイル</div>
+                    <div className="text-xl font-bold">上位15%</div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-gray-600">成長率</div>
+                    <div className="text-xl font-bold text-green-600">+12%</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 評価コメント */}
+              <div className="mt-6 border-t pt-4">
+                <h4 className="font-semibold mb-2">評価コメント</h4>
+                <p className="text-gray-700">
+                  施設内での技術力・貢献度ともに高い水準を維持しています。
+                  法人全体での視点では、他施設との交流や法人プロジェクトへの参加により、
+                  さらなる成長が期待できます。
+                </p>
+                <div className="mt-3">
+                  <span className="text-sm font-medium text-gray-600">推奨アクション:</span>
+                  <ul className="text-sm text-gray-700 mt-1">
+                    <li>• 法人研修への積極的参加</li>
+                    <li>• 他施設交流プログラムへの参加</li>
+                    <li>• リーダーシップ研修の受講</li>
+                  </ul>
+                </div>
               </div>
             </Card>
           )}
 
-          {/* システム説明 */}
-          <Card className="p-6 bg-blue-50">
-            <h3 className="text-lg font-bold mb-3">2軸評価システムについて</h3>
-            <div className="space-y-2 text-sm">
-              <p>
-                2軸評価システムは、職員が「施設内でどの位置にいるか」と「法人全体でどの位置にいるか」を
-                可視化し、組織内での相対的な位置づけを明確にするシステムです。
-              </p>
-              <div className="grid grid-cols-2 gap-4 mt-4">
-                <div>
-                  <h4 className="font-semibold mb-2">施設内評価</h4>
-                  <ul className="list-disc list-inside space-y-1 text-gray-700">
-                    <li>自施設内での職員の位置づけを把握</li>
-                    <li>施設レベルでの相対的な立ち位置を可視化</li>
-                    <li>施設運営における役割・貢献度の指標</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-semibold mb-2">法人内評価</h4>
-                  <ul className="list-disc list-inside space-y-1 text-gray-700">
-                    <li>法人全体での職員の位置づけを把握</li>
-                    <li>組織全体における相対的な立ち位置を可視化</li>
-                    <li>法人内でのキャリア形成・配置の参考指標</li>
-                  </ul>
-                </div>
+          {!selectedStaff && (
+            <Card className="p-12">
+              <div className="text-center text-gray-500">
+                <Users className="h-16 w-16 mx-auto mb-4 text-gray-300" />
+                <p className="text-lg">職員を選択してください</p>
+                <p className="text-sm mt-2">上記のリストから評価を表示したい職員を選択してください</p>
               </div>
-              <div className="mt-4 p-3 bg-white rounded">
-                <h4 className="font-semibold mb-2">位置づけグレード（相対的分布）</h4>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Badge style={{ backgroundColor: '#ff5722', color: 'white' }}>S</Badge>
-                    <span className="text-gray-700">上位10%（最上位層）</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge style={{ backgroundColor: '#ffc107', color: 'white' }}>A</Badge>
-                    <span className="text-gray-700">上位11-30%（上位層）</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge style={{ backgroundColor: '#4caf50', color: 'white' }}>B</Badge>
-                    <span className="text-gray-700">上位31-70%（中核層）</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge style={{ backgroundColor: '#2196f3', color: 'white' }}>C</Badge>
-                    <span className="text-gray-700">上位71-90%（育成層）</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge style={{ backgroundColor: '#9e9e9e', color: 'white' }}>D</Badge>
-                    <span className="text-gray-700">下位10%（要支援層）</span>
-                  </div>
-                </div>
-                <div className="mt-3 pt-3 border-t">
-                  <p className="text-xs text-gray-600">
-                    ※ 施設内と法人内の位置づけを組み合わせることで、職員の多面的な立ち位置が明確になります
-                  </p>
-                </div>
-              </div>
-            </div>
-          </Card>
+            </Card>
+          )}
         </div>
       </ReportLayout>
     </>
+  )
+}
+
+function Building({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+    </svg>
   )
 }
