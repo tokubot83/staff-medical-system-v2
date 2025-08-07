@@ -6,6 +6,7 @@ import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
 import SheetPreviewModal from '@/components/SheetPreviewModal';
 import InterviewSheetModal from '@/components/InterviewSheetModal';
+import TrainingContent from './TrainingContent';
 
 interface SheetItem {
   id: string;
@@ -87,30 +88,6 @@ export default function HRSystemGuidePage() {
           <p className="text-gray-600">
             医療法人厚生会の革新的な人事評価制度・面談制度について、職員の皆様にわかりやすくご説明します。
           </p>
-          
-          {/* 表示モード切り替え */}
-          <div className="mt-4 flex gap-2">
-            <button
-              onClick={() => setViewMode('general')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                viewMode === 'general'
-                  ? 'bg-green-500 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              📘 一般職員向け（わかりやすい説明）
-            </button>
-            <button
-              onClick={() => setViewMode('formal')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                viewMode === 'formal'
-                  ? 'bg-purple-500 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              📜 正式文書版（詳細規定）
-            </button>
-          </div>
         </div>
 
         {/* タブ切り替え */}
@@ -137,6 +114,16 @@ export default function HRSystemGuidePage() {
               面談制度
             </button>
             <button
+              onClick={() => setActiveTab('training')}
+              className={`flex-1 py-3 px-6 rounded-lg font-medium transition-all ${
+                activeTab === 'training'
+                  ? 'bg-blue-500 text-white shadow-md'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              教育・研修制度
+            </button>
+            <button
               onClick={() => setActiveTab('sheets')}
               className={`flex-1 py-3 px-6 rounded-lg font-medium transition-all ${
                 activeTab === 'sheets'
@@ -150,7 +137,33 @@ export default function HRSystemGuidePage() {
         </div>
 
         {/* 人事評価制度の内容 */}
-        {activeTab === 'evaluation' && viewMode === 'general' && (
+        {activeTab === 'evaluation' && (
+          <>
+            {/* 表示モード切り替え */}
+            <div className="mb-4 flex gap-2">
+              <button
+                onClick={() => setViewMode('general')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  viewMode === 'general'
+                    ? 'bg-green-500 text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                📘 一般職員向け
+              </button>
+              <button
+                onClick={() => setViewMode('formal')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  viewMode === 'formal'
+                    ? 'bg-purple-500 text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                📜 正式文書版
+              </button>
+            </div>
+
+            {viewMode === 'general' && (
           <div className="space-y-6">
             {/* 概要 */}
             <div className="bg-white rounded-xl shadow-lg p-6">
@@ -565,10 +578,10 @@ export default function HRSystemGuidePage() {
               </div>
             </div>
           </div>
-        )}
+            )}
 
-        {/* 人事評価制度の正式文書版 */}
-        {activeTab === 'evaluation' && viewMode === 'formal' && (
+            {/* 人事評価制度の正式文書版 */}
+            {viewMode === 'formal' && (
           <div className="space-y-6">
             {/* 規程 */}
             <div className="bg-white rounded-xl shadow-lg p-6">
@@ -658,10 +671,38 @@ export default function HRSystemGuidePage() {
               </div>
             </div>
           </div>
+            )}
+          </>
         )}
 
-        {/* 面談制度の内容（一般職員向け） */}
-        {activeTab === 'interview' && viewMode === 'general' && (
+        {/* 面談制度の内容 */}
+        {activeTab === 'interview' && (
+          <>
+            {/* 表示モード切り替え */}
+            <div className="mb-4 flex gap-2">
+              <button
+                onClick={() => setViewMode('general')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  viewMode === 'general'
+                    ? 'bg-green-500 text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                📘 一般職員向け
+              </button>
+              <button
+                onClick={() => setViewMode('formal')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  viewMode === 'formal'
+                    ? 'bg-purple-500 text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                📜 正式文書版
+              </button>
+            </div>
+
+            {viewMode === 'general' && (
           <div className="space-y-6">
             {/* 概要 */}
             <div className="bg-white rounded-xl shadow-lg p-6">
@@ -1191,10 +1232,10 @@ export default function HRSystemGuidePage() {
               </div>
             </div>
           </div>
-        )}
+            )}
 
-        {/* 面談制度の内容（正式文書版） */}
-        {activeTab === 'interview' && viewMode === 'formal' && (
+            {/* 面談制度の内容（正式文書版） */}
+            {viewMode === 'formal' && (
           <div className="space-y-6">
             {/* 面談規程 */}
             <div className="bg-white rounded-xl shadow-lg p-6">
@@ -1457,6 +1498,39 @@ export default function HRSystemGuidePage() {
               </div>
             </div>
           </div>
+            )}
+          </>
+        )}
+
+        {/* 教育・研修制度のコンテンツ */}
+        {activeTab === 'training' && (
+          <>
+            {/* 表示モード切り替え */}
+            <div className="mb-4 flex gap-2">
+              <button
+                onClick={() => setViewMode('general')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  viewMode === 'general'
+                    ? 'bg-green-500 text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                📘 一般職員向け
+              </button>
+              <button
+                onClick={() => setViewMode('formal')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  viewMode === 'formal'
+                    ? 'bg-purple-500 text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                📜 正式文書版
+              </button>
+            </div>
+            
+            <TrainingContent viewMode={viewMode} />
+          </>
         )}
 
         {/* シート閲覧セクション */}
