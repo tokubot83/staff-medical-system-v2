@@ -257,6 +257,39 @@ export default function HRSystemGuidePage() {
               </div>
             </div>
 
+            {/* 評価プロセスの全体像 */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <h3 className="text-xl font-bold text-gray-800 mb-4">評価はどうやって決まるの？</h3>
+              
+              {/* ステップ説明 */}
+              <div className="mb-6">
+                <h4 className="font-semibold text-gray-700 mb-3">3つのステップで評価が決まります</h4>
+                <div className="space-y-3">
+                  <div className="flex items-start gap-3">
+                    <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">1</div>
+                    <div className="flex-1">
+                      <p className="font-semibold text-gray-800">評価シートで点数化（100点満点）</p>
+                      <p className="text-sm text-gray-600">技術評価50点 + 施設貢献25点 + 法人貢献25点</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">2</div>
+                    <div className="flex-1">
+                      <p className="font-semibold text-gray-800">点数を順位に変換</p>
+                      <p className="text-sm text-gray-600">施設内と法人内でそれぞれ順位を算出</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">3</div>
+                    <div className="flex-1">
+                      <p className="font-semibold text-gray-800">2軸評価で最終評価決定</p>
+                      <p className="text-sm text-gray-600">順位をS〜Dランクに変換し、マトリックスで総合評価</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* 評価ランクとマトリクス */}
             <div className="bg-white rounded-xl shadow-lg p-6">
               <h3 className="text-xl font-bold text-gray-800 mb-4">評価ランクの仕組み</h3>
@@ -360,41 +393,92 @@ export default function HRSystemGuidePage() {
 
             {/* 実際の評価項目 */}
             <div className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">何が評価されるの？</h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-4">ステップ1：評価シートで何が評価される？</h3>
               <div className="space-y-4">
                 <div className="bg-purple-50 rounded-lg p-4 border-l-4 border-purple-500">
-                  <h4 className="font-semibold text-purple-800 mb-2">技術評価（50点）</h4>
-                  <p className="text-sm text-gray-700 mb-2">あなたの専門技術やスキルを360度評価で測定</p>
-                  <div className="bg-white rounded p-3">
-                    <ul className="text-sm text-gray-600 space-y-1">
-                      <li>• 看護技術・専門知識の実践</li>
-                      <li>• 患者さんへのケアの質</li>
-                      <li>• 医療安全への取り組み</li>
-                      <li>• チーム医療への貢献</li>
-                    </ul>
+                  <h4 className="font-semibold text-purple-800 mb-2">技術評価（50点）- 360度評価</h4>
+                  <div className="grid md:grid-cols-2 gap-3">
+                    <div>
+                      <p className="text-sm text-gray-700 mb-2">評価の内訳：</p>
+                      <ul className="text-sm text-gray-600 space-y-1">
+                        <li>• 上司評価：60%（30点）</li>
+                        <li>• 自己評価：40%（20点）</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-700 mb-2">評価項目：</p>
+                      <ul className="text-sm text-gray-600 space-y-1">
+                        <li>• 看護技術・専門知識</li>
+                        <li>• 患者ケアの質</li>
+                        <li>• 医療安全への取り組み</li>
+                        <li>• チーム医療への貢献</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="bg-white rounded p-2 mt-3">
+                    <p className="text-xs text-gray-600">
+                      各項目をS（100%）〜D（40%）の5段階で評価し、重み付け計算で点数化
+                    </p>
                   </div>
                 </div>
 
                 <div className="bg-orange-50 rounded-lg p-4 border-l-4 border-orange-500">
-                  <h4 className="font-semibold text-orange-800 mb-2">組織貢献評価（50点）</h4>
+                  <h4 className="font-semibold text-orange-800 mb-2">組織貢献評価（50点）- ポイント制</h4>
                   <div className="grid md:grid-cols-2 gap-3 mt-3">
                     <div className="bg-white rounded p-3">
                       <p className="text-sm font-semibold text-gray-700 mb-2">施設貢献（25点）</p>
                       <ul className="text-xs text-gray-600 space-y-1">
-                        <li>• 防災訓練参加</li>
-                        <li>• 朝礼出席</li>
-                        <li>• 勉強会開催</li>
-                        <li>• 新人指導</li>
+                        <li>• 防災訓練参加：5pt×回数</li>
+                        <li>• 朝礼出席：3pt×回数</li>
+                        <li>• 勉強会開催：8pt×回数</li>
+                        <li>• 新人指導：10pt×人数</li>
                       </ul>
+                      <p className="text-xs text-blue-600 mt-2">
+                        施設内の相対評価で点数決定
+                      </p>
                     </div>
                     <div className="bg-white rounded p-3">
                       <p className="text-sm font-semibold text-gray-700 mb-2">法人貢献（25点）</p>
                       <ul className="text-xs text-gray-600 space-y-1">
-                        <li>• 学会発表</li>
-                        <li>• 他施設支援</li>
-                        <li>• 法人委員会参加</li>
-                        <li>• スポーツ大会参加</li>
+                        <li>• 学会発表：20pt×回数</li>
+                        <li>• 他施設支援：20pt×日数</li>
+                        <li>• 法人委員会：10pt×回数</li>
+                        <li>• 法人行事参加：8pt×回数</li>
                       </ul>
+                      <p className="text-xs text-blue-600 mt-2">
+                        法人全体の相対評価で点数決定
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 順位化のプロセス */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <h3 className="text-xl font-bold text-gray-800 mb-4">ステップ2：点数から順位への変換</h3>
+              <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-lg p-4">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <h4 className="font-semibold text-blue-800 mb-2">施設内での順位付け</h4>
+                    <p className="text-sm text-gray-700 mb-2">
+                      同じ施設・同じ職種の中で、合計点数を比較して順位を決定
+                    </p>
+                    <div className="bg-white/80 rounded p-2">
+                      <p className="text-xs text-gray-600">
+                        例：A病院の看護師50名中、あなたは15位
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-green-800 mb-2">法人内での順位付け</h4>
+                    <p className="text-sm text-gray-700 mb-2">
+                      法人全体・同じ職種の中で、合計点数を比較して順位を決定
+                    </p>
+                    <div className="bg-white/80 rounded p-2">
+                      <p className="text-xs text-gray-600">
+                        例：法人全体の看護師300名中、あなたは80位
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -484,16 +568,35 @@ export default function HRSystemGuidePage() {
                   </p>
                 </div>
 
-                <h3 className="text-lg font-semibold mb-3 mt-6">第2章 人事評価制度（2軸評価システム）</h3>
+                <h3 className="text-lg font-semibold mb-3 mt-6">第2章 評価プロセス</h3>
                 <div className="ml-4 space-y-2 text-sm">
-                  <p><strong>第3条（評価軸の定義）</strong></p>
+                  <p><strong>第3条（評価シートによる点数化）</strong></p>
                   <p className="ml-4">
-                    評価は以下の2軸により実施する：<br/>
-                    (1) 施設内評価：当該施設における同一職種内での相対評価<br/>
-                    (2) 法人内評価：法人全体における同一職種内での相対評価
+                    職員の評価は、以下の3要素により100点満点で採点する：<br/>
+                    (1) 技術評価（50点）：360度評価により専門技術・知識を評価<br/>
+                    　　・上司評価60%（30点）、自己評価40%（20点）<br/>
+                    (2) 施設貢献評価（25点）：施設内活動ポイントの相対評価<br/>
+                    (3) 法人貢献評価（25点）：法人全体活動ポイントの相対評価
                   </p>
                   
-                  <p className="mt-4"><strong>第4条（評価ランク）</strong></p>
+                  <p className="mt-4"><strong>第4条（順位の算出）</strong></p>
+                  <p className="ml-4">
+                    前条の合計点数に基づき、以下の順位を算出する：<br/>
+                    (1) 施設内順位：同一施設・同一職種内での相対順位<br/>
+                    (2) 法人内順位：法人全体・同一職種内での相対順位
+                  </p>
+                </div>
+
+                <h3 className="text-lg font-semibold mb-3 mt-6">第3章 2軸評価システム</h3>
+                <div className="ml-4 space-y-2 text-sm">
+                  <p><strong>第5条（評価軸の定義）</strong></p>
+                  <p className="ml-4">
+                    前章で算出した順位を、以下の2軸に変換する：<br/>
+                    (1) 施設内評価：施設内順位をS〜Dの5段階に変換<br/>
+                    (2) 法人内評価：法人内順位をS〜Dの5段階に変換
+                  </p>
+                  
+                  <p className="mt-4"><strong>第6条（評価ランク）</strong></p>
                   <p className="ml-4">
                     各評価軸において、以下の5段階評価を適用する：<br/>
                     S：上位10%（卓越）<br/>
@@ -503,16 +606,16 @@ export default function HRSystemGuidePage() {
                     D：下位10%（要支援）
                   </p>
 
-                  <p className="mt-4"><strong>第5条（総合評価）</strong></p>
+                  <p className="mt-4"><strong>第7条（総合評価）</strong></p>
                   <p className="ml-4">
                     施設内評価と法人内評価のマトリクスにより、
                     7段階の総合評価（S+, S, A+, A, B, C, D）を決定する。
                   </p>
                 </div>
 
-                <h3 className="text-lg font-semibold mb-3 mt-6">第3章 評価の実施</h3>
+                <h3 className="text-lg font-semibold mb-3 mt-6">第4章 評価の実施</h3>
                 <div className="ml-4 space-y-2 text-sm">
-                  <p><strong>第6条（評価期間）</strong></p>
+                  <p><strong>第8条（評価期間）</strong></p>
                   <p className="ml-4">
                     評価は年度を単位として実施し、4月1日から翌年3月31日までを評価期間とする。
                   </p>
