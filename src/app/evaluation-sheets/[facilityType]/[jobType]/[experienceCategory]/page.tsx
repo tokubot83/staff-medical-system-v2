@@ -43,11 +43,12 @@ export default function EvaluationSheetPage() {
   };
 
   // 経験年数カテゴリの日本語表記
-  const experienceLabels = {
+  const experienceLabels: Record<ExperienceCategory, string> = {
     'new': '新人（1年目）',
     'junior': '一般（2-3年目）',
     'midlevel': '中堅（4-10年目）',
-    'veteran': 'ベテラン（11年以上）',
+    'senior': '上級（11-15年目）',
+    'veteran': 'ベテラン（16年以上）',
     'chief': 'チーフ',
     'manager': '管理職'
   };
