@@ -5,7 +5,6 @@ import Link from 'next/link';
 import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
 import SheetPreviewModal from '@/components/SheetPreviewModal';
-import TrainingContent from './TrainingContent';
 
 interface SheetItem {
   id: string;
@@ -22,7 +21,7 @@ interface SheetItem {
 }
 
 export default function HRSystemGuidePage() {
-  const [activeTab, setActiveTab] = useState<'evaluation' | 'interview' | 'sheets' | 'training'>('evaluation');
+  const [activeTab, setActiveTab] = useState<'evaluation' | 'interview' | 'sheets'>('evaluation');
   const [viewMode, setViewMode] = useState<'general' | 'formal'>('general');
   const [sheetType, setSheetType] = useState<'all' | 'interview'>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -135,16 +134,6 @@ export default function HRSystemGuidePage() {
               }`}
             >
               面談制度
-            </button>
-            <button
-              onClick={() => setActiveTab('training')}
-              className={`flex-1 py-3 px-6 rounded-lg font-medium transition-all ${
-                activeTab === 'training'
-                  ? 'bg-blue-500 text-white shadow-md'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              教育・研修制度
             </button>
             <button
               onClick={() => setActiveTab('sheets')}
@@ -1467,11 +1456,6 @@ export default function HRSystemGuidePage() {
               </div>
             </div>
           </div>
-        )}
-
-        {/* 教育・研修制度のコンテンツ */}
-        {activeTab === 'training' && (
-          <TrainingContent viewMode={viewMode} />
         )}
 
         {/* シート閲覧セクション */}
