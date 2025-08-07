@@ -395,9 +395,11 @@ export default function EvaluationAnalyticsPage() {
                           cx="50%"
                           cy="50%"
                           labelLine={false}
-                          label={({ name, value, percent }) => 
-                            `${name}: ${value}名 (${(percent * 100).toFixed(1)}%)`
-                          }
+                          label={(entry: any) => {
+                            const { name, value, percent } = entry;
+                            const percentage = percent ? (percent * 100).toFixed(1) : '0.0';
+                            return `${name}: ${value}名 (${percentage}%)`;
+                          }}
                           outerRadius={80}
                           fill="#8884d8"
                           dataKey="value"
