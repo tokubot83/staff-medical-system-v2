@@ -215,39 +215,39 @@ export default function ChiefNurseUnified45MinInterviewSheet() {
               <Label className="text-base font-semibold">ストレス要因の詳細</Label>
               <div className="grid grid-cols-3 gap-2">
                 <div className="flex items-center">
-                  <Checkbox id="stress-workload" />
+                  <Checkbox className="border-2 border-gray-400" id="stress-workload" className="border-2 border-gray-400" />
                   <Label htmlFor="stress-workload" className="ml-2">業務過多</Label>
                 </div>
                 <div className="flex items-center">
-                  <Checkbox id="stress-relations" />
+                  <Checkbox className="border-2 border-gray-400" id="stress-relations" />
                   <Label htmlFor="stress-relations" className="ml-2">人間関係</Label>
                 </div>
                 <div className="flex items-center">
-                  <Checkbox id="stress-pressure" />
+                  <Checkbox className="border-2 border-gray-400" id="stress-pressure" />
                   <Label htmlFor="stress-pressure" className="ml-2">経営プレッシャー</Label>
                 </div>
                 <div className="flex items-center">
-                  <Checkbox id="stress-balance" />
+                  <Checkbox className="border-2 border-gray-400" id="stress-balance" />
                   <Label htmlFor="stress-balance" className="ml-2">家庭との両立</Label>
                 </div>
                 <div className="flex items-center">
-                  <Checkbox id="stress-staff" />
+                  <Checkbox className="border-2 border-gray-400" id="stress-staff" />
                   <Label htmlFor="stress-staff" className="ml-2">部下の問題</Label>
                 </div>
                 <div className="flex items-center">
-                  <Checkbox id="stress-career" />
+                  <Checkbox className="border-2 border-gray-400" id="stress-career" />
                   <Label htmlFor="stress-career" className="ml-2">キャリアの停滞</Label>
                 </div>
                 <div className="flex items-center">
-                  <Checkbox id="stress-resources" />
+                  <Checkbox className="border-2 border-gray-400" id="stress-resources" />
                   <Label htmlFor="stress-resources" className="ml-2">リソース不足</Label>
                 </div>
                 <div className="flex items-center">
-                  <Checkbox id="stress-responsibility" />
+                  <Checkbox className="border-2 border-gray-400" id="stress-responsibility" />
                   <Label htmlFor="stress-responsibility" className="ml-2">責任の重さ</Label>
                 </div>
                 <div className="flex items-center">
-                  <Checkbox id="stress-other" />
+                  <Checkbox className="border-2 border-gray-400" id="stress-other" />
                   <Label htmlFor="stress-other" className="ml-2">その他</Label>
                 </div>
               </div>
@@ -293,27 +293,27 @@ export default function ChiefNurseUnified45MinInterviewSheet() {
               <Label>今後強化したい人材育成分野</Label>
               <div className="grid grid-cols-2 gap-2">
                 <div className="flex items-center">
-                  <Checkbox id="develop-leadership" />
+                  <Checkbox className="border-2 border-gray-400" id="develop-leadership" />
                   <Label htmlFor="develop-leadership" className="ml-2">リーダーシップ開発</Label>
                 </div>
                 <div className="flex items-center">
-                  <Checkbox id="develop-specialty" />
+                  <Checkbox className="border-2 border-gray-400" id="develop-specialty" />
                   <Label htmlFor="develop-specialty" className="ml-2">専門性向上</Label>
                 </div>
                 <div className="flex items-center">
-                  <Checkbox id="develop-succession" />
+                  <Checkbox className="border-2 border-gray-400" id="develop-succession" />
                   <Label htmlFor="develop-succession" className="ml-2">後継者育成</Label>
                 </div>
                 <div className="flex items-center">
-                  <Checkbox id="develop-innovation" />
+                  <Checkbox className="border-2 border-gray-400" id="develop-innovation" />
                   <Label htmlFor="develop-innovation" className="ml-2">イノベーション人材</Label>
                 </div>
                 <div className="flex items-center">
-                  <Checkbox id="develop-diversity" />
+                  <Checkbox className="border-2 border-gray-400" id="develop-diversity" />
                   <Label htmlFor="develop-diversity" className="ml-2">ダイバーシティ推進</Label>
                 </div>
                 <div className="flex items-center">
-                  <Checkbox id="develop-retention" />
+                  <Checkbox className="border-2 border-gray-400" id="develop-retention" />
                   <Label htmlFor="develop-retention" className="ml-2">定着率向上</Label>
                 </div>
               </div>
@@ -373,27 +373,27 @@ export default function ChiefNurseUnified45MinInterviewSheet() {
               <Label>必要なサポート・リソース</Label>
               <div className="grid grid-cols-2 gap-2">
                 <div className="flex items-center">
-                  <Checkbox id="support-authority" />
+                  <Checkbox className="border-2 border-gray-400" id="support-authority" />
                   <Label htmlFor="support-authority" className="ml-2">権限拡大</Label>
                 </div>
                 <div className="flex items-center">
-                  <Checkbox id="support-budget" />
+                  <Checkbox className="border-2 border-gray-400" id="support-budget" />
                   <Label htmlFor="support-budget" className="ml-2">予算増額</Label>
                 </div>
                 <div className="flex items-center">
-                  <Checkbox id="support-staff" />
+                  <Checkbox className="border-2 border-gray-400" id="support-staff" />
                   <Label htmlFor="support-staff" className="ml-2">人員増強</Label>
                 </div>
                 <div className="flex items-center">
-                  <Checkbox id="support-training" />
+                  <Checkbox className="border-2 border-gray-400" id="support-training" />
                   <Label htmlFor="support-training" className="ml-2">研修機会</Label>
                 </div>
                 <div className="flex items-center">
-                  <Checkbox id="support-coaching" />
+                  <Checkbox className="border-2 border-gray-400" id="support-coaching" />
                   <Label htmlFor="support-coaching" className="ml-2">コーチング</Label>
                 </div>
                 <div className="flex items-center">
-                  <Checkbox id="support-network" />
+                  <Checkbox className="border-2 border-gray-400" id="support-network" />
                   <Label htmlFor="support-network" className="ml-2">外部ネットワーク</Label>
                 </div>
               </div>

@@ -200,19 +200,19 @@ export default function GeneralNurseUnified30MinInterviewSheet() {
               <Label className="text-base font-semibold">ストレス要因</Label>
               <div className="grid grid-cols-2 gap-2">
                 <div className="flex items-center">
-                  <Checkbox id="stress-workload" />
+                  <Checkbox className="border-2 border-gray-400" id="stress-workload" />
                   <Label htmlFor="stress-workload" className="ml-2">業務負荷</Label>
                 </div>
                 <div className="flex items-center">
-                  <Checkbox id="stress-relations" />
+                  <Checkbox className="border-2 border-gray-400" id="stress-relations" />
                   <Label htmlFor="stress-relations" className="ml-2">人間関係</Label>
                 </div>
                 <div className="flex items-center">
-                  <Checkbox id="stress-skill" />
+                  <Checkbox className="border-2 border-gray-400" id="stress-skill" />
                   <Label htmlFor="stress-skill" className="ml-2">スキル不足</Label>
                 </div>
                 <div className="flex items-center">
-                  <Checkbox id="stress-career" />
+                  <Checkbox className="border-2 border-gray-400" id="stress-career" />
                   <Label htmlFor="stress-career" className="ml-2">キャリア不安</Label>
                 </div>
               </div>
@@ -243,27 +243,27 @@ export default function GeneralNurseUnified30MinInterviewSheet() {
               <Label>必要なサポート（優先順位が高いもの2-3個選択）</Label>
               <div className="grid grid-cols-2 gap-2">
                 <div className="flex items-center">
-                  <Checkbox id="support-training" />
+                  <Checkbox className="border-2 border-gray-400" id="support-training" />
                   <Label htmlFor="support-training" className="ml-2">研修・教育機会</Label>
                 </div>
                 <div className="flex items-center">
-                  <Checkbox id="support-challenge" />
+                  <Checkbox className="border-2 border-gray-400" id="support-challenge" />
                   <Label htmlFor="support-challenge" className="ml-2">新しい挑戦機会</Label>
                 </div>
                 <div className="flex items-center">
-                  <Checkbox id="support-mentor" />
+                  <Checkbox className="border-2 border-gray-400" id="support-mentor" />
                   <Label htmlFor="support-mentor" className="ml-2">メンター・指導</Label>
                 </div>
                 <div className="flex items-center">
-                  <Checkbox id="support-career" />
+                  <Checkbox className="border-2 border-gray-400" id="support-career" />
                   <Label htmlFor="support-career" className="ml-2">キャリア相談</Label>
                 </div>
                 <div className="flex items-center">
-                  <Checkbox id="support-workload" />
+                  <Checkbox className="border-2 border-gray-400" id="support-workload" />
                   <Label htmlFor="support-workload" className="ml-2">業務量調整</Label>
                 </div>
                 <div className="flex items-center">
-                  <Checkbox id="support-team" />
+                  <Checkbox className="border-2 border-gray-400" id="support-team" />
                   <Label htmlFor="support-team" className="ml-2">チーム環境改善</Label>
                 </div>
               </div>
