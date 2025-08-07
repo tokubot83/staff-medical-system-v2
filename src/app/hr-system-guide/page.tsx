@@ -23,7 +23,7 @@ interface SheetItem {
 export default function HRSystemGuidePage() {
   const [activeTab, setActiveTab] = useState<'evaluation' | 'interview' | 'sheets'>('evaluation');
   const [viewMode, setViewMode] = useState<'general' | 'formal'>('general');
-  const [sheetType, setSheetType] = useState<'all' | 'interview' | 'evaluation'>('all');
+  const [sheetType, setSheetType] = useState<'all' | 'interview'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFacility, setSelectedFacility] = useState<string>('all');
   const [selectedPosition, setSelectedPosition] = useState<string>('all');
@@ -41,30 +41,6 @@ export default function HRSystemGuidePage() {
     { id: 'iv-6', name: '主任看護師45分統合面談', category: '面談シート', type: 'interview', version: 'v4', position: '看護師', experience: '主任', duration: '45分', path: 'v4_interview/chief-nurse-unified-45min.tsx', description: '管理職向け面談シート' },
     { id: 'iv-8', name: 'ベテラン看護師45分統合面談', category: '面談シート', type: 'interview', version: 'v4', position: '看護師', experience: 'ベテラン', duration: '45分', path: 'v4_interview/veteran-nurse-unified-45min.tsx', description: 'ベテラン層向け面談シート' },
 
-    // v4評価シート - 急性期
-    { id: 'ev-1', name: '急性期新人看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '急性期', position: '看護師', experience: '新人', path: 'v4_evaluation-sheets/acute_nurse/new-nurse-evaluation-v4-pattern5.tsx', description: '急性期病棟の新人看護師評価用' },
-    { id: 'ev-2', name: '急性期一般看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '急性期', position: '看護師', experience: '一般', path: 'v4_evaluation-sheets/acute_nurse/junior-nurse-evaluation-v4-pattern5.tsx', description: '急性期病棟の一般看護師評価用' },
-    { id: 'ev-3', name: '急性期中堅看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '急性期', position: '看護師', experience: '中堅', path: 'v4_evaluation-sheets/acute_nurse/midlevel-nurse-evaluation-v4-pattern5.tsx', description: '急性期病棟の中堅看護師評価用' },
-    { id: 'ev-4', name: '急性期ベテラン看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '急性期', position: '看護師', experience: 'ベテラン', path: 'v4_evaluation-sheets/acute_nurse/veteran-nurse-evaluation-v4-pattern5.tsx', description: '急性期病棟のベテラン看護師評価用' },
-    
-    // v4評価シート - 慢性期
-    { id: 'ev-5', name: '慢性期新人看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '慢性期', position: '看護師', experience: '新人', path: 'v4_evaluation-sheets/chronic_nurse/chronic-new-nurse-evaluation-v4-pattern5.tsx', description: '慢性期病棟の新人看護師評価用' },
-    { id: 'ev-6', name: '慢性期一般看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '慢性期', position: '看護師', experience: '一般', path: 'v4_evaluation-sheets/chronic_nurse/chronic-junior-nurse-evaluation-v4-pattern5.tsx', description: '慢性期病棟の一般看護師評価用' },
-    { id: 'ev-7', name: '慢性期中堅看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '慢性期', position: '看護師', experience: '中堅', path: 'v4_evaluation-sheets/chronic_nurse/chronic-midlevel-nurse-evaluation-v4-pattern5.tsx', description: '慢性期病棟の中堅看護師評価用' },
-    { id: 'ev-8', name: '慢性期ベテラン看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '慢性期', position: '看護師', experience: 'ベテラン', path: 'v4_evaluation-sheets/chronic_nurse/chronic-veteran-nurse-evaluation-v4-pattern5.tsx', description: '慢性期病棟のベテラン看護師評価用' },
-    
-    // v4評価シート - 老健
-    { id: 'ev-9', name: '老健新人看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '老健', position: '看護師', experience: '新人', path: 'v4_evaluation-sheets/roken_nurse/roken-new-nurse-evaluation-v4-pattern5.tsx', description: '老健施設の新人看護師評価用' },
-    { id: 'ev-10', name: '老健一般看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '老健', position: '看護師', experience: '一般', path: 'v4_evaluation-sheets/roken_nurse/roken-junior-nurse-evaluation-v4-pattern5.tsx', description: '老健施設の一般看護師評価用' },
-    { id: 'ev-11', name: '老健介護士評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '老健', position: '介護士', experience: '一般', path: 'v4_evaluation-sheets/roken_care-worker/junior-care-worker-evaluation-v4-pattern5.tsx', description: '老健施設の介護士評価用' },
-    
-    // 准看護師評価シート
-    { id: 'ev-12', name: '急性期准看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '急性期', position: '准看護師', experience: '一般', path: 'v4_evaluation-sheets/acute_assistant-nurse/junior-assistant-nurse-evaluation-v4-pattern5.tsx', description: '急性期病棟の准看護師評価用' },
-    { id: 'ev-13', name: '慢性期准看護師評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '慢性期', position: '准看護師', experience: '一般', path: 'v4_evaluation-sheets/chronic_assistant-nurse/chronic-junior-assistant-nurse-evaluation-v4-pattern5.tsx', description: '慢性期病棟の准看護師評価用' },
-    
-    // 看護補助者評価シート
-    { id: 'ev-14', name: '急性期看護補助者評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '急性期', position: '看護補助者', experience: '一般', path: 'v4_evaluation-sheets/acute_nursing-aide/junior-nursing-aide-evaluation-v4-pattern5.tsx', description: '急性期病棟の看護補助者評価用' },
-    { id: 'ev-15', name: '慢性期看護補助者評価シート', category: '評価シート', type: 'evaluation', version: 'v4', facility: '慢性期', position: '看護補助者', experience: '一般', path: 'v4_evaluation-sheets/chronic_nursing-aide/chronic-junior-nursing-aide-evaluation-v4-pattern5.tsx', description: '慢性期病棟の看護補助者評価用' },
   ];
 
   // フィルター処理
@@ -158,6 +134,16 @@ export default function HRSystemGuidePage() {
               }`}
             >
               面談制度
+            </button>
+            <button
+              onClick={() => setActiveTab('training')}
+              className={`flex-1 py-3 px-6 rounded-lg font-medium transition-all ${
+                activeTab === 'training'
+                  ? 'bg-blue-500 text-white shadow-md'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              教育・研修制度
             </button>
             <button
               onClick={() => setActiveTab('sheets')}
@@ -1507,12 +1493,11 @@ export default function HRSystemGuidePage() {
                   <label className="block text-sm font-medium text-gray-700 mb-1">種類</label>
                   <select
                     value={sheetType}
-                    onChange={(e) => setSheetType(e.target.value as 'all' | 'interview' | 'evaluation')}
+                    onChange={(e) => setSheetType(e.target.value as 'all' | 'interview')}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="all">すべて</option>
                     <option value="interview">面談シート</option>
-                    <option value="evaluation">評価シート</option>
                   </select>
                 </div>
 
@@ -1690,8 +1675,9 @@ export default function HRSystemGuidePage() {
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-gray-800 mb-2">評価シートの使い方</h4>
+                  <h4 className="font-semibold text-gray-800 mb-2">評価システムの使い方</h4>
                   <ul className="space-y-1">
+                    <li>• <a href="/evaluation" className="text-blue-600 hover:underline">新評価システム</a>から施設・職種・経験に応じた評価シートを選択</li>
                     <li>• 評価期間前に評価項目を確認</li>
                     <li>• 自己評価と上司評価の両方を記入</li>
                     <li>• 2軸評価（施設内・法人内）を理解</li>
