@@ -39,15 +39,6 @@ export const acuteNurseEvaluationSheets: Record<ExperienceCategory, EvaluationSh
     jobType: 'nurse',
     pattern: 'pattern5'
   },
-  senior: {
-    component: 'VeteranNurseEvaluationV4Pattern5',
-    path: '/evaluation-sheets/v4/acute-nurse/veteran-nurse-evaluation-v4-pattern5',
-    title: 'シニア看護師（11-15年目）人事評価シート',
-    experienceCategory: 'senior',
-    facilityType: 'acute',
-    jobType: 'nurse',
-    pattern: 'pattern5'
-  },
   veteran: {
     component: 'VeteranNurseEvaluationV4Pattern5',
     path: '/evaluation-sheets/v4/acute-nurse/veteran-nurse-evaluation-v4-pattern5',
@@ -102,15 +93,6 @@ export const acuteNursingAideEvaluationSheets: Record<ExperienceCategory, Evalua
     path: '/evaluation-sheets/v4/acute-nursing-aide/midlevel-nursing-aide-evaluation-v4-pattern5',
     title: '中堅看護補助者（4-10年目）人事評価シート',
     experienceCategory: 'midlevel',
-    facilityType: 'acute',
-    jobType: 'nursing-aide',
-    pattern: 'pattern5'
-  },
-  senior: {
-    component: 'VeteranNursingAideEvaluationV4Pattern5',
-    path: '/evaluation-sheets/v4/acute-nursing-aide/veteran-nursing-aide-evaluation-v4-pattern5',
-    title: 'シニア看護補助者（11-15年目）人事評価シート',
-    experienceCategory: 'senior',
     facilityType: 'acute',
     jobType: 'nursing-aide',
     pattern: 'pattern5'

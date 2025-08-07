@@ -23,10 +23,6 @@ const interviewSheetComponents = {
   GeneralNurseUnified15Min: lazy(() => import('@/components/interview-sheets/v4/general-nurse-unified-15min')),
   GeneralNurseUnified30Min: lazy(() => import('@/components/interview-sheets/v4/general-nurse-unified-30min')),
   GeneralNurseUnified45Min: lazy(() => import('@/components/interview-sheets/v4/general-nurse-unified-45min')),
-  // シニア看護師
-  SeniorNurseUnified15Min: lazy(() => import('@/components/interview-sheets/v4/senior-nurse-unified-15min')),
-  SeniorNurseUnified30Min: lazy(() => import('@/components/interview-sheets/v4/senior-nurse-unified-30min')),
-  SeniorNurseUnified45Min: lazy(() => import('@/components/interview-sheets/v4/senior-nurse-unified-45min')),
   // ベテラン看護師
   VeteranNurseUnified15Min: lazy(() => import('@/components/interview-sheets/v4/veteran-nurse-unified-15min')),
   VeteranNurseUnified30Min: lazy(() => import('@/components/interview-sheets/v4/veteran-nurse-unified-30min')),

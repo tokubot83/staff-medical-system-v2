@@ -1,6 +1,6 @@
 // 経験年数に基づく職員分類と制御のユーティリティ関数
 
-export type ExperienceCategory = 'new' | 'junior' | 'midlevel' | 'senior' | 'veteran' | 'chief' | 'manager';
+export type ExperienceCategory = 'new' | 'junior' | 'midlevel' | 'veteran' | 'chief' | 'manager';
 export type ExperienceLevel = ExperienceCategory; // 互換性のため
 
 export interface ExperienceCategoryInfo {
@@ -35,17 +35,10 @@ export const EXPERIENCE_CATEGORIES: ExperienceCategoryInfo[] = [
     description: '4-10年目の中堅看護師'
   },
   {
-    level: 'senior',
-    label: 'シニア',
-    minYears: 11,
-    maxYears: 15,
-    description: '11-15年目のシニア看護師'
-  },
-  {
     level: 'veteran',
     label: 'ベテラン',
-    minYears: 16,
-    description: '16年目以上のベテラン看護師'
+    minYears: 11,
+    description: '11年目以上のベテラン看護師'
   }
 ];
 
@@ -155,7 +148,6 @@ export function getVisibleItemsByLevel(level: ExperienceCategory): string[] {
     new: [...baseItems, 'learning_progress', 'adaptation_status'],
     junior: [...baseItems, 'skill_development', 'team_contribution'],
     midlevel: [...baseItems, 'leadership', 'mentoring', 'specialized_skills'],
-    senior: [...baseItems, 'advanced_skills', 'project_leadership', 'cross_department_collaboration'],
     veteran: [...baseItems, 'knowledge_transfer', 'organizational_contribution', 'strategic_thinking'],
     chief: [...baseItems, 'team_management', 'staff_development', 'operational_improvement'],
     manager: [...baseItems, 'strategic_planning', 'budget_management', 'organizational_development']
@@ -187,12 +179,6 @@ export function getEvaluationCriteriaByLevel(level: ExperienceCategory): Record<
       leadership: 0.3,
       technical_expertise: 0.25,
       mentoring: 0.25,
-      innovation: 0.2
-    },
-    senior: {
-      advanced_expertise: 0.3,
-      project_management: 0.25,
-      cross_team_collaboration: 0.25,
       innovation: 0.2
     },
     veteran: {
@@ -236,7 +222,7 @@ export function canEditByExperience(
   }
 
   // 経験レベルの階層順
-  const levelHierarchy: ExperienceCategory[] = ['new', 'junior', 'midlevel', 'senior', 'veteran', 'chief', 'manager'];
+  const levelHierarchy: ExperienceCategory[] = ['new', 'junior', 'midlevel', 'veteran', 'chief', 'manager'];
   
   const userIndex = levelHierarchy.indexOf(userLevel);
   const targetIndex = levelHierarchy.indexOf(targetLevel);

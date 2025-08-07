@@ -39,7 +39,6 @@ export default function HRSystemGuidePage() {
     { id: 'iv-4', name: '一般看護師45分統合面談', category: '面談シート', type: 'interview', version: 'v4', position: '看護師', experience: '一般', duration: '45分', path: 'v4_interview/general-nurse-unified-45min.tsx', description: '詳細な評価面談用' },
     { id: 'iv-5', name: 'リーダー看護師45分統合面談', category: '面談シート', type: 'interview', version: 'v4', position: '看護師', experience: 'リーダー', duration: '45分', path: 'v4_interview/leader-nurse-unified-45min.tsx', description: 'リーダー層向け面談シート' },
     { id: 'iv-6', name: '主任看護師45分統合面談', category: '面談シート', type: 'interview', version: 'v4', position: '看護師', experience: '主任', duration: '45分', path: 'v4_interview/chief-nurse-unified-45min.tsx', description: '管理職向け面談シート' },
-    { id: 'iv-7', name: 'シニア看護師45分統合面談', category: '面談シート', type: 'interview', version: 'v4', position: '看護師', experience: 'シニア', duration: '45分', path: 'v4_interview/senior-nurse-unified-45min.tsx', description: 'シニア層向け面談シート' },
     { id: 'iv-8', name: 'ベテラン看護師45分統合面談', category: '面談シート', type: 'interview', version: 'v4', position: '看護師', experience: 'ベテラン', duration: '45分', path: 'v4_interview/veteran-nurse-unified-45min.tsx', description: 'ベテラン層向け面談シート' },
 
     // v4評価シート - 急性期

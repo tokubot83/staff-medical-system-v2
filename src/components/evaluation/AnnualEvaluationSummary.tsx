@@ -52,7 +52,7 @@ interface Props {
   jobCategory: string;
 }
 
-export default function AnnualEvaluationSummary({
+export function AnnualEvaluationSummary({
   currentYear,
   history = [],
   staffName,

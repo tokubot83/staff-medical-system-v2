@@ -79,29 +79,6 @@ export const v4InterviewSheets: Record<ExperienceCategory, InterviewSheetInfo[]>
       experienceCategory: 'midlevel'
     }
   ],
-  senior: [
-    {
-      component: 'SeniorNurseUnified15Min',
-      path: '/interview-sheets/v4/senior-nurse-unified-15min',
-      duration: 15,
-      title: 'シニア看護師定期面談シート（15分版）',
-      experienceCategory: 'senior'
-    },
-    {
-      component: 'SeniorNurseUnified30Min',
-      path: '/interview-sheets/v4/senior-nurse-unified-30min',
-      duration: 30,
-      title: 'シニア看護師定期面談シート（30分版）',
-      experienceCategory: 'senior'
-    },
-    {
-      component: 'SeniorNurseUnified45Min',
-      path: '/interview-sheets/v4/senior-nurse-unified-45min',
-      duration: 45,
-      title: 'シニア看護師定期面談シート（45分版）',
-      experienceCategory: 'senior'
-    }
-  ],
   veteran: [
     {
       component: 'VeteranNurseUnified15Min',

@@ -68,7 +68,6 @@ function LearningCohortContent() {
         switch (selectedCareerStage) {
           case 'early': if (yearsOfService > 3) return false; break;
           case 'mid': if (yearsOfService < 3 || yearsOfService > 10) return false; break;
-          case 'senior': if (yearsOfService < 10) return false; break;
         }
       }
       return true;
@@ -311,7 +310,6 @@ function LearningCohortContent() {
                   <option value="all">全ステージ</option>
                   <option value="early">初期（〜3年）</option>
                   <option value="mid">中期（3〜10年）</option>
-                  <option value="senior">後期（10年〜）</option>
                 </select>
               </div>
             </div>
