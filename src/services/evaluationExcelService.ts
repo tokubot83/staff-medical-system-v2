@@ -221,7 +221,7 @@ export class EvaluationExcelService {
     XLSX.utils.book_append_sheet(wb, wsMinor, '小項目設定');
     
     // 5. 配点ガイドシート
-    const scoringGuide = [
+    const scoringGuide: string[][] = [
       ['配点ガイドライン'],
       [''],
       ['【コア項目（30点固定）】'],
@@ -245,7 +245,7 @@ export class EvaluationExcelService {
       ['- F04: 成長・学習（最大10点）'],
       [''],
       ['施設特有スキル:'],
-      ...availableItems.map(item => `- ${item.id}: ${item.name}（最大${item.maxScore}点）`),
+      ...availableItems.map(item => [`- ${item.id}: ${item.name}（最大${item.maxScore}点）`]),
       [''],
       ['【配点の考え方】'],
       ['1. 施設の特性に応じて重要度の高い項目に配点'],
