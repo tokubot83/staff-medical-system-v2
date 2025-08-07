@@ -5,6 +5,7 @@ import Link from 'next/link';
 import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
 import SheetPreviewModal from '@/components/SheetPreviewModal';
+import InterviewSheetModal from '@/components/InterviewSheetModal';
 
 interface SheetItem {
   id: string;
@@ -2214,12 +2215,21 @@ export default function HRSystemGuidePage() {
       
       {/* プレビューモーダル */}
       {previewSheet && (
-        <SheetPreviewModal
-          isOpen={!!previewSheet}
-          onClose={() => setPreviewSheet(null)}
-          sheetName={previewSheet.name}
-          sheetPath={previewSheet.path}
-        />
+        previewSheet.type === 'interview' ? (
+          <InterviewSheetModal
+            isOpen={!!previewSheet}
+            onClose={() => setPreviewSheet(null)}
+            sheetName={previewSheet.name}
+            sheetPath={previewSheet.path}
+          />
+        ) : (
+          <SheetPreviewModal
+            isOpen={!!previewSheet}
+            onClose={() => setPreviewSheet(null)}
+            sheetName={previewSheet.name}
+            sheetPath={previewSheet.path}
+          />
+        )
       )}
       
       <DashboardButton />
