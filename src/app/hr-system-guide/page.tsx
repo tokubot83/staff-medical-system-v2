@@ -23,7 +23,7 @@ interface SheetItem {
 }
 
 export default function HRSystemGuidePage() {
-  const [activeTab, setActiveTab] = useState<'evaluation' | 'interview' | 'sheets'>('evaluation');
+  const [activeTab, setActiveTab] = useState<'evaluation' | 'interview' | 'training' | 'sheets'>('evaluation');
   const [viewMode, setViewMode] = useState<'general' | 'formal'>('general');
   const [sheetType, setSheetType] = useState<'all' | 'interview'>('all');
   const [searchQuery, setSearchQuery] = useState('');
