@@ -10,8 +10,6 @@ import styles from '../StaffCards.module.css'
 import DashboardButton from '@/components/DashboardButton'
 import ScrollToTopButton from '@/components/ScrollToTopButton'
 import BackToStaffCardsButton from '@/components/BackToStaffCardsButton'
-import { TwoAxisEvaluationSummaryCompact } from '@/components/evaluation/TwoAxisEvaluationSummaryCompact'
-import { estimateTwoAxisEvaluation } from '@/utils/twoAxisEvaluationUtils'
 import {
   Chart as ChartJS,
   CategoryScale,

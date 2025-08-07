@@ -7,8 +7,6 @@ import './evaluation-records.css'
 import { useRouter } from 'next/navigation'
 import { Interview } from '@/types/interview'
 import { getInterviewsByStaffId } from '@/data/mockInterviews'
-import { TwoAxisEvaluationSummaryDetailed } from '@/components/evaluation/TwoAxisEvaluationSummaryDetailed'
-import { TwoAxisEvaluationMatrixDisplay } from '@/components/evaluation/TwoAxisEvaluationMatrix'
 import { getTwoAxisEvaluationByStaffId } from '@/data/mockTwoAxisEvaluations'
 import { twoAxisColors, getTwoAxisChartOptions, calculateOverallGrade } from '@/utils/twoAxisChartUtils'
 import { CareerInfoSection } from '@/components/interview/CareerInfoSection'
@@ -503,19 +501,40 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
           </div>
           
           <div style={{ marginBottom: '24px' }}>
-            <TwoAxisEvaluationSummaryDetailed
-              facilityScore={twoAxisEvaluation.facilityScore}
-              facilityRank={twoAxisEvaluation.facilityRank}
-              facilityTotal={twoAxisEvaluation.facilityTotal}
-              corporateScore={twoAxisEvaluation.corporateScore}
-              corporateRank={twoAxisEvaluation.corporateRank}
-              corporateTotal={twoAxisEvaluation.corporateTotal}
-              overallScore={twoAxisEvaluation.overallScore}
-              description={twoAxisEvaluation.comments || '優秀な職員'}
-              recommendation="他施設との交流・研修機会の活用"
-              strengthArea="施設内での圧倒的なパフォーマンス"
-              improvementArea="法人規模での更なる成長余地"
-            />
+            <div className={styles.evaluationSummary}>
+              <div className={styles.evaluationScores}>
+                <div className={styles.scoreItem}>
+                  <span className={styles.scoreLabel}>施設評価</span>
+                  <span className={styles.scoreValue}>{twoAxisEvaluation.facilityScore}点</span>
+                  <span className={styles.scoreRank}>({twoAxisEvaluation.facilityRank}/{twoAxisEvaluation.facilityTotal}位)</span>
+                </div>
+                <div className={styles.scoreItem}>
+                  <span className={styles.scoreLabel}>法人評価</span>
+                  <span className={styles.scoreValue}>{twoAxisEvaluation.corporateScore}点</span>
+                  <span className={styles.scoreRank}>({twoAxisEvaluation.corporateRank}/{twoAxisEvaluation.corporateTotal}位)</span>
+                </div>
+                <div className={styles.scoreItem}>
+                  <span className={styles.scoreLabel}>総合評価</span>
+                  <span className={styles.scoreValue} style={{fontSize: '1.5em', fontWeight: 'bold'}}>
+                    {twoAxisEvaluation.overallScore}
+                  </span>
+                </div>
+              </div>
+              <div className={styles.evaluationComments}>
+                <p>{twoAxisEvaluation.comments || '優秀な職員'}</p>
+                <div className={styles.recommendations}>
+                  <div className={styles.recommendItem}>
+                    <strong>強み:</strong> 施設内での圧倒的なパフォーマンス
+                  </div>
+                  <div className={styles.recommendItem}>
+                    <strong>改善点:</strong> 法人規模での更なる成長余地
+                  </div>
+                  <div className={styles.recommendItem}>
+                    <strong>推奨:</strong> 他施設との交流・研修機会の活用
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         
@@ -565,12 +584,19 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
       {/* 2軸評価システム - 新デザイン */}
       <div className={styles.sectionCard} style={{ marginTop: '24px' }}>
         <h3>2軸評価マトリックス</h3>
-        <TwoAxisEvaluationMatrixDisplay
-          facilityScore={twoAxisEvaluation.facilityScore}
-          corporateScore={twoAxisEvaluation.corporateScore}
-          showGrid={true}
-          size="medium"
-        />
+        <div className={styles.matrixContainer}>
+          <div className={styles.matrixGrid}>
+            <div className={styles.matrixCell}>
+              <strong>施設評価:</strong> {twoAxisEvaluation.facilityScore}点
+            </div>
+            <div className={styles.matrixCell}>
+              <strong>法人評価:</strong> {twoAxisEvaluation.corporateScore}点
+            </div>
+          </div>
+          <div className={styles.matrixResult}>
+            総合グレード: <span className={styles.gradeLabel}>{twoAxisEvaluation.overallScore}</span>
+          </div>
+        </div>
       </div>
         </div>
       )}
