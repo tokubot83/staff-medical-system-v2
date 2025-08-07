@@ -4,32 +4,34 @@ export const calculateOverallScore = (
   facilityScore: 'S' | 'A' | 'B' | 'C' | 'D',
   corporateScore: 'S' | 'A' | 'B' | 'C' | 'D'
 ): 'S+' | 'S' | 'A+' | 'A' | 'B' | 'C' | 'D' => {
+  // PDFのマトリックスに基づく正確なマッピング
+  // 横軸：施設内評価、縦軸：法人内評価
   const matrixMapping: Record<string, 'S+' | 'S' | 'A+' | 'A' | 'B' | 'C' | 'D'> = {
-    'S-S': 'S+',
-    'S-A': 'S',
-    'S-B': 'A+',
-    'S-C': 'A',
     'S-D': 'A',
-    'A-S': 'S',
-    'A-A': 'A+',
-    'A-B': 'A',
-    'A-C': 'A',
+    'S-C': 'A+',
+    'S-B': 'S',
+    'S-A': 'S',
+    'S-S': 'S+',
     'A-D': 'B',
-    'B-S': 'A+',
-    'B-A': 'A',
-    'B-B': 'B',
-    'B-C': 'B',
+    'A-C': 'A',
+    'A-B': 'A',
+    'A-A': 'A+',
+    'A-S': 'S',
     'B-D': 'C',
-    'C-S': 'A',
-    'C-A': 'A',
-    'C-B': 'B',
-    'C-C': 'C',
+    'B-C': 'B',
+    'B-B': 'B',
+    'B-A': 'A',
+    'B-S': 'A+',
     'C-D': 'D',
-    'D-S': 'B',
-    'D-A': 'B',
+    'C-C': 'C',
+    'C-B': 'C',
+    'C-A': 'B',
+    'C-S': 'A',
+    'D-D': 'D',
+    'D-C': 'D',
     'D-B': 'C',
-    'D-C': 'C',
-    'D-D': 'D'
+    'D-A': 'C',
+    'D-S': 'B'
   }
   
   return matrixMapping[`${corporateScore}-${facilityScore}`] || 'B'

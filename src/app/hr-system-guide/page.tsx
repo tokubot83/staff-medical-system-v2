@@ -295,14 +295,24 @@ export default function HRSystemGuidePage() {
                     <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">1</div>
                     <div className="flex-1">
                       <p className="font-semibold text-gray-800">評価シートで点数化（100点満点）</p>
+<<<<<<< HEAD
                       <p className="text-sm text-gray-600">技術評価50点（3月実施） + 施設貢献25点 + 法人貢献25点（年間相対評価）</p>
+=======
+                      <p className="text-sm text-gray-600">技術評価50点 + 施設貢献25点 + 法人貢献25点</p>
+                      <p className="text-xs text-gray-500 mt-1">※施設内・法人内評価とも同じ100点満点の計算式を使用</p>
+>>>>>>> 03eefeb (fix: 評価マトリックスをPDF版の正式な分布に修正)
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">2</div>
                     <div className="flex-1">
                       <p className="font-semibold text-gray-800">点数を順位に変換</p>
+<<<<<<< HEAD
                       <p className="text-sm text-gray-600">職種別に施設内と法人内でそれぞれ順位を算出（相対評価）</p>
+=======
+                      <p className="text-sm text-gray-600">施設内と法人内でそれぞれ同職種内で順位を算出</p>
+                      <p className="text-xs text-gray-500 mt-1">※同じ100点の得点を、評価範囲の違いによって2つの順位を算出</p>
+>>>>>>> 03eefeb (fix: 評価マトリックスをPDF版の正式な分布に修正)
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -370,43 +380,43 @@ export default function HRSystemGuidePage() {
                     <tbody className="text-center text-sm font-semibold">
                       <tr>
                         <td className="border border-gray-300 p-3 bg-yellow-100">S</td>
-                        <td className="border border-gray-300 p-3 bg-yellow-200 text-lg">S+</td>
-                        <td className="border border-gray-300 p-3 bg-yellow-100 text-lg">S</td>
-                        <td className="border border-gray-300 p-3 bg-yellow-50 text-lg">S</td>
                         <td className="border border-gray-300 p-3 bg-green-100 text-lg">A</td>
-                        <td className="border border-gray-300 p-3 bg-blue-100 text-lg">B</td>
+                        <td className="border border-gray-300 p-3 bg-green-200 text-lg">A+</td>
+                        <td className="border border-gray-300 p-3 bg-yellow-100 text-lg">S</td>
+                        <td className="border border-gray-300 p-3 bg-yellow-100 text-lg">S</td>
+                        <td className="border border-gray-300 p-3 bg-yellow-200 text-lg">S+</td>
                       </tr>
                       <tr>
                         <td className="border border-gray-300 p-3 bg-green-100">A</td>
-                        <td className="border border-gray-300 p-3 bg-yellow-100 text-lg">S</td>
-                        <td className="border border-gray-300 p-3 bg-green-200 text-lg">A+</td>
-                        <td className="border border-gray-300 p-3 bg-green-100 text-lg">A</td>
                         <td className="border border-gray-300 p-3 bg-blue-100 text-lg">B</td>
-                        <td className="border border-gray-300 p-3 bg-orange-100 text-lg">C</td>
+                        <td className="border border-gray-300 p-3 bg-green-100 text-lg">A</td>
+                        <td className="border border-gray-300 p-3 bg-green-100 text-lg">A</td>
+                        <td className="border border-gray-300 p-3 bg-green-200 text-lg">A+</td>
+                        <td className="border border-gray-300 p-3 bg-yellow-100 text-lg">S</td>
                       </tr>
                       <tr>
                         <td className="border border-gray-300 p-3 bg-blue-100">B</td>
-                        <td className="border border-gray-300 p-3 bg-green-100 text-lg">A</td>
-                        <td className="border border-gray-300 p-3 bg-green-100 text-lg">A</td>
-                        <td className="border border-gray-300 p-3 bg-blue-100 text-lg">B</td>
                         <td className="border border-gray-300 p-3 bg-orange-100 text-lg">C</td>
-                        <td className="border border-gray-300 p-3 bg-red-100 text-lg">D</td>
+                        <td className="border border-gray-300 p-3 bg-blue-100 text-lg">B</td>
+                        <td className="border border-gray-300 p-3 bg-blue-100 text-lg">B</td>
+                        <td className="border border-gray-300 p-3 bg-green-100 text-lg">A</td>
+                        <td className="border border-gray-300 p-3 bg-green-200 text-lg">A+</td>
                       </tr>
                       <tr>
                         <td className="border border-gray-300 p-3 bg-orange-100">C</td>
-                        <td className="border border-gray-300 p-3 bg-blue-100 text-lg">B</td>
-                        <td className="border border-gray-300 p-3 bg-blue-100 text-lg">B</td>
-                        <td className="border border-gray-300 p-3 bg-orange-100 text-lg">C</td>
-                        <td className="border border-gray-300 p-3 bg-orange-100 text-lg">C</td>
                         <td className="border border-gray-300 p-3 bg-red-100 text-lg">D</td>
+                        <td className="border border-gray-300 p-3 bg-orange-100 text-lg">C</td>
+                        <td className="border border-gray-300 p-3 bg-orange-100 text-lg">C</td>
+                        <td className="border border-gray-300 p-3 bg-blue-100 text-lg">B</td>
+                        <td className="border border-gray-300 p-3 bg-green-100 text-lg">A</td>
                       </tr>
                       <tr>
                         <td className="border border-gray-300 p-3 bg-red-100">D</td>
-                        <td className="border border-gray-300 p-3 bg-orange-100 text-lg">C</td>
-                        <td className="border border-gray-300 p-3 bg-orange-100 text-lg">C</td>
-                        <td className="border border-gray-300 p-3 bg-red-100 text-lg">D</td>
-                        <td className="border border-gray-300 p-3 bg-red-100 text-lg">D</td>
                         <td className="border border-gray-300 p-3 bg-red-200 text-lg">D</td>
+                        <td className="border border-gray-300 p-3 bg-red-100 text-lg">D</td>
+                        <td className="border border-gray-300 p-3 bg-orange-100 text-lg">C</td>
+                        <td className="border border-gray-300 p-3 bg-orange-100 text-lg">C</td>
+                        <td className="border border-gray-300 p-3 bg-blue-100 text-lg">B</td>
                       </tr>
                     </tbody>
                   </table>
@@ -449,32 +459,44 @@ export default function HRSystemGuidePage() {
                 </div>
 
                 <div className="bg-orange-50 rounded-lg p-4 border-l-4 border-orange-500">
-                  <h4 className="font-semibold text-orange-800 mb-2">組織貢献評価（50点）- ポイント制</h4>
+                  <h4 className="font-semibold text-orange-800 mb-2">組織貢献評価（50点）- 相対評価</h4>
                   <div className="grid md:grid-cols-2 gap-3 mt-3">
                     <div className="bg-white rounded p-3">
                       <p className="text-sm font-semibold text-gray-700 mb-2">施設貢献（25点）</p>
                       <ul className="text-xs text-gray-600 space-y-1">
-                        <li>• 防災訓練参加：5pt×回数</li>
-                        <li>• 朝礼出席：3pt×回数</li>
-                        <li>• 勉強会開催：8pt×回数</li>
-                        <li>• 新人指導：10pt×人数</li>
+                        <li>• 防災訓練参加</li>
+                        <li>• 朝礼出席</li>
+                        <li>• 勉強会開催</li>
+                        <li>• 新人指導</li>
                       </ul>
                       <p className="text-xs text-blue-600 mt-2">
-                        施設内の相対評価で点数決定
+                        夏12.5点 + 冬12.5点の年2回査定
+                      </p>
+                      <p className="text-xs text-gray-600 mt-1">
+                        各施設独自の査定を順位化して配点
                       </p>
                     </div>
                     <div className="bg-white rounded p-3">
                       <p className="text-sm font-semibold text-gray-700 mb-2">法人貢献（25点）</p>
                       <ul className="text-xs text-gray-600 space-y-1">
-                        <li>• 学会発表：20pt×回数</li>
-                        <li>• 他施設支援：20pt×日数</li>
-                        <li>• 法人委員会：10pt×回数</li>
-                        <li>• 法人行事参加：8pt×回数</li>
+                        <li>• 学会発表</li>
+                        <li>• 他施設支援</li>
+                        <li>• 法人委員会</li>
+                        <li>• 法人行事参加</li>
                       </ul>
                       <p className="text-xs text-blue-600 mt-2">
-                        法人全体の相対評価で点数決定
+                        夏12.5点 + 冬12.5点の年2回査定
+                      </p>
+                      <p className="text-xs text-gray-600 mt-1">
+                        同職種内で順位化して0〜12.5点配点
                       </p>
                     </div>
+                  </div>
+                  <div className="bg-yellow-50 rounded p-3 mt-3">
+                    <p className="text-xs text-gray-700">
+                      <strong>重要：</strong>組織貢献査定は賞与だけでなく昇級にも反映されるようになりました。
+                      施設や組織のために頑張る人、スキルや知識を活かす人が正当に評価されます。
+                    </p>
                   </div>
                 </div>
               </div>
@@ -484,26 +506,35 @@ export default function HRSystemGuidePage() {
             <div className="bg-white rounded-xl shadow-lg p-6">
               <h3 className="text-xl font-bold text-gray-800 mb-4">ステップ2：点数から順位への変換</h3>
               <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-lg p-4">
+                <p className="text-sm text-gray-700 mb-3 font-semibold">
+                  同じ100点満点の評価を、2つの視点で順位化します
+                </p>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <h4 className="font-semibold text-blue-800 mb-2">施設内での順位付け</h4>
                     <p className="text-sm text-gray-700 mb-2">
-                      同じ施設・同じ職種の中で、合計点数を比較して順位を決定
+                      技術50点 + 施設貢献25点 + 法人貢献25点 = 100点
+                    </p>
+                    <p className="text-sm text-gray-700 mb-2">
+                      この100点を施設内の同職種で順位化
                     </p>
                     <div className="bg-white/80 rounded p-2">
                       <p className="text-xs text-gray-600">
-                        例：A病院の看護師50名中、あなたは15位
+                        例：A病院の看護師50名中、あなたは15位 → B評価
                       </p>
                     </div>
                   </div>
                   <div>
                     <h4 className="font-semibold text-green-800 mb-2">法人内での順位付け</h4>
                     <p className="text-sm text-gray-700 mb-2">
-                      法人全体・同じ職種の中で、合計点数を比較して順位を決定
+                      技術50点 + 施設貢献25点 + 法人貢献25点 = 100点
+                    </p>
+                    <p className="text-sm text-gray-700 mb-2">
+                      同じ100点を法人内の同職種で順位化
                     </p>
                     <div className="bg-white/80 rounded p-2">
                       <p className="text-xs text-gray-600">
-                        例：法人全体の看護師300名中、あなたは80位
+                        例：法人全体の看護師300名中、あなたは80位 → A評価
                       </p>
                     </div>
                   </div>
