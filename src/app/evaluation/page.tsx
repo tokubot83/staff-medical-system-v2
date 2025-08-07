@@ -20,10 +20,27 @@ import {
   Award
 } from 'lucide-react'
 
+// タスクの型定義
+interface Task {
+  type: 'urgent' | 'normal'
+  title: string
+  description: string
+  link: string
+  deadline: string
+}
+
+// 通知の型定義
+interface Notification {
+  id: number
+  type: 'warning' | 'info' | 'success'
+  message: string
+  time: string
+}
+
 // 現在の月から評価タスクを判定
-const getCurrentTasks = () => {
+const getCurrentTasks = (): Task[] => {
   const currentMonth = new Date().getMonth() + 1
-  const tasks = []
+  const tasks: Task[] = []
   
   if (currentMonth === 3) {
     tasks.push({
@@ -62,8 +79,8 @@ const getCurrentTasks = () => {
 }
 
 export default function EvaluationDashboard() {
-  const [currentTasks, setCurrentTasks] = useState([])
-  const [notifications, setNotifications] = useState([])
+  const [currentTasks, setCurrentTasks] = useState<Task[]>([])
+  const [notifications, setNotifications] = useState<Notification[]>([])
   const [progressData, setProgressData] = useState({
     technical: 0,
     contribution: 0,
