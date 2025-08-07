@@ -70,6 +70,11 @@ export function AnnualEvaluationSummary({
 
   const matrixPos = getMatrixPosition(currentYear.facilityGrade, currentYear.corporateGrade);
 
+  // 施設内評価と法人内評価の計算説明
+  // 両評価とも同じ計算式：技術50点 + 施設貢献25点 + 法人貢献25点 = 100点
+  // 施設内評価：この100点を施設内の同職種で順位化してS〜Dの5段階
+  // 法人内評価：この100点を法人内の同職種で順位化してS〜Dの5段階
+
   // レーダーチャート用データ
   const radarData = [
     { subject: '技術評価', value: (currentYear.technicalScore / 50) * 100, fullMark: 100 },
@@ -203,6 +208,9 @@ export function AnnualEvaluationSummary({
                       {currentYear.facilityRank}位 / {currentYear.facilityTotal}名
                     </p>
                   )}
+                  <p className="text-xs text-gray-500 mt-2">
+                    施設内同職種での相対評価
+                  </p>
                 </div>
                 <div className="text-center">
                   <p className="text-sm text-gray-600 mb-2">法人内評価</p>
@@ -214,7 +222,23 @@ export function AnnualEvaluationSummary({
                       {currentYear.corporateRank}位 / {currentYear.corporateTotal}名
                     </p>
                   )}
+                  <p className="text-xs text-gray-500 mt-2">
+                    法人内同職種での相対評価
+                  </p>
                 </div>
+              </div>
+
+              {/* 評価計算式の説明 */}
+              <div className="bg-blue-50 p-3 rounded-lg">
+                <p className="text-xs text-gray-700">
+                  <strong>評価計算式（施設内・法人内共通）:</strong>
+                </p>
+                <p className="text-xs text-gray-600 mt-1">
+                  技術評価 50点 + 施設貢献 25点 + 法人貢献 25点 = 100点
+                </p>
+                <p className="text-xs text-gray-600 mt-1">
+                  この100点を各評価範囲の同職種内で順位化してS〜Dの5段階評価
+                </p>
               </div>
 
               {/* 簡易マトリックス表示 */}
