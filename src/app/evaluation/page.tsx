@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import CommonHeader from '@/components/CommonHeader'
+import DashboardButton from '@/components/DashboardButton'
 import Link from 'next/link'
 import styles from './Evaluation.module.css'
 import { 
@@ -654,6 +655,7 @@ export default function EvaluationManagement() {
           )}
         </div>
       </div>
+      <DashboardButton />
     </div>
   )
 }
