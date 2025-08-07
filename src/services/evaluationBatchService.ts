@@ -53,7 +53,7 @@ export const EVALUATION_SCHEDULE = {
   },
   finalCalculation: {
     month: 3,  // 3月末に全評価を統合
-    description: '技術評価50点 + 施設貢献25点 + 法人貢献25点の最終計算'
+    description: '技術評価50点 + 施設貢献25点（夏12.5+冬12.5） + 法人貢献25点（夏12.5+冬12.5）の最終計算'
   }
 };
 

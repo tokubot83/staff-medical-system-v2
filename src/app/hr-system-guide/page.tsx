@@ -267,13 +267,13 @@ export default function HRSystemGuidePage() {
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div className="text-center">
                       <p className="font-bold text-lg text-blue-600">8月</p>
-                      <p className="text-sm text-gray-700">組織貢献度査定</p>
-                      <p className="text-xs text-gray-600">12月〜5月実績</p>
+                      <p className="text-sm text-gray-700">夏季賞与査定</p>
+                      <p className="text-xs text-gray-600">施設12.5点+法人12.5点</p>
                     </div>
                     <div className="text-center">
                       <p className="font-bold text-lg text-green-600">12月</p>
-                      <p className="text-sm text-gray-700">組織貢献度査定</p>
-                      <p className="text-xs text-gray-600">6月〜11月実績</p>
+                      <p className="text-sm text-gray-700">冬季賞与査定</p>
+                      <p className="text-xs text-gray-600">施設12.5点+法人12.5点</p>
                     </div>
                     <div className="text-center">
                       <p className="font-bold text-lg text-purple-600">3月</p>
@@ -294,7 +294,7 @@ export default function HRSystemGuidePage() {
                     <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">1</div>
                     <div className="flex-1">
                       <p className="font-semibold text-gray-800">評価シートで点数化（100点満点）</p>
-                      <p className="text-sm text-gray-600">技術評価50点（3月実施） + 施設貢献25点 + 法人貢献25点（年間相対評価）</p>
+                      <p className="text-sm text-gray-600">技術評価50点（3月） + 施設貢献25点（夏12.5+冬12.5） + 法人貢献25点（夏12.5+冬12.5）</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">

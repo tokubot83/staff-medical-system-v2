@@ -446,11 +446,16 @@ export default function ContributionAssessmentPage() {
         <CheckCircle2 className="h-4 w-4" />
         <AlertTitle>年間評価スケジュール</AlertTitle>
         <AlertDescription className="mt-2 space-y-1">
-          <p>1. <strong>8月賞与時</strong>：12月～5月の実績を基に施設・法人貢献度を査定</p>
-          <p>2. <strong>12月賞与時</strong>：6月～11月の実績を基に施設・法人貢献度を査定</p>
+          <p>1. <strong>8月賞与査定</strong>：12月～5月の実績を基に評価</p>
+          <p>   ・施設貢献度：12.5点（相対評価）</p>
+          <p>   ・法人貢献度：12.5点（相対評価）</p>
+          <p>2. <strong>12月賞与査定</strong>：6月～11月の実績を基に評価</p>
+          <p>   ・施設貢献度：12.5点（相対評価）</p>
+          <p>   ・法人貢献度：12.5点（相対評価）</p>
           <p>3. <strong>3月（年度末）</strong>：技術評価（4月～3月の年間評価）を実施</p>
-          <p>4. <strong>3月末</strong>：全評価を統合し最終計算</p>
-          <p>   技術評価50点 + 施設貢献25点（相対評価） + 法人貢献25点（相対評価） = 100点満点</p>
+          <p>   ・技術評価：50点</p>
+          <p>4. <strong>3月末 統合評価</strong>：全評価を統合し最終計算</p>
+          <p>   技術評価50点 + 施設貢献25点（夏12.5+冬12.5） + 法人貢献25点（夏12.5+冬12.5） = 100点満点</p>
         </AlertDescription>
       </Alert>
     </div>
