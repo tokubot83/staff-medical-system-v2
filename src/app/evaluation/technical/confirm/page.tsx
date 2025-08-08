@@ -107,9 +107,9 @@ export default function TechnicalConfirmPage() {
     { value: 'locked', label: 'ロック済み' }
   ];
 
-  const filteredEvaluations = mockEvaluations.filter(eval => {
-    const matchesDepartment = selectedDepartment === 'all' || eval.department === selectedDepartment;
-    const matchesStatus = selectedStatus === 'all' || eval.status === selectedStatus;
+  const filteredEvaluations = mockEvaluations.filter(evaluation => {
+    const matchesDepartment = selectedDepartment === 'all' || evaluation.department === selectedDepartment;
+    const matchesStatus = selectedStatus === 'all' || evaluation.status === selectedStatus;
     return matchesDepartment && matchesStatus;
   });
 

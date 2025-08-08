@@ -7,8 +7,9 @@ import styles from './Recruitment.module.css';
 import { jobPostings, applicants, interviewSchedules } from '@/app/data/recruitmentData';
 import { JobPosting, Applicant } from '@/types/recruitment';
 import { useRouter } from 'next/navigation';
+import { facilities } from '@/app/data/facilityData';
 
-type TabType = 'jobPostings' | 'applicants' | 'interviews' | 'onboarding' | 'analytics';
+type TabType = 'jobPostings' | 'applicants' | 'interviews' | 'onboarding' | 'analytics' | 'placement' | 'talent';
 
 const tabs = [
   { id: 'jobPostings', label: '求人管理', icon: '📋' },
@@ -16,6 +17,8 @@ const tabs = [
   { id: 'interviews', label: '面接スケジュール', icon: '📅' },
   { id: 'onboarding', label: '入職管理', icon: '🎯' },
   { id: 'analytics', label: '採用分析', icon: '📊' },
+  { id: 'placement', label: '人材配置', icon: '🔄' },
+  { id: 'talent', label: 'タレント管理', icon: '🎯' },
 ];
 
 export default function RecruitmentPage() {
@@ -299,6 +302,411 @@ export default function RecruitmentPage() {
       </div>
     </div>
   );
+
+  const renderPlacement = () => {
+    const [selectedStaff, setSelectedStaff] = useState<any>(null);
+    const [filterType, setFilterType] = useState('all');
+
+    // デモスタッフデータ（簡略版）
+    const staffData = [
+      { id: 1, name: '山田 太郎', facility: '小原病院', department: '看護部', position: '主任', performance: 'A', yearsOfService: 5, skills: ['リーダーシップ', 'チーム管理'], transferWish: true },
+      { id: 2, name: '佐藤 花子', facility: '小原病院', department: '看護部', position: '主任', performance: 'S', yearsOfService: 8, skills: ['リーダーシップ', 'イノベーション'], transferWish: false },
+      { id: 3, name: '田中 美咲', facility: '小原病院', department: '看護部', position: '副部長', performance: 'A', yearsOfService: 12, skills: ['戦略企画', 'チーム管理'], transferWish: false },
+      { id: 4, name: '鈴木 健一', facility: '小原病院', department: 'リハビリテーション科', position: '主任', performance: 'A', yearsOfService: 7, skills: ['専門技術', 'コミュニケーション'], transferWish: false },
+      { id: 5, name: '高橋 由美', facility: '小原病院', department: '薬剤部', position: '一般職', performance: 'B', yearsOfService: 3, skills: ['薬剤管理', '在庫管理'], transferWish: true },
+    ];
+
+    const filteredStaff = staffData.filter(staff => {
+      if (filterType === 'all') return true;
+      if (filterType === 'transfer') return staff.transferWish;
+      if (filterType === 'highPerformance') return staff.performance === 'S' || staff.performance === 'A';
+      return true;
+    });
+
+    // 施設別の部署データ
+    const facilityDepartments: any = {
+      'obara-hospital': [
+        { name: '看護部', staffCount: 180, vacancyRate: 7.5 },
+        { name: 'リハビリテーション科', staffCount: 40, vacancyRate: 15.3 },
+        { name: '薬剤部', staffCount: 15, vacancyRate: 4.4 },
+      ],
+      'tachigami-hospital': [
+        { name: '看護部', staffCount: 65, vacancyRate: 5.0 },
+        { name: 'リハビリテーション科', staffCount: 35, vacancyRate: 8.3 },
+        { name: '薬剤部', staffCount: 5, vacancyRate: 12.0 },
+      ],
+    };
+
+    return (
+      <div className={styles.listContainer}>
+        <div className={styles.listHeader}>
+          <h2>人材配置 - 異動プランニング</h2>
+          <button className={styles.addButton}>
+            シミュレーション開始
+          </button>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr 1fr', gap: '20px', marginTop: '20px' }}>
+          {/* 左パネル: 職員リスト */}
+          <div style={{ backgroundColor: '#f9f9f9', padding: '20px', borderRadius: '8px' }}>
+            <h3>対象職員選択</h3>
+            <select 
+              className={styles.filterSelect}
+              value={filterType}
+              onChange={(e) => setFilterType(e.target.value)}
+              style={{ width: '100%', marginBottom: '15px' }}
+            >
+              <option value="all">すべての職員</option>
+              <option value="transfer">異動希望者のみ</option>
+              <option value="highPerformance">評価A以上</option>
+            </select>
+            
+            <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+              {filteredStaff.map((staff) => (
+                <div 
+                  key={staff.id}
+                  onClick={() => setSelectedStaff(staff)}
+                  style={{
+                    padding: '10px',
+                    marginBottom: '10px',
+                    backgroundColor: selectedStaff?.id === staff.id ? '#e3f2fd' : 'white',
+                    borderRadius: '5px',
+                    cursor: 'pointer',
+                    border: '1px solid #ddd'
+                  }}
+                >
+                  <div style={{ fontWeight: 'bold' }}>{staff.name}</div>
+                  <div style={{ fontSize: '0.9em', color: '#666' }}>
+                    {staff.department} / {staff.position}
+                  </div>
+                  <div style={{ marginTop: '5px' }}>
+                    {staff.transferWish && (
+                      <span style={{ 
+                        backgroundColor: '#ff9800', 
+                        color: 'white', 
+                        padding: '2px 8px', 
+                        borderRadius: '3px', 
+                        fontSize: '0.8em',
+                        marginRight: '5px'
+                      }}>
+                        異動希望
+                      </span>
+                    )}
+                    <span style={{ 
+                      backgroundColor: staff.performance === 'S' ? '#4caf50' : staff.performance === 'A' ? '#8bc34a' : '#ffc107',
+                      color: 'white', 
+                      padding: '2px 8px', 
+                      borderRadius: '3px', 
+                      fontSize: '0.8em' 
+                    }}>
+                      評価{staff.performance}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 中央パネル: マッチング結果 */}
+          <div style={{ backgroundColor: '#f9f9f9', padding: '20px', borderRadius: '8px' }}>
+            <h3>マッチング結果</h3>
+            {selectedStaff ? (
+              <div>
+                <h4>{selectedStaff.name}さんの異動候補</h4>
+                {facilities
+                  .filter(f => f.id !== 'obara-hospital')
+                  .slice(0, 3)
+                  .map((facility) => {
+                    const matchScore = Math.floor(Math.random() * 30) + 70;
+                    return (
+                      <div key={facility.id} style={{
+                        padding: '15px',
+                        marginBottom: '15px',
+                        backgroundColor: 'white',
+                        borderRadius: '5px',
+                        border: '1px solid #ddd'
+                      }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <h4>{facility.name}</h4>
+                          <span style={{
+                            backgroundColor: matchScore >= 85 ? '#4caf50' : '#ff9800',
+                            color: 'white',
+                            padding: '5px 10px',
+                            borderRadius: '15px',
+                            fontWeight: 'bold'
+                          }}>
+                            {matchScore}%
+                          </span>
+                        </div>
+                        <p style={{ color: '#666', fontSize: '0.9em' }}>{facility.type}</p>
+                        <p style={{ color: '#666', fontSize: '0.9em' }}>{facility.location}</p>
+                        <ul style={{ marginTop: '10px', fontSize: '0.9em' }}>
+                          <li>人員不足部署あり</li>
+                          <li>スキルマッチ度が高い</li>
+                          <li>キャリア成長の機会</li>
+                        </ul>
+                        <button className={styles.secondaryButton} style={{ marginTop: '10px' }}>
+                          詳細確認
+                        </button>
+                      </div>
+                    );
+                  })}
+              </div>
+            ) : (
+              <p style={{ textAlign: 'center', color: '#666' }}>職員を選択してください</p>
+            )}
+          </div>
+
+          {/* 右パネル: 施設状況 */}
+          <div style={{ backgroundColor: '#f9f9f9', padding: '20px', borderRadius: '8px' }}>
+            <h3>系列施設の人員状況</h3>
+            {facilities.slice(0, 3).map((facility) => {
+              const depts = facilityDepartments[facility.id] || [];
+              const avgVacancy = depts.length > 0 
+                ? depts.reduce((sum: number, d: any) => sum + d.vacancyRate, 0) / depts.length 
+                : 0;
+              
+              return (
+                <div key={facility.id} style={{
+                  padding: '10px',
+                  marginBottom: '10px',
+                  backgroundColor: 'white',
+                  borderRadius: '5px',
+                  border: '1px solid #ddd'
+                }}>
+                  <h4 style={{ marginBottom: '5px' }}>{facility.name}</h4>
+                  <p style={{ fontSize: '0.85em', color: '#666' }}>
+                    充足率: {(100 - avgVacancy).toFixed(1)}%
+                  </p>
+                  {avgVacancy > 10 && (
+                    <p style={{ fontSize: '0.85em', color: '#e74c3c' }}>
+                      要員不足
+                    </p>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderTalent = () => {
+    // ハイパフォーマーのデモデータ
+    const highPerformers = [
+      { id: 1, name: '佐藤 花子', department: '看護部', position: '主任', performance: 'S', yearsOfService: 8, skills: ['リーダーシップ', 'イノベーション'] },
+      { id: 2, name: '田中 美咲', department: '看護部', position: '副部長', performance: 'A', yearsOfService: 12, skills: ['戦略企画', 'チーム管理'] },
+      { id: 3, name: '鈴木 健一', department: 'リハビリテーション科', position: '主任', performance: 'A', yearsOfService: 7, skills: ['専門技術', 'コミュニケーション'] },
+    ];
+
+    // サクセッションプラン
+    const successionPlans = [
+      {
+        position: '看護部長',
+        candidates: [
+          { name: '田中 美咲', readiness: 85, currentPosition: '副部長', developmentNeeds: ['経営戦略'] },
+          { name: '佐藤 花子', readiness: 70, currentPosition: '主任', developmentNeeds: ['リーダーシップ', '財務管理'] },
+        ]
+      },
+      {
+        position: 'リハビリテーション科部長',
+        candidates: [
+          { name: '鈴木 健一', readiness: 90, currentPosition: '主任', developmentNeeds: ['戦略企画'] },
+        ]
+      },
+    ];
+
+    // 育成プログラム
+    const developmentPrograms = [
+      { name: 'リーダーシップ研修プログラム', participants: 24, completed: 18, progressRate: 75 },
+      { name: 'マネジメント基礎研修', participants: 35, completed: 28, progressRate: 80 },
+      { name: '専門スキル向上プログラム', participants: 42, completed: 35, progressRate: 83 },
+    ];
+
+    return (
+      <div className={styles.listContainer}>
+        <div className={styles.listHeader}>
+          <h2>タレント管理</h2>
+          <div>
+            <button className={styles.secondaryButton} style={{ marginRight: '10px' }}>
+              タレントプール編集
+            </button>
+            <button className={styles.addButton}>
+              育成計画作成
+            </button>
+          </div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginTop: '20px' }}>
+          {/* ハイパフォーマー管理 */}
+          <div style={{ backgroundColor: '#f9f9f9', padding: '20px', borderRadius: '8px' }}>
+            <h3>🌟 ハイパフォーマー管理</h3>
+            {highPerformers.map((performer) => (
+              <div key={performer.id} style={{
+                padding: '15px',
+                marginBottom: '10px',
+                backgroundColor: 'white',
+                borderRadius: '5px',
+                border: '1px solid #ddd'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                  <h4>{performer.name}</h4>
+                  <span style={{
+                    backgroundColor: performer.performance === 'S' ? '#4caf50' : '#8bc34a',
+                    color: 'white',
+                    padding: '2px 8px',
+                    borderRadius: '3px',
+                    fontSize: '0.9em'
+                  }}>
+                    評価{performer.performance}
+                  </span>
+                </div>
+                <p style={{ fontSize: '0.9em', color: '#666' }}>
+                  {performer.department} / {performer.position}
+                </p>
+                <p style={{ fontSize: '0.9em', color: '#666' }}>
+                  勤続: {performer.yearsOfService}年
+                </p>
+                <div style={{ marginTop: '10px' }}>
+                  {performer.skills.map((skill, idx) => (
+                    <span key={idx} style={{
+                      backgroundColor: '#e3f2fd',
+                      padding: '2px 8px',
+                      borderRadius: '3px',
+                      fontSize: '0.8em',
+                      marginRight: '5px'
+                    }}>
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+                <div style={{ marginTop: '10px' }}>
+                  <button className={styles.linkButton} style={{ marginRight: '10px' }}>詳細</button>
+                  <button className={styles.linkButton}>育成計画</button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* サクセッションプラン */}
+          <div style={{ backgroundColor: '#f9f9f9', padding: '20px', borderRadius: '8px' }}>
+            <h3>📋 サクセッションプラン</h3>
+            {successionPlans.map((plan, index) => (
+              <div key={index} style={{
+                padding: '15px',
+                marginBottom: '10px',
+                backgroundColor: 'white',
+                borderRadius: '5px',
+                border: '1px solid #ddd'
+              }}>
+                <h4>{plan.position}</h4>
+                {plan.candidates.map((candidate, idx) => (
+                  <div key={idx} style={{
+                    padding: '10px',
+                    marginTop: '10px',
+                    backgroundColor: '#f5f5f5',
+                    borderRadius: '5px'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontWeight: 'bold' }}>{candidate.name}</span>
+                      <span style={{
+                        backgroundColor: candidate.readiness >= 80 ? '#4caf50' : '#ff9800',
+                        color: 'white',
+                        padding: '2px 8px',
+                        borderRadius: '3px',
+                        fontSize: '0.8em'
+                      }}>
+                        準備度: {candidate.readiness}%
+                      </span>
+                    </div>
+                    <p style={{ fontSize: '0.85em', color: '#666', margin: '5px 0' }}>
+                      現職: {candidate.currentPosition}
+                    </p>
+                    <div>
+                      {candidate.developmentNeeds.map((need, needIdx) => (
+                        <span key={needIdx} style={{
+                          fontSize: '0.8em',
+                          backgroundColor: '#fff3e0',
+                          padding: '2px 6px',
+                          marginRight: '5px',
+                          borderRadius: '3px'
+                        }}>
+                          {need}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+
+          {/* 育成プログラム */}
+          <div style={{ backgroundColor: '#f9f9f9', padding: '20px', borderRadius: '8px' }}>
+            <h3>📈 育成プログラム進捗</h3>
+            {developmentPrograms.map((program, index) => (
+              <div key={index} style={{
+                padding: '15px',
+                marginBottom: '10px',
+                backgroundColor: 'white',
+                borderRadius: '5px',
+                border: '1px solid #ddd'
+              }}>
+                <h4 style={{ fontSize: '1em', marginBottom: '10px' }}>{program.name}</h4>
+                <div style={{ marginBottom: '10px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9em', color: '#666', marginBottom: '5px' }}>
+                    <span>参加者: {program.participants}名</span>
+                    <span>{program.progressRate}%</span>
+                  </div>
+                  <div style={{ backgroundColor: '#e0e0e0', height: '8px', borderRadius: '4px', overflow: 'hidden' }}>
+                    <div style={{
+                      width: `${program.progressRate}%`,
+                      height: '100%',
+                      backgroundColor: '#4caf50',
+                      transition: 'width 0.3s ease'
+                    }} />
+                  </div>
+                </div>
+                <p style={{ fontSize: '0.85em', color: '#666' }}>
+                  修了: {program.completed}名 / {program.participants}名
+                </p>
+              </div>
+            ))}
+            
+            {/* キャリアパス */}
+            <div style={{
+              padding: '15px',
+              marginTop: '20px',
+              backgroundColor: 'white',
+              borderRadius: '5px',
+              border: '1px solid #ddd'
+            }}>
+              <h4 style={{ marginBottom: '10px' }}>キャリアパス分布</h4>
+              <div style={{ fontSize: '0.9em' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
+                  <span>一般職</span>
+                  <span>45名</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
+                  <span>主任</span>
+                  <span>28名</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
+                  <span>副部長</span>
+                  <span>12名</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span>部長</span>
+                  <span>8名</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   const renderAnalytics = () => (
     <div className={styles.listContainer}>
