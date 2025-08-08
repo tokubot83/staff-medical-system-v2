@@ -2619,7 +2619,7 @@ const HRSystemGuidePage = () => {
         )
       )}
       
-      <DashboardButton />
+        <DashboardButton />
     </div>
   );
 };
