@@ -24,6 +24,7 @@ interface SheetItem {
 
 export default function HRSystemGuidePage() {
   const [activeTab, setActiveTab] = useState<'evaluation' | 'interview' | 'training' | 'sheets' | 'guidelines'>('evaluation');
+  const [guidelineSubTab, setGuidelineSubTab] = useState<'organization' | 'info-collection' | 'system-design' | 'trial-adjustment' | 'process'>('organization');
   const [viewMode, setViewMode] = useState<'general' | 'formal'>('general');
   const [sheetType, setSheetType] = useState<'all' | 'interview'>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -1768,8 +1769,459 @@ export default function HRSystemGuidePage() {
         {/* ガイドラインセクション */}
         {activeTab === 'guidelines' && (
           <div className="space-y-6">
-            {/* 評価項目決定プロセスのガイドライン */}
-          <div className="bg-indigo-50 rounded-xl shadow-lg p-6 mt-8">
+            {/* サブタブ切り替え */}
+            <div className="bg-white rounded-xl shadow-lg p-2">
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setGuidelineSubTab('organization')}
+                  className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all text-sm ${
+                    guidelineSubTab === 'organization'
+                      ? 'bg-indigo-500 text-white shadow-md'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  🏭 組織体制
+                </button>
+                <button
+                  onClick={() => setGuidelineSubTab('info-collection')}
+                  className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all text-sm ${
+                    guidelineSubTab === 'info-collection'
+                      ? 'bg-green-500 text-white shadow-md'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  🔍 情報収集フェーズ
+                </button>
+                <button
+                  onClick={() => setGuidelineSubTab('system-design')}
+                  className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all text-sm ${
+                    guidelineSubTab === 'system-design'
+                      ? 'bg-blue-500 text-white shadow-md'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  📝 制度設計フェーズ
+                </button>
+                <button
+                  onClick={() => setGuidelineSubTab('trial-adjustment')}
+                  className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all text-sm ${
+                    guidelineSubTab === 'trial-adjustment'
+                      ? 'bg-purple-500 text-white shadow-md'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  🔄 試行・調整フェーズ
+                </button>
+                <button
+                  onClick={() => setGuidelineSubTab('process')}
+                  className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all text-sm ${
+                    guidelineSubTab === 'process'
+                      ? 'bg-amber-500 text-white shadow-md'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  📊 評価プロセス
+                </button>
+              </div>
+            </div>
+
+            {/* 組織体制タブ */}
+            {guidelineSubTab === 'organization' && (
+              <div className="bg-white rounded-xl shadow-lg p-6">
+              {/* ヘッダー部分 */}
+              <div className="flex justify-between items-center mb-6 pb-4 border-b-2 border-gray-200">
+                <div>
+                  <div className="text-sm text-gray-500 mb-1">内部検討資料</div>
+                  <h2 className="text-2xl font-bold text-gray-800">人財統括本部準備室 配置案</h2>
+                  <p className="text-gray-600 mt-2">現場の声を丁寧に収集し、実態に即した制度設計を行う・リスクを最小化して着実に基盤を構築</p>
+                </div>
+                <div className="text-right">
+                  <div className="flex items-center justify-end mb-2">
+                    <span className="mr-2 text-blue-600">📅</span>
+                    <span className="text-blue-800 font-medium">実施期間: 2025年7月～2026年3月</span>
+                  </div>
+                  <div className="flex items-center justify-end mb-2">
+                    <span className="mr-2 text-green-600">🎯</span>
+                    <span className="text-green-800 font-medium">配置方針: 現場情報収集と課題抽出に重点</span>
+                  </div>
+                  <div className="text-sm text-gray-600">作成者：徳留</div>
+                </div>
+              </div>
+
+              {/* 準備室体制案 */}
+              <div className="mb-8">
+                <h3 className="text-xl font-bold flex items-center mb-4 pb-2 border-b-2 border-blue-500">
+                  <span className="mr-2 text-blue-600">💼</span>
+                  準備室組織体制案（焦点集中型体制ベース）
+                </h3>
+                
+                <div className="border border-blue-200 rounded-lg overflow-hidden shadow-md">
+                  <div className="bg-blue-600 text-white p-3">
+                    <h4 className="text-lg font-bold">準備室段階・情報収集重点型配置案</h4>
+                    <p className="text-sm text-white text-opacity-90">現場の声を丁寧に収集し、実態に即した制度設計を行う体制</p>
+                  </div>
+                  
+                  <div className="p-4">
+                    <div className="mb-4">
+                      <h5 className="font-bold text-blue-800 mb-2 text-sm">組織図</h5>
+                      <div className="bg-white p-3 border border-blue-100 rounded-lg">
+                        <div className="flex flex-col items-center">
+                          {/* トップ部門 */}
+                          <div className="w-80 mb-3 border-2 border-blue-400 rounded-lg p-3 bg-blue-50 shadow-md">
+                            <h6 className="font-bold text-blue-800 text-sm flex items-center">
+                              <span className="mr-1">💼</span>
+                              戦略企画・統括管理部門（準備室）
+                            </h6>
+                            <div className="mt-2 border-t border-blue-100 pt-2">
+                              <div className="space-y-1 text-xs">
+                                <div className="flex items-start">
+                                  <span className="mr-1 text-blue-600">⭐</span>
+                                  <span><strong>リーダー：廻 茂樹（総師長）</strong> - 全体統括・法人との連携調整</span>
+                                </div>
+                                <div className="flex items-start">
+                                  <span className="mr-1 text-blue-600">✓</span>
+                                  <span><strong>サポート：徳留 拓哉</strong> - 準備室運営・進捗管理・法人連携連絡会議での活動報告と提言</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 詳細は後で追加 */}
+              <div className="text-sm text-gray-500 italic">
+                ※ 詳細な組織構成と稼働率計画は別途資料参照
+              </div>
+              </div>
+            )}
+
+            {/* 情報収集フェーズタブ */}
+            {guidelineSubTab === 'info-collection' && (
+              <div className="bg-white rounded-xl shadow-lg p-6">
+                {/* ヘッダー部分 */}
+                <div className="flex justify-between items-center mb-6 pb-4 border-b-2 border-gray-200">
+                  <div>
+                    <div className="text-sm text-gray-500 mb-1">内部検討資料</div>
+                    <h2 className="text-2xl font-bold text-gray-800">情報収集フェーズ行動計画書</h2>
+                    <p className="text-gray-600 mt-2">現場の声を丁寧に収集し、実態に即した制度設計のための基盤づくり</p>
+                  </div>
+                  <div className="text-right">
+                    <div className="flex items-center justify-end mb-2">
+                      <span className="mr-2 text-green-600">📅</span>
+                      <span className="text-green-800 font-medium">実施期間: 2025年7月～10月</span>
+                    </div>
+                    <div className="flex items-center justify-end mb-2">
+                      <span className="mr-2 text-green-600">🎯</span>
+                      <span className="text-green-800 font-medium">重点方針: 現場の声収集と課題抽出</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 全体スケジュール */}
+                <div className="mb-8">
+                  <h3 className="text-xl font-bold flex items-center mb-4 pb-2 border-b-2 border-green-500">
+                    <span className="mr-2 text-green-600">🕰️</span>
+                    全体スケジュール
+                  </h3>
+                  
+                  <div className="border border-green-200 rounded-lg overflow-hidden shadow-md">
+                    <div className="bg-green-600 text-white p-3">
+                      <h4 className="text-lg font-bold">4ヶ月間の段階的アプローチ</h4>
+                      <p className="text-sm text-white text-opacity-90">現場との信頼関係構築から本格的な課題抽出まで</p>
+                    </div>
+                    
+                    <div className="p-4">
+                      <div className="grid grid-cols-4 gap-4">
+                        <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                          <h5 className="font-bold text-green-800 mb-2 flex items-center text-sm">
+                            <span className="mr-1">📅</span>
+                            7月：基盤づくり
+                          </h5>
+                          <ul className="text-xs space-y-1">
+                            <li>• キックオフ会議</li>
+                            <li>• 管理職説明会</li>
+                            <li>• 運営ルール確立</li>
+                            <li>• 現状把握開始</li>
+                          </ul>
+                        </div>
+                        <div className="bg-green-100 border border-green-300 rounded-lg p-3">
+                          <h5 className="font-bold text-green-800 mb-2 flex items-center text-sm">
+                            <span className="mr-1">🔍</span>
+                            8月：本格収集
+                          </h5>
+                          <ul className="text-xs space-y-1">
+                            <li>• 現場ヒアリング開始</li>
+                            <li>• アンケート実施</li>
+                            <li>• 養成校訪問</li>
+                            <li>• データ収集本格化</li>
+                          </ul>
+                        </div>
+                        <div className="bg-green-200 border border-green-400 rounded-lg p-3">
+                          <h5 className="font-bold text-green-800 mb-2 flex items-center text-sm">
+                            <span className="mr-1">📋</span>
+                            9月：深掘り分析
+                          </h5>
+                          <ul className="text-xs space-y-1">
+                            <li>• 課題の詳細分析</li>
+                            <li>• 他法人事例研究</li>
+                            <li>• 制度比較検討</li>
+                            <li>• 優先順位検討</li>
+                          </ul>
+                        </div>
+                        <div className="bg-green-300 border border-green-500 rounded-lg p-3">
+                          <h5 className="font-bold text-green-800 mb-2 flex items-center text-sm">
+                            <span className="mr-1">📄</span>
+                            10月：まとめ
+                          </h5>
+                          <ul className="text-xs space-y-1">
+                            <li>• 課題整理・統合</li>
+                            <li>• 制度設計準備</li>
+                            <li>• 次フェーズ計画</li>
+                            <li>• 中間報告</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="text-sm text-gray-500 italic">
+                  ※ 詳細な部門別行動計画と成果指標は別途資料参照
+                </div>
+              </div>
+            )}
+
+            {/* 制度設計フェーズタブ */}
+            {guidelineSubTab === 'system-design' && (
+              <div className="bg-white rounded-xl shadow-lg p-6">
+                {/* ヘッダー部分 */}
+                <div className="flex justify-between items-center mb-6 pb-4 border-b-2 border-gray-200">
+                  <div>
+                    <div className="text-sm text-gray-500 mb-1">内部検討資料</div>
+                    <h2 className="text-2xl font-bold text-gray-800">制度設計フェーズ行動計画書</h2>
+                    <p className="text-gray-600 mt-2">現場の声を反映した実践的制度設計・効果的な人材育成プログラムの構築</p>
+                  </div>
+                  <div className="text-right">
+                    <div className="flex items-center justify-end mb-2">
+                      <span className="mr-2 text-blue-600">📅</span>
+                      <span className="text-blue-800 font-medium">実施期間: 2025年11月～2026年1月</span>
+                    </div>
+                    <div className="flex items-center justify-end mb-2">
+                      <span className="mr-2 text-blue-600">🎯</span>
+                      <span className="text-blue-800 font-medium">重点方針: 現場ニーズ反映の制度設計</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 全体スケジュール */}
+                <div className="mb-8">
+                  <h3 className="text-xl font-bold flex items-center mb-4 pb-2 border-b-2 border-blue-500">
+                    <span className="mr-2 text-blue-600">✏️</span>
+                    全体スケジュール
+                  </h3>
+                  
+                  <div className="border border-blue-200 rounded-lg overflow-hidden shadow-md">
+                    <div className="bg-blue-600 text-white p-3">
+                      <h4 className="text-lg font-bold">3ヶ月間の集中的制度構築</h4>
+                      <p className="text-sm text-white text-opacity-90">情報収集結果を基にした実践的制度設計から試行準備まで</p>
+                    </div>
+                    
+                    <div className="p-4">
+                      <div className="grid grid-cols-3 gap-4">
+                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                          <h5 className="font-bold text-blue-800 mb-2 flex items-center text-sm">
+                            <span className="mr-1">📅</span>
+                            11月：基本設計
+                          </h5>
+                          <ul className="text-xs space-y-1">
+                            <li>• 情報収集結果分析・整理</li>
+                            <li>• 制度設計方針決定</li>
+                            <li>• 評価制度素案作成開始</li>
+                            <li>• 研修体系基本構造設計</li>
+                          </ul>
+                        </div>
+                        <div className="bg-blue-100 border border-blue-300 rounded-lg p-3">
+                          <h5 className="font-bold text-blue-800 mb-2 flex items-center text-sm">
+                            <span className="mr-1">⚙️</span>
+                            12月：詳細設計
+                          </h5>
+                          <ul className="text-xs space-y-1">
+                            <li>• 各制度の詳細設計</li>
+                            <li>• 面談制度運用方法確定</li>
+                            <li>• 採用戦略具体化</li>
+                            <li>• システム仕様詳細化</li>
+                          </ul>
+                        </div>
+                        <div className="bg-blue-200 border border-blue-400 rounded-lg p-3">
+                          <h5 className="font-bold text-blue-800 mb-2 flex items-center text-sm">
+                            <span className="mr-1">🧪</span>
+                            1月：試行準備
+                          </h5>
+                          <ul className="text-xs space-y-1">
+                            <li>• 制度統合・最終調整</li>
+                            <li>• パイロット運用準備</li>
+                            <li>• 運用マニュアル作成</li>
+                            <li>• 現場説明・研修準備</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="text-sm text-gray-500 italic">
+                  ※ 詳細な部門別行動計画と成果指標は別途資料参照
+                </div>
+              </div>
+            )}
+
+            {/* 試行・調整フェーズタブ */}
+            {guidelineSubTab === 'trial-adjustment' && (
+              <div className="bg-white rounded-xl shadow-lg p-6">
+                {/* ヘッダー部分 */}
+                <div className="flex justify-between items-center mb-6 pb-4 border-b-2 border-gray-200">
+                  <div>
+                    <div className="text-sm text-gray-500 mb-1">内部検討資料</div>
+                    <h2 className="text-2xl font-bold text-gray-800">試行・調整フェーズ行動計画書</h2>
+                    <p className="text-gray-600 mt-2">パイロット運用による制度検証・本格運用に向けた最終調整と準備</p>
+                  </div>
+                  <div className="text-right">
+                    <div className="flex items-center justify-end mb-2">
+                      <span className="mr-2 text-purple-600">📅</span>
+                      <span className="text-purple-800 font-medium">実施期間: 2026年2月～3月</span>
+                    </div>
+                    <div className="flex items-center justify-end mb-2">
+                      <span className="mr-2 text-purple-600">🎯</span>
+                      <span className="text-purple-800 font-medium">重点方針: 実践検証と本格運用準備</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 全体スケジュール */}
+                <div className="mb-8">
+                  <h3 className="text-xl font-bold flex items-center mb-4 pb-2 border-b-2 border-purple-500">
+                    <span className="mr-2 text-purple-600">🧪</span>
+                    全体スケジュール
+                  </h3>
+                  
+                  <div className="border border-purple-200 rounded-lg overflow-hidden shadow-md">
+                    <div className="bg-purple-600 text-white p-3">
+                      <h4 className="text-lg font-bold">2ヶ月間の集中的パイロット運用</h4>
+                      <p className="text-sm text-white text-opacity-90">実践による制度検証から本格運用準備まで</p>
+                    </div>
+                    
+                    <div className="p-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="bg-purple-50 border border-purple-200 rounded-lg p-3">
+                          <h5 className="font-bold text-purple-800 mb-2 flex items-center text-sm">
+                            <span className="mr-1">▶️</span>
+                            2月：パイロット運用開始
+                          </h5>
+                          <ul className="text-xs space-y-1">
+                            <li>• 現場説明会・研修実施</li>
+                            <li>• 一部制度の試行実施</li>
+                            <li>• システム稼働開始</li>
+                            <li>• 初期フィードバック収集</li>
+                          </ul>
+                        </div>
+                        <div className="bg-purple-100 border border-purple-300 rounded-lg p-3">
+                          <h5 className="font-bold text-purple-800 mb-2 flex items-center text-sm">
+                            <span className="mr-1">⚙️</span>
+                            3月：最終調整・準備完了
+                          </h5>
+                          <ul className="text-xs space-y-1">
+                            <li>• 課題抽出と制度改善</li>
+                            <li>• システム最終調整</li>
+                            <li>• 本格運用準備完了</li>
+                            <li>• 2026年4月開始準備</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* パイロット運用管理 */}
+                <div className="mb-8">
+                  <h3 className="text-xl font-bold flex items-center mb-4 pb-2 border-b-2 border-orange-500">
+                    <span className="mr-2 text-orange-600">👁️</span>
+                    パイロット運用管理・効果測定
+                  </h3>
+                  
+                  <div className="grid grid-cols-2 gap-6">
+                    <div className="p-4 bg-orange-50 rounded-lg border border-orange-200 shadow-sm">
+                      <h4 className="font-bold text-orange-800 mb-3 text-sm">パイロット運用対象</h4>
+                      <div className="space-y-2 text-xs">
+                        <div className="bg-white p-2 rounded border">
+                          <div className="font-medium text-orange-700 mb-1">対象部署</div>
+                          <ul className="text-orange-600 space-y-1">
+                            <li>• 小原病院看護部（各病棟5-10名）</li>
+                            <li>• 外来部門</li>
+                            <li>• 管理職・指導者層</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="p-4 bg-green-50 rounded-lg border border-green-200 shadow-sm">
+                      <h4 className="font-bold text-green-800 mb-3 text-sm">効果測定指標</h4>
+                      <div className="space-y-2 text-xs">
+                        <div className="bg-white p-2 rounded border">
+                          <div className="font-medium text-green-700 mb-1">目標値</div>
+                          <ul className="text-green-600 space-y-1">
+                            <li>• 参加率：90%以上</li>
+                            <li>• 満足度：4.0以上（5点満点）</li>
+                            <li>• システム稼働率：99%以上</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 最終成功指標 */}
+                <div className="mb-8">
+                  <h3 className="text-xl font-bold flex items-center mb-4 pb-2 border-b-2 border-purple-500">
+                    <span className="mr-2 text-purple-600">🏆</span>
+                    最終成功指標（3月末時点）
+                  </h3>
+                  
+                  <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 shadow-md">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      <div className="text-center p-3 bg-white rounded-lg border border-purple-200">
+                        <div className="text-2xl font-bold text-purple-700 mb-1">95%</div>
+                        <div className="text-xs text-purple-600">パイロット完了率</div>
+                      </div>
+                      <div className="text-center p-3 bg-white rounded-lg border border-purple-200">
+                        <div className="text-2xl font-bold text-purple-700 mb-1">4.2</div>
+                        <div className="text-xs text-purple-600">満足度平均</div>
+                      </div>
+                      <div className="text-center p-3 bg-white rounded-lg border border-purple-200">
+                        <div className="text-2xl font-bold text-purple-700 mb-1">100%</div>
+                        <div className="text-xs text-purple-600">制度改善完了</div>
+                      </div>
+                      <div className="text-center p-3 bg-white rounded-lg border border-purple-200">
+                        <div className="text-2xl font-bold text-purple-700 mb-1">100%</div>
+                        <div className="text-xs text-purple-600">本格運用準備</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="text-sm text-gray-500 italic">
+                  ※ 詳細な部門別行動計画とPDCAサイクルは別途資料参照
+                </div>
+              </div>
+            )}
+
+            {/* 評価プロセスタブ */}
+            {guidelineSubTab === 'process' && (
+
+              <div className="bg-indigo-50 rounded-xl shadow-lg p-6">
             <h2 className="text-2xl font-bold text-indigo-800 mb-4">評価項目決定プロセスガイドライン</h2>
             
             {/* プロセス概要 */}
@@ -1926,10 +2378,9 @@ export default function HRSystemGuidePage() {
                   </tbody>
                 </table>
               </div>
-            </div>
-          </div>
+                </div>
 
-            {/* 法人人事部準備室向け参考資料 */}
+              {/* 法人人事部準備室向け参考資料 */}
           <div className="bg-gray-100 rounded-xl shadow-lg p-6 mt-8">
             <h2 className="text-2xl font-bold text-gray-800 mb-4">法人人事部準備室向け参考資料</h2>
             
@@ -2125,8 +2576,9 @@ export default function HRSystemGuidePage() {
                   </ul>
                 </div>
               </div>
+                </div>
             </div>
-          </div>
+            )}
           </div>
         )}
 
