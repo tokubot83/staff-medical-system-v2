@@ -22,7 +22,7 @@ interface SheetItem {
   description: string;
 }
 
-const HRSystemGuidePage = () => {
+export default function HRSystemGuidePage() {
   const [activeTab, setActiveTab] = useState<'evaluation' | 'interview' | 'training' | 'sheets' | 'guidelines'>('evaluation');
   const [guidelineSubTab, setGuidelineSubTab] = useState<'organization' | 'info-collection' | 'system-design' | 'trial-adjustment' | 'process'>('organization');
   const [viewMode, setViewMode] = useState<'general' | 'formal'>('general');
@@ -76,6 +76,7 @@ const HRSystemGuidePage = () => {
     return true;
   });
 
+  // コンポーネントのレンダリング
   return (
     <div className="min-h-screen bg-gray-50">
       <CommonHeader title="人事制度ガイド" />
@@ -2622,6 +2623,4 @@ const HRSystemGuidePage = () => {
         <DashboardButton />
     </div>
   );
-};
-
-export default HRSystemGuidePage;
+}
