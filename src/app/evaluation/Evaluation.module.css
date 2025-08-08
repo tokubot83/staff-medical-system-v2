@@ -1,47 +1,46 @@
-/* タブコンテナ */
-.tabContainer {
+/* コンテナ */
+.container {
   max-width: 1400px;
   margin: 0 auto;
   padding: 20px;
 }
 
 /* タブナビゲーション */
-.tabs {
+.tabNavigation {
   display: flex;
-  gap: 10px;
-  margin-bottom: 24px;
-  border-bottom: 2px solid #e0e0e0;
   background: white;
-  padding: 0 20px;
-  border-radius: 12px 12px 0 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+  overflow: hidden;
 }
 
-.tab {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 16px 20px;
+.tabButton {
+  flex: 1;
+  padding: 16px 24px;
   background: transparent;
   border: none;
-  border-bottom: 3px solid transparent;
   cursor: pointer;
-  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   font-size: 14px;
   font-weight: 500;
   color: #6b7280;
-  white-space: nowrap;
+  transition: all 0.2s;
+  border-bottom: 3px solid transparent;
 }
 
-.tab:hover {
+.tabButton:hover {
   background: #f9fafb;
-  color: #2563eb;
+  color: #3b82f6;
 }
 
-.activeTab {
-  color: #2563eb !important;
+.tabButton.active {
+  color: #3b82f6;
   background: #eff6ff;
-  border-bottom-color: #2563eb;
+  border-bottom-color: #3b82f6;
 }
 
 .tabIcon {
@@ -61,15 +60,15 @@
   font-weight: 600;
 }
 
-.activeTab .tabBadge {
+.tabButton.active .tabBadge {
   background: #dbeafe;
-  color: #2563eb;
+  color: #3b82f6;
 }
 
 /* タブコンテンツ共通 */
 .tabContent {
   background: white;
-  border-radius: 0 12px 12px 12px;
+  border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   min-height: 600px;
   padding: 32px;
@@ -80,8 +79,201 @@
   padding: 0;
 }
 
+/* システム概要セクション */
+.systemOverview {
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.systemTitle {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 24px;
+}
+
+.scoreDistribution {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+.scoreCard {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+  padding: 24px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+}
+
+.scoreValue {
+  font-size: 48px;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.scoreLabel {
+  font-size: 16px;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.scoreBreakdown {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.scoreItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 20px;
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  transition: all 0.2s;
+}
+
+.scoreItem:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.scoreIcon {
+  color: #3b82f6;
+}
+
+.scoreText {
+  font-size: 16px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.scorePoints {
+  font-size: 18px;
+  font-weight: 700;
+  color: #3b82f6;
+  background: white;
+  padding: 4px 12px;
+  border-radius: 8px;
+}
+
+.scorePlus {
+  font-size: 24px;
+  font-weight: 700;
+  color: #6b7280;
+}
+
+/* スケジュール概要セクション */
+.scheduleOverview {
+  margin-bottom: 40px;
+}
+
+.scheduleTitle {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.scheduleTimeline {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.scheduleItem {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 20px 24px;
+  transition: all 0.2s;
+}
+
+.scheduleItem:hover {
+  border-color: #d1d5db;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.scheduleMonth {
+  font-size: 28px;
+  font-weight: 700;
+  color: #3b82f6;
+  min-width: 80px;
+  text-align: center;
+  background: #eff6ff;
+  padding: 12px 16px;
+  border-radius: 12px;
+  margin-right: 24px;
+}
+
+.scheduleContent {
+  flex: 1;
+}
+
+.scheduleEventTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 4px;
+}
+
+.scheduleEventDesc {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+.schedulePoints {
+  font-size: 14px;
+  font-weight: 600;
+  color: #059669;
+  background: #d1fae5;
+  padding: 4px 12px;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+.scheduleStatus {
+  margin-left: 24px;
+}
+
+.statusBadge {
+  background: #f3f4f6;
+  color: #6b7280;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
 .flowOverview {
   margin-bottom: 32px;
+}
+
+.flowHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.flowScore {
+  font-size: 20px;
+  font-weight: 700;
+  color: #059669;
+  background: #d1fae5;
+  padding: 8px 16px;
+  border-radius: 12px;
+  margin-left: auto;
 }
 
 .flowTitle {
@@ -866,6 +1058,581 @@
 .secondaryAction:hover {
   background: #eff6ff;
   transform: translateY(-2px);
+}
+
+/* タブナビゲーションのデザイン統一 */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.tabNavigation {
+  display: flex;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+
+.tabButton {
+  flex: 1;
+  padding: 16px 24px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+  transition: all 0.2s;
+  border-bottom: 3px solid transparent;
+  white-space: nowrap;
+}
+
+.tabButton:hover {
+  background: #f9fafb;
+  color: #3b82f6;
+}
+
+.tabButton.active {
+  color: #3b82f6;
+  background: #eff6ff;
+  border-bottom-color: #3b82f6;
+}
+
+.tabLabel {
+  position: relative;
+}
+
+.newBadge {
+  position: absolute;
+  top: -8px;
+  right: -20px;
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+/* 第1段階実装: 評価開示タブ */
+.disclosureContent {
+  padding: 24px;
+}
+
+.disclosureContent h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 24px;
+}
+
+.disclosureGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.channelCard {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.channelCard h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 16px;
+}
+
+.channelStatus {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.statusLabel {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.statusValue {
+  color: #1f2937;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.channelProgress {
+  margin-bottom: 20px;
+}
+
+.progressHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.channelNote {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 16px;
+}
+
+.actionButton {
+  width: 100%;
+  padding: 10px 20px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.actionButton:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.actionButton:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.scheduleSection {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.scheduleSection h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 20px;
+}
+
+.scheduleTimeline {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.timelineItem {
+  display: flex;
+  gap: 16px;
+}
+
+.timelineMarker {
+  width: 32px;
+  height: 32px;
+  background: #3b82f6;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.timelineContent h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+.timelineContent ul {
+  list-style: disc;
+  padding-left: 20px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* 第2段階実装: 異議申し立てタブ */
+.appealContent {
+  padding: 24px;
+}
+
+.appealContent h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 24px;
+}
+
+.appealOverview {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.appealInfo {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.appealInfo h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 12px;
+}
+
+.appealInfo p {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.appealStats {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.appealStats h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 16px;
+}
+
+.statsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.statItem {
+  text-align: center;
+}
+
+.statValue {
+  display: block;
+  font-size: 24px;
+  font-weight: 700;
+  color: #3b82f6;
+  margin-bottom: 4px;
+}
+
+.statLabel {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.appealProcess {
+  margin-bottom: 32px;
+}
+
+.appealProcess h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 20px;
+}
+
+.processFlow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.processStep {
+  flex: 1;
+  text-align: center;
+}
+
+.processArrow {
+  font-size: 24px;
+  color: #9ca3af;
+  margin: 0 8px;
+}
+
+.stepContent h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 4px;
+  margin-top: 8px;
+}
+
+.stepContent p {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.appealReasons {
+  margin-bottom: 32px;
+}
+
+.appealReasons h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 16px;
+}
+
+.reasonGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.reasonCard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.reasonCard:hover {
+  background: #f9fafb;
+  border-color: #3b82f6;
+}
+
+.reasonIcon {
+  font-size: 24px;
+}
+
+.reasonText {
+  font-size: 14px;
+  color: #4b5563;
+}
+
+.appealActions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.primaryButton,
+.secondaryButton {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.primaryButton {
+  background: #3b82f6;
+  color: white;
+}
+
+.primaryButton:hover {
+  background: #2563eb;
+}
+
+.secondaryButton {
+  background: white;
+  color: #3b82f6;
+  border: 1px solid #3b82f6;
+}
+
+.secondaryButton:hover {
+  background: #eff6ff;
+}
+
+/* ガイドタブ */
+.guideContent {
+  padding: 24px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.guideContent h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 32px;
+}
+
+.guideSection {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  border: 1px solid #e5e7eb;
+}
+
+.guideSection h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 16px;
+}
+
+.guideText {
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.guideText p {
+  margin-bottom: 12px;
+}
+
+.scheduleTable table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.scheduleTable th {
+  background: #f3f4f6;
+  padding: 12px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.scheduleTable td {
+  padding: 12px;
+  font-size: 14px;
+  color: #6b7280;
+  border-top: 1px solid #e5e7eb;
+}
+
+.phaseList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.phaseItem {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.phaseItem h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+.phaseItem ul {
+  list-style: disc;
+  padding-left: 24px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.implementationNote {
+  margin-top: 32px;
+  padding: 24px;
+  background: #fef3c7;
+  border-radius: 12px;
+  border: 1px solid #fbbf24;
+}
+
+.implementationNote h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #92400e;
+  margin-bottom: 20px;
+}
+
+.implementPhase {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #fbbf24;
+}
+
+.implementPhase h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #92400e;
+  margin-bottom: 8px;
+}
+
+.phaseDescription {
+  font-size: 14px;
+  color: #78350f;
+  margin-bottom: 16px;
+}
+
+.implementPhase ul {
+  list-style: disc;
+  padding-left: 24px;
+  margin-bottom: 16px;
+  color: #78350f;
+}
+
+.implementationCommand {
+  background: #1f2937;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 16px;
+  overflow-x: auto;
+}
+
+.implementationCommand h5 {
+  color: #10b981;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.implementationCommand code {
+  color: #10b981;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  white-space: pre;
+  display: block;
+}
+
+.noteCard {
+  background: white;
+  border: 1px solid #fbbf24;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.noteCard h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #92400e;
+  margin-bottom: 8px;
+}
+
+.noteCard p {
+  font-size: 14px;
+  color: #78350f;
+  line-height: 1.5;
 }
 
 /* 設定・管理タブ（既存のスタイルを流用） */
