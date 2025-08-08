@@ -13,15 +13,9 @@ import { InfoIcon, Calculator, Award, Users, Building } from 'lucide-react';
 import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
-// Type definitions
-type TechnicalScoreCategory = 'skills' | 'knowledge' | 'patient' | 'safety';
-type EvaluatorType = 'superiorEval' | 'selfEval';
-
 export default function NewNurseEvaluationV4Pattern5() {
   // 評価項目の状態管理
-  const [technicalScores, setTechnicalScores] = useState<{
-    [K in EvaluatorType]: Record<TechnicalScoreCategory, number>
-  }>({
+  const [technicalScores, setTechnicalScores] = useState({
     superiorEval: { skills: 0, knowledge: 0, patient: 0, safety: 0 },
     selfEval: { skills: 0, knowledge: 0, patient: 0, safety: 0 }
   });
@@ -36,7 +30,7 @@ export default function NewNurseEvaluationV4Pattern5() {
   const [corporateRank, setCorporateRank] = useState(50);
 
   // 評価グレードから点数への変換
-  const gradeToScore: Record<string, number> = {
+  const gradeToScore = {
     'S': 1.0,
     'A': 0.85,
     'B': 0.70,
@@ -52,7 +46,7 @@ export default function NewNurseEvaluationV4Pattern5() {
   };
 
   // 貢献度評価の計算（各25点満点）
-  const calculateContributionScore = (percentile: number) => {
+  const calculateContributionScore = (percentile) => {
     if (percentile <= 10) return 25;
     if (percentile <= 20) return 22.5;
     if (percentile <= 30) return 20;
@@ -73,17 +67,17 @@ export default function NewNurseEvaluationV4Pattern5() {
     setTotalScore(Math.round((technical + facility + corporate) * 10) / 10);
   }, [technicalScores, facilityRank, corporateRank]);
 
-  const handleTechnicalScoreChange = (evaluator: EvaluatorType, category: TechnicalScoreCategory, grade: keyof typeof gradeToScore) => {
+  const handleTechnicalScoreChange = (evaluator, category, grade) => {
     setTechnicalScores(prev => ({
       ...prev,
       [evaluator]: {
         ...prev[evaluator],
-        [category]: gradeToScore[grade]
+        [category]: gradeToScore[grade] || 0
       }
     }));
   };
 
-  const getScoreColor = (score: number) => {
+  const getScoreColor = (score) => {
     if (score >= 90) return 'text-red-600';
     if (score >= 80) return 'text-orange-600';
     if (score >= 70) return 'text-green-600';
@@ -251,7 +245,7 @@ export default function NewNurseEvaluationV4Pattern5() {
                 <div className="space-y-4">
                   <div>
                     <Label className="text-sm font-medium">1. 基礎看護技術の習得</Label>
-                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('superiorEval', 'skills', value as keyof typeof gradeToScore)}>
+                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('superiorEval', 'skills', value)}>
                       <div className="grid grid-cols-5 gap-2 mt-2">
                         {['S', 'A', 'B', 'C', 'D'].map((grade) => (
                           <div key={grade} className="flex items-center space-x-1">
@@ -268,7 +262,7 @@ export default function NewNurseEvaluationV4Pattern5() {
 
                   <div>
                     <Label className="text-sm font-medium">2. 看護知識の理解と応用</Label>
-                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('superiorEval', 'knowledge', value as keyof typeof gradeToScore)}>
+                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('superiorEval', 'knowledge', value)}>
                       <div className="grid grid-cols-5 gap-2 mt-2">
                         {['S', 'A', 'B', 'C', 'D'].map((grade) => (
                           <div key={grade} className="flex items-center space-x-1">
@@ -285,7 +279,7 @@ export default function NewNurseEvaluationV4Pattern5() {
 
                   <div>
                     <Label className="text-sm font-medium">3. 患者・家族への対応</Label>
-                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('superiorEval', 'patient', value as keyof typeof gradeToScore)}>
+                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('superiorEval', 'patient', value)}>
                       <div className="grid grid-cols-5 gap-2 mt-2">
                         {['S', 'A', 'B', 'C', 'D'].map((grade) => (
                           <div key={grade} className="flex items-center space-x-1">
@@ -302,7 +296,7 @@ export default function NewNurseEvaluationV4Pattern5() {
 
                   <div>
                     <Label className="text-sm font-medium">4. 医療安全・感染対策の実践</Label>
-                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('superiorEval', 'safety', value as keyof typeof gradeToScore)}>
+                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('superiorEval', 'safety', value)}>
                       <div className="grid grid-cols-5 gap-2 mt-2">
                         {['S', 'A', 'B', 'C', 'D'].map((grade) => (
                           <div key={grade} className="flex items-center space-x-1">
@@ -326,7 +320,7 @@ export default function NewNurseEvaluationV4Pattern5() {
                 <div className="space-y-4">
                   <div>
                     <Label className="text-sm font-medium">1. 基礎看護技術の習得</Label>
-                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('selfEval', 'skills', value as keyof typeof gradeToScore)}>
+                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('selfEval', 'skills', value)}>
                       <div className="grid grid-cols-5 gap-2 mt-2">
                         {['S', 'A', 'B', 'C', 'D'].map((grade) => (
                           <div key={grade} className="flex items-center space-x-1">
@@ -340,7 +334,7 @@ export default function NewNurseEvaluationV4Pattern5() {
 
                   <div>
                     <Label className="text-sm font-medium">2. 看護知識の理解と応用</Label>
-                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('selfEval', 'knowledge', value as keyof typeof gradeToScore)}>
+                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('selfEval', 'knowledge', value)}>
                       <div className="grid grid-cols-5 gap-2 mt-2">
                         {['S', 'A', 'B', 'C', 'D'].map((grade) => (
                           <div key={grade} className="flex items-center space-x-1">
@@ -354,7 +348,7 @@ export default function NewNurseEvaluationV4Pattern5() {
 
                   <div>
                     <Label className="text-sm font-medium">3. 患者・家族への対応</Label>
-                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('selfEval', 'patient', value as keyof typeof gradeToScore)}>
+                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('selfEval', 'patient', value)}>
                       <div className="grid grid-cols-5 gap-2 mt-2">
                         {['S', 'A', 'B', 'C', 'D'].map((grade) => (
                           <div key={grade} className="flex items-center space-x-1">
@@ -368,7 +362,7 @@ export default function NewNurseEvaluationV4Pattern5() {
 
                   <div>
                     <Label className="text-sm font-medium">4. 医療安全・感染対策の実践</Label>
-                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('selfEval', 'safety', value as keyof typeof gradeToScore)}>
+                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('selfEval', 'safety', value)}>
                       <div className="grid grid-cols-5 gap-2 mt-2">
                         {['S', 'A', 'B', 'C', 'D'].map((grade) => (
                           <div key={grade} className="flex items-center space-x-1">
@@ -671,6 +665,16 @@ export default function NewNurseEvaluationV4Pattern5() {
                     {totalScore}点
                   </p>
                   <p className="text-gray-600 mt-2">100点満点</p>
+                  
+                  <div className="mt-4">
+                    <span className="text-lg font-semibold">評価ランク: </span>
+                    <span className={`text-2xl font-bold ${getScoreColor(totalScore)}`}>
+                      {totalScore >= 90 ? 'S' : 
+                       totalScore >= 80 ? 'A' : 
+                       totalScore >= 70 ? 'B' : 
+                       totalScore >= 60 ? 'C' : 'D'}
+                    </span>
+                  </div>
                 </div>
 
                 {/* 評価の内訳 */}
