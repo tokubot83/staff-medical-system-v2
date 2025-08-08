@@ -288,50 +288,50 @@ export default function TechnicalConfirmPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredEvaluations.map((eval) => (
-                      <tr key={eval.staffId} className="border-b hover:bg-gray-50">
+                    {filteredEvaluations.map((evaluation) => (
+                      <tr key={evaluation.staffId} className="border-b hover:bg-gray-50">
                         <td className="py-3 px-4">
-                          <p className="font-medium">{eval.staffName}</p>
-                          <p className="text-xs text-gray-500">ID: {eval.staffId}</p>
+                          <p className="font-medium">{evaluation.staffName}</p>
+                          <p className="text-xs text-gray-500">ID: {evaluation.staffId}</p>
                         </td>
                         <td className="py-3 px-4">
-                          <p className="text-sm">{eval.department}</p>
-                          <p className="text-xs text-gray-500">{eval.position}</p>
+                          <p className="text-sm">{evaluation.department}</p>
+                          <p className="text-xs text-gray-500">{evaluation.position}</p>
                         </td>
                         <td className="py-3 px-4 text-center">
-                          <p className="font-medium">{eval.selfScore.toFixed(1)}</p>
+                          <p className="font-medium">{evaluation.selfScore.toFixed(1)}</p>
                           <p className="text-xs text-gray-500">40%</p>
                         </td>
                         <td className="py-3 px-4 text-center">
-                          <p className="font-medium">{eval.supervisorScore.toFixed(1)}</p>
+                          <p className="font-medium">{evaluation.supervisorScore.toFixed(1)}</p>
                           <p className="text-xs text-gray-500">60%</p>
                         </td>
                         <td className="py-3 px-4 text-center">
-                          <p className="text-lg font-bold text-blue-600">{eval.totalScore.toFixed(1)}</p>
+                          <p className="text-lg font-bold text-blue-600">{evaluation.totalScore.toFixed(1)}</p>
                         </td>
                         <td className="py-3 px-4 text-center">
-                          {getGradeBadge(eval.grade)}
+                          {getGradeBadge(evaluation.grade)}
                         </td>
                         <td className="py-3 px-4 text-center">
-                          {getStatusBadge(eval.status)}
+                          {getStatusBadge(evaluation.status)}
                         </td>
                         <td className="py-3 px-4 text-center">
-                          {eval.status === 'pending_approval' && (
+                          {evaluation.status === 'pending_approval' && (
                             <Button size="sm" variant="default">
                               確定
                             </Button>
                           )}
-                          {eval.status === 'draft' && (
+                          {evaluation.status === 'draft' && (
                             <Button size="sm" variant="outline">
                               編集
                             </Button>
                           )}
-                          {eval.status === 'confirmed' && (
+                          {evaluation.status === 'confirmed' && (
                             <Button size="sm" variant="outline">
                               <Lock className="h-4 w-4" />
                             </Button>
                           )}
-                          {eval.status === 'locked' && (
+                          {evaluation.status === 'locked' && (
                             <Unlock className="h-4 w-4 text-gray-400" />
                           )}
                         </td>

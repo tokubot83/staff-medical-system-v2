@@ -826,6 +826,8 @@ export default function RecruitmentPage() {
           {activeTab === 'interviews' && renderInterviews()}
           {activeTab === 'onboarding' && renderOnboarding()}
           {activeTab === 'analytics' && renderAnalytics()}
+          {activeTab === 'placement' && renderPlacement()}
+          {activeTab === 'talent' && renderTalent()}
         </div>
 
         {selectedJobPosting && (

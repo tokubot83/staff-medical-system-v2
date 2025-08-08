@@ -1,10 +1,7 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import CommonHeader from '@/components/CommonHeader'
-import DashboardButton from '@/components/DashboardButton'
-import styles from './HrStrategy.module.css'
-import { facilities } from '@/app/data/facilityData'
+import React, { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 // タブの定義
 const tabs = [
