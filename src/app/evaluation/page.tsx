@@ -52,7 +52,7 @@ const tabs = [
   { id: 'overview', label: '評価概要', icon: '🏠' },
   { id: 'technical', label: '技術評価フロー', icon: '🎯', badge: '50点' },
   { id: 'contribution', label: '貢献度評価フロー', icon: '🤝', badge: '50点' },
-  { id: 'integration', label: '統合・最終評価', icon: '📊' },
+  { id: 'integration', label: '総合評価フロー', icon: '📊' },
   { id: 'settings', label: '設定・管理', icon: '⚙️' },
 ]
 
@@ -445,7 +445,7 @@ export default function EvaluationManagement() {
             </div>
           )}
 
-          {/* 統合・最終評価タブ */}
+          {/* 総合評価フロータブ */}
           {activeTab === 'integration' && (
             <div className={styles.integrationContent}>
               <div className={styles.integrationSection}>
