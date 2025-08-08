@@ -22,7 +22,7 @@ interface SheetItem {
   description: string;
 }
 
-export default function HRSystemGuidePage() {
+const HRSystemGuidePage = () => {
   const [activeTab, setActiveTab] = useState<'evaluation' | 'interview' | 'training' | 'sheets' | 'guidelines'>('evaluation');
   const [guidelineSubTab, setGuidelineSubTab] = useState<'organization' | 'info-collection' | 'system-design' | 'trial-adjustment' | 'process'>('organization');
   const [viewMode, setViewMode] = useState<'general' | 'formal'>('general');
@@ -2622,4 +2622,6 @@ export default function HRSystemGuidePage() {
       <DashboardButton />
     </div>
   );
-}
+};
+
+export default HRSystemGuidePage;
