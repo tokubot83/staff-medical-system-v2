@@ -9,6 +9,7 @@ import InterviewSheetModal from '@/components/InterviewSheetModal';
 import TrainingContent from './TrainingContent';
 import JinzaiPreparationLayout from './JinzaiPreparationLayout';
 import ActionPlanLayout from './ActionPlanLayout';
+import DesignPhaseLayout from './DesignPhaseLayout';
 import {
   Users, Briefcase, GraduationCap, LineChart, 
   CheckCircle, Calendar, Target, Star,
@@ -2206,15 +2207,7 @@ export default function HRSystemGuidePage() {
 
             {/* 制度設計フェーズタブ */}
             {preparationSubTab === 'system-design' && (
-              <div className="bg-white rounded-xl shadow-lg p-6">
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">制度設計フェーズ</h2>
-                <p className="text-gray-600 mb-4">
-                  収集した情報を基に、実効性のある制度を設計します。
-                </p>
-                <div className="bg-purple-50 rounded-lg p-4">
-                  <p className="text-purple-800 font-semibold">実施期間：2026年1月〜2026年3月</p>
-                </div>
-              </div>
+              <DesignPhaseLayout />
             )}
 
             {/* 試行・調整フェーズタブ */}
