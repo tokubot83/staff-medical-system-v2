@@ -499,6 +499,9 @@ export default function Home() {
          <Link href="/staff-cards" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
           職員カルテ
          </Link>
+         <Link href="/recruitment" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
+          採用管理
+         </Link>
          <Link href="/interviews" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
           面談管理
          </Link>
@@ -510,12 +513,6 @@ export default function Home() {
          </Link>
          <Link href="/goals" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
           目標管理
-         </Link>
-         <Link href="/hr-strategy" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
-          人材戦略
-         </Link>
-         <Link href="/recruitment" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
-          採用管理
          </Link>
          <Link href="/health" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
           健康管理
