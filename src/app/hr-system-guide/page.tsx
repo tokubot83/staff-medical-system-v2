@@ -23,7 +23,7 @@ interface SheetItem {
 }
 
 export default function HRSystemGuidePage() {
-  const [activeTab, setActiveTab] = useState<'evaluation' | 'interview' | 'training' | 'sheets'>('evaluation');
+  const [activeTab, setActiveTab] = useState<'evaluation' | 'interview' | 'training' | 'sheets' | 'guidelines'>('evaluation');
   const [viewMode, setViewMode] = useState<'general' | 'formal'>('general');
   const [sheetType, setSheetType] = useState<'all' | 'interview'>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -132,6 +132,16 @@ export default function HRSystemGuidePage() {
               }`}
             >
               📄 シート閲覧
+            </button>
+            <button
+              onClick={() => setActiveTab('guidelines')}
+              className={`flex-1 py-3 px-6 rounded-lg font-medium transition-all ${
+                activeTab === 'guidelines'
+                  ? 'bg-blue-500 text-white shadow-md'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              📋 ガイドライン
             </button>
           </div>
         </div>
@@ -1755,8 +1765,10 @@ export default function HRSystemGuidePage() {
         )}
 
 
-        {/* 評価項目決定プロセスのガイドライン */}
-        {activeTab === 'evaluation' && (
+        {/* ガイドラインセクション */}
+        {activeTab === 'guidelines' && (
+          <div className="space-y-6">
+            {/* 評価項目決定プロセスのガイドライン */}
           <div className="bg-indigo-50 rounded-xl shadow-lg p-6 mt-8">
             <h2 className="text-2xl font-bold text-indigo-800 mb-4">評価項目決定プロセスガイドライン</h2>
             
@@ -1916,10 +1928,8 @@ export default function HRSystemGuidePage() {
               </div>
             </div>
           </div>
-        )}
 
-        {/* 法人人事部準備室向け参考資料 */}
-        {activeTab === 'evaluation' && (
+            {/* 法人人事部準備室向け参考資料 */}
           <div className="bg-gray-100 rounded-xl shadow-lg p-6 mt-8">
             <h2 className="text-2xl font-bold text-gray-800 mb-4">法人人事部準備室向け参考資料</h2>
             
@@ -2116,6 +2126,7 @@ export default function HRSystemGuidePage() {
                 </div>
               </div>
             </div>
+          </div>
           </div>
         )}
 
