@@ -10,6 +10,7 @@ import TrainingContent from './TrainingContent';
 import JinzaiPreparationLayout from './JinzaiPreparationLayout';
 import ActionPlanLayout from './ActionPlanLayout';
 import DesignPhaseLayout from './DesignPhaseLayout';
+import TrialPhaseLayout from './TrialPhaseLayout';
 import {
   Users, Briefcase, GraduationCap, LineChart, 
   CheckCircle, Calendar, Target, Star,
@@ -2212,15 +2213,7 @@ export default function HRSystemGuidePage() {
 
             {/* 試行・調整フェーズタブ */}
             {preparationSubTab === 'trial-adjustment' && (
-              <div className="bg-white rounded-xl shadow-lg p-6">
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">試行・調整フェーズ</h2>
-                <p className="text-gray-600 mb-4">
-                  制度の試行運用を行い、現場のフィードバックを基に調整を行います。
-                </p>
-                <div className="bg-amber-50 rounded-lg p-4">
-                  <p className="text-amber-800 font-semibold">実施期間：2026年4月〜2026年6月</p>
-                </div>
-              </div>
+              <TrialPhaseLayout />
             )}
           </div>
         )}
