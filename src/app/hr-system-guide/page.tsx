@@ -8,6 +8,7 @@ import SheetPreviewModal from '@/components/SheetPreviewModal';
 import InterviewSheetModal from '@/components/InterviewSheetModal';
 import TrainingContent from './TrainingContent';
 import JinzaiPreparationLayout from './JinzaiPreparationLayout';
+import ActionPlanLayout from './ActionPlanLayout';
 import {
   Users, Briefcase, GraduationCap, LineChart, 
   CheckCircle, Calendar, Target, Star,
