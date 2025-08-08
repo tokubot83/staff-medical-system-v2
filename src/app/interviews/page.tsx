@@ -13,18 +13,21 @@ import InterviewSheetSelector from '@/components/interview/InterviewSheetSelecto
 import InterviewSheetWrapper from '@/components/interview/InterviewSheetWrapper'
 import { getExperienceCategory } from '@/utils/experienceUtils'
 
+// 第1段階実装: タブ順序を業務フローに合わせて修正
 const tabs = [
+  { id: 'dashboard', label: 'ダッシュボード', icon: '🏠', badge: '', isNew: true },
   { id: 'schedule', label: '面談予定', icon: '📅' },
-  { id: 'history', label: '面談履歴', icon: '📝' },
-  { id: 'feedback', label: 'フィードバック', icon: '💬' },
-  { id: 'sheets', label: '面談シート', icon: '📄' },
-  { id: 'report', label: 'レポート', icon: '📊' },
+  { id: 'sheets', label: '面談実施', icon: '📄' },
+  { id: 'record', label: '結果記録', icon: '📝' },
+  { id: 'history', label: '履歴・分析', icon: '📊' },
+  { id: 'guide', label: 'ガイド', icon: '❓', isNew: true },
   { id: 'settings', label: '設定', icon: '⚙️' },
 ]
 
 
 export default function InterviewsPage() {
-  const [activeTab, setActiveTab] = useState('schedule')
+  const [activeTab, setActiveTab] = useState('dashboard')
+  const [showGuideModal, setShowGuideModal] = useState(false)
   const [selectedInterview, setSelectedInterview] = useState<Interview | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedFacility, setSelectedFacility] = useState('all')
@@ -43,7 +46,7 @@ export default function InterviewsPage() {
 
   const handleInterviewSelect = (interview: Interview) => {
     setSelectedInterview(interview)
-    setActiveTab('feedback')
+    setActiveTab('record') // フィードバック→結果記録に変更
   }
 
   const handleSaveInterview = (interviewData: Partial<Interview>) => {
@@ -120,12 +123,17 @@ export default function InterviewsPage() {
               className={`${styles.tabButton} ${activeTab === tab.id ? styles.active : ''}`}
             >
               <span className={styles.tabIcon}>{tab.icon}</span>
-              <span className={styles.tabLabel}>{tab.label}</span>
+              <span className={styles.tabLabel}>
+                {tab.label}
+                {tab.isNew && <span className={styles.newBadge}>New</span>}
+              </span>
+              {tab.badge && <span className={styles.tabBadge}>{tab.badge}</span>}
             </button>
           ))}
         </div>
 
         <div className={styles.tabContent}>
+          {activeTab === 'dashboard' && <DashboardTab />}
           {activeTab === 'schedule' && (
             <ScheduleTab 
               interviews={filteredInterviews.filter(i => i.status === 'scheduled')}
@@ -151,9 +159,9 @@ export default function InterviewsPage() {
               onDateRangeChange={setDateRange}
             />
           )}
-          {activeTab === 'feedback' && <FeedbackTab selectedInterview={selectedInterview} />}
           {activeTab === 'sheets' && <InterviewSheetsTab />}
-          {activeTab === 'report' && <ReportTab />}
+          {activeTab === 'record' && <RecordTab selectedInterview={selectedInterview} />}
+          {activeTab === 'guide' && <GuideTab />}
           {activeTab === 'settings' && <SettingsTab />}
         </div>
       </div>
@@ -168,6 +176,230 @@ export default function InterviewsPage() {
         interview={editingInterview}
       />
       <DashboardButton />
+    </div>
+  )
+}
+
+// 第1段階実装: 新規追加 - ダッシュボードタブ
+function DashboardTab(): React.ReactElement {
+  // 面談タイプのデータ（実際の統計に置き換え予定）
+  const interviewTypes = [
+    { type: 'new_employee_monthly', label: '新入職員月次面談', count: 12, required: 15, rate: 80 },
+    { type: 'regular_annual', label: '一般職員年次面談', count: 45, required: 60, rate: 75 },
+    { type: 'management_biannual', label: '管理職半年面談', count: 8, required: 10, rate: 80 },
+    { type: 'incident_followup', label: 'インシデント後面談', count: 2, urgent: true },
+    { type: 'return_to_work', label: '復職面談', count: 1, scheduled: 2 },
+    { type: 'career_development', label: 'キャリア開発面談', count: 5, pending: 3 },
+    { type: 'stress_care', label: 'ストレスケア面談', count: 3, urgent: true },
+    { type: 'performance_review', label: '人事評価面談', count: 30, required: 50, rate: 60 },
+    { type: 'grievance', label: '苦情・相談面談', count: 2, pending: 1 },
+    { type: 'exit_interview', label: '退職面談', count: 1, scheduled: 1 },
+    { type: 'ad_hoc', label: '随時面談', count: 7, available: true },
+  ]
+
+  const todayTasks = [
+    { time: '09:00', type: '新入職員月次面談', name: '山田花子', location: '面談室A' },
+    { time: '14:00', type: 'キャリア開発面談', name: '佐藤太郎', location: '面談室B' },
+    { time: '16:00', type: 'ストレスケア面談', name: '鈴木一郎', location: 'オンライン' },
+  ]
+
+  return (
+    <div className={styles.dashboardContainer}>
+      <h2>面談管理ダッシュボード</h2>
+      
+      <div className={styles.dashboardGrid}>
+        {/* 本日のタスク */}
+        <div className={styles.dashboardCard}>
+          <h3>📅 本日の面談予定</h3>
+          <div className={styles.todaysList}>
+            {todayTasks.map((task, index) => (
+              <div key={index} className={styles.todayItem}>
+                <span className={styles.todayTime}>{task.time}</span>
+                <span className={styles.todayType}>{task.type}</span>
+                <span className={styles.todayName}>{task.name}</span>
+                <span className={styles.todayLocation}>{task.location}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 緊急対応 */}
+        <div className={styles.dashboardCard}>
+          <h3>⚠️ 要対応・緊急</h3>
+          <div className={styles.urgentList}>
+            <div className={styles.urgentItem}>
+              <span className={styles.urgentBadge}>緊急</span>
+              インシデント後面談: 2件
+            </div>
+            <div className={styles.urgentItem}>
+              <span className={styles.urgentBadge}>期限切れ</span>
+              年次面談未実施: 15名
+            </div>
+            <div className={styles.urgentItem}>
+              <span className={styles.urgentBadge}>要確認</span>
+              ストレスケア面談: 3件
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 面談タイプ別状況 */}
+      <div className={styles.typeGrid}>
+        <h3>面談タイプ別実施状況</h3>
+        <div className={styles.typeCards}>
+          {interviewTypes.map((item, index) => (
+            <div key={index} className={styles.typeCard}>
+              <div className={styles.typeHeader}>
+                <span className={styles.typeName}>{item.label}</span>
+                {item.urgent && <span className={styles.urgentTag}>緊急</span>}
+              </div>
+              <div className={styles.typeStats}>
+                {item.rate !== undefined && (
+                  <div className={styles.progressBar}>
+                    <div 
+                      className={styles.progressFill} 
+                      style={{ width: `${item.rate}%` }}
+                    />
+                    <span className={styles.progressText}>{item.rate}%</span>
+                  </div>
+                )}
+                {item.required && (
+                  <div className={styles.typeCount}>
+                    実施: {item.count} / 対象: {item.required}
+                  </div>
+                )}
+                {item.pending && (
+                  <div className={styles.typePending}>
+                    申込待ち: {item.pending}件
+                  </div>
+                )}
+                {item.scheduled && (
+                  <div className={styles.typeScheduled}>
+                    予定: {item.scheduled}件
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// 第1段階実装: 新規追加 - ガイドタブ
+function GuideTab(): React.ReactElement {
+  return (
+    <div className={styles.guideContainer}>
+      <h2>面談管理システム ガイド</h2>
+      
+      <div className={styles.guideSection}>
+        <h3>📖 システム概要</h3>
+        <div className={styles.guideContent}>
+          <p>このシステムは、医療法人厚生会の面談制度を総合的に管理するためのシステムです。</p>
+          <p>11種類の面談タイプと13種類の相談カテゴリに対応し、職員と人事部の両方から利用できます。</p>
+        </div>
+      </div>
+
+      <div className={styles.guideSection}>
+        <h3>🎯 面談の種類（11種類）</h3>
+        <ul className={styles.guideList}>
+          <li><strong>新入職員月次面談</strong> - 入職1年未満の職員に月1回実施（必須）</li>
+          <li><strong>一般職員年次面談</strong> - 全職員対象、年1回実施（必須）</li>
+          <li><strong>管理職半年面談</strong> - 管理職対象、半年に1回実施（必須）</li>
+          <li><strong>インシデント後面談</strong> - インシデント発生後の職員フォロー</li>
+          <li><strong>復職面談</strong> - 休職からの復職時に実施</li>
+          <li><strong>キャリア開発面談</strong> - キャリア形成の相談（随時）</li>
+          <li><strong>ストレスケア面談</strong> - メンタルヘルスケア（随時）</li>
+          <li><strong>人事評価面談</strong> - 評価フィードバック（年2回）</li>
+          <li><strong>苦情・相談面談</strong> - 職場の問題相談（随時）</li>
+          <li><strong>退職面談</strong> - 退職予定者との面談</li>
+          <li><strong>随時面談</strong> - その他の相談（随時）</li>
+        </ul>
+      </div>
+
+      <div className={styles.guideSection}>
+        <h3>📝 相談カテゴリ（13種類）</h3>
+        <div className={styles.categoryGrid}>
+          <div className={styles.categoryItem}>キャリアパス</div>
+          <div className={styles.categoryItem}>スキル開発</div>
+          <div className={styles.categoryItem}>職場環境</div>
+          <div className={styles.categoryItem}>業務負荷・ワークライフバランス</div>
+          <div className={styles.categoryItem}>人間関係</div>
+          <div className={styles.categoryItem}>パフォーマンス</div>
+          <div className={styles.categoryItem}>給与・待遇</div>
+          <div className={styles.categoryItem}>研修・教育</div>
+          <div className={styles.categoryItem}>昇進・昇格</div>
+          <div className={styles.categoryItem}>異動・転勤</div>
+          <div className={styles.categoryItem}>健康・安全</div>
+          <div className={styles.categoryItem}>コンプライアンス</div>
+          <div className={styles.categoryItem}>その他</div>
+        </div>
+      </div>
+
+      <div className={styles.guideSection}>
+        <h3>🔄 業務フロー</h3>
+        <ol className={styles.flowList}>
+          <li><strong>ダッシュボード</strong>で全体状況を確認</li>
+          <li><strong>面談予定</strong>で予約管理</li>
+          <li><strong>面談実施</strong>で適切な面談シートを選択・記入</li>
+          <li><strong>結果記録</strong>で面談結果とアクションプランを記録</li>
+          <li><strong>履歴・分析</strong>で過去の面談を確認・分析</li>
+        </ol>
+      </div>
+
+      <div className={styles.implementationNote}>
+        <h3>🚀 今後の実装予定</h3>
+        
+        <div className={styles.phaseCard}>
+          <h4>第2段階実装（VoiceDrive連携準備）</h4>
+          <ul>
+            <li>予約管理機能の強化（カレンダービュー、承認フロー）</li>
+            <li>権限別表示の実装（人事部/一般職員の切り替え）</li>
+            <li>API エンドポイントの実装</li>
+            <li>通知システムの基盤構築</li>
+          </ul>
+          <div className={styles.implementationCommand}>
+            <code>
+              {`// 実装指示（Claude用）:
+// 1. 予約管理タブに月/週/日のカレンダービューを追加
+// 2. userRole に基づく条件分岐を実装
+// 3. /api/v1/interview/bookings のCRUD APIを実装
+// 4. WebSocket または Server-Sent Events で通知機能を実装`}
+            </code>
+          </div>
+        </div>
+
+        <div className={styles.phaseCard}>
+          <h4>第3段階実装（VoiceDrive連携）</h4>
+          <ul>
+            <li>VoiceDrive との双方向API連携</li>
+            <li>共通データベースの同期機能</li>
+            <li>スマホからの予約対応（VoiceDrive経由）</li>
+            <li>リアルタイム同期ステータス表示</li>
+          </ul>
+          <div className={styles.implementationCommand}>
+            <code>
+              {`// 実装指示（Claude用）:
+// 1. docs/interview-api-design.md に基づくAPI実装
+// 2. JWT認証の実装（docs/interview-api-design.md 参照）
+// 3. Webhook によるイベント駆動型同期
+// 4. 同期ステータス監視ダッシュボードの追加
+// 参照: docs/INTEGRATION_ARCHITECTURE.md`}
+            </code>
+          </div>
+        </div>
+
+        <div className={styles.phaseCard}>
+          <h4>参考ドキュメント</h4>
+          <ul>
+            <li><code>docs/interview-system-overview.md</code> - 面談制度の詳細仕様</li>
+            <li><code>docs/interview-api-design.md</code> - API設計書</li>
+            <li><code>docs/INTEGRATION_ARCHITECTURE.md</code> - VoiceDrive連携アーキテクチャ</li>
+            <li><code>src/types/interview.ts</code> - 型定義ファイル</li>
+          </ul>
+        </div>
+      </div>
     </div>
   )
 }
@@ -361,11 +593,12 @@ function HistoryTab({ interviews, onInterviewSelect, dateRange, onDateRangeChang
   )
 }
 
-interface FeedbackTabProps {
+// 第1段階実装: RecordTab（旧FeedbackTab）
+interface RecordTabProps {
   selectedInterview: Interview | null
 }
 
-function FeedbackTab({ selectedInterview }: FeedbackTabProps) {
+function RecordTab({ selectedInterview }: RecordTabProps) {
   if (!selectedInterview) {
     return (
       <div className={styles.noSelection}>
@@ -377,7 +610,7 @@ function FeedbackTab({ selectedInterview }: FeedbackTabProps) {
   return (
     <div className={styles.feedbackContainer}>
       <div className={styles.feedbackHeader}>
-        <h2>面談フィードバック</h2>
+        <h2>面談結果記録</h2>
         <div className={styles.interviewMeta}>
           <span>{selectedInterview.employeeName}</span>
           <span>{new Date(selectedInterview.bookingDate).toLocaleDateString('ja-JP')}</span>
@@ -397,10 +630,10 @@ function FeedbackTab({ selectedInterview }: FeedbackTabProps) {
         </div>
 
         <div className={styles.formSection}>
-          <h3>フィードバック内容</h3>
+          <h3>主な相談内容と対応</h3>
           <textarea 
             className={styles.textArea}
-            placeholder="フィードバック内容を入力してください"
+            placeholder="相談内容と対応を入力してください"
             rows={6}
             defaultValue={selectedInterview.outcomeActionItems?.join('\n') || ''}
           />
@@ -413,6 +646,13 @@ function FeedbackTab({ selectedInterview }: FeedbackTabProps) {
             placeholder="今後のアクションプランを入力してください"
             rows={4}
           />
+        </div>
+
+        <div className={styles.formSection}>
+          <h3>フォローアップ</h3>
+          <label>
+            <input type="checkbox" /> フォローアップが必要
+          </label>
         </div>
 
         <div className={styles.formActions}>
