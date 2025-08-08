@@ -7,6 +7,12 @@ import DashboardButton from '@/components/DashboardButton';
 import SheetPreviewModal from '@/components/SheetPreviewModal';
 import InterviewSheetModal from '@/components/InterviewSheetModal';
 import TrainingContent from './TrainingContent';
+import JinzaiPreparationLayout from './JinzaiPreparationLayout';
+import {
+  Users, Briefcase, GraduationCap, LineChart, 
+  CheckCircle, Calendar, Target, Star,
+  TrendingUp
+} from 'lucide-react';
 
 interface SheetItem {
   id: string;
@@ -23,7 +29,8 @@ interface SheetItem {
 }
 
 export default function HRSystemGuidePage() {
-  const [activeTab, setActiveTab] = useState<'evaluation' | 'interview' | 'training' | 'sheets'>('evaluation');
+  const [activeTab, setActiveTab] = useState<'evaluation' | 'interview' | 'training' | 'sheets' | 'preparation'>('evaluation');
+  const [preparationSubTab, setPreparationSubTab] = useState<'organization' | 'info-collection' | 'system-design' | 'trial-adjustment'>('organization');
   const [viewMode, setViewMode] = useState<'general' | 'formal'>('general');
   const [sheetType, setSheetType] = useState<'all' | 'interview'>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -132,6 +139,16 @@ export default function HRSystemGuidePage() {
               }`}
             >
               📄 シート閲覧
+            </button>
+            <button
+              onClick={() => setActiveTab('preparation')}
+              className={`flex-1 py-3 px-6 rounded-lg font-medium transition-all ${
+                activeTab === 'preparation'
+                  ? 'bg-blue-500 text-white shadow-md'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              🏗️ 準備室活動計画
             </button>
           </div>
         </div>
@@ -2116,6 +2133,101 @@ export default function HRSystemGuidePage() {
                 </div>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* 準備室活動計画セクション */}
+        {activeTab === 'preparation' && (
+          <div className="space-y-6">
+            {/* サブタブ切り替え */}
+            <div className="bg-white rounded-xl shadow-lg p-2">
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setPreparationSubTab('organization')}
+                  className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all text-sm ${
+                    preparationSubTab === 'organization'
+                      ? 'bg-blue-500 text-white shadow-md'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  🏢 準備室組織体制
+                </button>
+                <button
+                  onClick={() => setPreparationSubTab('info-collection')}
+                  className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all text-sm ${
+                    preparationSubTab === 'info-collection'
+                      ? 'bg-green-500 text-white shadow-md'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  🔍 情報収集フェーズ
+                </button>
+                <button
+                  onClick={() => setPreparationSubTab('system-design')}
+                  className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all text-sm ${
+                    preparationSubTab === 'system-design'
+                      ? 'bg-purple-500 text-white shadow-md'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  📝 制度設計フェーズ
+                </button>
+                <button
+                  onClick={() => setPreparationSubTab('trial-adjustment')}
+                  className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all text-sm ${
+                    preparationSubTab === 'trial-adjustment'
+                      ? 'bg-amber-500 text-white shadow-md'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  🔄 試行・調整フェーズ
+                </button>
+              </div>
+            </div>
+
+            {/* 準備室組織体制タブ */}
+            {preparationSubTab === 'organization' && (
+              <JinzaiPreparationLayout />
+            )}
+
+            {/* 情報収集フェーズタブ */}
+            {preparationSubTab === 'info-collection' && (
+              <div className="bg-white rounded-xl shadow-lg p-6">
+                <h2 className="text-2xl font-bold text-gray-800 mb-4">情報収集フェーズ</h2>
+                <p className="text-gray-600 mb-4">
+                  現場の声を丁寧に収集し、実態に即した制度設計の基盤を構築します。
+                </p>
+                <div className="bg-green-50 rounded-lg p-4">
+                  <p className="text-green-800 font-semibold">実施期間：2025年7月〜2025年12月</p>
+                </div>
+              </div>
+            )}
+
+            {/* 制度設計フェーズタブ */}
+            {preparationSubTab === 'system-design' && (
+              <div className="bg-white rounded-xl shadow-lg p-6">
+                <h2 className="text-2xl font-bold text-gray-800 mb-4">制度設計フェーズ</h2>
+                <p className="text-gray-600 mb-4">
+                  収集した情報を基に、実効性のある制度を設計します。
+                </p>
+                <div className="bg-purple-50 rounded-lg p-4">
+                  <p className="text-purple-800 font-semibold">実施期間：2026年1月〜2026年3月</p>
+                </div>
+              </div>
+            )}
+
+            {/* 試行・調整フェーズタブ */}
+            {preparationSubTab === 'trial-adjustment' && (
+              <div className="bg-white rounded-xl shadow-lg p-6">
+                <h2 className="text-2xl font-bold text-gray-800 mb-4">試行・調整フェーズ</h2>
+                <p className="text-gray-600 mb-4">
+                  制度の試行運用を行い、現場のフィードバックを基に調整を行います。
+                </p>
+                <div className="bg-amber-50 rounded-lg p-4">
+                  <p className="text-amber-800 font-semibold">実施期間：2026年4月〜2026年6月</p>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
