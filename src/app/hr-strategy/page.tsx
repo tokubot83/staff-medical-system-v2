@@ -3,45 +3,26 @@
 import React, { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
-// タブの定義
-const tabs = [
-  { id: 'dashboard', label: '戦略ダッシュボード', icon: '📊' },
-  { id: 'transfer', label: '異動プランニング', icon: '🔄' },
-  { id: 'talent', label: 'タレント管理', icon: '🎯' },
-  { id: 'optimization', label: '組織最適化', icon: '📈' },
-]
-
 export default function HrStrategyPage() {
-  const [activeTab, setActiveTab] = useState('dashboard')
+  const router = useRouter()
+  
+  useEffect(() => {
+    // 採用管理ページの人材配置タブへリダイレクト
+    router.replace('/recruitment?tab=placement')
+  }, [router])
 
   return (
-    <div>
-      <CommonHeader title="人材戦略プランニング" />
-      
-      <div className={styles.container}>
-        {/* タブナビゲーション */}
-        <div className={styles.tabNavigation}>
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`${styles.tabButton} ${activeTab === tab.id ? styles.active : ''}`}
-            >
-              <span className={styles.tabIcon}>{tab.icon}</span>
-              <span className={styles.tabLabel}>{tab.label}</span>
-            </button>
-          ))}
-        </div>
-
-        {/* タブコンテンツ */}
-        <div className={styles.tabContent}>
-          {activeTab === 'dashboard' && <StrategyDashboard />}
-          {activeTab === 'transfer' && <TransferPlanning />}
-          {activeTab === 'talent' && <TalentManagement />}
-          {activeTab === 'optimization' && <OrganizationOptimization />}
-        </div>
+    <div style={{ 
+      display: 'flex', 
+      justifyContent: 'center', 
+      alignItems: 'center', 
+      height: '100vh',
+      backgroundColor: '#f5f5f5'
+    }}>
+      <div style={{ textAlign: 'center' }}>
+        <h2>リダイレクト中...</h2>
+        <p>採用管理ページへ移動しています</p>
       </div>
-      <DashboardButton />
     </div>
   )
 }
