@@ -1995,15 +1995,7 @@ export default function HRSystemGuidePage() {
 
             {/* 情報収集フェーズタブ */}
             {preparationSubTab === 'info-collection' && (
-              <div className="bg-white rounded-xl shadow-lg p-6">
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">情報収集フェーズ</h2>
-                <p className="text-gray-600 mb-4">
-                  現場の声を丁寧に収集し、実態に即した制度設計の基盤を構築します。
-                </p>
-                <div className="bg-green-50 rounded-lg p-4">
-                  <p className="text-green-800 font-semibold">実施期間：2025年7月〜2025年12月</p>
-                </div>
-              </div>
+              <ActionPlanLayout />
             )}
 
             {/* 制度設計フェーズタブ */}
