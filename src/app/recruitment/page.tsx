@@ -25,6 +25,8 @@ export default function RecruitmentPage() {
   const [activeTab, setActiveTab] = useState<TabType>('jobPostings');
   const [selectedJobPosting, setSelectedJobPosting] = useState<JobPosting | null>(null);
   const [selectedApplicant, setSelectedApplicant] = useState<Applicant | null>(null);
+  const [selectedStaff, setSelectedStaff] = useState<any>(null);
+  const [filterType, setFilterType] = useState('all');
   const router = useRouter();
 
   const getStatusBadgeClass = (status: string) => {
@@ -304,8 +306,6 @@ export default function RecruitmentPage() {
   );
 
   const renderPlacement = () => {
-    const [selectedStaff, setSelectedStaff] = useState<any>(null);
-    const [filterType, setFilterType] = useState('all');
 
     // デモスタッフデータ（簡略版）
     const staffData = [
