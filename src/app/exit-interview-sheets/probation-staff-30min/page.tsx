@@ -4,7 +4,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Printer } from 'lucide-react';
-import ProbationStaff30MinExitInterviewSheet from '../../../../../../docs/exit-interview-sheets/probation-staff-30min';
+import ProbationStaff30MinExitInterviewSheet from '@/docs/exit-interview-sheets/probation-staff-30min';
 
 export default function ProbationStaff30MinPage() {
   const router = useRouter();
