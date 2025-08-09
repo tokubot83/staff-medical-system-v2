@@ -12,6 +12,7 @@ import InterviewModal from '@/components/InterviewModal'
 import InterviewSheetSelector from '@/components/interview/InterviewSheetSelector'
 import InterviewSheetWrapper from '@/components/interview/InterviewSheetWrapper'
 import { getExperienceCategory } from '@/utils/experienceUtils'
+import RoleSelectionModal from '@/components/RoleSelectionModal'
 
 // 第1段階実装: タブ順序を業務フローに合わせて修正
 const tabs = [
@@ -39,6 +40,8 @@ export default function InterviewsPage() {
     start: '',
     end: ''
   })
+  const [showRoleModal, setShowRoleModal] = useState(false)
+  const [selectedInterviewType, setSelectedInterviewType] = useState<string>('')
 
   useEffect(() => {
     setInterviews(mockInterviews)
@@ -88,6 +91,49 @@ export default function InterviewsPage() {
     }
     setShowAddModal(false)
     setEditingInterview(null)
+  }
+
+  const handleInterviewTypeClick = (type: string) => {
+    if (type === 'new-employee') {
+      setSelectedInterviewType(type)
+      setShowRoleModal(true)
+    } else if (type === 'regular-annual') {
+      setSelectedInterviewType(type)
+      setShowRoleModal(true)
+    } else if (type === 'management') {
+      setSelectedInterviewType(type)
+      setShowRoleModal(true)
+    } else {
+      window.location.href = `/interview-sheets-viewer?type=${type}`
+    }
+  }
+
+  const handleRoleSelect = (role: string) => {
+    window.location.href = `/interview-sheets-viewer?type=${selectedInterviewType}&role=${role}`
+  }
+
+  const getRoleOptions = (type: string) => {
+    if (type === 'new-employee') {
+      return [
+        { value: 'nurse', label: '看護師（新人）', description: '1年目の看護師' },
+        { value: 'assistant-nurse', label: '准看護師（新人）', description: '1年目の准看護師' },
+        { value: 'nursing-aide', label: '看護補助者（新人）', description: '1年目の看護補助者' }
+      ]
+    } else if (type === 'regular-annual') {
+      return [
+        { value: 'nurse', label: '看護師', description: '2年目以降の看護師' },
+        { value: 'assistant-nurse', label: '准看護師', description: '2年目以降の准看護師' },
+        { value: 'nursing-aide', label: '看護補助者', description: '2年目以降の看護補助者' },
+        { value: 'leader-nurse', label: '主任看護師', description: 'リーダー職の看護師' },
+        { value: 'chief-nurse', label: '病棟師長', description: '管理職の看護師' }
+      ]
+    } else if (type === 'management') {
+      return [
+        { value: 'leader-nurse', label: '主任看護師', description: '主任職' },
+        { value: 'chief-nurse', label: '病棟師長', description: '師長職' }
+      ]
+    }
+    return []
   }
 
   const filteredInterviews = interviews.filter((interview) => {
@@ -161,7 +207,7 @@ export default function InterviewsPage() {
           )}
           {activeTab === 'sheets' && <InterviewSheetsTab />}
           {activeTab === 'record' && <RecordTab selectedInterview={selectedInterview} />}
-          {activeTab === 'guide' && <GuideTab />}
+          {activeTab === 'guide' && <GuideTab onInterviewTypeClick={handleInterviewTypeClick} />}
           {activeTab === 'settings' && <SettingsTab />}
         </div>
       </div>
@@ -174,6 +220,18 @@ export default function InterviewsPage() {
         }}
         onSave={handleSaveInterview}
         interview={editingInterview}
+      />
+      <RoleSelectionModal
+        isOpen={showRoleModal}
+        onClose={() => setShowRoleModal(false)}
+        onSelect={handleRoleSelect}
+        title={
+          selectedInterviewType === 'new-employee' ? '新入職員月次面談 - 職種選択' :
+          selectedInterviewType === 'regular-annual' ? '一般職員年次面談 - 職種選択' :
+          selectedInterviewType === 'management' ? '管理職半年面談 - 職種選択' :
+          '職種選択'
+        }
+        roles={getRoleOptions(selectedInterviewType)}
       />
       <DashboardButton />
     </div>
@@ -288,7 +346,11 @@ function DashboardTab(): React.ReactElement {
 }
 
 // 第1段階実装: 新規追加 - ガイドタブ
-function GuideTab(): React.ReactElement {
+interface GuideTabProps {
+  onInterviewTypeClick: (type: string) => void
+}
+
+function GuideTab({ onInterviewTypeClick }: GuideTabProps): React.ReactElement {
   return (
     <div className={styles.guideContainer}>
       <h2>面談管理システム ガイド</h2>
@@ -310,7 +372,7 @@ function GuideTab(): React.ReactElement {
               <span className={styles.typeDescription}>入職1年未満の職員に月1回実施（必須）</span>
             </div>
             <button 
-              onClick={() => window.location.href = '/interview-sheets-viewer?type=new-employee'}
+              onClick={() => onInterviewTypeClick('new-employee')}
               className={styles.sheetButton}
             >
               📄 面談シート
@@ -323,7 +385,7 @@ function GuideTab(): React.ReactElement {
               <span className={styles.typeDescription}>全職員対象、年1回実施（必須）</span>
             </div>
             <button 
-              onClick={() => window.location.href = '/interview-sheets-viewer?type=regular-annual'}
+              onClick={() => onInterviewTypeClick('regular-annual')}
               className={styles.sheetButton}
             >
               📄 面談シート
@@ -336,7 +398,7 @@ function GuideTab(): React.ReactElement {
               <span className={styles.typeDescription}>管理職対象、半年に1回実施（必須）</span>
             </div>
             <button 
-              onClick={() => window.location.href = '/interview-sheets-viewer?type=management'}
+              onClick={() => onInterviewTypeClick('management')}
               className={styles.sheetButton}
             >
               📄 面談シート

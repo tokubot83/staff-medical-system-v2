@@ -6,28 +6,52 @@ import Link from 'next/link';
 import CommonHeader from '@/components/CommonHeader';
 import DashboardButton from '@/components/DashboardButton';
 
+interface Sheet {
+  label: string;
+  paths: {
+    [key: string]: string;
+  };
+}
+
+interface SheetCategory {
+  category: string;
+  sheets: Sheet[];
+}
+
 function InterviewSheetsViewerContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [interviewType, setInterviewType] = useState<string | null>(null);
+  const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {
     const type = searchParams.get('type');
+    const roleParam = searchParams.get('role');
+    
     if (type) {
       setInterviewType(type);
-      // 面談タイプに応じて適切なカテゴリを自動選択
-      if (type === 'new-employee') {
+      setRole(roleParam);
+      
+      // 職種パラメータに基づいてカテゴリを自動選択
+      if (roleParam === 'nurse') {
         setSelectedCategory('看護師');
-      } else if (type === 'regular-annual') {
+      } else if (roleParam === 'assistant-nurse') {
+        setSelectedCategory('准看護師');
+      } else if (roleParam === 'nursing-aide') {
+        setSelectedCategory('看護補助者');
+      } else if (roleParam === 'leader-nurse') {
         setSelectedCategory('看護師');
-      } else if (type === 'management') {
+      } else if (roleParam === 'chief-nurse') {
+        setSelectedCategory('看護師');
+      } else {
+        // パラメータがない場合はデフォルトで看護師
         setSelectedCategory('看護師');
       }
     }
   }, [searchParams]);
 
-  const interviewSheets = [
+  const interviewSheets: SheetCategory[] = [
     {
       category: '看護師',
       sheets: [
@@ -159,16 +183,71 @@ function InterviewSheetsViewerContent() {
 
   // 面談タイプごとのメッセージ
   const getTypeMessage = () => {
+    let message = '';
+    
     switch(interviewType) {
       case 'new-employee':
-        return '新入職員月次面談用のシートを選択してください';
+        message = '新入職員月次面談';
+        break;
       case 'regular-annual':
-        return '一般職員年次面談用のシートを選択してください';
+        message = '一般職員年次面談';
+        break;
       case 'management':
-        return '管理職半年面談用のシートを選択してください';
+        message = '管理職半年面談';
+        break;
       default:
         return null;
     }
+    
+    // 職種名を追加
+    if (role) {
+      const roleNames: { [key: string]: string } = {
+        'nurse': '看護師',
+        'assistant-nurse': '准看護師',
+        'nursing-aide': '看護補助者',
+        'leader-nurse': '主任看護師',
+        'chief-nurse': '病棟師長'
+      };
+      const roleName = roleNames[role] || '';
+      if (roleName) {
+        message += ` - ${roleName}`;
+      }
+    }
+    
+    return message + '用のシートを選択してください';
+  };
+  
+  // 表示するシートをフィルタリング
+  const getFilteredSheets = (sheets: Sheet[]) => {
+    if (!role) return sheets;
+    
+    // 新入職員月次面談の場合は1年目のシートのみ表示
+    if (interviewType === 'new-employee') {
+      return sheets.filter(sheet => sheet.label.includes('1年目') || sheet.label.includes('新人'));
+    }
+    
+    // 一般職員年次面談の場合
+    if (interviewType === 'regular-annual') {
+      if (role === 'leader-nurse') {
+        return sheets.filter(sheet => sheet.label.includes('主任'));
+      } else if (role === 'chief-nurse') {
+        return sheets.filter(sheet => sheet.label.includes('師長'));
+      } else {
+        // 管理職以外は全て表示（管理職を除く）
+        return sheets.filter(sheet => !sheet.label.includes('主任') && !sheet.label.includes('師長'));
+      }
+    }
+    
+    // 管理職半年面談の場合
+    if (interviewType === 'management') {
+      if (role === 'leader-nurse') {
+        return sheets.filter(sheet => sheet.label.includes('主任'));
+      } else if (role === 'chief-nurse') {
+        return sheets.filter(sheet => sheet.label.includes('師長'));
+      }
+    }
+    
+    return sheets;
   };
 
   return (
@@ -198,7 +277,7 @@ function InterviewSheetsViewerContent() {
             <p className="text-center text-blue-600 mb-6">{getTypeMessage()}</p>
           )}
           
-          {!selectedCategory ? (
+          {!selectedCategory && !role ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {interviewSheets.map((category, index) => (
               <button
@@ -218,23 +297,27 @@ function InterviewSheetsViewerContent() {
           </div>
         ) : (
           <>
-            <div className="mb-6">
-              <button
-                onClick={() => setSelectedCategory(null)}
-                className="text-blue-600 hover:text-blue-800 text-sm"
-              >
-                ← カテゴリ一覧に戻る
-              </button>
-            </div>
+            {!role && (
+              <div className="mb-6">
+                <button
+                  onClick={() => setSelectedCategory(null)}
+                  className="text-blue-600 hover:text-blue-800 text-sm"
+                >
+                  ← カテゴリ一覧に戻る
+                </button>
+              </div>
+            )}
             
             <h2 className="text-lg font-semibold mb-6 text-gray-700">
               {selectedCategory}用面談シート
             </h2>
             
             <div className="space-y-4">
-              {interviewSheets
-                .find(cat => cat.category === selectedCategory)
-                ?.sheets.map((sheet, sheetIndex) => (
+              {getFilteredSheets(
+                interviewSheets
+                  .find(cat => cat.category === selectedCategory)
+                  ?.sheets || []
+              ).map((sheet, sheetIndex) => (
                   <div
                     key={sheetIndex}
                     className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50"
