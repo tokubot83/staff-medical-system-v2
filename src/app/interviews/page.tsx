@@ -74,7 +74,7 @@ export default function InterviewsPage() {
         bookingDate: interviewData.bookingDate || new Date().toISOString().split('T')[0],
         startTime: interviewData.startTime || '10:00',
         endTime: interviewData.endTime || '11:00',
-        interviewType: interviewData.interviewType || 'ad_hoc',
+        interviewType: interviewData.interviewType || 'individual_consultation',
         interviewCategory: interviewData.interviewCategory || 'other',
         requestedTopics: interviewData.requestedTopics || [],
         description: interviewData.description || '',
@@ -256,18 +256,17 @@ function DashboardTab(): React.ReactElement {
     { type: 'management_biannual', label: '管理職半年面談', count: 8, required: 10, rate: 80 },
     { type: 'incident_followup', label: 'インシデント後面談', count: 2, urgent: true },
     { type: 'return_to_work', label: '復職面談', count: 1, scheduled: 2 },
-    { type: 'career_development', label: 'キャリア開発面談', count: 5, pending: 3 },
-    { type: 'stress_care', label: 'ストレスケア面談', count: 3, urgent: true },
-    { type: 'performance_review', label: '人事評価面談', count: 30, required: 50, rate: 60 },
-    { type: 'grievance', label: '苦情・相談面談', count: 2, pending: 1 },
+    { type: 'feedback', label: 'フィードバック面談', count: 30, required: 50, rate: 60 },
+    { type: 'career_support', label: 'キャリア系面談', count: 5, pending: 3 },
+    { type: 'workplace_support', label: '職場環境系面談', count: 5, pending: 2 },
     { type: 'exit_interview', label: '退職面談', count: 1, scheduled: 1 },
-    { type: 'ad_hoc', label: '随時面談', count: 7, available: true },
+    { type: 'individual_consultation', label: '個別相談面談', count: 7, available: true },
   ]
 
   const todayTasks = [
     { time: '09:00', type: '新入職員月次面談', name: '山田花子', location: '面談室A' },
-    { time: '14:00', type: 'キャリア開発面談', name: '佐藤太郎', location: '面談室B' },
-    { time: '16:00', type: 'ストレスケア面談', name: '鈴木一郎', location: 'オンライン' },
+    { time: '14:00', type: 'キャリア系面談', name: '佐藤太郎', location: '面談室B' },
+    { time: '16:00', type: '職場環境系面談', name: '鈴木一郎', location: 'オンライン' },
   ]
 
   return (

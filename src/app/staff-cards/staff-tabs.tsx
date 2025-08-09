@@ -1026,16 +1026,15 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
     // InterviewTypeをInterviewRecordのtypeにマッピング
     const typeMapping: Record<string, 'regular' | 'career' | 'stress' | 'evaluation' | 'other'> = {
       'regular_annual': 'regular',
-      'career_development': 'career',
-      'stress_care': 'stress',
-      'performance_review': 'evaluation',
       'new_employee_monthly': 'regular',
       'management_biannual': 'regular',
       'incident_followup': 'other',
       'return_to_work': 'other',
-      'grievance': 'other',
       'exit_interview': 'other',
-      'ad_hoc': 'other'
+      'individual_consultation': 'other',
+      'feedback': 'evaluation',
+      'career_support': 'career',
+      'workplace_support': 'stress'
     }
     
     return {

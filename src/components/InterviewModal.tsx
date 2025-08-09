@@ -148,9 +148,13 @@ export default function InterviewModal({
                 <option value="new_employee_monthly">新入職員月次面談</option>
                 <option value="regular_annual">一般職員年次面談</option>
                 <option value="management_biannual">管理職半年面談</option>
-                <option value="career_development">キャリア開発面談</option>
-                <option value="stress_care">ストレスケア面談</option>
-                <option value="ad_hoc">随時面談</option>
+                <option value="return_to_work">復職面談</option>
+                <option value="incident_followup">インシデント後面談</option>
+                <option value="exit_interview">退職面談</option>
+                <option value="feedback">フィードバック面談</option>
+                <option value="career_support">キャリア系面談</option>
+                <option value="workplace_support">職場環境系面談</option>
+                <option value="individual_consultation">個別相談面談</option>
               </select>
             </div>
             <div className={styles.formGroup}>
