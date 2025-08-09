@@ -4,7 +4,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Printer } from 'lucide-react';
-import ManagerVeteran60MinExitInterviewSheet from '@/docs/exit-interview-sheets/manager-veteran-60min';
+import ManagerVeteran60MinExitInterviewSheet from '@/components/exit-interview-sheets/manager-veteran-60min';
 
 export default function ManagerVeteran60MinPage() {
   const router = useRouter();
