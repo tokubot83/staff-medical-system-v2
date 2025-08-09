@@ -431,6 +431,13 @@ export default function HRSystemGuidePage() {
             {/* 実際の評価項目 */}
             <div className="bg-white rounded-xl shadow-lg p-6">
               <h3 className="text-xl font-bold text-gray-800 mb-4">ステップ1：評価シートで何が評価される？</h3>
+              <div className="bg-green-50 border-l-4 border-green-400 p-3 rounded-r-lg mb-4">
+                <p className="text-sm font-semibold text-green-800 mb-1">✨ 最新アップデート</p>
+                <p className="text-xs text-gray-700">
+                  v4評価シート（パターン5改良版）が全職種・経験レベルで利用可能になりました。
+                  100点満点評価でより公平な評価が実現されます。
+                </p>
+              </div>
               <div className="space-y-4">
                 <div className="bg-purple-50 rounded-lg p-4 border-l-4 border-purple-500">
                   <h4 className="font-semibold text-purple-800 mb-2">技術評価（50点）- 360度評価</h4>
@@ -752,9 +759,16 @@ export default function HRSystemGuidePage() {
               </div>
             </div>
 
-            {/* 10種類の面談 */}
+            {/* 11種類の面談 */}
             <div className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">10種類の面談体系</h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-4">11種類の面談体系</h3>
+              <div className="bg-orange-50 border-l-4 border-orange-400 p-3 rounded-r-lg mb-4">
+                <p className="text-sm font-semibold text-orange-800 mb-1">⚠️ 実装状況のお知らせ</p>
+                <p className="text-xs text-gray-700">
+                  現在、新入職員月次面談、一般職員年次面談、管理職半年面談の3種類が利用可能です。
+                  その他の面談機能は順次実装予定です。
+                </p>
+              </div>
               <div className="grid md:grid-cols-2 gap-4 mb-6">
                 {/* 定期面談 */}
                 <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4">
@@ -766,21 +780,30 @@ export default function HRSystemGuidePage() {
                     <div className="bg-white/80 rounded p-2">
                       <div className="flex justify-between items-start">
                         <span className="font-semibold text-blue-800">新入職員月次面談</span>
-                        <span className="text-xs bg-blue-200 px-2 py-1 rounded">月1回</span>
+                        <div className="flex gap-1">
+                          <span className="text-xs bg-green-500 text-white px-2 py-1 rounded">実装済</span>
+                          <span className="text-xs bg-blue-200 px-2 py-1 rounded">月1回</span>
+                        </div>
                       </div>
                       <p className="text-xs text-gray-600 mt-1">入職1年未満の職員対象</p>
                     </div>
                     <div className="bg-white/80 rounded p-2">
                       <div className="flex justify-between items-start">
                         <span className="font-semibold text-blue-800">一般職員年次面談</span>
-                        <span className="text-xs bg-blue-200 px-2 py-1 rounded">年1回</span>
+                        <div className="flex gap-1">
+                          <span className="text-xs bg-green-500 text-white px-2 py-1 rounded">実装済</span>
+                          <span className="text-xs bg-blue-200 px-2 py-1 rounded">年1回</span>
+                        </div>
                       </div>
                       <p className="text-xs text-gray-600 mt-1">全職員対象</p>
                     </div>
                     <div className="bg-white/80 rounded p-2">
                       <div className="flex justify-between items-start">
                         <span className="font-semibold text-blue-800">管理職半年面談</span>
-                        <span className="text-xs bg-blue-200 px-2 py-1 rounded">半年1回</span>
+                        <div className="flex gap-1">
+                          <span className="text-xs bg-green-500 text-white px-2 py-1 rounded">実装済</span>
+                          <span className="text-xs bg-blue-200 px-2 py-1 rounded">半年1回</span>
+                        </div>
                       </div>
                       <p className="text-xs text-gray-600 mt-1">管理職対象</p>
                     </div>
@@ -795,15 +818,24 @@ export default function HRSystemGuidePage() {
                   </h4>
                   <div className="space-y-2 text-sm">
                     <div className="bg-white/80 rounded p-2">
-                      <span className="font-semibold text-green-800">復職面談</span>
+                      <div className="flex justify-between items-start">
+                        <span className="font-semibold text-green-800">復職面談</span>
+                        <span className="text-xs bg-gray-400 text-white px-2 py-1 rounded">開発中</span>
+                      </div>
                       <p className="text-xs text-gray-600 mt-1">休職からの復職時に実施</p>
                     </div>
                     <div className="bg-white/80 rounded p-2">
-                      <span className="font-semibold text-green-800">インシデント後面談</span>
+                      <div className="flex justify-between items-start">
+                        <span className="font-semibold text-green-800">インシデント後面談</span>
+                        <span className="text-xs bg-gray-400 text-white px-2 py-1 rounded">開発中</span>
+                      </div>
                       <p className="text-xs text-gray-600 mt-1">インシデント発生後のフォロー</p>
                     </div>
                     <div className="bg-white/80 rounded p-2">
-                      <span className="font-semibold text-green-800">退職面談</span>
+                      <div className="flex justify-between items-start">
+                        <span className="font-semibold text-green-800">退職面談</span>
+                        <span className="text-xs bg-gray-400 text-white px-2 py-1 rounded">開発中</span>
+                      </div>
                       <p className="text-xs text-gray-600 mt-1">退職予定者との最終面談</p>
                     </div>
                   </div>
@@ -817,23 +849,38 @@ export default function HRSystemGuidePage() {
                   </h4>
                   <div className="grid md:grid-cols-5 gap-2">
                     <div className="bg-white/80 rounded p-2">
-                      <span className="font-semibold text-purple-800 text-sm">キャリア開発面談</span>
+                      <div className="flex justify-between items-start">
+                        <span className="font-semibold text-purple-800 text-sm">キャリア開発面談</span>
+                        <span className="text-xs bg-gray-400 text-white px-1 py-0.5 rounded text-xs">開発中</span>
+                      </div>
                       <p className="text-xs text-gray-600 mt-1">キャリアプランの相談</p>
                     </div>
                     <div className="bg-white/80 rounded p-2">
-                      <span className="font-semibold text-purple-800 text-sm">ストレスケア面談</span>
+                      <div className="flex justify-between items-start">
+                        <span className="font-semibold text-purple-800 text-sm">ストレスケア面談</span>
+                        <span className="text-xs bg-gray-400 text-white px-1 py-0.5 rounded text-xs">開発中</span>
+                      </div>
                       <p className="text-xs text-gray-600 mt-1">メンタルヘルスサポート</p>
                     </div>
                     <div className="bg-white/80 rounded p-2">
-                      <span className="font-semibold text-purple-800 text-sm">苦情・相談面談</span>
+                      <div className="flex justify-between items-start">
+                        <span className="font-semibold text-purple-800 text-sm">苦情・相談面談</span>
+                        <span className="text-xs bg-gray-400 text-white px-1 py-0.5 rounded text-xs">開発中</span>
+                      </div>
                       <p className="text-xs text-gray-600 mt-1">職場の問題や悩み相談</p>
                     </div>
                     <div className="bg-white/80 rounded p-2">
-                      <span className="font-semibold text-purple-800 text-sm">評価フィードバック面談</span>
+                      <div className="flex justify-between items-start">
+                        <span className="font-semibold text-purple-800 text-sm">人事評価面談</span>
+                        <span className="text-xs bg-gray-400 text-white px-1 py-0.5 rounded text-xs">開発中</span>
+                      </div>
                       <p className="text-xs text-gray-600 mt-1">評価結果の詳細説明</p>
                     </div>
                     <div className="bg-white/80 rounded p-2">
-                      <span className="font-semibold text-purple-800 text-sm">随時面談</span>
+                      <div className="flex justify-between items-start">
+                        <span className="font-semibold text-purple-800 text-sm">随時面談</span>
+                        <span className="text-xs bg-gray-400 text-white px-1 py-0.5 rounded text-xs">開発中</span>
+                      </div>
                       <p className="text-xs text-gray-600 mt-1">その他必要時</p>
                     </div>
                   </div>
@@ -1556,6 +1603,16 @@ export default function HRSystemGuidePage() {
         {/* シート閲覧セクション */}
         {activeTab === 'sheets' && (
           <div className="space-y-6">
+            {/* 実装状況のお知らせ */}
+            <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r-lg">
+              <h3 className="font-semibold text-blue-800 mb-2">📄 利用可能なシートについて</h3>
+              <div className="text-sm text-gray-700 space-y-2">
+                <p>✅ <strong>評価シート</strong>：全職種・全経験レベルのv4評価シート（パターン5改良版）が利用可能</p>
+                <p>✅ <strong>面談シート</strong>：看護師用v4統合版（15分・30分・45分）が利用可能</p>
+                <p>⚠️ 准看護師・看護補助者用の面談シートは開発中です</p>
+              </div>
+            </div>
+            
             {/* 検索・フィルターセクション */}
             <div className="bg-white rounded-xl shadow-lg p-6">
               <h2 className="text-xl font-bold text-gray-800 mb-4">シート検索・フィルター</h2>
