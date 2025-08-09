@@ -96,7 +96,7 @@ export default function ChronicJuniorNurseEvaluationV4Pattern5() {
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">
-            【慢性期医療】ジュニア看護師（2-3年目） 人事評価シート v4.0
+            【慢性期医療】一般看護師（2-3年目） 人事評価シート v4.0
           </CardTitle>
           <p className="text-center text-gray-600 mt-2">
             パターン5改良版 - 慢性期ケアの深化と後輩指導を重視した評価
