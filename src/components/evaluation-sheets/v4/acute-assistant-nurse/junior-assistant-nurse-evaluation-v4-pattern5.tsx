@@ -67,17 +67,17 @@ export default function JuniorAssistantNurseEvaluationV4Pattern5() {
     setTotalScore(Math.round((technical + facility + corporate) * 10) / 10);
   }, [technicalScores, facilityRank, corporateRank]);
 
-  const handleTechnicalScoreChange = (evaluator, category, grade) => {
+  const handleTechnicalScoreChange = (evaluator: 'superiorEval' | 'selfEval', category: string, grade: string) => {
     setTechnicalScores(prev => ({
       ...prev,
       [evaluator]: {
         ...prev[evaluator],
-        [category]: gradeToScore[grade] || 0
+        [category]: (gradeToScore as any)[grade] || 0
       }
     }));
   };
 
-  const getScoreColor = (score) => {
+  const getScoreColor = (score: number) => {
     if (score >= 90) return 'text-red-600';
     if (score >= 80) return 'text-orange-600';
     if (score >= 70) return 'text-green-600';
