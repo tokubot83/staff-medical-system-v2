@@ -516,6 +516,77 @@ function GuideTab(): React.ReactElement {
         </div>
       </div>
 
+      <div className={styles.guideSection}>
+        <h3>⚠️ 重要：職員階層定義について（開発メモ）</h3>
+        <div className={styles.developerNote}>
+          <h4>面談システムと評価システムの階層対応</h4>
+          <p className={styles.warningText}>
+            <strong>注意：面談システムと評価システムでは階層定義が異なります</strong>
+          </p>
+          
+          <h5>看護師の役職階層</h5>
+          <table className={styles.hierarchyTable}>
+            <thead>
+              <tr>
+                <th>役職</th>
+                <th>面談システム</th>
+                <th>評価システム</th>
+                <th>設計思想</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>主任看護師</td>
+                <td><code>leader-nurse</code></td>
+                <td><code>ward-chief</code></td>
+                <td rowSpan={2}>面談は共通シート<br/>評価は将来細分化</td>
+              </tr>
+              <tr>
+                <td>病棟師長</td>
+                <td><code>chief-nurse</code></td>
+                <td><code>ward-manager</code></td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <h5>システム設計の違い</h5>
+          <ul className={styles.systemDifference}>
+            <li><strong>面談システム（本システム）</strong>: 
+              <ul>
+                <li>病棟・外来で共通の面談シートを使用</li>
+                <li>主任看護師用: <code>leader-nurse-unified-[15/30/45]min</code></li>
+                <li>病棟師長用: <code>chief-nurse-unified-[15/30/45]min</code></li>
+                <li>メンテナンス性と一貫性を重視した設計</li>
+              </ul>
+            </li>
+            <li><strong>評価システム</strong>: 
+              <ul>
+                <li>将来的に病棟・外来で異なる評価項目を想定</li>
+                <li>病棟主任: <code>ward-chief-evaluation</code></li>
+                <li>外来主任: <code>outpatient-chief-evaluation</code>（今後）</li>
+                <li>専門性と詳細度を重視した設計</li>
+              </ul>
+            </li>
+          </ul>
+          
+          <div className={styles.importantNote}>
+            <h5>⚠️ ファイル名の注意事項</h5>
+            <p>
+              <strong>leader-nurse</strong> = 主任看護師（リーダー看護師ではない）<br/>
+              <strong>chief-nurse</strong> = 病棟師長（主任看護師ではない）
+            </p>
+            <p className={styles.highlightText}>
+              ※ 新規開発時は必ずこの対応関係を確認してください
+            </p>
+          </div>
+          
+          <div className={styles.referenceLink}>
+            <p>📚 詳細は階層定義ドキュメントを参照:</p>
+            <code>docs/STAFF_HIERARCHY_DEFINITION.md</code>
+          </div>
+        </div>
+      </div>
+
       <div className={styles.implementationNote}>
         <h3>🚀 今後の実装予定</h3>
         

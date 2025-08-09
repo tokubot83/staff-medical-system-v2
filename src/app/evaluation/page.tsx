@@ -931,6 +931,63 @@ export default function EvaluationManagement() {
                 </div>
               </div>
 
+              <div className={styles.guideSection}>
+                <h3>⚠️ 重要：職員階層定義について（開発メモ）</h3>
+                <div className={styles.developerNote}>
+                  <h4>評価システムと面談システムの階層対応</h4>
+                  <p className={styles.warningText}>
+                    <strong>注意：評価システムと面談システムでは階層定義が異なります</strong>
+                  </p>
+                  
+                  <h5>看護師の役職階層</h5>
+                  <table className={styles.hierarchyTable}>
+                    <thead>
+                      <tr>
+                        <th>役職</th>
+                        <th>評価システム</th>
+                        <th>面談システム</th>
+                        <th>備考</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>主任看護師</td>
+                        <td><code>ward-chief</code></td>
+                        <td><code>leader-nurse</code></td>
+                        <td>病棟主任・外来主任共通</td>
+                      </tr>
+                      <tr>
+                        <td>病棟師長</td>
+                        <td><code>ward-manager</code></td>
+                        <td><code>chief-nurse</code></td>
+                        <td>病棟師長・外来師長共通</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  
+                  <h5>システム設計の違い</h5>
+                  <ul className={styles.systemDifference}>
+                    <li><strong>評価システム</strong>: 将来的に病棟・外来を区別した詳細評価を想定
+                      <ul>
+                        <li>病棟主任用: <code>ward-chief-evaluation</code></li>
+                        <li>外来主任用: <code>outpatient-chief-evaluation</code>（今後実装）</li>
+                      </ul>
+                    </li>
+                    <li><strong>面談システム</strong>: 病棟・外来共通のシートで運用
+                      <ul>
+                        <li>主任共通: <code>leader-nurse-unified</code></li>
+                        <li>師長共通: <code>chief-nurse-unified</code></li>
+                      </ul>
+                    </li>
+                  </ul>
+                  
+                  <div className={styles.referenceLink}>
+                    <p>📚 詳細は階層定義ドキュメントを参照:</p>
+                    <code>docs/STAFF_HIERARCHY_DEFINITION.md</code>
+                  </div>
+                </div>
+              </div>
+
               <div className={styles.implementationNote}>
                 <h3>🚀 今後の実装予定</h3>
                 
