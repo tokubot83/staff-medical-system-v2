@@ -896,12 +896,19 @@ export default function HRSystemGuidePage() {
               </div>
             </div>
 
-            {/* 13種類の相談カテゴリ */}
+            {/* サポート面談のカテゴリ選択 */}
             <div className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">相談できる13のカテゴリ</h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-4">サポート面談のカテゴリ選択</h3>
+              <div className="bg-blue-50 border-l-4 border-blue-400 p-3 rounded-r-lg mb-4">
+                <p className="text-sm font-semibold text-blue-800 mb-1">📢 カテゴリ選択について</p>
+                <p className="text-xs text-gray-700">
+                  サポート面談（フィードバック面談を除く）では、予約時に相談内容のカテゴリを選択していただきます。
+                  これにより、面談担当者が事前に準備をして、より充実した面談を実施できます。
+                </p>
+              </div>
               <div className="grid md:grid-cols-3 gap-3">
                 <div className="bg-blue-50 rounded-lg p-3">
-                  <h4 className="font-semibold text-blue-800 text-sm mb-2">キャリア系</h4>
+                  <h4 className="font-semibold text-blue-800 text-sm mb-2">🎯 キャリア系面談</h4>
                   <ul className="text-xs text-gray-600 space-y-1">
                     <li>• キャリアパス（将来の目標）</li>
                     <li>• スキル開発（研修・資格）</li>
@@ -910,7 +917,7 @@ export default function HRSystemGuidePage() {
                   </ul>
                 </div>
                 <div className="bg-green-50 rounded-lg p-3">
-                  <h4 className="font-semibold text-green-800 text-sm mb-2">職場環境系</h4>
+                  <h4 className="font-semibold text-green-800 text-sm mb-2">🏢 職場環境系面談</h4>
                   <ul className="text-xs text-gray-600 space-y-1">
                     <li>• 職場環境（設備・制度）</li>
                     <li>• 人間関係（チームワーク）</li>
@@ -919,7 +926,7 @@ export default function HRSystemGuidePage() {
                   </ul>
                 </div>
                 <div className="bg-purple-50 rounded-lg p-3">
-                  <h4 className="font-semibold text-purple-800 text-sm mb-2">その他</h4>
+                  <h4 className="font-semibold text-purple-800 text-sm mb-2">📦 個別相談面談</h4>
                   <ul className="text-xs text-gray-600 space-y-1">
                     <li>• パフォーマンス（業務改善）</li>
                     <li>• 給与・待遇</li>
@@ -1296,6 +1303,77 @@ export default function HRSystemGuidePage() {
                     </li>
                   </ul>
                 </div>
+              </div>
+            </div>
+
+            {/* 開発メモ（Phase 3: システム間連携） */}
+            <div className="bg-gray-100 rounded-xl shadow-lg p-6 mt-6">
+              <h3 className="text-xl font-bold text-gray-800 mb-4">
+                💻 開発メモ：Phase 3 システム間連携仕様
+              </h3>
+              <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg mb-4">
+                <p className="text-sm font-semibold text-yellow-800 mb-1">🔧 開発者向け情報</p>
+                <p className="text-xs text-gray-700">
+                  このセクションは、VoiceDriveとの連携実装に関する技術仕様を記載しています。
+                </p>
+              </div>
+              
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="bg-white rounded-lg p-4">
+                  <h4 className="font-semibold text-gray-800 mb-3">📥 予約データ受信フロー</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="bg-gray-50 rounded p-2">
+                      <p className="font-medium text-gray-700">1. VoiceDriveから予約データ受信</p>
+                      <ul className="text-xs text-gray-600 ml-4 mt-1">
+                        <li>• interviewType（必須）</li>
+                        <li>• interviewCategory（条件付き必須）</li>
+                        <li>• employeeInfo</li>
+                        <li>• requestedTopics[]</li>
+                      </ul>
+                    </div>
+                    <div className="bg-gray-50 rounded p-2">
+                      <p className="font-medium text-gray-700">2. カテゴリ処理ロジック</p>
+                      <ul className="text-xs text-gray-600 ml-4 mt-1">
+                        <li>• サポート面談：カテゴリ必須</li>
+                        <li>• 定期・特別面談：カテゴリ不要</li>
+                        <li>• フィードバック面談：カテゴリ不要</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-white rounded-lg p-4">
+                  <h4 className="font-semibold text-gray-800 mb-3">🔄 面談実施フロー</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="bg-gray-50 rounded p-2">
+                      <p className="font-medium text-gray-700">予約ベースフロー</p>
+                      <ul className="text-xs text-gray-600 ml-4 mt-1">
+                        <li>1. 予約一覧から選択</li>
+                        <li>2. カテゴリ情報を自動表示</li>
+                        <li>3. 推奨シートを提示</li>
+                        <li>4. 面談実施・記録</li>
+                      </ul>
+                    </div>
+                    <div className="bg-gray-50 rounded p-2">
+                      <p className="font-medium text-gray-700">新規面談フロー</p>
+                      <ul className="text-xs text-gray-600 ml-4 mt-1">
+                        <li>1. 面談種類選択</li>
+                        <li>2. カテゴリ選択（必要時）</li>
+                        <li>3. 対象者選択</li>
+                        <li>4. シート選択・実施</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                <p className="text-sm font-semibold text-blue-800 mb-1">📋 実装タスク</p>
+                <ul className="text-xs text-gray-700 space-y-1">
+                  <li>✅ Phase 1: 本システムの10種類体系への改修（完了）</li>
+                  <li>⏳ Phase 2: VoiceDrive側の予約フォーム改修（指示書作成済み）</li>
+                  <li>📅 Phase 3: API連携と予約データ自動取り込み（計画中）</li>
+                </ul>
               </div>
             </div>
           </div>

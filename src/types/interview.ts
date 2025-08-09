@@ -1,34 +1,54 @@
-// VoiceDrive面談制度との統合仕様に基づく型定義
+// VoiceDrive面談制度との統合仕様に基づく型定義（10種類体系・2024年12月改定）
 
-// 面談種類（11種類）
+// 面談分類
+export type InterviewClassification = 'regular' | 'special' | 'support';
+
+// 面談種類（10種類）
 export type InterviewType = 
+  // 定期面談（3種類）
   | 'new_employee_monthly'    // 新入職員月次面談（入職1年未満）
   | 'regular_annual'          // 一般職員年次面談
   | 'management_biannual'     // 管理職半年面談
-  | 'incident_followup'       // インシデント後面談
+  // 特別面談（3種類）
   | 'return_to_work'          // 復職面談
-  | 'career_development'      // キャリア開発面談
-  | 'stress_care'             // ストレスケア面談
-  | 'performance_review'      // 人事評価面談
-  | 'grievance'               // 苦情・相談面談
+  | 'incident_followup'       // インシデント後面談
   | 'exit_interview'          // 退職面談
-  | 'ad_hoc';                 // 随時面談
+  // サポート面談（4種類）
+  | 'feedback'                // フィードバック面談（人事評価後）
+  | 'career_support'          // キャリア系面談
+  | 'workplace_support'       // 職場環境系面談
+  | 'individual_consultation'; // 個別相談面談
 
-// 面談カテゴリ（13種類）
+// 面談カテゴリ（サポート面談用・詳細分類）
 export type InterviewCategory = 
-  | 'career_path'           // キャリアパス
-  | 'skill_development'     // スキル開発
-  | 'work_environment'      // 職場環境
-  | 'workload_balance'      // 業務負荷・ワークライフバランス
-  | 'interpersonal'         // 人間関係
-  | 'performance'           // パフォーマンス
-  | 'compensation'          // 給与・待遇
-  | 'training'              // 研修・教育
+  // キャリア系面談カテゴリ
+  | 'career_path'           // キャリアパス（将来の目標）
+  | 'skill_development'     // スキル開発（研修・資格）
   | 'promotion'             // 昇進・昇格
   | 'transfer'              // 異動・転勤
+  // 職場環境系面談カテゴリ
+  | 'work_environment'      // 職場環境（設備・制度）
+  | 'interpersonal'         // 人間関係（チームワーク）
+  | 'workload_balance'      // 業務負荷・ワークライフバランス
   | 'health_safety'         // 健康・安全
+  // 個別相談面談カテゴリ
+  | 'performance'           // パフォーマンス（業務改善）
+  | 'compensation'          // 給与・待遇
+  | 'training'              // 研修・教育
   | 'compliance'            // コンプライアンス
   | 'other';                // その他
+
+// カテゴリが必要な面談種類の判定
+export const requiresCategory = (interviewType: InterviewType): boolean => {
+  return ['career_support', 'workplace_support', 'individual_consultation'].includes(interviewType);
+};
+
+// 面談種類ごとの利用可能カテゴリ
+export const availableCategories: Record<string, InterviewCategory[]> = {
+  career_support: ['career_path', 'skill_development', 'promotion', 'transfer'],
+  workplace_support: ['work_environment', 'interpersonal', 'workload_balance', 'health_safety'],
+  individual_consultation: ['performance', 'compensation', 'training', 'compliance', 'other'],
+};
 
 // 面談ステータス
 export type InterviewStatus = 

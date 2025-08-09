@@ -7,63 +7,68 @@ import InterviewSheetWrapper from '@/components/interview/InterviewSheetWrapper'
 import { getExperienceCategory } from '@/utils/experienceUtils';
 import styles from './ImprovedInterviewFlow.module.css';
 
-// 面談の種類定義
+import { InterviewCategory, requiresCategory, availableCategories } from '@/types/interview';
+
+// 面談の種類定義（10種類体系）
 const interviewTypes = [
   {
     id: 'regular',
     name: '定期面談',
+    classification: 'regular',
     description: '月次・年次・半期などの定期的な面談',
     icon: '📅',
+    requiresCategory: false,
     subtypes: [
-      { id: 'monthly', name: '月次面談', target: '新入職員（1年未満）' },
-      { id: 'annual', name: '年次面談', target: '全職員' },
-      { id: 'biannual', name: '半期面談', target: '管理職' }
+      { id: 'new_employee_monthly', name: '新入職員月次面談', target: '入職1年未満', frequency: '月1回' },
+      { id: 'regular_annual', name: '一般職員年次面談', target: '全職員', frequency: '年1回' },
+      { id: 'management_biannual', name: '管理職半年面談', target: '管理職', frequency: '半年1回' }
     ]
   },
   {
-    id: 'exit',
-    name: '退職面談',
-    description: '退職予定者との面談',
-    icon: '🚪',
-    subtypes: [
-      { id: 'probation', name: '試用期間退職', target: '試用期間中の職員' },
-      { id: 'general', name: '一般退職', target: '正職員・契約職員' },
-      { id: 'management', name: '管理職退職', target: '管理職・ベテラン職員' }
-    ]
-  },
-  {
-    id: 'incident',
-    name: 'インシデント後面談',
-    description: 'インシデント発生後のフォロー面談',
+    id: 'special',
+    name: '特別面談',
+    classification: 'special',
+    description: '特定の状況で実施する面談',
     icon: '⚠️',
+    requiresCategory: false,
     subtypes: [
-      { id: 'medical', name: '医療事故後', target: '当事者職員' },
-      { id: 'complaint', name: 'クレーム対応後', target: '対応職員' }
+      { id: 'return_to_work', name: '復職面談', target: '休職からの復職者', trigger: '復職時' },
+      { id: 'incident_followup', name: 'インシデント後面談', target: '当事者職員', trigger: 'インシデント発生後' },
+      { id: 'exit_interview', name: '退職面談', target: '退職予定者', trigger: '退職前' }
     ]
   },
   {
-    id: 'consultation',
-    name: '苦情・相談面談',
-    description: '職員からの相談や苦情対応',
+    id: 'support',
+    name: 'サポート面談',
+    classification: 'support',
+    description: '職員の希望に応じて実施する支援面談',
     icon: '💬',
+    requiresCategory: true,
     subtypes: [
-      { id: 'harassment', name: 'ハラスメント相談', target: '相談希望者' },
-      { id: 'workplace', name: '職場環境相談', target: '全職員' },
-      { id: 'career', name: 'キャリア相談', target: '全職員' }
-    ]
-  },
-  {
-    id: 'adhoc',
-    name: '随時面談',
-    description: 'その他の臨時面談',
-    icon: '📝',
-    subtypes: [
-      { id: 'return', name: '復職面談', target: '休職からの復職者' },
-      { id: 'transfer', name: '異動面談', target: '異動対象者' },
-      { id: 'other', name: 'その他', target: '必要に応じて' }
+      { id: 'feedback', name: 'フィードバック面談', target: '評価開示後の希望者', requiresCategory: false },
+      { id: 'career_support', name: 'キャリア系面談', target: '全職員', requiresCategory: true },
+      { id: 'workplace_support', name: '職場環境系面談', target: '全職員', requiresCategory: true },
+      { id: 'individual_consultation', name: '個別相談面談', target: '全職員', requiresCategory: true }
     ]
   }
 ];
+
+// カテゴリの表示名マッピング
+const categoryDisplayNames: Record<InterviewCategory, string> = {
+  career_path: 'キャリアパス（将来の目標）',
+  skill_development: 'スキル開発（研修・資格）',
+  promotion: '昇進・昇格',
+  transfer: '異動・転勤',
+  work_environment: '職場環境（設備・制度）',
+  interpersonal: '人間関係（チームワーク）',
+  workload_balance: '業務負荷・ワークライフバランス',
+  health_safety: '健康・安全',
+  performance: 'パフォーマンス（業務改善）',
+  compensation: '給与・待遇',
+  training: '研修・教育',
+  compliance: 'コンプライアンス',
+  other: 'その他'
+};
 
 interface ImprovedInterviewFlowProps {
   onBack?: () => void;
@@ -73,6 +78,7 @@ export default function ImprovedInterviewFlow({ onBack }: ImprovedInterviewFlowP
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedType, setSelectedType] = useState<any>(null);
   const [selectedSubtype, setSelectedSubtype] = useState<any>(null);
+  const [selectedCategory, setSelectedCategory] = useState<InterviewCategory | null>(null);
   const [selectedStaff, setSelectedStaff] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSheetDuration, setSelectedSheetDuration] = useState<number | null>(null);
@@ -108,12 +114,22 @@ export default function ImprovedInterviewFlow({ onBack }: ImprovedInterviewFlowP
   const handleTypeSelect = (type: any, subtype: any) => {
     setSelectedType(type);
     setSelectedSubtype(subtype);
-    setCurrentStep(2);
+    // カテゴリ選択が必要な場合はカテゴリ選択へ、不要な場合は対象者選択へ
+    if (subtype.requiresCategory) {
+      setCurrentStep(2); // カテゴリ選択へ
+    } else {
+      setCurrentStep(3); // 対象者選択へ
+    }
+  };
+
+  const handleCategorySelect = (category: InterviewCategory) => {
+    setSelectedCategory(category);
+    setCurrentStep(3); // 対象者選択へ
   };
 
   const handleStaffSelect = (staff: any) => {
     setSelectedStaff(staff);
-    setCurrentStep(3);
+    setCurrentStep(4); // シート選択へ
   };
 
   const handleSelectSheet = (sheetPath: string) => {
@@ -125,12 +141,21 @@ export default function ImprovedInterviewFlow({ onBack }: ImprovedInterviewFlowP
   const handleBack = () => {
     if (showSheet) {
       setShowSheet(false);
+    } else if (currentStep === 4) {
+      setCurrentStep(3);
     } else if (currentStep === 3) {
-      setCurrentStep(2);
+      if (selectedSubtype?.requiresCategory) {
+        setCurrentStep(2);
+      } else {
+        setCurrentStep(1);
+        setSelectedType(null);
+        setSelectedSubtype(null);
+      }
     } else if (currentStep === 2) {
       setCurrentStep(1);
       setSelectedType(null);
       setSelectedSubtype(null);
+      setSelectedCategory(null);
     } else if (onBack) {
       onBack();
     }
@@ -140,6 +165,7 @@ export default function ImprovedInterviewFlow({ onBack }: ImprovedInterviewFlowP
     setCurrentStep(1);
     setSelectedType(null);
     setSelectedSubtype(null);
+    setSelectedCategory(null);
     setSelectedStaff(null);
     setSearchTerm('');
     setSelectedSheetDuration(null);
@@ -148,27 +174,37 @@ export default function ImprovedInterviewFlow({ onBack }: ImprovedInterviewFlowP
 
   // 退職面談用の特別なシート選択
   const getExitInterviewSheets = () => {
-    if (selectedSubtype?.id === 'probation') {
+    // 職員の経験年数や役職に基づいて適切なシートを提供
+    if (!selectedStaff) return [];
+    
+    const yearsOfExperience = selectedStaff.経験年数;
+    const position = selectedStaff.役職;
+    
+    // 試用期間中（1年未満）
+    if (yearsOfExperience < 1) {
       return [
         { path: '/exit-interview-sheets/probation-staff-15min', duration: '15分', label: '簡潔版' },
         { path: '/exit-interview-sheets/probation-staff-30min', duration: '30分', label: '詳細版' }
       ];
-    } else if (selectedSubtype?.id === 'general') {
-      return [
-        { path: '/exit-interview-sheets/general-staff-30min', duration: '30分', label: '標準版' },
-        { path: '/exit-interview-sheets/general-staff-45min', duration: '45分', label: '詳細版' }
-      ];
-    } else if (selectedSubtype?.id === 'management') {
+    }
+    // 管理職・ベテラン職員
+    else if (position?.includes('師長') || position?.includes('主任') || yearsOfExperience >= 10) {
       return [
         { path: '/exit-interview-sheets/manager-veteran-45min', duration: '45分', label: '詳細版' },
         { path: '/exit-interview-sheets/manager-veteran-60min', duration: '60分', label: '包括版' }
       ];
     }
-    return [];
+    // 一般職員
+    else {
+      return [
+        { path: '/exit-interview-sheets/general-staff-30min', duration: '30分', label: '標準版' },
+        { path: '/exit-interview-sheets/general-staff-45min', duration: '45分', label: '詳細版' }
+      ];
+    }
   };
 
   if (showSheet) {
-    if (selectedType?.id === 'exit') {
+    if (selectedSubtype?.id === 'exit_interview') {
       // 退職面談シートへ直接遷移
       const sheets = getExitInterviewSheets();
       const selectedSheet = sheets.find(s => s.duration === `${selectedSheetDuration}分`);
@@ -204,13 +240,22 @@ export default function ImprovedInterviewFlow({ onBack }: ImprovedInterviewFlowP
           <span className={styles.stepLabel}>面談種類</span>
         </div>
         <div className={styles.progressLine} />
-        <div className={`${styles.progressStep} ${currentStep >= 2 ? styles.active : ''}`}>
-          <span className={styles.stepNumber}>2</span>
+        {selectedSubtype?.requiresCategory && (
+          <>
+            <div className={`${styles.progressStep} ${currentStep >= 2 ? styles.active : ''}`}>
+              <span className={styles.stepNumber}>2</span>
+              <span className={styles.stepLabel}>カテゴリ</span>
+            </div>
+            <div className={styles.progressLine} />
+          </>
+        )}
+        <div className={`${styles.progressStep} ${currentStep >= 3 ? styles.active : ''}`}>
+          <span className={styles.stepNumber}>{selectedSubtype?.requiresCategory ? '3' : '2'}</span>
           <span className={styles.stepLabel}>対象者選択</span>
         </div>
         <div className={styles.progressLine} />
-        <div className={`${styles.progressStep} ${currentStep >= 3 ? styles.active : ''}`}>
-          <span className={styles.stepNumber}>3</span>
+        <div className={`${styles.progressStep} ${currentStep >= 4 ? styles.active : ''}`}>
+          <span className={styles.stepNumber}>{selectedSubtype?.requiresCategory ? '4' : '3'}</span>
           <span className={styles.stepLabel}>シート選択</span>
         </div>
       </div>
@@ -230,6 +275,14 @@ export default function ImprovedInterviewFlow({ onBack }: ImprovedInterviewFlowP
               >
                 {selectedType.name} {selectedSubtype && `- ${selectedSubtype.name}`}
               </button>
+            </>
+          )}
+          {selectedCategory && (
+            <>
+              <span className={styles.breadcrumbSeparator}>›</span>
+              <span className={styles.breadcrumbItem}>
+                {categoryDisplayNames[selectedCategory]}
+              </span>
             </>
           )}
           {selectedStaff && (
@@ -277,8 +330,50 @@ export default function ImprovedInterviewFlow({ onBack }: ImprovedInterviewFlowP
         </div>
       )}
 
-      {/* Step 2: 対象者選択 */}
-      {currentStep === 2 && (
+      {/* Step 2: カテゴリ選択（サポート面談のみ） */}
+      {currentStep === 2 && selectedSubtype?.requiresCategory && (
+        <div className={styles.stepContainer}>
+          <button onClick={handleBack} className={styles.backButtonInline}>
+            ← 戻る
+          </button>
+          <h2 className={styles.stepTitle}>
+            <span className={styles.stepIcon}>📋</span>
+            相談内容のカテゴリを選択してください
+          </h2>
+          <div className={styles.selectedTypeInfo}>
+            <span className={styles.infoLabel}>選択中の面談：</span>
+            <span className={styles.infoValue}>
+              {selectedType?.name} - {selectedSubtype?.name}
+            </span>
+          </div>
+          
+          <div className={styles.categoryGrid}>
+            {availableCategories[selectedSubtype.id]?.map((categoryId: InterviewCategory) => (
+              <button
+                key={categoryId}
+                onClick={() => handleCategorySelect(categoryId)}
+                className={styles.categoryCard}
+              >
+                <div className={styles.categoryIcon}>
+                  {categoryId.includes('career') ? '🎯' :
+                   categoryId.includes('work') || categoryId.includes('interpersonal') ? '🏭' :
+                   categoryId.includes('health') ? '🏝️' :
+                   categoryId.includes('performance') ? '📈' :
+                   categoryId.includes('compensation') ? '💰' :
+                   categoryId.includes('training') ? '📚' :
+                   categoryId.includes('compliance') ? '⚖️' : '📦'}
+                </div>
+                <div className={styles.categoryName}>
+                  {categoryDisplayNames[categoryId]}
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Step 3: 対象者選択 */}
+      {currentStep === 3 && (
         <div className={styles.stepContainer}>
           <button onClick={handleBack} className={styles.backButtonInline}>
             ← 戻る
@@ -330,8 +425,8 @@ export default function ImprovedInterviewFlow({ onBack }: ImprovedInterviewFlowP
         </div>
       )}
 
-      {/* Step 3: 面談シート選択 */}
-      {currentStep === 3 && (
+      {/* Step 4: 面談シート選択 */}
+      {currentStep === 4 && (
         <div className={styles.stepContainer}>
           <button onClick={handleBack} className={styles.backButtonInline}>
             ← 戻る
@@ -355,7 +450,7 @@ export default function ImprovedInterviewFlow({ onBack }: ImprovedInterviewFlowP
             </div>
           </div>
           
-          {selectedType?.id === 'exit' ? (
+          {selectedSubtype?.id === 'exit_interview' ? (
             // 退職面談用の特別なシート選択
             <div className={styles.sheetOptions}>
               <h3>利用可能な面談シート</h3>
