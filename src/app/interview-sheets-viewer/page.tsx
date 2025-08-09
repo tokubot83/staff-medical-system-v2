@@ -41,9 +41,9 @@ function InterviewSheetsViewerContent() {
       } else if (roleParam === 'nursing-aide') {
         setSelectedCategory('看護補助者');
       } else if (roleParam === 'leader-nurse') {
-        setSelectedCategory('看護師');
+        setSelectedCategory('主任看護師');
       } else if (roleParam === 'chief-nurse') {
-        setSelectedCategory('看護師');
+        setSelectedCategory('病棟師長');
       } else {
         // パラメータがない場合はデフォルトで看護師
         setSelectedCategory('看護師');
@@ -86,7 +86,12 @@ function InterviewSheetsViewerContent() {
             '30分': '/interview-sheets/veteran/30',
             '45分': '/interview-sheets/veteran/45'
           }
-        },
+        }
+      ]
+    },
+    {
+      category: '主任看護師',
+      sheets: [
         { 
           label: '主任看護師', 
           paths: {
@@ -94,7 +99,12 @@ function InterviewSheetsViewerContent() {
             '30分': '/interview-sheets/leader/30',
             '45分': '/interview-sheets/leader/45'
           }
-        },
+        }
+      ]
+    },
+    {
+      category: '病棟師長',
+      sheets: [
         { 
           label: '病棟師長', 
           paths: {
@@ -228,23 +238,14 @@ function InterviewSheetsViewerContent() {
     
     // 一般職員年次面談の場合
     if (interviewType === 'regular-annual') {
-      if (role === 'leader-nurse') {
-        return sheets.filter(sheet => sheet.label.includes('主任'));
-      } else if (role === 'chief-nurse') {
-        return sheets.filter(sheet => sheet.label.includes('師長'));
-      } else {
-        // 管理職以外は全て表示（管理職を除く）
-        return sheets.filter(sheet => !sheet.label.includes('主任') && !sheet.label.includes('師長'));
-      }
+      // 一般職員年次面談では管理職用のシートは表示しない（主任・師長は別カテゴリ）
+      return sheets;
     }
     
     // 管理職半年面談の場合
     if (interviewType === 'management') {
-      if (role === 'leader-nurse') {
-        return sheets.filter(sheet => sheet.label.includes('主任'));
-      } else if (role === 'chief-nurse') {
-        return sheets.filter(sheet => sheet.label.includes('師長'));
-      }
+      // 管理職半年面談では全シートを表示
+      return sheets;
     }
     
     return sheets;
@@ -279,7 +280,9 @@ function InterviewSheetsViewerContent() {
           
           {!selectedCategory && !role ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {interviewSheets.map((category, index) => (
+            {interviewSheets.filter(cat => 
+              cat.category !== '主任看護師' && cat.category !== '病棟師長'
+            ).map((category, index) => (
               <button
                 key={index}
                 onClick={() => setSelectedCategory(category.category)}
