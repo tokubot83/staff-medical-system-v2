@@ -123,9 +123,7 @@ export default function InterviewsPage() {
       return [
         { value: 'nurse', label: '看護師', description: '2年目以降の看護師' },
         { value: 'assistant-nurse', label: '准看護師', description: '2年目以降の准看護師' },
-        { value: 'nursing-aide', label: '看護補助者', description: '2年目以降の看護補助者' },
-        { value: 'leader-nurse', label: '主任看護師', description: 'リーダー職の看護師' },
-        { value: 'chief-nurse', label: '病棟師長', description: '管理職の看護師' }
+        { value: 'nursing-aide', label: '看護補助者', description: '2年目以降の看護補助者' }
       ]
     } else if (type === 'management') {
       return [
