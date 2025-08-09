@@ -103,6 +103,9 @@ export default function InterviewsPage() {
     } else if (type === 'management') {
       setSelectedInterviewType(type)
       setShowRoleModal(true)
+    } else if (type === 'exit-interview') {
+      setSelectedInterviewType(type)
+      setShowRoleModal(true)
     } else {
       window.location.href = `/interview-sheets-viewer?type=${type}`
     }
@@ -129,6 +132,12 @@ export default function InterviewsPage() {
       return [
         { value: 'leader-nurse', label: '主任看護師', description: '主任職' },
         { value: 'chief-nurse', label: '病棟師長', description: '師長職' }
+      ]
+    } else if (type === 'exit-interview') {
+      return [
+        { value: 'probation-staff', label: '試用期間職員', description: '試用期間中の職員' },
+        { value: 'general-staff', label: '一般職員', description: '正職員・契約職員' },
+        { value: 'manager-veteran', label: '管理職・ベテラン', description: '管理職・長期勤務者' }
       ]
     }
     return []
@@ -227,6 +236,7 @@ export default function InterviewsPage() {
           selectedInterviewType === 'new-employee' ? '新入職員月次面談 - 職種選択' :
           selectedInterviewType === 'regular-annual' ? '一般職員年次面談 - 職種選択' :
           selectedInterviewType === 'management' ? '管理職半年面談 - 職種選択' :
+          selectedInterviewType === 'exit-interview' ? '退職面談 - 職員区分選択' :
           '職種選択'
         }
         roles={getRoleOptions(selectedInterviewType)}
@@ -487,10 +497,10 @@ function GuideTab({ onInterviewTypeClick }: GuideTabProps): React.ReactElement {
               <span className={styles.typeDescription}>退職予定者との面談</span>
             </div>
             <button 
-              onClick={() => alert('退職面談シートは現在開発中です')}
-              className={`${styles.sheetButton} ${styles.developing}`}
+              onClick={() => onInterviewTypeClick('exit-interview')}
+              className={styles.sheetButton}
             >
-              📄 開発中
+              📄 面談シート
             </button>
           </div>
           

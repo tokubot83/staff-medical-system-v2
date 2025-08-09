@@ -44,6 +44,12 @@ function InterviewSheetsViewerContent() {
         setSelectedCategory('主任看護師');
       } else if (roleParam === 'chief-nurse') {
         setSelectedCategory('病棟師長');
+      } else if (roleParam === 'probation-staff') {
+        setSelectedCategory('試用期間職員');
+      } else if (roleParam === 'general-staff') {
+        setSelectedCategory('一般職員');
+      } else if (roleParam === 'manager-veteran') {
+        setSelectedCategory('管理職・ベテラン');
       } else {
         // パラメータがない場合はデフォルトで看護師
         setSelectedCategory('看護師');
@@ -188,6 +194,42 @@ function InterviewSheetsViewerContent() {
           }
         }
       ]
+    },
+    {
+      category: '試用期間職員',
+      sheets: [
+        { 
+          label: '試用期間職員 退職面談', 
+          paths: {
+            '15分': '/exit-interview-sheets/probation-staff-15min',
+            '30分': '/exit-interview-sheets/probation-staff-30min'
+          }
+        }
+      ]
+    },
+    {
+      category: '一般職員',
+      sheets: [
+        { 
+          label: '一般職員 退職面談', 
+          paths: {
+            '30分': '/exit-interview-sheets/general-staff-30min',
+            '45分': '/exit-interview-sheets/general-staff-45min'
+          }
+        }
+      ]
+    },
+    {
+      category: '管理職・ベテラン',
+      sheets: [
+        { 
+          label: '管理職・ベテラン 退職面談', 
+          paths: {
+            '45分': '/exit-interview-sheets/manager-veteran-45min',
+            '60分': '/exit-interview-sheets/manager-veteran-60min'
+          }
+        }
+      ]
     }
   ];
 
@@ -205,6 +247,9 @@ function InterviewSheetsViewerContent() {
       case 'management':
         message = '管理職半年面談';
         break;
+      case 'exit-interview':
+        message = '退職面談';
+        break;
       default:
         return null;
     }
@@ -216,7 +261,10 @@ function InterviewSheetsViewerContent() {
         'assistant-nurse': '准看護師',
         'nursing-aide': '看護補助者',
         'leader-nurse': '主任看護師',
-        'chief-nurse': '病棟師長'
+        'chief-nurse': '病棟師長',
+        'probation-staff': '試用期間職員',
+        'general-staff': '一般職員',
+        'manager-veteran': '管理職・ベテラン'
       };
       const roleName = roleNames[role] || '';
       if (roleName) {
@@ -245,6 +293,12 @@ function InterviewSheetsViewerContent() {
     // 管理職半年面談の場合
     if (interviewType === 'management') {
       // 管理職半年面談では全シートを表示
+      return sheets;
+    }
+    
+    // 退職面談の場合
+    if (interviewType === 'exit-interview') {
+      // 退職面談では選択されたカテゴリのシートのみ表示
       return sheets;
     }
     
@@ -280,9 +334,15 @@ function InterviewSheetsViewerContent() {
           
           {!selectedCategory && !role ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {interviewSheets.filter(cat => 
-              cat.category !== '主任看護師' && cat.category !== '病棟師長'
-            ).map((category, index) => (
+            {interviewSheets.filter(cat => {
+              // 退職面談の場合は退職面談関連のカテゴリのみ表示
+              if (interviewType === 'exit-interview') {
+                return ['試用期間職員', '一般職員', '管理職・ベテラン'].includes(cat.category);
+              }
+              // 通常の面談の場合は従来通り
+              return cat.category !== '主任看護師' && cat.category !== '病棟師長' && 
+                     !['試用期間職員', '一般職員', '管理職・ベテラン'].includes(cat.category);
+            }).map((category, index) => (
               <button
                 key={index}
                 onClick={() => setSelectedCategory(category.category)}
@@ -292,6 +352,9 @@ function InterviewSheetsViewerContent() {
                   {category.category === '看護師' && '👩‍⚕️'}
                   {category.category === '看護補助者' && '🏥'}
                   {category.category === '准看護師' && '💉'}
+                  {category.category === '試用期間職員' && '🆕'}
+                  {category.category === '一般職員' && '👤'}
+                  {category.category === '管理職・ベテラン' && '👨‍💼'}
                 </div>
                 <h2 className="text-lg font-semibold text-gray-800">{category.category}</h2>
                 <p className="text-sm text-gray-600 mt-2">{category.sheets.length}種類の面談シート</p>
