@@ -266,34 +266,6 @@ export default function EvaluationSheetsV4Page() {
             ))}
 
             {/* 特別版の案内（急性期の中堅看護師のみ） */}
-            {activeTab === 'acute' && (
-              <div className="mt-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <h4 className="font-semibold text-yellow-800 mb-2">📌 特別版評価シート</h4>
-                <p className="text-sm text-yellow-700 mb-3">
-                  急性期中堅看護師には、以下の特別版評価シートも用意されています：
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                  <Link
-                    href="/evaluation-sheets/v4/acute-nurse/midlevel-nurse-evaluation-v4"
-                    className="text-sm text-blue-600 hover:text-blue-800 underline"
-                  >
-                    • 標準版
-                  </Link>
-                  <Link
-                    href="/evaluation-sheets/v4/acute-nurse/midlevel-nurse-evaluation-v4-future-value"
-                    className="text-sm text-blue-600 hover:text-blue-800 underline"
-                  >
-                    • Future Value版
-                  </Link>
-                  <Link
-                    href="/evaluation-sheets/v4/acute-nurse/midlevel-nurse-evaluation-v4-triple-impact"
-                    className="text-sm text-blue-600 hover:text-blue-800 underline"
-                  >
-                    • Triple Impact版
-                  </Link>
-                </div>
-              </div>
-            )}
 
             {/* 開発者向けメモ */}
             <div className="mt-8 p-4 bg-gray-100 rounded-lg">

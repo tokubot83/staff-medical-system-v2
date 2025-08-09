@@ -97,7 +97,7 @@ export default function JuniorNurseEvaluationV4Pattern5() {
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">
-            ジュニア看護師（2-3年目） 人事評価シート v4.0
+            一般看護師（2-3年目） 人事評価シート v4.0
           </CardTitle>
           <p className="text-center text-gray-600 mt-2">
             パターン5改良版 - 実践力とチーム貢献を重視した評価
