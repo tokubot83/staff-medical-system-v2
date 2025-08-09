@@ -1,12 +1,31 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import CommonHeader from '@/components/CommonHeader';
+import DashboardButton from '@/components/DashboardButton';
 
-export default function InterviewSheetsViewerPage() {
+function InterviewSheetsViewerContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [interviewType, setInterviewType] = useState<string | null>(null);
+
+  useEffect(() => {
+    const type = searchParams.get('type');
+    if (type) {
+      setInterviewType(type);
+      // 面談タイプに応じて適切なカテゴリを自動選択
+      if (type === 'new-employee') {
+        setSelectedCategory('看護師');
+      } else if (type === 'regular-annual') {
+        setSelectedCategory('看護師');
+      } else if (type === 'management') {
+        setSelectedCategory('看護師');
+      }
+    }
+  }, [searchParams]);
 
   const interviewSheets = [
     {
@@ -138,21 +157,48 @@ export default function InterviewSheetsViewerPage() {
     }
   ];
 
-  return (
-    <div className="container mx-auto p-6">
-      <div className="mb-6">
-        <button
-          onClick={() => router.back()}
-          className="flex items-center gap-2 text-blue-600 hover:text-blue-800"
-        >
-          ← 戻る
-        </button>
-      </div>
+  // 面談タイプごとのメッセージ
+  const getTypeMessage = () => {
+    switch(interviewType) {
+      case 'new-employee':
+        return '新入職員月次面談用のシートを選択してください';
+      case 'regular-annual':
+        return '一般職員年次面談用のシートを選択してください';
+      case 'management':
+        return '管理職半年面談用のシートを選択してください';
+      default:
+        return null;
+    }
+  };
 
-      <div className="bg-white rounded-lg shadow-lg p-8">
-        <h1 className="text-2xl font-bold mb-8 text-center">面談シート一覧</h1>
-        
-        {!selectedCategory ? (
+  return (
+    <>
+      <CommonHeader title="面談シート一覧" />
+      <div className="container mx-auto p-6">
+        <div className="mb-6 flex justify-between items-center">
+          <div className="flex gap-4">
+            <button
+              onClick={() => router.push('/interviews')}
+              className="flex items-center gap-2 px-4 py-2 text-blue-600 hover:text-blue-800 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
+            >
+              ← 面談管理に戻る
+            </button>
+            <button
+              onClick={() => router.back()}
+              className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-400 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              ← 前のページに戻る
+            </button>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow-lg p-8">
+          <h1 className="text-2xl font-bold mb-4 text-center">面談シート一覧</h1>
+          {getTypeMessage() && (
+            <p className="text-center text-blue-600 mb-6">{getTypeMessage()}</p>
+          )}
+          
+          {!selectedCategory ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {interviewSheets.map((category, index) => (
               <button
@@ -212,7 +258,17 @@ export default function InterviewSheetsViewerPage() {
             </div>
           </>
         )}
+        </div>
+        <DashboardButton />
       </div>
-    </div>
+    </>
+  );
+}
+
+export default function InterviewSheetsViewerPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <InterviewSheetsViewerContent />
+    </Suspense>
   );
 }

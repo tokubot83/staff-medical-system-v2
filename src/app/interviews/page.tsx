@@ -303,19 +303,150 @@ function GuideTab(): React.ReactElement {
 
       <div className={styles.guideSection}>
         <h3>🎯 面談の種類（11種類）</h3>
-        <ul className={styles.guideList}>
-          <li><strong>新入職員月次面談</strong> - 入職1年未満の職員に月1回実施（必須）</li>
-          <li><strong>一般職員年次面談</strong> - 全職員対象、年1回実施（必須）</li>
-          <li><strong>管理職半年面談</strong> - 管理職対象、半年に1回実施（必須）</li>
-          <li><strong>インシデント後面談</strong> - インシデント発生後の職員フォロー</li>
-          <li><strong>復職面談</strong> - 休職からの復職時に実施</li>
-          <li><strong>キャリア開発面談</strong> - キャリア形成の相談（随時）</li>
-          <li><strong>ストレスケア面談</strong> - メンタルヘルスケア（随時）</li>
-          <li><strong>人事評価面談</strong> - 評価フィードバック（年2回）</li>
-          <li><strong>苦情・相談面談</strong> - 職場の問題相談（随時）</li>
-          <li><strong>退職面談</strong> - 退職予定者との面談</li>
-          <li><strong>随時面談</strong> - その他の相談（随時）</li>
-        </ul>
+        <div className={styles.interviewTypesList}>
+          <div className={styles.interviewTypeItem}>
+            <div className={styles.typeInfo}>
+              <strong>新入職員月次面談</strong>
+              <span className={styles.typeDescription}>入職1年未満の職員に月1回実施（必須）</span>
+            </div>
+            <button 
+              onClick={() => window.location.href = '/interview-sheets-viewer?type=new-employee'}
+              className={styles.sheetButton}
+            >
+              📄 面談シート
+            </button>
+          </div>
+          
+          <div className={styles.interviewTypeItem}>
+            <div className={styles.typeInfo}>
+              <strong>一般職員年次面談</strong>
+              <span className={styles.typeDescription}>全職員対象、年1回実施（必須）</span>
+            </div>
+            <button 
+              onClick={() => window.location.href = '/interview-sheets-viewer?type=regular-annual'}
+              className={styles.sheetButton}
+            >
+              📄 面談シート
+            </button>
+          </div>
+          
+          <div className={styles.interviewTypeItem}>
+            <div className={styles.typeInfo}>
+              <strong>管理職半年面談</strong>
+              <span className={styles.typeDescription}>管理職対象、半年に1回実施（必須）</span>
+            </div>
+            <button 
+              onClick={() => window.location.href = '/interview-sheets-viewer?type=management'}
+              className={styles.sheetButton}
+            >
+              📄 面談シート
+            </button>
+          </div>
+          
+          <div className={styles.interviewTypeItem}>
+            <div className={styles.typeInfo}>
+              <strong>インシデント後面談</strong>
+              <span className={styles.typeDescription}>インシデント発生後の職員フォロー</span>
+            </div>
+            <button 
+              onClick={() => alert('インシデント後面談シートは現在開発中です')}
+              className={`${styles.sheetButton} ${styles.developing}`}
+            >
+              📄 開発中
+            </button>
+          </div>
+          
+          <div className={styles.interviewTypeItem}>
+            <div className={styles.typeInfo}>
+              <strong>復職面談</strong>
+              <span className={styles.typeDescription}>休職からの復職時に実施</span>
+            </div>
+            <button 
+              onClick={() => alert('復職面談シートは現在開発中です')}
+              className={`${styles.sheetButton} ${styles.developing}`}
+            >
+              📄 開発中
+            </button>
+          </div>
+          
+          <div className={styles.interviewTypeItem}>
+            <div className={styles.typeInfo}>
+              <strong>キャリア開発面談</strong>
+              <span className={styles.typeDescription}>キャリア形成の相談（随時）</span>
+            </div>
+            <button 
+              onClick={() => alert('キャリア開発面談シートは現在開発中です')}
+              className={`${styles.sheetButton} ${styles.developing}`}
+            >
+              📄 開発中
+            </button>
+          </div>
+          
+          <div className={styles.interviewTypeItem}>
+            <div className={styles.typeInfo}>
+              <strong>ストレスケア面談</strong>
+              <span className={styles.typeDescription}>メンタルヘルスケア（随時）</span>
+            </div>
+            <button 
+              onClick={() => alert('ストレスケア面談シートは現在開発中です')}
+              className={`${styles.sheetButton} ${styles.developing}`}
+            >
+              📄 開発中
+            </button>
+          </div>
+          
+          <div className={styles.interviewTypeItem}>
+            <div className={styles.typeInfo}>
+              <strong>人事評価面談</strong>
+              <span className={styles.typeDescription}>評価フィードバック（年2回）</span>
+            </div>
+            <button 
+              onClick={() => alert('人事評価面談シートは現在開発中です')}
+              className={`${styles.sheetButton} ${styles.developing}`}
+            >
+              📄 開発中
+            </button>
+          </div>
+          
+          <div className={styles.interviewTypeItem}>
+            <div className={styles.typeInfo}>
+              <strong>苦情・相談面談</strong>
+              <span className={styles.typeDescription}>職場の問題相談（随時）</span>
+            </div>
+            <button 
+              onClick={() => alert('苦情・相談面談シートは現在開発中です')}
+              className={`${styles.sheetButton} ${styles.developing}`}
+            >
+              📄 開発中
+            </button>
+          </div>
+          
+          <div className={styles.interviewTypeItem}>
+            <div className={styles.typeInfo}>
+              <strong>退職面談</strong>
+              <span className={styles.typeDescription}>退職予定者との面談</span>
+            </div>
+            <button 
+              onClick={() => alert('退職面談シートは現在開発中です')}
+              className={`${styles.sheetButton} ${styles.developing}`}
+            >
+              📄 開発中
+            </button>
+          </div>
+          
+          <div className={styles.interviewTypeItem}>
+            <div className={styles.typeInfo}>
+              <strong>随時面談</strong>
+              <span className={styles.typeDescription}>その他の相談（随時）</span>
+            </div>
+            <button 
+              onClick={() => alert('随時面談シートは現在開発中です')}
+              className={`${styles.sheetButton} ${styles.developing}`}
+            >
+              📄 開発中
+            </button>
+          </div>
+        </div>
       </div>
 
       <div className={styles.guideSection}>
