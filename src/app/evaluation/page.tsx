@@ -176,10 +176,48 @@ export default function EvaluationManagement() {
 
               {/* 実施スケジュール */}
               <div className={styles.scheduleOverview}>
-                <h2 className={styles.scheduleTitle}>年間実施スケジュール</h2>
+                <h2 className={styles.scheduleTitle}>年間実施スケジュール（4月〜翌年3月）</h2>
+                <div className={styles.yearIndicator}>
+                  <span className={styles.yearLabel}>年度開始 → </span>
+                  <span className={styles.yearPeriod}>4月スタート</span>
+                  <span className={styles.yearLabel}> → 翌年3月終了</span>
+                </div>
                 <div className={styles.scheduleTimeline}>
                   <div className={styles.scheduleItem}>
-                    <div className={styles.scheduleMonth}>3月</div>
+                    <div className={styles.scheduleMonth}>
+                      <span className={styles.monthNumber}>8月</span>
+                      <span className={styles.monthOrder}>（年度第1回）</span>
+                    </div>
+                    <div className={styles.scheduleContent}>
+                      <h4 className={styles.scheduleEventTitle}>夏季賞与査定</h4>
+                      <p className={styles.scheduleEventDesc}>12月〜5月実績の貢献度評価</p>
+                      <div className={styles.schedulePoints}>25点満点（施設12.5点＋法人12.5点）</div>
+                    </div>
+                    <div className={styles.scheduleStatus}>
+                      <span className={styles.statusBadge}>半年毎</span>
+                      <span className={styles.orderBadge}>①</span>
+                    </div>
+                  </div>
+                  <div className={styles.scheduleItem}>
+                    <div className={styles.scheduleMonth}>
+                      <span className={styles.monthNumber}>12月</span>
+                      <span className={styles.monthOrder}>（年度第2回）</span>
+                    </div>
+                    <div className={styles.scheduleContent}>
+                      <h4 className={styles.scheduleEventTitle}>冬季賞与査定</h4>
+                      <p className={styles.scheduleEventDesc}>6月〜11月実績の貢献度評価</p>
+                      <div className={styles.schedulePoints}>25点満点（施設12.5点＋法人12.5点）</div>
+                    </div>
+                    <div className={styles.scheduleStatus}>
+                      <span className={styles.statusBadge}>半年毎</span>
+                      <span className={styles.orderBadge}>②</span>
+                    </div>
+                  </div>
+                  <div className={styles.scheduleItem}>
+                    <div className={styles.scheduleMonth}>
+                      <span className={styles.monthNumber}>翌年3月</span>
+                      <span className={styles.monthOrder}>（年度末）</span>
+                    </div>
                     <div className={styles.scheduleContent}>
                       <h4 className={styles.scheduleEventTitle}>技術評価実施</h4>
                       <p className={styles.scheduleEventDesc}>職種別専門技術・スキル評価</p>
@@ -187,28 +225,14 @@ export default function EvaluationManagement() {
                     </div>
                     <div className={styles.scheduleStatus}>
                       <span className={styles.statusBadge}>年1回</span>
+                      <span className={styles.orderBadge}>③</span>
                     </div>
                   </div>
-                  <div className={styles.scheduleItem}>
-                    <div className={styles.scheduleMonth}>8月</div>
-                    <div className={styles.scheduleContent}>
-                      <h4 className={styles.scheduleEventTitle}>夏季賞与査定</h4>
-                      <p className={styles.scheduleEventDesc}>12月〜5月実績の貢献度評価</p>
-                      <div className={styles.schedulePoints}>25点満点（12.5点×2項目）</div>
-                    </div>
-                    <div className={styles.scheduleStatus}>
-                      <span className={styles.statusBadge}>半年毎</span>
-                    </div>
-                  </div>
-                  <div className={styles.scheduleItem}>
-                    <div className={styles.scheduleMonth}>12月</div>
-                    <div className={styles.scheduleContent}>
-                      <h4 className={styles.scheduleEventTitle}>冬季賞与査定</h4>
-                      <p className={styles.scheduleEventDesc}>6月〜11月実績の貢献度評価</p>
-                      <div className={styles.schedulePoints}>25点満点（12.5点×2項目）</div>
-                    </div>
-                    <div className={styles.scheduleStatus}>
-                      <span className={styles.statusBadge}>半年毎</span>
+                  <div className={styles.scheduleSummary}>
+                    <div className={styles.summaryIcon}>📊</div>
+                    <div className={styles.summaryContent}>
+                      <h4>年度総合評価確定</h4>
+                      <p>貢献度評価（8月25点＋12月25点）＋ 技術評価（3月50点）＝ <strong>100点満点</strong></p>
                     </div>
                   </div>
                 </div>
