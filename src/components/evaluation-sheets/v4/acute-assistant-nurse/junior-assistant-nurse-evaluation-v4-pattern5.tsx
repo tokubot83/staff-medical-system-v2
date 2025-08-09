@@ -90,7 +90,7 @@ export default function JuniorAssistantNurseEvaluationV4Pattern5() {
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">
-            ジュニア准看護師（2-3年目） 人事評価シート v4.0
+            一般准看護師（2-3年目） 人事評価シート v4.0
           </CardTitle>
           <p className="text-center text-gray-600 mt-2">
             パターン5改良版 - 自立度向上とチーム貢献を重視した評価
@@ -688,7 +688,7 @@ export default function JuniorAssistantNurseEvaluationV4Pattern5() {
                   <Textarea 
                     id="summary-comments" 
                     rows={6}
-                    placeholder="ジュニア准看護師としての成長度、自立度、チーム貢献、今後の期待等を記載"
+                    placeholder="一般准看護師としての成長度、自立度、チーム貢献、今後の期待等を記載"
                   />
                 </div>
               </div>
@@ -704,7 +704,7 @@ export default function JuniorAssistantNurseEvaluationV4Pattern5() {
                   <Textarea 
                     id="strength" 
                     rows={3}
-                    placeholder="ジュニア准看護師として成長が見られる点、チームへの貢献度等"
+                    placeholder="一般准看護師として成長が見られる点、チームへの貢献度等"
                   />
                 </div>
 

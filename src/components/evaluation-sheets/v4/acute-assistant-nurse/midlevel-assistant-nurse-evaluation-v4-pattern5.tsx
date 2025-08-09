@@ -90,7 +90,7 @@ export default function MidlevelAssistantNurseEvaluationV4Pattern5() {
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">
-            ミドル准看護師（4-10年目） 人事評価シート v4.0
+            中堅准看護師（4-10年目） 人事評価シート v4.0
           </CardTitle>
           <p className="text-center text-gray-600 mt-2">
             パターン5改良版 - リーダーシップと専門性向上を重視した評価

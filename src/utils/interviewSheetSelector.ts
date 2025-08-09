@@ -9,7 +9,7 @@ export interface InterviewSheetInfo {
 }
 
 // v4面談シートのマッピング
-export const v4InterviewSheets: Record<ExperienceCategory, InterviewSheetInfo[]> = {
+export const v4InterviewSheets: Record<ExperienceCategory | 'leader', InterviewSheetInfo[]> = {
   new: [
     {
       component: 'NewNurseUnified15Min',
@@ -107,21 +107,21 @@ export const v4InterviewSheets: Record<ExperienceCategory, InterviewSheetInfo[]>
       component: 'ChiefNurseUnified15Min',
       path: '/interview-sheets/v4/chief-nurse-unified-15min',
       duration: 15,
-      title: '主任看護師定期面談シート（15分版）',
+      title: '病棟師長定期面談シート（15分版）',
       experienceCategory: 'chief'
     },
     {
       component: 'ChiefNurseUnified30Min',
       path: '/interview-sheets/v4/chief-nurse-unified-30min',
       duration: 30,
-      title: '主任看護師定期面談シート（30分版）',
+      title: '病棟師長定期面談シート（30分版）',
       experienceCategory: 'chief'
     },
     {
       component: 'ChiefNurseUnified45Min',
       path: '/interview-sheets/v4/chief-nurse-unified-45min',
       duration: 45,
-      title: '主任看護師定期面談シート（45分版）',
+      title: '病棟師長定期面談シート（45分版）',
       experienceCategory: 'chief'
     }
   ],
@@ -130,22 +130,45 @@ export const v4InterviewSheets: Record<ExperienceCategory, InterviewSheetInfo[]>
       component: 'LeaderNurseUnified15Min',
       path: '/interview-sheets/v4/leader-nurse-unified-15min',
       duration: 15,
-      title: 'リーダー看護師定期面談シート（15分版）',
+      title: '主任看護師定期面談シート（15分版）',
       experienceCategory: 'manager'
     },
     {
       component: 'LeaderNurseUnified30Min',
       path: '/interview-sheets/v4/leader-nurse-unified-30min',
       duration: 30,
-      title: 'リーダー看護師定期面談シート（30分版）',
+      title: '主任看護師定期面談シート（30分版）',
       experienceCategory: 'manager'
     },
     {
       component: 'LeaderNurseUnified45Min',
       path: '/interview-sheets/v4/leader-nurse-unified-45min',
       duration: 45,
-      title: 'リーダー看護師定期面談シート（45分版）',
+      title: '主任看護師定期面談シート（45分版）',
       experienceCategory: 'manager'
+    }
+  ],
+  leader: [
+    {
+      component: 'LeaderNurseUnified15Min',
+      path: '/interview-sheets/v4/leader-nurse-unified-15min',
+      duration: 15,
+      title: '主任看護師定期面談シート（15分版）',
+      experienceCategory: 'leader' as any
+    },
+    {
+      component: 'LeaderNurseUnified30Min',
+      path: '/interview-sheets/v4/leader-nurse-unified-30min',
+      duration: 30,
+      title: '主任看護師定期面談シート（30分版）',
+      experienceCategory: 'leader' as any
+    },
+    {
+      component: 'LeaderNurseUnified45Min',
+      path: '/interview-sheets/v4/leader-nurse-unified-45min',
+      duration: 45,
+      title: '主任看護師定期面談シート（45分版）',
+      experienceCategory: 'leader' as any
     }
   ]
 };
