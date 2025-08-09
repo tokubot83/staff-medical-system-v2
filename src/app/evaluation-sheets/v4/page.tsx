@@ -20,6 +20,15 @@ export default function EvaluationSheetsV4Page() {
       ]
     },
     {
+      category: '急性期病院 - 准看護師',
+      sheets: [
+        { label: '新人准看護師（1年目）', path: '/evaluation-sheets/v4/acute-assistant-nurse/new-assistant-nurse-evaluation-v4-pattern5' },
+        { label: '一般准看護師（2-3年目）', path: '/evaluation-sheets/v4/acute-assistant-nurse/junior-assistant-nurse-evaluation-v4-pattern5' },
+        { label: '中堅准看護師（4-10年目）', path: '/evaluation-sheets/v4/acute-assistant-nurse/midlevel-assistant-nurse-evaluation-v4-pattern5' },
+        { label: 'ベテラン准看護師（11年以上）', path: '/evaluation-sheets/v4/acute-assistant-nurse/veteran-assistant-nurse-evaluation-v4-pattern5' },
+      ]
+    },
+    {
       category: '急性期病院 - 看護補助者',
       sheets: [
         { label: '新人看護補助者（1年目）', path: '/evaluation-sheets/v4/acute-nursing-aide/new-nursing-aide-evaluation-v4-pattern5' },

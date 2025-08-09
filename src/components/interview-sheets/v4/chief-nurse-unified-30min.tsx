@@ -16,7 +16,7 @@ export default function ChiefNurseUnified30MinInterviewSheet() {
     <div className="max-w-4xl mx-auto p-6 space-y-6">
       <Card>
         <CardHeader className="bg-indigo-50">
-          <CardTitle className="text-2xl">主任看護師 定期面談シート（30分版）</CardTitle>
+          <CardTitle className="text-2xl">病棟師長 定期面談シート（30分版）</CardTitle>
           <div className="text-sm text-gray-600 mt-2">
             <p>面談日時：{new Date().toLocaleDateString('ja-JP')} ＿＿:＿＿</p>
             <p>面談者：＿＿＿＿＿＿＿＿　対象者：＿＿＿＿＿＿＿＿</p>
@@ -25,7 +25,7 @@ export default function ChiefNurseUnified30MinInterviewSheet() {
           <Alert className="mt-3">
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>
-              30分の標準面談です。主任看護師の管理能力と部署運営を総合的に評価します。
+              30分の標準面談です。病棟師長の管理能力と部署運営を総合的に評価します。
             </AlertDescription>
           </Alert>
         </CardHeader>

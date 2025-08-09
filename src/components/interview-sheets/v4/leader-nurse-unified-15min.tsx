@@ -15,16 +15,16 @@ export default function LeaderNurseUnified15MinInterviewSheet() {
     <div className="max-w-4xl mx-auto p-6 space-y-6">
       <Card>
         <CardHeader className="bg-emerald-50">
-          <CardTitle className="text-2xl">リーダー看護師 定期面談シート（15分版）</CardTitle>
+          <CardTitle className="text-2xl">主任看護師 定期面談シート（15分版）</CardTitle>
           <div className="text-sm text-gray-600 mt-2">
             <p>面談日時：{new Date().toLocaleDateString('ja-JP')} ＿＿:＿＿</p>
             <p>面談者：＿＿＿＿＿＿＿＿　対象者：＿＿＿＿＿＿＿＿</p>
-            <p>リーダー経験：＿＿年＿＿ヶ月　配属部署：＿＿＿＿＿＿</p>
+            <p>主任経験：＿＿年＿＿ヶ月　配属部署：＿＿＿＿＿＿</p>
           </div>
           <Alert className="mt-3">
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>
-              15分の短時間面談です。リーダー看護師の日々の業務状況と緊急課題を確認します。
+              15分の短時間面談です。主任看護師の日々の業務状況と緊急課題を確認します。
             </AlertDescription>
           </Alert>
         </CardHeader>

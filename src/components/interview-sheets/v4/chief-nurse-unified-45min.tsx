@@ -16,7 +16,7 @@ export default function ChiefNurseUnified45MinInterviewSheet() {
     <div className="max-w-4xl mx-auto p-6 space-y-6">
       <Card>
         <CardHeader className="bg-amber-50">
-          <CardTitle className="text-2xl">看護師長・管理職定期面談シート（45分版）</CardTitle>
+          <CardTitle className="text-2xl">病棟師長 定期面談シート（45分版）</CardTitle>
           <div className="text-sm text-gray-600 mt-2">
             <p>面談日時：{new Date().toLocaleDateString('ja-JP')} ＿＿:＿＿</p>
             <p>面談者：＿＿＿＿＿＿＿＿　対象者：＿＿＿＿＿＿＿＿</p>

@@ -13,39 +13,24 @@ import { InfoIcon, Calculator, Award, Users, Building } from 'lucide-react';
 import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
-// Type definitions
-type TechnicalScoreCategory = 'skills' | 'knowledge' | 'patient' | 'safety';
-type EvaluatorType = 'superiorEval' | 'selfEval';
-type GradeType = 'S' | 'A' | 'B' | 'C' | 'D';
-
-interface TechnicalScores {
-  superiorEval: Record<TechnicalScoreCategory, number>;
-  selfEval: Record<TechnicalScoreCategory, number>;
-}
-
-interface ContributionPoints {
-  facility: number;
-  corporate: number;
-}
-
 export default function NewAssistantNurseEvaluationV4Pattern5() {
   // 評価項目の状態管理
-  const [technicalScores, setTechnicalScores] = useState<TechnicalScores>({
+  const [technicalScores, setTechnicalScores] = useState({
     superiorEval: { skills: 0, knowledge: 0, patient: 0, safety: 0 },
     selfEval: { skills: 0, knowledge: 0, patient: 0, safety: 0 }
   });
 
-  const [contributionPoints, setContributionPoints] = useState<ContributionPoints>({
+  const [contributionPoints, setContributionPoints] = useState({
     facility: 0,
     corporate: 0
   });
 
-  const [totalScore, setTotalScore] = useState<number>(0);
-  const [facilityRank, setFacilityRank] = useState<number>(50); // パーセンタイル
-  const [corporateRank, setCorporateRank] = useState<number>(50);
+  const [totalScore, setTotalScore] = useState(0);
+  const [facilityRank, setFacilityRank] = useState(50); // パーセンタイル
+  const [corporateRank, setCorporateRank] = useState(50);
 
   // 評価グレードから点数への変換
-  const gradeToScore: Record<GradeType, number> = {
+  const gradeToScore = {
     'S': 1.0,
     'A': 0.85,
     'B': 0.70,
@@ -54,14 +39,14 @@ export default function NewAssistantNurseEvaluationV4Pattern5() {
   };
 
   // 技術評価の計算（50点満点）
-  const calculateTechnicalScore = (): number => {
+  const calculateTechnicalScore = () => {
     const superiorTotal = Object.values(technicalScores.superiorEval).reduce((a, b) => a + b, 0) / 4;
     const selfTotal = Object.values(technicalScores.selfEval).reduce((a, b) => a + b, 0) / 4;
     return (superiorTotal * 0.6 + selfTotal * 0.4) * 50;
   };
 
   // 貢献度評価の計算（各25点満点）
-  const calculateContributionScore = (percentile: number): number => {
+  const calculateContributionScore = (percentile) => {
     if (percentile <= 10) return 25;
     if (percentile <= 20) return 22.5;
     if (percentile <= 30) return 20;
@@ -82,23 +67,17 @@ export default function NewAssistantNurseEvaluationV4Pattern5() {
     setTotalScore(Math.round((technical + facility + corporate) * 10) / 10);
   }, [technicalScores, facilityRank, corporateRank]);
 
-  const handleTechnicalScoreChange = (
-    evaluator: EvaluatorType, 
-    category: TechnicalScoreCategory, 
-    grade: string
-  ) => {
-    if (grade in gradeToScore) {
-      setTechnicalScores(prev => ({
-        ...prev,
-        [evaluator]: {
-          ...prev[evaluator],
-          [category]: gradeToScore[grade as GradeType]
-        }
-      }));
-    }
+  const handleTechnicalScoreChange = (evaluator, category, grade) => {
+    setTechnicalScores(prev => ({
+      ...prev,
+      [evaluator]: {
+        ...prev[evaluator],
+        [category]: gradeToScore[grade] || 0
+      }
+    }));
   };
 
-  const getScoreColor = (score: number): string => {
+  const getScoreColor = (score) => {
     if (score >= 90) return 'text-red-600';
     if (score >= 80) return 'text-orange-600';
     if (score >= 70) return 'text-green-600';

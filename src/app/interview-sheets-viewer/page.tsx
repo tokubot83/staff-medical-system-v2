@@ -64,7 +64,7 @@ function InterviewSheetsViewerContent() {
           }
         },
         { 
-          label: 'リーダー看護師', 
+          label: '主任看護師', 
           paths: {
             '15分': '/interview-sheets/leader/15',
             '30分': '/interview-sheets/leader/30',
@@ -72,7 +72,7 @@ function InterviewSheetsViewerContent() {
           }
         },
         { 
-          label: '主任看護師', 
+          label: '病棟師長', 
           paths: {
             '15分': '/interview-sheets/chief/15',
             '30分': '/interview-sheets/chief/30',
