@@ -238,7 +238,7 @@ export default function ChronicJuniorAssistantNurseEvaluationV4Pattern5() {
                 <div className="space-y-4">
                   <div>
                     <Label className="text-sm font-medium">1. 慢性期療養上の世話技術の実践</Label>
-                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('superiorEval', 'skills', value)}>
+                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('superiorEval', 'skills', value as keyof typeof gradeToScore)}>
                       <div className="grid grid-cols-5 gap-2 mt-2">
                         {['S', 'A', 'B', 'C', 'D'].map((grade) => (
                           <div key={grade} className="flex items-center space-x-1">
@@ -257,7 +257,7 @@ export default function ChronicJuniorAssistantNurseEvaluationV4Pattern5() {
 
                   <div>
                     <Label className="text-sm font-medium">2. 慢性期疾患・病態の理解と対応</Label>
-                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('superiorEval', 'knowledge', value)}>
+                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('superiorEval', 'knowledge', value as keyof typeof gradeToScore)}>
                       <div className="grid grid-cols-5 gap-2 mt-2">
                         {['S', 'A', 'B', 'C', 'D'].map((grade) => (
                           <div key={grade} className="flex items-center space-x-1">
@@ -276,7 +276,7 @@ export default function ChronicJuniorAssistantNurseEvaluationV4Pattern5() {
 
                   <div>
                     <Label className="text-sm font-medium">3. 長期療養患者・家族との関係構築</Label>
-                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('superiorEval', 'patient', value)}>
+                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('superiorEval', 'patient', value as keyof typeof gradeToScore)}>
                       <div className="grid grid-cols-5 gap-2 mt-2">
                         {['S', 'A', 'B', 'C', 'D'].map((grade) => (
                           <div key={grade} className="flex items-center space-x-1">
@@ -295,7 +295,7 @@ export default function ChronicJuniorAssistantNurseEvaluationV4Pattern5() {
 
                   <div>
                     <Label className="text-sm font-medium">4. リスク管理と予防的ケアの実践</Label>
-                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('superiorEval', 'safety', value)}>
+                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('superiorEval', 'safety', value as keyof typeof gradeToScore)}>
                       <div className="grid grid-cols-5 gap-2 mt-2">
                         {['S', 'A', 'B', 'C', 'D'].map((grade) => (
                           <div key={grade} className="flex items-center space-x-1">
@@ -330,7 +330,7 @@ export default function ChronicJuniorAssistantNurseEvaluationV4Pattern5() {
                 <div className="space-y-4">
                   <div>
                     <Label className="text-sm font-medium">1. 慢性期療養上の世話技術の実践</Label>
-                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('selfEval', 'skills', value)}>
+                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('selfEval', 'skills', value as keyof typeof gradeToScore)}>
                       <div className="grid grid-cols-5 gap-2 mt-2">
                         {['S', 'A', 'B', 'C', 'D'].map((grade) => (
                           <div key={grade} className="flex items-center space-x-1">
@@ -344,7 +344,7 @@ export default function ChronicJuniorAssistantNurseEvaluationV4Pattern5() {
 
                   <div>
                     <Label className="text-sm font-medium">2. 慢性期疾患・病態の理解と対応</Label>
-                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('selfEval', 'knowledge', value)}>
+                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('selfEval', 'knowledge', value as keyof typeof gradeToScore)}>
                       <div className="grid grid-cols-5 gap-2 mt-2">
                         {['S', 'A', 'B', 'C', 'D'].map((grade) => (
                           <div key={grade} className="flex items-center space-x-1">
@@ -358,7 +358,7 @@ export default function ChronicJuniorAssistantNurseEvaluationV4Pattern5() {
 
                   <div>
                     <Label className="text-sm font-medium">3. 長期療養患者・家族との関係構築</Label>
-                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('selfEval', 'patient', value)}>
+                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('selfEval', 'patient', value as keyof typeof gradeToScore)}>
                       <div className="grid grid-cols-5 gap-2 mt-2">
                         {['S', 'A', 'B', 'C', 'D'].map((grade) => (
                           <div key={grade} className="flex items-center space-x-1">
@@ -372,7 +372,7 @@ export default function ChronicJuniorAssistantNurseEvaluationV4Pattern5() {
 
                   <div>
                     <Label className="text-sm font-medium">4. リスク管理と予防的ケアの実践</Label>
-                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('selfEval', 'safety', value)}>
+                    <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('selfEval', 'safety', value as keyof typeof gradeToScore)}>
                       <div className="grid grid-cols-5 gap-2 mt-2">
                         {['S', 'A', 'B', 'C', 'D'].map((grade) => (
                           <div key={grade} className="flex items-center space-x-1">
