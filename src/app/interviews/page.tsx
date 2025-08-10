@@ -360,180 +360,190 @@ interface GuideTabProps {
 
 function GuideTab({ onInterviewTypeClick }: GuideTabProps): React.ReactElement {
   return (
-    <div className={styles.guideContainer}>
-      <h2>面談管理システム ガイド</h2>
+    <div className="max-w-7xl mx-auto space-y-6">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">面談管理システム ガイド</h2>
       
-      <div className={styles.guideSection}>
-        <h3>📖 システム概要</h3>
-        <div className={styles.guideContent}>
+      {/* システム概要 */}
+      <div className="bg-white rounded-xl shadow-lg p-6">
+        <h3 className="text-xl font-bold text-gray-800 mb-4">📖 システム概要</h3>
+        <div className="prose max-w-none text-gray-600">
           <p>このシステムは、医療法人厚生会の面談制度を総合的に管理するためのシステムです。</p>
           <p>3つの分類（定期・特別・サポート）による10種類の面談タイプと13種類の相談カテゴリに対応し、職員と人事部の両方から利用できます。</p>
         </div>
       </div>
 
-      <div className={styles.guideSection}>
-        <h3>🎯 面談の種類（3分類・10種類）</h3>
-        <div className={styles.interviewTypesList}>
+      {/* 3分類・10種類の面談体系 */}
+      <div className="bg-white rounded-xl shadow-lg p-6">
+        <h3 className="text-xl font-bold text-gray-800 mb-4">3分類・10種類の面談体系</h3>
+        <div className="bg-orange-50 border-l-4 border-orange-400 p-3 rounded-r-lg mb-4">
+          <p className="text-sm font-semibold text-orange-800 mb-1">⚠️ 実装状況のお知らせ</p>
+          <p className="text-xs text-gray-700">
+            現在、定期面談の3種類（新入職員月次、一般職員年次、管理職半年）が利用可能です。
+            特別面談とサポート面談は順次実装予定です。
+          </p>
+        </div>
+        
+        <div className="grid md:grid-cols-2 gap-4 mb-6">
           {/* 定期面談 */}
-          <div className={styles.categorySection}>
-            <h4 className={styles.categoryTitle}>📅 定期面談（必須）</h4>
-            <div className={styles.interviewTypeItem}>
-              <div className={styles.typeInfo}>
-                <strong>新入職員月次面談</strong>
-                <span className={styles.typeDescription}>入職1年未満の職員に月1回実施</span>
+          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4">
+            <h4 className="font-bold text-blue-900 mb-3 flex items-center gap-2">
+              <span className="text-xl">📅</span>
+              定期面談（必須）
+            </h4>
+            <div className="space-y-2 text-sm">
+              <div className="bg-white/80 rounded p-2">
+                <div className="flex justify-between items-start">
+                  <span className="font-semibold text-blue-800">新入職員月次面談</span>
+                  <div className="flex gap-1">
+                    <span className="text-xs bg-green-500 text-white px-2 py-1 rounded">実装済</span>
+                    <span className="text-xs bg-blue-200 px-2 py-1 rounded">月1回</span>
+                  </div>
+                </div>
+                <p className="text-xs text-gray-600 mt-1">入職1年未満の職員対象</p>
               </div>
-              <button 
-                onClick={() => onInterviewTypeClick('new-employee')}
-                className={styles.sheetButton}
-              >
-                📄 面談シート
-              </button>
-            </div>
-            
-            <div className={styles.interviewTypeItem}>
-              <div className={styles.typeInfo}>
-                <strong>一般職員年次面談</strong>
-                <span className={styles.typeDescription}>全職員対象、年1回実施</span>
+              <div className="bg-white/80 rounded p-2">
+                <div className="flex justify-between items-start">
+                  <span className="font-semibold text-blue-800">一般職員年次面談</span>
+                  <div className="flex gap-1">
+                    <span className="text-xs bg-green-500 text-white px-2 py-1 rounded">実装済</span>
+                    <span className="text-xs bg-blue-200 px-2 py-1 rounded">年1回</span>
+                  </div>
+                </div>
+                <p className="text-xs text-gray-600 mt-1">全職員対象</p>
               </div>
-              <button 
-                onClick={() => onInterviewTypeClick('regular-annual')}
-                className={styles.sheetButton}
-              >
-                📄 面談シート
-              </button>
-            </div>
-            
-            <div className={styles.interviewTypeItem}>
-              <div className={styles.typeInfo}>
-                <strong>管理職半年面談</strong>
-                <span className={styles.typeDescription}>管理職対象、年2回実施</span>
+              <div className="bg-white/80 rounded p-2">
+                <div className="flex justify-between items-start">
+                  <span className="font-semibold text-blue-800">管理職半年面談</span>
+                  <div className="flex gap-1">
+                    <span className="text-xs bg-green-500 text-white px-2 py-1 rounded">実装済</span>
+                    <span className="text-xs bg-blue-200 px-2 py-1 rounded">年2回</span>
+                  </div>
+                </div>
+                <p className="text-xs text-gray-600 mt-1">管理職対象</p>
               </div>
-              <button 
-                onClick={() => onInterviewTypeClick('management')}
-                className={styles.sheetButton}
-              >
-                📄 面談シート
-              </button>
             </div>
           </div>
           
           {/* 特別面談 */}
-          <div className={styles.categorySection}>
-            <h4 className={styles.categoryTitle}>🔶 特別面談（状況に応じて）</h4>
-            <div className={styles.interviewTypeItem}>
-              <div className={styles.typeInfo}>
-                <strong>復職面談</strong>
-                <span className={styles.typeDescription}>休職からの復職時に実施</span>
+          <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-4">
+            <h4 className="font-bold text-orange-900 mb-3 flex items-center gap-2">
+              <span className="text-xl">🔶</span>
+              特別面談（状況に応じて）
+            </h4>
+            <div className="space-y-2 text-sm">
+              <div className="bg-white/80 rounded p-2">
+                <div className="flex justify-between items-start">
+                  <span className="font-semibold text-orange-800">復職面談</span>
+                  <span className="text-xs bg-gray-400 text-white px-2 py-1 rounded">開発中</span>
+                </div>
+                <p className="text-xs text-gray-600 mt-1">休職からの復職時</p>
               </div>
-              <button 
-                onClick={() => alert('復職面談シートは現在開発中です')}
-                className={`${styles.sheetButton} ${styles.developing}`}
-              >
-                📄 開発中
-              </button>
-            </div>
-            
-            <div className={styles.interviewTypeItem}>
-              <div className={styles.typeInfo}>
-                <strong>インシデント後面談</strong>
-                <span className={styles.typeDescription}>インシデント発生後の職員フォロー</span>
+              <div className="bg-white/80 rounded p-2">
+                <div className="flex justify-between items-start">
+                  <span className="font-semibold text-orange-800">インシデント後面談</span>
+                  <span className="text-xs bg-gray-400 text-white px-2 py-1 rounded">開発中</span>
+                </div>
+                <p className="text-xs text-gray-600 mt-1">インシデント発生後</p>
               </div>
-              <button 
-                onClick={() => alert('インシデント後面談シートは現在開発中です')}
-                className={`${styles.sheetButton} ${styles.developing}`}
-              >
-                📄 開発中
-              </button>
-            </div>
-            
-            <div className={styles.interviewTypeItem}>
-              <div className={styles.typeInfo}>
-                <strong>退職面談</strong>
-                <span className={styles.typeDescription}>退職前に実施</span>
+              <div className="bg-white/80 rounded p-2">
+                <div className="flex justify-between items-start">
+                  <span className="font-semibold text-orange-800">退職面談</span>
+                  <span className="text-xs bg-gray-400 text-white px-2 py-1 rounded">開発中</span>
+                </div>
+                <p className="text-xs text-gray-600 mt-1">退職前のヒアリング</p>
               </div>
-              <button 
-                onClick={() => onInterviewTypeClick('exit-interview')}
-                className={styles.sheetButton}
-              >
-                📄 面談シート
-              </button>
             </div>
           </div>
           
           {/* サポート面談 */}
-          <div className={styles.categorySection}>
-            <h4 className={styles.categoryTitle}>💬 サポート面談（任意）</h4>
-            <div className={styles.interviewTypeItem}>
-              <div className={styles.typeInfo}>
-                <strong>フィードバック面談</strong>
-                <span className={styles.typeDescription}>人事評価後の結果共有</span>
+          <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 md:col-span-2">
+            <h4 className="font-bold text-green-900 mb-3 flex items-center gap-2">
+              <span className="text-xl">💬</span>
+              サポート面談（任意）
+            </h4>
+            <div className="grid md:grid-cols-2 gap-2 text-sm">
+              <div className="bg-white/80 rounded p-2">
+                <div className="flex justify-between items-start">
+                  <span className="font-semibold text-green-800">フィードバック面談</span>
+                  <span className="text-xs bg-gray-400 text-white px-2 py-1 rounded">開発中</span>
+                </div>
+                <p className="text-xs text-gray-600 mt-1">人事評価後の結果共有</p>
               </div>
-              <button 
-                onClick={() => alert('フィードバック面談シートは現在開発中です')}
-                className={`${styles.sheetButton} ${styles.developing}`}
-              >
-                📄 開発中
-              </button>
-            </div>
-            
-            <div className={styles.interviewTypeItem}>
-              <div className={styles.typeInfo}>
-                <strong>キャリア系面談</strong>
-                <span className={styles.typeDescription}>キャリアパス、スキル開発、昇進・昇格、異動・転勤</span>
+              <div className="bg-white/80 rounded p-2">
+                <div className="flex justify-between items-start">
+                  <span className="font-semibold text-green-800">キャリア系面談</span>
+                  <span className="text-xs bg-gray-400 text-white px-2 py-1 rounded">開発中</span>
+                </div>
+                <p className="text-xs text-gray-600 mt-1">キャリアパス、スキル開発、昇進・異動</p>
               </div>
-              <button 
-                onClick={() => alert('キャリア系面談シートは現在開発中です')}
-                className={`${styles.sheetButton} ${styles.developing}`}
-              >
-                📄 開発中
-              </button>
-            </div>
-            
-            <div className={styles.interviewTypeItem}>
-              <div className={styles.typeInfo}>
-                <strong>職場環境系面談</strong>
-                <span className={styles.typeDescription}>職場環境、人間関係、業務負荷、健康・安全</span>
+              <div className="bg-white/80 rounded p-2">
+                <div className="flex justify-between items-start">
+                  <span className="font-semibold text-green-800">職場環境系面談</span>
+                  <span className="text-xs bg-gray-400 text-white px-2 py-1 rounded">開発中</span>
+                </div>
+                <p className="text-xs text-gray-600 mt-1">職場環境、人間関係、業務負荷</p>
               </div>
-              <button 
-                onClick={() => alert('職場環境系面談シートは現在開発中です')}
-                className={`${styles.sheetButton} ${styles.developing}`}
-              >
-                📄 開発中
-              </button>
-            </div>
-            
-            <div className={styles.interviewTypeItem}>
-              <div className={styles.typeInfo}>
-                <strong>個別相談面談</strong>
-                <span className={styles.typeDescription}>パフォーマンス、給与・待遇、研修・教育、その他</span>
+              <div className="bg-white/80 rounded p-2">
+                <div className="flex justify-between items-start">
+                  <span className="font-semibold text-green-800">個別相談面談</span>
+                  <span className="text-xs bg-gray-400 text-white px-2 py-1 rounded">開発中</span>
+                </div>
+                <p className="text-xs text-gray-600 mt-1">パフォーマンス、給与、研修、その他</p>
               </div>
-              <button 
-                onClick={() => alert('個別相談面談シートは現在開発中です')}
-                className={`${styles.sheetButton} ${styles.developing}`}
-              >
-                📄 開発中
-              </button>
             </div>
           </div>
         </div>
+        
+        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg">
+          <p className="text-sm font-semibold text-yellow-800 mb-1">💡 重要なポイント</p>
+          <p className="text-xs text-gray-700">
+            全ての面談は「評価」ではなく「支援」が目的です。人事評価とは完全に切り離されており、職員の成長と働きやすさの向上を目指しています。
+          </p>
+        </div>
       </div>
 
-      <div className={styles.guideSection}>
-        <h3>📝 相談カテゴリ（13種類）</h3>
-        <div className={styles.categoryGrid}>
-          <div className={styles.categoryItem}>キャリアパス</div>
-          <div className={styles.categoryItem}>スキル開発</div>
-          <div className={styles.categoryItem}>職場環境</div>
-          <div className={styles.categoryItem}>業務負荷・ワークライフバランス</div>
-          <div className={styles.categoryItem}>人間関係</div>
-          <div className={styles.categoryItem}>パフォーマンス</div>
-          <div className={styles.categoryItem}>給与・待遇</div>
-          <div className={styles.categoryItem}>研修・教育</div>
-          <div className={styles.categoryItem}>昇進・昇格</div>
-          <div className={styles.categoryItem}>異動・転勤</div>
-          <div className={styles.categoryItem}>健康・安全</div>
-          <div className={styles.categoryItem}>コンプライアンス</div>
-          <div className={styles.categoryItem}>その他</div>
+      {/* サポート面談のカテゴリ選択 */}
+      <div className="bg-white rounded-xl shadow-lg p-6">
+        <h3 className="text-xl font-bold text-gray-800 mb-4">サポート面談のカテゴリ選択</h3>
+        <div className="bg-blue-50 border-l-4 border-blue-400 p-3 rounded-r-lg mb-4">
+          <p className="text-sm font-semibold text-blue-800 mb-1">📢 カテゴリ選択について</p>
+          <p className="text-xs text-gray-700">
+            サポート面談（フィードバック面談を除く）では、予約時に相談内容のカテゴリを選択していただきます。
+            これにより、面談担当者が事前に準備をして、より充実した面談を実施できます。
+          </p>
+        </div>
+        
+        <div className="grid md:grid-cols-3 gap-3">
+          <div className="bg-blue-50 rounded-lg p-3">
+            <h4 className="font-semibold text-blue-800 text-sm mb-2">🎯 キャリア系面談</h4>
+            <ul className="text-xs text-gray-600 space-y-1">
+              <li>• キャリアパス（将来の目標）</li>
+              <li>• スキル開発（研修・資格）</li>
+              <li>• 昇進・昇格</li>
+              <li>• 異動・転勤</li>
+            </ul>
+          </div>
+          
+          <div className="bg-green-50 rounded-lg p-3">
+            <h4 className="font-semibold text-green-800 text-sm mb-2">🏢 職場環境系面談</h4>
+            <ul className="text-xs text-gray-600 space-y-1">
+              <li>• 職場環境（設備・制度）</li>
+              <li>• 人間関係（チームワーク）</li>
+              <li>• 業務負荷・ワークライフバランス</li>
+              <li>• 健康・安全</li>
+            </ul>
+          </div>
+          
+          <div className="bg-purple-50 rounded-lg p-3">
+            <h4 className="font-semibold text-purple-800 text-sm mb-2">📦 個別相談面談</h4>
+            <ul className="text-xs text-gray-600 space-y-1">
+              <li>• パフォーマンス（業務改善）</li>
+              <li>• 給与・待遇</li>
+              <li>• 研修・教育</li>
+              <li>• コンプライアンス</li>
+              <li>• その他の相談</li>
+            </ul>
+          </div>
         </div>
       </div>
 
