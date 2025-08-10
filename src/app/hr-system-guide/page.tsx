@@ -740,7 +740,7 @@ export default function HRSystemGuidePage() {
               <div className="prose max-w-none text-gray-600">
                 <p className="mb-4">
                   面談制度は、職員一人ひとりの声を聞き、働きやすい職場環境を作るための重要な仕組みです。
-                  上司と部下の定期的なコミュニケーションを通じて、個人のキャリア形成支援と組織全体の活性化を図ります。
+                  3つの分類（定期・特別・サポート）による10種類の面談タイプを通じて、個人のキャリア形成支援と組織全体の活性化を図ります。
                 </p>
                 <div className="bg-blue-50 rounded-lg p-4">
                   <p className="text-blue-800 font-semibold mb-2">面談制度の3つの目的</p>
@@ -759,14 +759,14 @@ export default function HRSystemGuidePage() {
               </div>
             </div>
 
-            {/* 11種類の面談 */}
+            {/* 10種類の面談 */}
             <div className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">11種類の面談体系</h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-4">3分類・10種類の面談体系</h3>
               <div className="bg-orange-50 border-l-4 border-orange-400 p-3 rounded-r-lg mb-4">
                 <p className="text-sm font-semibold text-orange-800 mb-1">⚠️ 実装状況のお知らせ</p>
                 <p className="text-xs text-gray-700">
-                  現在、新入職員月次面談、一般職員年次面談、管理職半年面談の3種類が利用可能です。
-                  その他の面談機能は順次実装予定です。
+                  現在、定期面談の3種類（新入職員月次、一般職員年次、管理職半年）が利用可能です。
+                  特別面談とサポート面談は順次実装予定です。
                 </p>
               </div>
               <div className="grid md:grid-cols-2 gap-4 mb-6">
@@ -802,7 +802,7 @@ export default function HRSystemGuidePage() {
                         <span className="font-semibold text-blue-800">管理職半年面談</span>
                         <div className="flex gap-1">
                           <span className="text-xs bg-green-500 text-white px-2 py-1 rounded">実装済</span>
-                          <span className="text-xs bg-blue-200 px-2 py-1 rounded">半年1回</span>
+                          <span className="text-xs bg-blue-200 px-2 py-1 rounded">年2回</span>
                         </div>
                       </div>
                       <p className="text-xs text-gray-600 mt-1">管理職対象</p>
@@ -811,77 +811,70 @@ export default function HRSystemGuidePage() {
                 </div>
 
                 {/* 特別面談 */}
-                <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4">
-                  <h4 className="font-bold text-green-900 mb-3 flex items-center gap-2">
-                    <span className="text-xl">🔧</span>
-                    特別面談（随時）
+                <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-4">
+                  <h4 className="font-bold text-orange-900 mb-3 flex items-center gap-2">
+                    <span className="text-xl">🔶</span>
+                    特別面談（状況に応じて）
                   </h4>
                   <div className="space-y-2 text-sm">
                     <div className="bg-white/80 rounded p-2">
                       <div className="flex justify-between items-start">
-                        <span className="font-semibold text-green-800">復職面談</span>
+                        <span className="font-semibold text-orange-800">復職面談</span>
                         <span className="text-xs bg-gray-400 text-white px-2 py-1 rounded">開発中</span>
                       </div>
-                      <p className="text-xs text-gray-600 mt-1">休職からの復職時に実施</p>
+                      <p className="text-xs text-gray-600 mt-1">休職からの復職時</p>
                     </div>
                     <div className="bg-white/80 rounded p-2">
                       <div className="flex justify-between items-start">
-                        <span className="font-semibold text-green-800">インシデント後面談</span>
+                        <span className="font-semibold text-orange-800">インシデント後面談</span>
                         <span className="text-xs bg-gray-400 text-white px-2 py-1 rounded">開発中</span>
                       </div>
-                      <p className="text-xs text-gray-600 mt-1">インシデント発生後のフォロー</p>
+                      <p className="text-xs text-gray-600 mt-1">インシデント発生後</p>
                     </div>
                     <div className="bg-white/80 rounded p-2">
                       <div className="flex justify-between items-start">
-                        <span className="font-semibold text-green-800">退職面談</span>
+                        <span className="font-semibold text-orange-800">退職面談</span>
                         <span className="text-xs bg-gray-400 text-white px-2 py-1 rounded">開発中</span>
                       </div>
-                      <p className="text-xs text-gray-600 mt-1">退職予定者との最終面談</p>
+                      <p className="text-xs text-gray-600 mt-1">退職前のヒアリング</p>
                     </div>
                   </div>
                 </div>
 
                 {/* サポート面談 */}
-                <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 md:col-span-2">
-                  <h4 className="font-bold text-purple-900 mb-3 flex items-center gap-2">
-                    <span className="text-xl">💭</span>
-                    サポート面談（希望制）
+                <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 md:col-span-2">
+                  <h4 className="font-bold text-green-900 mb-3 flex items-center gap-2">
+                    <span className="text-xl">💬</span>
+                    サポート面談（任意）
                   </h4>
-                  <div className="grid md:grid-cols-5 gap-2">
+                  <div className="grid md:grid-cols-2 gap-2 text-sm">
                     <div className="bg-white/80 rounded p-2">
                       <div className="flex justify-between items-start">
-                        <span className="font-semibold text-purple-800 text-sm">キャリア開発面談</span>
-                        <span className="text-xs bg-gray-400 text-white px-1 py-0.5 rounded text-xs">開発中</span>
+                        <span className="font-semibold text-green-800">フィードバック面談</span>
+                        <span className="text-xs bg-gray-400 text-white px-2 py-1 rounded">開発中</span>
                       </div>
-                      <p className="text-xs text-gray-600 mt-1">キャリアプランの相談</p>
+                      <p className="text-xs text-gray-600 mt-1">人事評価後の結果共有</p>
                     </div>
                     <div className="bg-white/80 rounded p-2">
                       <div className="flex justify-between items-start">
-                        <span className="font-semibold text-purple-800 text-sm">ストレスケア面談</span>
-                        <span className="text-xs bg-gray-400 text-white px-1 py-0.5 rounded text-xs">開発中</span>
+                        <span className="font-semibold text-green-800">キャリア系面談</span>
+                        <span className="text-xs bg-gray-400 text-white px-2 py-1 rounded">開発中</span>
                       </div>
-                      <p className="text-xs text-gray-600 mt-1">メンタルヘルスサポート</p>
+                      <p className="text-xs text-gray-600 mt-1">キャリアパス、スキル開発、昇進・異動</p>
                     </div>
                     <div className="bg-white/80 rounded p-2">
                       <div className="flex justify-between items-start">
-                        <span className="font-semibold text-purple-800 text-sm">苦情・相談面談</span>
-                        <span className="text-xs bg-gray-400 text-white px-1 py-0.5 rounded text-xs">開発中</span>
+                        <span className="font-semibold text-green-800">職場環境系面談</span>
+                        <span className="text-xs bg-gray-400 text-white px-2 py-1 rounded">開発中</span>
                       </div>
-                      <p className="text-xs text-gray-600 mt-1">職場の問題や悩み相談</p>
+                      <p className="text-xs text-gray-600 mt-1">職場環境、人間関係、業務負荷</p>
                     </div>
                     <div className="bg-white/80 rounded p-2">
                       <div className="flex justify-between items-start">
-                        <span className="font-semibold text-purple-800 text-sm">人事評価面談</span>
-                        <span className="text-xs bg-gray-400 text-white px-1 py-0.5 rounded text-xs">開発中</span>
+                        <span className="font-semibold text-green-800">個別相談面談</span>
+                        <span className="text-xs bg-gray-400 text-white px-2 py-1 rounded">開発中</span>
                       </div>
-                      <p className="text-xs text-gray-600 mt-1">評価結果の詳細説明</p>
-                    </div>
-                    <div className="bg-white/80 rounded p-2">
-                      <div className="flex justify-between items-start">
-                        <span className="font-semibold text-purple-800 text-sm">随時面談</span>
-                        <span className="text-xs bg-gray-400 text-white px-1 py-0.5 rounded text-xs">開発中</span>
-                      </div>
-                      <p className="text-xs text-gray-600 mt-1">その他必要時</p>
+                      <p className="text-xs text-gray-600 mt-1">パフォーマンス、給与、研修、その他</p>
                     </div>
                   </div>
                 </div>
