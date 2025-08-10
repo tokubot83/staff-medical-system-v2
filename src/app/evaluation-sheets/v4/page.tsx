@@ -84,11 +84,11 @@ export default function EvaluationSheetsV4Page() {
           title: '看護補助者',
           icon: '🤝',
           sheets: [
-            { label: '新人看護補助者（1年目）', path: '/evaluation-sheets/v4/chronic-nursing-aide/chronic-new-nursing-aide-evaluation-v4-pattern5', implemented: true },
-            { label: '一般看護補助者（2-3年目）', path: '', implemented: false },
-            { label: '中堅看護補助者（4-10年目）', path: '', implemented: false },
-            { label: 'ベテラン看護補助者（11年以上）', path: '', implemented: false },
-            { label: 'リーダー看護補助者', path: '', implemented: false },
+            { label: '新人看護補助者（1年目）', path: '/evaluation-sheets/v4/acute-nursing-aide/new-nursing-aide-evaluation-v4-pattern5', implemented: true },
+            { label: '一般看護補助者（2-3年目）', path: '/evaluation-sheets/v4/acute-nursing-aide/junior-nursing-aide-evaluation-v4-pattern5', implemented: true },
+            { label: '中堅看護補助者（4-10年目）', path: '/evaluation-sheets/v4/acute-nursing-aide/midlevel-nursing-aide-evaluation-v4-pattern5', implemented: true },
+            { label: 'ベテラン看護補助者（11年以上）', path: '/evaluation-sheets/v4/acute-nursing-aide/veteran-nursing-aide-evaluation-v4-pattern5', implemented: true },
+            { label: 'リーダー看護補助者', path: '/evaluation-sheets/v4/acute-nursing-aide/leader-nursing-aide-evaluation-v4-pattern5', implemented: true },
           ]
         }
       ]
@@ -273,7 +273,7 @@ export default function EvaluationSheetsV4Page() {
               <h4 className="font-semibold text-gray-700 mb-2">🔧 開発メモ</h4>
               <p className="text-sm text-gray-600">
                 評価シートは部署（急性期・慢性期・外来）と職種（看護師・准看護師・看護補助者）、
-                経験年数で分類されています。現在、急性期は全職種実装済み、慢性期は看護師のみ、
+                経験年数で分類されています。現在、急性期は全職種実装済み、慢性期は看護師・准看護師・看護補助者実装済み、
                 外来は看護師（管理職除く）のみ実装されています。
               </p>
             </div>
