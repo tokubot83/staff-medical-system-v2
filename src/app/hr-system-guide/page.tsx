@@ -1476,29 +1476,28 @@ export default function HRSystemGuidePage() {
                   <p className="ml-6">
                     (1) 新入職員月次面談：入職1年未満の職員を対象に月1回実施<br/>
                     (2) 一般職員年次面談：全職員を対象に年1回実施<br/>
-                    (3) 管理職半年面談：管理職を対象に半年1回実施
+                    (3) 管理職半年面談：管理職を対象に年2回実施
                   </p>
                   
                   <p className="mt-3 ml-4"><strong>2. 特別面談（3種類）</strong></p>
                   <p className="ml-6">
                     (1) 復職面談：休職からの復職時に実施<br/>
                     (2) インシデント後面談：インシデント発生後のフォローとして実施<br/>
-                    (3) 退職面談：退職予定者との最終面談
+                    (3) 退職面談：退職前に実施
                   </p>
                   
-                  <p className="mt-3 ml-4"><strong>3. サポート面談（5種類）</strong></p>
+                  <p className="mt-3 ml-4"><strong>3. サポート面談（4種類）</strong></p>
                   <p className="ml-6">
-                    (1) キャリア開発面談：キャリアプランの相談（希望者、随時）<br/>
-                    (2) ストレスケア面談：メンタルヘルスサポート（希望者、随時）<br/>
-                    (3) 苦情・相談面談：職場の問題や悩み相談（希望者、随時）<br/>
-                    (4) 評価フィードバック面談：評価結果の詳細説明（希望者、評価開示後1ヶ月以内）<br/>
-                    (5) 随時面談：その他必要時（希望者、随時）
+                    (1) フィードバック面談：人事評価後の結果共有（評価開示後1ヶ月以内）<br/>
+                    (2) キャリア系面談：キャリアパス、スキル開発、昇進・昇格、異動・転勤の相談（随時）<br/>
+                    (3) 職場環境系面談：職場環境、人間関係、業務負荷、健康・安全の相談（随時）<br/>
+                    (4) 個別相談面談：パフォーマンス、給与・待遇、研修・教育、コンプライアンス、その他の相談（随時）
                   </p>
                   
                   <p className="mt-4"><strong>第13条（面談と評価の分離）</strong></p>
                   <p className="ml-4">
                     全ての面談は「支援」を目的とし、人事評価とは完全に分離して実施する。
-                    評価フィードバック面談においても、評価者ではない人事部が中立的立場から
+                    フィードバック面談においても、評価者ではない人事部が中立的立場から
                     キャリア支援を中心とした建設的な対話を行うものとする。
                   </p>
                 </div>
@@ -1562,7 +1561,17 @@ export default function HRSystemGuidePage() {
                 </div>
 
                 <div className="border-l-4 border-orange-500 pl-4">
-                  <h4 className="font-semibold text-gray-800 mb-2">4. 面談後のアクション</h4>
+                  <h4 className="font-semibold text-gray-800 mb-2">4. サポート面談のカテゴリ選択</h4>
+                  <ul className="ml-4 space-y-1 text-gray-600">
+                    <li><strong>キャリア系：</strong>キャリアパス、スキル開発、昇進・昇格、異動・転勤</li>
+                    <li><strong>職場環境系：</strong>職場環境、人間関係、業務負荷、健康・安全</li>
+                    <li><strong>個別相談：</strong>パフォーマンス、給与・待遇、研修・教育、コンプライアンス、その他</li>
+                    <li>※ フィードバック面談はカテゴリ選択不要</li>
+                  </ul>
+                </div>
+
+                <div className="border-l-4 border-red-500 pl-4">
+                  <h4 className="font-semibold text-gray-800 mb-2">5. 面談後のアクション</h4>
                   <ul className="ml-4 space-y-1 text-gray-600">
                     <li>• 面談シートを3日以内に人事部提出</li>
                     <li>• 合意した目標・改善策を文書化</li>

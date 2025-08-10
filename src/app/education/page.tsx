@@ -28,6 +28,7 @@ import {
   jobCategoryNames,
   experienceLevelNames
 } from '@/data/evaluationMasterData';
+import LegalTrainingGuide from '@/components/education/LegalTrainingGuide';
 
 interface TrainingProgram {
   id: string;
@@ -203,10 +204,11 @@ export default function EducationPage() {
       </div>
 
       <Tabs defaultValue="programs" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="programs">研修プログラム</TabsTrigger>
           <TabsTrigger value="mapping">評価項目マッピング</TabsTrigger>
           <TabsTrigger value="analytics">分析・レポート</TabsTrigger>
+          <TabsTrigger value="guide">ガイド</TabsTrigger>
         </TabsList>
 
         {/* 研修プログラムタブ */}
@@ -480,6 +482,11 @@ export default function EducationPage() {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* ガイドタブ */}
+        <TabsContent value="guide" className="space-y-6">
+          <LegalTrainingGuide />
         </TabsContent>
       </Tabs>
     </div>
