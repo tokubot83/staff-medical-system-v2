@@ -104,8 +104,8 @@ export default function EvaluationSheetsV4Page() {
             { label: '一般看護師（2-3年目）', path: '/evaluation-sheets/v4/outpatient-nurse/junior-outpatient-nurse-evaluation-v4-pattern5', implemented: true },
             { label: '中堅看護師（4-10年目）', path: '/evaluation-sheets/v4/outpatient-nurse/midlevel-outpatient-nurse-evaluation-v4-pattern5', implemented: true },
             { label: 'ベテラン看護師（11年以上）', path: '/evaluation-sheets/v4/outpatient-nurse/veteran-outpatient-nurse-evaluation-v4-pattern5', implemented: true },
-            { label: '外来主任', path: '', implemented: false },
-            { label: '外来師長', path: '', implemented: false },
+            { label: '外来主任', path: '/evaluation-sheets/v4/outpatient-chief', implemented: true },
+            { label: '外来師長', path: '/evaluation-sheets/v4/outpatient-manager', implemented: true },
           ]
         },
         {

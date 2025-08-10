@@ -1,0 +1,179 @@
+{
+  "id": "outpatient-manager-v4",
+  "name": "外来師長評価シート",
+  "version": "4.0",
+  "category": "outpatient",
+  "role": "manager",
+  "description": "外来師長の経営管理能力と戦略的リーダーシップを評価",
+  "evaluationStructure": {
+    "technical": {
+      "weight": 50,
+      "description": "技術評価（360度評価）",
+      "evaluators": {
+        "superior": {
+          "weight": 60,
+          "evaluator": "看護部長・病院長"
+        },
+        "self": {
+          "weight": 40,
+          "evaluator": "本人"
+        }
+      }
+    },
+    "facilityContribution": {
+      "weight": 25,
+      "description": "施設貢献（相対評価）"
+    },
+    "corporateContribution": {
+      "weight": 25,
+      "description": "法人貢献（相対評価）"
+    }
+  },
+  "technicalEvaluationItems": [
+    {
+      "id": "business-results",
+      "name": "外来部門の経営成果",
+      "description": "外来収益向上、効率的運営、患者満足度向上への貢献",
+      "grades": {
+        "S": "法人トップクラスの成果達成、革新的改善実施",
+        "A": "目標を大幅に上回る成果、効果的な改善実施",
+        "B": "目標達成、標準的な運営管理",
+        "C": "目標を下回る、改善が必要",
+        "D": "著しく低い成果、重大な問題あり"
+      }
+    },
+    {
+      "id": "team-leadership",
+      "name": "外来チーム統括とリーダーシップ",
+      "description": "多職種連携、スタッフ育成、組織力向上",
+      "grades": {
+        "S": "卓越したリーダーシップで最高水準のチーム運営",
+        "A": "優れたリーダーシップで高い組織力を実現",
+        "B": "安定したチーム運営を維持",
+        "C": "チーム運営に課題あり",
+        "D": "重大な組織運営上の問題"
+      }
+    },
+    {
+      "id": "strategic-planning",
+      "name": "外来戦略立案と実行",
+      "description": "中長期計画策定、新規サービス開発、地域連携強化",
+      "grades": {
+        "S": "革新的な戦略で外来部門を変革",
+        "A": "効果的な戦略立案と着実な実行",
+        "B": "適切な戦略対応",
+        "C": "短期的視点に偏重",
+        "D": "戦略性の欠如"
+      }
+    },
+    {
+      "id": "quality-safety",
+      "name": "医療の質と安全管理",
+      "description": "外来医療の質向上、インシデント削減、感染管理",
+      "grades": {
+        "S": "最高水準の質と安全を確立",
+        "A": "高い質と安全性を維持",
+        "B": "標準的な質と安全管理",
+        "C": "質・安全管理に課題",
+        "D": "重大な質・安全上の問題"
+      }
+    }
+  ],
+  "facilityContributionItems": [
+    {
+      "id": "outpatient-innovation",
+      "name": "外来運営改革・新規プロジェクト主導",
+      "points": 20,
+      "unit": "件"
+    },
+    {
+      "id": "cross-department",
+      "name": "診療科横断的な調整・改善活動",
+      "points": 15,
+      "unit": "件"
+    },
+    {
+      "id": "management-committee",
+      "name": "病院経営会議・管理者会議参加",
+      "points": 10,
+      "unit": "回"
+    },
+    {
+      "id": "quality-improvement",
+      "name": "外来品質改善プロジェクトリード",
+      "points": 15,
+      "unit": "件"
+    },
+    {
+      "id": "staff-development",
+      "name": "外来スタッフ教育プログラム開発・実施",
+      "points": 12,
+      "unit": "回"
+    },
+    {
+      "id": "emergency-management",
+      "name": "緊急時対応・危機管理統括",
+      "points": 8,
+      "unit": "件"
+    }
+  ],
+  "corporateContributionItems": [
+    {
+      "id": "corporate-strategy",
+      "name": "法人戦略プロジェクト参画",
+      "points": 25,
+      "unit": "件"
+    },
+    {
+      "id": "corporate-committee",
+      "name": "法人委員会活動（委員長・副委員長）",
+      "points": 15,
+      "unit": "回"
+    },
+    {
+      "id": "external-relations",
+      "name": "対外活動・地域連携会議参加",
+      "points": 12,
+      "unit": "回"
+    },
+    {
+      "id": "cross-facility",
+      "name": "他施設支援・連携活動",
+      "points": 18,
+      "unit": "日"
+    },
+    {
+      "id": "corporate-training",
+      "name": "法人研修講師・ファシリテーター",
+      "points": 20,
+      "unit": "回"
+    },
+    {
+      "id": "research-publication",
+      "name": "学会発表・論文執筆",
+      "points": 15,
+      "unit": "件"
+    }
+  ],
+  "scoringRules": {
+    "gradeToScore": {
+      "S": 1.0,
+      "A": 0.85,
+      "B": 0.70,
+      "C": 0.55,
+      "D": 0.40
+    },
+    "percentileToScore": {
+      "10": 25,
+      "20": 22.5,
+      "30": 20,
+      "40": 17.5,
+      "50": 15,
+      "60": 12.5,
+      "70": 10,
+      "80": 7.5,
+      "90": 5,
+      "100": 2.5
+    }
+  }
+}

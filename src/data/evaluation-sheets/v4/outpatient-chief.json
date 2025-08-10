@@ -1,0 +1,179 @@
+{
+  "id": "outpatient-chief-v4",
+  "name": "外来主任評価シート",
+  "version": "4.0",
+  "category": "outpatient",
+  "role": "chief",
+  "description": "外来主任の管理能力とチーム統括力を評価",
+  "evaluationStructure": {
+    "technical": {
+      "weight": 50,
+      "description": "技術評価（360度評価）",
+      "evaluators": {
+        "superior": {
+          "weight": 60,
+          "evaluator": "師長・看護部長"
+        },
+        "self": {
+          "weight": 40,
+          "evaluator": "本人"
+        }
+      }
+    },
+    "facilityContribution": {
+      "weight": 25,
+      "description": "施設貢献（相対評価）"
+    },
+    "corporateContribution": {
+      "weight": 25,
+      "description": "法人貢献（相対評価）"
+    }
+  },
+  "technicalEvaluationItems": [
+    {
+      "id": "team-management",
+      "name": "外来チームの管理・統括",
+      "description": "シフト管理、業務調整、スタッフサポート",
+      "grades": {
+        "S": "卓越した管理で高い成果と満足度を実現",
+        "A": "効果的な管理で期待を上回る成果",
+        "B": "標準的な管理業務を遂行",
+        "C": "管理に課題があり改善が必要",
+        "D": "不適切な管理で問題発生"
+      }
+    },
+    {
+      "id": "staff-development",
+      "name": "外来スタッフの育成・能力開発",
+      "description": "新人指導、スキル向上支援、キャリア開発",
+      "grades": {
+        "S": "体系的な育成で優秀な人材を輩出",
+        "A": "積極的な育成支援で成長を促進",
+        "B": "適切な指導と支援を実施",
+        "C": "育成支援が不十分",
+        "D": "育成を軽視または放棄"
+      }
+    },
+    {
+      "id": "outpatient-operations",
+      "name": "外来運営への参画",
+      "description": "業務改善提案、効率化推進、品質向上活動",
+      "grades": {
+        "S": "主導的に運営改善を推進し成果を創出",
+        "A": "積極的に参画し改善に貢献",
+        "B": "適切な業務遂行と協力",
+        "C": "消極的な参画姿勢",
+        "D": "運営への不参加"
+      }
+    },
+    {
+      "id": "leadership",
+      "name": "管理職としてのリーダーシップ",
+      "description": "チーム統率、問題解決、意思決定",
+      "grades": {
+        "S": "模範的な管理職として組織を牽引",
+        "A": "優れたリーダーシップを発揮",
+        "B": "適切な管理とリーダーシップ",
+        "C": "リーダーシップに課題あり",
+        "D": "不適切な管理行動"
+      }
+    }
+  ],
+  "facilityContributionItems": [
+    {
+      "id": "preceptor-coordination",
+      "name": "プリセプター調整・教育支援",
+      "points": 8,
+      "unit": "月"
+    },
+    {
+      "id": "improvement-project",
+      "name": "外来業務改善プロジェクト参加",
+      "points": 12,
+      "unit": "件"
+    },
+    {
+      "id": "committee-participation",
+      "name": "院内委員会活動参加",
+      "points": 5,
+      "unit": "回"
+    },
+    {
+      "id": "special-clinic",
+      "name": "特殊外来・専門外来担当",
+      "points": 6,
+      "unit": "日"
+    },
+    {
+      "id": "emergency-response",
+      "name": "緊急対応・トリアージリーダー",
+      "points": 10,
+      "unit": "回"
+    },
+    {
+      "id": "staff-training",
+      "name": "スタッフ研修企画・実施",
+      "points": 8,
+      "unit": "回"
+    },
+    {
+      "id": "quality-control",
+      "name": "外来品質管理活動",
+      "points": 7,
+      "unit": "月"
+    }
+  ],
+  "corporateContributionItems": [
+    {
+      "id": "corporate-committee",
+      "name": "法人委員会活動参加",
+      "points": 10,
+      "unit": "回"
+    },
+    {
+      "id": "cross-facility-support",
+      "name": "他施設支援・応援業務",
+      "points": 15,
+      "unit": "日"
+    },
+    {
+      "id": "corporate-project",
+      "name": "法人プロジェクト参加",
+      "points": 12,
+      "unit": "回"
+    },
+    {
+      "id": "corporate-training",
+      "name": "法人研修参加・発表",
+      "points": 8,
+      "unit": "回"
+    },
+    {
+      "id": "external-activity",
+      "name": "対外活動・地域連携参加",
+      "points": 10,
+      "unit": "回"
+    }
+  ],
+  "scoringRules": {
+    "gradeToScore": {
+      "S": 1.0,
+      "A": 0.85,
+      "B": 0.70,
+      "C": 0.55,
+      "D": 0.40
+    },
+    "percentileToScore": {
+      "10": 25,
+      "20": 22.5,
+      "30": 20,
+      "40": 17.5,
+      "50": 15,
+      "60": 12.5,
+      "70": 10,
+      "80": 7.5,
+      "90": 5,
+      "100": 2.5
+    }
+  }
+}

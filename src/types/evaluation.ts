@@ -97,6 +97,79 @@ export function calculateTotalScore(scores: EvaluationScores): number {
   return values.reduce((sum, score) => sum + score, 0) / values.length
 }
 
+// V4評価シート用の型定義
+export interface V4EvaluationSheet {
+  id: string
+  name: string
+  version: string
+  category: 'outpatient' | 'acute' | 'chronic' | 'roken' | 'grouphome'
+  role: 'nurse' | 'chief' | 'manager' | 'assistant-nurse' | 'nursing-aide'
+  description: string
+  evaluationStructure: {
+    technical: {
+      weight: number
+      description: string
+      evaluators: {
+        superior: {
+          weight: number
+          evaluator: string
+        }
+        self: {
+          weight: number
+          evaluator: string
+        }
+      }
+    }
+    facilityContribution: {
+      weight: number
+      description: string
+    }
+    corporateContribution: {
+      weight: number
+      description: string
+    }
+  }
+  technicalEvaluationItems: V4TechnicalItem[]
+  facilityContributionItems: V4ContributionItem[]
+  corporateContributionItems: V4ContributionItem[]
+  scoringRules: V4ScoringRules
+}
+
+export interface V4TechnicalItem {
+  id: string
+  name: string
+  description: string
+  grades: {
+    S: string
+    A: string
+    B: string
+    C: string
+    D: string
+  }
+}
+
+export interface V4ContributionItem {
+  id: string
+  name: string
+  points: number
+  unit: string
+}
+
+export interface V4ScoringRules {
+  gradeToScore: Record<EvaluationGrade, number>
+  percentileToScore: Record<string, number>
+}
+
+export interface V4EvaluationScores {
+  superiorEval: Record<string, number>
+  selfEval: Record<string, number>
+}
+
+export interface V4ContributionPoints {
+  facility: number
+  corporate: number
+}
+
 export function getGradeColor(grade: EvaluationGrade): string {
   const colors: Record<EvaluationGrade, string> = {
     S: '#ff6b6b',
