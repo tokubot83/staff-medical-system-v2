@@ -10,6 +10,7 @@ import { Doughnut, Bar, Line } from 'react-chartjs-2'
 import { useSearchParams } from 'next/navigation'
 import LegalTrainingGuide from '@/components/education/LegalTrainingGuide'
 import EvaluationItemBank from '@/components/training/EvaluationItemBank'
+import TrainingPlanGenerator from '@/components/training/TrainingPlanGenerator'
 
 ChartJS.register(
   ArcElement,
@@ -25,6 +26,7 @@ ChartJS.register(
 
 const tabs = [
   { id: 'programs', label: '研修プログラム', icon: '📚' },
+  { id: 'planning', label: '研修計画', icon: '📅' },
   { id: 'schedule', label: 'スケジュール', icon: '📅' },
   { id: 'progress', label: '進捗管理', icon: '📊' },
   { id: 'individual', label: '個人管理', icon: '👤' },
@@ -227,6 +229,7 @@ function TrainingPageContent() {
               onProgramSelect={handleProgramSelect}
             />
           )}
+          {activeTab === 'planning' && <TrainingPlanningTab />}
           {activeTab === 'schedule' && <ScheduleTab />}
           {activeTab === 'progress' && <ProgressTab selectedProgram={selectedProgram} />}
           {activeTab === 'individual' && <IndividualTab staff={mockStaff} selectedStaff={selectedStaff} setSelectedStaff={setSelectedStaff} />}
@@ -967,6 +970,14 @@ function AnalyticsTab(): React.ReactElement {
           </div>
         </div>
       </div>
+    </div>
+  )
+}
+
+function TrainingPlanningTab(): React.ReactElement {
+  return (
+    <div className={styles.planningTabContainer}>
+      <TrainingPlanGenerator />
     </div>
   )
 }
