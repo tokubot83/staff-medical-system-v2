@@ -13,6 +13,9 @@ import { InfoIcon, Calculator, Award, Users, Building, Heart } from 'lucide-reac
 import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
+type TechnicalScoreCategory = 'skills' | 'knowledge' | 'patient' | 'safety';
+type EvaluatorType = 'superiorEval' | 'selfEval';
+
 export default function ChronicNewNursingAideEvaluationV4Pattern5() {
   // 評価項目の状態管理
   const [technicalScores, setTechnicalScores] = useState({
@@ -67,12 +70,12 @@ export default function ChronicNewNursingAideEvaluationV4Pattern5() {
     setTotalScore(Math.round((technical + facility + corporate) * 10) / 10);
   }, [technicalScores, facilityRank, corporateRank]);
 
-  const handleTechnicalScoreChange = (evaluator: string, category: string, grade: string) => {
+  const handleTechnicalScoreChange = (evaluator: EvaluatorType, category: TechnicalScoreCategory, grade: keyof typeof gradeToScore) => {
     setTechnicalScores(prev => ({
       ...prev,
       [evaluator]: {
         ...prev[evaluator],
-        [category]: gradeToScore[grade as keyof typeof gradeToScore] || 0
+        [category]: gradeToScore[grade] || 0
       }
     }));
   };
