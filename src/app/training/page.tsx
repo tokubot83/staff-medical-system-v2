@@ -9,6 +9,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearSca
 import { Doughnut, Bar, Line } from 'react-chartjs-2'
 import { useSearchParams } from 'next/navigation'
 import LegalTrainingGuide from '@/components/education/LegalTrainingGuide'
+import EvaluationItemBank from '@/components/training/EvaluationItemBank'
 
 ChartJS.register(
   ArcElement,
@@ -29,6 +30,7 @@ const tabs = [
   { id: 'individual', label: '個人管理', icon: '👤' },
   { id: 'history', label: '受講履歴', icon: '📝' },
   { id: 'analytics', label: '分析', icon: '📈' },
+  { id: 'itembank', label: '項目バンク', icon: '📋' },
   { id: 'guide', label: 'ガイド', icon: '📖' },
   { id: 'settings', label: '設定', icon: '⚙️' },
 ]
@@ -230,6 +232,7 @@ function TrainingPageContent() {
           {activeTab === 'individual' && <IndividualTab staff={mockStaff} selectedStaff={selectedStaff} setSelectedStaff={setSelectedStaff} />}
           {activeTab === 'history' && <HistoryTab />}
           {activeTab === 'analytics' && <AnalyticsTab />}
+          {activeTab === 'itembank' && <ItemBankTab />}
           {activeTab === 'guide' && <GuideTab />}
           {activeTab === 'settings' && <SettingsTab />}
         </div>
@@ -964,6 +967,14 @@ function AnalyticsTab(): React.ReactElement {
           </div>
         </div>
       </div>
+    </div>
+  )
+}
+
+function ItemBankTab(): React.ReactElement {
+  return (
+    <div className={styles.itemBankTabContainer}>
+      <EvaluationItemBank />
     </div>
   )
 }

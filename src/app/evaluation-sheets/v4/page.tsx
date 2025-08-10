@@ -122,10 +122,11 @@ export default function EvaluationSheetsV4Page() {
           title: '看護補助者',
           icon: '🤝',
           sheets: [
-            { label: '新人看護補助者（1年目）', path: '', implemented: false },
-            { label: '一般看護補助者（2-3年目）', path: '', implemented: false },
-            { label: '中堅看護補助者（4-10年目）', path: '', implemented: false },
-            { label: 'ベテラン看護補助者（11年以上）', path: '', implemented: false },
+            { label: '新人看護補助者（1年目）', path: '/evaluation-sheets/v4/chronic-nursing-aide/new', implemented: true },
+            { label: '初級看護補助者（2-3年目）', path: '/evaluation-sheets/v4/chronic-nursing-aide/junior', implemented: true },
+            { label: '中堅看護補助者（4-7年目）', path: '/evaluation-sheets/v4/chronic-nursing-aide/midlevel', implemented: true },
+            { label: 'ベテラン看護補助者（8年以上）', path: '/evaluation-sheets/v4/chronic-nursing-aide/veteran', implemented: true },
+            { label: 'リーダー看護補助者', path: '/evaluation-sheets/v4/chronic-nursing-aide/leader', implemented: true },
           ]
         }
       ]
