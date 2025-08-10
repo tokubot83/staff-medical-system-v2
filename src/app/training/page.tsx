@@ -8,6 +8,7 @@ import styles from './Training.module.css'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title, PointElement, LineElement } from 'chart.js'
 import { Doughnut, Bar, Line } from 'react-chartjs-2'
 import { useSearchParams } from 'next/navigation'
+import LegalTrainingGuide from '@/components/education/LegalTrainingGuide'
 
 ChartJS.register(
   ArcElement,
@@ -28,6 +29,7 @@ const tabs = [
   { id: 'individual', label: '個人管理', icon: '👤' },
   { id: 'history', label: '受講履歴', icon: '📝' },
   { id: 'analytics', label: '分析', icon: '📈' },
+  { id: 'guide', label: 'ガイド', icon: '📖' },
   { id: 'settings', label: '設定', icon: '⚙️' },
 ]
 
@@ -228,6 +230,7 @@ function TrainingPageContent() {
           {activeTab === 'individual' && <IndividualTab staff={mockStaff} selectedStaff={selectedStaff} setSelectedStaff={setSelectedStaff} />}
           {activeTab === 'history' && <HistoryTab />}
           {activeTab === 'analytics' && <AnalyticsTab />}
+          {activeTab === 'guide' && <GuideTab />}
           {activeTab === 'settings' && <SettingsTab />}
         </div>
       </div>
@@ -961,6 +964,14 @@ function AnalyticsTab(): React.ReactElement {
           </div>
         </div>
       </div>
+    </div>
+  )
+}
+
+function GuideTab(): React.ReactElement {
+  return (
+    <div className={styles.guideContainer}>
+      <LegalTrainingGuide />
     </div>
   )
 }
