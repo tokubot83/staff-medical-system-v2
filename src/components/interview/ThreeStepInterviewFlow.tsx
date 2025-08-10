@@ -6,7 +6,7 @@ import InterviewSheetSelector from '@/components/interview/InterviewSheetSelecto
 import InterviewSheetWrapper from '@/components/interview/InterviewSheetWrapper';
 import { getExperienceCategory } from '@/utils/experienceUtils';
 import styles from './ThreeStepInterviewFlow.module.css';
-import { InterviewCategory, requiresCategory, availableCategories } from '@/types/interview';
+import { InterviewType, InterviewCategory, requiresCategory, availableCategories } from '@/types/interview';
 
 // 面談分類の定義
 const interviewClassifications = [
@@ -74,7 +74,7 @@ export default function ThreeStepInterviewFlow() {
     setSelectedType(typeId);
     
     // カテゴリが必要な面談かチェック
-    if (requiresCategory(typeId)) {
+    if (requiresCategory(typeId as InterviewType)) {
       setCurrentStep(3);
     } else {
       setCurrentStep(4);
@@ -89,7 +89,7 @@ export default function ThreeStepInterviewFlow() {
 
   // Step 4: 職員と日時を選択
   const handleStaffDateSelect = (staffId: string, date: string, time: string) => {
-    const staff = staffDatabase.find(s => s.id === staffId);
+    const staff = Object.values(staffDatabase).find(s => s.id === staffId);
     setSelectedStaff(staff);
     setSelectedDate(date);
     setSelectedTime(time);
@@ -125,7 +125,7 @@ export default function ThreeStepInterviewFlow() {
   // プログレスバーのレンダリング
   const renderProgressBar = () => {
     const steps = ['面談分類', '面談種別', 'カテゴリ', '職員・日時'];
-    const totalSteps = requiresCategory(selectedType) ? 4 : 3;
+    const totalSteps = requiresCategory(selectedType as InterviewType) ? 4 : 3;
     
     return (
       <div className={styles.progressBar}>
@@ -135,7 +135,7 @@ export default function ThreeStepInterviewFlow() {
           const isCompleted = stepNumber < currentStep;
           
           // カテゴリステップをスキップする場合の調整
-          if (!requiresCategory(selectedType) && stepNumber === 3) {
+          if (!requiresCategory(selectedType as InterviewType) && stepNumber === 3) {
             return null;
           }
           
@@ -177,12 +177,16 @@ export default function ThreeStepInterviewFlow() {
   };
 
   if (showInterviewSheet && selectedStaff) {
+    // Calculate experience category based on tenure
+    const tenureYears = parseInt(selectedStaff.tenure) || 0;
+    const experienceCategory = getExperienceCategory(tenureYears);
+    
     return (
       <InterviewSheetWrapper
-        staffMember={selectedStaff}
-        interviewType={selectedType}
-        category={selectedCategory}
-        onBack={resetFlow}
+        experienceCategory={experienceCategory}
+        duration={30}
+        staffName={selectedStaff.name}
+        yearsOfExperience={tenureYears}
       />
     );
   }
@@ -239,7 +243,7 @@ export default function ThreeStepInterviewFlow() {
         )}
 
         {/* Step 3: カテゴリ選択（必要な場合のみ） */}
-        {currentStep === 3 && requiresCategory(selectedType) && (
+        {currentStep === 3 && requiresCategory(selectedType as InterviewType) && (
           <div className={styles.stepContent}>
             <h2>ステップ3: 相談カテゴリを選択してください</h2>
             <button onClick={goBack} className={styles.backButton}>← 戻る</button>
@@ -260,7 +264,7 @@ export default function ThreeStepInterviewFlow() {
         {/* Step 4: 職員・日時選択 */}
         {currentStep === 4 && (
           <div className={styles.stepContent}>
-            <h2>ステップ{requiresCategory(selectedType) ? '4' : '3'}: 職員と日時を選択してください</h2>
+            <h2>ステップ{requiresCategory(selectedType as InterviewType) ? '4' : '3'}: 職員と日時を選択してください</h2>
             <button onClick={goBack} className={styles.backButton}>← 戻る</button>
             
             <div className={styles.staffDateSelector}>
@@ -269,15 +273,15 @@ export default function ThreeStepInterviewFlow() {
                 <select 
                   className={styles.staffSelect}
                   onChange={(e) => {
-                    const staff = staffDatabase.find(s => s.id === e.target.value);
+                    const staff = Object.values(staffDatabase).find(s => s.id === e.target.value);
                     setSelectedStaff(staff);
                   }}
                   value={selectedStaff?.id || ''}
                 >
                   <option value="">職員を選択してください</option>
-                  {staffDatabase.map(staff => (
+                  {Object.values(staffDatabase).map(staff => (
                     <option key={staff.id} value={staff.id}>
-                      {staff.name} - {staff.department} ({getExperienceCategory(staff.yearsOfExperience)})
+                      {staff.name} - {staff.department}
                     </option>
                   ))}
                 </select>
