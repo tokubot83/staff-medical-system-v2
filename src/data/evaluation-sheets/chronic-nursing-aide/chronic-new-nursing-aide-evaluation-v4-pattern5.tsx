@@ -13,9 +13,7 @@ import { InfoIcon, Calculator, Award, Users, Building, Heart } from 'lucide-reac
 import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
-type TechnicalScoreCategory = 'skills' | 'knowledge' | 'patient' | 'safety';
-type EvaluatorType = 'superiorEval' | 'selfEval';
-export default function ChronicVeteranAssistantNurseEvaluationV4Pattern5() {
+export default function ChronicNewNursingAideEvaluationV4Pattern5() {
   // 評価項目の状態管理
   const [technicalScores, setTechnicalScores] = useState({
     superiorEval: { skills: 0, knowledge: 0, patient: 0, safety: 0 },
@@ -48,7 +46,7 @@ export default function ChronicVeteranAssistantNurseEvaluationV4Pattern5() {
   };
 
   // 貢献度評価の計算（各25点満点）
-  const calculateContributionScore = (percentile: number) => {
+  const calculateContributionScore = (percentile) => {
     if (percentile <= 10) return 25;
     if (percentile <= 20) return 22.5;
     if (percentile <= 30) return 20;
@@ -69,7 +67,7 @@ export default function ChronicVeteranAssistantNurseEvaluationV4Pattern5() {
     setTotalScore(Math.round((technical + facility + corporate) * 10) / 10);
   }, [technicalScores, facilityRank, corporateRank]);
 
-  const handleTechnicalScoreChange = (evaluator: EvaluatorType, category: TechnicalScoreCategory, grade: keyof typeof gradeToScore) => {
+  const handleTechnicalScoreChange = (evaluator, category, grade) => {
     setTechnicalScores(prev => ({
       ...prev,
       [evaluator]: {
@@ -79,7 +77,7 @@ export default function ChronicVeteranAssistantNurseEvaluationV4Pattern5() {
     }));
   };
 
-  const getScoreColor = (score: number) => {
+  const getScoreColor = (score) => {
     if (score >= 90) return 'text-red-600';
     if (score >= 80) return 'text-orange-600';
     if (score >= 70) return 'text-green-600';
@@ -92,10 +90,10 @@ export default function ChronicVeteranAssistantNurseEvaluationV4Pattern5() {
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">
-            【慢性期医療】ベテラン准看護師（8年目以上） 人事評価シート v4.0
+            【慢性期医療】新人看護補助者（1年目） 人事評価シート v4.0
           </CardTitle>
           <p className="text-center text-gray-600 mt-2">
-            パターン5改良版 - 慢性期ケアの熟練性と組織への影響力・後進育成を重視
+            パターン5改良版 - 慢性期における基本的な生活援助技術の習得と職場適応を重視
           </p>
         </CardHeader>
         <CardContent>
@@ -104,7 +102,7 @@ export default function ChronicVeteranAssistantNurseEvaluationV4Pattern5() {
             <AlertDescription>
               <strong>評価構成：</strong>技術評価（360度評価）50点 + 施設貢献（相対評価）25点 + 法人貢献（相対評価）25点
               <br />
-              慢性期医療におけるベテラン准看護師は、卓越した療養ケアの実践と組織文化の醸成・知識技術の伝承を重点的に評価します
+              慢性期医療における新人看護補助者は、基本的な生活援助技術の習得と長期療養患者への配慮を重点的に評価します
             </AlertDescription>
           </Alert>
 
@@ -166,7 +164,7 @@ export default function ChronicVeteranAssistantNurseEvaluationV4Pattern5() {
                 </div>
                 <div>
                   <Label htmlFor="eval-period">評価時期</Label>
-                  <Input type="text" id="eval-period" placeholder="2024年度上期 / 下期" />
+                  <Input type="text" id="eval-period" placeholder="入職3ヶ月 / 6ヶ月 / 12ヶ月" />
                 </div>
               </div>
 
@@ -189,7 +187,17 @@ export default function ChronicVeteranAssistantNurseEvaluationV4Pattern5() {
                   </div>
                   <div>
                     <Label htmlFor="corp-experience">法人経験年数</Label>
-                    <Input type="text" id="corp-experience" placeholder="8年以上" />
+                    <Input type="text" id="corp-experience" placeholder="1年目" readOnly />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4 mt-4">
+                  <div>
+                    <Label htmlFor="previous-experience">前職経験</Label>
+                    <Input type="text" id="previous-experience" placeholder="なし / 介護施設○年（参考）" />
+                  </div>
+                  <div>
+                    <Label htmlFor="qualification">保有資格</Label>
+                    <Input type="text" id="qualification" placeholder="介護職員初任者研修修了等" />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4 mt-4">
@@ -198,8 +206,8 @@ export default function ChronicVeteranAssistantNurseEvaluationV4Pattern5() {
                     <Input type="text" id="department" placeholder="例：療養病棟、認知症病棟" />
                   </div>
                   <div>
-                    <Label htmlFor="mentor-role">メンター・指導役割</Label>
-                    <Input type="text" id="mentor-role" placeholder="教育責任者、実習指導者等" />
+                    <Label htmlFor="instructor">指導担当者</Label>
+                    <Input type="text" id="instructor" />
                   </div>
                 </div>
               </div>
@@ -208,11 +216,11 @@ export default function ChronicVeteranAssistantNurseEvaluationV4Pattern5() {
                 <h3 className="font-semibold mb-3">評価者情報</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="evaluator1">1次評価者（主任看護師）</Label>
+                    <Label htmlFor="evaluator1">1次評価者（リーダー看護補助者）</Label>
                     <Input type="text" id="evaluator1" />
                   </div>
                   <div>
-                    <Label htmlFor="evaluator2">2次評価者（師長）</Label>
+                    <Label htmlFor="evaluator2">2次評価者（主任・師長）</Label>
                     <Input type="text" id="evaluator2" />
                   </div>
                 </div>
@@ -226,17 +234,17 @@ export default function ChronicVeteranAssistantNurseEvaluationV4Pattern5() {
                 <p className="text-sm text-gray-600 mb-4">
                   上司評価60％（30点）＋ 本人評価40％（20点）で算出
                   <br />
-                  ベテラン准看護師は卓越した慢性期ケアの実践と組織への影響力・知識技術の伝承を重視
+                  慢性期における基本的な生活援助技術と患者への配慮を重視
                 </p>
               </div>
 
               {/* 上司評価セクション */}
               <div className="border rounded-lg p-4">
-                <h4 className="font-semibold mb-4 text-blue-600">上司評価（60％）</h4>
+                <h4 className="font-semibold mb-4 text-blue-600">上司・指導者評価（60％）</h4>
                 
                 <div className="space-y-4">
                   <div>
-                    <Label className="text-sm font-medium">1. 卓越した慢性期ケア技術と専門性</Label>
+                    <Label className="text-sm font-medium">1. 基本的な生活援助技術の習得</Label>
                     <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('superiorEval', 'skills', value)}>
                       <div className="grid grid-cols-5 gap-2 mt-2">
                         {['S', 'A', 'B', 'C', 'D'].map((grade) => (
@@ -248,14 +256,14 @@ export default function ChronicVeteranAssistantNurseEvaluationV4Pattern5() {
                       </div>
                     </RadioGroup>
                     <p className="text-xs text-gray-500 mt-1">
-                      S:模範的・革新的実践 A:卓越した実践 B:高度な実践 C:標準的実践 D:要改善
+                      S:予定より早く習得・実践 A:順調に習得 B:標準的 C:遅れあり D:大幅な遅れ
                       <br />
-                      （困難事例への対応、複雑な終末期ケア、高度な認知症ケア、家族支援のエキスパート等）
+                      （食事介助、排泄介助、入浴介助、移動介助、環境整備、シーツ交換等）
                     </p>
                   </div>
 
                   <div>
-                    <Label className="text-sm font-medium">2. 慢性期医療の深い知識と革新的提案</Label>
+                    <Label className="text-sm font-medium">2. 慢性期患者の特性理解と配慮</Label>
                     <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('superiorEval', 'knowledge', value)}>
                       <div className="grid grid-cols-5 gap-2 mt-2">
                         {['S', 'A', 'B', 'C', 'D'].map((grade) => (
@@ -267,14 +275,14 @@ export default function ChronicVeteranAssistantNurseEvaluationV4Pattern5() {
                       </div>
                     </RadioGroup>
                     <p className="text-xs text-gray-500 mt-1">
-                      S:革新的な知識活用 A:深い専門知識 B:豊富な知識 C:適切な知識 D:知識更新必要
+                      S:深い理解と配慮 A:良好な理解 B:基本的理解 C:理解不足 D:大幅な不足
                       <br />
-                      （エビデンスに基づく実践、新しいケア方法の導入、ケアの標準化推進等）
+                      （長期療養の心理、個別性への配慮、生活リズムの把握、認知症の基礎理解等）
                     </p>
                   </div>
 
                   <div>
-                    <Label className="text-sm font-medium">3. 組織文化の醸成と後進育成への貢献</Label>
+                    <Label className="text-sm font-medium">3. 患者との関わりとコミュニケーション</Label>
                     <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('superiorEval', 'patient', value)}>
                       <div className="grid grid-cols-5 gap-2 mt-2">
                         {['S', 'A', 'B', 'C', 'D'].map((grade) => (
@@ -286,14 +294,14 @@ export default function ChronicVeteranAssistantNurseEvaluationV4Pattern5() {
                       </div>
                     </RadioGroup>
                     <p className="text-xs text-gray-500 mt-1">
-                      S:卓越した影響力 A:強い影響力 B:良好な貢献 C:適切な貢献 D:消極的
+                      S:優れた関わり A:丁寧で適切 B:標準的 C:改善必要 D:要指導
                       <br />
-                      （メンタリング、技術伝承、組織文化の構築、チーム精神の醸成等）
+                      （声かけ、傾聴、尊厳の保持、プライバシー配慮、優しい態度等）
                     </p>
                   </div>
 
                   <div>
-                    <Label className="text-sm font-medium">4. 組織全体の質向上とリスク管理への主導</Label>
+                    <Label className="text-sm font-medium">4. 安全への配慮と報告・連絡</Label>
                     <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('superiorEval', 'safety', value)}>
                       <div className="grid grid-cols-5 gap-2 mt-2">
                         {['S', 'A', 'B', 'C', 'D'].map((grade) => (
@@ -305,9 +313,9 @@ export default function ChronicVeteranAssistantNurseEvaluationV4Pattern5() {
                       </div>
                     </RadioGroup>
                     <p className="text-xs text-gray-500 mt-1">
-                      S:組織変革の推進者 A:積極的な主導 B:確実な貢献 C:適切な関与 D:要改善
+                      S:模範的な実践 A:確実な実践 B:基本的実践 C:実践に不安 D:要継続指導
                       <br />
-                      （システム改善、プロトコル作成、安全文化の確立、教育体系の構築等）
+                      （転倒予防、感染予防、異常の気づきと報告、チームへの連絡等）
                     </p>
                   </div>
                 </div>
@@ -316,7 +324,7 @@ export default function ChronicVeteranAssistantNurseEvaluationV4Pattern5() {
                   <Label htmlFor="superior-comment">上司評価コメント</Label>
                   <Textarea 
                     id="superior-comment" 
-                    placeholder="ベテランとしての模範性、組織への影響力、後進育成の成果、今後の期待など具体的に記載"
+                    placeholder="生活援助技術の習得状況、患者への配慮、優れた点、改善が必要な点など具体的に記載"
                     className="min-h-[100px]"
                   />
                 </div>
@@ -328,7 +336,7 @@ export default function ChronicVeteranAssistantNurseEvaluationV4Pattern5() {
                 
                 <div className="space-y-4">
                   <div>
-                    <Label className="text-sm font-medium">1. 卓越した慢性期ケア技術と専門性</Label>
+                    <Label className="text-sm font-medium">1. 基本的な生活援助技術の習得</Label>
                     <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('selfEval', 'skills', value)}>
                       <div className="grid grid-cols-5 gap-2 mt-2">
                         {['S', 'A', 'B', 'C', 'D'].map((grade) => (
@@ -342,7 +350,7 @@ export default function ChronicVeteranAssistantNurseEvaluationV4Pattern5() {
                   </div>
 
                   <div>
-                    <Label className="text-sm font-medium">2. 慢性期医療の深い知識と革新的提案</Label>
+                    <Label className="text-sm font-medium">2. 慢性期患者の特性理解と配慮</Label>
                     <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('selfEval', 'knowledge', value)}>
                       <div className="grid grid-cols-5 gap-2 mt-2">
                         {['S', 'A', 'B', 'C', 'D'].map((grade) => (
@@ -356,7 +364,7 @@ export default function ChronicVeteranAssistantNurseEvaluationV4Pattern5() {
                   </div>
 
                   <div>
-                    <Label className="text-sm font-medium">3. 組織文化の醸成と後進育成への貢献</Label>
+                    <Label className="text-sm font-medium">3. 患者との関わりとコミュニケーション</Label>
                     <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('selfEval', 'patient', value)}>
                       <div className="grid grid-cols-5 gap-2 mt-2">
                         {['S', 'A', 'B', 'C', 'D'].map((grade) => (
@@ -370,7 +378,7 @@ export default function ChronicVeteranAssistantNurseEvaluationV4Pattern5() {
                   </div>
 
                   <div>
-                    <Label className="text-sm font-medium">4. 組織全体の質向上とリスク管理への主導</Label>
+                    <Label className="text-sm font-medium">4. 安全への配慮と報告・連絡</Label>
                     <RadioGroup onValueChange={(value) => handleTechnicalScoreChange('selfEval', 'safety', value)}>
                       <div className="grid grid-cols-5 gap-2 mt-2">
                         {['S', 'A', 'B', 'C', 'D'].map((grade) => (
@@ -388,7 +396,7 @@ export default function ChronicVeteranAssistantNurseEvaluationV4Pattern5() {
                   <Label htmlFor="self-reflection">自己評価・振り返り</Label>
                   <Textarea 
                     id="self-reflection" 
-                    placeholder="長年の経験を通じた成長、組織への貢献、後進育成での工夫、今後の抱負など"
+                    placeholder="生活援助での学び、患者との関わりで感じたこと、今後の課題など"
                     className="min-h-[100px]"
                   />
                 </div>
@@ -411,9 +419,9 @@ export default function ChronicVeteranAssistantNurseEvaluationV4Pattern5() {
               <div>
                 <h3 className="font-bold text-lg mb-2">施設貢献評価（25点）- 相対評価</h3>
                 <p className="text-sm text-gray-600 mb-4">
-                  慢性期病棟での組織運営への貢献・文化醸成・教育体系構築を評価
+                  慢性期病棟でのチーム貢献・職場適応・積極的な姿勢を評価
                   <br />
-                  ベテラン准看護師として組織の要としての役割発揮を重視
+                  新人看護補助者として基本業務への取り組みと協調性を重視
                 </p>
               </div>
 
@@ -423,25 +431,38 @@ export default function ChronicVeteranAssistantNurseEvaluationV4Pattern5() {
                   <div className="space-y-2 text-sm">
                     <div className="flex items-start">
                       <span className="font-medium mr-2">1.</span>
-                      <span>組織の要としての調整・問題解決力</span>
+                      <span>チーム内での協調性と積極的な協力姿勢</span>
                     </div>
                     <div className="flex items-start">
                       <span className="font-medium mr-2">2.</span>
-                      <span>慢性期ケアの質向上システムの構築・運用</span>
+                      <span>日常業務への真摯な取り組み（環境整備、物品管理等）</span>
                     </div>
                     <div className="flex items-start">
                       <span className="font-medium mr-2">3.</span>
-                      <span>教育体系の確立と後進育成の成果</span>
+                      <span>病棟ルールの理解と遵守</span>
                     </div>
                     <div className="flex items-start">
                       <span className="font-medium mr-2">4.</span>
-                      <span>施設運営への参画と戦略的提言</span>
+                      <span>研修・勉強会への参加と学習意欲</span>
                     </div>
                     <div className="flex items-start">
                       <span className="font-medium mr-2">5.</span>
-                      <span>地域連携・外部機関との協働推進</span>
+                      <span>レクリエーション活動への参加・協力</span>
                     </div>
                   </div>
+                </div>
+
+                <div className="border rounded-lg p-4">
+                  <Label htmlFor="facility-points" className="font-semibold">組織貢献度ポイント（参考）</Label>
+                  <Input 
+                    type="number" 
+                    id="facility-points" 
+                    placeholder="例：60ポイント" 
+                    className="mt-2"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    年間累計ポイントを記入（勉強会参加、行事協力、改善提案等）
+                  </p>
                 </div>
 
                 <div className="border rounded-lg p-4">
@@ -473,7 +494,7 @@ export default function ChronicVeteranAssistantNurseEvaluationV4Pattern5() {
                   <Label htmlFor="facility-contribution">具体的な貢献内容</Label>
                   <Textarea 
                     id="facility-contribution" 
-                    placeholder="組織運営への影響、教育システムの構築、文化醸成の成果など"
+                    placeholder="チームへの協力、業務での工夫、積極的な姿勢の具体例など"
                     className="min-h-[100px]"
                   />
                 </div>
@@ -485,9 +506,9 @@ export default function ChronicVeteranAssistantNurseEvaluationV4Pattern5() {
               <div>
                 <h3 className="font-bold text-lg mb-2">法人貢献評価（25点）- 相対評価</h3>
                 <p className="text-sm text-gray-600 mb-4">
-                  法人全体への貢献・慢性期医療のモデル構築・組織横断的な活動を評価
+                  法人全体への貢献・慢性期ケアの基礎習得への取り組みを評価
                   <br />
-                  法人内のベテラン准看護師全体での相対評価を実施
+                  法人内の新人看護補助者全体での相対評価を実施
                 </p>
               </div>
 
@@ -497,25 +518,38 @@ export default function ChronicVeteranAssistantNurseEvaluationV4Pattern5() {
                   <div className="space-y-2 text-sm">
                     <div className="flex items-start">
                       <span className="font-medium mr-2">1.</span>
-                      <span>法人理念の体現と慢性期ケアモデルの確立</span>
+                      <span>法人理念に基づく患者ケアの実践</span>
                     </div>
                     <div className="flex items-start">
                       <span className="font-medium mr-2">2.</span>
-                      <span>法人全体の質向上への戦略的貢献</span>
+                      <span>患者・家族からの評価と信頼</span>
                     </div>
                     <div className="flex items-start">
                       <span className="font-medium mr-2">3.</span>
-                      <span>法人教育プログラムの開発・講師活動</span>
+                      <span>法人研修での学習姿勢と成績</span>
                     </div>
                     <div className="flex items-start">
                       <span className="font-medium mr-2">4.</span>
-                      <span>法人内外での知識・技術の普及活動</span>
+                      <span>基礎介護技術の向上への努力</span>
                     </div>
                     <div className="flex items-start">
                       <span className="font-medium mr-2">5.</span>
-                      <span>後継者育成とキャリア開発支援</span>
+                      <span>他部署・他職種との協力姿勢</span>
                     </div>
                   </div>
+                </div>
+
+                <div className="border rounded-lg p-4">
+                  <Label htmlFor="corporate-points" className="font-semibold">法人貢献度ポイント（参考）</Label>
+                  <Input 
+                    type="number" 
+                    id="corporate-points" 
+                    placeholder="例：55ポイント" 
+                    className="mt-2"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    法人全体での活動ポイント（研修成績、患者評価、表彰等）
+                  </p>
                 </div>
 
                 <div className="border rounded-lg p-4">
@@ -547,7 +581,7 @@ export default function ChronicVeteranAssistantNurseEvaluationV4Pattern5() {
                   <Label htmlFor="corporate-contribution">法人への貢献内容</Label>
                   <Textarea 
                     id="corporate-contribution" 
-                    placeholder="法人戦略への貢献、教育プログラム開発、外部活動での法人代表としての活動など"
+                    placeholder="患者ケアでの評価、研修での成果、他施設との交流など"
                     className="min-h-[100px]"
                   />
                 </div>
@@ -638,28 +672,28 @@ export default function ChronicVeteranAssistantNurseEvaluationV4Pattern5() {
                 {/* 評価コメント */}
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="strengths">特に優れている点（ベテラン准看護師としての観点から）</Label>
+                    <Label htmlFor="strengths">特に優れている点（看護補助者としての観点から）</Label>
                     <Textarea 
                       id="strengths" 
-                      placeholder="卓越した専門性、組織への影響力、後進育成の成果、模範的な実践など"
+                      placeholder="生活援助での丁寧さ、患者への優しい関わり、チーム協調性など"
                       className="min-h-[80px]"
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="improvements">今後の期待と課題</Label>
+                    <Label htmlFor="improvements">今後の成長課題</Label>
                     <Textarea 
                       id="improvements" 
-                      placeholder="更なる組織貢献、知識技術の体系化、後継者育成の強化など"
+                      placeholder="技術の向上、慢性期ケアの理解深化、コミュニケーション力など"
                       className="min-h-[80px]"
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="development-plan">今後の役割と活躍領域</Label>
+                    <Label htmlFor="development-plan">次期目標・育成計画</Label>
                     <Textarea 
                       id="development-plan" 
-                      placeholder="専門分野での更なる活躍、組織開発への参画、教育システムの発展など"
+                      placeholder="2年目に向けた具体的な目標、必要な研修・支援、資格取得への意向など"
                       className="min-h-[100px]"
                     />
                   </div>
@@ -668,7 +702,7 @@ export default function ChronicVeteranAssistantNurseEvaluationV4Pattern5() {
                     <Label htmlFor="final-comment">総合所見</Label>
                     <Textarea 
                       id="final-comment" 
-                      placeholder="ベテラン准看護師としての価値、組織への貢献度、今後の期待と要望など"
+                      placeholder="看護補助者としての適性、慢性期ケアでの成長可能性、将来への期待など"
                       className="min-h-[120px]"
                     />
                   </div>

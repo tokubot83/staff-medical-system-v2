@@ -74,17 +74,17 @@ export default function EvaluationSheetsV4Page() {
           title: '准看護師',
           icon: '💉',
           sheets: [
-            { label: '新人准看護師（1年目）', path: '', implemented: false },
-            { label: '一般准看護師（2-3年目）', path: '', implemented: false },
-            { label: '中堅准看護師（4-10年目）', path: '', implemented: false },
-            { label: 'ベテラン准看護師（11年以上）', path: '', implemented: false },
+            { label: '新人准看護師（1年目）', path: '/evaluation-sheets/v4/chronic-assistant-nurse/chronic-new-assistant-nurse-evaluation-v4-pattern5', implemented: true },
+            { label: '一般准看護師（2-3年目）', path: '/evaluation-sheets/v4/chronic-assistant-nurse/chronic-junior-assistant-nurse-evaluation-v4-pattern5', implemented: true },
+            { label: '中堅准看護師（4-10年目）', path: '/evaluation-sheets/v4/chronic-assistant-nurse/chronic-midlevel-assistant-nurse-evaluation-v4-pattern5', implemented: true },
+            { label: 'ベテラン准看護師（11年以上）', path: '/evaluation-sheets/v4/chronic-assistant-nurse/chronic-veteran-assistant-nurse-evaluation-v4-pattern5', implemented: true },
           ]
         },
         {
           title: '看護補助者',
           icon: '🤝',
           sheets: [
-            { label: '新人看護補助者（1年目）', path: '', implemented: false },
+            { label: '新人看護補助者（1年目）', path: '/evaluation-sheets/v4/chronic-nursing-aide/chronic-new-nursing-aide-evaluation-v4-pattern5', implemented: true },
             { label: '一般看護補助者（2-3年目）', path: '', implemented: false },
             { label: '中堅看護補助者（4-10年目）', path: '', implemented: false },
             { label: 'ベテラン看護補助者（11年以上）', path: '', implemented: false },

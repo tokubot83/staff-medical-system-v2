@@ -13,6 +13,9 @@ import { InfoIcon, Calculator, Award, Users, Building, Heart } from 'lucide-reac
 import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
+type TechnicalScoreCategory = 'skills' | 'knowledge' | 'patient' | 'safety';
+type EvaluatorType = 'superiorEval' | 'selfEval';
+
 export default function ChronicJuniorAssistantNurseEvaluationV4Pattern5() {
   // 評価項目の状態管理
   const [technicalScores, setTechnicalScores] = useState({
@@ -46,7 +49,7 @@ export default function ChronicJuniorAssistantNurseEvaluationV4Pattern5() {
   };
 
   // 貢献度評価の計算（各25点満点）
-  const calculateContributionScore = (percentile) => {
+  const calculateContributionScore = (percentile: number) => {
     if (percentile <= 10) return 25;
     if (percentile <= 20) return 22.5;
     if (percentile <= 30) return 20;
@@ -67,7 +70,7 @@ export default function ChronicJuniorAssistantNurseEvaluationV4Pattern5() {
     setTotalScore(Math.round((technical + facility + corporate) * 10) / 10);
   }, [technicalScores, facilityRank, corporateRank]);
 
-  const handleTechnicalScoreChange = (evaluator, category, grade) => {
+  const handleTechnicalScoreChange = (evaluator: EvaluatorType, category: TechnicalScoreCategory, grade: keyof typeof gradeToScore) => {
     setTechnicalScores(prev => ({
       ...prev,
       [evaluator]: {
@@ -77,7 +80,7 @@ export default function ChronicJuniorAssistantNurseEvaluationV4Pattern5() {
     }));
   };
 
-  const getScoreColor = (score) => {
+  const getScoreColor = (score: number) => {
     if (score >= 90) return 'text-red-600';
     if (score >= 80) return 'text-orange-600';
     if (score >= 70) return 'text-green-600';
