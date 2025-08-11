@@ -163,11 +163,11 @@ export const evaluationGrades = {
 // 研修マスターデータ
 export const trainingMaster = {
   // 基本研修
-  TR_BASIC_001: { name: '職種別基礎研修', frequency: '入職時', mandatory: true },
-  TR_BASIC_002: { name: '基本手技研修', frequency: '年1回', mandatory: true },
-  TR_ADVANCED_001: { name: '専門技術向上研修', frequency: '年1回', mandatory: false },
-  TR_RECORD_001: { name: '記録管理研修', frequency: '年1回', mandatory: true },
-  TR_COMMUNICATION_001: { name: '接遇・コミュニケーション研修', frequency: '年1回', mandatory: true },
+  TR_BASIC_001: { name: '職種別基礎研修', frequency: '入職時', mandatory: true, legal: false },
+  TR_BASIC_002: { name: '基本手技研修', frequency: '年1回', mandatory: true, legal: false },
+  TR_ADVANCED_001: { name: '専門技術向上研修', frequency: '年1回', mandatory: false, legal: false },
+  TR_RECORD_001: { name: '記録管理研修', frequency: '年1回', mandatory: true, legal: false },
+  TR_COMMUNICATION_001: { name: '接遇・コミュニケーション研修', frequency: '年1回', mandatory: true, legal: false },
   
   // 法定研修
   TR_ABUSE_001: { name: '虐待防止研修', frequency: '年1回', mandatory: true, legal: true },

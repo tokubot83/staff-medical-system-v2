@@ -258,14 +258,25 @@ export default function EvaluationManagement() {
                     <div className={styles.flowDetails}>
                       <p>職種別の専門技術・スキルを評価</p>
                       <ul>
-                        <li>上司評価（60%配点）</li>
-                        <li>自己評価（40%配点）</li>
-                        <li>360度評価（管理職対象）</li>
+                        <li>法人統一項目（30点）</li>
+                        <li>施設特化項目（20点）</li>
+                        <li>項目別差別化型配分を採用</li>
                       </ul>
+                      <div className={styles.devNote}>
+                        <span className={styles.devNoteLabel}>開発メモ</span>
+                        <Link href="/docs/development-notes/evaluation-pattern-designs" className={styles.devNoteLink}>
+                          評価配分5パターン検討資料 →
+                        </Link>
+                      </div>
                     </div>
-                    <Link href="/evaluation/technical" className={styles.flowAction}>
-                      評価を開始 <ChevronRight size={16} />
-                    </Link>
+                    <div className={styles.flowActions}>
+                      <Link href="/evaluation/technical" className={styles.flowAction}>
+                        従来版を開始 <ChevronRight size={16} />
+                      </Link>
+                      <Link href="/evaluation/core-v2" className={styles.flowActionNew}>
+                        新V2版を開始 <ChevronRight size={16} />
+                      </Link>
+                    </div>
                   </div>
 
                   {/* 貢献度評価フロー */}
