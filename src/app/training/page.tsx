@@ -10,6 +10,7 @@ import { Doughnut, Bar, Line } from 'react-chartjs-2'
 import { useSearchParams } from 'next/navigation'
 import LegalTrainingGuide from '@/components/education/LegalTrainingGuide'
 import EvaluationItemBank from '@/components/training/EvaluationItemBank'
+import EvaluationItemBankV2 from '@/components/training/EvaluationItemBankV2'
 import TrainingPlanGenerator from '@/components/training/TrainingPlanGenerator'
 
 ChartJS.register(
@@ -985,7 +986,7 @@ function TrainingPlanningTab(): React.ReactElement {
 function ItemBankTab(): React.ReactElement {
   return (
     <div className={styles.itemBankTabContainer}>
-      <EvaluationItemBank />
+      <EvaluationItemBankV2 />
     </div>
   )
 }
