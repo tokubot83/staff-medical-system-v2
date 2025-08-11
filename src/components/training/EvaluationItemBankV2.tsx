@@ -473,7 +473,7 @@ export default function EvaluationItemBankV2() {
                           <p className="text-sm text-muted-foreground mt-1">
                             {item.description}
                           </p>
-                          {item.requiredTrainings.length > 0 && (
+                          {item.requiredTrainings && item.requiredTrainings.length > 0 && (
                             <div className="flex items-center gap-2 mt-2">
                               <BookOpen className="w-3 h-3 text-gray-400" />
                               <span className="text-xs text-gray-500">
@@ -521,7 +521,7 @@ export default function EvaluationItemBankV2() {
                           <p className="text-sm text-muted-foreground mt-1">
                             {item.description}
                           </p>
-                          {item.requiredTrainings.length > 0 && (
+                          {item.requiredTrainings && item.requiredTrainings.length > 0 && (
                             <div className="flex items-center gap-2 mt-2">
                               <BookOpen className="w-3 h-3 text-gray-400" />
                               <span className="text-xs text-gray-500">
