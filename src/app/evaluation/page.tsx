@@ -276,6 +276,9 @@ export default function EvaluationManagement() {
                       <Link href="/evaluation/core-v2" className={styles.flowActionNew}>
                         新V2版を開始 <ChevronRight size={16} />
                       </Link>
+                      <Link href="/evaluation/facility-specific" className={styles.flowActionNew}>
+                        施設特化項目 <ChevronRight size={16} />
+                      </Link>
                     </div>
                   </div>
 
