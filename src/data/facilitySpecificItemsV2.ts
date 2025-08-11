@@ -309,7 +309,7 @@ export const facilitySpecificItemsV2: FacilitySpecificItem[] = [
 ];
 
 // 推奨選択パターン
-export const recommendedFacilityItemSets = {
+export const recommendedFacilityItemSets: Record<string, Record<string, Record<string, string[]>>> = {
   // 急性期病院
   acute: {
     nurse: {

@@ -154,7 +154,7 @@ export default function FacilitySpecificEvaluationForm({
   };
 
   // カテゴリ名のマッピング
-  const categoryNames = {
+  const categoryNames: Record<string, string> = {
     emergency: '救急・急性期',
     specialized: '専門技術',
     care: 'ケア技術',
@@ -163,7 +163,7 @@ export default function FacilitySpecificEvaluationForm({
   };
 
   // 施設タイプ名のマッピング
-  const facilityTypeNames = {
+  const facilityTypeNames: Record<string, string> = {
     acute: '急性期病院',
     chronic: '慢性期病院',
     recovery: '回復期リハビリ病院',
