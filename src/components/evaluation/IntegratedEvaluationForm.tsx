@@ -35,24 +35,42 @@ export interface EvaluationData {
   year: number;
   technical: {
     score: number;
+    breakdown?: {
+      coreItems: number;      // 法人統一項目（30点）
+      facilityItems: number;  // 施設特化項目（20点）
+    };
     comments: string;
   };
   facilityContribution: {
-    summer: number;
-    winter: number;
-    yearTotal: number;
-    finalScore?: number;
+    summer: {
+      rawScore: number;       // 管理者入力の素点
+      percentile?: number;    // 順位パーセンタイル
+      points?: number;        // 相対評価後の配点（12.5点満点）
+    };
+    winter: {
+      rawScore: number;
+      percentile?: number;
+      points?: number;
+    };
+    yearTotal?: number;       // 年間合計配点（25点満点）
   };
   corporateContribution: {
-    summer: number;
-    winter: number;
-    yearTotal: number;
-    finalScore?: number;
+    summer: {
+      rawScore: number;
+      percentile?: number;
+      points?: number;
+    };
+    winter: {
+      rawScore: number;
+      percentile?: number;
+      points?: number;
+    };
+    yearTotal?: number;
   };
-  totalScore: number;
-  facilityGrade?: string;
-  corporateGrade?: string;
-  finalGrade?: string;
+  totalScore: number;         // 100点満点
+  facilityGrade?: string;     // 施設内評価グレード
+  corporateGrade?: string;    // 法人内評価グレード
+  finalGrade?: string;        // 最終グレード（マトリクス評価）
   overallComments: string;
 }
 
@@ -71,16 +89,20 @@ export function IntegratedEvaluationForm({
     year,
     technical: {
       score: 0,
+      breakdown: {
+        coreItems: 0,
+        facilityItems: 0
+      },
       comments: ''
     },
     facilityContribution: {
-      summer: 0,
-      winter: 0,
+      summer: { rawScore: 0 },
+      winter: { rawScore: 0 },
       yearTotal: 0
     },
     corporateContribution: {
-      summer: 0,
-      winter: 0,
+      summer: { rawScore: 0 },
+      winter: { rawScore: 0 },
       yearTotal: 0
     },
     totalScore: 0,
@@ -104,10 +126,18 @@ export function IntegratedEvaluationForm({
 
   // 組織貢献度スコアの取得（実際はAPIから取得）
   const fetchContributionScores = async () => {
-    // TODO: API実装
+    // TODO: API実装 - 相対評価後のデータを取得
     const mockData = {
-      facility: { summer: 35, winter: 30, yearTotal: 65 },
-      corporate: { summer: 25, winter: 20, yearTotal: 45 }
+      facility: {
+        summer: { rawScore: 85, percentile: 15, points: 11.25 },
+        winter: { rawScore: 78, percentile: 25, points: 10.0 },
+        yearTotal: 21.25
+      },
+      corporate: {
+        summer: { rawScore: 72, percentile: 35, points: 8.75 },
+        winter: { rawScore: 68, percentile: 40, points: 8.75 },
+        yearTotal: 17.5
+      }
     };
     
     setEvaluationData(prev => ({
@@ -120,8 +150,8 @@ export function IntegratedEvaluationForm({
   // 総合スコア計算
   const calculateTotalScore = () => {
     const technical = evaluationData.technical.score;
-    const facility = evaluationData.facilityContribution.finalScore || 0;
-    const corporate = evaluationData.corporateContribution.finalScore || 0;
+    const facility = evaluationData.facilityContribution.yearTotal || 0;
+    const corporate = evaluationData.corporateContribution.yearTotal || 0;
     return technical + facility + corporate;
   };
 
@@ -139,8 +169,8 @@ export function IntegratedEvaluationForm({
     }));
   }, [
     evaluationData.technical.score,
-    evaluationData.facilityContribution.finalScore,
-    evaluationData.corporateContribution.finalScore
+    evaluationData.facilityContribution.yearTotal,
+    evaluationData.corporateContribution.yearTotal
   ]);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -334,22 +364,22 @@ export function IntegratedEvaluationForm({
                     <div className="space-y-3">
                       <div className="flex justify-between">
                         <span className="text-sm">8月賞与時</span>
-                        <span className="font-semibold">{evaluationData.facilityContribution.summer}点</span>
+                        <span className="font-semibold">{evaluationData.facilityContribution.summer.rawScore}点</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-sm">12月賞与時</span>
-                        <span className="font-semibold">{evaluationData.facilityContribution.winter}点</span>
+                        <span className="font-semibold">{evaluationData.facilityContribution.winter.rawScore}点</span>
                       </div>
                       <div className="border-t pt-2 flex justify-between">
                         <span className="font-semibold">年間合計</span>
-                        <span className="font-bold text-lg">{evaluationData.facilityContribution.yearTotal}点</span>
+                        <span className="font-bold text-lg">{evaluationData.facilityContribution.yearTotal?.toFixed(1) || 0}点</span>
                       </div>
-                      {evaluationData.facilityContribution.finalScore !== undefined && (
+                      {evaluationData.facilityContribution.summer.percentile !== undefined && (
                         <div className="bg-blue-50 p-3 rounded-lg">
                           <div className="flex justify-between items-center">
-                            <span className="text-sm">相対評価配点</span>
+                            <span className="text-sm">相対評価後の配点</span>
                             <Badge variant="outline">
-                              {evaluationData.facilityContribution.finalScore} / 25点
+                              {evaluationData.facilityContribution.yearTotal?.toFixed(1) || 0} / 25点
                             </Badge>
                           </div>
                         </div>
@@ -369,22 +399,22 @@ export function IntegratedEvaluationForm({
                     <div className="space-y-3">
                       <div className="flex justify-between">
                         <span className="text-sm">8月賞与時</span>
-                        <span className="font-semibold">{evaluationData.corporateContribution.summer}点</span>
+                        <span className="font-semibold">{evaluationData.corporateContribution.summer.rawScore}点</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-sm">12月賞与時</span>
-                        <span className="font-semibold">{evaluationData.corporateContribution.winter}点</span>
+                        <span className="font-semibold">{evaluationData.corporateContribution.winter.rawScore}点</span>
                       </div>
                       <div className="border-t pt-2 flex justify-between">
                         <span className="font-semibold">年間合計</span>
-                        <span className="font-bold text-lg">{evaluationData.corporateContribution.yearTotal}点</span>
+                        <span className="font-bold text-lg">{evaluationData.corporateContribution.yearTotal?.toFixed(1) || 0}点</span>
                       </div>
-                      {evaluationData.corporateContribution.finalScore !== undefined && (
+                      {evaluationData.corporateContribution.summer.percentile !== undefined && (
                         <div className="bg-green-50 p-3 rounded-lg">
                           <div className="flex justify-between items-center">
-                            <span className="text-sm">相対評価配点</span>
+                            <span className="text-sm">相対評価後の配点</span>
                             <Badge variant="outline">
-                              {evaluationData.corporateContribution.finalScore} / 25点
+                              {evaluationData.corporateContribution.yearTotal?.toFixed(1) || 0} / 25点
                             </Badge>
                           </div>
                         </div>
