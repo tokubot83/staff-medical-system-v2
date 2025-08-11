@@ -19,9 +19,11 @@ import {
   Calendar,
   Users,
   Building,
-  TrendingUp
+  TrendingUp,
+  FileSpreadsheet
 } from 'lucide-react';
 import { evaluationBatchService, BatchProcessResult, BatchError } from '@/services/evaluationBatchService';
+import ExcelImport from '@/components/evaluation/ExcelImport';
 
 export default function EvaluationBatchPage() {
   const [isProcessing, setIsProcessing] = useState(false);
@@ -137,7 +139,7 @@ export default function EvaluationBatchPage() {
                 </div>
                 <Progress value={progress} className="h-2" />
                 <p className="text-xs text-gray-600">
-                  職種別・施設別の順位計算とグレード判定を実行中...
+                  4軸独立評価（夏施設・夏法人・冬施設・冬法人）の相対順位計算を実行中...
                 </p>
               </div>
             )}
@@ -233,8 +235,8 @@ export default function EvaluationBatchPage() {
                         <TableHead>施設</TableHead>
                         <TableHead>職種</TableHead>
                         <TableHead className="text-center">総合点</TableHead>
-                        <TableHead className="text-center">施設内順位</TableHead>
-                        <TableHead className="text-center">法人内順位</TableHead>
+                        <TableHead className="text-center" colSpan={2}>夏季評価</TableHead>
+                        <TableHead className="text-center" colSpan={2}>冬季評価</TableHead>
                         <TableHead className="text-center">最終評価</TableHead>
                       </TableRow>
                     </TableHeader>
@@ -249,33 +251,56 @@ export default function EvaluationBatchPage() {
                           <TableCell className="text-center font-semibold">
                             {ranking.totalScore.toFixed(1)}
                           </TableCell>
-                          <TableCell className="text-center">
-                            <div className="flex flex-col">
-                              <span className="font-semibold">
-                                {ranking.facilityRank} / {ranking.facilityTotal}
-                              </span>
-                              <Badge variant="outline" className="mt-1">
-                                {ranking.facilityGrade}
+                          {/* 夏季評価 */}
+                          <TableCell className="text-center border-l">
+                            <div className="text-xs">
+                              <div>施設: {ranking.details?.summer.facilityPercentile ? 
+                                `上位${ranking.details.summer.facilityPercentile.toFixed(0)}%` : '-'}
+                              </div>
+                              <Badge variant="outline" className="mt-1 text-xs">
+                                {ranking.details?.summer.facilityGrade || '-'}
                               </Badge>
                             </div>
                           </TableCell>
                           <TableCell className="text-center">
-                            <div className="flex flex-col">
-                              <span className="font-semibold">
-                                {ranking.corporateRank} / {ranking.corporateTotal}
-                              </span>
-                              <Badge variant="outline" className="mt-1">
-                                {ranking.corporateGrade}
+                            <div className="text-xs">
+                              <div>法人: {ranking.details?.summer.corporatePercentile ? 
+                                `上位${ranking.details.summer.corporatePercentile.toFixed(0)}%` : '-'}
+                              </div>
+                              <Badge variant="outline" className="mt-1 text-xs">
+                                {ranking.details?.summer.corporateGrade || '-'}
+                              </Badge>
+                            </div>
+                          </TableCell>
+                          {/* 冬季評価 */}
+                          <TableCell className="text-center border-l">
+                            <div className="text-xs">
+                              <div>施設: {ranking.details?.winter.facilityPercentile ? 
+                                `上位${ranking.details.winter.facilityPercentile.toFixed(0)}%` : '-'}
+                              </div>
+                              <Badge variant="outline" className="mt-1 text-xs">
+                                {ranking.details?.winter.facilityGrade || '-'}
                               </Badge>
                             </div>
                           </TableCell>
                           <TableCell className="text-center">
+                            <div className="text-xs">
+                              <div>法人: {ranking.details?.winter.corporatePercentile ? 
+                                `上位${ranking.details.winter.corporatePercentile.toFixed(0)}%` : '-'}
+                              </div>
+                              <Badge variant="outline" className="mt-1 text-xs">
+                                {ranking.details?.winter.corporateGrade || '-'}
+                              </Badge>
+                            </div>
+                          </TableCell>
+                          {/* 最終評価 */}
+                          <TableCell className="text-center border-l">
                             <Badge className={
-                              ranking.finalGrade.includes('S') ? 'bg-red-500' :
-                              ranking.finalGrade.includes('A') ? 'bg-orange-500' :
-                              ranking.finalGrade === 'B' ? 'bg-green-500' :
-                              ranking.finalGrade === 'C' ? 'bg-blue-500' :
-                              'bg-gray-500'
+                              ranking.finalGrade.includes('S') ? 'bg-yellow-500' :
+                              ranking.finalGrade.includes('A') ? 'bg-green-500' :
+                              ranking.finalGrade === 'B' ? 'bg-blue-500' :
+                              ranking.finalGrade === 'C' ? 'bg-orange-500' :
+                              'bg-red-500'
                             }>
                               {ranking.finalGrade}
                             </Badge>
@@ -326,8 +351,9 @@ export default function EvaluationBatchPage() {
                 <Alert className="mt-6">
                   <AlertCircle className="h-4 w-4" />
                   <AlertTitle>評価分布の目安</AlertTitle>
-                  <AlertDescription>
-                    S: 上位10%、A: 上位11-30%、B: 上位31-70%、C: 上位71-90%、D: 下位10%
+                  <AlertDescription className="space-y-1">
+                    <p>S: 上位10%、A: 上位11-30%、B: 上位31-70%、C: 上位71-90%、D: 下位10%</p>
+                    <p className="text-xs mt-2">※ 夏季・冬季の施設/法人貢献度をそれぞれ独立して相対評価</p>
                   </AlertDescription>
                 </Alert>
               </TabsContent>
@@ -375,12 +401,30 @@ export default function EvaluationBatchPage() {
         </Card>
       )}
 
+      {/* Excelインポート */}
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <FileSpreadsheet className="h-5 w-5" />
+            Excelデータ一括インポート
+          </CardTitle>
+          <CardDescription>
+            組織貢献度評価データをExcelファイルから一括インポートしてバッチ処理を実行します
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ExcelImport />
+        </CardContent>
+      </Card>
+
       {/* 注意事項 */}
       <Alert>
         <AlertCircle className="h-4 w-4" />
         <AlertTitle>バッチ処理に関する注意事項</AlertTitle>
         <AlertDescription className="mt-2 space-y-1">
           <p>• バッチ処理は評価期間終了後、全職員の評価入力が完了してから実行してください</p>
+          <p>• 4軸独立評価により、夏季施設・夏季法人・冬季施設・冬季法人をそれぞれ相対評価します</p>
+          <p>• Excelインポートでは、管理者が入力した素点を基に自動的に相対評価・配点計算されます</p>
           <p>• 処理には数分かかる場合があります。処理中はブラウザを閉じないでください</p>
           <p>• 一度確定した評価結果の再計算は、管理者権限が必要です</p>
           <p>• 処理結果は自動的にデータベースに保存されます</p>
