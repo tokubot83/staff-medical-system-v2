@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Slider } from "@/components/ui/slider";
 import { 
   Calculator,
   Target,
@@ -536,35 +537,73 @@ export default function IntegratedEvaluationV2() {
 
         {/* 貢献度評価タブ */}
         <TabsContent value="contribution" className="space-y-4">
+          <Alert className="bg-blue-50 border-blue-200">
+            <AlertCircle className="h-4 w-4 text-blue-600" />
+            <AlertDescription>
+              貢献度評価は年2回（8月・12月）実施され、各回25点満点（施設12.5点＋法人12.5点）で評価されます。
+            </AlertDescription>
+          </Alert>
+
           <Card>
             <CardHeader>
-              <CardTitle>施設貢献度（25点）</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <Building className="w-5 h-5" />
+                施設貢献度（年間25点）
+              </CardTitle>
+              <CardDescription>
+                施設内での委員会活動、研修講師、業務改善、新人指導等を評価
+              </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 gap-4">
+            <CardContent className="space-y-4">
+              <div className="space-y-4">
                 <div>
-                  <label className="text-sm font-medium">夏季査定（8月）- 12.5点満点</label>
-                  <input
-                    type="number"
-                    min="0"
-                    max="12.5"
-                    step="0.5"
-                    className="w-full mt-1 p-2 border rounded"
-                    value={evaluationData.contributionEvaluation.facilityContribution.summer}
-                    onChange={(e) => updateContributionScore('facilityContribution', 'summer', Number(e.target.value))}
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="text-sm font-medium">夏季査定（8月）- 12月〜5月実績</label>
+                    <span className="text-lg font-bold text-blue-600">
+                      {evaluationData.contributionEvaluation.facilityContribution.summer.toFixed(1)} / 12.5点
+                    </span>
+                  </div>
+                  <Slider
+                    value={[evaluationData.contributionEvaluation.facilityContribution.summer]}
+                    onValueChange={(v) => updateContributionScore('facilityContribution', 'summer', v[0])}
+                    max={12.5}
+                    step={0.5}
+                    className="w-full"
+                  />
+                  <Progress 
+                    value={(evaluationData.contributionEvaluation.facilityContribution.summer / 12.5) * 100} 
+                    className="mt-2 h-2"
                   />
                 </div>
+                
                 <div>
-                  <label className="text-sm font-medium">冬季査定（12月）- 12.5点満点</label>
-                  <input
-                    type="number"
-                    min="0"
-                    max="12.5"
-                    step="0.5"
-                    className="w-full mt-1 p-2 border rounded"
-                    value={evaluationData.contributionEvaluation.facilityContribution.winter}
-                    onChange={(e) => updateContributionScore('facilityContribution', 'winter', Number(e.target.value))}
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="text-sm font-medium">冬季査定（12月）- 6月〜11月実績</label>
+                    <span className="text-lg font-bold text-blue-600">
+                      {evaluationData.contributionEvaluation.facilityContribution.winter.toFixed(1)} / 12.5点
+                    </span>
+                  </div>
+                  <Slider
+                    value={[evaluationData.contributionEvaluation.facilityContribution.winter]}
+                    onValueChange={(v) => updateContributionScore('facilityContribution', 'winter', v[0])}
+                    max={12.5}
+                    step={0.5}
+                    className="w-full"
                   />
+                  <Progress 
+                    value={(evaluationData.contributionEvaluation.facilityContribution.winter / 12.5) * 100} 
+                    className="mt-2 h-2"
+                  />
+                </div>
+                
+                <div className="border-t pt-3">
+                  <div className="flex justify-between">
+                    <span className="font-medium">年間合計</span>
+                    <span className="text-xl font-bold text-blue-600">
+                      {(evaluationData.contributionEvaluation.facilityContribution.summer + 
+                        evaluationData.contributionEvaluation.facilityContribution.winter).toFixed(1)} / 25点
+                    </span>
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -572,34 +611,76 @@ export default function IntegratedEvaluationV2() {
 
           <Card>
             <CardHeader>
-              <CardTitle>法人貢献度（25点）</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <Users className="w-5 h-5" />
+                法人貢献度（年間25点）
+              </CardTitle>
+              <CardDescription>
+                法人イベント、他施設応援、プロジェクト参加、採用活動等を評価
+              </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 gap-4">
+            <CardContent className="space-y-4">
+              <div className="space-y-4">
                 <div>
-                  <label className="text-sm font-medium">夏季査定（8月）- 12.5点満点</label>
-                  <input
-                    type="number"
-                    min="0"
-                    max="12.5"
-                    step="0.5"
-                    className="w-full mt-1 p-2 border rounded"
-                    value={evaluationData.contributionEvaluation.corporateContribution.summer}
-                    onChange={(e) => updateContributionScore('corporateContribution', 'summer', Number(e.target.value))}
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="text-sm font-medium">夏季査定（8月）- 12月〜5月実績</label>
+                    <span className="text-lg font-bold text-green-600">
+                      {evaluationData.contributionEvaluation.corporateContribution.summer.toFixed(1)} / 12.5点
+                    </span>
+                  </div>
+                  <Slider
+                    value={[evaluationData.contributionEvaluation.corporateContribution.summer]}
+                    onValueChange={(v) => updateContributionScore('corporateContribution', 'summer', v[0])}
+                    max={12.5}
+                    step={0.5}
+                    className="w-full"
+                  />
+                  <Progress 
+                    value={(evaluationData.contributionEvaluation.corporateContribution.summer / 12.5) * 100} 
+                    className="mt-2 h-2"
                   />
                 </div>
+                
                 <div>
-                  <label className="text-sm font-medium">冬季査定（12月）- 12.5点満点</label>
-                  <input
-                    type="number"
-                    min="0"
-                    max="12.5"
-                    step="0.5"
-                    className="w-full mt-1 p-2 border rounded"
-                    value={evaluationData.contributionEvaluation.corporateContribution.winter}
-                    onChange={(e) => updateContributionScore('corporateContribution', 'winter', Number(e.target.value))}
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="text-sm font-medium">冬季査定（12月）- 6月〜11月実績</label>
+                    <span className="text-lg font-bold text-green-600">
+                      {evaluationData.contributionEvaluation.corporateContribution.winter.toFixed(1)} / 12.5点
+                    </span>
+                  </div>
+                  <Slider
+                    value={[evaluationData.contributionEvaluation.corporateContribution.winter]}
+                    onValueChange={(v) => updateContributionScore('corporateContribution', 'winter', v[0])}
+                    max={12.5}
+                    step={0.5}
+                    className="w-full"
+                  />
+                  <Progress 
+                    value={(evaluationData.contributionEvaluation.corporateContribution.winter / 12.5) * 100} 
+                    className="mt-2 h-2"
                   />
                 </div>
+                
+                <div className="border-t pt-3">
+                  <div className="flex justify-between">
+                    <span className="font-medium">年間合計</span>
+                    <span className="text-xl font-bold text-green-600">
+                      {(evaluationData.contributionEvaluation.corporateContribution.summer + 
+                        evaluationData.contributionEvaluation.corporateContribution.winter).toFixed(1)} / 25点
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gray-50">
+            <CardContent className="pt-6">
+              <div className="text-center">
+                <p className="text-sm text-muted-foreground mb-2">貢献度評価 年間総合</p>
+                <p className="text-3xl font-bold">
+                  {evaluationData.contributionEvaluation.totalScore.toFixed(1)} / 50点
+                </p>
               </div>
             </CardContent>
           </Card>
