@@ -249,8 +249,8 @@ export class TrainingIntegrationService {
         recommended: [{
           id: 'BASIC001',
           name: '基礎スキル向上研修',
-          category: 'skill',
-          type: 'mandatory',
+          category: 'skill' as const,
+          type: 'mandatory' as const,
           duration: 8,
           targetAudience: [jobCategory],
           objectives: ['基礎技術の習得', '業務品質の向上'],
@@ -261,7 +261,7 @@ export class TrainingIntegrationService {
           }
         }],
         reason: '評価スコアが基準を下回っているため、基礎スキルの強化が必要',
-        priority: 'high'
+        priority: 'high' as const
       });
     }
     
@@ -271,8 +271,8 @@ export class TrainingIntegrationService {
         recommended: [{
           id: 'NURSE_SPEC001',
           name: '看護専門技術研修',
-          category: 'skill',
-          type: 'elective',
+          category: 'skill' as const,
+          type: 'elective' as const,
           duration: 16,
           targetAudience: ['nurse'],
           objectives: ['専門看護技術の向上', '最新医療知識の習得'],
@@ -283,7 +283,7 @@ export class TrainingIntegrationService {
           }
         }],
         reason: '看護職の専門性向上のため',
-        priority: 'medium'
+        priority: 'medium' as const
       });
     }
     
@@ -293,8 +293,8 @@ export class TrainingIntegrationService {
         recommended: [{
           id: 'LEAD001',
           name: 'リーダーシップ開発プログラム',
-          category: 'management',
-          type: 'elective',
+          category: 'management' as const,
+          type: 'elective' as const,
           duration: 24,
           targetAudience: ['all'],
           objectives: ['リーダーシップスキル開発', 'チームマネジメント'],
@@ -305,7 +305,7 @@ export class TrainingIntegrationService {
           }
         }],
         reason: '次期リーダー候補として育成',
-        priority: 'low'
+        priority: 'low' as const
       });
     }
     
