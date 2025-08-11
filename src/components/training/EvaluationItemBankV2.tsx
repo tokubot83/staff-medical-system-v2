@@ -590,8 +590,8 @@ export default function EvaluationItemBankV2() {
                                 </p>
                               </div>
                             </div>
-                            <Badge variant={training.mandatory ? "default" : "secondary"}>
-                              {training.mandatory ? "必須" : "推奨"}
+                            <Badge variant={training.type === 'mandatory' ? "default" : "secondary"}>
+                              {training.type === 'mandatory' ? "必須" : "推奨"}
                             </Badge>
                           </div>
                         ))}
