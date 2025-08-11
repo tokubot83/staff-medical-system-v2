@@ -138,7 +138,7 @@ export interface BatchProcessResult {
   errors: BatchError[];
 }
 
-// ランキング結果
+// ランキング結果（4軸評価対応）
 export interface RankingResult {
   staffId: string;
   facilityId: string;
@@ -153,6 +153,39 @@ export interface RankingResult {
   facilityGrade: EvaluationGrade;
   corporateGrade: EvaluationGrade;
   finalGrade: FinalEvaluationGrade;
+  // 4軸詳細データ（オプション）
+  details?: {
+    summer: {
+      facilityRank: number;
+      facilityTotal: number;
+      facilityPercentile: number;
+      facilityGrade: EvaluationGrade;
+      corporateRank: number;
+      corporateTotal: number;
+      corporatePercentile: number;
+      corporateGrade: EvaluationGrade;
+    };
+    winter: {
+      facilityRank: number;
+      facilityTotal: number;
+      facilityPercentile: number;
+      facilityGrade: EvaluationGrade;
+      corporateRank: number;
+      corporateTotal: number;
+      corporatePercentile: number;
+      corporateGrade: EvaluationGrade;
+    };
+  };
+  // 点数内訳（分析用）
+  pointsBreakdown?: {
+    technical: number;
+    summerFacility: number;
+    summerCorporate: number;
+    winterFacility: number;
+    winterCorporate: number;
+    totalFacility: number;
+    totalCorporate: number;
+  };
 }
 
 // バッチエラー
@@ -296,7 +329,7 @@ export class EvaluationBatchService {
   }
 
   /**
-   * 施設内順位計算
+   * 施設内順位計算（4軸独立評価）
    */
   private calculateFacilityRankings(
     groupedData: Map<string, EvaluationInputData[]>
@@ -304,17 +337,30 @@ export class EvaluationBatchService {
     const rankings = new Map<string, number>();
     
     groupedData.forEach((group, groupKey) => {
-      // スコアでソート（降順）
-      const sorted = [...group].sort((a, b) => {
-        const scoreA = this.calculateTotalScore(a);
-        const scoreB = this.calculateTotalScore(b);
+      // 夏季施設貢献でソート
+      const summerFacilitySorted = [...group].sort((a, b) => {
+        const scoreA = a.facilityContribution.summer?.subtotal || 0;
+        const scoreB = b.facilityContribution.summer?.subtotal || 0;
         return scoreB - scoreA;
       });
       
-      // 順位付け
-      sorted.forEach((evalData, index) => {
-        rankings.set(`${evalData.staffId}_facility`, index + 1);
-        rankings.set(`${evalData.staffId}_facility_total`, sorted.length);
+      // 夏季施設貢献の順位付け
+      summerFacilitySorted.forEach((evalData, index) => {
+        rankings.set(`${evalData.staffId}_summer_facility`, index + 1);
+        rankings.set(`${evalData.staffId}_summer_facility_total`, summerFacilitySorted.length);
+      });
+      
+      // 冬季施設貢献でソート
+      const winterFacilitySorted = [...group].sort((a, b) => {
+        const scoreA = a.facilityContribution.winter?.subtotal || 0;
+        const scoreB = b.facilityContribution.winter?.subtotal || 0;
+        return scoreB - scoreA;
+      });
+      
+      // 冬季施設貢献の順位付け
+      winterFacilitySorted.forEach((evalData, index) => {
+        rankings.set(`${evalData.staffId}_winter_facility`, index + 1);
+        rankings.set(`${evalData.staffId}_winter_facility_total`, winterFacilitySorted.length);
       });
     });
     
@@ -322,7 +368,7 @@ export class EvaluationBatchService {
   }
 
   /**
-   * 法人内順位計算（職種別）
+   * 法人内順位計算（職種別・4軸独立評価）
    */
   private calculateCorporateRankings(
     evaluations: EvaluationInputData[]
@@ -338,17 +384,32 @@ export class EvaluationBatchService {
       byJobCategory.get(evalData.jobCategory)!.push(evalData);
     });
     
-    // 各職種内で順位計算
+    // 各職種内で4軸それぞれ順位計算
     byJobCategory.forEach((group) => {
-      const sorted = [...group].sort((a, b) => {
-        const scoreA = this.calculateTotalScore(a);
-        const scoreB = this.calculateTotalScore(b);
+      // 夏季法人貢献でソート
+      const summerCorporateSorted = [...group].sort((a, b) => {
+        const scoreA = a.corporateContribution.summer?.subtotal || 0;
+        const scoreB = b.corporateContribution.summer?.subtotal || 0;
         return scoreB - scoreA;
       });
       
-      sorted.forEach((evalData, index) => {
-        rankings.set(`${evalData.staffId}_corporate`, index + 1);
-        rankings.set(`${evalData.staffId}_corporate_total`, sorted.length);
+      // 夏季法人貢献の順位付け
+      summerCorporateSorted.forEach((evalData, index) => {
+        rankings.set(`${evalData.staffId}_summer_corporate`, index + 1);
+        rankings.set(`${evalData.staffId}_summer_corporate_total`, summerCorporateSorted.length);
+      });
+      
+      // 冬季法人貢献でソート
+      const winterCorporateSorted = [...group].sort((a, b) => {
+        const scoreA = a.corporateContribution.winter?.subtotal || 0;
+        const scoreB = b.corporateContribution.winter?.subtotal || 0;
+        return scoreB - scoreA;
+      });
+      
+      // 冬季法人貢献の順位付け
+      winterCorporateSorted.forEach((evalData, index) => {
+        rankings.set(`${evalData.staffId}_winter_corporate`, index + 1);
+        rankings.set(`${evalData.staffId}_winter_corporate_total`, winterCorporateSorted.length);
       });
     });
     
@@ -356,7 +417,8 @@ export class EvaluationBatchService {
   }
 
   /**
-   * 貢献度スコア計算
+   * 貢献度スコア計算（4軸独立評価）
+   * 夏施設、夏法人、冬施設、冬法人をそれぞれ独立して順位付け
    */
   private calculateContributionScores(
     facilityRankings: Map<string, number>,
@@ -373,18 +435,37 @@ export class EvaluationBatchService {
     });
     
     staffIds.forEach(staffId => {
-      const facilityRank = facilityRankings.get(`${staffId}_facility`) || 0;
-      const facilityTotal = facilityRankings.get(`${staffId}_facility_total`) || 1;
-      const corporateRank = corporateRankings.get(`${staffId}_corporate`) || 0;
-      const corporateTotal = corporateRankings.get(`${staffId}_corporate_total`) || 1;
+      // 夏季施設貢献の順位
+      const summerFacilityRank = facilityRankings.get(`${staffId}_summer_facility`) || 0;
+      const summerFacilityTotal = facilityRankings.get(`${staffId}_summer_facility_total`) || 1;
+      const summerFacilityPercentile = (summerFacilityRank / summerFacilityTotal) * 100;
       
-      // パーセンタイル計算
-      const facilityPercentile = (facilityRank / facilityTotal) * 100;
-      const corporatePercentile = (corporateRank / corporateTotal) * 100;
+      // 夏季法人貢献の順位
+      const summerCorporateRank = corporateRankings.get(`${staffId}_summer_corporate`) || 0;
+      const summerCorporateTotal = corporateRankings.get(`${staffId}_summer_corporate_total`) || 1;
+      const summerCorporatePercentile = (summerCorporateRank / summerCorporateTotal) * 100;
       
-      // グレード判定
-      const facilityGrade = this.percentileToGrade(facilityPercentile);
-      const corporateGrade = this.percentileToGrade(corporatePercentile);
+      // 冬季施設貢献の順位
+      const winterFacilityRank = facilityRankings.get(`${staffId}_winter_facility`) || 0;
+      const winterFacilityTotal = facilityRankings.get(`${staffId}_winter_facility_total`) || 1;
+      const winterFacilityPercentile = (winterFacilityRank / winterFacilityTotal) * 100;
+      
+      // 冬季法人貢献の順位
+      const winterCorporateRank = corporateRankings.get(`${staffId}_winter_corporate`) || 0;
+      const winterCorporateTotal = corporateRankings.get(`${staffId}_winter_corporate_total`) || 1;
+      const winterCorporatePercentile = (winterCorporateRank / winterCorporateTotal) * 100;
+      
+      // 各軸のグレード判定
+      const summerFacilityGrade = this.percentileToGrade(summerFacilityPercentile);
+      const summerCorporateGrade = this.percentileToGrade(summerCorporatePercentile);
+      const winterFacilityGrade = this.percentileToGrade(winterFacilityPercentile);
+      const winterCorporateGrade = this.percentileToGrade(winterCorporatePercentile);
+      
+      // 年間総合グレード（4軸の総合評価）
+      const avgFacilityPercentile = (summerFacilityPercentile + winterFacilityPercentile) / 2;
+      const avgCorporatePercentile = (summerCorporatePercentile + winterCorporatePercentile) / 2;
+      const facilityGrade = this.percentileToGrade(avgFacilityPercentile);
+      const corporateGrade = this.percentileToGrade(avgCorporatePercentile);
       const finalGrade = this.getFinalGrade(corporateGrade, facilityGrade);
       
       results.push({
@@ -392,33 +473,56 @@ export class EvaluationBatchService {
         facilityId: '', // TODO: 実データから取得
         jobCategory: '', // TODO: 実データから取得
         totalScore: 0, // TODO: 実スコア計算
-        facilityRank,
-        facilityTotal,
-        facilityPercentile,
-        corporateRank,
-        corporateTotal,
-        corporatePercentile,
+        facilityRank: Math.round((summerFacilityRank + winterFacilityRank) / 2),
+        facilityTotal: Math.round((summerFacilityTotal + winterFacilityTotal) / 2),
+        facilityPercentile: avgFacilityPercentile,
+        corporateRank: Math.round((summerCorporateRank + winterCorporateRank) / 2),
+        corporateTotal: Math.round((summerCorporateTotal + winterCorporateTotal) / 2),
+        corporatePercentile: avgCorporatePercentile,
         facilityGrade,
         corporateGrade,
-        finalGrade
-      });
+        finalGrade,
+        // 詳細データ（分析用）
+        details: {
+          summer: {
+            facilityRank: summerFacilityRank,
+            facilityTotal: summerFacilityTotal,
+            facilityPercentile: summerFacilityPercentile,
+            facilityGrade: summerFacilityGrade,
+            corporateRank: summerCorporateRank,
+            corporateTotal: summerCorporateTotal,
+            corporatePercentile: summerCorporatePercentile,
+            corporateGrade: summerCorporateGrade
+          },
+          winter: {
+            facilityRank: winterFacilityRank,
+            facilityTotal: winterFacilityTotal,
+            facilityPercentile: winterFacilityPercentile,
+            facilityGrade: winterFacilityGrade,
+            corporateRank: winterCorporateRank,
+            corporateTotal: winterCorporateTotal,
+            corporatePercentile: winterCorporatePercentile,
+            corporateGrade: winterCorporateGrade
+          }
+        }
+      } as any);
     });
     
     return results;
   }
 
   /**
-   * 最終評価グレード算出
+   * 最終評価グレード算出（4軸独立評価の点数計算）
    */
   private calculateFinalGrades(rankings: RankingResult[]): RankingResult[] {
     return rankings.map(ranking => {
-      // 夏季貢献度点数の計算（各12.5点満点）
-      const summerFacilityPoints = this.percentileToPoints(ranking.facilityPercentile, 12.5);
-      const summerCorporatePoints = this.percentileToPoints(ranking.corporatePercentile, 12.5);
+      const details = (ranking as any).details;
       
-      // 冬季貢献度点数の計算（各12.5点満点）
-      const winterFacilityPoints = this.percentileToPoints(ranking.facilityPercentile, 12.5);
-      const winterCorporatePoints = this.percentileToPoints(ranking.corporatePercentile, 12.5);
+      // 4軸それぞれの点数計算（各12.5点満点）
+      const summerFacilityPoints = this.percentileToPoints(details.summer.facilityPercentile, 12.5);
+      const summerCorporatePoints = this.percentileToPoints(details.summer.corporatePercentile, 12.5);
+      const winterFacilityPoints = this.percentileToPoints(details.winter.facilityPercentile, 12.5);
+      const winterCorporatePoints = this.percentileToPoints(details.winter.corporatePercentile, 12.5);
       
       // 年間合計
       const totalFacilityPoints = summerFacilityPoints + winterFacilityPoints; // 最大25点
@@ -428,6 +532,17 @@ export class EvaluationBatchService {
       const technicalPoints = 35; // TODO: 実データから取得（最大50点）
       
       ranking.totalScore = technicalPoints + totalFacilityPoints + totalCorporatePoints;
+      
+      // 詳細点数を記録（分析用）
+      (ranking as any).pointsBreakdown = {
+        technical: technicalPoints,
+        summerFacility: summerFacilityPoints,
+        summerCorporate: summerCorporatePoints,
+        winterFacility: winterFacilityPoints,
+        winterCorporate: winterCorporatePoints,
+        totalFacility: totalFacilityPoints,
+        totalCorporate: totalCorporatePoints
+      };
       
       return ranking;
     });
