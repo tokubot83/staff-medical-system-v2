@@ -257,11 +257,11 @@ export function IntegratedEvaluationForm({
                       <Building className="h-8 w-8 mx-auto mb-2 text-green-500" />
                       <p className="text-sm text-gray-600">施設貢献</p>
                       <p className="text-2xl font-bold">
-                        {evaluationData.facilityContribution.finalScore || '-'}
+                        {evaluationData.facilityContribution.yearTotal?.toFixed(1) || '-'}
                       </p>
                       <p className="text-xs text-gray-600">/ 25点</p>
                       <Progress 
-                        value={((evaluationData.facilityContribution.finalScore || 0) / 25) * 100} 
+                        value={((evaluationData.facilityContribution.yearTotal || 0) / 25) * 100} 
                         className="mt-2 h-2" 
                       />
                     </div>
@@ -274,11 +274,11 @@ export function IntegratedEvaluationForm({
                       <Users className="h-8 w-8 mx-auto mb-2 text-orange-500" />
                       <p className="text-sm text-gray-600">法人貢献</p>
                       <p className="text-2xl font-bold">
-                        {evaluationData.corporateContribution.finalScore || '-'}
+                        {evaluationData.corporateContribution.yearTotal?.toFixed(1) || '-'}
                       </p>
                       <p className="text-xs text-gray-600">/ 25点</p>
                       <Progress 
-                        value={((evaluationData.corporateContribution.finalScore || 0) / 25) * 100} 
+                        value={((evaluationData.corporateContribution.yearTotal || 0) / 25) * 100} 
                         className="mt-2 h-2" 
                       />
                     </div>
