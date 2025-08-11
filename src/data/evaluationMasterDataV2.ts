@@ -1,6 +1,5 @@
 import { 
   CoreEvaluationCategory, 
-  CoreEvaluationItem, 
   EvaluationMasterV2 
 } from '@/types/evaluation-config-v2';
 
