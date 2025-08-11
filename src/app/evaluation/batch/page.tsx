@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { evaluationBatchService, BatchProcessResult, BatchError } from '@/services/evaluationBatchService';
 import ExcelImport from '@/components/evaluation/ExcelImport';
+import EvaluationFlowChart from '@/components/evaluation/EvaluationFlowChart';
 
 export default function EvaluationBatchPage() {
   const [isProcessing, setIsProcessing] = useState(false);
@@ -87,6 +88,11 @@ export default function EvaluationBatchPage() {
         <p className="text-gray-600">評価期間終了後の一括計算処理を管理します</p>
       </div>
 
+      {/* 評価プロセスフロー */}
+      <div className="mb-6">
+        <EvaluationFlowChart />
+      </div>
+
       {/* 処理実行パネル */}
       <Card className="mb-6">
         <CardHeader>
@@ -139,7 +145,7 @@ export default function EvaluationBatchPage() {
                 </div>
                 <Progress value={progress} className="h-2" />
                 <p className="text-xs text-gray-600">
-                  4軸独立評価（夏施設・夏法人・冬施設・冬法人）の相対順位計算を実行中...
+                  技術評価の集計、4軸独立相対評価、2軸マトリクス評価を実行中...
                 </p>
               </div>
             )}
