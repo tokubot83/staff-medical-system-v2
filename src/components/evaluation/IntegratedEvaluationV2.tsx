@@ -130,18 +130,15 @@ export default function IntegratedEvaluationV2() {
     return facilityTotal + corporateTotal;
   };
 
-  // 総合評価の計算とグレード判定
+  // 総合評価の計算とグレード判定（相対評価）
   const calculateTotalScoreAndGrade = () => {
     const technicalScore = calculateTechnicalScore();
     const contributionScore = calculateContributionScore();
     const total = technicalScore + contributionScore;
     
-    let grade = '';
-    if (total >= 90) grade = 'S';
-    else if (total >= 80) grade = 'A';
-    else if (total >= 70) grade = 'B';
-    else if (total >= 60) grade = 'C';
-    else grade = 'D';
+    // 注：実際の運用では同職種内での順位から相対評価でグレードを決定
+    // ここではデモ用に仮のグレードを表示
+    let grade = '未定';
     
     return { total, grade };
   };
@@ -214,14 +211,14 @@ export default function IntegratedEvaluationV2() {
     setTimeout(() => setSaved(false), 3000);
   };
 
-  // グレードの色
+  // グレードの色（相対評価用）
   const getGradeColor = (grade: string) => {
     switch (grade) {
-      case 'S': return 'text-purple-600 bg-purple-100';
-      case 'A': return 'text-blue-600 bg-blue-100';
-      case 'B': return 'text-green-600 bg-green-100';
-      case 'C': return 'text-yellow-600 bg-yellow-100';
-      case 'D': return 'text-red-600 bg-red-100';
+      case 'S': return 'text-yellow-800 bg-yellow-100';
+      case 'A': return 'text-green-800 bg-green-100';
+      case 'B': return 'text-blue-800 bg-blue-100';
+      case 'C': return 'text-orange-800 bg-orange-100';
+      case 'D': return 'text-red-800 bg-red-100';
       default: return 'text-gray-600 bg-gray-100';
     }
   };
@@ -273,9 +270,10 @@ export default function IntegratedEvaluationV2() {
             </div>
             <div className="bg-white rounded-lg p-4 text-center">
               <p className="text-sm text-muted-foreground">評価グレード</p>
-              <div className={`text-3xl font-bold rounded-lg py-2 ${getGradeColor(evaluationData.grade)}`}>
-                {evaluationData.grade || '-'}
+              <div className={`text-2xl font-bold rounded-lg py-2 ${getGradeColor(evaluationData.grade)}`}>
+                {evaluationData.grade || '相対評価待ち'}
               </div>
+              <p className="text-xs text-muted-foreground mt-1">同職種内順位で決定</p>
             </div>
           </div>
         </CardContent>
@@ -350,33 +348,47 @@ export default function IntegratedEvaluationV2() {
                   </div>
                 </div>
 
-                {/* 評価グレード基準 */}
+                {/* 評価グレード基準（相対評価） */}
                 <div>
                   <h3 className="font-semibold mb-3 flex items-center gap-2">
                     <TrendingUp className="w-5 h-5" />
-                    評価グレード基準
+                    評価グレード基準（相対評価）
                   </h3>
-                  <div className="ml-7 grid grid-cols-5 gap-2">
-                    <div className="text-center p-2 bg-purple-50 rounded">
-                      <div className="font-bold text-purple-600">S</div>
-                      <div className="text-xs">90点以上</div>
+                  <div className="ml-7 space-y-3">
+                    <div className="grid grid-cols-5 gap-2">
+                      <div className="text-center p-3 bg-yellow-100 rounded">
+                        <div className="font-bold text-yellow-800">S</div>
+                        <div className="text-xs">上位10%</div>
+                        <div className="text-xs font-semibold">卓越</div>
+                      </div>
+                      <div className="text-center p-3 bg-green-100 rounded">
+                        <div className="font-bold text-green-800">A</div>
+                        <div className="text-xs">上位11-30%</div>
+                        <div className="text-xs font-semibold">優秀</div>
+                      </div>
+                      <div className="text-center p-3 bg-blue-100 rounded">
+                        <div className="font-bold text-blue-800">B</div>
+                        <div className="text-xs">上位31-70%</div>
+                        <div className="text-xs font-semibold">標準</div>
+                      </div>
+                      <div className="text-center p-3 bg-orange-100 rounded">
+                        <div className="font-bold text-orange-800">C</div>
+                        <div className="text-xs">上位71-90%</div>
+                        <div className="text-xs font-semibold">要改善</div>
+                      </div>
+                      <div className="text-center p-3 bg-red-100 rounded">
+                        <div className="font-bold text-red-800">D</div>
+                        <div className="text-xs">下位10%</div>
+                        <div className="text-xs font-semibold">要支援</div>
+                      </div>
                     </div>
-                    <div className="text-center p-2 bg-blue-50 rounded">
-                      <div className="font-bold text-blue-600">A</div>
-                      <div className="text-xs">80-89点</div>
-                    </div>
-                    <div className="text-center p-2 bg-green-50 rounded">
-                      <div className="font-bold text-green-600">B</div>
-                      <div className="text-xs">70-79点</div>
-                    </div>
-                    <div className="text-center p-2 bg-yellow-50 rounded">
-                      <div className="font-bold text-yellow-600">C</div>
-                      <div className="text-xs">60-69点</div>
-                    </div>
-                    <div className="text-center p-2 bg-red-50 rounded">
-                      <div className="font-bold text-red-600">D</div>
-                      <div className="text-xs">60点未満</div>
-                    </div>
+                    <Alert className="bg-blue-50 border-blue-200">
+                      <AlertCircle className="h-4 w-4 text-blue-600" />
+                      <AlertDescription className="text-sm">
+                        最終的なグレードは、施設内と法人内での相対順位を基に決定されます。
+                        100点満点の得点を同職種内で比較し、パーセンタイルでランクを判定します。
+                      </AlertDescription>
+                    </Alert>
                   </div>
                 </div>
               </div>
@@ -658,9 +670,12 @@ export default function IntegratedEvaluationV2() {
                     <p className="text-4xl font-bold mb-4">
                       {evaluationData.totalScore} / 100点
                     </p>
-                    <div className={`inline-block text-2xl font-bold px-6 py-3 rounded-lg ${getGradeColor(evaluationData.grade)}`}>
-                      グレード: {evaluationData.grade || '-'}
+                    <div className={`inline-block text-xl font-bold px-6 py-3 rounded-lg ${getGradeColor(evaluationData.grade)}`}>
+                      グレード: {evaluationData.grade || '相対評価により決定'}
                     </div>
+                    <p className="text-sm text-muted-foreground mt-2">
+                      ※最終グレードは同職種内での相対順位により決定されます
+                    </p>
                   </div>
                 </div>
 
