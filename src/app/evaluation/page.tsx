@@ -27,7 +27,8 @@ import {
   UserCheck,
   FileSpreadsheet,
   Calculator,
-  ArrowRight
+  ArrowRight,
+  Badge
 } from 'lucide-react'
 
 // タスクの型定義
@@ -312,6 +313,21 @@ export default function EvaluationManagement() {
                     </Link>
                   </div>
                 </div>
+              </div>
+
+              {/* 統合評価システムへのリンク */}
+              <div className={styles.integratedSystemCard}>
+                <div className={styles.integratedHeader}>
+                  <Award className={styles.integratedIcon} />
+                  <h3>統合評価システム V2（100点満点）</h3>
+                  <Badge className={styles.newBadge}>NEW</Badge>
+                </div>
+                <p className={styles.integratedDescription}>
+                  技術評価（50点）と貢献度評価（50点）を統合した総合評価システム
+                </p>
+                <Link href="/evaluation/integrated-v2" className={styles.integratedButton}>
+                  統合評価を開始 <ChevronRight size={16} />
+                </Link>
               </div>
 
               {/* 現在のタスクと進捗 */}
