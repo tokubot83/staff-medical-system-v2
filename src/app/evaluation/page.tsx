@@ -5,6 +5,9 @@ import CommonHeader from '@/components/CommonHeader'
 import DashboardButton from '@/components/DashboardButton'
 import Link from 'next/link'
 import styles from './Evaluation.module.css'
+import PersonalAnalysisReport from '@/components/evaluation/PersonalAnalysisReport'
+import StrengthWeaknessRadar from '@/components/evaluation/StrengthWeaknessRadar'
+import TrainingEffectAnalysis from '@/components/evaluation/TrainingEffectAnalysis'
 import { 
   Clock, 
   AlertCircle, 
@@ -52,6 +55,8 @@ interface Notification {
 const tabs = [
   { id: 'overview', label: '評価概要', icon: '🏠' },
   { id: 'dashboard', label: 'ダッシュボード', icon: '📊', isNew: true },
+  { id: 'personal-analysis', label: '個人分析レポート', icon: '📈', isNew: true },
+  { id: 'training-effect', label: '研修効果分析', icon: '🎓', isNew: true },
   { id: 'technical', label: '技術評価フロー', icon: '🎯', badge: '50点' },
   { id: 'contribution', label: '貢献度評価フロー', icon: '🤝', badge: '50点' },
   { id: 'integration', label: '総合評価フロー', icon: '📊' },
@@ -1228,6 +1233,24 @@ export default function EvaluationManagement() {
                   <p>第3段階はバックエンド開発開始時に、この指示書を参照して実装してください。</p>
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* 個人分析レポートタブ */}
+          {activeTab === 'personal-analysis' && (
+            <div className={styles.personalAnalysisContent}>
+              <PersonalAnalysisReport />
+              <div className={styles.radarChartSection}>
+                <h3>スキル評価レーダーチャート</h3>
+                <StrengthWeaknessRadar />
+              </div>
+            </div>
+          )}
+
+          {/* 研修効果分析タブ */}
+          {activeTab === 'training-effect' && (
+            <div className={styles.trainingEffectContent}>
+              <TrainingEffectAnalysis />
             </div>
           )}
 
