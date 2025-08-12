@@ -33,6 +33,7 @@ import {
   DevelopmentTab, 
   EducationTab 
 } from '../staff-tabs'
+import PersonalDashboard from '@/components/dashboard/PersonalDashboard'
 
 // Chart.jsの登録
 ChartJS.register(
@@ -51,16 +52,17 @@ ChartJS.register(
 
 const tabs = [
   { id: 'basic', label: '基本情報', icon: '📋' },
+  { id: 'dashboard', label: 'ダッシュボード', icon: '📊' },
   { id: 'career', label: '経歴・キャリア', icon: '💼' },
   { id: 'mindset', label: 'マインド・志向性', icon: '🧠' },
   { id: 'qualification', label: '資格・専門性', icon: '📜' },
-  { id: 'achievement', label: '実績・表彰', icon: '📊' },
+  { id: 'achievement', label: '実績・表彰', icon: '🏆' },
   { id: 'attendance', label: '勤務状況', icon: '⏰' },
   { id: 'wellbeing', label: '健康・ウェルビーイング', icon: '💚' },
   { id: 'development', label: '能力開発', icon: '🚀' },
   { id: 'interview', label: '面談・指導', icon: '💬' },
-  { id: 'evaluation', label: '人事評価', icon: '📊' },
-  { id: 'analytics', label: '総合分析', icon: '📈' },
+  { id: 'evaluation', label: '人事評価', icon: '📈' },
+  { id: 'analytics', label: '総合分析', icon: '📊' },
   { id: 'recruitment', label: '採用・配属', icon: '👥' },
   { id: 'education', label: '教育・研修', icon: '🎓' },
   { id: 'links', label: '統合管理リンク', icon: '🔗' },
@@ -111,6 +113,14 @@ export default function StaffDetailPage() {
 
         <div className={styles.tabContent}>
           {activeTab === 'basic' && <BasicInfoTab selectedStaff={selectedStaff} />}
+          {activeTab === 'dashboard' && (
+            <div style={{ margin: '-20px' }}>
+              <PersonalDashboard 
+                employeeId={selectedStaff.id} 
+                employeeName={selectedStaff.name}
+              />
+            </div>
+          )}
           {activeTab === 'career' && <CareerTab selectedStaff={selectedStaff} />}
           {activeTab === 'mindset' && <MindsetTab selectedStaff={selectedStaff} />}
           {activeTab === 'qualification' && <QualificationTab selectedStaff={selectedStaff} />}
