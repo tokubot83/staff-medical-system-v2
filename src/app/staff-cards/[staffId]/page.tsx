@@ -34,6 +34,9 @@ import {
   EducationTab 
 } from '../staff-tabs'
 import PersonalDashboard from '@/components/dashboard/PersonalDashboard'
+import PersonalAnalysisReport from '@/components/evaluation/PersonalAnalysisReport'
+import StrengthWeaknessRadar from '@/components/evaluation/StrengthWeaknessRadar'
+import TrainingEffectAnalysis from '@/components/evaluation/TrainingEffectAnalysis'
 
 // Chart.jsの登録
 ChartJS.register(
@@ -61,6 +64,7 @@ const tabs = [
   { id: 'development', label: '能力開発', icon: '🚀' },
   { id: 'interview', label: '面談・指導', icon: '💬' },
   { id: 'evaluation', label: '人事評価', icon: '📈' },
+  { id: 'evaluation-report', label: '評価分析レポート', icon: '📊', isNew: true },
   { id: 'analytics', label: '総合分析', icon: '📊' },
   { id: 'recruitment', label: '採用・配属', icon: '👥' },
   { id: 'education', label: '教育・研修', icon: '🎓' },
@@ -129,6 +133,7 @@ export default function StaffDetailPage() {
           {activeTab === 'links' && <ManagementLinksTab selectedStaff={selectedStaff} />}
           {activeTab === 'analytics' && <AnalyticsTab selectedStaff={selectedStaff} />}
           {activeTab === 'evaluation' && <EvaluationTab selectedStaff={selectedStaff} />}
+          {activeTab === 'evaluation-report' && <EvaluationReportTab selectedStaff={selectedStaff} />}
           {activeTab === 'recruitment' && <RecruitmentTab selectedStaff={selectedStaff} />}
           {activeTab === 'interview' && <InterviewTab selectedStaff={selectedStaff} />}
           {activeTab === 'development' && <DevelopmentTab selectedStaff={selectedStaff} />}
@@ -933,6 +938,29 @@ function MindsetTab({ selectedStaff }: { selectedStaff: any }): React.ReactEleme
             )}
           </div>
         )}
+      </div>
+    </div>
+  )
+}
+
+function EvaluationReportTab({ selectedStaff }: { selectedStaff: any }): React.ReactElement {
+  return (
+    <div className={styles.evaluationReportContainer}>
+      <div className={styles.reportSection}>
+        <h2>評価分析レポート</h2>
+        <div className={styles.reportTabs}>
+          <div className={styles.reportTabContent}>
+            <PersonalAnalysisReport />
+          </div>
+          <div className={styles.radarChartSection}>
+            <h3>スキル評価レーダーチャート</h3>
+            <StrengthWeaknessRadar />
+          </div>
+          <div className={styles.trainingEffectSection}>
+            <h3>研修効果分析</h3>
+            <TrainingEffectAnalysis />
+          </div>
+        </div>
       </div>
     </div>
   )
