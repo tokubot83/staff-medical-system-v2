@@ -12,6 +12,7 @@ import LegalTrainingGuide from '@/components/education/LegalTrainingGuide'
 import EvaluationItemBank from '@/components/training/EvaluationItemBank'
 import EvaluationItemBankV2 from '@/components/training/EvaluationItemBankV2'
 import TrainingPlanGenerator from '@/components/training/TrainingPlanGenerator'
+import ProgressDashboard from '@/components/training/ProgressDashboard'
 
 ChartJS.register(
   ArcElement,
@@ -26,6 +27,7 @@ ChartJS.register(
 )
 
 const tabs = [
+  { id: 'dashboard', label: '進捗ダッシュボード', icon: '🎯', isNew: true },
   { id: 'programs', label: '研修プログラム', icon: '📚' },
   { id: 'planning', label: '研修計画', icon: '📅' },
   { id: 'schedule', label: 'スケジュール', icon: '📅' },
@@ -70,7 +72,7 @@ function TrainingPageContent() {
   const staffIdFromUrl = searchParams.get('staffId')
   const tabFromUrl = searchParams.get('tab')
   
-  const [activeTab, setActiveTab] = useState(tabFromUrl || 'programs')
+  const [activeTab, setActiveTab] = useState(tabFromUrl || 'dashboard')
   const [selectedProgram, setSelectedProgram] = useState<TrainingProgram | null>(null)
   const [selectedStaff, setSelectedStaff] = useState<Staff | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
@@ -216,6 +218,9 @@ function TrainingPageContent() {
         </div>
 
         <div className={styles.tabContent}>
+          {activeTab === 'dashboard' && (
+            <ProgressDashboard />
+          )}
           {activeTab === 'programs' && (
             <ProgramsTab 
               programs={filteredPrograms}

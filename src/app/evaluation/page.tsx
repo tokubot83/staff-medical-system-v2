@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import CommonHeader from '@/components/CommonHeader'
 import DashboardButton from '@/components/DashboardButton'
+import EvaluationIntegratedDashboard from '@/components/evaluation/EvaluationIntegratedDashboard'
 import Link from 'next/link'
 import styles from './Evaluation.module.css'
 import { 
@@ -149,6 +150,11 @@ export default function EvaluationManagement() {
 
         {/* タブコンテンツ */}
         <div className={styles.tabContent}>
+          {/* ダッシュボードタブ */}
+          {activeTab === 'dashboard' && (
+            <EvaluationIntegratedDashboard />
+          )}
+
           {/* 評価概要タブ */}
           {activeTab === 'overview' && (
             <div className={styles.overviewContent}>
