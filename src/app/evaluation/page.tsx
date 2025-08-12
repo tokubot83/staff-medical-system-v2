@@ -51,6 +51,7 @@ interface Notification {
 // タブ定義 - 2大評価フローを中心に再構成（第1・第2段階実装）
 const tabs = [
   { id: 'overview', label: '評価概要', icon: '🏠' },
+  { id: 'dashboard', label: 'ダッシュボード', icon: '📊', isNew: true },
   { id: 'technical', label: '技術評価フロー', icon: '🎯', badge: '50点' },
   { id: 'contribution', label: '貢献度評価フロー', icon: '🤝', badge: '50点' },
   { id: 'integration', label: '総合評価フロー', icon: '📊' },
@@ -364,6 +365,129 @@ export default function EvaluationManagement() {
                         <div style={{ width: `${progressData.contribution}%` }} />
                       </div>
                       <span>{progressData.contribution}%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ダッシュボードタブ */}
+          {activeTab === 'dashboard' && (
+            <div className={styles.dashboardContent}>
+              <div className={styles.dashboardHeader}>
+                <h2>評価ダッシュボード</h2>
+                <p className={styles.dashboardDescription}>
+                  人事評価の進捗管理と分析を行うダッシュボードです。管理者向けと個人向けの2種類があります。
+                </p>
+              </div>
+
+              <div className={styles.dashboardGrid}>
+                {/* 管理者ダッシュボード */}
+                <div className={styles.dashboardCard}>
+                  <div className={styles.dashboardIcon}>
+                    <Building size={48} className={styles.iconAdmin} />
+                  </div>
+                  <h3>管理者ダッシュボード</h3>
+                  <p className={styles.dashboardCardDescription}>
+                    組織全体の評価進捗、グレード分布、部門別分析を確認できます。
+                  </p>
+                  <ul className={styles.dashboardFeatures}>
+                    <li>
+                      <CheckCircle size={16} />
+                      <span>施設全体の評価進捗管理</span>
+                    </li>
+                    <li>
+                      <CheckCircle size={16} />
+                      <span>S/A/B/C/Dグレード分布の可視化</span>
+                    </li>
+                    <li>
+                      <CheckCircle size={16} />
+                      <span>部門別パフォーマンス分析</span>
+                    </li>
+                    <li>
+                      <CheckCircle size={16} />
+                      <span>リマインダー送信機能</span>
+                    </li>
+                  </ul>
+                  <Link href="/dashboard/admin" className={styles.dashboardLink}>
+                    管理者ダッシュボードへ
+                    <ChevronRight size={20} />
+                  </Link>
+                </div>
+
+                {/* 個人ダッシュボード */}
+                <div className={styles.dashboardCard}>
+                  <div className={styles.dashboardIcon}>
+                    <UserCheck size={48} className={styles.iconPersonal} />
+                  </div>
+                  <h3>個人ダッシュボード</h3>
+                  <p className={styles.dashboardCardDescription}>
+                    個人の評価履歴、研修状況、次回評価の準備状況を確認できます。
+                  </p>
+                  <ul className={styles.dashboardFeatures}>
+                    <li>
+                      <CheckCircle size={16} />
+                      <span>評価履歴とトレンド分析</span>
+                    </li>
+                    <li>
+                      <CheckCircle size={16} />
+                      <span>研修受講状況の管理</span>
+                    </li>
+                    <li>
+                      <CheckCircle size={16} />
+                      <span>次回評価スケジュール</span>
+                    </li>
+                    <li>
+                      <CheckCircle size={16} />
+                      <span>個人目標の設定と追跡</span>
+                    </li>
+                  </ul>
+                  <Link href="/dashboard/personal" className={styles.dashboardLink}>
+                    個人ダッシュボードへ
+                    <ChevronRight size={20} />
+                  </Link>
+                </div>
+              </div>
+
+              {/* 統計サマリー */}
+              <div className={styles.dashboardSummary}>
+                <h3>システム利用状況</h3>
+                <div className={styles.summaryGrid}>
+                  <div className={styles.summaryItem}>
+                    <div className={styles.summaryIcon}>
+                      <Users size={24} />
+                    </div>
+                    <div className={styles.summaryContent}>
+                      <div className={styles.summaryValue}>450</div>
+                      <div className={styles.summaryLabel}>評価対象職員数</div>
+                    </div>
+                  </div>
+                  <div className={styles.summaryItem}>
+                    <div className={styles.summaryIcon}>
+                      <Target size={24} />
+                    </div>
+                    <div className={styles.summaryContent}>
+                      <div className={styles.summaryValue}>68%</div>
+                      <div className={styles.summaryLabel}>評価完了率</div>
+                    </div>
+                  </div>
+                  <div className={styles.summaryItem}>
+                    <div className={styles.summaryIcon}>
+                      <TrendingUp size={24} />
+                    </div>
+                    <div className={styles.summaryContent}>
+                      <div className={styles.summaryValue}>72.5</div>
+                      <div className={styles.summaryLabel}>平均評価点</div>
+                    </div>
+                  </div>
+                  <div className={styles.summaryItem}>
+                    <div className={styles.summaryIcon}>
+                      <Calendar size={24} />
+                    </div>
+                    <div className={styles.summaryContent}>
+                      <div className={styles.summaryValue}>15日</div>
+                      <div className={styles.summaryLabel}>次回評価まで</div>
                     </div>
                   </div>
                 </div>

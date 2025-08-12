@@ -5,6 +5,162 @@
   padding: 20px;
 }
 
+/* ダッシュボードタブのスタイル */
+.dashboardContent {
+  padding: 20px;
+}
+
+.dashboardHeader {
+  margin-bottom: 32px;
+}
+
+.dashboardHeader h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.dashboardDescription {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.dashboardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.dashboardCard {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 24px;
+  transition: all 0.3s ease;
+}
+
+.dashboardCard:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.dashboardIcon {
+  margin-bottom: 16px;
+}
+
+.iconAdmin {
+  color: #3b82f6;
+}
+
+.iconPersonal {
+  color: #10b981;
+}
+
+.dashboardCard h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.dashboardCardDescription {
+  color: #6b7280;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.dashboardFeatures {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px 0;
+}
+
+.dashboardFeatures li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  color: #4b5563;
+  font-size: 14px;
+}
+
+.dashboardFeatures li svg {
+  color: #10b981;
+  flex-shrink: 0;
+}
+
+.dashboardLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.dashboardLink:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.dashboardSummary {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.dashboardSummary h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.summaryItem {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: white;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.summaryIcon {
+  padding: 12px;
+  background: #f3f4f6;
+  border-radius: 8px;
+}
+
+.summaryIcon svg {
+  color: #6b7280;
+}
+
+.summaryContent {
+  flex: 1;
+}
+
+.summaryValue {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.summaryLabel {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
 /* 統合評価システムカード */
 .integratedSystemCard {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
