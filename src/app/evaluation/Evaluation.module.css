@@ -2224,3 +2224,28 @@
 }
 
 /* 既存の他のスタイルも同様に残す */
+
+/* 個人分析レポートタブのスタイル */
+.personalAnalysisContent {
+  padding: 20px;
+  background: #f5f5f5;
+  min-height: 500px;
+}
+
+.radarChartSection {
+  margin-top: 32px;
+}
+
+.radarChartSection h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* 研修効果分析タブのスタイル */
+.trainingEffectContent {
+  padding: 20px;
+  background: #f5f5f5;
+  min-height: 500px;
+}
