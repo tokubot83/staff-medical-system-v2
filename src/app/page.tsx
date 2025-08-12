@@ -524,7 +524,7 @@ export default function Home() {
           レポート
          </Link>
          <Link href="/hr-system-guide" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
-          制度ガイド
+          人事制度ガイド
          </Link>
         </div>
        </div>
