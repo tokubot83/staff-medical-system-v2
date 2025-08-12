@@ -19,6 +19,11 @@ import EvaluationHistory from './EvaluationHistory';
 import TrainingStatus from './TrainingStatus';
 import NextEvaluationTimeline from './NextEvaluationTimeline';
 
+interface Skill {
+  name: string;
+  level: number;
+}
+
 interface PersonalDashboardProps {
   employeeId?: string;
   employeeName?: string;
@@ -300,7 +305,7 @@ const PersonalDashboard: React.FC<PersonalDashboardProps> = ({
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    {personalData.skills.map((skill, index) => (
+                    {personalData.skills.map((skill: Skill, index: number) => (
                       <div key={index}>
                         <div className="flex justify-between mb-1">
                           <span className="text-sm font-medium">{skill.name}</span>
@@ -330,7 +335,7 @@ const PersonalDashboard: React.FC<PersonalDashboardProps> = ({
                     <div>
                       <h4 className="text-sm font-semibold text-gray-700 mb-2">保有資格</h4>
                       <div className="flex flex-wrap gap-2">
-                        {personalData.qualifications.map((qual, index) => (
+                        {personalData.qualifications.map((qual: string, index: number) => (
                           <Badge key={index} variant="outline" className="bg-blue-50">
                             {qual}
                           </Badge>
@@ -340,7 +345,7 @@ const PersonalDashboard: React.FC<PersonalDashboardProps> = ({
                     <div>
                       <h4 className="text-sm font-semibold text-gray-700 mb-2">修了研修</h4>
                       <div className="flex flex-wrap gap-2">
-                        {personalData.certifications.map((cert, index) => (
+                        {personalData.certifications.map((cert: string, index: number) => (
                           <Badge key={index} variant="outline" className="bg-green-50">
                             {cert}
                           </Badge>
