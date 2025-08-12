@@ -52,7 +52,6 @@ ChartJS.register(
 
 const tabs = [
   { id: 'basic', label: '基本情報', icon: '📋' },
-  { id: 'dashboard', label: 'ダッシュボード', icon: '📊' },
   { id: 'career', label: '経歴・キャリア', icon: '💼' },
   { id: 'mindset', label: 'マインド・志向性', icon: '🧠' },
   { id: 'qualification', label: '資格・専門性', icon: '📜' },
@@ -112,12 +111,12 @@ export default function StaffDetailPage() {
         </div>
 
         <div className={styles.tabContent}>
-          {activeTab === 'basic' && <BasicInfoTab selectedStaff={selectedStaff} />}
-          {activeTab === 'dashboard' && (
+          {activeTab === 'basic' && (
             <div style={{ margin: '-20px' }}>
               <PersonalDashboard 
                 employeeId={selectedStaff.id} 
                 employeeName={selectedStaff.name}
+                selectedStaff={selectedStaff}
               />
             </div>
           )}
@@ -139,163 +138,6 @@ export default function StaffDetailPage() {
       <ScrollToTopButton />
       <BackToStaffCardsButton />
       <DashboardButton />
-    </div>
-  )
-}
-
-function BasicInfoTab({ selectedStaff }: { selectedStaff: any }) {
-  // 2軸評価データの取得（デモデータ）
-  const twoAxisEvaluation = selectedStaff.twoAxisEvaluation || {
-    facilityScore: 85,
-    facilityRank: Math.floor(Math.random() * 50) + 1,
-    facilityTotal: 200,
-    corporateScore: 78,
-    corporateRank: Math.floor(Math.random() * 100) + 1,
-    corporateTotal: 500,
-    overallScore: selectedStaff.evaluation || 'B',
-    description: '優秀な職員として評価されています',
-    recommendation: '継続的な成長を支援し、リーダーシップ研修への参加を推奨'
-  }
-
-  return (
-    <div className={styles.detailContainer}>
-      <div className={styles.profileSection}>
-        <div className={styles.profileHeader}>
-          <div className={`${styles.profileAvatar} ${selectedStaff.avatar}`}>
-            {selectedStaff.nameInitial}
-          </div>
-          <div className={styles.profileInfo}>
-            <h2>{selectedStaff.name}</h2>
-            <p className={styles.profileTitle}>{selectedStaff.facility} / {selectedStaff.department} / {selectedStaff.position}</p>
-            <div className={styles.profileMeta}>
-              <span>ID: {selectedStaff.id}</span>
-              <span>入職: {selectedStaff.joinDate}</span>
-              <span>年齢: {selectedStaff.age}歳</span>
-            </div>
-          </div>
-          <div className={styles.profileStatus}>
-            <div className={`${styles.statusBadge} ${
-              twoAxisEvaluation.overallScore === 'S+' || twoAxisEvaluation.overallScore === 'S' ? styles.statusExcellent :
-              twoAxisEvaluation.overallScore === 'A+' || twoAxisEvaluation.overallScore === 'A' ? styles.statusGood :
-              styles.statusNormal
-            }`}>
-              {twoAxisEvaluation.overallScore === 'S+' ? '最優秀' :
-               twoAxisEvaluation.overallScore === 'S' ? '優秀' :
-               twoAxisEvaluation.overallScore === 'A+' || twoAxisEvaluation.overallScore === 'A' ? '高評価' :
-               '標準'}
-            </div>
-          </div>
-        </div>
-
-        <div className={styles.metricsGrid}>
-          <div className={styles.metricCard}>
-            <h3>総合評価</h3>
-            <div className={styles.metricValue}>{twoAxisEvaluation.overallScore}</div>
-            <p className={styles.metricLabel}>最新総合人事評価</p>
-          </div>
-          <div className={styles.metricCard}>
-            <h3>健康スコア</h3>
-            <div className={styles.metricValue}>{selectedStaff.stressIndex ? 100 - selectedStaff.stressIndex : 75}</div>
-            <p className={styles.metricLabel}>ストレス指数: {selectedStaff.stressIndex || 48}</p>
-          </div>
-          <div className={styles.metricCard}>
-            <h3>エンゲージメント</h3>
-            <div className={styles.metricValue}>{selectedStaff.engagement}%</div>
-            <p className={styles.metricLabel}>組織への貢献度</p>
-          </div>
-          <div className={styles.metricCard}>
-            <h3>離職リスク</h3>
-            <div className={`${styles.metricValue} ${
-              selectedStaff.stressIndex < 40 ? styles.textGreen :
-              selectedStaff.stressIndex < 60 ? styles.textYellow :
-              styles.textRed
-            }`}>
-              {selectedStaff.stressIndex < 40 ? '低' :
-               selectedStaff.stressIndex < 60 ? '中' : '高'}
-            </div>
-            <p className={styles.metricLabel}>要注意度</p>
-          </div>
-        </div>
-
-        <div style={{ marginTop: '24px', marginBottom: '24px' }}>
-          <div className={styles.evaluationSummaryCompact}>
-            <div className={styles.evaluationHeader}>
-              <h4>人事評価サマリー</h4>
-              <span className={styles.evaluationGrade}>{twoAxisEvaluation.overallScore}</span>
-            </div>
-            <div className={styles.evaluationScores}>
-              <div className={styles.scoreItem}>
-                <span className={styles.scoreLabel}>施設評価</span>
-                <span className={styles.scoreValue}>{twoAxisEvaluation.facilityScore}点</span>
-                <span className={styles.scoreRank}>({twoAxisEvaluation.facilityRank}/{twoAxisEvaluation.facilityTotal}位)</span>
-              </div>
-              <div className={styles.scoreItem}>
-                <span className={styles.scoreLabel}>法人評価</span>
-                <span className={styles.scoreValue}>{twoAxisEvaluation.corporateScore}点</span>
-                <span className={styles.scoreRank}>({twoAxisEvaluation.corporateRank}/{twoAxisEvaluation.corporateTotal}位)</span>
-              </div>
-            </div>
-            <div className={styles.evaluationDescription}>
-              <p>{twoAxisEvaluation.description || '優秀な職員'}</p>
-              <p className={styles.recommendation}>{twoAxisEvaluation.recommendation || '継続的な成長を支援'}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className={styles.detailSections}>
-          <div className={styles.sectionCard}>
-            <h3>スキル・資格</h3>
-            <div className={styles.skillGrid}>
-              {selectedStaff.skills?.length > 0 ? selectedStaff.skills.map((skill: any, index: number) => (
-                <div key={index} className={styles.skillItem}>
-                  <span className={styles.skillName}>{skill.name}</span>
-                  <div className={styles.skillBar}>
-                    <div 
-                      className={styles.skillProgress} 
-                      style={{ width: `${skill.level}%` }}
-                    ></div>
-                  </div>
-                  <span className={styles.skillLevel}>{skill.level}%</span>
-                </div>
-              )) : (
-                <div className={styles.skillItem}>
-                  <span className={styles.skillName}>看護技術</span>
-                  <div className={styles.skillBar}>
-                    <div className={styles.skillProgress} style={{ width: '85%' }}></div>
-                  </div>
-                  <span className={styles.skillLevel}>85%</span>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className={styles.sectionCard}>
-            <h3>最近の評価コメント</h3>
-            <div className={styles.commentList}>
-              <div className={styles.commentItem}>
-                <p className={styles.commentDate}>2024年上期評価</p>
-                <p className={styles.commentText}>
-                  患者様への対応が丁寧で、チーム内でのコミュニケーションも良好。
-                  新人指導にも積極的に取り組んでいる。
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className={styles.sectionCard}>
-            <h3>アクションプラン</h3>
-            <div className={styles.actionList}>
-              <div className={styles.actionItem}>
-                <span className={styles.actionPriority}>優先度: 高</span>
-                <p className={styles.actionTitle}>リーダーシップ研修の受講</p>
-                <p className={styles.actionDetail}>
-                  次期主任候補として、マネジメントスキルの向上が必要
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   )
 }

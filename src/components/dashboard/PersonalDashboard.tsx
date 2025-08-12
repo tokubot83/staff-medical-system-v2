@@ -22,21 +22,25 @@ import NextEvaluationTimeline from './NextEvaluationTimeline';
 interface PersonalDashboardProps {
   employeeId?: string;
   employeeName?: string;
+  selectedStaff?: any; // 職員カルテから渡されるデータ
 }
 
 const PersonalDashboard: React.FC<PersonalDashboardProps> = ({ 
   employeeId = 'E001',
-  employeeName = '山田 太郎'
+  employeeName = '山田 太郎',
+  selectedStaff
 }) => {
   const [selectedTab, setSelectedTab] = useState('overview');
 
-  // サンプル個人データ
-  const personalData = {
-    employeeId: employeeId,
-    name: employeeName,
-    department: '看護部',
-    position: '主任看護師',
-    joinDate: '2018-04-01',
+  // 職員カルテデータがある場合はそれを使用、なければデフォルト値
+  const personalData = selectedStaff ? {
+    employeeId: selectedStaff.id || 'OH-NS-2021-001',
+    name: selectedStaff.name || employeeName,
+    department: selectedStaff.department || '3階病棟',
+    position: selectedStaff.position || '看護師',
+    facility: selectedStaff.facility || '小原病院',
+    joinDate: selectedStaff.joinDate || '2021-04-01',
+    age: selectedStaff.age || 29,
     currentGrade: 'B',
     currentScore: 72.5,
     previousGrade: 'B',
@@ -50,7 +54,53 @@ const PersonalDashboard: React.FC<PersonalDashboardProps> = ({
     completedTrainings: 8,
     requiredTrainings: 10,
     rank: 142,
-    totalEmployees: 450
+    totalEmployees: 450,
+    evaluation: selectedStaff.evaluation || 'B',
+    healthScore: selectedStaff.healthScore || 75,
+    stressIndex: selectedStaff.stressIndex || 48,
+    engagement: selectedStaff.engagement || 82,
+    skills: selectedStaff.skills || [
+      { name: '看護技術', level: 85 },
+      { name: '患者対応', level: 90 },
+      { name: 'チーム連携', level: 88 },
+      { name: '記録・報告', level: 82 }
+    ],
+    qualifications: selectedStaff.qualifications || ['看護師免許', 'BLS資格'],
+    certifications: selectedStaff.certifications || ['感染対策研修修了', '医療安全研修修了']
+  } : {
+    employeeId: employeeId,
+    name: employeeName,
+    department: '看護部',
+    position: '主任看護師',
+    facility: '医療法人',
+    joinDate: '2018-04-01',
+    age: 32,
+    currentGrade: 'B',
+    currentScore: 72.5,
+    previousGrade: 'B',
+    previousScore: 70.2,
+    trend: 'up' as const,
+    trendValue: 2.3,
+    technicalScore: 38,
+    contributionScore: 34.5,
+    nextEvaluationDate: '2025-12-31',
+    daysUntilEvaluation: 141,
+    completedTrainings: 8,
+    requiredTrainings: 10,
+    rank: 142,
+    totalEmployees: 450,
+    evaluation: 'B',
+    healthScore: 75,
+    stressIndex: 48,
+    engagement: 82,
+    skills: [
+      { name: '看護技術', level: 85 },
+      { name: '患者対応', level: 90 },
+      { name: 'チーム連携', level: 88 },
+      { name: '記録・報告', level: 82 }
+    ],
+    qualifications: ['看護師免許', 'BLS資格'],
+    certifications: ['感染対策研修修了', '医療安全研修修了']
   };
 
   const getGradeColor = (grade: string) => {
@@ -77,8 +127,10 @@ const PersonalDashboard: React.FC<PersonalDashboardProps> = ({
             </div>
             <div>
               <h1 className="text-2xl font-bold">{personalData.name}</h1>
-              <p className="text-blue-100">{personalData.department} / {personalData.position}</p>
-              <p className="text-sm text-blue-200 mt-1">社員番号: {personalData.employeeId}</p>
+              <p className="text-blue-100">{personalData.facility} / {personalData.department} / {personalData.position}</p>
+              <p className="text-sm text-blue-200 mt-1">
+                ID: {personalData.employeeId} | 入職: {personalData.joinDate} | 年齢: {personalData.age}歳
+              </p>
             </div>
           </div>
           <div className="text-right">
@@ -206,65 +258,148 @@ const PersonalDashboard: React.FC<PersonalDashboardProps> = ({
         </TabsList>
 
         <TabsContent value="overview" className="mt-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>評価サマリー</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div>
-                    <div className="flex justify-between mb-2">
-                      <span className="text-sm font-medium">技術評価</span>
-                      <span className="text-sm font-bold">{personalData.technicalScore}/50点</span>
+          <div className="space-y-6">
+            {/* 評価とスキル */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>評価サマリー</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex justify-between mb-2">
+                        <span className="text-sm font-medium">技術評価</span>
+                        <span className="text-sm font-bold">{personalData.technicalScore}/50点</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-blue-600 h-2 rounded-full"
+                          style={{ width: `${(personalData.technicalScore / 50) * 100}%` }}
+                        />
+                      </div>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div 
-                        className="bg-blue-600 h-2 rounded-full"
-                        style={{ width: `${(personalData.technicalScore / 50) * 100}%` }}
-                      />
+                    <div>
+                      <div className="flex justify-between mb-2">
+                        <span className="text-sm font-medium">組織貢献度</span>
+                        <span className="text-sm font-bold">{personalData.contributionScore}/50点</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-green-600 h-2 rounded-full"
+                          style={{ width: `${(personalData.contributionScore / 50) * 100}%` }}
+                        />
+                      </div>
                     </div>
                   </div>
-                  <div>
-                    <div className="flex justify-between mb-2">
-                      <span className="text-sm font-medium">組織貢献度</span>
-                      <span className="text-sm font-bold">{personalData.contributionScore}/50点</span>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle>スキル・専門性</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {personalData.skills.map((skill, index) => (
+                      <div key={index}>
+                        <div className="flex justify-between mb-1">
+                          <span className="text-sm font-medium">{skill.name}</span>
+                          <span className="text-sm text-gray-600">{skill.level}%</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div 
+                            className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full"
+                            style={{ width: `${skill.level}%` }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* 資格と評価コメント */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>資格・研修</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="text-sm font-semibold text-gray-700 mb-2">保有資格</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {personalData.qualifications.map((qual, index) => (
+                          <Badge key={index} variant="outline" className="bg-blue-50">
+                            {qual}
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div 
-                        className="bg-green-600 h-2 rounded-full"
-                        style={{ width: `${(personalData.contributionScore / 50) * 100}%` }}
-                      />
+                    <div>
+                      <h4 className="text-sm font-semibold text-gray-700 mb-2">修了研修</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {personalData.certifications.map((cert, index) => (
+                          <Badge key={index} variant="outline" className="bg-green-50">
+                            {cert}
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle>最近の評価コメント</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="border-l-4 border-blue-500 pl-4">
+                      <p className="text-sm text-gray-600 mb-1">2024年上期評価</p>
+                      <p className="text-sm">
+                        患者様への対応が丁寧で、チーム内でのコミュニケーションも良好。
+                        新人指導にも積極的に取り組んでいる。
+                      </p>
+                    </div>
+                    <div className="border-l-4 border-green-500 pl-4">
+                      <p className="text-sm text-gray-600 mb-1">今後の期待</p>
+                      <p className="text-sm">
+                        リーダーシップ研修の受講を推奨。次期主任候補として期待。
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* 今期の目標 */}
             <Card>
               <CardHeader>
-                <CardTitle>今期の目標</CardTitle>
+                <CardTitle>今期の目標・アクションプラン</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
-                  <div className="flex items-start gap-2">
-                    <Target className="h-4 w-4 text-blue-500 mt-1" />
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
+                    <Target className="h-5 w-5 text-blue-500 mt-1" />
                     <div>
                       <p className="text-sm font-medium">専門スキル向上</p>
-                      <p className="text-xs text-gray-500">認定看護師資格取得に向けた学習</p>
+                      <p className="text-xs text-gray-600 mt-1">認定看護師資格取得に向けた学習</p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-2">
-                    <Target className="h-4 w-4 text-green-500 mt-1" />
+                  <div className="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
+                    <Target className="h-5 w-5 text-green-500 mt-1" />
                     <div>
                       <p className="text-sm font-medium">チーム貢献</p>
-                      <p className="text-xs text-gray-500">新人教育プログラムのリーダー</p>
+                      <p className="text-xs text-gray-600 mt-1">新人教育プログラムのリーダー</p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-2">
-                    <Target className="h-4 w-4 text-purple-500 mt-1" />
+                  <div className="flex items-start gap-3 p-3 bg-purple-50 rounded-lg">
+                    <Target className="h-5 w-5 text-purple-500 mt-1" />
                     <div>
                       <p className="text-sm font-medium">業務改善</p>
-                      <p className="text-xs text-gray-500">看護記録システムの効率化提案</p>
+                      <p className="text-xs text-gray-600 mt-1">看護記録システムの効率化提案</p>
                     </div>
                   </div>
                 </div>
