@@ -325,7 +325,7 @@ export function MotivationTypeSection({
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {getTypeSpecificQuestions(selectedType).map((question, index) => (
+                  {selectedType && getTypeSpecificQuestions(selectedType).map((question, index) => (
                     <div key={index} className="space-y-2">
                       <Label className="text-sm font-medium">
                         質問{index + 1}. {question}
