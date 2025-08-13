@@ -374,7 +374,7 @@ export default function MidlevelCareWorkerEvaluationV4Pattern5() {
                             <RadioGroupItem value={grade} id={`self-mentoring-${grade}`} />
                             <Label htmlFor={`self-mentoring-${grade}`} className="font-normal">{grade}</Label>
                           </div>
-                        )}}
+                        ))}
                       </div>
                     </RadioGroup>
                   </div>
