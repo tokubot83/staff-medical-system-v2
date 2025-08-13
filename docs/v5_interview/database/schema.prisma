@@ -1,0 +1,206 @@
+// This is your Prisma schema file for motivation type extension
+// Learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// 動機タイプマスター
+// ============================================
+model MotivationType {
+  id           String   @id @db.VarChar(20)
+  typeName     String   @map("type_name") @db.VarChar(50)
+  label        String   @db.VarChar(100)
+  description  String   @db.Text
+  icon         String?  @db.VarChar(50)
+  color        String?  @db.VarChar(50)
+  approach     String   @db.Text
+  keywords     Json?
+  displayOrder Int      @default(0) @map("display_order")
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  staffHistory        StaffMotivationHistory[]
+  interviews          Interview[]
+  actions             MotivationTypeAction[]
+  compatibilityFrom   MotivationTypeCompatibility[] @relation("CompatibilityFrom")
+  compatibilityTo     MotivationTypeCompatibility[] @relation("CompatibilityTo")
+
+  @@map("motivation_types")
+}
+
+// ============================================
+// 職員動機タイプ履歴
+// ============================================
+model StaffMotivationHistory {
+  id               Int                @id @default(autoincrement())
+  staffId          Int                @map("staff_id")
+  motivationTypeId String             @map("motivation_type_id") @db.VarChar(20)
+  interviewId      Int?               @map("interview_id")
+  assessmentDate   DateTime           @map("assessment_date") @db.Date
+  assessedBy       Int?               @map("assessed_by")
+  confidenceLevel  ConfidenceLevel    @default(MEDIUM) @map("confidence_level")
+  notes            String?            @db.Text
+  isPrimary        Boolean            @default(true) @map("is_primary")
+  createdAt        DateTime           @default(now()) @map("created_at")
+  updatedAt        DateTime           @updatedAt @map("updated_at")
+
+  // Relations
+  staff          Staff          @relation(fields: [staffId], references: [id])
+  motivationType MotivationType @relation(fields: [motivationTypeId], references: [id])
+  interview      Interview?     @relation(fields: [interviewId], references: [id])
+  assessor       User?          @relation(fields: [assessedBy], references: [id])
+
+  @@index([staffId, assessmentDate(sort: Desc)])
+  @@index([motivationTypeId])
+  @@map("staff_motivation_history")
+}
+
+enum ConfidenceLevel {
+  HIGH   @map("high")
+  MEDIUM @map("medium")
+  LOW    @map("low")
+}
+
+// ============================================
+// 動機タイプ別推奨アクション
+// ============================================
+model MotivationTypeAction {
+  id                Int            @id @default(autoincrement())
+  motivationTypeId  String         @map("motivation_type_id") @db.VarChar(20)
+  actionCategory    ActionCategory @map("action_category")
+  actionName        String         @map("action_name") @db.VarChar(200)
+  actionDescription String?        @map("action_description") @db.Text
+  priority          Int            @default(5)
+  isActive          Boolean        @default(true) @map("is_active")
+  createdAt         DateTime       @default(now()) @map("created_at")
+  updatedAt         DateTime       @updatedAt @map("updated_at")
+
+  // Relations
+  motivationType MotivationType @relation(fields: [motivationTypeId], references: [id])
+
+  @@index([motivationTypeId, actionCategory])
+  @@map("motivation_type_actions")
+}
+
+enum ActionCategory {
+  TRAINING    @map("training")
+  PROJECT     @map("project")
+  REWARD      @map("reward")
+  ENVIRONMENT @map("environment")
+  CAREER      @map("career")
+  OTHER       @map("other")
+}
+
+// ============================================
+// 動機タイプ組み合わせ相性
+// ============================================
+model MotivationTypeCompatibility {
+  id                 Int                @id @default(autoincrement())
+  typeId1            String             @map("type_id_1") @db.VarChar(20)
+  typeId2            String             @map("type_id_2") @db.VarChar(20)
+  compatibilityLevel CompatibilityLevel @map("compatibility_level")
+  description        String?            @db.Text
+  managementTips     String?            @map("management_tips") @db.Text
+  createdAt          DateTime           @default(now()) @map("created_at")
+
+  // Relations
+  type1 MotivationType @relation("CompatibilityFrom", fields: [typeId1], references: [id])
+  type2 MotivationType @relation("CompatibilityTo", fields: [typeId2], references: [id])
+
+  @@unique([typeId1, typeId2])
+  @@map("motivation_type_compatibility")
+}
+
+enum CompatibilityLevel {
+  EXCELLENT @map("excellent")
+  GOOD      @map("good")
+  NEUTRAL   @map("neutral")
+  CAUTION   @map("caution")
+  DIFFICULT @map("difficult")
+}
+
+// ============================================
+// 既存テーブルの拡張（面談記録）
+// ============================================
+model Interview {
+  id                   Int                      @id @default(autoincrement())
+  staffId              Int                      @map("staff_id")
+  interviewerId        Int                      @map("interviewer_id")
+  interviewDate        DateTime                 @map("interview_date")
+  interviewType        String                   @map("interview_type") @db.VarChar(50)
+  duration             Int?                     // 面談時間（分）
+  
+  // 動機タイプ関連フィールド（v5追加）
+  motivationTypeId     String?                  @map("motivation_type_id") @db.VarChar(20)
+  motivationConfidence ConfidenceLevel?         @map("motivation_confidence")
+  typeSpecificNotes    String?                  @map("type_specific_notes") @db.Text
+  
+  // 既存フィールド
+  overallEvaluation    String?                  @map("overall_evaluation") @db.VarChar(50)
+  potentialEvaluation  String?                  @map("potential_evaluation") @db.VarChar(50)
+  turnoverRisk         String?                  @map("turnover_risk") @db.VarChar(20)
+  developmentPlan      String?                  @map("development_plan") @db.Text
+  nextActionItems      Json?                    @map("next_action_items")
+  notes                String?                  @db.Text
+  createdAt            DateTime                 @default(now()) @map("created_at")
+  updatedAt            DateTime                 @updatedAt @map("updated_at")
+
+  // Relations
+  staff              Staff                    @relation(fields: [staffId], references: [id])
+  interviewer        User                     @relation(fields: [interviewerId], references: [id])
+  motivationType     MotivationType?          @relation(fields: [motivationTypeId], references: [id])
+  motivationHistory  StaffMotivationHistory[]
+
+  @@index([staffId])
+  @@index([interviewerId])
+  @@index([motivationTypeId])
+  @@map("interviews")
+}
+
+// ============================================
+// 既存テーブル（参照用）
+// ============================================
+model Staff {
+  id                 Int                      @id @default(autoincrement())
+  employeeId         String                   @unique @map("employee_id") @db.VarChar(50)
+  name               String                   @db.VarChar(100)
+  email              String?                  @unique @db.VarChar(255)
+  department         String                   @db.VarChar(100)
+  position           String                   @db.VarChar(100)
+  hireDate           DateTime                 @map("hire_date")
+  isActive           Boolean                  @default(true) @map("is_active")
+  createdAt          DateTime                 @default(now()) @map("created_at")
+  updatedAt          DateTime                 @updatedAt @map("updated_at")
+
+  // Relations
+  interviews         Interview[]
+  motivationHistory  StaffMotivationHistory[]
+
+  @@map("staff")
+}
+
+model User {
+  id                Int                      @id @default(autoincrement())
+  username          String                   @unique @db.VarChar(50)
+  email             String                   @unique @db.VarChar(255)
+  name              String                   @db.VarChar(100)
+  role              String                   @db.VarChar(50)
+  isActive          Boolean                  @default(true) @map("is_active")
+  createdAt         DateTime                 @default(now()) @map("created_at")
+  updatedAt         DateTime                 @updatedAt @map("updated_at")
+
+  // Relations
+  interviews             Interview[]
+  assessedMotivations    StaffMotivationHistory[]
+
+  @@map("users")
+}

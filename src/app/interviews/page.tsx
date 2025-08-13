@@ -17,14 +17,14 @@ import ImprovedInterviewFlow from '@/components/interview/ImprovedInterviewFlow'
 
 // 第1段階実装: タブ順序を業務フローに合わせて修正
 const tabs = [
-  { id: 'overview', label: '面談概要', icon: '🏠' },
-  { id: 'dashboard', label: 'ダッシュボード', icon: '📊', isNew: true },
-  { id: 'schedule', label: '面談予定', icon: '📅' },
-  { id: 'sheets', label: '面談実施', icon: '📄' },
-  { id: 'record', label: '結果記録', icon: '📝' },
-  { id: 'history', label: '履歴・分析', icon: '📈' },
-  { id: 'guide', label: 'ガイド', icon: '❓', isNew: true },
-  { id: 'settings', label: '設定', icon: '⚙️' },
+  { id: 'overview', label: '面談概要', icon: '🏠', badge: '', isNew: false },
+  { id: 'dashboard', label: 'ダッシュボード', icon: '📊', badge: '', isNew: true },
+  { id: 'schedule', label: '面談予定', icon: '📅', badge: '', isNew: false },
+  { id: 'sheets', label: '面談実施', icon: '📄', badge: '', isNew: false },
+  { id: 'record', label: '結果記録', icon: '📝', badge: '', isNew: false },
+  { id: 'history', label: '履歴・分析', icon: '📈', badge: '', isNew: false },
+  { id: 'guide', label: 'ガイド', icon: '❓', badge: '', isNew: true },
+  { id: 'settings', label: '設定', icon: '⚙️', badge: '', isNew: false },
 ]
 
 
