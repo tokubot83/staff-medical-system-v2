@@ -42,8 +42,8 @@ export default function V5InterviewSheetsPage() {
     },
     {
       id: 'senior-nurse-45min',
-      title: 'シニア看護師（45分版）',
-      description: 'シニア看護師向けの詳細面談シート（動機タイプ判定付き）',
+      title: '中堅看護師（45分版）',
+      description: '中堅看護師向けの詳細面談シート（動機タイプ判定付き）',
       duration: 45,
       icon: TrendingUp,
       color: 'bg-purple-50 border-purple-200'
