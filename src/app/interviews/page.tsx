@@ -929,12 +929,12 @@ function GuideTab({ onInterviewTypeClick }: GuideTabProps): React.ReactElement {
         <div className={styles.sheetList}>
           <h4>看護師用面談シート（v4統合版）</h4>
           <ul>
-            <li>新人看護師（1年目）: 15分/30分/45分</li>
+            <li>新人看護師（1年目）: 45分</li>
             <li>一般看護師（2-3年目）: 15分/30分/45分</li>
-            <li>中堅看護師（4-10年目）: 15分/30分/45分</li>
-            <li>ベテラン看護師（11年以上）: 15分/30分/45分</li>
-            <li>主任看護師: 15分/30分/45分</li>
-            <li>病棟師長: 15分/30分/45分</li>
+            <li>中堅看護師（4-10年目）: 45分</li>
+            <li>ベテラン看護師（11年以上）: 45分</li>
+            <li>主任看護師: 45分</li>
+            <li>病棟師長: 45分</li>
           </ul>
           <h4>看護補助者用面談シート（v4統合版）</h4>
           <ul>
