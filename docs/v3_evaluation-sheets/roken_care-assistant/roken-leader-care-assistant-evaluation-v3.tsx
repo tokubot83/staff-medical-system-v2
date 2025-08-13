@@ -35,7 +35,7 @@ export default function LeaderCareAssistantEvaluationV3() {
               <TabsTrigger value="basic">基本情報</TabsTrigger>
               <TabsTrigger value="facility">施設内評価</TabsTrigger>
               <TabsTrigger value="corporate">法人内評価</TabsTrigger>
-              <TagsTrigger value="matrix">総合判定</TabsTrigger>
+              <TabsTrigger value="matrix">総合判定</TabsTrigger>
               <TabsTrigger value="development">育成計画</TabsTrigger>
             </TabsList>
 
