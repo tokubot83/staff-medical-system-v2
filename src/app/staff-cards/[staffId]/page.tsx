@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import CommonHeader from '@/components/CommonHeader'
 import Link from 'next/link'
@@ -10,6 +10,7 @@ import styles from '../StaffCards.module.css'
 import DashboardButton from '@/components/DashboardButton'
 import ScrollToTopButton from '@/components/ScrollToTopButton'
 import BackToStaffCardsButton from '@/components/BackToStaffCardsButton'
+import { motivationTypes } from '@/components/interview/MotivationTypeSection'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -663,6 +664,35 @@ function WellbeingTab({ selectedStaff }: { selectedStaff: any }): React.ReactEle
 }
 
 function MindsetTab({ selectedStaff }: { selectedStaff: any }): React.ReactElement {
+  const [motivationType, setMotivationType] = useState<any>(null)
+  const [isLoadingMotivation, setIsLoadingMotivation] = useState(false)
+  
+  // 動機タイプデータの取得
+  useEffect(() => {
+    const fetchMotivationType = async () => {
+      if (!selectedStaff?.id) return
+      
+      setIsLoadingMotivation(true)
+      try {
+        const response = await fetch(`/api/motivation/history/${selectedStaff.id}`)
+        if (response.ok) {
+          const data = await response.json()
+          if (data.history && data.history.length > 0) {
+            // 最新の動機タイプを設定
+            const latest = data.history[0]
+            setMotivationType(latest)
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch motivation type:', error)
+      } finally {
+        setIsLoadingMotivation(false)
+      }
+    }
+    
+    fetchMotivationType()
+  }, [selectedStaff?.id])
+  
   const mindset = selectedStaff.mindset || {
     careerOrientation: {
       type: 'balanced',
@@ -724,6 +754,20 @@ function MindsetTab({ selectedStaff }: { selectedStaff: any }): React.ReactEleme
     growth: '成長',
     contribution: '貢献',
     stability: '安定'
+  }
+  
+  // 動機タイプに基づく具体的なモチベーション源を取得
+  const getMotivationSourcesForType = (typeId: string): string[] => {
+    const typeSourcesMap: Record<string, string[]> = {
+      growth: ['新しいスキルの習得', '挑戦的な業務への参加', '研修・学習機会', '成長実感'],
+      recognition: ['上司からの評価', '同僚からの感謝', '表彰・昇進', '成果の可視化'],
+      stability: ['明確な業務手順', '予測可能な環境', '安定した評価', '段階的な変化'],
+      teamwork: ['チーム協働', '後輩指導', '相互支援', '良好な人間関係'],
+      efficiency: ['業務改善', 'プロセス最適化', 'DX推進', '無駄の削減'],
+      compensation: ['昇給機会', '福利厚生', '資格手当', 'インセンティブ'],
+      creativity: ['独自のアプローチ', '裁量権', '創造的な問題解決', '柔軟な働き方']
+    }
+    return typeSourcesMap[typeId] || ['成長機会', '評価・承認', '貢献実感']
   }
 
   return (
@@ -806,14 +850,80 @@ function MindsetTab({ selectedStaff }: { selectedStaff: any }): React.ReactEleme
                 ))}
               </div>
             </div>
+            
+            {/* 動機タイプ（V5判定結果） */}
             <div className={styles.approachItem}>
-              <h4>モチベーション源</h4>
+              <h4>動機タイプ</h4>
+              {isLoadingMotivation ? (
+                <div className={styles.loadingIndicator}>読み込み中...</div>
+              ) : motivationType ? (
+                <div className={styles.motivationTypeCard}>
+                  <div className={styles.motivationTypeHeader}>
+                    <span className={styles.motivationTypeLabel}>
+                      {motivationType.optionLabel || 'A'}
+                    </span>
+                    <span className={styles.motivationTypeName}>
+                      {motivationType.typeName}
+                    </span>
+                  </div>
+                  <div className={styles.motivationTypeDetails}>
+                    <div className={styles.detailItem}>
+                      <span className={styles.detailLabel}>判定日:</span>
+                      <span className={styles.detailValue}>
+                        {new Date(motivationType.assessmentDate).toLocaleDateString('ja-JP')}
+                      </span>
+                    </div>
+                    <div className={styles.detailItem}>
+                      <span className={styles.detailLabel}>信頼度:</span>
+                      <span className={`${styles.detailValue} ${styles[`confidence-${motivationType.confidenceLevel}`]}`}>
+                        {motivationType.confidenceLevel === 'high' ? '高' :
+                         motivationType.confidenceLevel === 'medium' ? '中' : '低'}
+                      </span>
+                    </div>
+                  </div>
+                  {motivationType.keywords && (
+                    <div className={styles.motivationKeywords}>
+                      {motivationType.keywords.map((keyword: string, index: number) => (
+                        <span key={index} className={styles.keywordTag}>
+                          {keyword}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className={styles.noMotivationType}>
+                  <p>V5面談による判定結果がありません</p>
+                  <Link href={`/interviews?staffId=${selectedStaff.id}&type=v5`} className={styles.linkButton}>
+                    V5面談を実施する
+                  </Link>
+                </div>
+              )}
+            </div>
+            
+            {/* モチベーション源（動機タイプに基づく具体例） */}
+            <div className={styles.approachItem}>
+              <h4>モチベーション源
+                {motivationType && <span className={styles.subLabel}>（{motivationType.typeName}型の特徴）</span>}
+              </h4>
               <div className={styles.motivationList}>
-                {mindset.workApproach.motivationSources.map((source: string, index: number) => (
-                  <span key={index} className={styles.motivationTag}>
-                    {motivationLabels[source as keyof typeof motivationLabels]}
-                  </span>
-                ))}
+                {motivationType ? (
+                  // 動機タイプに基づく具体的なモチベーション源を表示
+                  <>
+                    {getMotivationSourcesForType(motivationType.typeId).map((source: string, index: number) => (
+                      <span key={index} className={styles.motivationTag}>
+                        {source}
+                      </span>
+                    ))}
+                  </>
+                ) : (
+                  // 既存のモチベーション源を表示
+                  mindset.workApproach.motivationSources.map((source: string, index: number) => (
+                    <span key={index} className={styles.motivationTag}>
+                      {motivationLabels[source as keyof typeof motivationLabels]}
+                    </span>
+                  ))
+                )}
               </div>
             </div>
           </div>
