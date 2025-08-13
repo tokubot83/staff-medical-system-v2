@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { InfoIcon, Calculator, Award, Users, Building, Hands } from 'lucide-react';
+import { InfoIcon, Calculator, Award, Users, Building, Heart } from 'lucide-react';
 import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
@@ -726,7 +726,7 @@ export default function ChronicNewNursingAideEvaluationV4Pattern5() {
                 {/* 新人看護補助者の成長段階評価 */}
                 <div className="bg-yellow-50 p-4 rounded-lg mb-6">
                   <h4 className="font-semibold mb-2 flex items-center">
-                    <Hands className="h-5 w-5 mr-2" />
+                    <Heart className="h-5 w-5 mr-2" />
                     新人看護補助者としての成長段階
                   </h4>
                   {(() => {

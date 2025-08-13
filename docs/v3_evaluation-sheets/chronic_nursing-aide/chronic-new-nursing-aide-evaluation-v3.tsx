@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Hands } from 'lucide-react';
+import { Users } from 'lucide-react';
 
 export default function ChronicNewNursingAideEvaluationV3() {
   return (
@@ -25,7 +25,7 @@ export default function ChronicNewNursingAideEvaluationV3() {
         </CardHeader>
         <CardContent>
           <Alert className="mb-6">
-            <Hands className="h-4 w-4" />
+            <Users className="h-4 w-4" />
             <AlertDescription>
               慢性期医療の新人看護補助者として、生活援助技術の習得と患者様への温かな関わりを評価します
             </AlertDescription>
