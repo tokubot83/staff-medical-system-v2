@@ -177,7 +177,7 @@ export default function NotificationCenter() {
   const getPriorityBadge = (priority: NotificationPriority) => {
     switch (priority) {
       case 'high': return 'destructive'
-      case 'medium': return 'warning'
+      case 'medium': return 'default'
       case 'low': return 'secondary'
       case 'info': return 'default'
       default: return 'secondary'

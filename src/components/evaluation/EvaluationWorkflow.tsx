@@ -93,8 +93,8 @@ export default function EvaluationWorkflowComponent({
     switch (status) {
       case 'draft': return 'secondary'
       case 'submitted': return 'default'
-      case 'pending_approval': return 'warning'
-      case 'approved': return 'success'
+      case 'pending_approval': return 'default'
+      case 'approved': return 'default'
       case 'rejected': return 'destructive'
       case 'confirmed': return 'default'
       default: return 'secondary'
