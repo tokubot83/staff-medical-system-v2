@@ -341,7 +341,7 @@ export default function ChronicVeteranNursingAideEvaluationV4Pattern5() {
                             <RadioGroupItem value={grade} id={`self-knowledge-${grade}`} />
                             <Label htmlFor={`self-knowledge-${grade}`} className="font-normal">{grade}</Label>
                           </div>
-                        )}}
+                        ))}
                       </div>
                     </RadioGroup>
                   </div>
