@@ -29,17 +29,21 @@ ChartJS.register(
 )
 
 const tabs = [
-  { id: 'dashboard', label: '進捗ダッシュボード', icon: '🎯', isNew: true },
-  { id: 'programs', label: '研修プログラム', icon: '📚' },
-  { id: 'planning', label: '研修計画', icon: '📅' },
-  { id: 'schedule', label: 'スケジュール', icon: '📅' },
-  { id: 'progress', label: '進捗管理', icon: '📊' },
-  { id: 'individual', label: '個人管理', icon: '👤' },
-  { id: 'history', label: '受講履歴', icon: '📝' },
-  { id: 'analytics', label: '分析', icon: '📈' },
-  { id: 'itembank', label: '項目バンク', icon: '📋' },
-  { id: 'guide', label: 'ガイド', icon: '📖' },
-  { id: 'settings', label: '設定', icon: '⚙️' },
+  // 第1行 - 主要機能
+  { id: 'dashboard', label: '進捗ダッシュボード', icon: '🎯', isNew: true, row: 1 },
+  { id: 'programs', label: '研修プログラム', icon: '📚', row: 1 },
+  { id: 'calendar', label: 'カレンダー', icon: '📅', isNew: true, row: 1 },
+  { id: 'planning', label: '研修計画', icon: '📋', row: 1 },
+  { id: 'progress', label: '進捗管理', icon: '📊', row: 1 },
+  { id: 'individual', label: '個人管理', icon: '👤', row: 1 },
+  
+  // 第2行 - 分析・管理機能
+  { id: 'department-analysis', label: '部門別分析', icon: '🏢', isNew: true, row: 2 },
+  { id: 'history', label: '受講履歴', icon: '📝', row: 2 },
+  { id: 'analytics', label: '統計分析', icon: '📈', row: 2 },
+  { id: 'itembank', label: '項目バンク', icon: '🗂️', row: 2 },
+  { id: 'guide', label: 'ガイド', icon: '📖', row: 2 },
+  { id: 'settings', label: '設定', icon: '⚙️', row: 2 },
 ]
 
 interface TrainingProgram {
@@ -206,17 +210,37 @@ function TrainingPageContent() {
       <CommonHeader title="教育・研修管理" />
       
       <div className={styles.container}>
-        <div className={styles.tabNavigation}>
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`${styles.tabButton} ${activeTab === tab.id ? styles.active : ''}`}
-            >
-              <span className={styles.tabIcon}>{tab.icon}</span>
-              <span className={styles.tabLabel}>{tab.label}</span>
-            </button>
-          ))}
+        <div className={styles.tabNavigationWrapper}>
+          <div className={styles.tabNavigation}>
+            {tabs.filter(tab => tab.row === 1).map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`${styles.tabButton} ${activeTab === tab.id ? styles.active : ''}`}
+              >
+                <span className={styles.tabIcon}>{tab.icon}</span>
+                <span className={styles.tabLabel}>
+                  {tab.label}
+                  {tab.isNew && <span className={styles.newBadge}>New</span>}
+                </span>
+              </button>
+            ))}
+          </div>
+          <div className={styles.tabNavigation}>
+            {tabs.filter(tab => tab.row === 2).map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`${styles.tabButton} ${activeTab === tab.id ? styles.active : ''}`}
+              >
+                <span className={styles.tabIcon}>{tab.icon}</span>
+                <span className={styles.tabLabel}>
+                  {tab.label}
+                  {tab.isNew && <span className={styles.newBadge}>New</span>}
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className={styles.tabContent}>
@@ -237,10 +261,12 @@ function TrainingPageContent() {
               onProgramSelect={handleProgramSelect}
             />
           )}
+          {activeTab === 'calendar' && <TrainingCalendarView />}
           {activeTab === 'planning' && <TrainingPlanningTab />}
           {activeTab === 'schedule' && <ScheduleTab />}
           {activeTab === 'progress' && <ProgressTab selectedProgram={selectedProgram} />}
           {activeTab === 'individual' && <IndividualTab staff={mockStaff} selectedStaff={selectedStaff} setSelectedStaff={setSelectedStaff} />}
+          {activeTab === 'department-analysis' && <DepartmentAnalysisReport />}
           {activeTab === 'history' && <HistoryTab />}
           {activeTab === 'analytics' && <AnalyticsTab />}
           {activeTab === 'itembank' && <ItemBankTab />}
