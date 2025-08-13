@@ -67,7 +67,7 @@ export default function GrouphomeNewNurseEvaluationV4Pattern5() {
     setTotalScore(Math.round((technical + facility + corporate) * 10) / 10);
   }, [technicalScores, facilityRank, corporateRank]);
 
-  const handleTechnicalScoreChange = (evaluator: string, category: string, grade: string) => {
+  const handleTechnicalScoreChange = (evaluator: keyof typeof technicalScores, category: string, grade: string) => {
     setTechnicalScores(prev => ({
       ...prev,
       [evaluator]: {
