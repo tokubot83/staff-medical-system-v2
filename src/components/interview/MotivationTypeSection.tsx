@@ -13,6 +13,7 @@ export interface MotivationType {
   id: string;
   type: string;
   label: string;
+  optionLabel: string;  // A〜G用の選択肢ラベル
   description: string;
   icon: React.ElementType;
   color: string;
@@ -25,6 +26,7 @@ export const motivationTypes: MotivationType[] = [
     id: 'growth',
     type: '成長・挑戦型',
     label: '新しいスキルを身につけた時',
+    optionLabel: 'A',
     description: '学習意欲が高く、新しいことへの挑戦を好む。スキルアップや成長実感が主なモチベーション。',
     icon: TrendingUp,
     color: 'text-green-600 bg-green-50',
@@ -35,6 +37,7 @@ export const motivationTypes: MotivationType[] = [
     id: 'recognition',
     type: '評価・承認型',
     label: '上司や同僚に褒められた時',
+    optionLabel: 'B',
     description: '他者からの評価や承認を重視。成果を認められることで強いモチベーションを感じる。',
     icon: Award,
     color: 'text-yellow-600 bg-yellow-50',
@@ -45,6 +48,7 @@ export const motivationTypes: MotivationType[] = [
     id: 'stability',
     type: '安定・安心型',
     label: '安定した環境で確実に成果を出せた時',
+    optionLabel: 'C',
     description: 'リスクを避け、確実性を重視。予測可能で安定した環境を好む。',
     icon: Shield,
     color: 'text-blue-600 bg-blue-50',
@@ -55,6 +59,7 @@ export const motivationTypes: MotivationType[] = [
     id: 'teamwork',
     type: '関係・調和型',
     label: 'チームで協力して目標を達成した時',
+    optionLabel: 'D',
     description: '人間関係やチームワークを重視。協力して成果を出すことに喜びを感じる。',
     icon: Users,
     color: 'text-purple-600 bg-purple-50',
@@ -65,6 +70,7 @@ export const motivationTypes: MotivationType[] = [
     id: 'efficiency',
     type: '効率・合理型',
     label: '無駄な作業を改善・効率化できた時',
+    optionLabel: 'E',
     description: '効率性と合理性を追求。プロセス改善や最適化に強い関心を持つ。',
     icon: Zap,
     color: 'text-orange-600 bg-orange-50',
@@ -75,6 +81,7 @@ export const motivationTypes: MotivationType[] = [
     id: 'compensation',
     type: '報酬・待遇型',
     label: '良い待遇で働けている時',
+    optionLabel: 'F',
     description: '給与や福利厚生などの待遇を重視。実利的なメリットがモチベーションの源泉。',
     icon: DollarSign,
     color: 'text-emerald-600 bg-emerald-50',
@@ -85,6 +92,7 @@ export const motivationTypes: MotivationType[] = [
     id: 'creativity',
     type: '自由・創造型',
     label: '自分らしい方法で創造的な成果を出せた時',
+    optionLabel: 'G',
     description: '自由度と創造性を重視。独自のアプローチで成果を出すことを好む。',
     icon: Palette,
     color: 'text-pink-600 bg-pink-50',
@@ -107,6 +115,7 @@ export function MotivationTypeSection({
   showHistory = false 
 }: MotivationTypeSectionProps) {
   const [showResult, setShowResult] = useState(false);
+  const [hasSelected, setHasSelected] = useState(false);  // 選択済みフラグ
   const [motivationHistory, setMotivationHistory] = useState<any[]>([]);
   const [typeSpecificNotes, setTypeSpecificNotes] = useState('');
   const [confidenceLevel, setConfidenceLevel] = useState<'high' | 'medium' | 'low'>('medium');
@@ -133,7 +142,11 @@ export function MotivationTypeSection({
 
   const handleTypeChange = (value: string) => {
     onTypeSelect(value);
-    setShowResult(true);
+    setHasSelected(true);
+    // 選択後、少し遅延してから結果を表示（アニメーション効果）
+    setTimeout(() => {
+      setShowResult(true);
+    }, 300);
   };
 
   const getTypeSpecificQuestions = (typeId: string): string[] => {
@@ -212,23 +225,40 @@ export function MotivationTypeSection({
             <div className="space-y-3">
               {motivationTypes.map((type) => {
                 const Icon = type.icon;
+                const isSelected = selectedType === type.id;
+                
                 return (
                   <label
                     key={type.id}
                     className={`flex items-start p-4 rounded-lg border-2 cursor-pointer transition-all hover:shadow-md ${
-                      selectedType === type.id 
+                      isSelected 
                         ? 'border-purple-500 bg-purple-50' 
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
                     <RadioGroupItem value={type.id} className="mt-1" />
                     <div className="ml-3 flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Icon className={`h-4 w-4 ${type.color.split(' ')[0]}`} />
-                        <span className="font-semibold text-sm">{type.type}</span>
+                      <div className="flex items-center gap-3 mb-2">
+                        {/* 選択肢ラベル（A〜G）を大きく表示 */}
+                        <span className="text-lg font-bold text-purple-600 bg-purple-100 px-3 py-1 rounded-full">
+                          {type.optionLabel}
+                        </span>
+                        {/* 選択後のみタイプ名とアイコンを表示 */}
+                        {hasSelected && isSelected && (
+                          <>
+                            <Icon className={`h-5 w-5 ${type.color.split(' ')[0]}`} />
+                            <span className="font-bold text-base">{type.type}</span>
+                          </>
+                        )}
                       </div>
-                      <div className="font-medium mb-1">{type.label}</div>
-                      <div className="text-sm text-gray-600">{type.description}</div>
+                      {/* 選択肢のテキスト */}
+                      <div className="font-medium text-base mb-1">{type.label}</div>
+                      {/* 選択後のみ詳細説明を表示 */}
+                      {hasSelected && isSelected && (
+                        <div className="text-sm text-gray-600 mt-2 animate-fade-in">
+                          {type.description}
+                        </div>
+                      )}
                     </div>
                   </label>
                 );
@@ -237,43 +267,110 @@ export function MotivationTypeSection({
           </RadioGroup>
 
           {showResult && selectedMotivation && (
-            <Alert className={`mt-4 ${selectedMotivation.color.split(' ')[1]} border-2`}>
-              <AlertDescription>
-                <div className="space-y-3">
-                  <div>
-                    <span className="font-semibold">判定結果: </span>
-                    <span className={`font-bold ${selectedMotivation.color.split(' ')[0]}`}>
-                      {selectedMotivation.type}
-                    </span>
+            <>
+              {/* 判定結果カード */}
+              <Card className={`mt-6 border-2 ${selectedMotivation.color.split(' ')[0].replace('text', 'border')}`}>
+                <CardHeader className={`${selectedMotivation.color.split(' ')[1]}`}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl font-bold text-purple-600 bg-white px-4 py-2 rounded-full">
+                        {selectedMotivation.optionLabel}
+                      </span>
+                      <div>
+                        <p className="text-sm text-gray-600">あなたの動機タイプは</p>
+                        <h3 className={`text-xl font-bold ${selectedMotivation.color.split(' ')[0]}`}>
+                          {selectedMotivation.type}
+                        </h3>
+                      </div>
+                    </div>
+                    {React.createElement(selectedMotivation.icon, {
+                      className: `h-12 w-12 ${selectedMotivation.color.split(' ')[0]}`
+                    })}
                   </div>
-                  <div>
-                    <span className="font-semibold">特徴: </span>
-                    {selectedMotivation.description}
-                  </div>
-                  <div>
-                    <span className="font-semibold">推奨アプローチ: </span>
-                    {selectedMotivation.approach}
-                  </div>
-                  <div>
-                    <span className="font-semibold">キーワード: </span>
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      {selectedMotivation.keywords.map((keyword, index) => (
-                        <span 
-                          key={index}
-                          className={`px-2 py-1 rounded text-xs ${selectedMotivation.color}`}
-                        >
-                          {keyword}
-                        </span>
-                      ))}
+                </CardHeader>
+                <CardContent className="pt-4">
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="font-semibold text-sm text-gray-700 mb-1">タイプの特徴</h4>
+                      <p className="text-gray-600">{selectedMotivation.description}</p>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-semibold text-sm text-gray-700 mb-1">推奨されるマネジメント手法</h4>
+                      <p className="text-gray-600">{selectedMotivation.approach}</p>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-semibold text-sm text-gray-700 mb-2">モチベーションキーワード</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {selectedMotivation.keywords.map((keyword, index) => (
+                          <span 
+                            key={index}
+                            className={`px-3 py-1 rounded-full text-sm font-medium ${selectedMotivation.color}`}
+                          >
+                            {keyword}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </AlertDescription>
-            </Alert>
+                </CardContent>
+              </Card>
+
+              {/* タイプ別質問セクション */}
+              <Card className="mt-4">
+                <CardHeader>
+                  <CardTitle className="text-base">
+                    {selectedMotivation.type}のための詳細質問
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {getTypeSpecificQuestions(selectedType).map((question, index) => (
+                    <div key={index} className="space-y-2">
+                      <Label className="text-sm font-medium">
+                        質問{index + 1}. {question}
+                      </Label>
+                      <Textarea 
+                        placeholder="回答を記入してください..."
+                        className="min-h-[60px] text-sm"
+                      />
+                    </div>
+                  ))}
+
+                  <div className="space-y-2 pt-4 border-t">
+                    <Label className="text-sm font-medium">判定の信頼度</Label>
+                    <RadioGroup value={confidenceLevel} onValueChange={(value: any) => setConfidenceLevel(value)}>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="high" id="conf-high" />
+                        <Label htmlFor="conf-high" className="text-sm">高い - 明確に該当</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="medium" id="conf-medium" />
+                        <Label htmlFor="conf-medium" className="text-sm">中程度 - 概ね該当</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="low" id="conf-low" />
+                        <Label htmlFor="conf-low" className="text-sm">低い - 暫定的</Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium">動機タイプに関する所見・備考</Label>
+                    <Textarea 
+                      value={typeSpecificNotes}
+                      onChange={(e) => setTypeSpecificNotes(e.target.value)}
+                      placeholder="面談での観察、具体的なエピソード、今後の対応方針など..."
+                      className="min-h-[80px] text-sm"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            </>
           )}
 
-          {/* タイプ別質問セクション */}
-          {selectedType && (
+          {/* タイプ別質問セクション（結果表示前は非表示） */}
+          {false && selectedType && (
             <Card className="mt-4">
               <CardHeader>
                 <CardTitle className="text-base">タイプ別深掘り質問</CardTitle>

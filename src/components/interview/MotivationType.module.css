@@ -1,0 +1,51 @@
+/* 動機タイプ判定コンポーネント用スタイル */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in {
+  animation: slideIn 0.5s ease-in-out;
+}
+
+/* 選択肢ホバー時のエフェクト */
+.option-hover:hover {
+  transform: translateX(5px);
+  transition: transform 0.2s ease;
+}
+
+/* 選択肢ラベルのパルスアニメーション */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.option-label-pulse {
+  animation: pulse 2s infinite;
+}
