@@ -79,10 +79,10 @@ export default function DepartmentAnalysisReport() {
         </div>
         <div className="flex gap-2">
           <Select value={selectedDepartment} onValueChange={setSelectedDepartment}>
-            <SelectTrigger className="w-48">
+            <SelectTrigger className="w-48 bg-white">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white">
               {comparison?.metrics.map(dept => (
                 <SelectItem key={dept.departmentId} value={dept.departmentId}>
                   {dept.departmentName}
@@ -389,18 +389,32 @@ export default function DepartmentAnalysisReport() {
               {/* トレンドグラフ（簡易版） */}
               <div className="mt-8">
                 <h4 className="font-medium mb-4">12ヶ月トレンド</h4>
-                <div className="flex items-end justify-between h-32 px-2">
-                  {departmentMetrics?.trends.map((trend, index) => (
-                    <div key={index} className="flex flex-col items-center flex-1">
-                      <div 
-                        className={`w-full mx-0.5 ${getProgressColor(trend.score)} rounded-t`}
-                        style={{ height: `${(trend.score / 100) * 128}px` }}
-                      />
-                      {index % 3 === 0 && (
-                        <span className="text-xs mt-1">{trend.month.slice(5)}</span>
-                      )}
-                    </div>
-                  ))}
+                <div className="relative h-40 bg-gray-50 rounded-lg p-4">
+                  <div className="absolute inset-4 flex items-end justify-between">
+                    {departmentMetrics?.trends.map((trend, index) => (
+                      <div key={index} className="flex flex-col items-center flex-1 h-full justify-end">
+                        <div className="relative w-full px-0.5">
+                          <div 
+                            className={`w-full ${getProgressColor(trend.score)} rounded-t transition-all duration-300 hover:opacity-80`}
+                            style={{ 
+                              height: `${Math.max((trend.score / 100) * 120, 4)}px`,
+                              minHeight: '4px'
+                            }}
+                            title={`${trend.month}: ${trend.score.toFixed(1)}点`}
+                          />
+                        </div>
+                        {(index === 0 || index === 6 || index === 11) && (
+                          <span className="text-xs mt-2 text-gray-600">{trend.month.slice(5)}</span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  {/* Y軸の目盛り */}
+                  <div className="absolute left-0 top-4 bottom-4 w-8 flex flex-col justify-between text-xs text-gray-500">
+                    <span>100</span>
+                    <span>50</span>
+                    <span>0</span>
+                  </div>
                 </div>
               </div>
             </CardContent>
