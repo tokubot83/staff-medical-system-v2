@@ -17,18 +17,19 @@ import ImprovedInterviewFlow from '@/components/interview/ImprovedInterviewFlow'
 
 // 第1段階実装: タブ順序を業務フローに合わせて修正
 const tabs = [
-  { id: 'dashboard', label: 'ダッシュボード', icon: '🏠', badge: '', isNew: true },
+  { id: 'overview', label: '面談概要', icon: '🏠' },
+  { id: 'dashboard', label: 'ダッシュボード', icon: '📊', isNew: true },
   { id: 'schedule', label: '面談予定', icon: '📅' },
   { id: 'sheets', label: '面談実施', icon: '📄' },
   { id: 'record', label: '結果記録', icon: '📝' },
-  { id: 'history', label: '履歴・分析', icon: '📊' },
+  { id: 'history', label: '履歴・分析', icon: '📈' },
   { id: 'guide', label: 'ガイド', icon: '❓', isNew: true },
   { id: 'settings', label: '設定', icon: '⚙️' },
 ]
 
 
 export default function InterviewsPage() {
-  const [activeTab, setActiveTab] = useState('dashboard')
+  const [activeTab, setActiveTab] = useState('overview')
   const [showGuideModal, setShowGuideModal] = useState(false)
   const [selectedInterview, setSelectedInterview] = useState<Interview | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
@@ -187,6 +188,7 @@ export default function InterviewsPage() {
         </div>
 
         <div className={styles.tabContent}>
+          {activeTab === 'overview' && <OverviewTab />}
           {activeTab === 'dashboard' && <DashboardTab />}
           {activeTab === 'schedule' && (
             <ScheduleTab 
@@ -243,6 +245,370 @@ export default function InterviewsPage() {
         roles={getRoleOptions(selectedInterviewType)}
       />
       <DashboardButton />
+    </div>
+  )
+}
+
+// 面談概要タブコンポーネント
+function OverviewTab(): React.ReactElement {
+  return (
+    <div className={styles.overviewContent}>
+      {/* 面談システム概要 */}
+      <div className={styles.systemOverview}>
+        <h2 className={styles.systemTitle}>面談管理システム概要</h2>
+        <div className={styles.purposeSection}>
+          <div className={styles.purposeCard}>
+            <div className={styles.purposeIcon}>
+              ❤️
+            </div>
+            <div className={styles.purposeContent}>
+              <h3>面談の目的</h3>
+              <p>職員一人ひとりの成長と組織の発展を支援する継続的な対話プロセス</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 面談種別と特徴 */}
+      <div className={styles.interviewTypes}>
+        <h2 className={styles.sectionTitle}>面談種別と実施時期</h2>
+        <div className={styles.typeGrid}>
+          {/* 定期面談カテゴリ */}
+          <div className={styles.categorySection}>
+            <h3 className={styles.categoryTitle}>
+              📅 定期面談（必須）
+            </h3>
+            <div className={styles.typeCards}>
+              <div className={styles.typeCard}>
+                <div className={styles.typeHeader} style={{ backgroundColor: '#e3f2fd' }}>
+                  <span className={styles.typeIcon}>👥</span>
+                  <h4>新入職員月次面談</h4>
+                  <span className={styles.frequency}>月1回</span>
+                </div>
+                <div className={styles.typeBody}>
+                  <p className={styles.typeDescription}>入職1年未満の職員を対象とした月次フォローアップ</p>
+                  <ul className={styles.typePoints}>
+                    <li>職場適応の確認</li>
+                    <li>初期不安の解消</li>
+                    <li>早期離職防止</li>
+                  </ul>
+                  <div className={styles.typeMeta}>
+                    <span>対象: 新入職員</span>
+                    <span>時間: 15-30分</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.typeCard}>
+                <div className={styles.typeHeader} style={{ backgroundColor: '#e8f5e9' }}>
+                  <span className={styles.typeIcon}>👨‍👩‍👧‍👦</span>
+                  <h4>一般職員年次面談</h4>
+                  <span className={styles.frequency}>年1回</span>
+                </div>
+                <div className={styles.typeBody}>
+                  <p className={styles.typeDescription}>全職員を対象とした年次評価・目標設定面談</p>
+                  <ul className={styles.typePoints}>
+                    <li>年度目標の振り返り</li>
+                    <li>次年度目標の設定</li>
+                    <li>キャリア希望の確認</li>
+                  </ul>
+                  <div className={styles.typeMeta}>
+                    <span>対象: 全職員</span>
+                    <span>時間: 30-45分</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.typeCard}>
+                <div className={styles.typeHeader} style={{ backgroundColor: '#fff3e0' }}>
+                  <span className={styles.typeIcon}>💼</span>
+                  <h4>管理職半年面談</h4>
+                  <span className={styles.frequency}>年2回</span>
+                </div>
+                <div className={styles.typeBody}>
+                  <p className={styles.typeDescription}>管理職を対象とした組織運営・人材育成面談</p>
+                  <ul className={styles.typePoints}>
+                    <li>部署運営の課題</li>
+                    <li>人材育成状況</li>
+                    <li>組織改善提案</li>
+                  </ul>
+                  <div className={styles.typeMeta}>
+                    <span>対象: 管理職</span>
+                    <span>時間: 45-60分</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 特別面談カテゴリ */}
+          <div className={styles.categorySection}>
+            <h3 className={styles.categoryTitle}>
+              ⚠️ 特別面談（状況に応じて）
+            </h3>
+            <div className={styles.typeCards}>
+              <div className={styles.typeCard}>
+                <div className={styles.typeHeader} style={{ backgroundColor: '#fce4ec' }}>
+                  <span className={styles.typeIcon}>🏥</span>
+                  <h4>復職面談</h4>
+                  <span className={styles.statusBadge}>必要時</span>
+                </div>
+                <div className={styles.typeBody}>
+                  <p className={styles.typeDescription}>休職からの復職時の状況確認・支援面談</p>
+                  <ul className={styles.typePoints}>
+                    <li>健康状態の確認</li>
+                    <li>業務調整の相談</li>
+                    <li>段階的復帰計画</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className={styles.typeCard}>
+                <div className={styles.typeHeader} style={{ backgroundColor: '#ffe0b2' }}>
+                  <span className={styles.typeIcon}>🛡️</span>
+                  <h4>インシデント後面談</h4>
+                  <span className={styles.statusBadge}>緊急</span>
+                </div>
+                <div className={styles.typeBody}>
+                  <p className={styles.typeDescription}>医療事故・インシデント発生後のフォロー面談</p>
+                  <ul className={styles.typePoints}>
+                    <li>心理的サポート</li>
+                    <li>原因分析と対策</li>
+                    <li>再発防止策の検討</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className={styles.typeCard}>
+                <div className={styles.typeHeader} style={{ backgroundColor: '#e1f5fe' }}>
+                  <span className={styles.typeIcon}>👋</span>
+                  <h4>退職面談</h4>
+                  <span className={styles.statusBadge}>退職時</span>
+                </div>
+                <div className={styles.typeBody}>
+                  <p className={styles.typeDescription}>退職予定者への最終確認・引継ぎ面談</p>
+                  <ul className={styles.typePoints}>
+                    <li>退職理由の確認</li>
+                    <li>業務引継ぎ状況</li>
+                    <li>改善提案の聴取</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* サポート面談カテゴリ */}
+          <div className={styles.categorySection}>
+            <h3 className={styles.categoryTitle}>
+              💬 サポート面談（任意）
+            </h3>
+            <div className={styles.typeCards}>
+              <div className={styles.typeCard}>
+                <div className={styles.typeHeader} style={{ backgroundColor: '#f3e5f5' }}>
+                  <span className={styles.typeIcon}>🏆</span>
+                  <h4>フィードバック面談</h4>
+                  <span className={styles.statusBadge}>評価後</span>
+                </div>
+                <div className={styles.typeBody}>
+                  <p className={styles.typeDescription}>人事評価結果のフィードバック面談</p>
+                  <ul className={styles.typePoints}>
+                    <li>評価結果の説明</li>
+                    <li>改善点の明確化</li>
+                    <li>成長支援計画</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className={styles.typeCard}>
+                <div className={styles.typeHeader} style={{ backgroundColor: '#e8eaf6' }}>
+                  <span className={styles.typeIcon}>🎯</span>
+                  <h4>キャリア面談</h4>
+                  <span className={styles.statusBadge}>随時</span>
+                </div>
+                <div className={styles.typeBody}>
+                  <p className={styles.typeDescription}>キャリア形成・異動希望の相談</p>
+                  <ul className={styles.typePoints}>
+                    <li>キャリアパス相談</li>
+                    <li>スキル開発支援</li>
+                    <li>異動・昇進相談</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className={styles.typeCard}>
+                <div className={styles.typeHeader} style={{ backgroundColor: '#e0f2f1' }}>
+                  <span className={styles.typeIcon}>💙</span>
+                  <h4>個別相談面談</h4>
+                  <span className={styles.statusBadge}>随時</span>
+                </div>
+                <div className={styles.typeBody}>
+                  <p className={styles.typeDescription}>職場環境・人間関係・個人的な相談</p>
+                  <ul className={styles.typePoints}>
+                    <li>職場環境の改善</li>
+                    <li>人間関係の調整</li>
+                    <li>ワークライフバランス</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 年間面談スケジュール */}
+      <div className={styles.scheduleOverview}>
+        <h2 className={styles.scheduleTitle}>年間面談スケジュール</h2>
+        <div className={styles.scheduleTimeline}>
+          <div className={styles.scheduleQuarter}>
+            <h3>第1四半期（4-6月）</h3>
+            <div className={styles.scheduleItems}>
+              <div className={styles.scheduleItem}>
+                <span className={styles.scheduleIcon}>📅</span>
+                <span>4月：新入職員オリエンテーション面談</span>
+              </div>
+              <div className={styles.scheduleItem}>
+                <span className={styles.scheduleIcon}>📅</span>
+                <span>5月：新人フォローアップ面談</span>
+              </div>
+              <div className={styles.scheduleItem}>
+                <span className={styles.scheduleIcon}>📅</span>
+                <span>6月：上期キャリア面談</span>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.scheduleQuarter}>
+            <h3>第2四半期（7-9月）</h3>
+            <div className={styles.scheduleItems}>
+              <div className={styles.scheduleItem}>
+                <span className={styles.scheduleIcon}>📅</span>
+                <span>7月：夏季賞与フィードバック面談</span>
+              </div>
+              <div className={styles.scheduleItem}>
+                <span className={styles.scheduleIcon}>📅</span>
+                <span>8月：中間評価面談</span>
+              </div>
+              <div className={styles.scheduleItem}>
+                <span className={styles.scheduleIcon}>📅</span>
+                <span>9月：スキルアップ面談</span>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.scheduleQuarter}>
+            <h3>第3四半期（10-12月）</h3>
+            <div className={styles.scheduleItems}>
+              <div className={styles.scheduleItem}>
+                <span className={styles.scheduleIcon}>📅</span>
+                <span>10月：異動希望面談</span>
+              </div>
+              <div className={styles.scheduleItem}>
+                <span className={styles.scheduleIcon}>📅</span>
+                <span>11月：冬季賞与フィードバック面談</span>
+              </div>
+              <div className={styles.scheduleItem}>
+                <span className={styles.scheduleIcon}>📅</span>
+                <span>12月：下期キャリア面談</span>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.scheduleQuarter}>
+            <h3>第4四半期（1-3月）</h3>
+            <div className={styles.scheduleItems}>
+              <div className={styles.scheduleItem}>
+                <span className={styles.scheduleIcon}>📅</span>
+                <span>1月：年度目標設定面談</span>
+              </div>
+              <div className={styles.scheduleItem}>
+                <span className={styles.scheduleIcon}>📅</span>
+                <span>2月：人事異動前面談</span>
+              </div>
+              <div className={styles.scheduleItem}>
+                <span className={styles.scheduleIcon}>📅</span>
+                <span>3月：年度評価フィードバック面談</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 面談の進め方ガイド */}
+      <div className={styles.processGuide}>
+        <h2 className={styles.processTitle}>効果的な面談の進め方</h2>
+        <div className={styles.processFlow}>
+          <div className={styles.processStep}>
+            <div className={styles.stepNumber}>1</div>
+            <div className={styles.stepContent}>
+              <h4>事前準備</h4>
+              <ul>
+                <li>面談シートの準備</li>
+                <li>過去の記録確認</li>
+                <li>目標・課題の整理</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className={styles.processStep}>
+            <div className={styles.stepNumber}>2</div>
+            <div className={styles.stepContent}>
+              <h4>面談実施</h4>
+              <ul>
+                <li>傾聴と共感</li>
+                <li>具体的なフィードバック</li>
+                <li>建設的な対話</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className={styles.processStep}>
+            <div className={styles.stepNumber}>3</div>
+            <div className={styles.stepContent}>
+              <h4>アクション設定</h4>
+              <ul>
+                <li>具体的な目標設定</li>
+                <li>支援内容の明確化</li>
+                <li>次回までの課題</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className={styles.processStep}>
+            <div className={styles.stepNumber}>4</div>
+            <div className={styles.stepContent}>
+              <h4>フォローアップ</h4>
+              <ul>
+                <li>面談記録の作成</li>
+                <li>進捗確認</li>
+                <li>継続的な支援</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* クイックアクセス */}
+      <div className={styles.quickAccess}>
+        <h2 className={styles.quickAccessTitle}>クイックアクセス</h2>
+        <div className={styles.quickAccessGrid}>
+          <Link href="/interview-sheets" className={styles.quickAccessCard}>
+            <span className={styles.quickIcon}>📄</span>
+            <span>面談シート</span>
+          </Link>
+          <Link href="#" className={styles.quickAccessCard} onClick={(e) => { e.preventDefault(); }}>
+            <span className={styles.quickIcon}>📅</span>
+            <span>予約管理</span>
+          </Link>
+          <Link href="#" className={styles.quickAccessCard} onClick={(e) => { e.preventDefault(); }}>
+            <span className={styles.quickIcon}>📋</span>
+            <span>面談記録</span>
+          </Link>
+          <Link href="#" className={styles.quickAccessCard} onClick={(e) => { e.preventDefault(); }}>
+            <span className={styles.quickIcon}>📊</span>
+            <span>実施統計</span>
+          </Link>
+        </div>
+      </div>
     </div>
   )
 }
