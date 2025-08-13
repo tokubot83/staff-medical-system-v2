@@ -115,7 +115,7 @@ export default function ChiefNurse45MinInterviewSheet() {
             <div className="space-y-2">
               <Label>管理者としての成長・学び</Label>
               <Textarea 
-                placeholder "研修参加、他部門見学、外部勉強会、管理技術の習得など"
+                placeholder="研修参加、他部門見学、外部勉強会、管理技術の習得など"
                 className="min-h-[60px]"
               />
             </div>
