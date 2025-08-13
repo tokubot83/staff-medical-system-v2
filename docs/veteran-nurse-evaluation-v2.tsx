@@ -20,9 +20,9 @@ export default function VeteranNurseEvaluationV2() {
   });
 
   // 合計点数の計算
-  const calculateTotal = (type) => {
+  const calculateTotal = (type: keyof typeof scores) => {
     const typeScores = scores[type];
-    return Object.values(typeScores).reduce((sum, score) => sum + (parseInt(score) || 0), 0);
+    return Object.values(typeScores).reduce((sum: number, score: any) => sum + (parseInt(score) || 0), 0);
   };
 
   return (
