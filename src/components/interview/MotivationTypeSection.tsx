@@ -369,54 +369,6 @@ export function MotivationTypeSection({
             </>
           )}
 
-          {/* タイプ別質問セクション（結果表示前は非表示） */}
-          {false && selectedType && (
-            <Card className="mt-4">
-              <CardHeader>
-                <CardTitle className="text-base">タイプ別深掘り質問</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {getTypeSpecificQuestions(selectedType).map((question, index) => (
-                  <div key={index} className="space-y-2">
-                    <Label className="text-sm font-medium">{index + 1}. {question}</Label>
-                    <Textarea 
-                      placeholder="回答を記入してください..."
-                      className="min-h-[60px] text-sm"
-                    />
-                  </div>
-                ))}
-
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium">判定の信頼度</Label>
-                  <RadioGroup value={confidenceLevel} onValueChange={(value: any) => setConfidenceLevel(value)}>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="high" id="conf-high" />
-                      <Label htmlFor="conf-high" className="text-sm">高い - 明確に該当</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="medium" id="conf-medium" />
-                      <Label htmlFor="conf-medium" className="text-sm">中程度 - 概ね該当</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="low" id="conf-low" />
-                      <Label htmlFor="conf-low" className="text-sm">低い - 暫定的</Label>
-                    </div>
-                  </RadioGroup>
-                </div>
-
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium">動機タイプに関する所見・備考</Label>
-                  <Textarea 
-                    value={typeSpecificNotes}
-                    onChange={(e) => setTypeSpecificNotes(e.target.value)}
-                    placeholder="面談での観察、具体的なエピソード、今後の対応方針など..."
-                    className="min-h-[80px] text-sm"
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
           {/* 履歴表示 */}
           {showHistory && motivationHistory.length > 0 && (
             <Card className="mt-4">
