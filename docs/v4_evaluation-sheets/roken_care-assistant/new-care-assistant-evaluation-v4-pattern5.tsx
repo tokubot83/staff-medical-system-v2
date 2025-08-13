@@ -30,7 +30,7 @@ export default function NewCareAssistantEvaluationV4Pattern5() {
   const [corporateRank, setCorporateRank] = useState(50);
 
   // 評価グレードから点数への変換
-  const gradeToScore = {
+  const gradeToScore: { [key: string]: number } = {
     'S': 1.0,
     'A': 0.85,
     'B': 0.70,

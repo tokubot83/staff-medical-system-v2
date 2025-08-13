@@ -53,7 +53,7 @@ export default function RokenHeadNurseEvaluationV4Pattern5() {
   const [kpiBonus, setKpiBonus] = useState(0);
 
   // 評価グレードから点数への変換
-  const gradeToScore = {
+  const gradeToScore: { [key: string]: number } = {
     'S': 1.0,
     'A': 0.85,
     'B': 0.70,
