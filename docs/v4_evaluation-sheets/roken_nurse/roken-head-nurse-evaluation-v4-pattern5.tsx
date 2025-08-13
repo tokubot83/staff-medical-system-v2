@@ -130,7 +130,7 @@ export default function RokenHeadNurseEvaluationV4Pattern5() {
     }));
   };
 
-  const handleKpiChange = (key, value) => {
+  const handleKpiChange = (key: string, value: string | number) => {
     setKpiMetrics(prev => ({
       ...prev,
       [key]: value
