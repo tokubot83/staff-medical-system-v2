@@ -12,6 +12,20 @@ import { InterviewCategory, requiresCategory, availableCategories } from '@/type
 // 面談の種類定義（10種類体系）
 const interviewTypes = [
   {
+    id: 'v5_motivational',
+    name: 'V5動機タイプ面談',
+    classification: 'v5',
+    description: '動機タイプ判定機能付きの次世代面談システム',
+    icon: '🎯',
+    requiresCategory: false,
+    subtypes: [
+      { id: 'v5_new_nurse', name: '新人看護師（V5）', target: '1年目看護師', frequency: '初回・定期' },
+      { id: 'v5_general_nurse', name: '一般看護師（V5）', target: '2-3年目看護師', frequency: '定期' },
+      { id: 'v5_senior_nurse', name: 'シニア看護師（V5）', target: '4年目以上', frequency: '定期' },
+      { id: 'v5_management', name: '管理職（V5）', target: '主任・師長', frequency: '定期' }
+    ]
+  },
+  {
     id: 'regular',
     name: '定期面談',
     classification: 'regular',
@@ -214,6 +228,24 @@ export default function ImprovedInterviewFlow({ onBack }: ImprovedInterviewFlowP
       return null;
     }
     
+    // V5動機タイプ面談への遷移
+    if (selectedType?.id === 'v5_motivational') {
+      let v5Path = '/interview-sheets/v5/';
+      
+      if (selectedSubtype?.id === 'v5_new_nurse') {
+        v5Path += 'new-nurse-45min';
+      } else if (selectedSubtype?.id === 'v5_general_nurse') {
+        v5Path += `general-nurse-${selectedSheetDuration}min`;
+      } else if (selectedSubtype?.id === 'v5_senior_nurse') {
+        v5Path += 'senior-nurse-45min';
+      } else if (selectedSubtype?.id === 'v5_management') {
+        v5Path += 'chief-nurse-45min';
+      }
+      
+      window.location.href = v5Path;
+      return null;
+    }
+    
     return (
       <div className={styles.sheetViewerSection}>
         <button onClick={handleBack} className={styles.backButton}>
@@ -221,7 +253,10 @@ export default function ImprovedInterviewFlow({ onBack }: ImprovedInterviewFlowP
         </button>
         {selectedStaff && selectedSheetDuration && (
           <InterviewSheetWrapper
-            experienceCategory={getExperienceCategory(selectedStaff.経験年数)}
+            experienceCategory={getExperienceCategory(
+              selectedStaff.経験年数,
+              selectedStaff.役職 && (selectedStaff.役職.includes('師長') || selectedStaff.役職.includes('主任'))
+            )}
             duration={selectedSheetDuration}
             staffName={selectedStaff.name}
             yearsOfExperience={selectedStaff.経験年数}

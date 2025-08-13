@@ -93,18 +93,16 @@ export function getExperienceLevel(
     }
   }
 
-  // 一般職員の分類
-  for (const category of EXPERIENCE_CATEGORIES) {
-    if (
-      totalYears >= category.minYears &&
-      (category.maxYears === undefined || totalYears <= category.maxYears)
-    ) {
-      return category.level;
-    }
+  // 経験年数に基づく分類（境界値を明確に）
+  if (totalYears <= 1) {
+    return 'new';  // 1年目まで（0-1年）
+  } else if (totalYears <= 3) {
+    return 'junior';  // 2-3年目
+  } else if (totalYears <= 10) {
+    return 'midlevel';  // 4-10年目
+  } else {
+    return 'veteran';  // 11年目以上
   }
-
-  // デフォルトは新人
-  return 'new';
 }
 
 /**

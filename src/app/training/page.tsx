@@ -13,6 +13,8 @@ import EvaluationItemBank from '@/components/training/EvaluationItemBank'
 import EvaluationItemBankV2 from '@/components/training/EvaluationItemBankV2'
 import TrainingPlanGenerator from '@/components/training/TrainingPlanGenerator'
 import ProgressDashboard from '@/components/training/ProgressDashboard'
+import TrainingCalendarView from '@/components/training/TrainingCalendarView'
+import DepartmentAnalysisReport from '@/components/reports/DepartmentAnalysisReport'
 
 ChartJS.register(
   ArcElement,
