@@ -19,10 +19,10 @@ const interviewTypes = [
     icon: '🎯',
     requiresCategory: false,
     subtypes: [
-      { id: 'v5_new_nurse', name: '新人看護師（V5）', target: '1年目', frequency: '初回・定期' },
-      { id: 'v5_general_nurse', name: '一般看護師（V5）', target: '2-3年目', frequency: '定期' },
-      { id: 'v5_senior_nurse', name: '中堅看護師（V5）', target: '4-10年目', frequency: '定期' },
-      { id: 'v5_veteran_nurse', name: 'ベテラン看護師（V5）', target: '11年以上', frequency: '定期' },
+      { id: 'v5_new_nurse', name: '新人看護師（V5）', target: '1年目看護師', frequency: '初回・定期' },
+      { id: 'v5_general_nurse', name: '一般看護師（V5）', target: '2-3年目看護師', frequency: '定期' },
+      { id: 'v5_senior_nurse', name: '中堅看護師（V5）', target: '4-10年目看護師', frequency: '定期' },
+      { id: 'v5_veteran_nurse', name: 'ベテラン看護師（V5）', target: '11年目以上', frequency: '定期' },
       { id: 'v5_management', name: '管理職（V5）', target: '主任・師長', frequency: '定期' }
     ]
   },

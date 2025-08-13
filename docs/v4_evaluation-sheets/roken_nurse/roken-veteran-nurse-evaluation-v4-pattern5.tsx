@@ -556,7 +556,7 @@ export default function RokenVeteranNurseEvaluationV4Pattern5() {
                       <Checkbox 
                         id="national-presentation"
                         checked={specialContributions.nationalPresentation}
-                        onCheckedChange={(checked) => handleSpecialContributionChange('nationalPresentation', checked)}
+                        onCheckedChange={(checked) => handleSpecialContributionChange('nationalPresentation', checked as boolean)}
                       />
                       <Label htmlFor="national-presentation">全国学会・研修会での発表・講演</Label>
                     </div>
@@ -564,7 +564,7 @@ export default function RokenVeteranNurseEvaluationV4Pattern5() {
                       <Checkbox 
                         id="certification-leader"
                         checked={specialContributions.certificationLeader}
-                        onCheckedChange={(checked) => handleSpecialContributionChange('certificationLeader', checked)}
+                        onCheckedChange={(checked) => handleSpecialContributionChange('certificationLeader', checked as boolean)}
                       />
                       <Label htmlFor="certification-leader">認定看護師等の専門資格取得・活用</Label>
                     </div>
@@ -572,7 +572,7 @@ export default function RokenVeteranNurseEvaluationV4Pattern5() {
                       <Checkbox 
                         id="expert-consultant"
                         checked={specialContributions.expertConsultant}
-                        onCheckedChange={(checked) => handleSpecialContributionChange('expertConsultant', checked)}
+                        onCheckedChange={(checked) => handleSpecialContributionChange('expertConsultant', checked as boolean)}
                       />
                       <Label htmlFor="expert-consultant">外部機関からの専門コンサルタント依頼</Label>
                     </div>
@@ -580,7 +580,7 @@ export default function RokenVeteranNurseEvaluationV4Pattern5() {
                       <Checkbox 
                         id="system-development"
                         checked={specialContributions.systemDevelopment}
-                        onCheckedChange={(checked) => handleSpecialContributionChange('systemDevelopment', checked)}
+                        onCheckedChange={(checked) => handleSpecialContributionChange('systemDevelopment', checked as boolean)}
                       />
                       <Label htmlFor="system-development">革新的なケアシステム・プログラムの開発</Label>
                     </div>
@@ -588,7 +588,7 @@ export default function RokenVeteranNurseEvaluationV4Pattern5() {
                       <Checkbox 
                         id="mentorship-program"
                         checked={specialContributions.mentorshipProgram}
-                        onCheckedChange={(checked) => handleSpecialContributionChange('mentorshipProgram', checked)}
+                        onCheckedChange={(checked) => handleSpecialContributionChange('mentorshipProgram', checked as boolean)}
                       />
                       <Label htmlFor="mentorship-program">メンターシッププログラムの設計・運営</Label>
                     </div>
