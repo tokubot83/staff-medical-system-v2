@@ -101,7 +101,7 @@ export default function RokenVeteranAssistantNurseEvaluationV4Pattern5() {
     }));
   };
 
-  const handleSpecialContributionChange = (contribution, checked) => {
+  const handleSpecialContributionChange = (contribution: string, checked: boolean) => {
     setSpecialContributions(prev => ({
       ...prev,
       [contribution]: checked
@@ -575,7 +575,7 @@ export default function RokenVeteranAssistantNurseEvaluationV4Pattern5() {
                     <Checkbox 
                       id="national-presentation"
                       checked={specialContributions.nationalPresentation}
-                      onCheckedChange={(checked) => handleSpecialContributionChange('nationalPresentation', checked)}
+                      onCheckedChange={(checked) => handleSpecialContributionChange('nationalPresentation', checked as boolean)}
                     />
                     <div className="flex-1">
                       <Label htmlFor="national-presentation" className="font-medium">
@@ -591,7 +591,7 @@ export default function RokenVeteranAssistantNurseEvaluationV4Pattern5() {
                     <Checkbox 
                       id="certification-leader"
                       checked={specialContributions.certificationLeader}
-                      onCheckedChange={(checked) => handleSpecialContributionChange('certificationLeader', checked)}
+                      onCheckedChange={(checked) => handleSpecialContributionChange('certificationLeader', checked as boolean)}
                     />
                     <div className="flex-1">
                       <Label htmlFor="certification-leader" className="font-medium">
@@ -607,7 +607,7 @@ export default function RokenVeteranAssistantNurseEvaluationV4Pattern5() {
                     <Checkbox 
                       id="expert-consultant"
                       checked={specialContributions.expertConsultant}
-                      onCheckedChange={(checked) => handleSpecialContributionChange('expertConsultant', checked)}
+                      onCheckedChange={(checked) => handleSpecialContributionChange('expertConsultant', checked as boolean)}
                     />
                     <div className="flex-1">
                       <Label htmlFor="expert-consultant" className="font-medium">
@@ -623,7 +623,7 @@ export default function RokenVeteranAssistantNurseEvaluationV4Pattern5() {
                     <Checkbox 
                       id="system-development"
                       checked={specialContributions.systemDevelopment}
-                      onCheckedChange={(checked) => handleSpecialContributionChange('systemDevelopment', checked)}
+                      onCheckedChange={(checked) => handleSpecialContributionChange('systemDevelopment', checked as boolean)}
                     />
                     <div className="flex-1">
                       <Label htmlFor="system-development" className="font-medium">
@@ -639,7 +639,7 @@ export default function RokenVeteranAssistantNurseEvaluationV4Pattern5() {
                     <Checkbox 
                       id="mentorship-program"
                       checked={specialContributions.mentorshipProgram}
-                      onCheckedChange={(checked) => handleSpecialContributionChange('mentorshipProgram', checked)}
+                      onCheckedChange={(checked) => handleSpecialContributionChange('mentorshipProgram', checked as boolean)}
                     />
                     <div className="flex-1">
                       <Label htmlFor="mentorship-program" className="font-medium">
