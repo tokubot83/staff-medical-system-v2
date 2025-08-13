@@ -364,7 +364,7 @@ export default function ChronicWardManagerEvaluationV4Pattern5() {
                             <RadioGroupItem value={grade} id={`self-facility-${grade}`} />
                             <Label htmlFor={`self-facility-${grade}`} className="font-normal">{grade}</Label>
                           </div>
-                        )}
+                        ))}
                       </div>
                     </RadioGroup>
                   </div>
@@ -378,7 +378,7 @@ export default function ChronicWardManagerEvaluationV4Pattern5() {
                             <RadioGroupItem value={grade} id={`self-strategic-${grade}`} />
                             <Label htmlFor={`self-strategic-${grade}`} className="font-normal">{grade}</Label>
                           </div>
-                        )}
+                        ))}
                       </div>
                     </RadioGroup>
                   </div>
