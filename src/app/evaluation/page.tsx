@@ -53,9 +53,9 @@ interface Notification {
 const tabs = [
   { id: 'overview', label: '評価概要', icon: '🏠' },
   { id: 'dashboard', label: 'ダッシュボード', icon: '📊', isNew: true },
-  { id: 'technical', label: '技術評価フロー', icon: '🎯', badge: '50点' },
-  { id: 'contribution', label: '貢献度評価フロー', icon: '🤝', badge: '50点' },
-  { id: 'integration', label: '総合評価フロー', icon: '📊' },
+  { id: 'technical', label: '①技術評価', icon: '🎯', badge: '50点' },
+  { id: 'contribution', label: '②組織貢献度評価', icon: '🤝', badge: '50点' },
+  { id: 'integration', label: '③総合評価', icon: '📊' },
   { id: 'disclosure', label: '評価開示', icon: '📤', isNew: true }, // 第1段階
   { id: 'appeal', label: '異議申し立て', icon: '⚖️', isNew: true }, // 第2段階
   { id: 'guide', label: 'ガイド', icon: '❓', isNew: true },
@@ -254,7 +254,7 @@ export default function EvaluationManagement() {
                   <div className={styles.flowCard}>
                     <div className={styles.flowHeader}>
                       <Target className={styles.flowIcon} />
-                      <h3>技術評価フロー</h3>
+                      <h3>①技術評価</h3>
                       <div className={styles.flowScore}>50点</div>
                     </div>
                     <div className={styles.flowTimeline}>
@@ -294,7 +294,7 @@ export default function EvaluationManagement() {
                   <div className={styles.flowCard}>
                     <div className={styles.flowHeader}>
                       <Users className={styles.flowIcon} />
-                      <h3>貢献度評価フロー</h3>
+                      <h3>②組織貢献度評価</h3>
                       <div className={styles.flowScore}>50点</div>
                     </div>
                     <div className={styles.flowTimeline}>
@@ -501,11 +501,11 @@ export default function EvaluationManagement() {
             </div>
           )}
 
-          {/* 技術評価フロータブ */}
+          {/* 技術評価タブ */}
           {activeTab === 'technical' && (
             <div className={styles.technicalContent}>
               <div className={styles.flowSection}>
-                <h2>技術評価フロー（年間50点）</h2>
+                <h2>①技術評価（年間50点）</h2>
                 <p className={styles.flowDescription}>
                   3月に実施する年度末評価。職種別の専門技術・スキルを評価します。
                 </p>
@@ -579,11 +579,11 @@ export default function EvaluationManagement() {
             </div>
           )}
 
-          {/* 貢献度評価フロータブ */}
+          {/* 組織貢献度評価タブ */}
           {activeTab === 'contribution' && (
             <div className={styles.contributionContent}>
               <div className={styles.flowSection}>
-                <h2>貢献度評価フロー（年間50点）</h2>
+                <h2>②組織貢献度評価（年間50点）</h2>
                 <p className={styles.flowDescription}>
                   年2回の賞与査定時に実施。施設・法人への貢献度を相対評価します。
                 </p>
@@ -701,11 +701,11 @@ export default function EvaluationManagement() {
             </div>
           )}
 
-          {/* 総合評価フロータブ */}
+          {/* 総合評価タブ */}
           {activeTab === 'integration' && (
             <div className={styles.integrationContent}>
               <div className={styles.integrationSection}>
-                <h2>統合評価（3月末実施）</h2>
+                <h2>③総合評価（3月末実施）</h2>
                 <p className={styles.integrationDescription}>
                   技術評価と貢献度評価を統合し、最終的な評価グレードを決定します。
                 </p>
