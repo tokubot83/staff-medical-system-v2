@@ -104,15 +104,51 @@ export default function ImprovedInterviewFlow({ onBack }: ImprovedInterviewFlowP
     let staff = Object.values(staffDatabase);
     
     // 面談種類によるフィルタリング
-    if (selectedType?.id === 'regular' && selectedSubtype?.id === 'monthly') {
-      // 新入職員のみ（経験年数1年未満）
-      staff = staff.filter(s => s.経験年数 < 1);
-    } else if (selectedType?.id === 'regular' && selectedSubtype?.id === 'biannual') {
-      // 管理職のみ
-      staff = staff.filter(s => s.役職 && (s.役職.includes('師長') || s.役職.includes('主任')));
-    } else if (selectedType?.id === 'exit') {
-      // 退職予定者のフラグがある職員（デモのため全員表示）
-      // 実際の実装では退職予定フラグでフィルタ
+    if (selectedType?.id === 'v5_motivational') {
+      // V5動機タイプ面談のフィルタリング
+      if (selectedSubtype?.id === 'v5_new_nurse') {
+        // 新人看護師（1年目）
+        staff = staff.filter(s => s.経験年数 === 1);
+      } else if (selectedSubtype?.id === 'v5_general_nurse') {
+        // 一般看護師（2-3年目）
+        staff = staff.filter(s => s.経験年数 >= 2 && s.経験年数 <= 3);
+      } else if (selectedSubtype?.id === 'v5_senior_nurse') {
+        // 中堅看護師（4-10年目）
+        staff = staff.filter(s => s.経験年数 >= 4 && s.経験年数 <= 10);
+      } else if (selectedSubtype?.id === 'v5_veteran_nurse') {
+        // ベテラン看護師（11年目以上）
+        staff = staff.filter(s => s.経験年数 >= 11);
+      } else if (selectedSubtype?.id === 'v5_management') {
+        // 管理職（主任・師長）
+        staff = staff.filter(s => s.役職 && (s.役職.includes('師長') || s.役職.includes('主任')));
+      }
+    } else if (selectedType?.id === 'regular') {
+      // 定期面談のフィルタリング
+      if (selectedSubtype?.id === 'new_employee_monthly') {
+        // 新入職員月次面談（入職1年未満）
+        staff = staff.filter(s => s.経験年数 < 1);
+      } else if (selectedSubtype?.id === 'regular_annual') {
+        // 一般職員年次面談（全職員）
+        // フィルタリングなし（全職員対象）
+      } else if (selectedSubtype?.id === 'management_biannual') {
+        // 管理職半年面談（管理職）
+        staff = staff.filter(s => s.役職 && (s.役職.includes('師長') || s.役職.includes('主任')));
+      }
+    } else if (selectedType?.id === 'special') {
+      // 特別面談のフィルタリング
+      if (selectedSubtype?.id === 'return_to_work') {
+        // 復職面談（デモのため全員表示）
+        // 実際の実装では復職フラグでフィルタ
+      } else if (selectedSubtype?.id === 'incident_followup') {
+        // インシデント後面談（デモのため全員表示）
+        // 実際の実装ではインシデント関与フラグでフィルタ
+      } else if (selectedSubtype?.id === 'exit_interview') {
+        // 退職面談（デモのため全員表示）
+        // 実際の実装では退職予定フラグでフィルタ
+      }
+    } else if (selectedType?.id === 'support') {
+      // サポート面談（全職員対象）
+      // フィルタリングなし
     }
     
     // 検索フィルタ
