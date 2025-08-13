@@ -101,7 +101,7 @@ export default function RokenVeteranNurseEvaluationV4Pattern5() {
     }));
   };
 
-  const handleSpecialContributionChange = (key, checked) => {
+  const handleSpecialContributionChange = (key: string, checked: boolean) => {
     setSpecialContributions(prev => ({
       ...prev,
       [key]: checked
