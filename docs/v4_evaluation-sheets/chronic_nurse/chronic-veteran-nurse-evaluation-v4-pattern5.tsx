@@ -364,7 +364,7 @@ export default function ChronicVeteranNurseEvaluationV4Pattern5() {
                             <RadioGroupItem value={grade} id={`self-innovation-${grade}`} />
                             <Label htmlFor={`self-innovation-${grade}`} className="font-normal">{grade}</Label>
                           </div>
-                        )}
+                        ))}
                       </div>
                     </RadioGroup>
                   </div>
@@ -378,7 +378,7 @@ export default function ChronicVeteranNurseEvaluationV4Pattern5() {
                             <RadioGroupItem value={grade} id={`self-mentorship-${grade}`} />
                             <Label htmlFor={`self-mentorship-${grade}`} className="font-normal">{grade}</Label>
                           </div>
-                        )}
+                        ))}
                       </div>
                     </RadioGroup>
                   </div>
