@@ -8,8 +8,8 @@ export interface InterviewSheetInfo {
   experienceCategory: ExperienceCategory;
 }
 
-// v4面談シートのマッピング
-export const v4InterviewSheets: Record<ExperienceCategory | 'leader', InterviewSheetInfo[]> = {
+// v5面談シートのマッピング（医事課職員対応）
+export const v5InterviewSheets: Record<ExperienceCategory | 'leader', InterviewSheetInfo[]> = {
   new: [
     {
       component: 'NewNurseUnified15Min',
@@ -170,6 +170,29 @@ export const v4InterviewSheets: Record<ExperienceCategory | 'leader', InterviewS
       title: '主任看護師定期面談シート（45分版）',
       experienceCategory: 'leader' as any
     }
+  ],
+  medical_affairs: [
+    {
+      component: 'MedicalAffairsStaffUnified15Min',
+      path: '/interview-sheets/v5/medical-affairs-staff-15min',
+      duration: 15,
+      title: '医事課職員定期面談シート（15分版）',
+      experienceCategory: 'medical_affairs'
+    },
+    {
+      component: 'MedicalAffairsStaffUnified30Min',
+      path: '/interview-sheets/v5/medical-affairs-staff-30min',
+      duration: 30,
+      title: '医事課職員定期面談シート（30分版）',
+      experienceCategory: 'medical_affairs'
+    },
+    {
+      component: 'MedicalAffairsStaffUnified45Min',
+      path: '/interview-sheets/v5/medical-affairs-staff-45min',
+      duration: 45,
+      title: '医事課職員定期面談シート（45分版）',
+      experienceCategory: 'medical_affairs'
+    }
   ]
 };
 
@@ -183,7 +206,8 @@ export function selectInterviewSheet(
   experienceCategory: ExperienceCategory,
   preferredDuration: number = 30
 ): InterviewSheetInfo {
-  const sheets = v4InterviewSheets[experienceCategory];
+  // v5シートに医事課職員がある場合はv5を使用、それ以外はv4を使用
+  const sheets = v5InterviewSheets[experienceCategory] || v4InterviewSheets[experienceCategory];
   
   if (!sheets || sheets.length === 0) {
     // フォールバック: junior（一般看護師）の30分版を使用
@@ -209,5 +233,5 @@ export function selectInterviewSheet(
  * @returns 全ての面談シート情報
  */
 export function getAllInterviewSheets(): InterviewSheetInfo[] {
-  return Object.values(v4InterviewSheets).flat();
+  return [...Object.values(v4InterviewSheets).flat(), ...Object.values(v5InterviewSheets).flat()];
 }
