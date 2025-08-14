@@ -5,7 +5,7 @@
 
 import { AppError } from '@/lib/error/AppError';
 import { ErrorLevel, ErrorCategory } from '@/lib/error/ErrorTypes';
-import { offlineCache } from '@/lib/offline/OfflineCache';
+// import { OfflineManager } from '@/lib/offline/OfflineManager';
 
 /**
  * 画像メタデータ
@@ -110,22 +110,10 @@ export class ImageStorage {
    */
   async getImage(imageId: string): Promise<StoredImage | null> {
     try {
-      // オフラインキャッシュから取得を試行
-      const cached = await offlineCache.get<StoredImage>(`${this.STORAGE_PREFIX}${imageId}`);
-      if (cached) {
-        return cached;
-      }
-
       // LocalStorageから取得
       const stored = localStorage.getItem(`${this.STORAGE_PREFIX}${imageId}`);
       if (stored) {
         const image = JSON.parse(stored) as StoredImage;
-        
-        // キャッシュに保存（1時間のTTL）
-        await offlineCache.set(`${this.STORAGE_PREFIX}${imageId}`, image, { 
-          ttl: 60 * 60 * 1000 
-        });
-        
         return image;
       }
 
@@ -162,9 +150,6 @@ export class ImageStorage {
     try {
       // 画像データを削除
       localStorage.removeItem(`${this.STORAGE_PREFIX}${imageId}`);
-      
-      // オフラインキャッシュからも削除
-      await offlineCache.remove(`${this.STORAGE_PREFIX}${imageId}`);
 
       // メタデータから削除
       await this.removeFromMetadataIndex(imageId);
@@ -322,8 +307,8 @@ export class ImageStorage {
     const key = `${this.STORAGE_PREFIX}${imageId}`;
     localStorage.setItem(key, JSON.stringify(image));
     
-    // オフラインキャッシュにも保存
-    await offlineCache.set(key, image, { ttl: 60 * 60 * 1000 });
+    // TODO: オフラインキャッシュサポートを追加
+    // await offlineCache.set(key, image, { ttl: 60 * 60 * 1000 });
   }
 
   private async updateMetadataIndex(metadata: ImageMetadata): Promise<void> {
