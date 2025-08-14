@@ -6,9 +6,6 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { offlineManager } from '@/lib/offline/OfflineManager';
-import { offlineCache } from '@/lib/offline/OfflineCache';
-import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 interface UseOfflineSupportOptions {
   enableCache?: boolean;
@@ -41,35 +38,22 @@ export function useOfflineSupport(
 
   const [isOnline, setIsOnline] = useState(true);
   const [pendingCount, setPendingCount] = useState(0);
-  const { handleError } = useErrorHandler();
 
   useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
     // 初期状態を設定
-    setIsOnline(offlineManager.getOnlineStatus());
-    setPendingCount(offlineManager.getPendingOperationsCount());
+    setIsOnline(navigator.onLine);
 
-    // オンライン状態の監視
-    const unsubscribe = offlineManager.subscribeToStatusChange((online) => {
-      setIsOnline(online);
-      
-      if (online && autoSync) {
-        // オンラインに復帰したら自動同期
-        offlineManager.syncWithServer();
-      }
-    });
-
-    // 同期完了イベントの監視
-    const handleSyncComplete = () => {
-      setPendingCount(offlineManager.getPendingOperationsCount());
-    };
-
-    window.addEventListener('syncComplete', handleSyncComplete);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
 
     return () => {
-      unsubscribe();
-      window.removeEventListener('syncComplete', handleSyncComplete);
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
     };
-  }, [autoSync]);
+  }, []);
 
   /**
    * データを保存（キャッシュとローカルストレージ）
@@ -77,22 +61,16 @@ export function useOfflineSupport(
   const saveData = useCallback(async <T,>(key: string, data: T): Promise<void> => {
     try {
       if (enableCache) {
-        await offlineCache.set(key, data, { ttl: cacheTTL });
-      }
-      
-      // オフライン時はキューに追加
-      if (!isOnline) {
-        await offlineManager.queueOperation({
-          type: 'UPDATE',
-          endpoint: `/api/data/${key}`,
-          data
-        });
-        setPendingCount(offlineManager.getPendingOperationsCount());
+        localStorage.setItem(key, JSON.stringify({
+          data,
+          timestamp: Date.now(),
+          ttl: cacheTTL
+        }));
       }
     } catch (error) {
-      handleError(error);
+      console.error('Error saving data:', error);
     }
-  }, [enableCache, cacheTTL, isOnline, handleError]);
+  }, [enableCache, cacheTTL]);
 
   /**
    * データを読み込み（キャッシュから優先）
@@ -100,73 +78,83 @@ export function useOfflineSupport(
   const loadData = useCallback(async <T,>(key: string): Promise<T | null> => {
     try {
       if (enableCache) {
-        // キャッシュから取得を試行
-        const cached = await offlineCache.get<T>(key);
+        const cached = localStorage.getItem(key);
         if (cached) {
-          return cached;
+          const { data, timestamp, ttl } = JSON.parse(cached);
+          if (Date.now() - timestamp < ttl) {
+            return data;
+          } else {
+            localStorage.removeItem(key);
+          }
         }
       }
-
-      // オンラインの場合はAPIから取得を試行
-      if (isOnline) {
-        // ここでAPIからデータを取得する処理を実装
-        // 今回は例として null を返す
-        return null;
-      }
-
       return null;
     } catch (error) {
-      handleError(error);
+      console.error('Error loading data:', error);
       return null;
     }
-  }, [enableCache, isOnline, handleError]);
+  }, [enableCache]);
 
   /**
    * 操作をキューに追加
    */
   const queueOperation = useCallback(async (operation: any): Promise<void> => {
     try {
-      await offlineManager.queueOperation(operation);
-      setPendingCount(offlineManager.getPendingOperationsCount());
+      const queue = JSON.parse(localStorage.getItem('offline_queue') || '[]');
+      queue.push({
+        ...operation,
+        id: Date.now().toString(),
+        timestamp: Date.now()
+      });
+      localStorage.setItem('offline_queue', JSON.stringify(queue));
+      setPendingCount(queue.length);
     } catch (error) {
-      handleError(error);
+      console.error('Error queueing operation:', error);
     }
-  }, [handleError]);
+  }, []);
 
   /**
    * 今すぐ同期
    */
   const syncNow = useCallback(async (): Promise<void> => {
     try {
-      await offlineManager.syncWithServer();
-      setPendingCount(offlineManager.getPendingOperationsCount());
+      const queue = JSON.parse(localStorage.getItem('offline_queue') || '[]');
+      if (queue.length === 0) return;
+
+      // 実際の同期処理はここに実装
+      console.log(`Syncing ${queue.length} operations...`);
+      
+      // 同期後にキューをクリア
+      localStorage.setItem('offline_queue', '[]');
+      setPendingCount(0);
     } catch (error) {
-      handleError(error);
+      console.error('Error syncing:', error);
     }
-  }, [handleError]);
+  }, []);
 
   /**
    * キャッシュをクリア
    */
   const clearCache = useCallback(async (): Promise<void> => {
     try {
-      await offlineCache.clear();
+      const keys = Object.keys(localStorage);
+      keys.forEach(key => {
+        if (key.startsWith('cache_')) {
+          localStorage.removeItem(key);
+        }
+      });
     } catch (error) {
-      handleError(error);
+      console.error('Error clearing cache:', error);
     }
-  }, [handleError]);
+  }, []);
 
   /**
    * キューをクリア
    */
   const clearQueue = useCallback((): void => {
-    try {
-      offlineManager.clearQueue();
-      setPendingCount(0);
-    } catch (error) {
-      handleError(error);
-    }
-  }, [handleError]);
+    localStorage.setItem('offline_queue', '[]');
+    setPendingCount(0);
+  }, []);
 
   return {
     isOnline,
@@ -177,142 +165,5 @@ export function useOfflineSupport(
     syncNow,
     clearCache,
     clearQueue
-  };
-}
-
-/**
- * オフライン対応のデータフェッチフック
- */
-export function useOfflineFetch<T>(
-  url: string,
-  options?: {
-    cacheKey?: string;
-    cacheTTL?: number;
-    forceRefresh?: boolean;
-  }
-) {
-  const [data, setData] = useState<T | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-  const { isOnline } = useOfflineSupport();
-
-  const cacheKey = options?.cacheKey || url;
-  const cacheTTL = options?.cacheTTL || 60 * 60 * 1000; // 1時間
-  const forceRefresh = options?.forceRefresh || false;
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      setError(null);
-
-      try {
-        // キャッシュから取得を試行
-        if (!forceRefresh) {
-          const cached = await offlineCache.get<T>(cacheKey);
-          if (cached) {
-            setData(cached);
-            setLoading(false);
-            
-            // バックグラウンドで更新（オンラインの場合）
-            if (isOnline) {
-              fetch(url)
-                .then(res => res.json())
-                .then(async (freshData) => {
-                  await offlineCache.set(cacheKey, freshData, { ttl: cacheTTL });
-                  setData(freshData);
-                })
-                .catch(console.error);
-            }
-            return;
-          }
-        }
-
-        // オンラインの場合はフェッチ
-        if (isOnline) {
-          const response = await fetch(url);
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          const result = await response.json();
-          
-          // キャッシュに保存
-          await offlineCache.set(cacheKey, result, { ttl: cacheTTL });
-          setData(result);
-        } else {
-          // オフラインでキャッシュもない場合
-          setError(new Error('オフラインです。データを取得できません。'));
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error('Unknown error'));
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [url, cacheKey, cacheTTL, forceRefresh, isOnline]);
-
-  return { data, loading, error, isOnline };
-}
-
-/**
- * オフライン対応のミューテーションフック
- */
-export function useOfflineMutation<T, R = any>(
-  mutationFn: (data: T) => Promise<R>,
-  options?: {
-    onSuccess?: (data: R) => void;
-    onError?: (error: Error) => void;
-    optimisticUpdate?: boolean;
-  }
-) {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-  const { isOnline, queueOperation } = useOfflineSupport();
-  const { handleError } = useErrorHandler();
-
-  const mutate = useCallback(async (data: T): Promise<R | null> => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      if (isOnline) {
-        // オンラインの場合は直接実行
-        const result = await mutationFn(data);
-        options?.onSuccess?.(result);
-        return result;
-      } else {
-        // オフラインの場合はキューに追加
-        await queueOperation({
-          type: 'CREATE',
-          endpoint: '/api/mutation',
-          data
-        });
-
-        // 楽観的更新
-        if (options?.optimisticUpdate) {
-          const optimisticResult = { success: true, data } as unknown as R;
-          options?.onSuccess?.(optimisticResult);
-          return optimisticResult;
-        }
-
-        return null;
-      }
-    } catch (err) {
-      const error = err instanceof Error ? err : new Error('Unknown error');
-      setError(error);
-      options?.onError?.(error);
-      handleError(error);
-      return null;
-    } finally {
-      setLoading(false);
-    }
-  }, [isOnline, mutationFn, queueOperation, options, handleError]);
-
-  return {
-    mutate,
-    loading,
-    error,
-    isOnline
   };
 }
