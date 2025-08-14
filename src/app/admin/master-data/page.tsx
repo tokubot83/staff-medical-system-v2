@@ -2,10 +2,11 @@
 
 import React, { useState } from 'react';
 import GenericMasterTable from '@/components/admin/GenericMasterTable';
+import DevelopmentMemoTab from '@/components/admin/DevelopmentMemoTab';
 import { masterSchemas } from '@/config/masterSchemas';
 import { 
   Users, Building2, GraduationCap, ClipboardCheck, 
-  Database, ChevronRight, Shield, Settings
+  Database, ChevronRight, Shield, Settings, BookOpen
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -39,11 +40,18 @@ const masterTypes = [
     description: '評価項目の管理',
     color: 'orange'
   },
+  {
+    key: 'developmentMemo',
+    label: '開発メモ',
+    icon: BookOpen,
+    description: '開発メモ・実装指示の集約',
+    color: 'indigo'
+  },
 ];
 
 export default function MasterDataPage() {
   const [selectedMaster, setSelectedMaster] = useState<string>('staff');
-  const currentSchema = masterSchemas[selectedMaster];
+  const currentSchema = selectedMaster !== 'developmentMemo' ? masterSchemas[selectedMaster] : null;
 
   const getColorClasses = (color: string) => {
     const colors: Record<string, string> = {
@@ -51,6 +59,7 @@ export default function MasterDataPage() {
       green: 'bg-green-50 hover:bg-green-100 border-green-200 text-green-700',
       purple: 'bg-purple-50 hover:bg-purple-100 border-purple-200 text-purple-700',
       orange: 'bg-orange-50 hover:bg-orange-100 border-orange-200 text-orange-700',
+      indigo: 'bg-indigo-50 hover:bg-indigo-100 border-indigo-200 text-indigo-700',
     };
     return colors[color] || colors.blue;
   };
@@ -61,6 +70,7 @@ export default function MasterDataPage() {
       green: 'text-green-600',
       purple: 'text-purple-600',
       orange: 'text-orange-600',
+      indigo: 'text-indigo-600',
     };
     return colors[color] || colors.blue;
   };
@@ -172,7 +182,7 @@ export default function MasterDataPage() {
                       return (
                         <>
                           <Icon className={`h-5 w-5 mr-2 ${getIconColorClasses(master?.color || 'blue')}`} />
-                          {currentSchema?.label}
+                          {master?.label}
                         </>
                       );
                     })()}
@@ -182,37 +192,62 @@ export default function MasterDataPage() {
                   </p>
                 </div>
 
-                {currentSchema && (
+                {selectedMaster === 'developmentMemo' ? (
+                  <DevelopmentMemoTab />
+                ) : currentSchema ? (
                   <GenericMasterTable
                     masterType={selectedMaster}
                     label={currentSchema.label}
                     fields={currentSchema.fields}
                     searchableFields={currentSchema.searchableFields}
                   />
-                )}
+                ) : null}
               </div>
             </div>
 
-            <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <div className="flex">
-                <div className="flex-shrink-0">
-                  <Shield className="h-5 w-5 text-blue-600" />
-                </div>
-                <div className="ml-3">
-                  <h3 className="text-sm font-medium text-blue-800">
-                    データ管理に関する注意事項
-                  </h3>
-                  <div className="mt-2 text-sm text-blue-700">
-                    <ul className="list-disc list-inside space-y-1">
-                      <li>マスターデータの変更は、システム全体に影響を与える可能性があります</li>
-                      <li>削除したデータは復元できません。必要に応じてバックアップを取得してください</li>
-                      <li>インポート時は、データ形式が正しいことを確認してください</li>
-                      <li>変更履歴は自動的に記録されます</li>
-                    </ul>
+            {selectedMaster === 'developmentMemo' ? (
+              <div className="mt-4 bg-indigo-50 border border-indigo-200 rounded-lg p-4">
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <BookOpen className="h-5 w-5 text-indigo-600" />
+                  </div>
+                  <div className="ml-3">
+                    <h3 className="text-sm font-medium text-indigo-800">
+                      開発メモについて
+                    </h3>
+                    <div className="mt-2 text-sm text-indigo-700">
+                      <ul className="list-disc list-inside space-y-1">
+                        <li>システム内の開発メモ、TODO、実装指示書を集約表示しています</li>
+                        <li>ファイルパスをクリックすると、該当ファイルの場所が確認できます</li>
+                        <li>優先度「Critical」の項目は早急な対応が必要です</li>
+                        <li>最新の実装指示書: /docs/implementation-resume-guide-v3-20250113.md</li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <Shield className="h-5 w-5 text-blue-600" />
+                  </div>
+                  <div className="ml-3">
+                    <h3 className="text-sm font-medium text-blue-800">
+                      データ管理に関する注意事項
+                    </h3>
+                    <div className="mt-2 text-sm text-blue-700">
+                      <ul className="list-disc list-inside space-y-1">
+                        <li>マスターデータの変更は、システム全体に影響を与える可能性があります</li>
+                        <li>削除したデータは復元できません。必要に応じてバックアップを取得してください</li>
+                        <li>インポート時は、データ形式が正しいことを確認してください</li>
+                        <li>変更履歴は自動的に記録されます</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
