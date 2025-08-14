@@ -118,11 +118,11 @@ export default function EvaluationSheetsV4Page() {
           title: '看護補助者',
           icon: '🤝',
           sheets: [
-            { label: '新人看護補助者（1年目）', path: '/evaluation-sheets/v4/acute-nursing-aide/new-nursing-aide-evaluation-v4-pattern5', implemented: true },
-            { label: '一般看護補助者（2-3年目）', path: '/evaluation-sheets/v4/acute-nursing-aide/junior-nursing-aide-evaluation-v4-pattern5', implemented: true },
-            { label: '中堅看護補助者（4-10年目）', path: '/evaluation-sheets/v4/acute-nursing-aide/midlevel-nursing-aide-evaluation-v4-pattern5', implemented: true },
-            { label: 'ベテラン看護補助者（11年以上）', path: '/evaluation-sheets/v4/acute-nursing-aide/veteran-nursing-aide-evaluation-v4-pattern5', implemented: true },
-            { label: 'リーダー看護補助者', path: '/evaluation-sheets/v4/acute-nursing-aide/leader-nursing-aide-evaluation-v4-pattern5', implemented: true },
+            { label: '新人看護補助者（1年目）', path: '/evaluation-sheets/v4/chronic-nursing-aide/chronic-new-nursing-aide-evaluation-v4-pattern5', implemented: true },
+            { label: '一般看護補助者（2-3年目）', path: '/evaluation-sheets/v4/chronic-nursing-aide/junior', implemented: true },
+            { label: '中堅看護補助者（4-10年目）', path: '/evaluation-sheets/v4/chronic-nursing-aide/midlevel', implemented: true },
+            { label: 'ベテラン看護補助者（11年以上）', path: '/evaluation-sheets/v4/chronic-nursing-aide/veteran', implemented: true },
+            { label: 'リーダー看護補助者', path: '/evaluation-sheets/v4/chronic-nursing-aide/leader', implemented: true },
           ]
         },
         {
@@ -208,7 +208,7 @@ export default function EvaluationSheetsV4Page() {
             { label: '新人看護師（1年目）', path: '/evaluation-sheets/v4/roken-nurse/new-nurse-evaluation-v4-pattern5', implemented: true },
             { label: '一般看護師（2-3年目）', path: '/evaluation-sheets/v4/roken-nurse/junior-nurse-evaluation-v4-pattern5', implemented: true },
             { label: '中堅看護師（4-10年目）', path: '/evaluation-sheets/v4/roken-nurse/midlevel-nurse-evaluation-v4-pattern5', implemented: true },
-            { label: 'ベテラン看護師（11年以上）', path: '/evaluation-sheets/v4/roken-nurse/veteran-nurse-evaluation-v4-pattern5', implemented: false },
+            { label: 'ベテラン看護師（11年以上）', path: '/evaluation-sheets/v4/roken-nurse/veteran-nurse-evaluation-v4-pattern5', implemented: true },
             { label: '主任看護師', path: '/evaluation-sheets/v4/roken-nurse/chief-nurse-evaluation-v4-pattern5', implemented: false },
           ]
         },
@@ -216,10 +216,10 @@ export default function EvaluationSheetsV4Page() {
           title: '准看護師',
           icon: '💉',
           sheets: [
-            { label: '新人准看護師（1年目）', path: '/evaluation-sheets/v4/roken-assistant-nurse/new-assistant-nurse-evaluation-v4-pattern5', implemented: false },
-            { label: '一般准看護師（2-3年目）', path: '/evaluation-sheets/v4/roken-assistant-nurse/junior-assistant-nurse-evaluation-v4-pattern5', implemented: false },
-            { label: '中堅准看護師（4-10年目）', path: '/evaluation-sheets/v4/roken-assistant-nurse/midlevel-assistant-nurse-evaluation-v4-pattern5', implemented: false },
-            { label: 'ベテラン准看護師（11年以上）', path: '/evaluation-sheets/v4/roken-assistant-nurse/veteran-assistant-nurse-evaluation-v4-pattern5', implemented: false },
+            { label: '新人准看護師（1年目）', path: '/evaluation-sheets/v4/roken-assistant-nurse/new-assistant-nurse-evaluation-v4-pattern5', implemented: true },
+            { label: '一般准看護師（2-3年目）', path: '/evaluation-sheets/v4/roken-assistant-nurse/junior-assistant-nurse-evaluation-v4-pattern5', implemented: true },
+            { label: '中堅准看護師（4-10年目）', path: '/evaluation-sheets/v4/roken-assistant-nurse/midlevel-assistant-nurse-evaluation-v4-pattern5', implemented: true },
+            { label: 'ベテラン准看護師（11年以上）', path: '/evaluation-sheets/v4/roken-assistant-nurse/veteran-assistant-nurse-evaluation-v4-pattern5', implemented: true },
           ]
         },
         {
@@ -227,10 +227,10 @@ export default function EvaluationSheetsV4Page() {
           icon: '🏥',
           sheets: [
             { label: '新人介護福祉士（1年目）', path: '/evaluation-sheets/v4/roken-certified-care-worker/new-certified-care-worker-evaluation-v4-pattern5', implemented: true },
-            { label: '一般介護福祉士（2-3年目）', path: '/evaluation-sheets/v4/roken-certified-care-worker/junior-certified-care-worker-evaluation-v4-pattern5', implemented: false },
-            { label: '中堅介護福祉士（4-10年目）', path: '/evaluation-sheets/v4/roken-certified-care-worker/midlevel-certified-care-worker-evaluation-v4-pattern5', implemented: false },
-            { label: 'ベテラン介護福祉士（11年以上）', path: '/evaluation-sheets/v4/roken-certified-care-worker/veteran-certified-care-worker-evaluation-v4-pattern5', implemented: false },
-            { label: 'リーダー介護福祉士', path: '/evaluation-sheets/v4/roken-certified-care-worker/leader-certified-care-worker-evaluation-v4-pattern5', implemented: false },
+            { label: '一般介護福祉士（2-3年目）', path: '/evaluation-sheets/v4/roken-certified-care-worker/junior-certified-care-worker-evaluation-v4-pattern5', implemented: true },
+            { label: '中堅介護福祉士（4-10年目）', path: '/evaluation-sheets/v4/roken-certified-care-worker/midlevel-certified-care-worker-evaluation-v4-pattern5', implemented: true },
+            { label: 'ベテラン介護福祉士（11年以上）', path: '/evaluation-sheets/v4/roken-certified-care-worker/veteran-certified-care-worker-evaluation-v4-pattern5', implemented: true },
+            { label: 'リーダー介護福祉士', path: '/evaluation-sheets/v4/roken-certified-care-worker/leader-certified-care-worker-evaluation-v4-pattern5', implemented: true },
           ]
         },
         {
@@ -238,9 +238,9 @@ export default function EvaluationSheetsV4Page() {
           icon: '🤝',
           sheets: [
             { label: '新人介護職員（1年目）', path: '/evaluation-sheets/v4/roken-care-worker/new-care-worker-evaluation-v4-pattern5', implemented: true },
-            { label: '一般介護職員（2-3年目）', path: '/evaluation-sheets/v4/roken-care-worker/junior-care-worker-evaluation-v4-pattern5', implemented: false },
-            { label: '中堅介護職員（4-7年目）', path: '/evaluation-sheets/v4/roken-care-worker/midlevel-care-worker-evaluation-v4-pattern5', implemented: false },
-            { label: 'ベテラン介護職員（8年以上）', path: '/evaluation-sheets/v4/roken-care-worker/veteran-care-worker-evaluation-v4-pattern5', implemented: false },
+            { label: '一般介護職員（2-3年目）', path: '/evaluation-sheets/v4/roken-care-worker/junior-care-worker-evaluation-v4-pattern5', implemented: true },
+            { label: '中堅介護職員（4-7年目）', path: '/evaluation-sheets/v4/roken-care-worker/midlevel-care-worker-evaluation-v4-pattern5', implemented: true },
+            { label: 'ベテラン介護職員（8年以上）', path: '/evaluation-sheets/v4/roken-care-worker/veteran-care-worker-evaluation-v4-pattern5', implemented: true },
           ]
         },
         {
