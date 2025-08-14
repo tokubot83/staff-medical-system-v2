@@ -6,7 +6,7 @@ import { staffListData, staffDatabase } from './data/staffData';
 import { StaffDetail } from '@/types/staff';
 import TalentFlowSection from '../components/talent-flow/TalentFlowSection';
 import HRDashboardSection from '../components/hr-dashboard/HRDashboardSection';
-import { OfflineIndicator, OfflineBanner } from '@/components/offline/OfflineIndicator';
+import { OfflineIndicator } from '@/components/offline/OfflineIndicator';
 
 // 型定義
 interface Staff {
@@ -460,7 +460,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
      {/* Offline Banner */}
-     <OfflineBanner />
+     {/* <OfflineBanner /> */}
      
      {/* Header */}
      <header className="bg-gray-700 text-white p-5 border-b">
