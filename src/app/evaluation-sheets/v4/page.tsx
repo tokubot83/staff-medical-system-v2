@@ -59,32 +59,32 @@ export default function EvaluationSheetsV4Page() {
           icon: '🏃',
           sheets: [
             { label: '新人理学療法士（1年目）', path: '/evaluation-sheets/v4/acute-pt/new-pt-evaluation-v4-pattern5', implemented: true },
-            { label: '若手理学療法士（2-3年目）', path: '/evaluation-sheets/v4/acute-pt/junior-pt-evaluation-v4-pattern5', implemented: false },
-            { label: '中堅理学療法士（4-10年目）', path: '/evaluation-sheets/v4/acute-pt/midlevel-pt-evaluation-v4-pattern5', implemented: false },
-            { label: 'ベテラン理学療法士（11年以上）', path: '/evaluation-sheets/v4/acute-pt/veteran-pt-evaluation-v4-pattern5', implemented: false },
-            { label: 'リハビリ主任', path: '/evaluation-sheets/v4/acute-pt/chief-pt-evaluation-v4-pattern5', implemented: false },
+            { label: '若手理学療法士（2-3年目）', path: '/evaluation-sheets/v4/acute-pt/junior-pt-evaluation-v4-pattern5', implemented: true },
+            { label: '中堅理学療法士（4-10年目）', path: '/evaluation-sheets/v4/acute-pt/midlevel-pt-evaluation-v4-pattern5', implemented: true },
+            { label: 'ベテラン理学療法士（11年以上）', path: '/evaluation-sheets/v4/acute-pt/veteran-pt-evaluation-v4-pattern5', implemented: true },
+            { label: 'リハビリ主任', path: '/evaluation-sheets/v4/acute-pt/chief-pt-evaluation-v4-pattern5', implemented: true },
           ]
         },
         {
           title: '作業療法士',
           icon: '✋',
           sheets: [
-            { label: '新人作業療法士（1年目）', path: '/evaluation-sheets/v4/acute-ot/new-ot-evaluation-v4-pattern5', implemented: false },
-            { label: '若手作業療法士（2-3年目）', path: '/evaluation-sheets/v4/acute-ot/junior-ot-evaluation-v4-pattern5', implemented: false },
-            { label: '中堅作業療法士（4-10年目）', path: '/evaluation-sheets/v4/acute-ot/midlevel-ot-evaluation-v4-pattern5', implemented: false },
-            { label: 'ベテラン作業療法士（11年以上）', path: '/evaluation-sheets/v4/acute-ot/veteran-ot-evaluation-v4-pattern5', implemented: false },
-            { label: 'リハビリ主任', path: '/evaluation-sheets/v4/acute-ot/chief-ot-evaluation-v4-pattern5', implemented: false },
+            { label: '新人作業療法士（1年目）', path: '/evaluation-sheets/v4/acute-ot/new-ot-evaluation-v4-pattern5', implemented: true },
+            { label: '若手作業療法士（2-3年目）', path: '/evaluation-sheets/v4/acute-ot/junior-ot-evaluation-v4-pattern5', implemented: true },
+            { label: '中堅作業療法士（4-10年目）', path: '/evaluation-sheets/v4/acute-ot/midlevel-ot-evaluation-v4-pattern5', implemented: true },
+            { label: 'ベテラン作業療法士（11年以上）', path: '/evaluation-sheets/v4/acute-ot/veteran-ot-evaluation-v4-pattern5', implemented: true },
+            { label: 'リハビリ主任', path: '/evaluation-sheets/v4/acute-ot/chief-ot-evaluation-v4-pattern5', implemented: true },
           ]
         },
         {
           title: '言語聴覚士',
           icon: '🗣️',
           sheets: [
-            { label: '新人言語聴覚士（1年目）', path: '/evaluation-sheets/v4/acute-st/new-st-evaluation-v4-pattern5', implemented: false },
-            { label: '若手言語聴覚士（2-3年目）', path: '/evaluation-sheets/v4/acute-st/junior-st-evaluation-v4-pattern5', implemented: false },
-            { label: '中堅言語聴覚士（4-10年目）', path: '/evaluation-sheets/v4/acute-st/midlevel-st-evaluation-v4-pattern5', implemented: false },
-            { label: 'ベテラン言語聴覚士（11年以上）', path: '/evaluation-sheets/v4/acute-st/veteran-st-evaluation-v4-pattern5', implemented: false },
-            { label: 'リハビリ主任', path: '/evaluation-sheets/v4/acute-st/chief-st-evaluation-v4-pattern5', implemented: false },
+            { label: '新人言語聴覚士（1年目）', path: '/evaluation-sheets/v4/acute-st/new-st-evaluation-v4-pattern5', implemented: true },
+            { label: '若手言語聴覚士（2-3年目）', path: '/evaluation-sheets/v4/acute-st/junior-st-evaluation-v4-pattern5', implemented: true },
+            { label: '中堅言語聴覚士（4-10年目）', path: '/evaluation-sheets/v4/acute-st/midlevel-st-evaluation-v4-pattern5', implemented: true },
+            { label: 'ベテラン言語聴覚士（11年以上）', path: '/evaluation-sheets/v4/acute-st/veteran-st-evaluation-v4-pattern5', implemented: true },
+            { label: 'リハビリ主任', path: '/evaluation-sheets/v4/acute-st/chief-st-evaluation-v4-pattern5', implemented: true },
           ]
         }
       ]
@@ -129,33 +129,33 @@ export default function EvaluationSheetsV4Page() {
           title: '理学療法士',
           icon: '🏃',
           sheets: [
-            { label: '新人理学療法士（1年目）', path: '/evaluation-sheets/v4/chronic-pt/new-pt-evaluation-v4-pattern5', implemented: false },
-            { label: '若手理学療法士（2-3年目）', path: '/evaluation-sheets/v4/chronic-pt/junior-pt-evaluation-v4-pattern5', implemented: false },
-            { label: '中堅理学療法士（4-10年目）', path: '/evaluation-sheets/v4/chronic-pt/midlevel-pt-evaluation-v4-pattern5', implemented: false },
-            { label: 'ベテラン理学療法士（11年以上）', path: '/evaluation-sheets/v4/chronic-pt/veteran-pt-evaluation-v4-pattern5', implemented: false },
-            { label: 'リハビリ主任', path: '/evaluation-sheets/v4/chronic-pt/chief-pt-evaluation-v4-pattern5', implemented: false },
+            { label: '新人理学療法士（1年目）', path: '/evaluation-sheets/v4/chronic-pt/new-pt-evaluation-v4-pattern5', implemented: true },
+            { label: '若手理学療法士（2-3年目）', path: '/evaluation-sheets/v4/chronic-pt/junior-pt-evaluation-v4-pattern5', implemented: true },
+            { label: '中堅理学療法士（4-10年目）', path: '/evaluation-sheets/v4/chronic-pt/midlevel-pt-evaluation-v4-pattern5', implemented: true },
+            { label: 'ベテラン理学療法士（11年以上）', path: '/evaluation-sheets/v4/chronic-pt/veteran-pt-evaluation-v4-pattern5', implemented: true },
+            { label: 'リハビリ主任', path: '/evaluation-sheets/v4/chronic-pt/chief-pt-evaluation-v4-pattern5', implemented: true },
           ]
         },
         {
           title: '作業療法士',
           icon: '✋',
           sheets: [
-            { label: '新人作業療法士（1年目）', path: '/evaluation-sheets/v4/chronic-ot/new-ot-evaluation-v4-pattern5', implemented: false },
-            { label: '若手作業療法士（2-3年目）', path: '/evaluation-sheets/v4/chronic-ot/junior-ot-evaluation-v4-pattern5', implemented: false },
-            { label: '中堅作業療法士（4-10年目）', path: '/evaluation-sheets/v4/chronic-ot/midlevel-ot-evaluation-v4-pattern5', implemented: false },
-            { label: 'ベテラン作業療法士（11年以上）', path: '/evaluation-sheets/v4/chronic-ot/veteran-ot-evaluation-v4-pattern5', implemented: false },
-            { label: 'リハビリ主任', path: '/evaluation-sheets/v4/chronic-ot/chief-ot-evaluation-v4-pattern5', implemented: false },
+            { label: '新人作業療法士（1年目）', path: '/evaluation-sheets/v4/chronic-ot/new-ot-evaluation-v4-pattern5', implemented: true },
+            { label: '若手作業療法士（2-3年目）', path: '/evaluation-sheets/v4/chronic-ot/junior-ot-evaluation-v4-pattern5', implemented: true },
+            { label: '中堅作業療法士（4-10年目）', path: '/evaluation-sheets/v4/chronic-ot/midlevel-ot-evaluation-v4-pattern5', implemented: true },
+            { label: 'ベテラン作業療法士（11年以上）', path: '/evaluation-sheets/v4/chronic-ot/veteran-ot-evaluation-v4-pattern5', implemented: true },
+            { label: 'リハビリ主任', path: '/evaluation-sheets/v4/chronic-ot/chief-ot-evaluation-v4-pattern5', implemented: true },
           ]
         },
         {
           title: '言語聴覚士',
           icon: '🗣️',
           sheets: [
-            { label: '新人言語聴覚士（1年目）', path: '/evaluation-sheets/v4/chronic-st/new-st-evaluation-v4-pattern5', implemented: false },
-            { label: '若手言語聴覚士（2-3年目）', path: '/evaluation-sheets/v4/chronic-st/junior-st-evaluation-v4-pattern5', implemented: false },
-            { label: '中堅言語聴覚士（4-10年目）', path: '/evaluation-sheets/v4/chronic-st/midlevel-st-evaluation-v4-pattern5', implemented: false },
-            { label: 'ベテラン言語聴覚士（11年以上）', path: '/evaluation-sheets/v4/chronic-st/veteran-st-evaluation-v4-pattern5', implemented: false },
-            { label: 'リハビリ主任', path: '/evaluation-sheets/v4/chronic-st/chief-st-evaluation-v4-pattern5', implemented: false },
+            { label: '新人言語聴覚士（1年目）', path: '/evaluation-sheets/v4/chronic-st/new-st-evaluation-v4-pattern5', implemented: true },
+            { label: '若手言語聴覚士（2-3年目）', path: '/evaluation-sheets/v4/chronic-st/junior-st-evaluation-v4-pattern5', implemented: true },
+            { label: '中堅言語聴覚士（4-10年目）', path: '/evaluation-sheets/v4/chronic-st/midlevel-st-evaluation-v4-pattern5', implemented: true },
+            { label: 'ベテラン言語聴覚士（11年以上）', path: '/evaluation-sheets/v4/chronic-st/veteran-st-evaluation-v4-pattern5', implemented: true },
+            { label: 'リハビリ主任', path: '/evaluation-sheets/v4/chronic-st/chief-st-evaluation-v4-pattern5', implemented: true },
           ]
         }
       ]
@@ -247,33 +247,33 @@ export default function EvaluationSheetsV4Page() {
           title: '理学療法士',
           icon: '🏃',
           sheets: [
-            { label: '新人理学療法士（1年目）', path: '/evaluation-sheets/v4/roken-pt/new-pt-evaluation-v4-pattern5', implemented: false },
-            { label: '若手理学療法士（2-3年目）', path: '/evaluation-sheets/v4/roken-pt/junior-pt-evaluation-v4-pattern5', implemented: false },
-            { label: '中堅理学療法士（4-10年目）', path: '/evaluation-sheets/v4/roken-pt/midlevel-pt-evaluation-v4-pattern5', implemented: false },
-            { label: 'ベテラン理学療法士（11年以上）', path: '/evaluation-sheets/v4/roken-pt/veteran-pt-evaluation-v4-pattern5', implemented: false },
-            { label: 'リハビリ主任', path: '/evaluation-sheets/v4/roken-pt/chief-pt-evaluation-v4-pattern5', implemented: false },
+            { label: '新人理学療法士（1年目）', path: '/evaluation-sheets/v4/roken-pt/new-pt-evaluation-v4-pattern5', implemented: true },
+            { label: '若手理学療法士（2-3年目）', path: '/evaluation-sheets/v4/roken-pt/junior-pt-evaluation-v4-pattern5', implemented: true },
+            { label: '中堅理学療法士（4-10年目）', path: '/evaluation-sheets/v4/roken-pt/midlevel-pt-evaluation-v4-pattern5', implemented: true },
+            { label: 'ベテラン理学療法士（11年以上）', path: '/evaluation-sheets/v4/roken-pt/veteran-pt-evaluation-v4-pattern5', implemented: true },
+            { label: 'リハビリ主任', path: '/evaluation-sheets/v4/roken-pt/chief-pt-evaluation-v4-pattern5', implemented: true },
           ]
         },
         {
           title: '作業療法士',
           icon: '✋',
           sheets: [
-            { label: '新人作業療法士（1年目）', path: '/evaluation-sheets/v4/roken-ot/new-ot-evaluation-v4-pattern5', implemented: false },
-            { label: '若手作業療法士（2-3年目）', path: '/evaluation-sheets/v4/roken-ot/junior-ot-evaluation-v4-pattern5', implemented: false },
-            { label: '中堅作業療法士（4-10年目）', path: '/evaluation-sheets/v4/roken-ot/midlevel-ot-evaluation-v4-pattern5', implemented: false },
-            { label: 'ベテラン作業療法士（11年以上）', path: '/evaluation-sheets/v4/roken-ot/veteran-ot-evaluation-v4-pattern5', implemented: false },
-            { label: 'リハビリ主任', path: '/evaluation-sheets/v4/roken-ot/chief-ot-evaluation-v4-pattern5', implemented: false },
+            { label: '新人作業療法士（1年目）', path: '/evaluation-sheets/v4/roken-ot/new-ot-evaluation-v4-pattern5', implemented: true },
+            { label: '若手作業療法士（2-3年目）', path: '/evaluation-sheets/v4/roken-ot/junior-ot-evaluation-v4-pattern5', implemented: true },
+            { label: '中堅作業療法士（4-10年目）', path: '/evaluation-sheets/v4/roken-ot/midlevel-ot-evaluation-v4-pattern5', implemented: true },
+            { label: 'ベテラン作業療法士（11年以上）', path: '/evaluation-sheets/v4/roken-ot/veteran-ot-evaluation-v4-pattern5', implemented: true },
+            { label: 'リハビリ主任', path: '/evaluation-sheets/v4/roken-ot/chief-ot-evaluation-v4-pattern5', implemented: true },
           ]
         },
         {
           title: '言語聴覚士',
           icon: '🗣️',
           sheets: [
-            { label: '新人言語聴覚士（1年目）', path: '/evaluation-sheets/v4/roken-st/new-st-evaluation-v4-pattern5', implemented: false },
-            { label: '若手言語聴覚士（2-3年目）', path: '/evaluation-sheets/v4/roken-st/junior-st-evaluation-v4-pattern5', implemented: false },
-            { label: '中堅言語聴覚士（4-10年目）', path: '/evaluation-sheets/v4/roken-st/midlevel-st-evaluation-v4-pattern5', implemented: false },
-            { label: 'ベテラン言語聴覚士（11年以上）', path: '/evaluation-sheets/v4/roken-st/veteran-st-evaluation-v4-pattern5', implemented: false },
-            { label: 'リハビリ主任', path: '/evaluation-sheets/v4/roken-st/chief-st-evaluation-v4-pattern5', implemented: false },
+            { label: '新人言語聴覚士（1年目）', path: '/evaluation-sheets/v4/roken-st/new-st-evaluation-v4-pattern5', implemented: true },
+            { label: '若手言語聴覚士（2-3年目）', path: '/evaluation-sheets/v4/roken-st/junior-st-evaluation-v4-pattern5', implemented: true },
+            { label: '中堅言語聴覚士（4-10年目）', path: '/evaluation-sheets/v4/roken-st/midlevel-st-evaluation-v4-pattern5', implemented: true },
+            { label: 'ベテラン言語聴覚士（11年以上）', path: '/evaluation-sheets/v4/roken-st/veteran-st-evaluation-v4-pattern5', implemented: true },
+            { label: 'リハビリ主任', path: '/evaluation-sheets/v4/roken-st/chief-st-evaluation-v4-pattern5', implemented: true },
           ]
         }
       ]
@@ -419,8 +419,8 @@ export default function EvaluationSheetsV4Page() {
             <div className="mt-8 p-4 bg-gray-100 rounded-lg">
               <h4 className="font-semibold text-gray-700 mb-2">🔧 開発メモ</h4>
               <p className="text-sm text-gray-600">
-                評価シートは部署（急性期・慢性期・外来）と職種（看護師・准看護師・看護補助者・理学療法士・作業療法士・言語聴覚士）、
-                経験年数で分類されています。現在、急性期は看護職全職種実装済み、リハビリ職は新人PTのみ実装済み、慢性期は看護師・准看護師・看護補助者実装済み、
+                評価シートは部署（急性期・慢性期・外来・老健）と職種（看護師・准看護師・看護補助者・理学療法士・作業療法士・言語聴覚士）、
+                経験年数で分類されています。現在、急性期は全職種実装済み、慢性期は全職種実装済み、老健はリハビリ職全職種実装済み、
                 外来は看護師（管理職除く）のみ実装されています。
               </p>
             </div>
