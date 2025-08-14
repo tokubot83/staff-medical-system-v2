@@ -1,0 +1,2 @@
+export { default as NewOutpatientAssistantNurseEvaluationV4Pattern5 } from './new-outpatient-assistant-nurse-evaluation-v4-pattern5';
+export { default as JuniorOutpatientAssistantNurseEvaluationV4Pattern5 } from './junior-outpatient-assistant-nurse-evaluation-v4-pattern5';
