@@ -847,29 +847,35 @@ function MindsetTab({ selectedStaff }: { selectedStaff: any }): React.ReactEleme
         </div>
       )}
 
+      {/* 全体サマリーカード - この職員の特徴を一目で把握 */}
       <div className={styles.mindsetOverview}>
-        <div className={styles.mindsetSummaryCard}>
-          <div className={styles.priorityBadge}>
-            <span className={styles.priorityIcon}>⭐</span>
-            <span className={styles.priorityText}>優先度 2</span>
-          </div>
-          <div className={styles.mindsetType}>
-            <div className={styles.typeIcon}>
-              {mindset.careerOrientation.type === 'management' ? '👔' :
-               mindset.careerOrientation.type === 'specialist' ? '🎯' :
-               mindset.careerOrientation.type === 'frontline' ? '💉' : '⚖️'}
+        <div className={styles.mindsetQuickSummary}>
+          <h3 className={styles.quickSummaryTitle}>📊 {selectedStaff.name}さんの特性サマリー</h3>
+          <div className={styles.quickSummaryGrid}>
+            <div className={styles.summaryItem}>
+              <span className={styles.summaryLabel}>動機タイプ</span>
+              <span className={styles.summaryValue}>
+                {motivationType ? motivationType.typeName : '未判定'}
+              </span>
             </div>
-            <div className={styles.typeInfo}>
-              <h3>{careerTypeLabels[mindset.careerOrientation.type]}</h3>
-              <p>{mindset.careerOrientation.vision}</p>
-              <div className={styles.hrInsight}>
-                <span className={styles.insightIcon}>💡</span>
-                <span className={styles.insightText}>
-                  {mindset.careerOrientation.type === 'management' ? '管理職候補として育成計画策定が必要' :
-                   mindset.careerOrientation.type === 'specialist' ? '専門性向上の研修投資を検討' :
-                   mindset.careerOrientation.type === 'frontline' ? '現場スキル向上支援を重視' : '多様なキャリアパスを提示'}
-                </span>
-              </div>
+            <div className={styles.summaryItem}>
+              <span className={styles.summaryLabel}>キャリア志向</span>
+              <span className={styles.summaryValue}>
+                {careerTypeLabels[mindset.careerOrientation.type]}
+              </span>
+            </div>
+            <div className={styles.summaryItem}>
+              <span className={styles.summaryLabel}>ワークスタイル</span>
+              <span className={styles.summaryValue}>
+                {workStyleLabels[mindset.workApproach.style]}
+              </span>
+            </div>
+            <div className={styles.summaryItem}>
+              <span className={styles.summaryLabel}>組織貢献</span>
+              <span className={styles.summaryValue}>
+                {mindset.organizationalCommitment.mentorshipInterest === 'high' ? '高意欲' :
+                 mindset.organizationalCommitment.mentorshipInterest === 'medium' ? '中程度' : '低意欲'}
+              </span>
             </div>
           </div>
           <div className={styles.lastUpdateInfo}>
@@ -888,13 +894,86 @@ function MindsetTab({ selectedStaff }: { selectedStaff: any }): React.ReactEleme
               <span>優先度 2</span>
             </div>
           </div>
-          <div className={styles.hrPurpose}>
-            <div className={styles.purposeIcon}>🎯</div>
-            <div className={styles.purposeContent}>
-              <strong>人事部の把握目的:</strong>
-              <span>中長期的な人材育成計画の策定、後継者育成、適材適所の配置</span>
+          
+          {/* 現在のタイプを大きく表示 */}
+          <div className={styles.currentTypeHighlight}>
+            <div className={styles.typeLabel}>現在のタイプ</div>
+            <div className={styles.typeBadgeLarge}>
+              <span className={styles.typeIconLarge}>
+                {mindset.careerOrientation.type === 'management' ? '👔' :
+                 mindset.careerOrientation.type === 'specialist' ? '🎯' :
+                 mindset.careerOrientation.type === 'frontline' ? '💉' : '⚖️'}
+              </span>
+              <span className={styles.typeNameLarge}>
+                {careerTypeLabels[mindset.careerOrientation.type]}
+              </span>
             </div>
           </div>
+          
+          {/* タイプ別の具体的な対応方法 */}
+          <div className={styles.typeSpecificActions}>
+            <div className={styles.actionHeader}>
+              <span className={styles.actionIcon}>🎯</span>
+              <span className={styles.actionTitle}>
+                {careerTypeLabels[mindset.careerOrientation.type]}への推奨アプローチ
+              </span>
+            </div>
+            <div className={styles.actionContent}>
+              {mindset.careerOrientation.type === 'management' && (
+                <>
+                  <div className={styles.actionDescription}>
+                    管理職を目指す職員には、段階的にマネジメント経験を積ませることが重要です。
+                  </div>
+                  <ul className={styles.actionList}>
+                    <li>📌 プロジェクトリーダーへの任命</li>
+                    <li>📌 マネジメント研修の優先受講</li>
+                    <li>📌 部下指導・メンタリング機会の提供</li>
+                    <li>📌 経営層との対話機会の創出</li>
+                  </ul>
+                </>
+              )}
+              {mindset.careerOrientation.type === 'specialist' && (
+                <>
+                  <div className={styles.actionDescription}>
+                    専門職志向の職員には、深い専門性を追求できる環境を整備することが重要です。
+                  </div>
+                  <ul className={styles.actionList}>
+                    <li>📌 専門資格取得の支援</li>
+                    <li>📌 学会参加・発表機会の提供</li>
+                    <li>📌 専門分野での権限委譲</li>
+                    <li>📌 エキスパートとしての社内認定</li>
+                  </ul>
+                </>
+              )}
+              {mindset.careerOrientation.type === 'frontline' && (
+                <>
+                  <div className={styles.actionDescription}>
+                    現場志向の職員には、実務スキルの向上と現場での活躍を支援することが重要です。
+                  </div>
+                  <ul className={styles.actionList}>
+                    <li>📌 実務スキル向上研修の提供</li>
+                    <li>📌 現場改善提案の奨励</li>
+                    <li>📌 ベストプラクティスの共有機会</li>
+                    <li>📌 現場リーダーとしての役割付与</li>
+                  </ul>
+                </>
+              )}
+              {mindset.careerOrientation.type === 'balanced' && (
+                <>
+                  <div className={styles.actionDescription}>
+                    バランス型の職員には、多様な経験を積みながら適性を見極めることが重要です。
+                  </div>
+                  <ul className={styles.actionList}>
+                    <li>📌 ジョブローテーションの実施</li>
+                    <li>📌 複数分野のプロジェクト参加</li>
+                    <li>📌 キャリア相談の定期実施</li>
+                    <li>📌 幅広いスキル開発の支援</li>
+                  </ul>
+                </>
+              )}
+            </div>
+          </div>
+          
           <div className={styles.careerInfo}>
             <div className={styles.infoItem}>
               <h4>キャリアビジョン</h4>
@@ -937,12 +1016,21 @@ function MindsetTab({ selectedStaff }: { selectedStaff: any }): React.ReactEleme
           <div className={styles.workApproachGrid}>
             <div className={styles.approachItem}>
               <h4>ワークスタイル</h4>
-              <div className={styles.styleIndicator}>
-                <span className={styles.styleIcon}>
-                  {mindset.workApproach.style === 'team' ? '👥' : 
-                   mindset.workApproach.style === 'individual' ? '👤' : '🔄'}
-                </span>
-                <span>{workStyleLabels[mindset.workApproach.style]}</span>
+              <div className={styles.currentTypeHighlight}>
+                <div className={styles.typeBadgeMedium}>
+                  <span className={styles.typeIconMedium}>
+                    {mindset.workApproach.style === 'team' ? '👥' : 
+                     mindset.workApproach.style === 'individual' ? '👤' : '🔄'}
+                  </span>
+                  <span className={styles.typeNameMedium}>
+                    {workStyleLabels[mindset.workApproach.style]}
+                  </span>
+                </div>
+              </div>
+              <div className={styles.typeDescription}>
+                {mindset.workApproach.style === 'team' && '他者との協働で最高のパフォーマンスを発揮'}
+                {mindset.workApproach.style === 'individual' && '集中できる環境で高い成果を出す'}
+                {mindset.workApproach.style === 'flexible' && '状況に応じて柔軟に対応可能'}
               </div>
             </div>
             <div className={styles.approachItem}>
@@ -959,7 +1047,7 @@ function MindsetTab({ selectedStaff }: { selectedStaff: any }): React.ReactEleme
             {/* 動機タイプ（V5判定結果） - 最重要項目 */}
             <div className={`${styles.approachItem} ${styles.highlightedItem}`}>
               <div className={styles.itemHeader}>
-                <h4>動機タイプ</h4>
+                <h4>動機タイプ（V5判定）</h4>
                 <div className={styles.priorityBadgeSmall}>
                   <span>🔥 最重要</span>
                 </div>
@@ -967,54 +1055,105 @@ function MindsetTab({ selectedStaff }: { selectedStaff: any }): React.ReactEleme
               {isLoadingMotivation ? (
                 <div className={styles.loadingIndicator}>読み込み中...</div>
               ) : motivationType ? (
-                <div className={styles.motivationTypeCard}>
-                  <div className={styles.motivationTypeHeader}>
-                    <span className={styles.motivationTypeLabel}>
-                      {motivationType.optionLabel || 'A'}
-                    </span>
-                    <span className={styles.motivationTypeName}>
-                      {motivationType.typeName}
-                    </span>
+                <>
+                  {/* 現在のタイプを大きく表示 */}
+                  <div className={styles.currentTypeHighlight}>
+                    <div className={styles.typeBadgeLarge} style={{ background: 'linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)' }}>
+                      <span className={styles.typeOptionLabel}>
+                        {motivationType.optionLabel || 'A'}
+                      </span>
+                      <span className={styles.typeNameLarge}>
+                        {motivationType.typeName}
+                      </span>
+                    </div>
                   </div>
-                  <div className={styles.hrActionBox}>
-                    <div className={styles.actionTitle}>🎯 人事アクション</div>
-                    <ul className={styles.actionList}>
+                  
+                  {/* タイプ別の詳細説明と対応 */}
+                  <div className={styles.typeSpecificActions}>
+                    <div className={styles.actionHeader}>
+                      <span className={styles.actionIcon}>💡</span>
+                      <span className={styles.actionTitle}>
+                        {motivationType.typeName}型の特徴と対応方法
+                      </span>
+                    </div>
+                    <div className={styles.actionContent}>
                       {motivationType.typeId === 'growth' && (
                         <>
-                          <li>新規プロジェクトへのアサイン推奨</li>
-                          <li>スキル向上研修の優先提供</li>
-                          <li>チャレンジ目標の設定</li>
+                          <div className={styles.actionDescription}>
+                            成長追求型の職員は、新しい挑戦と学習機会に強くモチベートされます。停滞は離職リスクに直結します。
+                          </div>
+                          <ul className={styles.actionList}>
+                            <li>🚀 新規プロジェクトへの積極的アサイン</li>
+                            <li>🚀 スキル向上研修の優先提供</li>
+                            <li>🚀 チャレンジングな目標設定</li>
+                            <li>🚀 キャリアアップの道筋明示</li>
+                          </ul>
+                          <div className={styles.warningBox}>
+                            ⚠️ 注意: ルーティン業務のみでは満足度が低下します
+                          </div>
                         </>
                       )}
                       {motivationType.typeId === 'recognition' && (
                         <>
-                          <li>定期的な成果フィードバック実施</li>
-                          <li>表彰制度への積極的推薦</li>
-                          <li>成果の可視化と共有</li>
+                          <div className={styles.actionDescription}>
+                            承認重視型の職員は、成果への評価と認知を強く求めます。フィードバック不足は深刻なモチベーション低下を招きます。
+                          </div>
+                          <ul className={styles.actionList}>
+                            <li>🏆 定期的な成果フィードバック（月1回以上）</li>
+                            <li>🏆 表彰制度への積極的推薦</li>
+                            <li>🏆 成果の可視化と全体共有</li>
+                            <li>🏆 上司からの直接的な評価伝達</li>
+                          </ul>
+                          <div className={styles.warningBox}>
+                            ⚠️ 注意: 成果を認められないと離職リスクが高まります
+                          </div>
                         </>
                       )}
                       {motivationType.typeId === 'stability' && (
                         <>
-                          <li>明確な業務手順とロールの提示</li>
-                          <li>段階的な変化管理</li>
-                          <li>長期的な雇用安定性の確保</li>
+                          <div className={styles.actionDescription}>
+                            安定志向型の職員は、予測可能な環境と明確な役割を好みます。急激な変化は強いストレスとなります。
+                          </div>
+                          <ul className={styles.actionList}>
+                            <li>🛡️ 明確な業務手順とロールの提示</li>
+                            <li>🛡️ 段階的で計画的な変化管理</li>
+                            <li>🛡️ 長期的な雇用安定性の保証</li>
+                            <li>🛡️ 予測可能なキャリアパスの提示</li>
+                          </ul>
+                          <div className={styles.warningBox}>
+                            ⚠️ 注意: 突然の組織変更や役割変更は避けるべきです
+                          </div>
                         </>
                       )}
                       {motivationType.typeId === 'teamwork' && (
                         <>
-                          <li>チームプロジェクトへの配置</li>
-                          <li>メンター・教育担当への任命</li>
-                          <li>部門間連携業務の推進</li>
+                          <div className={styles.actionDescription}>
+                            チーム協調型の職員は、仲間との協働と相互支援に喜びを感じます。孤立した環境では能力を発揮できません。
+                          </div>
+                          <ul className={styles.actionList}>
+                            <li>👥 チームプロジェクトへの優先配置</li>
+                            <li>👥 メンター・教育担当への任命</li>
+                            <li>👥 部門間連携業務の推進役</li>
+                            <li>👥 チームビルディング活動への参加</li>
+                          </ul>
+                          <div className={styles.warningBox}>
+                            ⚠️ 注意: 個人作業中心の配置は避けるべきです
+                          </div>
                         </>
                       )}
                       {!['growth', 'recognition', 'stability', 'teamwork'].includes(motivationType.typeId) && (
                         <>
-                          <li>個別面談による詳細確認</li>
-                          <li>カスタマイズされた育成計画</li>
-                          <li>定期的なモチベーション確認</li>
+                          <div className={styles.actionDescription}>
+                            このタイプの詳細な特性は個別確認が必要です。
+                          </div>
+                          <ul className={styles.actionList}>
+                            <li>📋 個別面談による詳細確認</li>
+                            <li>📋 カスタマイズされた育成計画</li>
+                            <li>📋 定期的なモチベーション確認</li>
+                          </ul>
                         </>
                       )}
-                    </ul>
+                    </div>
                   </div>
                   <div className={styles.motivationTypeDetails}>
                     <div className={styles.detailItem}>
@@ -1040,7 +1179,7 @@ function MindsetTab({ selectedStaff }: { selectedStaff: any }): React.ReactEleme
                       ))}
                     </div>
                   )}
-                </div>
+                </>
               ) : (
                 <div className={styles.noMotivationType}>
                   <p>V5面談による判定結果がありません</p>
