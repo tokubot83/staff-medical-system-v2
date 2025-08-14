@@ -347,7 +347,7 @@ export default function DataExportImport({
                 <Checkbox
                   id="import-headers"
                   checked={includeHeaders}
-                  onCheckedChange={setIncludeHeaders}
+                  onCheckedChange={(checked) => setIncludeHeaders(checked === true)}
                 />
                 <Label htmlFor="import-headers" className="text-sm">
                   ヘッダー行を含む
