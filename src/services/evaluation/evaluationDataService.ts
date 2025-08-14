@@ -221,6 +221,7 @@ class EvaluationDataService {
       
       // メタデータの更新
       evaluation.metadata = {
+        createdAt: evaluation.metadata?.createdAt || new Date(),
         ...evaluation.metadata,
         updatedAt: new Date(),
       };
