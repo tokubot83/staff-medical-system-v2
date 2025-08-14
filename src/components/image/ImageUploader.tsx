@@ -76,7 +76,7 @@ export function ImageUploader({
         fileName: file.name,
         fileType: file.type,
         fileSize: result.compressedBlob.size,
-        originalSize: result.originalSize,
+        originalSize: result.metadata.originalSize,
         compressionRatio: result.metadata.compressionRatio,
         dimensions: result.metadata.dimensions,
         tags: staffId ? [`staff:${staffId}`] : []
