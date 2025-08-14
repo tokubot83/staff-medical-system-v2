@@ -11,7 +11,7 @@ import { AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { MotivationTypeSection, getMotivationTypeQuestions } from './components/MotivationType';
 
-export default function SeniorNurseUnified15MinInterviewSheetV5() {
+export default function MidlevelNurseUnified15MinInterviewSheetV5() {
   const [selectedMotivationType, setSelectedMotivationType] = useState<string>('');
   const typeSpecificQuestions = getMotivationTypeQuestions(selectedMotivationType);
 
@@ -19,7 +19,7 @@ export default function SeniorNurseUnified15MinInterviewSheetV5() {
     <div className="max-w-4xl mx-auto p-6 space-y-6">
       <Card>
         <CardHeader className="bg-blue-50">
-          <CardTitle className="text-2xl">中堅看護師（2-5年目）定期面談シート V5（15分版）</CardTitle>
+          <CardTitle className="text-2xl">中堅看護師（4-10年目）定期面談シート V5（15分版）</CardTitle>
           <div className="text-sm text-gray-600 mt-2">
             <p>面談日時：{new Date().toLocaleDateString('ja-JP')} ＿＿:＿＿</p>
             <p>面談者：＿＿＿＿＿＿＿＿　対象者：＿＿＿＿＿＿＿＿</p>

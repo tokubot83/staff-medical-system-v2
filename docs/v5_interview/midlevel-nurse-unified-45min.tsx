@@ -12,7 +12,7 @@ import { AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { MotivationTypeSection, getMotivationTypeQuestions } from './components/MotivationType';
 
-export default function SeniorNurseUnified45MinInterviewSheetV5() {
+export default function MidlevelNurseUnified45MinInterviewSheetV5() {
   const [selectedMotivationType, setSelectedMotivationType] = useState<string>('');
   const typeSpecificQuestions = getMotivationTypeQuestions(selectedMotivationType);
 
