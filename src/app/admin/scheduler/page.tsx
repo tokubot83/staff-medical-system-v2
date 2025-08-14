@@ -39,8 +39,8 @@ export default function SchedulerPage() {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    type: 'backup' as const,
-    scheduleType: 'daily' as const,
+    type: 'backup' as 'backup' | 'report' | 'sync' | 'cleanup' | 'notification' | 'custom',
+    scheduleType: 'daily' as 'daily' | 'weekly' | 'monthly',
     time: '00:00',
     dayOfWeek: 1,
     dayOfMonth: 1,
@@ -111,8 +111,8 @@ export default function SchedulerPage() {
     setFormData({
       name: '',
       description: '',
-      type: 'backup',
-      scheduleType: 'daily',
+      type: 'backup' as 'backup' | 'report' | 'sync' | 'cleanup' | 'notification' | 'custom',
+      scheduleType: 'daily' as 'daily' | 'weekly' | 'monthly',
       time: '00:00',
       dayOfWeek: 1,
       dayOfMonth: 1,
