@@ -44,6 +44,8 @@ function InterviewSheetsViewerContent() {
         setSelectedCategory('主任看護師');
       } else if (roleParam === 'chief-nurse') {
         setSelectedCategory('病棟師長');
+      } else if (roleParam === 'medical-affairs') {
+        setSelectedCategory('医事課職員');
       } else if (roleParam === 'probation-staff') {
         setSelectedCategory('試用期間職員');
       } else if (roleParam === 'general-staff') {
@@ -191,6 +193,19 @@ function InterviewSheetsViewerContent() {
             '15分': '/interview-sheets/veteran-assistant-nurse/15',
             '30分': '/interview-sheets/veteran-assistant-nurse/30',
             '45分': '/interview-sheets/veteran-assistant-nurse/45'
+          }
+        }
+      ]
+    },
+    {
+      category: '医事課職員',
+      sheets: [
+        { 
+          label: '医事課職員', 
+          paths: {
+            '15分': '/interview-sheets/v5/medical-affairs-staff-15min',
+            '30分': '/interview-sheets/v5/medical-affairs-staff-30min',
+            '45分': '/interview-sheets/v5/medical-affairs-staff-45min'
           }
         }
       ]

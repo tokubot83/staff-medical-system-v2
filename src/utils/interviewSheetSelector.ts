@@ -206,12 +206,16 @@ export function selectInterviewSheet(
   experienceCategory: ExperienceCategory,
   preferredDuration: number = 30
 ): InterviewSheetInfo {
-  // v5シートに医事課職員がある場合はv5を使用、それ以外はv4を使用
-  const sheets = v5InterviewSheets[experienceCategory] || v4InterviewSheets[experienceCategory];
+  // 該当する経験カテゴリのシートを取得
+  const sheets = v5InterviewSheets[experienceCategory];
   
   if (!sheets || sheets.length === 0) {
-    // フォールバック: junior（一般看護師）の30分版を使用
-    return v4InterviewSheets.junior[1];
+    // 医事課職員の場合は医事課の30分版をデフォルトに
+    if (experienceCategory === 'medical_affairs') {
+      return v5InterviewSheets.medical_affairs[1]; // 30分版
+    }
+    // その他の場合は一般看護師の30分版をフォールバック
+    return v5InterviewSheets.junior[1];
   }
   
   // 希望する時間の面談シートを探す
@@ -233,5 +237,5 @@ export function selectInterviewSheet(
  * @returns 全ての面談シート情報
  */
 export function getAllInterviewSheets(): InterviewSheetInfo[] {
-  return [...Object.values(v4InterviewSheets).flat(), ...Object.values(v5InterviewSheets).flat()];
+  return Object.values(v5InterviewSheets).flat();
 }
