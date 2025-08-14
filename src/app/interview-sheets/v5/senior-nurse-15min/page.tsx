@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import SeniorNurseUnified15MinInterviewSheetV5 from '@/docs/v5_interview/senior-nurse-unified-15min';
+import MidlevelNurseUnified15MinInterviewSheetV5 from '@/docs/v5_interview/midlevel-nurse-unified-15min';
 
 export default function SeniorNurse15MinPage() {
-  return <SeniorNurseUnified15MinInterviewSheetV5 />;
+  return <MidlevelNurseUnified15MinInterviewSheetV5 />;
 }
