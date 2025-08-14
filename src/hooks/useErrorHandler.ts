@@ -9,7 +9,6 @@ import { useState, useCallback, useEffect } from 'react';
 import { AppError, ErrorFactory } from '@/lib/error/AppError';
 import { errorLogger } from '@/lib/error/ErrorLogger';
 import { getErrorMessage } from '@/lib/error/ErrorMessages';
-import { toast } from 'sonner'; // Toast通知用（インストールが必要な場合は別のUIライブラリを使用）
 
 /**
  * エラーハンドリングフックのオプション
