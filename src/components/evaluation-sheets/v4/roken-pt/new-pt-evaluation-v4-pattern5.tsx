@@ -168,7 +168,7 @@ export default function NewPTEvaluationV4Pattern5() {
                           {['S', 'A', 'B', 'C', 'D'].map(grade => (
                             <div key={grade} className="flex items-center space-x-2">
                               <RadioGroupItem value={grade} id={`superior-planning-${grade}`} />
-                              <Label htmlFor={`superior-planning-${grade}`}>{gender}</Label>
+                              <Label htmlFor={`superior-planning-${grade}`}>{grade}</Label>
                             </div>
                           ))}
                         </RadioGroup>
