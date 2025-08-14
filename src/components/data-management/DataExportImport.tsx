@@ -275,7 +275,7 @@ export default function DataExportImport({
                     <Checkbox
                       id="headers"
                       checked={includeHeaders}
-                      onCheckedChange={setIncludeHeaders}
+                      onCheckedChange={(checked) => setIncludeHeaders(checked as boolean)}
                     />
                     <Label htmlFor="headers" className="text-sm">
                       ヘッダー行を含む
