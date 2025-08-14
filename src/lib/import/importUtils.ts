@@ -65,7 +65,7 @@ export const importFromCSV = async <T = any>(
     Papa.parse(file, {
       header: hasHeader,
       skipEmptyLines: skipEmptyRows,
-      trimHeaders: trimWhitespace,
+      transformHeader: trimWhitespace ? (header: string) => header.trim() : undefined,
       transform: trimWhitespace ? (value: string) => value.trim() : undefined,
       complete: (results) => {
         const { data, errors: parseErrors } = results;
