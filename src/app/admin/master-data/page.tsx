@@ -220,7 +220,7 @@ export default function MasterDataPage() {
                         <li>システム内の開発メモ、TODO、実装指示書を集約表示しています</li>
                         <li>ファイルパスをクリックすると、該当ファイルの場所が確認できます</li>
                         <li>優先度「Critical」の項目は早急な対応が必要です</li>
-                        <li>最新の実装指示書: /docs/implementation-resume-guide-v3-20250113.md</li>
+                        <li>最新の実装指示書: /docs/implementation-resume-guide-v3-20250813.md</li>
                       </ul>
                     </div>
                   </div>
