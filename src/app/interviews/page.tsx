@@ -122,13 +122,15 @@ export default function InterviewsPage() {
       return [
         { value: 'nurse', label: '看護師（新人）', description: '1年目の看護師' },
         { value: 'assistant-nurse', label: '准看護師（新人）', description: '1年目の准看護師' },
-        { value: 'nursing-aide', label: '看護補助者（新人）', description: '1年目の看護補助者' }
+        { value: 'nursing-aide', label: '看護補助者（新人）', description: '1年目の看護補助者' },
+        { value: 'medical-affairs', label: '医事課職員（新人）', description: '1年目の医事課職員' }
       ]
     } else if (type === 'regular-annual') {
       return [
         { value: 'nurse', label: '看護師', description: '2年目以降の看護師' },
         { value: 'assistant-nurse', label: '准看護師', description: '2年目以降の准看護師' },
-        { value: 'nursing-aide', label: '看護補助者', description: '2年目以降の看護補助者' }
+        { value: 'nursing-aide', label: '看護補助者', description: '2年目以降の看護補助者' },
+        { value: 'medical-affairs', label: '医事課職員', description: '2年目以降の医事課職員' }
       ]
     } else if (type === 'management') {
       return [
@@ -949,6 +951,10 @@ function GuideTab({ onInterviewTypeClick }: GuideTabProps): React.ReactElement {
             <li>一般准看護師（2-3年目）: 15分/30分/45分</li>
             <li>中堅准看護師（4-10年目）: 15分/30分/45分</li>
             <li>ベテラン准看護師（11年以上）: 15分/30分/45分</li>
+          </ul>
+          <h4>医事課職員用面談シート（v5版）</h4>
+          <ul>
+            <li>医事課職員: 15分/30分/45分</li>
           </ul>
           <div className={styles.sheetViewButton}>
             <button 
