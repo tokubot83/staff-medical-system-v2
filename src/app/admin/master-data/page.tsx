@@ -6,7 +6,7 @@ import DevelopmentMemoTab from '@/components/admin/DevelopmentMemoTab';
 import { masterSchemas } from '@/config/masterSchemas';
 import { 
   Users, Building2, GraduationCap, ClipboardCheck, 
-  Database, ChevronRight, Shield, Settings, BookOpen
+  Database, ChevronRight, Shield, Settings, BookOpen, Image
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -47,11 +47,18 @@ const masterTypes = [
     description: '開発メモ・実装指示の集約',
     color: 'indigo'
   },
+  {
+    key: 'imageManagement',
+    label: '画像管理',
+    icon: Image,
+    description: '職員画像・ファイル管理',
+    color: 'pink'
+  },
 ];
 
 export default function MasterDataPage() {
   const [selectedMaster, setSelectedMaster] = useState<string>('staff');
-  const currentSchema = selectedMaster !== 'developmentMemo' ? masterSchemas[selectedMaster] : null;
+  const currentSchema = selectedMaster !== 'developmentMemo' && selectedMaster !== 'imageManagement' ? masterSchemas[selectedMaster] : null;
 
   const getColorClasses = (color: string) => {
     const colors: Record<string, string> = {
@@ -60,6 +67,7 @@ export default function MasterDataPage() {
       purple: 'bg-purple-50 hover:bg-purple-100 border-purple-200 text-purple-700',
       orange: 'bg-orange-50 hover:bg-orange-100 border-orange-200 text-orange-700',
       indigo: 'bg-indigo-50 hover:bg-indigo-100 border-indigo-200 text-indigo-700',
+      pink: 'bg-pink-50 hover:bg-pink-100 border-pink-200 text-pink-700',
     };
     return colors[color] || colors.blue;
   };
@@ -71,6 +79,7 @@ export default function MasterDataPage() {
       purple: 'text-purple-600',
       orange: 'text-orange-600',
       indigo: 'text-indigo-600',
+      pink: 'text-pink-600',
     };
     return colors[color] || colors.blue;
   };
@@ -194,6 +203,23 @@ export default function MasterDataPage() {
 
                 {selectedMaster === 'developmentMemo' ? (
                   <DevelopmentMemoTab />
+                ) : selectedMaster === 'imageManagement' ? (
+                  <div className="text-center py-8">
+                    <div className="max-w-md mx-auto">
+                      <Image className="h-16 w-16 mx-auto text-gray-400 mb-4" />
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">画像管理</h3>
+                      <p className="text-gray-600 mb-6">
+                        職員の画像やファイルを管理します。アップロード、削除、ストレージ監視が可能です。
+                      </p>
+                      <button
+                        onClick={() => window.location.href = '/admin/image-management'}
+                        className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
+                      >
+                        <Image className="h-5 w-5 mr-2" />
+                        画像管理ページを開く
+                      </button>
+                    </div>
+                  </div>
                 ) : currentSchema ? (
                   <GenericMasterTable
                     masterType={selectedMaster}
