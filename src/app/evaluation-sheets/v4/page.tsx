@@ -179,8 +179,8 @@ export default function EvaluationSheetsV4Page() {
           title: '准看護師',
           icon: '💉',
           sheets: [
-            { label: '新人准看護師（1年目）', path: '', implemented: false },
-            { label: '一般准看護師（2-3年目）', path: '', implemented: false },
+            { label: '新人准看護師（1年目）', path: '/evaluation-sheets/v4/outpatient-assistant-nurse/new-outpatient-assistant-nurse-evaluation-v4-pattern5', implemented: true },
+            { label: '一般准看護師（2-3年目）', path: '/evaluation-sheets/v4/outpatient-assistant-nurse/junior-outpatient-assistant-nurse-evaluation-v4-pattern5', implemented: true },
             { label: '中堅准看護師（4-10年目）', path: '', implemented: false },
             { label: 'ベテラン准看護師（11年以上）', path: '', implemented: false },
           ]
