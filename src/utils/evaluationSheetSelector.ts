@@ -1,17 +1,20 @@
 import { ExperienceCategory } from './experienceUtils';
 
+// 評価シート対象の経験カテゴリ（医事課を除く）
+export type EvaluationExperienceCategory = Exclude<ExperienceCategory, 'medical_affairs'>;
+
 export interface EvaluationSheetInfo {
   component: string;
   path: string;
   title: string;
-  experienceCategory: ExperienceCategory;
+  experienceCategory: EvaluationExperienceCategory;
   facilityType: 'acute' | 'chronic' | 'roken' | 'grouphome';
   jobType: 'nurse' | 'assistant-nurse' | 'nursing-aide' | 'care-worker';
   pattern?: string;
 }
 
 // 急性期病棟看護師のv4評価シートマッピング
-export const acuteNurseEvaluationSheets: Record<ExperienceCategory, EvaluationSheetInfo> = {
+export const acuteNurseEvaluationSheets: Record<EvaluationExperienceCategory, EvaluationSheetInfo> = {
   new: {
     component: 'NewNurseEvaluationV4Pattern5',
     path: '/evaluation-sheets/v4/acute-nurse/new-nurse-evaluation-v4-pattern5',
@@ -69,7 +72,7 @@ export const acuteNurseEvaluationSheets: Record<ExperienceCategory, EvaluationSh
 };
 
 // 急性期病棟看護補助者のv4評価シートマッピング
-export const acuteNursingAideEvaluationSheets: Record<ExperienceCategory, EvaluationSheetInfo> = {
+export const acuteNursingAideEvaluationSheets: Record<EvaluationExperienceCategory, EvaluationSheetInfo> = {
   new: {
     component: 'NewNursingAideEvaluationV4Pattern5',
     path: '/evaluation-sheets/v4/acute-nursing-aide/new-nursing-aide-evaluation-v4-pattern5',
@@ -134,7 +137,7 @@ export const acuteNursingAideEvaluationSheets: Record<ExperienceCategory, Evalua
  * @returns 評価シート情報
  */
 export function selectEvaluationSheet(
-  experienceCategory: ExperienceCategory,
+  experienceCategory: EvaluationExperienceCategory,
   facilityType: 'acute' | 'chronic' | 'roken' | 'grouphome' = 'acute',
   jobType: 'nurse' | 'assistant-nurse' | 'nursing-aide' | 'care-worker' = 'nurse'
 ): EvaluationSheetInfo | null {
