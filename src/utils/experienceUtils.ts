@@ -1,6 +1,6 @@
 // 経験年数に基づく職員分類と制御のユーティリティ関数
 
-export type ExperienceCategory = 'new' | 'junior' | 'midlevel' | 'veteran' | 'chief' | 'manager';
+export type ExperienceCategory = 'new' | 'junior' | 'midlevel' | 'veteran' | 'chief' | 'manager' | 'medical_affairs';
 export type ExperienceLevel = ExperienceCategory; // 互換性のため
 
 export interface ExperienceCategoryInfo {
@@ -55,6 +55,16 @@ export const MANAGEMENT_CATEGORIES: ExperienceCategoryInfo[] = [
     label: '師長',
     minYears: 10,
     description: '看護師長・管理職'
+  }
+];
+
+// 事務職員の分類
+export const ADMINISTRATIVE_CATEGORIES: ExperienceCategoryInfo[] = [
+  {
+    level: 'medical_affairs',
+    label: '医事課職員',
+    minYears: 0,
+    description: '医事課・事務職員'
   }
 ];
 
@@ -124,7 +134,7 @@ export function getExperienceCategory(
  * @returns カテゴリのラベル
  */
 export function getExperienceCategoryLabel(category: ExperienceCategory): string {
-  const allCategories = [...EXPERIENCE_CATEGORIES, ...MANAGEMENT_CATEGORIES];
+  const allCategories = [...EXPERIENCE_CATEGORIES, ...MANAGEMENT_CATEGORIES, ...ADMINISTRATIVE_CATEGORIES];
   const categoryInfo = allCategories.find(c => c.level === category);
   return categoryInfo?.label || '一般';
 }
@@ -148,7 +158,8 @@ export function getVisibleItemsByLevel(level: ExperienceCategory): string[] {
     midlevel: [...baseItems, 'leadership', 'mentoring', 'specialized_skills'],
     veteran: [...baseItems, 'knowledge_transfer', 'organizational_contribution', 'strategic_thinking'],
     chief: [...baseItems, 'team_management', 'staff_development', 'operational_improvement'],
-    manager: [...baseItems, 'strategic_planning', 'budget_management', 'organizational_development']
+    manager: [...baseItems, 'strategic_planning', 'budget_management', 'organizational_development'],
+    medical_affairs: [...baseItems, 'billing_skills', 'system_operation', 'patient_service', 'compliance']
   };
 
   return itemsByLevel[level] || baseItems;
@@ -196,6 +207,12 @@ export function getEvaluationCriteriaByLevel(level: ExperienceCategory): Record<
       organizational_performance: 0.3,
       talent_management: 0.2,
       innovation: 0.15
+    },
+    medical_affairs: {
+      billing_accuracy: 0.3,
+      system_skills: 0.25,
+      patient_service: 0.25,
+      compliance: 0.2
     }
   };
 
@@ -220,7 +237,7 @@ export function canEditByExperience(
   }
 
   // 経験レベルの階層順
-  const levelHierarchy: ExperienceCategory[] = ['new', 'junior', 'midlevel', 'veteran', 'chief', 'manager'];
+  const levelHierarchy: ExperienceCategory[] = ['new', 'junior', 'midlevel', 'veteran', 'chief', 'manager', 'medical_affairs'];
   
   const userIndex = levelHierarchy.indexOf(userLevel);
   const targetIndex = levelHierarchy.indexOf(targetLevel);
