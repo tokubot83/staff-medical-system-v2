@@ -1051,6 +1051,302 @@
   border-color: #2563eb;
 }
 
+/* 活用ガイドセクション */
+.usageGuide {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border: 1px solid #7dd3fc;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.guideHeader {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.guideHeader h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #0c4a6e;
+  margin-bottom: 8px;
+}
+
+.guideHeader p {
+  color: #075985;
+  font-size: 14px;
+}
+
+.guideGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.guideCard {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  position: relative;
+  border: 1px solid #e0f2fe;
+}
+
+.guidePriority {
+  position: absolute;
+  top: -10px;
+  right: 16px;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.guideCard h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 12px;
+  margin-top: 8px;
+}
+
+.guidePurpose {
+  font-size: 13px;
+  color: #4b5563;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.guidePurpose strong {
+  color: #1f2937;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.guideActions {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.guideActions li {
+  font-size: 13px;
+  color: #6b7280;
+  padding-left: 20px;
+  position: relative;
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+
+.guideActions li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: #3b82f6;
+  font-weight: 600;
+}
+
+/* 優先度インジケーター */
+.priorityBadge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+}
+
+.priorityIcon {
+  font-size: 14px;
+}
+
+.priorityText {
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sectionCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.sectionCardHeader h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.priorityIndicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #6b7280;
+  background: #f3f4f6;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.priorityDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+/* HR活用目的ボックス */
+.hrPurpose {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 1px solid #fbbf24;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.purposeIcon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.purposeContent {
+  flex: 1;
+  font-size: 13px;
+  color: #78350f;
+  line-height: 1.5;
+}
+
+.purposeContent strong {
+  color: #451a03;
+  margin-right: 8px;
+}
+
+/* HRインサイト */
+.hrInsight {
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #14532d;
+}
+
+.insightIcon {
+  font-size: 14px;
+}
+
+.insightText {
+  line-height: 1.4;
+}
+
+/* 動機タイプ強調表示 */
+.highlightedItem {
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  border: 2px solid #fca5a5;
+  border-radius: 8px;
+  padding: 16px;
+  position: relative;
+}
+
+.itemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.priorityBadgeSmall {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* HRアクションボックス */
+.hrActionBox {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 12px;
+  margin-top: 12px;
+}
+
+.actionTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.actionList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.actionList li {
+  font-size: 12px;
+  color: #4b5563;
+  padding-left: 16px;
+  position: relative;
+  margin-bottom: 4px;
+  line-height: 1.4;
+}
+
+.actionList li::before {
+  content: "•";
+  position: absolute;
+  left: 4px;
+  color: #3b82f6;
+  font-weight: bold;
+}
+
+/* アクションボタンガイド */
+.actionButtonGuide {
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  color: #1e40af;
+  border: 1px solid #93c5fd;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.actionButtonGuide:hover {
+  background: linear-gradient(135deg, #bfdbfe 0%, #93c5fd 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+}
+
 /* 管理コンテンツ */
 .managementContent {
   display: flex;

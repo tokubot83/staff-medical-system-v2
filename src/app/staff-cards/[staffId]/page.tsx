@@ -666,6 +666,7 @@ function WellbeingTab({ selectedStaff }: { selectedStaff: any }): React.ReactEle
 function MindsetTab({ selectedStaff }: { selectedStaff: any }): React.ReactElement {
   const [motivationType, setMotivationType] = useState<any>(null)
   const [isLoadingMotivation, setIsLoadingMotivation] = useState(false)
+  const [showGuide, setShowGuide] = useState(false)
   
   // 動機タイプデータの取得
   useEffect(() => {
@@ -775,13 +776,83 @@ function MindsetTab({ selectedStaff }: { selectedStaff: any }): React.ReactEleme
       <div className={styles.sectionHeader}>
         <h2>🧠 マインド・志向性</h2>
         <div className={styles.sectionActions}>
+          <button 
+            onClick={() => setShowGuide(!showGuide)}
+            className={styles.actionButtonGuide}
+          >
+            {showGuide ? '活用ガイドを閉じる' : '📖 活用ガイド'}
+          </button>
           <button className={styles.actionButton}>編集</button>
           <button className={styles.actionButtonSecondary}>面談で確認</button>
         </div>
       </div>
 
+      {/* 人事部向け活用ガイド */}
+      {showGuide && (
+        <div className={styles.usageGuide}>
+          <div className={styles.guideHeader}>
+            <h3>🎯 人事部向け活用ガイド</h3>
+            <p>各項目の重要度と具体的な活用方法</p>
+          </div>
+          <div className={styles.guideGrid}>
+            <div className={styles.guideCard}>
+              <div className={styles.guidePriority}>優先度 1</div>
+              <h4>動機タイプ（V5判定）</h4>
+              <p className={styles.guidePurpose}>
+                <strong>把握目的:</strong> モチベーション源の科学的理解
+              </p>
+              <ul className={styles.guideActions}>
+                <li>個別の動機付け戦略立案</li>
+                <li>適切な業務配置の決定</li>
+                <li>離職リスクの早期発見</li>
+              </ul>
+            </div>
+            <div className={styles.guideCard}>
+              <div className={styles.guidePriority}>優先度 2</div>
+              <h4>キャリア志向</h4>
+              <p className={styles.guidePurpose}>
+                <strong>把握目的:</strong> 中長期的な人材育成計画
+              </p>
+              <ul className={styles.guideActions}>
+                <li>後継者育成計画の策定</li>
+                <li>専門性強化の投資判断</li>
+                <li>昇進・異動の適性判断</li>
+              </ul>
+            </div>
+            <div className={styles.guideCard}>
+              <div className={styles.guidePriority}>優先度 3</div>
+              <h4>組織貢献意欲</h4>
+              <p className={styles.guidePurpose}>
+                <strong>把握目的:</strong> 組織力強化のキーパーソン特定
+              </p>
+              <ul className={styles.guideActions}>
+                <li>リーダー候補の選定</li>
+                <li>教育担当者の適任者選出</li>
+                <li>プロジェクトメンバー選定</li>
+              </ul>
+            </div>
+            <div className={styles.guideCard}>
+              <div className={styles.guidePriority}>優先度 4</div>
+              <h4>モチベーション源</h4>
+              <p className={styles.guidePurpose}>
+                <strong>把握目的:</strong> エンゲージメント向上策の立案
+              </p>
+              <ul className={styles.guideActions}>
+                <li>報酬制度の個別最適化</li>
+                <li>表彰プログラムの設計</li>
+                <li>業務環境の改善</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className={styles.mindsetOverview}>
         <div className={styles.mindsetSummaryCard}>
+          <div className={styles.priorityBadge}>
+            <span className={styles.priorityIcon}>⭐</span>
+            <span className={styles.priorityText}>優先度 2</span>
+          </div>
           <div className={styles.mindsetType}>
             <div className={styles.typeIcon}>
               {mindset.careerOrientation.type === 'management' ? '👔' :
@@ -791,6 +862,14 @@ function MindsetTab({ selectedStaff }: { selectedStaff: any }): React.ReactEleme
             <div className={styles.typeInfo}>
               <h3>{careerTypeLabels[mindset.careerOrientation.type]}</h3>
               <p>{mindset.careerOrientation.vision}</p>
+              <div className={styles.hrInsight}>
+                <span className={styles.insightIcon}>💡</span>
+                <span className={styles.insightText}>
+                  {mindset.careerOrientation.type === 'management' ? '管理職候補として育成計画策定が必要' :
+                   mindset.careerOrientation.type === 'specialist' ? '専門性向上の研修投資を検討' :
+                   mindset.careerOrientation.type === 'frontline' ? '現場スキル向上支援を重視' : '多様なキャリアパスを提示'}
+                </span>
+              </div>
             </div>
           </div>
           <div className={styles.lastUpdateInfo}>
@@ -802,7 +881,20 @@ function MindsetTab({ selectedStaff }: { selectedStaff: any }): React.ReactEleme
 
       <div className={styles.mindsetSections}>
         <div className={styles.sectionCard}>
-          <h3>キャリア志向</h3>
+          <div className={styles.sectionCardHeader}>
+            <h3>キャリア志向</h3>
+            <div className={styles.priorityIndicator}>
+              <span className={styles.priorityDot} style={{ backgroundColor: '#ef4444' }}></span>
+              <span>優先度 2</span>
+            </div>
+          </div>
+          <div className={styles.hrPurpose}>
+            <div className={styles.purposeIcon}>🎯</div>
+            <div className={styles.purposeContent}>
+              <strong>人事部の把握目的:</strong>
+              <span>中長期的な人材育成計画の策定、後継者育成、適材適所の配置</span>
+            </div>
+          </div>
           <div className={styles.careerInfo}>
             <div className={styles.infoItem}>
               <h4>キャリアビジョン</h4>
@@ -828,7 +920,20 @@ function MindsetTab({ selectedStaff }: { selectedStaff: any }): React.ReactEleme
         </div>
 
         <div className={styles.sectionCard}>
-          <h3>仕事への向き合い方</h3>
+          <div className={styles.sectionCardHeader}>
+            <h3>仕事への向き合い方</h3>
+            <div className={styles.priorityIndicator}>
+              <span className={styles.priorityDot} style={{ backgroundColor: '#f59e0b' }}></span>
+              <span>優先度 4</span>
+            </div>
+          </div>
+          <div className={styles.hrPurpose}>
+            <div className={styles.purposeIcon}>💡</div>
+            <div className={styles.purposeContent}>
+              <strong>人事部の把握目的:</strong>
+              <span>エンゲージメント向上策の立案、個別最適な動機付け方法の選定</span>
+            </div>
+          </div>
           <div className={styles.workApproachGrid}>
             <div className={styles.approachItem}>
               <h4>ワークスタイル</h4>
@@ -851,9 +956,14 @@ function MindsetTab({ selectedStaff }: { selectedStaff: any }): React.ReactEleme
               </div>
             </div>
             
-            {/* 動機タイプ（V5判定結果） */}
-            <div className={styles.approachItem}>
-              <h4>動機タイプ</h4>
+            {/* 動機タイプ（V5判定結果） - 最重要項目 */}
+            <div className={`${styles.approachItem} ${styles.highlightedItem}`}>
+              <div className={styles.itemHeader}>
+                <h4>動機タイプ</h4>
+                <div className={styles.priorityBadgeSmall}>
+                  <span>🔥 最重要</span>
+                </div>
+              </div>
               {isLoadingMotivation ? (
                 <div className={styles.loadingIndicator}>読み込み中...</div>
               ) : motivationType ? (
@@ -865,6 +975,46 @@ function MindsetTab({ selectedStaff }: { selectedStaff: any }): React.ReactEleme
                     <span className={styles.motivationTypeName}>
                       {motivationType.typeName}
                     </span>
+                  </div>
+                  <div className={styles.hrActionBox}>
+                    <div className={styles.actionTitle}>🎯 人事アクション</div>
+                    <ul className={styles.actionList}>
+                      {motivationType.typeId === 'growth' && (
+                        <>
+                          <li>新規プロジェクトへのアサイン推奨</li>
+                          <li>スキル向上研修の優先提供</li>
+                          <li>チャレンジ目標の設定</li>
+                        </>
+                      )}
+                      {motivationType.typeId === 'recognition' && (
+                        <>
+                          <li>定期的な成果フィードバック実施</li>
+                          <li>表彰制度への積極的推薦</li>
+                          <li>成果の可視化と共有</li>
+                        </>
+                      )}
+                      {motivationType.typeId === 'stability' && (
+                        <>
+                          <li>明確な業務手順とロールの提示</li>
+                          <li>段階的な変化管理</li>
+                          <li>長期的な雇用安定性の確保</li>
+                        </>
+                      )}
+                      {motivationType.typeId === 'teamwork' && (
+                        <>
+                          <li>チームプロジェクトへの配置</li>
+                          <li>メンター・教育担当への任命</li>
+                          <li>部門間連携業務の推進</li>
+                        </>
+                      )}
+                      {!['growth', 'recognition', 'stability', 'teamwork'].includes(motivationType.typeId) && (
+                        <>
+                          <li>個別面談による詳細確認</li>
+                          <li>カスタマイズされた育成計画</li>
+                          <li>定期的なモチベーション確認</li>
+                        </>
+                      )}
+                    </ul>
                   </div>
                   <div className={styles.motivationTypeDetails}>
                     <div className={styles.detailItem}>
@@ -948,7 +1098,20 @@ function MindsetTab({ selectedStaff }: { selectedStaff: any }): React.ReactEleme
         </div>
 
         <div className={styles.sectionCard}>
-          <h3>働き方の希望</h3>
+          <div className={styles.sectionCardHeader}>
+            <h3>働き方の希望</h3>
+            <div className={styles.priorityIndicator}>
+              <span className={styles.priorityDot} style={{ backgroundColor: '#10b981' }}></span>
+              <span>優先度 5</span>
+            </div>
+          </div>
+          <div className={styles.hrPurpose}>
+            <div className={styles.purposeIcon}>⚙️</div>
+            <div className={styles.purposeContent}>
+              <strong>人事部の把握目的:</strong>
+              <span>実務的な配置計画、シフト編成、異動可能性の判断</span>
+            </div>
+          </div>
           <div className={styles.preferencesGrid}>
             <div className={styles.preferenceItem}>
               <span className={styles.preferenceLabel}>勤務形態</span>
@@ -992,7 +1155,20 @@ function MindsetTab({ selectedStaff }: { selectedStaff: any }): React.ReactEleme
         </div>
 
         <div className={styles.sectionCard}>
-          <h3>組織への貢献意欲</h3>
+          <div className={styles.sectionCardHeader}>
+            <h3>組織への貢献意欲</h3>
+            <div className={styles.priorityIndicator}>
+              <span className={styles.priorityDot} style={{ backgroundColor: '#f59e0b' }}></span>
+              <span>優先度 3</span>
+            </div>
+          </div>
+          <div className={styles.hrPurpose}>
+            <div className={styles.purposeIcon}>🚀</div>
+            <div className={styles.purposeContent}>
+              <strong>人事部の把握目的:</strong>
+              <span>組織力強化のキーパーソン特定、リーダー候補選定、教育体制構築</span>
+            </div>
+          </div>
           <div className={styles.commitmentGrid}>
             <div className={styles.commitmentItem}>
               <h4>メンター・指導役</h4>
