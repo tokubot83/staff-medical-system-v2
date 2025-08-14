@@ -88,13 +88,8 @@ class StaffDataService {
         return response.data;
       }
       
-      // フォールバック: 既存のstaffDatabaseから取得（移行期間用）
-      const fallbackData = await this.getFallbackStaffData(staffId);
-      if (fallbackData) {
-        // LocalStorageに保存して次回から使用
-        await this.saveStaff(fallbackData);
-        return fallbackData;
-      }
+      // フォールバック処理は将来的に実装
+      // 現時点ではstaffDatabaseファイルが存在しないため、スキップ
       
       return null;
     } catch (error) {
@@ -121,8 +116,8 @@ class StaffDataService {
         return staffList;
       }
       
-      // フォールバック処理
-      return await this.getFallbackAllStaffData();
+      // フォールバック処理は将来的に実装
+      return [];
     } catch (error) {
       console.error('Error fetching all staff:', error);
       return [];
@@ -136,6 +131,7 @@ class StaffDataService {
     try {
       // メタデータの更新
       staff.metadata = {
+        createdAt: staff.metadata?.createdAt || new Date(),
         ...staff.metadata,
         updatedAt: new Date(),
       };
@@ -332,62 +328,6 @@ class StaffDataService {
     }
   }
 
-  /**
-   * フォールバック: 既存のstaffDatabaseから取得
-   */
-  private async getFallbackStaffData(staffId: string): Promise<Staff | null> {
-    try {
-      // 既存のstaffDatabaseをインポート（移行期間用）
-      const { default: staffDatabase } = await import('@/data/staffDatabase');
-      const staffData = staffDatabase[staffId];
-      
-      if (staffData) {
-        return this.convertLegacyStaffData(staffData);
-      }
-      
-      return null;
-    } catch {
-      return null;
-    }
-  }
-
-  private async getFallbackAllStaffData(): Promise<Staff[]> {
-    try {
-      const { default: staffDatabase } = await import('@/data/staffDatabase');
-      return Object.values(staffDatabase).map(staff => 
-        this.convertLegacyStaffData(staff)
-      );
-    } catch {
-      return [];
-    }
-  }
-
-  private convertLegacyStaffData(legacyData: any): Staff {
-    // 既存のデータ形式を新しい形式に変換
-    return {
-      id: legacyData.id || '',
-      name: legacyData.name || '',
-      department: legacyData.department || '',
-      position: legacyData.position || '',
-      employeeNumber: legacyData.employeeNumber || '',
-      email: legacyData.email,
-      phone: legacyData.phone,
-      joinDate: legacyData.joinDate || '',
-      birthDate: legacyData.birthDate,
-      qualifications: legacyData.qualifications || [],
-      specialties: legacyData.specialties || [],
-      evaluationHistory: legacyData.evaluationHistory || [],
-      interviewHistory: legacyData.interviewHistory || [],
-      trainingHistory: legacyData.trainingHistory || [],
-      motivationType: legacyData.motivationType,
-      riskLevel: legacyData.riskLevel,
-      wellbeingScore: legacyData.wellbeingScore,
-      metadata: {
-        createdAt: new Date(),
-        updatedAt: new Date()
-      }
-    };
-  }
 }
 
 // シングルトンインスタンスをエクスポート

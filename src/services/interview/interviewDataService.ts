@@ -149,6 +149,7 @@ class InterviewDataService {
       
       // メタデータの更新
       interview.metadata = {
+        createdAt: interview.metadata?.createdAt || new Date(),
         ...interview.metadata,
         updatedAt: new Date(),
       };

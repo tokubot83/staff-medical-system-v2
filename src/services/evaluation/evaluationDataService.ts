@@ -280,6 +280,7 @@ class EvaluationDataService {
       
       evaluation.status = 'submitted';
       evaluation.metadata = {
+        createdAt: evaluation.metadata?.createdAt || new Date(),
         ...evaluation.metadata,
         updatedAt: new Date()
       };
@@ -301,6 +302,7 @@ class EvaluationDataService {
       
       evaluation.status = 'approved';
       evaluation.metadata = {
+        createdAt: evaluation.metadata?.createdAt || new Date(),
         ...evaluation.metadata,
         approvedBy: approverId,
         approvedAt: new Date(),
@@ -324,6 +326,7 @@ class EvaluationDataService {
       
       evaluation.status = 'finalized';
       evaluation.metadata = {
+        createdAt: evaluation.metadata?.createdAt || new Date(),
         ...evaluation.metadata,
         updatedAt: new Date()
       };
