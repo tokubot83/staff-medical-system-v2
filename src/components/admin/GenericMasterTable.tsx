@@ -5,7 +5,7 @@ import { MasterRecord, FieldDefinition, ImportResult } from '@/types/masterData'
 import { masterDataService } from '@/services/masterDataService';
 import { 
   Search, Plus, Edit2, Trash2, Download, Upload, 
-  History, Filter, X, Check, AlertCircle, FileDown
+  History, Filter, X, Check, AlertCircle, FileDown, Settings
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -35,6 +35,7 @@ import {
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import DataExportImport from '@/components/data-management/DataExportImport';
 
 interface GenericMasterTableProps {
   masterType: string;
@@ -57,6 +58,7 @@ export default function GenericMasterTable({
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showHistoryDialog, setShowHistoryDialog] = useState(false);
   const [showImportDialog, setShowImportDialog] = useState(false);
+  const [showDataManagement, setShowDataManagement] = useState(false);
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [importResult, setImportResult] = useState<ImportResult | null>(null);
   const [isCreating, setIsCreating] = useState(false);
@@ -202,6 +204,20 @@ export default function GenericMasterTable({
     reader.readAsText(file);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
+    }
+  };
+
+  const handleDataImported = async (importedData: any[]) => {
+    try {
+      // インポートされたデータをサービスに保存
+      const result = await masterDataService.importData(masterType, importedData, 'append');
+      if (result.successCount > 0) {
+        await loadRecords();
+        alert(`${result.successCount}件のデータをインポートしました`);
+      }
+    } catch (error) {
+      console.error('Data import error:', error);
+      alert('データの保存に失敗しました');
     }
   };
 
@@ -406,6 +422,16 @@ export default function GenericMasterTable({
           
           <div className="flex gap-1">
             <Button
+              onClick={() => setShowDataManagement(true)}
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-1"
+            >
+              <Settings className="h-4 w-4" />
+              データ管理
+            </Button>
+            
+            <Button
               onClick={() => handleExport('csv')}
               variant="outline"
               size="sm"
@@ -586,6 +612,31 @@ export default function GenericMasterTable({
 
           <DialogFooter>
             <Button onClick={() => setShowImportDialog(false)}>
+              閉じる
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* データ管理ダイアログ */}
+      <Dialog open={showDataManagement} onOpenChange={setShowDataManagement}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{label} - データ管理</DialogTitle>
+          </DialogHeader>
+          
+          <DataExportImport
+            masterType={masterType}
+            data={records.map(record => record.data)}
+            onDataImported={handleDataImported}
+            fieldLabels={fields.reduce((acc, field) => {
+              acc[field.key] = field.label;
+              return acc;
+            }, {} as Record<string, string>)}
+          />
+
+          <DialogFooter>
+            <Button onClick={() => setShowDataManagement(false)}>
               閉じる
             </Button>
           </DialogFooter>

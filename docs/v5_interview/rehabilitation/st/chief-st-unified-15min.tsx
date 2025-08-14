@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { MotivationTypeSection, getMotivationTypeQuestions } from '../../components/MotivationType';
+import { MotivationTypeSection, getMotivationTypeQuestions } from '@/docs/v5_interview/components/MotivationType';
 
 export default function ChiefSTUnified15MinInterviewSheetV5() {
   const [selectedMotivationType, setSelectedMotivationType] = useState<string>('');
