@@ -9,6 +9,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -59,9 +60,17 @@ import {
   MessageCircle,
   ChevronRight,
   BarChart3,
-  FileCheck
+  FileCheck,
+  ClipboardCheck,
+  Users,
+  Smartphone,
+  Mail,
+  Bell,
+  BookOpen,
+  CheckSquare
 } from 'lucide-react';
-import { AppealRequest, AppealStatus, AppealCategory } from '@/mcp-shared/interfaces/appeal.interface';
+import { AppealRequest, AppealStatus, AppealCategory } from '../../../mcp-shared/interfaces/appeal.interface';
+import styles from './DisclosureManagement.module.css';
 // import { toast } from 'sonner';
 // Sonnerの代わりに簡易的なトースト通知を実装
 const toast = {
@@ -104,6 +113,22 @@ interface AppealRecord {
   evidenceDocuments?: string[];
   reviewerComments?: string;
   priority?: 'high' | 'medium' | 'low';
+  submittedVia?: 'voicedrive' | 'paper' | 'email' | 'system';
+  voiceDriveNotified?: boolean;
+  voiceDriveResponseReceived?: boolean;
+}
+
+interface AppealCase {
+  id: string;
+  staffName: string;
+  filedDate: string;
+  reason: string;
+  category: string;
+  status: 'filed' | 'reviewing' | 'additional-info' | 'resolved';
+  originalScore: number;
+  requestedScore?: number;
+  finalScore?: number;
+  reviewerNotes?: string;
 }
 
 export default function AppealManagement() {
@@ -112,8 +137,13 @@ export default function AppealManagement() {
   const [selectedAppeal, setSelectedAppeal] = useState<AppealRecord | null>(null);
   const [showDetailDialog, setShowDetailDialog] = useState(false);
   const [showSubmitDialog, setShowSubmitDialog] = useState(false);
+  const [showVoiceDriveDialog, setShowVoiceDriveDialog] = useState(false);
+  const [showCaseDetailDialog, setShowCaseDetailDialog] = useState(false);
+  const [selectedCase, setSelectedCase] = useState<AppealCase | null>(null);
+  const [selectedCases, setSelectedCases] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [voiceDriveMessage, setVoiceDriveMessage] = useState('新しい異議申し立てを受け付けました。審査結果は3週間以内にお知らせいたします。');
   
   // フォーム状態
   const [formData, setFormData] = useState<Partial<AppealRequest>>({
@@ -129,6 +159,41 @@ export default function AppealManagement() {
 
   // 評価期間リストを取得
   const [evaluationPeriods, setEvaluationPeriods] = useState<any[]>([]);
+  
+  // 異議申し立てケースデータ
+  const [appealCases, setAppealCases] = useState<AppealCase[]>([
+    {
+      id: 'AP001',
+      staffName: '鈴木 一郎',
+      filedDate: '2025-04-10',
+      reason: '技術評価の項目3について、実績が適切に評価されていない',
+      category: '評価基準の誤解釈',
+      status: 'reviewing',
+      originalScore: 68,
+      requestedScore: 75
+    },
+    {
+      id: 'AP002',
+      staffName: '高橋 さゆり',
+      filedDate: '2025-04-08',
+      reason: '研修講師活動が貢献度に反映されていない',
+      category: '成果の見落とし',
+      status: 'additional-info',
+      originalScore: 73,
+      requestedScore: 78
+    },
+    {
+      id: 'AP003',
+      staffName: '田中 美咲',
+      filedDate: '2025-04-12',
+      reason: 'プロジェクトリーダーとしての貢献が正しく評価されていない',
+      category: '成果の見落とし',
+      status: 'resolved',
+      originalScore: 72,
+      requestedScore: 80,
+      finalScore: 77
+    }
+  ]);
   
   useEffect(() => {
     fetchEvaluationPeriods();
@@ -212,6 +277,72 @@ export default function AppealManagement() {
     }
   };
 
+  // VoiceDrive SNS送信処理
+  const handleVoiceDriveSend = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/v1/appeals/voicedrive-notify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          appealIds: selectedCases,
+          message: voiceDriveMessage
+        })
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        toast.success(`${selectedCases.length}件のVoiceDrive通知を送信しました`);
+        setShowVoiceDriveDialog(false);
+        setSelectedCases([]);
+        // ケースデータを更新
+        setAppealCases(prev => prev.map(c => 
+          selectedCases.includes(c.id) 
+            ? { ...c, voiceDriveNotified: true }
+            : c
+        ));
+      } else {
+        toast.error(data.error?.message || 'VoiceDrive送信に失敗しました');
+      }
+    } catch (error) {
+      toast.error('VoiceDrive送信中にエラーが発生しました');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // ケース選択切り替え
+  const toggleCaseSelection = (caseId: string) => {
+    setSelectedCases(prev => 
+      prev.includes(caseId) 
+        ? prev.filter(id => id !== caseId)
+        : [...prev, caseId]
+    );
+  };
+
+  // 異議申し立てケースのステータス更新
+  const updateCaseStatus = async (caseId: string, newStatus: string, reviewerNotes?: string) => {
+    try {
+      const response = await fetch(`/api/v1/appeals/cases/${caseId}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus, reviewerNotes })
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setAppealCases(prev => prev.map(c => 
+          c.id === caseId 
+            ? { ...c, status: newStatus as any, reviewerNotes }
+            : c
+        ));
+        toast.success('ステータスを更新しました');
+      }
+    } catch (error) {
+      toast.error('ステータス更新に失敗しました');
+    }
+  };
+
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     const validFiles = files.filter(file => {
@@ -267,13 +398,16 @@ export default function AppealManagement() {
     pending: appeals.filter(a => a.status === AppealStatus.RECEIVED).length,
     reviewing: appeals.filter(a => a.status === AppealStatus.UNDER_REVIEW).length,
     resolved: appeals.filter(a => a.status === AppealStatus.RESOLVED).length,
-    rejected: appeals.filter(a => a.status === AppealStatus.REJECTED).length
+    rejected: appeals.filter(a => a.status === AppealStatus.REJECTED).length,
+    voiceDriveNotified: appealCases.filter(c => c.voiceDriveNotified).length,
+    appealsActive: appealCases.filter(c => c.status !== 'resolved').length,
+    averageResolutionTime: 18 // 日数（モックデータ）
   };
 
   return (
     <div className="space-y-6">
       {/* ヘッダー統計 */}
-      <div className="grid grid-cols-5 gap-4">
+      <div className="grid grid-cols-6 gap-4">
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
@@ -329,13 +463,26 @@ export default function AppealManagement() {
             </div>
           </CardContent>
         </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">VoiceDrive通知</p>
+                <p className="text-2xl font-bold text-purple-600">{statistics.voiceDriveNotified}</p>
+              </div>
+              <Smartphone className="w-8 h-8 text-purple-400" />
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid grid-cols-4 w-full max-w-2xl">
+        <TabsList className="grid grid-cols-6 w-full max-w-4xl">
           <TabsTrigger value="submit">新規申し立て</TabsTrigger>
           <TabsTrigger value="list">申し立て一覧</TabsTrigger>
           <TabsTrigger value="timeline">審査状況</TabsTrigger>
+          <TabsTrigger value="cases">ケース管理</TabsTrigger>
+          <TabsTrigger value="process">プロセス</TabsTrigger>
           <TabsTrigger value="guide">ガイド</TabsTrigger>
         </TabsList>
 
@@ -611,6 +758,229 @@ export default function AppealManagement() {
           </Card>
         </TabsContent>
 
+        {/* ケース管理タブ */}
+        <TabsContent value="cases" className="space-y-6">
+          {/* 統計情報 */}
+          <div className="grid grid-cols-4 gap-4">
+            <Card>
+              <CardContent className="p-4">
+                <div className="text-2xl font-bold">{appealCases.length}</div>
+                <div className="text-sm text-gray-600">今期申立件数</div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4">
+                <div className="text-2xl font-bold text-orange-600">{statistics.appealsActive}</div>
+                <div className="text-sm text-gray-600">審査中</div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4">
+                <div className="text-2xl font-bold text-green-600">
+                  {appealCases.filter(a => a.status === 'resolved').length}
+                </div>
+                <div className="text-sm text-gray-600">解決済</div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4">
+                <div className="text-2xl font-bold">25%</div>
+                <div className="text-sm text-gray-600">評価修正率</div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* ケース管理テーブル */}
+          <Card>
+            <CardHeader>
+              <div className="flex justify-between items-center">
+                <div>
+                  <CardTitle>異議申し立てケース管理</CardTitle>
+                  <CardDescription>
+                    異議申し立てケースの管理とVoiceDrive通知
+                  </CardDescription>
+                </div>
+                <div className="flex gap-2">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setShowVoiceDriveDialog(true)}
+                    disabled={selectedCases.length === 0}
+                  >
+                    <Smartphone className="w-4 h-4 mr-2" />
+                    VoiceDrive通知 ({selectedCases.length})
+                  </Button>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="border rounded-lg overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-12">
+                        <Checkbox 
+                          checked={selectedCases.length === appealCases.length}
+                          onCheckedChange={(checked) => {
+                            if (checked) {
+                              setSelectedCases(appealCases.map(c => c.id));
+                            } else {
+                              setSelectedCases([]);
+                            }
+                          }}
+                        />
+                      </TableHead>
+                      <TableHead>申立ID</TableHead>
+                      <TableHead>職員名</TableHead>
+                      <TableHead>申立日</TableHead>
+                      <TableHead>カテゴリー</TableHead>
+                      <TableHead>元スコア</TableHead>
+                      <TableHead>希望スコア</TableHead>
+                      <TableHead>ステータス</TableHead>
+                      <TableHead>操作</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {appealCases.map((appeal) => (
+                      <TableRow key={appeal.id}>
+                        <TableCell>
+                          <Checkbox 
+                            checked={selectedCases.includes(appeal.id)}
+                            onCheckedChange={() => toggleCaseSelection(appeal.id)}
+                          />
+                        </TableCell>
+                        <TableCell className="font-mono text-sm">{appeal.id}</TableCell>
+                        <TableCell className="font-medium">{appeal.staffName}</TableCell>
+                        <TableCell>{appeal.filedDate}</TableCell>
+                        <TableCell>
+                          <Badge variant="outline">{appeal.category}</Badge>
+                        </TableCell>
+                        <TableCell>{appeal.originalScore}</TableCell>
+                        <TableCell>
+                          {appeal.requestedScore && (
+                            <span className="font-medium text-blue-600">
+                              {appeal.requestedScore}
+                              <TrendingUp className="w-4 h-4 inline ml-1" />
+                            </span>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <Badge className={
+                            appeal.status === 'resolved' ? 'bg-green-100 text-green-800' :
+                            appeal.status === 'reviewing' ? 'bg-orange-100 text-orange-800' :
+                            appeal.status === 'additional-info' ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-gray-100 text-gray-800'
+                          }>
+                            {appeal.status === 'filed' && '申請受理'}
+                            {appeal.status === 'reviewing' && '審査中'}
+                            {appeal.status === 'additional-info' && '追加情報要'}
+                            {appeal.status === 'resolved' && '解決済'}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex gap-1">
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              onClick={() => {
+                                setSelectedCase(appeal);
+                                setShowCaseDetailDialog(true);
+                              }}
+                            >
+                              <Eye className="w-4 h-4" />
+                            </Button>
+                            <Button variant="ghost" size="sm">
+                              <MessageSquare className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* プロセスタブ */}
+        <TabsContent value="process" className="space-y-6">
+          {/* 申立プロセス */}
+          <Card>
+            <CardHeader>
+              <CardTitle>異議申し立プロセス</CardTitle>
+              <CardDescription>
+                透明性と公平性を確保した評価見直しプロセス
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className={styles.processFlow}>
+                <div className={styles.processStep}>
+                  <div className={styles.stepIcon}>
+                    <FileText className="w-6 h-6" />
+                  </div>
+                  <h4>申請受付</h4>
+                  <p className="text-sm">開示後2週間以内</p>
+                </div>
+                <ChevronRight className="w-6 h-6 text-gray-400" />
+                <div className={styles.processStep}>
+                  <div className={styles.stepIcon}>
+                    <Shield className="w-6 h-6" />
+                  </div>
+                  <h4>初回審査</h4>
+                  <p className="text-sm">申請後1週間</p>
+                </div>
+                <ChevronRight className="w-6 h-6 text-gray-400" />
+                <div className={styles.processStep}>
+                  <div className={styles.stepIcon}>
+                    <Users className="w-6 h-6" />
+                  </div>
+                  <h4>再評価委員会</h4>
+                  <p className="text-sm">必要に応じて</p>
+                </div>
+                <ChevronRight className="w-6 h-6 text-gray-400" />
+                <div className={styles.processStep}>
+                  <div className={styles.stepIcon}>
+                    <CheckCircle2 className="w-6 h-6" />
+                  </div>
+                  <h4>最終決定</h4>
+                  <p className="text-sm">申請後3週間以内</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* 申立理由カテゴリー */}
+          <Card>
+            <CardHeader>
+              <CardTitle>申立理由カテゴリー</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-4 gap-4">
+                <div className={styles.reasonCard}>
+                  <ClipboardCheck className="w-8 h-8 text-blue-600" />
+                  <h4>評価基準の誤解釈</h4>
+                  <p className="text-sm text-gray-600">評価基準の適用に誤りがある</p>
+                </div>
+                <div className={styles.reasonCard}>
+                  <Eye className="w-8 h-8 text-green-600" />
+                  <h4>成果の見落とし</h4>
+                  <p className="text-sm text-gray-600">重要な成果が評価されていない</p>
+                </div>
+                <div className={styles.reasonCard}>
+                  <Calendar className="w-8 h-8 text-purple-600" />
+                  <h4>評価期間の誤り</h4>
+                  <p className="text-sm text-gray-600">対象期間外の事項が含まれている</p>
+                </div>
+                <div className={styles.reasonCard}>
+                  <AlertCircle className="w-8 h-8 text-orange-600" />
+                  <h4>その他</h4>
+                  <p className="text-sm text-gray-600">上記以外の理由</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
         {/* ガイドタブ */}
         <TabsContent value="guide" className="space-y-6">
           <Card>
@@ -762,6 +1132,159 @@ export default function AppealManagement() {
           )}
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowDetailDialog(false)}>閉じる</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* VoiceDrive送信ダイアログ */}
+      <Dialog open={showVoiceDriveDialog} onOpenChange={setShowVoiceDriveDialog}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>VoiceDrive SNS送信</DialogTitle>
+            <DialogDescription>
+              {selectedCases.length}件の異議申し立てに関する通知をVoiceDriveで送信します
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label>メッセージテンプレート</Label>
+              <Textarea
+                value={voiceDriveMessage}
+                onChange={(e) => setVoiceDriveMessage(e.target.value)}
+                rows={4}
+                className="mt-2"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>送信対象ケース</Label>
+              <div className="border rounded-lg p-4 max-h-40 overflow-y-auto">
+                {selectedCases.map(caseId => {
+                  const appeal = appealCases.find(c => c.id === caseId);
+                  return appeal ? (
+                    <div key={caseId} className="flex items-center justify-between py-2 border-b last:border-b-0">
+                      <div>
+                        <span className="font-medium">{appeal.staffName}</span>
+                        <span className="text-sm text-gray-500 ml-2">({appeal.id})</span>
+                      </div>
+                      <Badge variant="outline">{appeal.category}</Badge>
+                    </div>
+                  ) : null;
+                })}
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Checkbox id="enable-replies" defaultChecked />
+              <Label htmlFor="enable-replies">返信機能を有効にする</Label>
+            </div>
+            <Alert>
+              <Smartphone className="h-4 w-4" />
+              <AlertDescription>
+                VoiceDrive SNSは補完的な通知手段です。正式な異議申し立て通知は紙面で行ってください。
+              </AlertDescription>
+            </Alert>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowVoiceDriveDialog(false)}>
+              キャンセル
+            </Button>
+            <Button 
+              onClick={handleVoiceDriveSend} 
+              disabled={isLoading}
+              className="bg-purple-600 hover:bg-purple-700"
+            >
+              <Send className="w-4 h-4 mr-2" />
+              {isLoading ? '送信中...' : '送信実行'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* ケース詳細ダイアログ */}
+      <Dialog open={showCaseDetailDialog} onOpenChange={setShowCaseDetailDialog}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>異議申し立てケース詳細</DialogTitle>
+            <DialogDescription>
+              ケースID: {selectedCase?.id}
+            </DialogDescription>
+          </DialogHeader>
+          {selectedCase && (
+            <div className="space-y-6">
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <Label>職員名</Label>
+                  <p className="font-medium">{selectedCase.staffName}</p>
+                </div>
+                <div>
+                  <Label>申立日</Label>
+                  <p className="font-medium">{selectedCase.filedDate}</p>
+                </div>
+                <div>
+                  <Label>カテゴリー</Label>
+                  <p className="font-medium">{selectedCase.category}</p>
+                </div>
+                <div>
+                  <Label>元スコア</Label>
+                  <p className="font-medium">{selectedCase.originalScore}</p>
+                </div>
+                <div>
+                  <Label>希望スコア</Label>
+                  <p className="font-medium">{selectedCase.requestedScore || '-'}</p>
+                </div>
+                <div>
+                  <Label>最終スコア</Label>
+                  <p className="font-medium">{selectedCase.finalScore || '-'}</p>
+                </div>
+              </div>
+              <div>
+                <Label>申し立て理由</Label>
+                <p className="mt-1 p-3 bg-gray-50 rounded">{selectedCase.reason}</p>
+              </div>
+              {selectedCase.reviewerNotes && (
+                <div>
+                  <Label>審査コメント</Label>
+                  <p className="mt-1 p-3 bg-blue-50 rounded">{selectedCase.reviewerNotes}</p>
+                </div>
+              )}
+              <div>
+                <Label>ステータス更新</Label>
+                <div className="flex gap-2 mt-2">
+                  <Select defaultValue={selectedCase.status}>
+                    <SelectTrigger className="w-48">
+                      <SelectValue placeholder="ステータスを選択" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="filed">申請受理</SelectItem>
+                      <SelectItem value="reviewing">審査中</SelectItem>
+                      <SelectItem value="additional-info">追加情報要</SelectItem>
+                      <SelectItem value="resolved">解決済</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Button 
+                    variant="outline"
+                    onClick={() => updateCaseStatus(selectedCase.id, 'reviewing')}
+                  >
+                    更新
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowCaseDetailDialog(false)}>閉じる</Button>
+            <Button 
+              onClick={() => {
+                if (selectedCase) {
+                  setSelectedCases([selectedCase.id]);
+                  setShowVoiceDriveDialog(true);
+                  setShowCaseDetailDialog(false);
+                }
+              }}
+              className="bg-purple-600 hover:bg-purple-700"
+            >
+              <Smartphone className="w-4 h-4 mr-2" />
+              VoiceDrive通知
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
