@@ -3,7 +3,7 @@
 
 import { InterviewManualGenerationService, ManualGenerationRequest, GeneratedInterviewManual } from './interviewManualGenerationService';
 import { DynamicInterviewGenerationService, StaffContext, DynamicInterviewSheet } from './dynamicInterviewGenerationService';
-import { InterviewDataService, InterviewData } from './interview/interviewDataService';
+import { interviewDataService, InterviewData } from './interview/interviewDataService';
 
 // 面談実施マスタ - 1回の面談情報を集約
 export interface InterviewSessionMaster {
