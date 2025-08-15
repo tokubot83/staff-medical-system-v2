@@ -522,7 +522,7 @@ export default function SupportInterviewFlow() {
                       <Label>緊急度</Label>
                       <Badge variant={
                         selectedRequest.urgency === 'urgent' ? 'destructive' :
-                        selectedRequest.urgency === 'high' ? 'warning' :
+                        selectedRequest.urgency === 'high' ? 'destructive' :
                         'secondary'
                       }>
                         {selectedRequest.urgency}
