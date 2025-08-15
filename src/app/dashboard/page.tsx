@@ -85,6 +85,100 @@ export default function DashboardPage() {
 
           {/* ホームタブ */}
           <TabsContent value="home" className="space-y-6">
+            {/* メイン機能 - 最重要 */}
+            <div className="grid grid-cols-2 gap-6 mb-8">
+              {/* 評価制度設計 */}
+              <Card className="border-2 border-blue-500 shadow-xl hover:shadow-2xl transition-all bg-gradient-to-br from-blue-600 to-blue-700 text-white">
+                <CardHeader className="pb-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="p-3 bg-white/20 rounded-lg backdrop-blur">
+                        <Settings className="h-8 w-8 text-white" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-2xl font-bold text-white">評価制度設計</CardTitle>
+                        <CardDescription className="text-blue-100 mt-1">
+                          100点満点配分の設計と動的設問管理
+                        </CardDescription>
+                      </div>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="p-3 bg-white/10 rounded-lg backdrop-blur">
+                      <p className="text-blue-100 text-sm mb-1">技術評価</p>
+                      <p className="text-2xl font-bold">50点</p>
+                    </div>
+                    <div className="p-3 bg-white/10 rounded-lg backdrop-blur">
+                      <p className="text-blue-100 text-sm mb-1">貢献度評価</p>
+                      <p className="text-2xl font-bold">50点</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-blue-100">
+                    <CheckCircle className="h-4 w-4" />
+                    <span>法人統一項目・施設特化項目の管理</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-blue-100">
+                    <Sparkles className="h-4 w-4" />
+                    <span>AI対応動的設問の自動生成</span>
+                  </div>
+                  <Link href="/evaluation-design">
+                    <Button className="w-full bg-white text-blue-600 hover:bg-blue-50" size="lg">
+                      <Target className="mr-2 h-5 w-5" />
+                      評価制度を設計する
+                      <ArrowRight className="ml-2 h-5 w-5" />
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
+
+              {/* 個人評価管理 */}
+              <Card className="border-2 border-purple-500 shadow-xl hover:shadow-2xl transition-all bg-gradient-to-br from-purple-600 to-purple-700 text-white">
+                <CardHeader className="pb-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="p-3 bg-white/20 rounded-lg backdrop-blur">
+                        <User className="h-8 w-8 text-white" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-2xl font-bold text-white">個人評価管理</CardTitle>
+                        <CardDescription className="text-purple-100 mt-1">
+                          評価実施から開示まで一元管理
+                        </CardDescription>
+                      </div>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="p-3 bg-white/10 rounded-lg backdrop-blur">
+                      <p className="text-purple-100 text-sm mb-1">評価対象</p>
+                      <p className="text-2xl font-bold">125名</p>
+                    </div>
+                    <div className="p-3 bg-white/10 rounded-lg backdrop-blur">
+                      <p className="text-purple-100 text-sm mb-1">完了率</p>
+                      <p className="text-2xl font-bold">{completionRate}%</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-purple-100">
+                    <FileText className="h-4 w-4" />
+                    <span>5段階評価とS~Dグレード判定</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-purple-100">
+                    <Shield className="h-4 w-4" />
+                    <span>評価開示と異議申立対応</span>
+                  </div>
+                  <Link href="/evaluation-execution">
+                    <Button className="w-full bg-white text-purple-600 hover:bg-purple-50" size="lg">
+                      <Award className="mr-2 h-5 w-5" />
+                      評価を実施する
+                      <ArrowRight className="ml-2 h-5 w-5" />
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            </div>
 
             {/* 評価進捗サマリー */}
             <div className="grid grid-cols-4 gap-4">
@@ -147,156 +241,114 @@ export default function DashboardPage() {
 
             {/* 全体進捗バー */}
             <Card className="bg-white">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-lg font-semibold">2025年度 評価進捗状況</h3>
-              <Badge className="bg-blue-100 text-blue-800">進行中</Badge>
-            </div>
-            <Progress value={completionRate} className="h-3 mb-2" />
-            <p className="text-sm text-gray-600">
-              {evaluationProgress.completed}名完了 / {evaluationProgress.total}名中
-            </p>
-          </CardContent>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-lg font-semibold">2025年度 評価進捗状況</h3>
+                  <Badge className="bg-blue-100 text-blue-800">進行中</Badge>
+                </div>
+                <Progress value={completionRate} className="h-3 mb-2" />
+                <p className="text-sm text-gray-600">
+                  {evaluationProgress.completed}名完了 / {evaluationProgress.total}名中
+                </p>
+              </CardContent>
             </Card>
 
-            {/* メイン機能エリア */}
-            <div className="grid grid-cols-2 gap-8">
-          {/* 評価制度設計 */}
-          <div className="space-y-4">
-            <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-              <Settings className="h-7 w-7 text-blue-600" />
-              評価制度設計
-            </h2>
-            <Card className="border-2 border-blue-200 hover:shadow-xl transition-all bg-gradient-to-br from-blue-50 to-white">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Target className="h-5 w-5 text-blue-600" />
-                  100点満点配分管理
-                </CardTitle>
-                <CardDescription>
-                  技術評価と貢献度評価の配分を設計
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div className="p-3 bg-white rounded-lg border">
-                      <p className="text-gray-600 mb-1">技術評価</p>
-                      <p className="text-xl font-bold text-blue-600">50点</p>
+            {/* その他の機能 */}
+            <div className="grid grid-cols-3 gap-4">
+              {/* クイックアクセス */}
+              <Card className="bg-white hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Building className="h-5 w-5 text-gray-600" />
+                    クイックアクセス
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 gap-2">
+                    <Link href="/dashboard/admin">
+                      <Button variant="outline" size="sm" className="w-full justify-start">
+                        <Shield className="mr-2 h-4 w-4" />
+                        管理者ダッシュボード
+                      </Button>
+                    </Link>
+                    <Link href="/dashboard/personal">
+                      <Button variant="outline" size="sm" className="w-full justify-start">
+                        <User className="mr-2 h-4 w-4" />
+                        個人ダッシュボード
+                      </Button>
+                    </Link>
+                    <Link href="/training">
+                      <Button variant="outline" size="sm" className="w-full justify-start">
+                        <Award className="mr-2 h-4 w-4" />
+                        研修管理システム
+                      </Button>
+                    </Link>
+                    <Link href="/reports">
+                      <Button variant="outline" size="sm" className="w-full justify-start">
+                        <BarChart3 className="mr-2 h-4 w-4" />
+                        分析レポート
+                      </Button>
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* 動的設問管理 */}
+              <Card className="bg-white hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Sparkles className="h-5 w-5 text-purple-600" />
+                    動的設問管理
+                    <Badge className="bg-purple-100 text-purple-800" variant="outline">AI</Badge>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <p className="text-sm text-gray-600">
+                      研修履歴と経験レベルに応じた設問を自動生成
+                    </p>
+                    <div className="p-3 bg-purple-50 rounded-lg">
+                      <p className="text-xs text-purple-700 mb-1">現在の設問数</p>
+                      <p className="text-lg font-bold text-purple-900">248問</p>
                     </div>
-                    <div className="p-3 bg-white rounded-lg border">
-                      <p className="text-gray-600 mb-1">貢献度評価</p>
-                      <p className="text-xl font-bold text-green-600">50点</p>
-                    </div>
+                    <Link href="/evaluation-design/questions">
+                      <Button className="w-full" variant="outline" size="sm">
+                        <Sparkles className="mr-2 h-4 w-4" />
+                        設問を管理
+                      </Button>
+                    </Link>
                   </div>
-                  <Link href="/evaluation-design">
-                    <Button className="w-full" size="lg">
-                      評価制度を設計する
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
 
-            {/* 動的設問管理 */}
-            <Card className="border-2 border-purple-200 hover:shadow-xl transition-all bg-gradient-to-br from-purple-50 to-white">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Sparkles className="h-5 w-5 text-purple-600" />
-                  動的設問管理
-                  <Badge className="bg-purple-100 text-purple-800">AI対応</Badge>
-                </CardTitle>
-                <CardDescription>
-                  研修履歴と経験レベルに応じた設問自動生成
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Link href="/evaluation-design/questions">
-                  <Button className="w-full" variant="outline">
-                    <Sparkles className="mr-2 h-4 w-4" />
-                    動的設問を管理
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* 個人評価管理 */}
-          <div className="space-y-4">
-            <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-              <User className="h-7 w-7 text-purple-600" />
-              個人評価管理
-            </h2>
-            <Card className="border-2 border-purple-200 hover:shadow-xl transition-all bg-gradient-to-br from-purple-50 to-white">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <FileText className="h-5 w-5 text-purple-600" />
-                  評価実施・管理
-                </CardTitle>
-                <CardDescription>
-                  評価入力から開示まで一元管理
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3 mb-4">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">評価入力</span>
-                    <Badge variant="outline">5段階評価</Badge>
+              {/* 評価締切アラート */}
+              <Card className="bg-white hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Bell className="h-5 w-5 text-orange-600" />
+                    評価締切アラート
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <Alert className="border-red-200 bg-red-50">
+                      <AlertCircle className="h-4 w-4 text-red-600" />
+                      <AlertDescription className="text-sm">
+                        <strong>本日締切:</strong> 5名分
+                      </AlertDescription>
+                    </Alert>
+                    <Alert className="border-yellow-200 bg-yellow-50">
+                      <Clock className="h-4 w-4 text-yellow-600" />
+                      <AlertDescription className="text-sm">
+                        <strong>3日後:</strong> 8名分
+                      </AlertDescription>
+                    </Alert>
+                    <Button variant="outline" size="sm" className="w-full">
+                      全ての締切を確認
+                    </Button>
                   </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">総合判定</span>
-                    <Badge variant="outline">S~Dグレード</Badge>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">評価開示</span>
-                    <Badge variant="outline">異議申立対応</Badge>
-                  </div>
-                </div>
-                <Link href="/evaluation-execution">
-                  <Button className="w-full" size="lg">
-                    評価を実施する
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-
-            {/* クイックアクセス */}
-            <Card className="bg-gray-50">
-              <CardHeader>
-                <CardTitle className="text-base">クイックアクセス</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 gap-2">
-                  <Link href="/dashboard/admin">
-                    <Button variant="outline" size="sm" className="w-full">
-                      <Shield className="mr-2 h-4 w-4" />
-                      管理者用
-                    </Button>
-                  </Link>
-                  <Link href="/dashboard/personal">
-                    <Button variant="outline" size="sm" className="w-full">
-                      <User className="mr-2 h-4 w-4" />
-                      個人用
-                    </Button>
-                  </Link>
-                  <Link href="/training">
-                    <Button variant="outline" size="sm" className="w-full">
-                      <Award className="mr-2 h-4 w-4" />
-                      研修管理
-                    </Button>
-                  </Link>
-                  <Link href="/reports">
-                    <Button variant="outline" size="sm" className="w-full">
-                      <BarChart3 className="mr-2 h-4 w-4" />
-                      レポート
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+                </CardContent>
+              </Card>
             </div>
 
             {/* スケジュールと重要日程 */}
