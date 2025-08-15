@@ -414,39 +414,39 @@ export default function IntegratedJudgment() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {evaluations.map((eval) => (
-                      <TableRow key={eval.id}>
+                    {evaluations.map((evaluation) => (
+                      <TableRow key={evaluation.id}>
                         <TableCell>
                           <Checkbox 
-                            checked={selectedStaff.includes(eval.id)}
-                            onCheckedChange={() => toggleStaffSelection(eval.id)}
+                            checked={selectedStaff.includes(evaluation.id)}
+                            onCheckedChange={() => toggleStaffSelection(evaluation.id)}
                           />
                         </TableCell>
-                        <TableCell className="font-medium">{eval.name}</TableCell>
-                        <TableCell>{eval.department}</TableCell>
-                        <TableCell>{eval.technicalScore || '-'}</TableCell>
-                        <TableCell>{eval.facilityContribution || '-'}</TableCell>
-                        <TableCell>{eval.corporateContribution || '-'}</TableCell>
-                        <TableCell className="font-bold">{eval.totalScore || '-'}</TableCell>
+                        <TableCell className="font-medium">{evaluation.name}</TableCell>
+                        <TableCell>{evaluation.department}</TableCell>
+                        <TableCell>{evaluation.technicalScore || '-'}</TableCell>
+                        <TableCell>{evaluation.facilityContribution || '-'}</TableCell>
+                        <TableCell>{evaluation.corporateContribution || '-'}</TableCell>
+                        <TableCell className="font-bold">{evaluation.totalScore || '-'}</TableCell>
                         <TableCell>
-                          {eval.finalGrade && (
-                            <Badge className={styles[`grade${eval.finalGrade.replace('+', 'Plus')}`]}>
-                              {eval.finalGrade}
+                          {evaluation.finalGrade && (
+                            <Badge className={styles[`grade${evaluation.finalGrade.replace('+', 'Plus')}`]}>
+                              {evaluation.finalGrade}
                             </Badge>
                           )}
                         </TableCell>
                         <TableCell>
                           <Badge variant={
-                            eval.status === 'approved' ? 'default' :
-                            eval.status === 'completed' ? 'secondary' :
-                            eval.status === 'rejected' ? 'destructive' :
+                            evaluation.status === 'approved' ? 'default' :
+                            evaluation.status === 'completed' ? 'secondary' :
+                            evaluation.status === 'rejected' ? 'destructive' :
                             'outline'
                           }>
-                            {eval.status}
+                            {evaluation.status}
                           </Badge>
                         </TableCell>
                         <TableCell>
-                          {eval.isDynamic && (
+                          {evaluation.isDynamic && (
                             <Badge className="bg-purple-100 text-purple-800">
                               <Sparkles className="w-3 h-3 mr-1" />
                               v3

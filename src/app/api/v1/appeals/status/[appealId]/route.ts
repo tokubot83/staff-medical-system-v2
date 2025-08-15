@@ -7,7 +7,7 @@ import {
   AppealAction,
   AppealLog,
   AppealResponse
-} from '@/mcp-shared/interfaces/appeal.interface';
+} from '../../../../../../../mcp-shared/interfaces/appeal.interface';
 
 // ログ記録関数
 function logRequest(

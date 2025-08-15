@@ -9,7 +9,7 @@ import {
   AppealRecord,
   AppealLog,
   AppealAction 
-} from '@/mcp-shared/interfaces/appeal.interface';
+} from '../../../../../../mcp-shared/interfaces/appeal.interface';
 
 // ログファイルのパス
 const LOG_FILE_PATH = path.join(process.cwd(), 'logs', 'appeal-integration.log');

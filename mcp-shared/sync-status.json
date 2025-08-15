@@ -1,5 +1,5 @@
 {
-  "lastSync": "2025-08-10T15:40:00Z",
+  "lastSync": "2025-01-16T14:30:00Z",
   "syncedFiles": {
     "config": {
       "interview-types.json": {
@@ -19,6 +19,38 @@
         "checksum": "e5f2a8b1",
         "syncStatus": "success",
         "syncedTo": ["medical-system", "voicedrive"]
+      },
+      "appeal.interface.ts": {
+        "path": "mcp-shared/interfaces/appeal.interface.ts",
+        "lastModified": "2025-01-16T14:00:00Z",
+        "size": 8234,
+        "checksum": "ap2025a1",
+        "syncStatus": "pending",
+        "syncedTo": [],
+        "priority": "high",
+        "description": "異議申し立てシステムインターフェース定義"
+      }
+    },
+    "docs": {
+      "voicedrive-appeal-request.md": {
+        "path": "mcp-shared/docs/voicedrive-appeal-request.md",
+        "lastModified": "2025-01-16T14:00:00Z",
+        "size": 6905,
+        "checksum": "vdr2025b",
+        "syncStatus": "pending",
+        "syncedTo": [],
+        "priority": "urgent",
+        "description": "【重要】VoiceDriveチーム向け異議申し立て機能実装指示書"
+      },
+      "appeal-api-implementation-status.md": {
+        "path": "mcp-shared/docs/appeal-api-implementation-status.md",
+        "lastModified": "2025-01-16T14:00:00Z",
+        "size": 5202,
+        "checksum": "api2025c",
+        "syncStatus": "pending",
+        "syncedTo": [],
+        "priority": "high",
+        "description": "異議申し立てAPI実装ステータス"
       }
     },
     "api": {
@@ -27,14 +59,27 @@
         "lastModified": "2025-08-10T15:40:00Z",
         "size": 6234,
         "checksum": "c9d1f3e4",
-        "syncStatus": "pending",
-        "syncedTo": []
+        "syncStatus": "success",
+        "syncedTo": ["medical-system"]
       }
     }
   },
-  "totalFiles": 3,
-  "successfulSyncs": 2,
-  "pendingSyncs": 1,
+  "totalFiles": 6,
+  "successfulSyncs": 3,
+  "pendingSyncs": 3,
   "failedSyncs": 0,
-  "nextSyncScheduled": "2025-08-10T16:00:00Z"
+  "nextSyncScheduled": "2025-01-16T14:35:00Z",
+  "urgentNotification": {
+    "enabled": true,
+    "message": "新規異議申し立てAPI実装指示書が追加されました。VoiceDriveチーム確認必須。",
+    "files": [
+      "mcp-shared/docs/voicedrive-appeal-request.md",
+      "mcp-shared/interfaces/appeal.interface.ts"
+    ],
+    "notifiedAt": "2025-01-16T14:30:00Z"
+  },
+  "appeals": {
+    "lastUpdate": "2025-01-16T14:00:00Z",
+    "pendingCount": 0
+  }
 }
