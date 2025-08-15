@@ -13,7 +13,7 @@ import Link from 'next/link';
 export default function DynamicEvaluationPage() {
   const params = useParams();
   const router = useRouter();
-  const staffId = params.id as string;
+  const id = params.id as string;
 
   return (
     <div>

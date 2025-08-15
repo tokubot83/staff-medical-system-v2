@@ -932,43 +932,86 @@ export default function DynamicInterviewFlow() {
             </CardContent>
           </Card>
 
-          {/* 現在のセクション */}
-          <Card className={isPrintMode ? 'print-mode-card' : ''}>
-            <CardHeader className={isPrintMode ? 'print:bg-white print:border-b print:border-gray-300' : 'bg-blue-50'}>
-              <CardTitle className="print:text-sm print:font-bold">
-                {session.manual.sections[session.currentSectionIndex].title}
-              </CardTitle>
-              <p className="text-sm text-gray-600 mt-1 print:text-xs print:hidden">
-                {session.manual.sections[session.currentSectionIndex].purpose}
-              </p>
-              <p className="text-xs text-gray-500 mt-1 print:hidden">
-                推奨時間: {session.manual.sections[session.currentSectionIndex].duration}分
-              </p>
-            </CardHeader>
-            <CardContent className="space-y-6 pt-6 print:space-y-3 print:pt-3">
-              {/* 質問項目 */}
-              {session.manual.sections[session.currentSectionIndex].questions.map((question, index) => (
-                <div key={question.id} className={isPrintMode ? 'print-question-item' : 'space-y-3 p-4 bg-gray-50 rounded-lg'}>
-                  <div className="flex items-start gap-3 print:gap-2">
-                    <span className={isPrintMode ? 
-                      'print:text-xs print:font-bold print:w-4' : 
-                      'flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-semibold'
-                    }>
-                      {isPrintMode ? `${index + 1}.` : index + 1}
-                    </span>
-                    <div className="flex-grow space-y-3 print:space-y-1">
-                      <div>
-                        <Label className="text-base font-medium print:text-xs print:font-normal">
-                          {question.question}
-                          {question.required && !isPrintMode && (
-                            <span className="ml-2 text-xs text-red-500">*必須</span>
-                          )}
-                        </Label>
+          {/* セクション表示 - 印刷モード時は全セクション、通常時は現在のセクションのみ */}
+          {isPrintMode ? (
+            // 印刷モード：全セクションを一括表示
+            <>
+              {session.manual.sections.map((section, sectionIndex) => (
+                <Card key={sectionIndex} className="print-mode-card mb-4 print:mb-2">
+                  <CardHeader className="print:bg-white print:border-b print:border-gray-300 print:py-1">
+                    <CardTitle className="print:text-xs print:font-bold">
+                      セクション{sectionIndex + 1}: {section.title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3 pt-3 print:space-y-1 print:pt-1">
+                    {section.questions.map((question, qIndex) => (
+                      <div key={question.id} className="print-question-item mb-1">
+                        <div className="flex items-start gap-1">
+                          <span className="text-xs font-bold">
+                            {sectionIndex + 1}.{qIndex + 1}
+                          </span>
+                          <div className="flex-grow">
+                            <Label className="text-xs font-normal">
+                              {question.question}
+                            </Label>
+                            <div className="print-answer-line mt-1"></div>
+                          </div>
+                        </div>
                       </div>
-                      
-                      {/* 質問の詳細情報（印刷時は非表示） */}
-                      {!isPrintMode && (
-                        <div className="text-sm text-gray-600 bg-blue-50 p-3 rounded print:hidden">
+                    ))}
+                  </CardContent>
+                </Card>
+              ))}
+              
+              {/* 印刷時の署名欄 */}
+              <div className="print-signature-section mt-4 print:mt-2">
+                <div className="text-xs text-gray-600">
+                  <div className="mb-2">
+                    <span>面談日時：____年____月____日 ____時____分</span>
+                  </div>
+                  <div className="mb-1">
+                    <span>面談者署名：_________________________</span>
+                  </div>
+                  <div>
+                    <span>対象者署名：_________________________</span>
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : (
+            // 通常モード：現在のセクションのみ表示
+            <Card>
+              <CardHeader className="bg-blue-50">
+                <CardTitle>
+                  {session.manual.sections[session.currentSectionIndex].title}
+                </CardTitle>
+                <p className="text-sm text-gray-600 mt-1">
+                  {session.manual.sections[session.currentSectionIndex].purpose}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  推奨時間: {session.manual.sections[session.currentSectionIndex].duration}分
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-6 pt-6">
+                {/* 質問項目 */}
+                {session.manual.sections[session.currentSectionIndex].questions.map((question, index) => (
+                  <div key={question.id} className="space-y-3 p-4 bg-gray-50 rounded-lg">
+                    <div className="flex items-start gap-3">
+                      <span className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-semibold">
+                        {index + 1}
+                      </span>
+                      <div className="flex-grow space-y-3">
+                        <div>
+                          <Label className="text-base font-medium">
+                            {question.question}
+                            {question.required && (
+                              <span className="ml-2 text-xs text-red-500">*必須</span>
+                            )}
+                          </Label>
+                        </div>
+                        
+                        {/* 質問の詳細情報 */}
+                        <div className="text-sm text-gray-600 bg-blue-50 p-3 rounded">
                           <p className="font-medium mb-1">💡 質問のポイント</p>
                           <ul className="space-y-1">
                             {question.details.askingTips.map((tip, i) => (
@@ -976,7 +1019,6 @@ export default function DynamicInterviewFlow() {
                             ))}
                           </ul>
                         </div>
-                      )}
 
                       {/* 回答入力エリア */}
                       {isPrintMode ? (
