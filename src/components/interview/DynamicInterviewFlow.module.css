@@ -1,0 +1,280 @@
+/* DynamicInterviewFlow専用スタイル */
+
+/* 印刷用の最適化スタイル */
+@media print {
+  /* 全体的な印刷設定 */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    font-size: 10pt !important;
+    line-height: 1.4 !important;
+    font-family: 'Helvetica Neue', Arial, sans-serif !important;
+    color: #000 !important;
+    background: white !important;
+  }
+
+  /* ページ設定 - A4サイズ最適化 */
+  @page {
+    size: A4;
+    margin: 10mm 15mm 10mm 15mm; /* 上下10mm、左右15mm */
+  }
+
+  /* 不要な要素を非表示 */
+  .print\:hidden {
+    display: none !important;
+  }
+
+  /* カードのスタイル調整 */
+  .print-mode-card {
+    border: 1px solid #000 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    margin-bottom: 8px !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* ヘッダー部分 */
+  .print\:text-base {
+    font-size: 11pt !important;
+    font-weight: bold !important;
+  }
+
+  .print\:text-sm {
+    font-size: 10pt !important;
+  }
+
+  .print\:text-xs {
+    font-size: 8pt !important;
+    color: #333 !important;
+  }
+
+  /* 背景色を全て白に */
+  .print\:bg-white {
+    background-color: white !important;
+  }
+
+  /* ボーダー設定 */
+  .print\:border-b {
+    border-bottom: 0.5pt solid #666 !important;
+  }
+
+  .print\:border-gray-300 {
+    border-color: #666 !important;
+  }
+
+  /* 質問項目のスタイル */
+  .print-question-item {
+    margin-bottom: 10px !important;
+    padding: 0 !important;
+    background: white !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* 質問番号 */
+  .print\:text-xs.print\:font-bold {
+    font-size: 9pt !important;
+    font-weight: bold !important;
+    color: #000 !important;
+  }
+
+  /* 手書き用罫線 */
+  .print-answer-line {
+    border-bottom: 0.5pt solid #666 !important;
+    height: 18px !important;
+    margin-top: 4px !important;
+    margin-bottom: 6px !important;
+    display: block !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* スペース調整 */
+  .print\:space-y-3 > * + * {
+    margin-top: 8px !important;
+  }
+
+  .print\:space-y-1 > * + * {
+    margin-top: 3px !important;
+  }
+
+  .print\:pt-3 {
+    padding-top: 8px !important;
+  }
+
+  .print\:gap-2 {
+    gap: 6px !important;
+  }
+
+  /* セクション区切り */
+  .print-section-break {
+    page-break-after: always !important;
+  }
+
+  /* 最後のページ - 署名欄 */
+  .print-signature-section {
+    margin-top: 20px !important;
+    padding-top: 10px !important;
+    border-top: 0.5pt solid #666 !important;
+  }
+
+  .print-signature-line {
+    display: inline-block !important;
+    border-bottom: 0.5pt solid #666 !important;
+    width: 150px !important;
+    margin: 0 10px !important;
+  }
+
+  /* チェックボックス（印刷用） */
+  .print-checkbox {
+    display: inline-block !important;
+    width: 10px !important;
+    height: 10px !important;
+    border: 0.5pt solid #000 !important;
+    margin-right: 5px !important;
+    vertical-align: middle !important;
+  }
+
+  /* 複数選択肢の印刷用スタイル */
+  .print-scale-options {
+    display: flex !important;
+    justify-content: space-between !important;
+    margin: 5px 0 !important;
+  }
+
+  .print-scale-item {
+    display: flex !important;
+    align-items: center !important;
+    font-size: 8pt !important;
+  }
+
+  /* ページ番号（フッター） */
+  .print-page-footer {
+    position: fixed !important;
+    bottom: 5mm !important;
+    right: 10mm !important;
+    font-size: 8pt !important;
+    color: #666 !important;
+  }
+
+  /* A4 2枚以内に収める調整 */
+  .print-compact {
+    margin: 0 !important;
+    padding: 2px 0 !important;
+  }
+
+  /* インク節約 - アイコンや装飾を最小化 */
+  svg, 
+  .icon,
+  [class*="lucide"] {
+    display: none !important;
+  }
+
+  /* 絵文字を非表示 */
+  .emoji {
+    display: none !important;
+  }
+
+  /* 改ページ制御 */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid !important;
+  }
+
+  table {
+    page-break-inside: avoid !important;
+  }
+
+  /* 印刷時のみ表示される要素 */
+  .print\:block {
+    display: block !important;
+  }
+
+  /* フォントの最適化 */
+  * {
+    font-weight: normal !important;
+  }
+
+  strong, b, .font-bold, .font-semibold, .font-medium {
+    font-weight: bold !important;
+  }
+}
+
+/* 通常表示時のスタイル */
+@media screen {
+  /* 印刷プレビューモード */
+  .print-preview-mode {
+    max-width: 210mm;
+    margin: 0 auto;
+    padding: 10mm 15mm;
+    background: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    min-height: 297mm;
+  }
+
+  /* 印刷モード時のカード表示 */
+  .print-mode-active .print-mode-card {
+    border: 1px solid #ccc;
+    border-radius: 0;
+    background: white;
+  }
+
+  /* 印刷用罫線のプレビュー */
+  .print-answer-line {
+    border-bottom: 1px solid #999;
+    height: 24px;
+    margin: 8px 0;
+    display: block;
+  }
+
+  /* 印刷用質問項目のプレビュー */
+  .print-question-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+  }
+}
+
+/* モード切り替えボタンのスタイル */
+.mode-toggle-button {
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.mode-toggle-button:hover {
+  background-color: #f5f5f5;
+}
+
+.mode-toggle-button.active {
+  background-color: #1e40af;
+  color: white;
+}
+
+/* 印刷ボタン */
+.print-button {
+  background-color: #059669;
+  color: white;
+  padding: 6px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.print-button:hover {
+  background-color: #047857;
+}
+
+/* ヘルパークラス */
+.no-print {
+  display: block;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}

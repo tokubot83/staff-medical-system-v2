@@ -22,8 +22,10 @@ import {
   Brain,
   Target,
   Users,
-  Calendar
+  Calendar,
+  Printer
 } from 'lucide-react';
+import styles from './DynamicInterviewFlow.module.css';
 import { 
   InterviewManualGenerationService, 
   ManualGenerationRequest,
@@ -99,6 +101,8 @@ export default function DynamicInterviewFlow() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [motivationQuestions, setMotivationQuestions] = useState<MotivationQuestion[]>([]);
   const [showMotivationDiagnosis, setShowMotivationDiagnosis] = useState(false);
+  const [isPrintMode, setIsPrintMode] = useState(false); // 印刷モードフラグ
+  const [showPrintPreview, setShowPrintPreview] = useState(false); // 印刷プレビューフラグ
 
   // スタッフデータの取得（実際にはAPIから）
   useEffect(() => {
@@ -421,7 +425,7 @@ export default function DynamicInterviewFlow() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-6">
+    <div className={`max-w-6xl mx-auto p-6 space-y-6 ${isPrintMode ? 'print-preview-mode' : ''}`}>
       {/* プログレスバー */}
       <div className="mb-8">
         <Progress value={calculateProgress()} className="h-2" />
@@ -872,100 +876,163 @@ export default function DynamicInterviewFlow() {
       {/* Step 5: 面談実施 */}
       {currentStep === 'conducting' && session.manual && (
         <div className="space-y-6">
+          {/* モード切り替えボタン */}
+          <div className="flex justify-end gap-2 print:hidden">
+            <Button
+              variant={isPrintMode ? 'outline' : 'default'}
+              size="sm"
+              onClick={() => setIsPrintMode(false)}
+            >
+              <FileText className="h-4 w-4 mr-1" />
+              デジタル入力モード
+            </Button>
+            <Button
+              variant={isPrintMode ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setIsPrintMode(true)}
+            >
+              <FileText className="h-4 w-4 mr-1" />
+              印刷用モード
+            </Button>
+            {isPrintMode && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => window.print()}
+              >
+                印刷
+              </Button>
+            )}
+          </div>
+
           {/* ヘッダー情報 */}
-          <Card>
+          <Card className={isPrintMode ? 'print-mode-card' : ''}>
             <CardContent className="p-4">
               <div className="flex justify-between items-center">
                 <div>
-                  <h2 className="text-xl font-semibold">
+                  <h2 className="text-xl font-semibold print:text-base">
                     {session.staffMember?.name}さん - {session.manual.title}
                   </h2>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="text-sm text-gray-600 mt-1 print:text-xs">
                     {session.staffMember?.department} / {session.staffMember?.position}
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm text-gray-600">予定時間: {session.duration}分</p>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-600 print:text-xs">予定時間: {session.duration}分</p>
+                  <p className="text-sm text-gray-600 print:text-xs">
                     セクション: {session.currentSectionIndex + 1} / {session.manual.sections.length}
                   </p>
+                  {isPrintMode && (
+                    <p className="text-xs text-gray-500 mt-2 print:block hidden">
+                      実施日: ___________　面談者: ___________
+                    </p>
+                  )}
                 </div>
               </div>
             </CardContent>
           </Card>
 
           {/* 現在のセクション */}
-          <Card>
-            <CardHeader className="bg-blue-50">
-              <CardTitle>
+          <Card className={isPrintMode ? 'print-mode-card' : ''}>
+            <CardHeader className={isPrintMode ? 'print:bg-white print:border-b print:border-gray-300' : 'bg-blue-50'}>
+              <CardTitle className="print:text-sm print:font-bold">
                 {session.manual.sections[session.currentSectionIndex].title}
               </CardTitle>
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-sm text-gray-600 mt-1 print:text-xs print:hidden">
                 {session.manual.sections[session.currentSectionIndex].purpose}
               </p>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 mt-1 print:hidden">
                 推奨時間: {session.manual.sections[session.currentSectionIndex].duration}分
               </p>
             </CardHeader>
-            <CardContent className="space-y-6 pt-6">
+            <CardContent className="space-y-6 pt-6 print:space-y-3 print:pt-3">
               {/* 質問項目 */}
               {session.manual.sections[session.currentSectionIndex].questions.map((question, index) => (
-                <div key={question.id} className="space-y-3 p-4 bg-gray-50 rounded-lg">
-                  <div className="flex items-start gap-3">
-                    <span className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-semibold">
-                      {index + 1}
+                <div key={question.id} className={isPrintMode ? 'print-question-item' : 'space-y-3 p-4 bg-gray-50 rounded-lg'}>
+                  <div className="flex items-start gap-3 print:gap-2">
+                    <span className={isPrintMode ? 
+                      'print:text-xs print:font-bold print:w-4' : 
+                      'flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-semibold'
+                    }>
+                      {isPrintMode ? `${index + 1}.` : index + 1}
                     </span>
-                    <div className="flex-grow space-y-3">
+                    <div className="flex-grow space-y-3 print:space-y-1">
                       <div>
-                        <Label className="text-base font-medium">{question.question}</Label>
-                        {question.required && (
-                          <span className="ml-2 text-xs text-red-500">*必須</span>
-                        )}
+                        <Label className="text-base font-medium print:text-xs print:font-normal">
+                          {question.question}
+                          {question.required && !isPrintMode && (
+                            <span className="ml-2 text-xs text-red-500">*必須</span>
+                          )}
+                        </Label>
                       </div>
                       
-                      {/* 質問の詳細情報 */}
-                      <div className="text-sm text-gray-600 bg-blue-50 p-3 rounded">
-                        <p className="font-medium mb-1">💡 質問のポイント</p>
-                        <ul className="space-y-1">
-                          {question.details.askingTips.map((tip, i) => (
-                            <li key={i}>• {tip}</li>
-                          ))}
-                        </ul>
-                      </div>
+                      {/* 質問の詳細情報（印刷時は非表示） */}
+                      {!isPrintMode && (
+                        <div className="text-sm text-gray-600 bg-blue-50 p-3 rounded print:hidden">
+                          <p className="font-medium mb-1">💡 質問のポイント</p>
+                          <ul className="space-y-1">
+                            {question.details.askingTips.map((tip, i) => (
+                              <li key={i}>• {tip}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
 
                       {/* 回答入力エリア */}
-                      {question.type === 'open' && (
-                        <Textarea
-                          placeholder="回答を入力してください..."
-                          className="min-h-[100px]"
-                          onChange={(e) => handleResponseSave(question.id, e.target.value)}
-                        />
+                      {isPrintMode ? (
+                        // 印刷モード：手書き用の罫線
+                        <div className="print-answer-line">___________________________________________</div>
+                      ) : (
+                        // デジタルモード：通常の入力フォーム
+                        question.type === 'open' && (
+                          <Textarea
+                            placeholder="回答を入力してください..."
+                            className="min-h-[100px]"
+                            onChange={(e) => handleResponseSave(question.id, e.target.value)}
+                          />
+                        )
                       )}
 
                       {question.type === 'scale' && question.scale && (
-                        <div>
-                          <div className="flex justify-between mb-2">
-                            <span className="text-sm">{question.scale.labels?.[0] || question.scale.min}</span>
-                            <span className="text-sm">{question.scale.labels?.[question.scale.labels.length - 1] || question.scale.max}</span>
+                        isPrintMode ? (
+                          // 印刷モード：チェックボックス式
+                          <div className="print-scale-options">
+                            {Array.from(
+                              { length: question.scale.max - question.scale.min + 1 },
+                              (_, i) => question.scale!.min + i
+                            ).map(value => (
+                              <div key={value} className="print-scale-item">
+                                <span className="print-checkbox"></span>
+                                <span className="text-xs">{value}</span>
+                              </div>
+                            ))}
                           </div>
-                          <RadioGroup
-                            onValueChange={(value) => handleResponseSave(question.id, value)}
-                          >
-                            <div className="flex justify-between">
-                              {Array.from(
-                                { length: question.scale.max - question.scale.min + 1 },
-                                (_, i) => question.scale!.min + i
-                              ).map(value => (
-                                <div key={value} className="flex flex-col items-center">
-                                  <RadioGroupItem value={String(value)} id={`${question.id}-${value}`} />
-                                  <Label htmlFor={`${question.id}-${value}`} className="text-xs mt-1">
-                                    {value}
-                                  </Label>
-                                </div>
-                              ))}
+                        ) : (
+                          // デジタルモード
+                          <div>
+                            <div className="flex justify-between mb-2">
+                              <span className="text-sm">{question.scale.labels?.[0] || question.scale.min}</span>
+                              <span className="text-sm">{question.scale.labels?.[question.scale.labels.length - 1] || question.scale.max}</span>
                             </div>
-                          </RadioGroup>
-                        </div>
+                            <RadioGroup
+                              onValueChange={(value) => handleResponseSave(question.id, value)}
+                            >
+                              <div className="flex justify-between">
+                                {Array.from(
+                                  { length: question.scale.max - question.scale.min + 1 },
+                                  (_, i) => question.scale!.min + i
+                                ).map(value => (
+                                  <div key={value} className="flex flex-col items-center">
+                                    <RadioGroupItem value={String(value)} id={`${question.id}-${value}`} />
+                                    <Label htmlFor={`${question.id}-${value}`} className="text-xs mt-1">
+                                      {value}
+                                    </Label>
+                                  </div>
+                                ))}
+                              </div>
+                            </RadioGroup>
+                          </div>
+                        )
                       )}
 
                       {/* ハイブリッド型（5段階評価＋テキスト入力） */}
@@ -1068,38 +1135,69 @@ export default function DynamicInterviewFlow() {
                 </div>
               ))}
 
-              {/* セクション移動ボタン */}
-              <div className="flex justify-between pt-4">
-                <Button
-                  variant="outline"
-                  onClick={() => setSession(prev => ({
-                    ...prev,
-                    currentSectionIndex: Math.max(0, prev.currentSectionIndex - 1)
-                  }))}
-                  disabled={session.currentSectionIndex === 0}
-                >
-                  前のセクション
-                </Button>
-                <Button 
-                  onClick={handleNextSection}
-                  disabled={
-                    session.manual.sections[session.currentSectionIndex].questions.some(q => {
-                      const response = session.responses.get(q.id);
-                      // 必須項目のチェック
-                      if (q.required && !response) return true;
-                      // ハイブリッド型でテキスト必須の場合
-                      if (q.type === 'hybrid' && q.hybridInput?.requireText) {
-                        return !response?.text || response.text.trim() === '';
-                      }
-                      return false;
-                    })
-                  }
-                >
-                  {session.currentSectionIndex === session.manual.sections.length - 1
-                    ? '面談を完了'
-                    : '次のセクション'}
-                </Button>
-              </div>
+              {/* セクション移動ボタン（印刷時は非表示） */}
+              {!isPrintMode && (
+                <div className="flex justify-between pt-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => setSession(prev => ({
+                      ...prev,
+                      currentSectionIndex: Math.max(0, prev.currentSectionIndex - 1)
+                    }))}
+                    disabled={session.currentSectionIndex === 0}
+                  >
+                    前のセクション
+                  </Button>
+                  <Button 
+                    onClick={handleNextSection}
+                    disabled={
+                      session.manual.sections[session.currentSectionIndex].questions.some(q => {
+                        const response = session.responses.get(q.id);
+                        // 必須項目のチェック
+                        if (q.required && !response) return true;
+                        // ハイブリッド型でテキスト必須の場合
+                        if (q.type === 'hybrid' && q.hybridInput?.requireText) {
+                          return !response?.text || response.text.trim() === '';
+                        }
+                        return false;
+                      })
+                    }
+                  >
+                    {session.currentSectionIndex === session.manual.sections.length - 1
+                      ? '面談を完了'
+                      : '次のセクション'}
+                  </Button>
+                </div>
+              )}
+
+              {/* 印刷時の署名欄 */}
+              {isPrintMode && session.currentSectionIndex === session.manual.sections.length - 1 && (
+                <div className="print-signature-section mt-8">
+                  <div className="text-xs text-gray-600">
+                    <div className="mb-4">
+                      <span>面談日時：</span>
+                      <span className="print-signature-line"></span>
+                      <span>年</span>
+                      <span className="print-signature-line" style={{ width: '50px' }}></span>
+                      <span>月</span>
+                      <span className="print-signature-line" style={{ width: '50px' }}></span>
+                      <span>日</span>
+                      <span className="print-signature-line" style={{ width: '50px' }}></span>
+                      <span>時</span>
+                      <span className="print-signature-line" style={{ width: '50px' }}></span>
+                      <span>分</span>
+                    </div>
+                    <div className="mb-2">
+                      <span>面談者署名：</span>
+                      <span className="print-signature-line" style={{ width: '200px' }}></span>
+                    </div>
+                    <div>
+                      <span>対象者署名：</span>
+                      <span className="print-signature-line" style={{ width: '200px' }}></span>
+                    </div>
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
