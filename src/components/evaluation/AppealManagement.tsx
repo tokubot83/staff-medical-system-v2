@@ -62,7 +62,30 @@ import {
   FileCheck
 } from 'lucide-react';
 import { AppealRequest, AppealStatus, AppealCategory } from '@/mcp-shared/interfaces/appeal.interface';
-import { toast } from 'sonner';
+// import { toast } from 'sonner';
+// Sonnerの代わりに簡易的なトースト通知を実装
+const toast = {
+  success: (message: string) => {
+    console.log('✅', message);
+    if (typeof window !== 'undefined') {
+      const div = document.createElement('div');
+      div.className = 'fixed bottom-4 right-4 bg-green-600 text-white px-4 py-2 rounded shadow-lg z-50';
+      div.textContent = message;
+      document.body.appendChild(div);
+      setTimeout(() => div.remove(), 3000);
+    }
+  },
+  error: (message: string) => {
+    console.error('❌', message);
+    if (typeof window !== 'undefined') {
+      const div = document.createElement('div');
+      div.className = 'fixed bottom-4 right-4 bg-red-600 text-white px-4 py-2 rounded shadow-lg z-50';
+      div.textContent = message;
+      document.body.appendChild(div);
+      setTimeout(() => div.remove(), 3000);
+    }
+  }
+};
 
 interface AppealRecord {
   appealId: string;
