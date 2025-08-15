@@ -69,7 +69,7 @@ export async function GET(request: NextRequest) {
     
     // 現在日時を追加
     const now = new Date().toISOString();
-    periods = periods.map(period => ({
+    const enrichedPeriods = periods.map(period => ({
       ...period,
       isAppealable: new Date(period.appealDeadline) > new Date(),
       daysUntilAppealDeadline: Math.ceil(
@@ -79,12 +79,12 @@ export async function GET(request: NextRequest) {
     
     return NextResponse.json({
       success: true,
-      periods,
+      periods: enrichedPeriods,
       currentDate: now,
       metadata: {
-        total: periods.length,
-        active: periods.filter(p => p.status === 'active').length,
-        appealable: periods.filter(p => p.isAppealable).length
+        total: enrichedPeriods.length,
+        active: enrichedPeriods.filter(p => p.status === 'active').length,
+        appealable: enrichedPeriods.filter(p => p.isAppealable).length
       }
     });
     
