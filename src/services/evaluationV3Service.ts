@@ -175,12 +175,13 @@ export class QuestionSelectorService {
     const { selectQuestionsForStaff, generateDynamicQuestion } = await import('@/data/questionBank');
     const { TrainingIntegrationService } = await import('@/services/trainingIntegrationService');
     
-    // 研修ベースの推奨設問を取得（簡易実装）
-    const trainingRecommendations = {
-      mandatoryQuestions: [],
-      recommendedQuestions: [],
-      reason: '研修履歴に基づく推奨'
-    };
+    // 研修ベースの推奨設問を取得
+    const trainingRecommendations = await TrainingIntegrationService.recommendQuestionsBasedOnTraining({
+      staffId: context.staffId,
+      experienceLevel: context.experienceLevel,
+      year: context.year,
+      categoryCode
+    });
     
     // 設問バンクから最適な設問を選定
     const selectedQuestions = selectQuestionsForStaff({
