@@ -495,10 +495,11 @@ export default function Home() {
       </div>
      </header>
 
-     {/* Navigation */}
+     {/* Navigation - 2列構成 */}
      <nav className="bg-gray-800 text-white shadow-md">
       <div className="max-w-7xl mx-auto px-4">
-       <div className="flex items-center h-12">
+       {/* 1列目 - 基本機能 */}
+       <div className="flex items-center h-12 border-b border-gray-700">
         <div className="flex space-x-1">
          <Link href="/staff-cards" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
           職員カルテ
@@ -512,9 +513,6 @@ export default function Home() {
          <Link href="/training" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
           教育・研修
          </Link>
-         <Link href="/evaluation" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
-          評価管理
-         </Link>
          <Link href="/goals" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
           目標管理
          </Link>
@@ -523,6 +521,23 @@ export default function Home() {
          </Link>
          <Link href="/attendance-management" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
           勤怠管理
+         </Link>
+        </div>
+       </div>
+       
+       {/* 2列目 - 評価・分析・管理機能 */}
+       <div className="flex items-center h-12">
+        <div className="flex space-x-1">
+         <Link href="/evaluation" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
+          評価管理
+         </Link>
+         <Link href="/evaluation-design" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-green-400 flex items-center gap-1">
+          <span className="text-xs bg-green-500 text-white px-1.5 py-0.5 rounded">NEW</span>
+          評価制度設計
+         </Link>
+         <Link href="/evaluation-execution" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-green-400 flex items-center gap-1">
+          <span className="text-xs bg-green-500 text-white px-1.5 py-0.5 rounded">NEW</span>
+          個人評価管理
          </Link>
          <Link href="/reports" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
           レポート
