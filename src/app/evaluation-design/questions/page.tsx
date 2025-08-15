@@ -121,16 +121,6 @@ export default function QuestionManagementPage() {
     }
   };
 
-  // 難易度のバッジ色
-  const getDifficultyBadge = (difficulty: string) => {
-    switch (difficulty) {
-      case 'basic': return <Badge className="bg-green-100 text-green-800">基礎</Badge>;
-      case 'intermediate': return <Badge className="bg-yellow-100 text-yellow-800">中級</Badge>;
-      case 'advanced': return <Badge className="bg-red-100 text-red-800">上級</Badge>;
-      default: return <Badge>-</Badge>;
-    }
-  };
-
   // 評価者のバッジ
   const getEvaluatorBadge = (evaluator: string) => {
     switch (evaluator) {
@@ -139,19 +129,6 @@ export default function QuestionManagementPage() {
       case 'both': return <Badge className="bg-indigo-100 text-indigo-800">両方</Badge>;
       default: return <Badge>-</Badge>;
     }
-  };
-
-  // 効果性インジケーター
-  const getEffectivenessIndicator = (effectiveness?: number) => {
-    if (!effectiveness) return null;
-    const color = effectiveness >= 80 ? 'text-green-600' : 
-                  effectiveness >= 60 ? 'text-yellow-600' : 'text-red-600';
-    return (
-      <div className="flex items-center gap-1">
-        <TrendingUp className={`w-4 h-4 ${color}`} />
-        <span className={`text-sm font-medium ${color}`}>{effectiveness}%</span>
-      </div>
-    );
   };
 
   return (
@@ -249,9 +226,9 @@ export default function QuestionManagementPage() {
                         <TableHead>設問内容</TableHead>
                         <TableHead>カテゴリー</TableHead>
                         <TableHead>対象レベル</TableHead>
-                        <TableHead>難易度</TableHead>
+                        <TableHead>配点</TableHead>
                         <TableHead>評価者</TableHead>
-                        <TableHead>効果性</TableHead>
+                        <TableHead>経験レベル</TableHead>
                         <TableHead>使用回数</TableHead>
                         <TableHead className="text-right">操作</TableHead>
                       </TableRow>
@@ -290,9 +267,13 @@ export default function QuestionManagementPage() {
                               )}
                             </div>
                           </TableCell>
-                          <TableCell>{getDifficultyBadge(question.difficulty)}</TableCell>
+                          <TableCell>{question.points}点</TableCell>
                           <TableCell>{getEvaluatorBadge(question.evaluator)}</TableCell>
-                          <TableCell>{getEffectivenessIndicator(question.effectiveness)}</TableCell>
+                          <TableCell>
+                            <Badge variant="outline">
+                              {question.experienceLevels.join(', ')}
+                            </Badge>
+                          </TableCell>
                           <TableCell>
                             <span className="text-sm text-gray-600">{question.usageCount}</span>
                           </TableCell>
@@ -461,12 +442,6 @@ export default function QuestionManagementPage() {
                               設問 {index + 1}
                             </span>
                             <div className="flex gap-2">
-                              {q.autoSelected && (
-                                <Badge className="bg-purple-100 text-purple-800">
-                                  <Sparkles className="w-3 h-3 mr-1" />
-                                  自動選定
-                                </Badge>
-                              )}
                               {q.requiredTrainings && q.requiredTrainings.length > 0 && (
                                 <Badge className="bg-blue-100 text-blue-800">
                                   <BookOpen className="w-3 h-3 mr-1" />
@@ -479,9 +454,8 @@ export default function QuestionManagementPage() {
                           <div className="flex items-center justify-between">
                             <div className="flex gap-2">
                               {getEvaluatorBadge(q.evaluator)}
-                              {getDifficultyBadge(q.difficulty)}
                             </div>
-                            <p className="text-xs text-gray-500">{q.selectionReason}</p>
+                            <p className="text-xs text-gray-500">配点: {q.points}点</p>
                           </div>
                         </div>
                       ))}

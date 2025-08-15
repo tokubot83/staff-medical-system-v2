@@ -30,7 +30,8 @@ import {
   Upload,
   Calendar,
   Clock,
-  TrendingUp
+  TrendingUp,
+  Sparkles
 } from 'lucide-react';
 import Link from 'next/link';
 import { ExperienceLevelMapper, ExperienceLevelsV3 } from '@/services/evaluationV3Service';
@@ -328,15 +329,27 @@ export default function EvaluationExecutionPage() {
                             )}
                           </div>
                           {getStatusBadge(staff.evaluationStatus)}
-                          <Link href={`/evaluation-execution/input/${staff.id}`}>
-                            <Button 
-                              variant={staff.evaluationStatus === 'not-started' ? 'default' : 'outline'}
-                              size="sm"
-                            >
-                              <FileText className="w-4 h-4 mr-2" />
-                              {staff.evaluationStatus === 'not-started' ? '評価開始' : '評価編集'}
-                            </Button>
-                          </Link>
+                          <div className="flex gap-2">
+                            <Link href={`/evaluation-execution/dynamic/${staff.id}`}>
+                              <Button 
+                                variant="default"
+                                size="sm"
+                                title="動的評価シート生成"
+                              >
+                                <Sparkles className="w-4 h-4 mr-2" />
+                                動的生成
+                              </Button>
+                            </Link>
+                            <Link href={`/evaluation-execution/input/${staff.id}`}>
+                              <Button 
+                                variant={staff.evaluationStatus === 'not-started' ? 'outline' : 'outline'}
+                                size="sm"
+                              >
+                                <FileText className="w-4 h-4 mr-2" />
+                                {staff.evaluationStatus === 'not-started' ? '評価開始' : '評価編集'}
+                              </Button>
+                            </Link>
+                          </div>
                         </div>
                       </div>
                     </div>

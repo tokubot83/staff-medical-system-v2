@@ -26,6 +26,8 @@ export interface Question {
   // 動的生成用
   template?: boolean; // テンプレート設問か
   variables?: string[]; // 置換可能な変数
+  autoSelected?: boolean; // 自動選定された設問か
+  selectionReason?: string; // 選定理由
 }
 
 // 法定研修マスタ
