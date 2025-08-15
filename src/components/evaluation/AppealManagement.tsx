@@ -129,6 +129,7 @@ interface AppealCase {
   requestedScore?: number;
   finalScore?: number;
   reviewerNotes?: string;
+  voiceDriveNotified?: boolean;
 }
 
 export default function AppealManagement() {
