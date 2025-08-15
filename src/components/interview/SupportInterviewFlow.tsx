@@ -26,6 +26,7 @@ import {
   ChevronRight,
   ChevronLeft,
   Check,
+  CheckCircle,
   AlertTriangle,
   Info,
   Loader2,
