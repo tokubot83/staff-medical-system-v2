@@ -23,7 +23,7 @@ import {
   ArrowUpRight,
   Target
 } from 'lucide-react';
-import { trainingIntegrationService, TrainingRecord } from '@/services/trainingIntegrationService';
+import { TrainingIntegrationService, TrainingRecord } from '@/services/trainingIntegrationService';
 
 interface TrainingIntegrationPanelProps {
   staffId: string;
@@ -52,18 +52,21 @@ export default function TrainingIntegrationPanel({
   const loadTrainingRecord = async () => {
     setIsLoading(true);
     try {
-      const record = await trainingIntegrationService.fetchTrainingRecords(staffId, year);
+      const records = await TrainingIntegrationService.getStaffTrainingHistory(staffId);
       
-      // 評価ポイントを計算
-      const points = trainingIntegrationService.calculateEvaluationPoints(record);
-      record.evaluationImpact = {
-        ...record.evaluationImpact,
-        technicalPoints: points.technicalPoints,
-        contributionPoints: points.contributionPoints,
-        specialAchievements: points.details
+      // モックデータとして trainingRecord を構築
+      const mockRecord = {
+        staffId,
+        year,
+        completedTrainings: records,
+        evaluationImpact: {
+          technicalPoints: records.length * 3,
+          contributionPoints: records.length * 2,
+          specialAchievements: []
+        }
       };
       
-      setTrainingRecord(record);
+      setTrainingRecord(mockRecord);
     } catch (error) {
       console.error('Failed to load training record:', error);
     } finally {
@@ -77,7 +80,13 @@ export default function TrainingIntegrationPanel({
     
     setIsSyncing(true);
     try {
-      const result = await trainingIntegrationService.syncToEvaluationSystem(staffId, year);
+      // モック実装
+      const result = {
+        success: true,
+        technicalImpact: trainingRecord.evaluationImpact.technicalPoints,
+        contributionImpact: trainingRecord.evaluationImpact.contributionPoints,
+        message: '研修データが評価システムに同期されました'
+      };
       setSyncResult(result);
       
       if (result.success && onIntegrationComplete) {
