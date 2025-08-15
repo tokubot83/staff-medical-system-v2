@@ -4,7 +4,8 @@ import React from 'react';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Shield, User, ArrowRight } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Shield, User, ArrowRight, Target } from 'lucide-react';
 
 export default function DashboardPage() {
   return (
@@ -85,9 +86,52 @@ export default function DashboardPage() {
           </Card>
         </div>
 
-        {/* クイックアクセス */}
+        {/* 総合評価システムv3 */}
+        <div className="mt-8 p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border-2 border-blue-200">
+          <h2 className="text-xl font-semibold mb-2 flex items-center gap-2">
+            🎯 総合評価システム v3
+            <Badge className="bg-red-500 text-white">NEW</Badge>
+          </h2>
+          <p className="text-sm text-gray-600 mb-4">
+            評価制度の設計から個人評価まで、統合的に管理できる新システム
+          </p>
+          <div className="grid grid-cols-2 gap-4">
+            <Link href="/evaluation-design">
+              <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <Target className="w-6 h-6 text-blue-600" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">評価制度設計</h3>
+                      <p className="text-xs text-gray-600">100点の配分を決める</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+            <Link href="/evaluation-execution">
+              <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                      <User className="w-6 h-6 text-purple-600" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">個人評価管理</h3>
+                      <p className="text-xs text-gray-600">職員を評価する</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          </div>
+        </div>
+
+        {/* クイックアクセス（既存） */}
         <div className="mt-8">
-          <h2 className="text-xl font-semibold mb-4">クイックアクセス</h2>
+          <h2 className="text-xl font-semibold mb-4">クイックアクセス（従来版）</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <Link href="/evaluation">
               <Button variant="outline" className="w-full h-20 flex-col">
