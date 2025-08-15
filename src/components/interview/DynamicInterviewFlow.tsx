@@ -1243,8 +1243,8 @@ export default function DynamicInterviewFlow() {
             </CardContent>
           </Card>
         </div>
+        )}
       )}
-    )}
 
       {/* Step 6: 完了 */}
       {currentStep === 'completed' && (
