@@ -20,7 +20,8 @@ import {
   Calendar,
   CheckCircle,
   Clock,
-  AlertCircle
+  AlertCircle,
+  Sparkles
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -274,6 +275,32 @@ export default function EvaluationDesignPage() {
                 法人統一項目（30点）と施設特化項目（20点）の詳細設計を行います
               </AlertDescription>
             </Alert>
+
+            {/* 動的設問管理 */}
+            <Card className="border-purple-200 bg-purple-50">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-purple-600" />
+                  動的設問管理
+                </CardTitle>
+                <CardDescription>
+                  研修履歴と経験レベルに応じて設問を自動選定
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Link href="/evaluation-design/questions">
+                  <Button className="w-full" variant="default">
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    動的設問を管理
+                  </Button>
+                </Link>
+                <p className="text-xs text-gray-600 mt-3">
+                  ✓ 研修完了状況に基づく設問推奨<br />
+                  ✓ 経験レベル別の難易度調整<br />
+                  ✓ 年度ごとの設問自動更新
+                </p>
+              </CardContent>
+            </Card>
 
             <div className="grid grid-cols-2 gap-6">
               <Card className="border-blue-200">
