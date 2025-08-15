@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PWA Icon Generator</title>
+</head>
+<body>
+    <h2>PWA Icon Fallback Generator</h2>
+    <p>Since we need actual PNG files for the PWA icons, here are placeholder data URLs that can be used temporarily:</p>
+    
+    <canvas id="canvas" width="512" height="512"></canvas>
+    
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Blue background
+        ctx.fillStyle = '#0070f3';
+        ctx.fillRect(0, 0, 512, 512);
+        
+        // White cross
+        ctx.fillStyle = 'white';
+        // Vertical bar
+        ctx.fillRect(206, 106, 100, 300);
+        // Horizontal bar
+        ctx.fillRect(106, 206, 300, 100);
+        
+        // Generate different sizes
+        const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+        
+        console.log('Copy these data URLs to create placeholder icons:');
+        sizes.forEach(size => {
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = size;
+            tempCanvas.height = size;
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCtx.drawImage(canvas, 0, 0, size, size);
+            console.log(`icon-${size}x${size}.png:`, tempCanvas.toDataURL('image/png'));
+        });
+    </script>
+</body>
+</html>
