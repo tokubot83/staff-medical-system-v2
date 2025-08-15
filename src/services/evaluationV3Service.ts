@@ -11,6 +11,9 @@ import {
   JobCategoryV3
 } from '@/types/evaluation-v3';
 
+// 再エクスポート
+export { ExperienceLevelsV3 } from '@/types/evaluation-v3';
+
 // 経験レベルマッピングサービス
 export class ExperienceLevelMapper {
   // 旧システムからv3への変換
