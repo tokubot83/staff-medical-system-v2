@@ -211,8 +211,8 @@ export class InterviewFlowOrchestrationService {
     // マニュアル生成リクエストの作成
     const manualRequest: ManualGenerationRequest = {
       staffLevel: this.determineStaffLevel(staffInfo),
-      jobRole: staffInfo.jobRole,
-      facilityType: staffInfo.facilityType,
+      jobRole: staffInfo.position as any, // positionをjobRoleとして使用
+      facilityType: 'hospital' as any, // デフォルト値を設定
       interviewType: interviewType as any,
       duration: options?.duration || 30,
       motivationType: staffInfo.motivationType,
