@@ -630,9 +630,9 @@ export default function SupportInterviewFlow() {
                                 {section.questions?.map((q, j) => (
                                   <div key={j} className="border-l-2 pl-3 py-1">
                                     <p className="text-sm font-medium">{q.question}</p>
-                                    {q.purpose && (
+                                    {q.details?.purpose && (
                                       <p className="text-xs text-muted-foreground mt-1">
-                                        💡 {q.purpose}
+                                        💡 {q.details.purpose}
                                       </p>
                                     )}
                                   </div>
@@ -686,7 +686,7 @@ export default function SupportInterviewFlow() {
                       <div className="space-y-4">
                         {manual.sections[currentSection].questions?.map((question, i) => (
                           <div key={i} className="space-y-2">
-                            <Label>{question.text}</Label>
+                            <Label>{question.question}</Label>
                             <Textarea
                               placeholder="回答を入力..."
                               value={responses.get(`${currentSection}_${i}`) || ''}
@@ -697,9 +697,9 @@ export default function SupportInterviewFlow() {
                               }}
                               rows={4}
                             />
-                            {question.tips && (
+                            {question.details?.askingTips && question.details.askingTips.length > 0 && (
                               <p className="text-xs text-muted-foreground">
-                                💡 {question.tips}
+                                💡 {question.details.askingTips.join(', ')}
                               </p>
                             )}
                           </div>

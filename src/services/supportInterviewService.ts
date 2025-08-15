@@ -2,7 +2,7 @@
 // 職員からの面談申込に基づいて動的に面談マニュアルを生成
 
 import { VoiceDriveInterviewRequest, VoiceDriveInterviewCategory } from './voicedriveIntegrationService';
-import { GeneratedInterviewManual } from './interviewManualGenerationService';
+import { GeneratedInterviewManual, StaffLevel, JobRole, FacilityType } from './interviewManualGenerationService';
 import { MotivationTypeDiagnosisService } from './motivationTypeDiagnosisService';
 
 // サポート面談カテゴリ詳細定義
@@ -90,6 +90,9 @@ export interface SupportInterviewManual extends GeneratedInterviewManual {
     }[];
     closingStrategy: string;
   };
+  
+  // フォローアップガイドライン
+  followUpGuidelines?: string[];
 }
 
 export class SupportInterviewService {
@@ -313,50 +316,77 @@ export class SupportInterviewService {
     const manual: SupportInterviewManual = {
       id: `support_${Date.now()}`,
       title: `サポート面談マニュアル - ${category.name}`,
-      type: 'support',
-      category: category.id,
       generatedAt: new Date(),
+      estimatedDuration: 30, // デフォルト30分
       
       // 基本情報
       staffInfo: {
-        id: request.employeeId,
-        name: request.employeeName,
-        department: request.department,
-        position: request.position,
-        experience: staffProfile?.experience || 'unknown',
-        lastInterviewDate: staffProfile?.lastInterviewDate
+        level: this.estimateStaffLevel(request.position),
+        jobRole: this.estimateJobRole(request.position),
+        facility: 'acute' as FacilityType, // デフォルト値
+        levelDescription: request.position || '一般職員'
       },
       
-      // リクエスト情報
+      // 面談概要
+      overview: {
+        purpose: `${category.name}に関するサポートと支援`,
+        objectives: [
+          '現状の問題・課題の明確化',
+          '解決策の検討と提案',
+          '今後のアクションプランの策定'
+        ],
+        keyPoints: [
+          '傾聴と共感の姿勢を大切にする',
+          '職員の自己決定を尊重する',
+          '実現可能な解決策を一緒に考える'
+        ],
+        preparationItems: preparation.reviewPoints
+      },
+      
+      // セクション（面談の流れ）
+      sections: this.buildSections(template, customizedQuestions, dynamicQuestions),
+      
+      // 時間配分
+      timeAllocation: this.calculateTimeAllocation(template, request) || [],
+      
+      // ガイドライン
+      guidelines: {
+        dos: [
+          '安心できる環境づくり',
+          '適切な質問と傾聴',
+          '具体的な支援の提供'
+        ],
+        donts: [
+          '批判や否定的な発言',
+          '個人的な価値観の押し付け',
+          '守秘義務の違反'
+        ],
+        tips: approachStrategy ? [
+          approachStrategy.initialApproach,
+          ...approachStrategy.buildingRapport
+        ] : []
+      },
+      
+      // リクエスト情報（SupportInterviewManual独自）
       requestInfo: {
         requestId: request.requestId,
         category: category.id,
         subcategory: subcategory?.id,
         consultationTopic: request.consultationTopic,
         consultationDetails: request.consultationDetails,
-        urgency: request.urgency,
-        preferredDuration: this.calculateDuration(request, category)
+        urgency: request.urgency
       },
       
-      // セクション
-      sections: this.buildSections(template, customizedQuestions, dynamicQuestions),
-      
-      // カスタマイズされた質問
+      // カスタマイズされた質問（SupportInterviewManual独自）
       customizedQuestions,
       
-      // 事前準備
+      // 事前準備（SupportInterviewManual独自）
       preparation,
       
-      // アプローチ戦略
+      // アプローチ戦略（SupportInterviewManual独自）
       approachStrategy,
       
-      // 時間配分
-      timeAllocation: this.calculateTimeAllocation(template, request),
-      
-      // 評価項目
-      evaluationPoints: this.generateEvaluationPoints(category),
-      
-      // フォローアップ
+      // フォローアップガイドライン（SupportInterviewManual独自）
       followUpGuidelines: this.generateFollowUpGuidelines(category, request.urgency)
     };
     
@@ -441,7 +471,7 @@ export class SupportInterviewService {
           id: 'main',
           title: 'メイントピック',
           duration: 25,
-          questions: subcategory?.suggestedQuestions.map((q, i) => ({
+          questions: subcategory?.suggestedQuestions.map((q: string, i: number) => ({
             id: `main_${i}`,
             text: q,
             type: 'open' as const,
@@ -561,7 +591,12 @@ export class SupportInterviewService {
     category: SupportInterviewCategory,
     staffProfile?: any
   ): any {
-    const strategy = {
+    const strategy: {
+      initialApproach: string;
+      buildingRapport: string[];
+      difficultTopics: { topic: string; approach: string }[];
+      closingStrategy: string;
+    } = {
       initialApproach: '',
       buildingRapport: [],
       difficultTopics: [],
@@ -896,8 +931,8 @@ export class SupportInterviewService {
     // データベースへの保存処理
     console.log('Saving interview data:', {
       manualId: manual.id,
-      staffId: manual.staffInfo.id,
-      category: manual.category,
+      requestId: manual.requestInfo.requestId,
+      category: manual.requestInfo.category,
       completedAt: new Date()
     });
   }
@@ -970,7 +1005,7 @@ export class SupportInterviewService {
     // 面談の効果測定と分析
     const analytics = {
       interviewId: manual.id,
-      category: manual.category,
+      category: manual.requestInfo.category,
       urgency: manual.requestInfo.urgency,
       duration: feedback.actualDuration,
       satisfactionScore: feedback.satisfactionScore,
@@ -979,5 +1014,47 @@ export class SupportInterviewService {
     };
     
     console.log('Updating analytics:', analytics);
+  }
+
+  /**
+   * 職員レベルの推定
+   */
+  private static estimateStaffLevel(position?: string): StaffLevel {
+    if (!position) return 'general';
+    
+    const positionLower = position.toLowerCase();
+    if (positionLower.includes('新人') || positionLower.includes('新卒')) return 'new';
+    if (positionLower.includes('初級') || positionLower.includes('ジュニア')) return 'junior';
+    if (positionLower.includes('中堅')) return 'midlevel';
+    if (positionLower.includes('上級') || positionLower.includes('シニア')) return 'senior';
+    if (positionLower.includes('ベテラン')) return 'veteran';
+    if (positionLower.includes('リーダー')) return 'leader';
+    if (positionLower.includes('主任')) return 'chief';
+    if (positionLower.includes('管理') || positionLower.includes('マネージャー')) return 'manager';
+    
+    return 'general';
+  }
+
+  /**
+   * 職種の推定
+   */
+  private static estimateJobRole(position?: string): JobRole {
+    if (!position) return 'nurse';
+    
+    const positionLower = position.toLowerCase();
+    if (positionLower.includes('看護師')) {
+      if (positionLower.includes('准')) return 'assistant-nurse';
+      return 'nurse';
+    }
+    if (positionLower.includes('看護補助')) return 'nursing-aide';
+    if (positionLower.includes('介護')) {
+      if (positionLower.includes('補助')) return 'care-assistant';
+      return 'care-worker';
+    }
+    if (positionLower.includes('理学療法') || positionLower.includes('pt')) return 'pt';
+    if (positionLower.includes('作業療法') || positionLower.includes('ot')) return 'ot';
+    if (positionLower.includes('言語聴覚') || positionLower.includes('st')) return 'st';
+    
+    return 'nurse';
   }
 }

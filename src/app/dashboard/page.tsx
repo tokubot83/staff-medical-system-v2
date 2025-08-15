@@ -3,9 +3,11 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { 
   Shield, 
   User, 
@@ -21,10 +23,20 @@ import {
   BarChart3,
   Settings,
   Calendar,
-  Sparkles
+  Sparkles,
+  BookOpen,
+  Activity,
+  Cog,
+  ChartBar,
+  Home,
+  Info,
+  Bell,
+  Building,
+  Download
 } from 'lucide-react';
 
 export default function DashboardPage() {
+  const [activeTab, setActiveTab] = useState('home');
   const [evaluationProgress] = useState({
     total: 125,
     completed: 78,
@@ -47,8 +59,35 @@ export default function DashboardPage() {
           <p className="text-gray-600 mt-3 text-lg">総合評価システムv3 - 評価制度の設計から実行まで統合管理</p>
         </div>
 
-        {/* 評価進捗サマリー */}
-        <div className="grid grid-cols-4 gap-4 mb-8">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <TabsList className="grid grid-cols-5 w-full">
+            <TabsTrigger value="home" className="flex items-center gap-2">
+              <Home className="h-4 w-4" />
+              ホーム
+            </TabsTrigger>
+            <TabsTrigger value="guide" className="flex items-center gap-2">
+              <BookOpen className="h-4 w-4" />
+              評価ガイド
+            </TabsTrigger>
+            <TabsTrigger value="progress" className="flex items-center gap-2">
+              <Activity className="h-4 w-4" />
+              進捗管理
+            </TabsTrigger>
+            <TabsTrigger value="settings" className="flex items-center gap-2">
+              <Cog className="h-4 w-4" />
+              設定・運用
+            </TabsTrigger>
+            <TabsTrigger value="analysis" className="flex items-center gap-2">
+              <ChartBar className="h-4 w-4" />
+              分析・レポート
+            </TabsTrigger>
+          </TabsList>
+
+          {/* ホームタブ */}
+          <TabsContent value="home" className="space-y-6">
+
+            {/* 評価進捗サマリー */}
+            <div className="grid grid-cols-4 gap-4">
           <Card className="bg-white hover:shadow-lg transition-shadow">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -104,10 +143,10 @@ export default function DashboardPage() {
               </div>
             </CardContent>
           </Card>
-        </div>
+            </div>
 
-        {/* 全体進捗バー */}
-        <Card className="mb-8 bg-white">
+            {/* 全体進捗バー */}
+            <Card className="bg-white">
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-lg font-semibold">2025年度 評価進捗状況</h3>
@@ -118,10 +157,10 @@ export default function DashboardPage() {
               {evaluationProgress.completed}名完了 / {evaluationProgress.total}名中
             </p>
           </CardContent>
-        </Card>
+            </Card>
 
-        {/* メイン機能エリア */}
-        <div className="grid grid-cols-2 gap-8 mb-8">
+            {/* メイン機能エリア */}
+            <div className="grid grid-cols-2 gap-8">
           {/* 評価制度設計 */}
           <div className="space-y-4">
             <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
@@ -258,10 +297,10 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
           </div>
-        </div>
+            </div>
 
-        {/* スケジュールと重要日程 */}
-        <Card className="bg-white">
+            {/* スケジュールと重要日程 */}
+            <Card className="bg-white">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Calendar className="h-5 w-5 text-gray-700" />
@@ -288,7 +327,388 @@ export default function DashboardPage() {
               </div>
             </div>
           </CardContent>
-        </Card>
+            </Card>
+          </TabsContent>
+
+          {/* 評価ガイドタブ */}
+          <TabsContent value="guide" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Info className="h-5 w-5" />
+                  評価制度の概要
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div>
+                  <h3 className="font-semibold mb-3">100点満点評価システム</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="p-4 bg-blue-50 rounded-lg">
+                      <h4 className="font-semibold text-blue-800 mb-2">技術評価（50点）</h4>
+                      <ul className="text-sm space-y-1 text-gray-600">
+                        <li>• 法人統一項目：30点</li>
+                        <li>• 施設特化項目：20点</li>
+                        <li>• 職種・経験に応じた評価</li>
+                      </ul>
+                    </div>
+                    <div className="p-4 bg-green-50 rounded-lg">
+                      <h4 className="font-semibold text-green-800 mb-2">貢献度評価（50点）</h4>
+                      <ul className="text-sm space-y-1 text-gray-600">
+                        <li>• 施設貢献度：25点</li>
+                        <li>• 法人貢献度：25点</li>
+                        <li>• 年2回評価（7月・12月）</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold mb-3">評価プロセスフロー</h3>
+                  <div className="flex items-center gap-2 text-sm">
+                    <Badge>1. 制度設計</Badge>
+                    <ArrowRight className="h-4 w-4" />
+                    <Badge>2. 評価実施</Badge>
+                    <ArrowRight className="h-4 w-4" />
+                    <Badge>3. 総合判定</Badge>
+                    <ArrowRight className="h-4 w-4" />
+                    <Badge>4. 評価開示</Badge>
+                    <ArrowRight className="h-4 w-4" />
+                    <Badge>5. 異議申立</Badge>
+                  </div>
+                </div>
+
+                <Alert>
+                  <Info className="h-4 w-4" />
+                  <AlertTitle>評価の目的</AlertTitle>
+                  <AlertDescription>
+                    公正で透明性の高い評価を通じて、職員の成長支援と組織の発展を実現します。
+                  </AlertDescription>
+                </Alert>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>よくある質問（FAQ）</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-3">
+                  <div className="p-4 bg-gray-50 rounded-lg">
+                    <h4 className="font-semibold mb-2">Q: 評価の頻度はどのくらいですか？</h4>
+                    <p className="text-sm text-gray-600">A: 技術評価は年1回、貢献度評価は年2回（7月・12月）実施されます。</p>
+                  </div>
+                  <div className="p-4 bg-gray-50 rounded-lg">
+                    <h4 className="font-semibold mb-2">Q: 評価結果に不服がある場合は？</h4>
+                    <p className="text-sm text-gray-600">A: 評価開示後、異議申立制度を利用して再評価を申請できます。</p>
+                  </div>
+                  <div className="p-4 bg-gray-50 rounded-lg">
+                    <h4 className="font-semibold mb-2">Q: 評価は誰が行いますか？</h4>
+                    <p className="text-sm text-gray-600">A: 直属の上司による1次評価と、部門長による2次評価の多段階評価を行います。</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* 進捗管理タブ */}
+          <TabsContent value="progress" className="space-y-6">
+            <div className="grid grid-cols-3 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Building className="h-5 w-5" />
+                    施設別進捗
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div>
+                      <div className="flex justify-between mb-1">
+                        <span className="text-sm">小原病院</span>
+                        <span className="text-sm font-semibold">82%</span>
+                      </div>
+                      <Progress value={82} className="h-2" />
+                    </div>
+                    <div>
+                      <div className="flex justify-between mb-1">
+                        <span className="text-sm">立神リハビリ</span>
+                        <span className="text-sm font-semibold">68%</span>
+                      </div>
+                      <Progress value={68} className="h-2" />
+                    </div>
+                    <div>
+                      <div className="flex justify-between mb-1">
+                        <span className="text-sm">エスポワール立神</span>
+                        <span className="text-sm font-semibold">95%</span>
+                      </div>
+                      <Progress value={95} className="h-2" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Bell className="h-5 w-5" />
+                    締切アラート
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <Alert className="border-red-200">
+                      <AlertCircle className="h-4 w-4 text-red-600" />
+                      <AlertDescription className="text-sm">
+                        <strong>本日締切:</strong> 外科病棟 5名分
+                      </AlertDescription>
+                    </Alert>
+                    <Alert className="border-yellow-200">
+                      <Clock className="h-4 w-4 text-yellow-600" />
+                      <AlertDescription className="text-sm">
+                        <strong>3日後:</strong> ICU 8名分
+                      </AlertDescription>
+                    </Alert>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <TrendingUp className="h-5 w-5" />
+                    完了率トレンド
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-green-600">+15%</div>
+                    <p className="text-sm text-gray-600 mt-2">先週比での進捗向上</p>
+                    <p className="text-xs text-gray-500 mt-4">このペースなら1/31までに完了予定</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>未完了リスト</CardTitle>
+                <CardDescription>評価が完了していない職員一覧</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                    <div>
+                      <span className="font-medium">内科病棟</span>
+                      <span className="text-sm text-gray-600 ml-3">12名未完了</span>
+                    </div>
+                    <Button size="sm">リマインド送信</Button>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                    <div>
+                      <span className="font-medium">外来部門</span>
+                      <span className="text-sm text-gray-600 ml-3">8名未完了</span>
+                    </div>
+                    <Button size="sm">リマインド送信</Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* 設定・運用タブ */}
+          <TabsContent value="settings" className="space-y-6">
+            <div className="grid grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Calendar className="h-5 w-5" />
+                    評価期間設定
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="p-4 bg-gray-50 rounded-lg">
+                    <h4 className="font-semibold mb-2">2025年度 上期評価</h4>
+                    <p className="text-sm text-gray-600">期間：2025年7月1日〜7月31日</p>
+                    <Button size="sm" variant="outline" className="mt-2">期間を編集</Button>
+                  </div>
+                  <div className="p-4 bg-gray-50 rounded-lg">
+                    <h4 className="font-semibold mb-2">2025年度 下期評価</h4>
+                    <p className="text-sm text-gray-600">期間：2025年12月1日〜12月31日</p>
+                    <Button size="sm" variant="outline" className="mt-2">期間を編集</Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Users className="h-5 w-5" />
+                    評価者権限管理
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="p-3 bg-gray-50 rounded-lg">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">1次評価者</span>
+                      <Badge>128名</Badge>
+                    </div>
+                  </div>
+                  <div className="p-3 bg-gray-50 rounded-lg">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">2次評価者</span>
+                      <Badge>24名</Badge>
+                    </div>
+                  </div>
+                  <div className="p-3 bg-gray-50 rounded-lg">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">最終承認者</span>
+                      <Badge>8名</Badge>
+                    </div>
+                  </div>
+                  <Button className="w-full" variant="outline">権限を管理</Button>
+                </CardContent>
+              </Card>
+            </div>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Settings className="h-5 w-5" />
+                  システム設定
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h4 className="font-medium">自動リマインダー</h4>
+                      <p className="text-sm text-gray-600">締切3日前に自動送信</p>
+                    </div>
+                    <Button size="sm" variant="outline">設定</Button>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h4 className="font-medium">メール通知</h4>
+                      <p className="text-sm text-gray-600">評価完了時に通知</p>
+                    </div>
+                    <Button size="sm" variant="outline">設定</Button>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h4 className="font-medium">システム連携</h4>
+                      <p className="text-sm text-gray-600">研修・勤怠システムとの連携</p>
+                    </div>
+                    <Button size="sm" variant="outline">設定</Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* 分析・レポートタブ */}
+          <TabsContent value="analysis" className="space-y-6">
+            <div className="grid grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <BarChart3 className="h-5 w-5" />
+                    評価結果統計
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="font-medium mb-2">グレード分布</h4>
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <span className="w-8">S:</span>
+                          <Progress value={15} className="flex-1" />
+                          <span className="text-sm">15%</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="w-8">A:</span>
+                          <Progress value={35} className="flex-1" />
+                          <span className="text-sm">35%</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="w-8">B:</span>
+                          <Progress value={30} className="flex-1" />
+                          <span className="text-sm">30%</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="w-8">C:</span>
+                          <Progress value={15} className="flex-1" />
+                          <span className="text-sm">15%</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="w-8">D:</span>
+                          <Progress value={5} className="flex-1" />
+                          <span className="text-sm">5%</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <TrendingUp className="h-5 w-5" />
+                    前年度比較
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="p-3 bg-green-50 rounded-lg">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm">平均スコア</span>
+                        <span className="text-green-600 font-semibold">+3.2%</span>
+                      </div>
+                    </div>
+                    <div className="p-3 bg-blue-50 rounded-lg">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm">S/Aグレード率</span>
+                        <span className="text-blue-600 font-semibold">+5.8%</span>
+                      </div>
+                    </div>
+                    <div className="p-3 bg-yellow-50 rounded-lg">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm">評価完了率</span>
+                        <span className="text-yellow-600 font-semibold">-2.1%</span>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Download className="h-5 w-5" />
+                  レポート出力
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-3 gap-4">
+                  <Button variant="outline" className="justify-start">
+                    <FileText className="mr-2 h-4 w-4" />
+                    評価結果一覧
+                  </Button>
+                  <Button variant="outline" className="justify-start">
+                    <BarChart3 className="mr-2 h-4 w-4" />
+                    統計レポート
+                  </Button>
+                  <Button variant="outline" className="justify-start">
+                    <Users className="mr-2 h-4 w-4" />
+                    部門別分析
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
 
       </div>
     </div>
