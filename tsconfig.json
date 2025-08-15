@@ -20,9 +20,10 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@/docs/*": ["./docs/*"]
+      "@/docs/*": ["./docs/*"],
+      "@/mcp-shared/*": ["./mcp-shared/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "docs/**/*.tsx", "docs/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "docs/**/*.tsx", "docs/**/*.ts", "mcp-shared/**/*.ts"],
   "exclude": ["node_modules"]
 }

@@ -39,6 +39,12 @@ import {
   MotivationQuestion
 } from '@/services/motivationTypeDiagnosisService';
 import { InterviewFlowOrchestrationService } from '@/services/interviewFlowOrchestrationService';
+import { 
+  SpecialInterviewTemplateService,
+  SpecialInterviewType,
+  ReturnReason,
+  IncidentLevel
+} from '@/services/specialInterviewTemplates';
 
 // 職員データの型定義
 interface StaffMember {
@@ -56,11 +62,13 @@ interface StaffMember {
 }
 
 // フロー状態の型定義
-type FlowStep = 'staff-select' | 'interview-type' | 'duration' | 'generating' | 'conducting' | 'completed';
+type FlowStep = 'staff-select' | 'interview-type' | 'special-type-select' | 'special-context' | 'duration' | 'generating' | 'conducting' | 'completed';
 
 interface InterviewSession {
   staffMember: StaffMember | null;
   interviewType: string;
+  specialType?: string; // 特別面談の詳細タイプ
+  specialContext?: any; // 特別面談のコンテキスト情報
   duration: InterviewDuration;
   includeMotivationDiagnosis: boolean;
   manual: GeneratedInterviewManual | null;
@@ -195,22 +203,112 @@ export default function DynamicInterviewFlow() {
     setIsGenerating(true);
     
     try {
-      // 職員レベルの判定
-      const staffLevel = determineStaffLevel(session.staffMember!.experienceMonths);
+      let manual: GeneratedInterviewManual;
       
-      // マニュアル生成リクエスト
-      const request: ManualGenerationRequest = {
-        staffLevel,
-        jobRole: session.staffMember!.jobRole,
-        facilityType: session.staffMember!.facilityType,
-        interviewType: session.interviewType as any,
-        duration: session.duration,
-        motivationType: session.staffMember!.motivationType,
-        includeEvaluation: true
-      };
-      
-      // マニュアル生成
-      const manual = await InterviewManualGenerationService.generateManual(request);
+      // 特別面談の場合
+      if (session.interviewType === 'special' && session.specialType) {
+        if (session.specialType === 'return_to_work') {
+          // 復職面談テンプレート取得
+          const template = SpecialInterviewTemplateService.getReturnToWorkTemplate(
+            session.specialContext?.returnReason as ReturnReason,
+            session.duration
+          );
+          
+          if (template) {
+            // テンプレートをマニュアル形式に変換
+            manual = {
+              id: `special_rtw_${Date.now()}`,
+              title: `復職面談マニュアル（${session.duration}分）`,
+              generatedAt: new Date(),
+              estimatedDuration: session.duration,
+              staffInfo: {
+                level: determineStaffLevel(session.staffMember!.experienceMonths),
+                jobRole: session.staffMember!.jobRole,
+                facility: session.staffMember!.facilityType,
+                levelDescription: ''
+              },
+              overview: {
+                purpose: '安全で円滑な職場復帰を支援',
+                objectives: ['健康状態確認', '勤務条件調整', 'サポート体制構築'],
+                keyPoints: ['受容的態度', '段階的復帰', '継続的フォロー'],
+                preparationItems: ['復職診断書確認', '勤務体制準備', 'メンター選定']
+              },
+              sections: template.sections as any,
+              timeAllocation: template.sections.map(s => ({
+                section: s.title,
+                minutes: s.duration,
+                percentage: Math.round((s.duration / session.duration) * 100)
+              })),
+              guidelines: {
+                dos: ['温かく迎える', '無理をさせない', '定期的フォロー'],
+                donts: ['プレッシャーをかけない', '過度な期待', 'プライバシー侵害'],
+                tips: ['段階的な業務復帰', '心理的サポート重視']
+              }
+            };
+          } else {
+            throw new Error('復職面談テンプレートが見つかりません');
+          }
+          
+        } else if (session.specialType === 'incident_followup') {
+          // インシデント後面談テンプレート取得
+          const template = SpecialInterviewTemplateService.getIncidentFollowupTemplate(
+            session.specialContext?.incidentLevel as IncidentLevel,
+            session.duration
+          );
+          
+          if (template) {
+            manual = {
+              id: `special_inc_${Date.now()}`,
+              title: `インシデント後面談マニュアル（${session.duration}分）`,
+              generatedAt: new Date(),
+              estimatedDuration: session.duration,
+              staffInfo: {
+                level: determineStaffLevel(session.staffMember!.experienceMonths),
+                jobRole: session.staffMember!.jobRole,
+                facility: session.staffMember!.facilityType,
+                levelDescription: ''
+              },
+              overview: {
+                purpose: '事故の振り返りと再発防止',
+                objectives: ['事実確認', '原因分析', '改善策立案', '心理的ケア'],
+                keyPoints: ['非懲罰的対応', 'システム思考', '学習機会'],
+                preparationItems: ['インシデントレポート', '関連資料', '改善提案']
+              },
+              sections: template.sections as any,
+              timeAllocation: template.sections.map(s => ({
+                section: s.title,
+                minutes: s.duration,
+                percentage: Math.round((s.duration / session.duration) * 100)
+              })),
+              guidelines: {
+                dos: ['傾聴姿勢', '建設的議論', '心理的サポート'],
+                donts: ['責めない', '個人批判', '隠蔽を疑う'],
+                tips: ['システム要因を探る', '再発防止重視']
+              }
+            };
+          } else {
+            throw new Error('インシデント後面談テンプレートが見つかりません');
+          }
+        } else {
+          throw new Error('未対応の特別面談タイプです');
+        }
+        
+      } else {
+        // 通常の定期面談
+        const staffLevel = determineStaffLevel(session.staffMember!.experienceMonths);
+        
+        const request: ManualGenerationRequest = {
+          staffLevel,
+          jobRole: session.staffMember!.jobRole,
+          facilityType: session.staffMember!.facilityType,
+          interviewType: session.interviewType as any,
+          duration: session.duration,
+          motivationType: session.staffMember!.motivationType,
+          includeEvaluation: true
+        };
+        
+        manual = await InterviewManualGenerationService.generateManual(request);
+      }
       
       setSession(prev => ({
         ...prev,
@@ -226,6 +324,7 @@ export default function DynamicInterviewFlow() {
     } catch (error) {
       console.error('Manual generation failed:', error);
       setIsGenerating(false);
+      alert('マニュアル生成に失敗しました: ' + error);
     }
   };
 
@@ -429,8 +528,14 @@ export default function DynamicInterviewFlow() {
 
               {/* 特別面談 */}
               <Card 
-                className="cursor-pointer hover:border-orange-500 transition-colors opacity-50"
-                onClick={() => alert('特別面談は開発中です')}
+                className="cursor-pointer hover:border-orange-500 transition-colors"
+                onClick={() => {
+                  setSession(prev => ({
+                    ...prev,
+                    interviewType: 'special'
+                  }));
+                  setCurrentStep('special-type-select');
+                }}
               >
                 <CardContent className="p-6">
                   <div className="flex flex-col items-center text-center space-y-3">
@@ -444,7 +549,7 @@ export default function DynamicInterviewFlow() {
                       <li>• インシデント後</li>
                       <li>• 退職面談</li>
                     </ul>
-                    <span className="text-xs bg-gray-200 px-2 py-1 rounded">開発中</span>
+                    <span className="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded">Phase 2実装</span>
                   </div>
                 </CardContent>
               </Card>
@@ -480,6 +585,194 @@ export default function DynamicInterviewFlow() {
                   {session.staffMember?.name}さんは動機タイプ未診断のため、初回診断質問（5問）が追加されます。
                 </AlertDescription>
               </Alert>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Step 2.5: 特別面談種類選択 */}
+      {currentStep === 'special-type-select' && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <AlertCircle className="h-5 w-5" />
+              特別面談の種類を選択
+            </CardTitle>
+            <p className="text-sm text-gray-600 mt-2">
+              {session.staffMember?.name}さんの特別面談の詳細を選択してください
+            </p>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* 復職面談 */}
+              <Card 
+                className="cursor-pointer hover:border-blue-500 transition-colors"
+                onClick={() => {
+                  setSession(prev => ({
+                    ...prev,
+                    specialType: 'return_to_work'
+                  }));
+                  setCurrentStep('special-context');
+                }}
+              >
+                <CardContent className="p-6">
+                  <div className="flex flex-col items-center text-center space-y-3">
+                    <User className="h-10 w-10 text-blue-500" />
+                    <h3 className="font-semibold">復職面談</h3>
+                    <p className="text-sm text-gray-600">
+                      休職からの復帰支援
+                    </p>
+                    <ul className="text-xs text-gray-500 space-y-1">
+                      <li>• 産休・育休</li>
+                      <li>• 病気療養</li>
+                      <li>• メンタルヘルス</li>
+                    </ul>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* インシデント後面談 */}
+              <Card 
+                className="cursor-pointer hover:border-red-500 transition-colors"
+                onClick={() => {
+                  setSession(prev => ({
+                    ...prev,
+                    specialType: 'incident_followup'
+                  }));
+                  setCurrentStep('special-context');
+                }}
+              >
+                <CardContent className="p-6">
+                  <div className="flex flex-col items-center text-center space-y-3">
+                    <AlertCircle className="h-10 w-10 text-red-500" />
+                    <h3 className="font-semibold">インシデント後面談</h3>
+                    <p className="text-sm text-gray-600">
+                      事故・ミス後のフォロー
+                    </p>
+                    <ul className="text-xs text-gray-500 space-y-1">
+                      <li>• ヒヤリハット</li>
+                      <li>• 医療事故</li>
+                      <li>• 再発防止</li>
+                    </ul>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* 退職面談 */}
+              <Card 
+                className="cursor-pointer hover:border-gray-500 transition-colors"
+                onClick={() => alert('退職面談は既存機能をご利用ください')}
+              >
+                <CardContent className="p-6">
+                  <div className="flex flex-col items-center text-center space-y-3">
+                    <User className="h-10 w-10 text-gray-500" />
+                    <h3 className="font-semibold">退職面談</h3>
+                    <p className="text-sm text-gray-600">
+                      退職予定者との面談
+                    </p>
+                    <ul className="text-xs text-gray-500 space-y-1">
+                      <li>• 退職理由確認</li>
+                      <li>• 引き継ぎ</li>
+                      <li>• 組織改善</li>
+                    </ul>
+                    <span className="text-xs bg-gray-200 px-2 py-1 rounded mt-2">既存機能</span>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Step 2.6: 特別面談コンテキスト */}
+      {currentStep === 'special-context' && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <FileText className="h-5 w-5" />
+              {session.specialType === 'return_to_work' ? '復職理由の選択' : 'インシデントレベルの選択'}
+            </CardTitle>
+            <p className="text-sm text-gray-600 mt-2">
+              詳細情報を選択してください
+            </p>
+          </CardHeader>
+          <CardContent>
+            {session.specialType === 'return_to_work' && (
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {[
+                  { value: 'maternity', label: '産休・育休', icon: '👶', description: '出産・育児休暇からの復帰' },
+                  { value: 'medical', label: '病気療養', icon: '🏥', description: '身体的疾患からの回復' },
+                  { value: 'mental', label: 'メンタルヘルス', icon: '🧠', description: '精神的不調からの回復' },
+                  { value: 'injury', label: '怪我・事故', icon: '🤕', description: '労災・交通事故等' },
+                  { value: 'family', label: '家族介護', icon: '👨‍👩‍👧', description: '介護休暇からの復帰' },
+                  { value: 'other', label: 'その他', icon: '📝', description: 'その他の理由' }
+                ].map(reason => (
+                  <Card
+                    key={reason.value}
+                    className="cursor-pointer hover:border-blue-500 transition-colors"
+                    onClick={() => {
+                      setSession(prev => ({
+                        ...prev,
+                        specialContext: { returnReason: reason.value }
+                      }));
+                      setCurrentStep('duration');
+                    }}
+                  >
+                    <CardContent className="p-4">
+                      <div className="text-center">
+                        <div className="text-2xl mb-2">{reason.icon}</div>
+                        <h4 className="font-semibold text-sm">{reason.label}</h4>
+                        <p className="text-xs text-gray-500 mt-1">{reason.description}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+
+            {session.specialType === 'incident_followup' && (
+              <div className="space-y-4">
+                <p className="text-sm text-gray-600 mb-4">
+                  インシデントの影響度レベルを選択してください
+                </p>
+                <div className="grid gap-3">
+                  {[
+                    { value: 'level0', label: 'レベル0', description: 'ヒヤリハット（患者への影響なし）', color: 'bg-green-50 hover:bg-green-100' },
+                    { value: 'level1', label: 'レベル1', description: '軽微な影響（観察強化で済む）', color: 'bg-yellow-50 hover:bg-yellow-100' },
+                    { value: 'level2', label: 'レベル2', description: '中程度の影響（簡単な処置が必要）', color: 'bg-orange-50 hover:bg-orange-100' },
+                    { value: 'level3a', label: 'レベル3a', description: '重大な影響（濃厚な処置が必要だが回復）', color: 'bg-red-50 hover:bg-red-100' },
+                    { value: 'level3b', label: 'レベル3b', description: '重大な影響（永続的な障害・後遺症）', color: 'bg-red-100 hover:bg-red-200' },
+                    { value: 'level4', label: 'レベル4-5', description: '死亡または重篤な状態', color: 'bg-gray-100 hover:bg-gray-200' }
+                  ].map(level => (
+                    <div
+                      key={level.value}
+                      className={`p-4 rounded-lg cursor-pointer transition-colors ${level.color} border`}
+                      onClick={() => {
+                        setSession(prev => ({
+                          ...prev,
+                          specialContext: { incidentLevel: level.value }
+                        }));
+                        setCurrentStep('duration');
+                      }}
+                    >
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <h4 className="font-semibold">{level.label}</h4>
+                          <p className="text-sm text-gray-600 mt-1">{level.description}</p>
+                        </div>
+                        <ChevronRight className="h-5 w-5 text-gray-400" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <Alert className="mt-4">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>
+                    レベル3b以上の場合は、医療安全管理委員会への報告も必要です
+                  </AlertDescription>
+                </Alert>
+              </div>
             )}
           </CardContent>
         </Card>

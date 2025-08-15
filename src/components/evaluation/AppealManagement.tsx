@@ -61,7 +61,7 @@ import {
   BarChart3,
   FileCheck
 } from 'lucide-react';
-import { AppealRequest, AppealStatus, AppealCategory } from '../../../mcp-shared/interfaces/appeal.interface';
+import { AppealRequest, AppealStatus, AppealCategory } from '@/mcp-shared/interfaces/appeal.interface';
 import { toast } from 'sonner';
 
 interface AppealRecord {
