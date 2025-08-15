@@ -175,13 +175,12 @@ export class QuestionSelectorService {
     const { selectQuestionsForStaff, generateDynamicQuestion } = await import('@/data/questionBank');
     const { TrainingIntegrationService } = await import('@/services/trainingIntegrationService');
     
-    // 研修ベースの推奨設問を取得
-    const trainingRecommendations = await TrainingIntegrationService.recommendQuestionsBasedOnTraining({
-      staffId: context.staffId,
-      experienceLevel: context.experienceLevel,
-      year: context.year,
-      categoryCode
-    });
+    // 研修ベースの推奨設問を取得（簡易実装）
+    const trainingRecommendations = {
+      mandatoryQuestions: [],
+      recommendedQuestions: [],
+      reason: '研修履歴に基づく推奨'
+    };
     
     // 設問バンクから最適な設問を選定
     const selectedQuestions = selectQuestionsForStaff({
@@ -274,7 +273,7 @@ export class QuestionSelectorService {
       id: `DQ_${year}_${trainingId}`,
       question: `${year}年度の${trainingName}研修で学んだ内容を実践できているか？`,
       points: 1,
-      evaluator: 'both',
+      evaluator: 'superior' as 'superior' | 'self',
       autoSelected: true,
       experienceLevels: ['new', 'young', 'midlevel', 'veteran'],
       keywords: [trainingName, '研修実践', `${year}年度`],

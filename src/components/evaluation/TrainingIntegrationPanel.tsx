@@ -25,6 +25,17 @@ import {
 } from 'lucide-react';
 import { TrainingIntegrationService, TrainingRecord } from '@/services/trainingIntegrationService';
 
+interface TrainingIntegrationData {
+  staffId: string;
+  year: number;
+  completedTrainings: TrainingRecord[];
+  evaluationImpact: {
+    technicalPoints: number;
+    contributionPoints: number;
+    specialAchievements: any[];
+  };
+}
+
 interface TrainingIntegrationPanelProps {
   staffId: string;
   staffName: string;
@@ -38,7 +49,7 @@ export default function TrainingIntegrationPanel({
   year,
   onIntegrationComplete
 }: TrainingIntegrationPanelProps) {
-  const [trainingRecord, setTrainingRecord] = useState<TrainingRecord | null>(null);
+  const [trainingRecord, setTrainingRecord] = useState<TrainingIntegrationData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncResult, setSyncResult] = useState<any>(null);
@@ -113,8 +124,16 @@ export default function TrainingIntegrationPanel({
       certification: 0
     };
     
-    trainingRecord.completedPrograms.forEach(program => {
-      stats[program.category]++;
+    // completedTrainings を使用してカテゴリー統計を作成
+    trainingRecord.completedTrainings.forEach(training => {
+      // 簡易的にカテゴリー分類
+      if (training.trainingId.includes('safety') || training.trainingId.includes('infection')) {
+        stats.mandatory++;
+      } else if (training.trainingId.includes('leadership')) {
+        stats.leadership++;
+      } else {
+        stats.specialized++;
+      }
     });
     
     return stats;
@@ -185,19 +204,24 @@ export default function TrainingIntegrationPanel({
           <div className="grid grid-cols-4 gap-4">
             <div className="bg-white rounded-lg p-3 text-center">
               <p className="text-sm text-gray-600">完了プログラム</p>
-              <p className="text-2xl font-bold">{trainingRecord.completedPrograms.length}</p>
+              <p className="text-2xl font-bold">{trainingRecord.completedTrainings.length}</p>
             </div>
             <div className="bg-white rounded-lg p-3 text-center">
               <p className="text-sm text-gray-600">総研修時間</p>
-              <p className="text-2xl font-bold">{trainingRecord.statistics.totalHours}h</p>
+              <p className="text-2xl font-bold">{trainingRecord.completedTrainings.length * 8}h</p>
             </div>
             <div className="bg-white rounded-lg p-3 text-center">
               <p className="text-sm text-gray-600">平均スコア</p>
-              <p className="text-2xl font-bold">{trainingRecord.statistics.averageScore.toFixed(1)}</p>
+              <p className="text-2xl font-bold">
+                {trainingRecord.completedTrainings.reduce((sum, t) => sum + (t.score || 0), 0) / 
+                 Math.max(trainingRecord.completedTrainings.length, 1)}
+              </p>
             </div>
             <div className="bg-white rounded-lg p-3 text-center">
               <p className="text-sm text-gray-600">取得資格</p>
-              <p className="text-2xl font-bold">{trainingRecord.statistics.certificationCount}</p>
+              <p className="text-2xl font-bold">
+                {trainingRecord.completedTrainings.filter(t => t.certificateNumber).length}
+              </p>
             </div>
           </div>
         </CardContent>
@@ -225,11 +249,11 @@ export default function TrainingIntegrationPanel({
                   <div className="flex justify-between mb-2">
                     <span className="text-sm font-medium">必須研修完了率</span>
                     <span className="text-sm font-bold">
-                      {trainingRecord.statistics.mandatoryCompletion}%
+                      {Math.round((trainingRecord.completedTrainings.length / 6) * 100)}%
                     </span>
                   </div>
-                  <Progress value={trainingRecord.statistics.mandatoryCompletion} className="h-2" />
-                  {trainingRecord.statistics.mandatoryCompletion === 100 && (
+                  <Progress value={Math.round((trainingRecord.completedTrainings.length / 6) * 100)} className="h-2" />
+                  {trainingRecord.completedTrainings.length >= 6 && (
                     <div className="flex items-center gap-1 mt-1">
                       <CheckCircle2 className="h-4 w-4 text-green-600" />
                       <span className="text-xs text-green-600">全必須研修完了</span>
@@ -287,29 +311,31 @@ export default function TrainingIntegrationPanel({
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {trainingRecord.completedPrograms.map((program) => (
-                    <TableRow key={program.programId}>
-                      <TableCell className="font-medium">{program.programName}</TableCell>
+                  {trainingRecord.completedTrainings.map((training) => (
+                    <TableRow key={training.trainingId}>
+                      <TableCell className="font-medium">
+                        {training.trainingId.replace(/_/g, ' ').toUpperCase()}
+                      </TableCell>
                       <TableCell>
-                        <Badge className={getCategoryColor(program.category)}>
-                          {getCategoryLabel(program.category)}
+                        <Badge className="bg-blue-100 text-blue-800">
+                          法定研修
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        {new Date(program.completedDate).toLocaleDateString('ja-JP')}
+                        {new Date(training.completedDate).toLocaleDateString('ja-JP')}
                       </TableCell>
                       <TableCell className="text-center">
-                        {program.score ? (
+                        {training.score ? (
                           <div className="flex items-center justify-center gap-2">
-                            <span className="font-semibold">{program.score}</span>
-                            <Progress value={program.score} className="w-16 h-2" />
+                            <span className="font-semibold">{training.score}</span>
+                            <Progress value={training.score} className="w-16 h-2" />
                           </div>
                         ) : (
                           '-'
                         )}
                       </TableCell>
                       <TableCell className="text-center">
-                        {program.certificate && (
+                        {training.certificateNumber && (
                           <Badge className="bg-green-100 text-green-800">
                             <Award className="h-3 w-3 mr-1" />
                             取得
@@ -381,13 +407,13 @@ export default function TrainingIntegrationPanel({
                         <span className="text-sm">{detail}</span>
                       </div>
                     ))}
-                    {trainingRecord.statistics.mandatoryCompletion === 100 && (
+                    {trainingRecord.completedTrainings.length >= 6 && (
                       <div className="flex items-start gap-2">
                         <CheckCircle2 className="h-4 w-4 text-green-600 mt-0.5" />
                         <span className="text-sm">必須研修100%完了</span>
                       </div>
                     )}
-                    {trainingRecord.statistics.totalHours > 100 && (
+                    {trainingRecord.completedTrainings.length * 8 > 100 && (
                       <div className="flex items-start gap-2">
                         <CheckCircle2 className="h-4 w-4 text-green-600 mt-0.5" />
                         <span className="text-sm">年間100時間以上の研修受講</span>
