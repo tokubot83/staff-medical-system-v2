@@ -358,6 +358,8 @@ export default function SupportInterviewFlow() {
 
   // 前のセクションへ
   const prevSection = () => {
+    if (!manual) return;
+    
     if (currentSection > 0) {
       setCurrentSection(currentSection - 1);
       setInterviewProgress((currentSection - 1) / manual.sections.length * 100);
