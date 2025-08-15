@@ -1242,8 +1242,8 @@ export default function DynamicInterviewFlow() {
               )}
             </CardContent>
           </Card>
-        </div>
         )}
+        </div>
       )}
 
       {/* Step 6: 完了 */}
