@@ -1,14 +1,15 @@
 'use client';
 
 import React, { useState } from 'react';
+import CommonHeader from '@/components/CommonHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import styles from './EvaluationExecution.module.css';
 import {
   Select,
   SelectContent,
@@ -176,22 +177,9 @@ export default function EvaluationExecutionPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* ヘッダー */}
-      <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center gap-4">
-            <Link href="/dashboard">
-              <Button variant="ghost" size="sm">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                戻る
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto p-6">
+    <div>
+      <CommonHeader title="個人評価管理" />
+      <div className={styles.container}>
         {/* 統合ダッシュボードヘッダー */}
         <DashboardHeader
           title="評価統合ダッシュボード"
@@ -243,17 +231,28 @@ export default function EvaluationExecutionPage() {
           </CardContent>
         </Card>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid grid-cols-5 w-full max-w-3xl">
-            <TabsTrigger value="input">評価入力</TabsTrigger>
-            <TabsTrigger value="review">評価確認</TabsTrigger>
-            <TabsTrigger value="judgment">総合判定</TabsTrigger>
-            <TabsTrigger value="disclosure">評価開示</TabsTrigger>
-            <TabsTrigger value="appeal">異議申立</TabsTrigger>
-          </TabsList>
+        <div className={styles.mainTabNavigation}>
+          {[
+            { id: 'input', label: '評価入力', icon: '✍️' },
+            { id: 'review', label: '評価確認', icon: '🔍' },
+            { id: 'judgment', label: '総合判定', icon: '⚖️' },
+            { id: 'disclosure', label: '評価開示', icon: '👁️' },
+            { id: 'appeal', label: '異議申立', icon: '📢' }
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`${styles.mainTabButton} ${activeTab === tab.id ? styles.active : ''}`}
+            >
+              <span className={styles.tabIcon}>{tab.icon}</span>
+              <span className={styles.tabLabel}>{tab.label}</span>
+            </button>
+          ))}
+        </div>
 
-          {/* 評価入力タブ */}
-          <TabsContent value="input" className="space-y-6 mt-6">
+        <div className={styles.tabContent}>
+          {activeTab === 'input' && (
+            <div className="space-y-6 p-6">
             <Card>
               <CardHeader>
                 <CardTitle>評価対象者一覧</CardTitle>
@@ -359,10 +358,11 @@ export default function EvaluationExecutionPage() {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
+            </div>
+          )}
 
-          {/* 評価確認タブ */}
-          <TabsContent value="review" className="space-y-6 mt-6">
+          {activeTab === 'review' && (
+            <div className="space-y-6 p-6">
             <Card>
               <CardHeader>
                 <CardTitle>評価確認</CardTitle>
@@ -400,23 +400,27 @@ export default function EvaluationExecutionPage() {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
+            </div>
+          )}
 
-          {/* 総合判定タブ - v2の機能を統合 */}
-          <TabsContent value="judgment" className="mt-6">
-            <IntegratedJudgment />
-          </TabsContent>
+          {activeTab === 'judgment' && (
+            <div className="p-6">
+              <IntegratedJudgment />
+            </div>
+          )}
 
-          {/* 評価開示・異議申立タブ - v2の機能を統合 */}
-          <TabsContent value="disclosure" className="mt-6">
-            <DisclosureManagement />
-          </TabsContent>
+          {activeTab === 'disclosure' && (
+            <div className="p-6">
+              <DisclosureManagement />
+            </div>
+          )}
 
-          {/* 異議申立タブ - 独立したコンポーネント */}
-          <TabsContent value="appeal" className="mt-6">
-            <AppealManagement />
-          </TabsContent>
-        </Tabs>
+          {activeTab === 'appeal' && (
+            <div className="p-6">
+              <AppealManagement />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

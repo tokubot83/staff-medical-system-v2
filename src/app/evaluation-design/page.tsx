@@ -1,12 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
+import CommonHeader from '@/components/CommonHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import styles from './EvaluationDesign.module.css';
 import { 
   ArrowLeft, 
   Target, 
@@ -70,47 +71,32 @@ export default function EvaluationDesignPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* ヘッダー */}
-      <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Link href="/dashboard">
-                <Button variant="ghost" size="sm">
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  ダッシュボードに戻る
-                </Button>
-              </Link>
-              <div>
-                <h1 className="text-2xl font-bold flex items-center gap-2">
-                  <Target className="w-7 h-7 text-blue-600" />
-                  評価制度設計
-                </h1>
-                <p className="text-sm text-gray-600 mt-1">
-                  100点満点の配分を決定し、評価方針を策定します
-                </p>
-              </div>
-            </div>
-            <div className="text-sm text-muted-foreground">
-              2025年度版
-            </div>
-          </div>
+    <div>
+      <CommonHeader title="評価制度設計" />
+      <div className={styles.container}>
+
+        <div className={styles.tabNavigation}>
+          {[
+            { id: 'overview', label: '概要', icon: '📋' },
+            { id: 'technical', label: '技術評価設計', icon: '🔧' },
+            { id: 'facility', label: '施設特化設計', icon: '🏢' },
+            { id: 'contribution', label: '貢献度設計', icon: '🌟' },
+            { id: 'simulation', label: 'シミュレーション', icon: '🧪' }
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`${styles.tabButton} ${activeTab === tab.id ? styles.active : ''}`}
+            >
+              <span className={styles.tabIcon}>{tab.icon}</span>
+              <span className={styles.tabLabel}>{tab.label}</span>
+            </button>
+          ))}
         </div>
-      </div>
 
-      <div className="max-w-7xl mx-auto p-6">
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid grid-cols-5 w-full max-w-3xl">
-            <TabsTrigger value="overview">概要</TabsTrigger>
-            <TabsTrigger value="technical">技術評価設計</TabsTrigger>
-            <TabsTrigger value="facility">施設特化設計</TabsTrigger>
-            <TabsTrigger value="contribution">貢献度設計</TabsTrigger>
-            <TabsTrigger value="simulation">シミュレーション</TabsTrigger>
-          </TabsList>
-
-          {/* 概要タブ */}
-          <TabsContent value="overview" className="space-y-6 mt-6">
+        <div className={styles.tabContent}>
+          {activeTab === 'overview' && (
+            <div className="space-y-6 p-6">
             {/* 現在の配分 */}
             <Card>
               <CardHeader>
@@ -264,10 +250,11 @@ export default function EvaluationDesignPage() {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
+            </div>
+          )}
 
-          {/* 技術評価設計タブ */}
-          <TabsContent value="technical" className="space-y-6 mt-6">
+          {activeTab === 'technical' && (
+            <div className="space-y-6 p-6">
             <Alert>
               <Info className="h-4 w-4" />
               <AlertTitle>技術評価（50点）の設計</AlertTitle>
@@ -371,10 +358,11 @@ export default function EvaluationDesignPage() {
                 </CardContent>
               </Card>
             </div>
-          </TabsContent>
+            </div>
+          )}
 
-          {/* 施設特化設計タブ */}
-          <TabsContent value="facility" className="space-y-6 mt-6">
+          {activeTab === 'facility' && (
+            <div className="space-y-6 p-6">
             <Card>
               <CardHeader>
                 <CardTitle>施設別の特化項目設計</CardTitle>
@@ -403,10 +391,11 @@ export default function EvaluationDesignPage() {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
+            </div>
+          )}
 
-          {/* 貢献度設計タブ */}
-          <TabsContent value="contribution" className="space-y-6 mt-6">
+          {activeTab === 'contribution' && (
+            <div className="space-y-6 p-6">
             <Card>
               <CardHeader>
                 <CardTitle>貢献度評価（50点）の設計</CardTitle>
@@ -441,10 +430,11 @@ export default function EvaluationDesignPage() {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
+            </div>
+          )}
 
-          {/* シミュレーションタブ */}
-          <TabsContent value="simulation" className="space-y-6 mt-6">
+          {activeTab === 'simulation' && (
+            <div className="space-y-6 p-6">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -472,8 +462,9 @@ export default function EvaluationDesignPage() {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
-        </Tabs>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
