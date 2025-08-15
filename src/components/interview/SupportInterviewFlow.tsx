@@ -629,10 +629,10 @@ export default function SupportInterviewFlow() {
                               <div className="space-y-2">
                                 {section.questions?.map((q, j) => (
                                   <div key={j} className="border-l-2 pl-3 py-1">
-                                    <p className="text-sm font-medium">{q.text}</p>
-                                    {q.tips && (
+                                    <p className="text-sm font-medium">{q.question}</p>
+                                    {q.purpose && (
                                       <p className="text-xs text-muted-foreground mt-1">
-                                        💡 {q.tips}
+                                        💡 {q.purpose}
                                       </p>
                                     )}
                                   </div>
