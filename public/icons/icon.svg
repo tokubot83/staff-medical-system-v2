@@ -1,0 +1,11 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" fill="#0070f3" rx="64"/>
+  <g transform="translate(256, 256)">
+    <!-- Hospital cross -->
+    <rect x="-60" y="-140" width="120" height="280" fill="white" rx="20"/>
+    <rect x="-140" y="-60" width="280" height="120" fill="white" rx="20"/>
+    <!-- Heart symbol for care -->
+    <path d="M -50,-10 C -50,-40 -25,-55 0,-35 C 25,-55 50,-40 50,-10 C 50,10 0,60 0,60 C 0,60 -50,10 -50,-10 Z" 
+          fill="#ff4444" transform="translate(0, 80) scale(0.8)"/>
+  </g>
+</svg>
