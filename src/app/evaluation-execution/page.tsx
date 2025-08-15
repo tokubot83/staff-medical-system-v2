@@ -35,12 +35,16 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { ExperienceLevelMapper, ExperienceLevelsV3 } from '@/services/evaluationV3Service';
+import DashboardHeader from '@/components/evaluation/DashboardHeader';
+import IntegratedJudgment from '@/components/evaluation/IntegratedJudgment';
+import DisclosureManagement from '@/components/evaluation/DisclosureManagement';
 
 export default function EvaluationExecutionPage() {
   const [activeTab, setActiveTab] = useState('input');
   const [selectedDepartment, setSelectedDepartment] = useState('all');
   const [selectedExperienceLevel, setSelectedExperienceLevel] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [refreshKey, setRefreshKey] = useState(0);
 
   // モックデータ：評価対象職員
   const staffList = [
@@ -165,37 +169,34 @@ export default function EvaluationExecutionPage() {
 
   const completionRate = Math.round((statistics.completed / statistics.total) * 100);
 
+  const handleRefresh = () => {
+    // データを再取得する処理
+    setRefreshKey(prev => prev + 1);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* ヘッダー */}
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Link href="/dashboard">
-                <Button variant="ghost" size="sm">
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  ダッシュボードに戻る
-                </Button>
-              </Link>
-              <div>
-                <h1 className="text-2xl font-bold flex items-center gap-2">
-                  <User className="w-7 h-7 text-purple-600" />
-                  個人評価管理
-                </h1>
-                <p className="text-sm text-gray-600 mt-1">
-                  職員の評価を実施・管理します
-                </p>
-              </div>
-            </div>
-            <div className="text-sm text-muted-foreground">
-              2025年度 評価期間
-            </div>
+          <div className="flex items-center gap-4">
+            <Link href="/dashboard">
+              <Button variant="ghost" size="sm">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                戻る
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto p-6">
+        {/* 統合ダッシュボードヘッダー */}
+        <DashboardHeader
+          title="評価統合ダッシュボード"
+          description="評価進捗と研修受講状況を一元管理"
+          onRefresh={handleRefresh}
+        />
         {/* 統計カード */}
         <div className="grid grid-cols-5 gap-4 mb-6">
           <Card>
@@ -400,154 +401,19 @@ export default function EvaluationExecutionPage() {
             </Card>
           </TabsContent>
 
-          {/* 総合判定タブ */}
-          <TabsContent value="judgment" className="space-y-6 mt-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>総合判定</CardTitle>
-                <CardDescription>
-                  100点満点の自動計算とグレード判定
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-5 gap-4 p-4 bg-gray-50 rounded-lg">
-                    <div className="text-center">
-                      <div className="text-sm text-gray-600">S（90点以上）</div>
-                      <div className="text-2xl font-bold text-red-600">
-                        {staffList.filter(s => s.grade === 'S').length}名
-                      </div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-sm text-gray-600">A（80-89点）</div>
-                      <div className="text-2xl font-bold text-orange-600">
-                        {staffList.filter(s => s.grade === 'A').length}名
-                      </div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-sm text-gray-600">B（70-79点）</div>
-                      <div className="text-2xl font-bold text-green-600">
-                        {staffList.filter(s => s.grade === 'B').length}名
-                      </div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-sm text-gray-600">C（60-69点）</div>
-                      <div className="text-2xl font-bold text-blue-600">
-                        {staffList.filter(s => s.grade === 'C').length}名
-                      </div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-sm text-gray-600">D（60点未満）</div>
-                      <div className="text-2xl font-bold text-gray-600">
-                        {staffList.filter(s => s.grade === 'D').length}名
-                      </div>
-                    </div>
-                  </div>
-
-                  <Button className="w-full" size="lg">
-                    <TrendingUp className="w-5 h-5 mr-2" />
-                    総合判定を確定する
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+          {/* 総合判定タブ - v2の機能を統合 */}
+          <TabsContent value="judgment" className="mt-6">
+            <IntegratedJudgment />
           </TabsContent>
 
-          {/* 評価開示タブ */}
-          <TabsContent value="disclosure" className="space-y-6 mt-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>評価開示</CardTitle>
-                <CardDescription>
-                  評価結果の本人への開示とフィードバック
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {filteredStaff
-                    .filter(s => s.evaluationStatus === 'completed' || s.evaluationStatus === 'disclosed')
-                    .map((staff) => (
-                      <div key={staff.id} className="border rounded-lg p-4">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <h4 className="font-medium">{staff.name}</h4>
-                            <div className="flex items-center gap-4 mt-2">
-                              <span className="text-sm text-gray-600">
-                                総合: {staff.totalScore}点
-                              </span>
-                              {getGradeBadge(staff.grade)}
-                            </div>
-                          </div>
-                          <div className="flex gap-2">
-                            <Button variant="outline" size="sm">
-                              <FileText className="w-4 h-4 mr-2" />
-                              評価シート出力
-                            </Button>
-                            <Button 
-                              variant={staff.evaluationStatus === 'disclosed' ? 'outline' : 'default'}
-                              size="sm"
-                            >
-                              <MessageSquare className="w-4 h-4 mr-2" />
-                              {staff.evaluationStatus === 'disclosed' ? 'フィードバック記録' : '開示実施'}
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                </div>
-              </CardContent>
-            </Card>
+          {/* 評価開示・異議申立タブ - v2の機能を統合 */}
+          <TabsContent value="disclosure" className="mt-6">
+            <DisclosureManagement />
           </TabsContent>
 
-          {/* 異議申立タブ */}
-          <TabsContent value="appeal" className="space-y-6 mt-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>異議申立管理</CardTitle>
-                <CardDescription>
-                  評価に対する異議申立の受付と対応
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {statistics.appealed > 0 ? (
-                  <div className="space-y-4">
-                    {filteredStaff
-                      .filter(s => s.evaluationStatus === 'appealed')
-                      .map((staff) => (
-                        <div key={staff.id} className="border border-orange-200 rounded-lg p-4">
-                          <div className="flex items-start justify-between">
-                            <div>
-                              <h4 className="font-medium flex items-center gap-2">
-                                <AlertTriangle className="w-4 h-4 text-orange-600" />
-                                {staff.name}
-                              </h4>
-                              <p className="text-sm text-gray-600 mt-1">
-                                申立理由: {staff.appealReason}
-                              </p>
-                              <div className="flex items-center gap-4 mt-2">
-                                <span className="text-sm text-gray-600">
-                                  現在の評価: {staff.totalScore}点（{staff.grade}）
-                                </span>
-                              </div>
-                            </div>
-                            <Button variant="outline" size="sm">
-                              <Eye className="w-4 h-4 mr-2" />
-                              詳細確認
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
-                  </div>
-                ) : (
-                  <Alert>
-                    <CheckCircle className="h-4 w-4" />
-                    <AlertDescription>
-                      現在、異議申立はありません
-                    </AlertDescription>
-                  </Alert>
-                )}
-              </CardContent>
-            </Card>
+          {/* 異議申立タブは評価開示に統合 */}
+          <TabsContent value="appeal" className="mt-6">
+            <DisclosureManagement />
           </TabsContent>
         </Tabs>
       </div>

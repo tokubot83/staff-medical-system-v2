@@ -1,0 +1,239 @@
+.dashboardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.headerContent h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  margin-bottom: 0.25rem;
+}
+
+.description {
+  font-size: 0.875rem;
+  opacity: 0.9;
+  margin: 0;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.refreshStatus {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  opacity: 0.9;
+}
+
+.refreshButton,
+.autoRefreshToggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.refreshButton:hover,
+.autoRefreshToggle:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.autoRefreshToggle.active {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+/* アラートセクション */
+.alertSection {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+  border: 1px solid #e5e7eb;
+}
+
+.alertHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #f3f4f6;
+}
+
+.alertHeader h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+  flex: 1;
+}
+
+.alertCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.75rem;
+  background: #ef4444;
+  color: white;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.alertList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.alertItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid;
+  transition: all 0.2s;
+}
+
+.alertItem.text-red-600 {
+  border-color: #fecaca;
+}
+
+.alertItem.text-yellow-600 {
+  border-color: #fde68a;
+}
+
+.alertItem.text-blue-600 {
+  border-color: #bfdbfe;
+}
+
+.alertItem:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.alertIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: currentColor;
+  opacity: 0.1;
+  position: relative;
+}
+
+.alertIcon svg {
+  position: absolute;
+  opacity: 10;
+}
+
+.alertContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.alertMain {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.alertStaff {
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.alertMessage {
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.alertMeta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.alertDue {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.alertAction {
+  display: flex;
+  align-items: center;
+}
+
+.actionButton {
+  padding: 0.5rem 1rem;
+  background: currentColor;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  opacity: 0.9;
+}
+
+.actionButton:hover {
+  opacity: 1;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .dashboardHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .headerActions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .alertItem {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .alertAction {
+    width: 100%;
+    margin-top: 0.75rem;
+  }
+
+  .actionButton {
+    width: 100%;
+  }
+}
