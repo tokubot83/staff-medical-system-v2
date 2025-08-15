@@ -444,7 +444,7 @@ export default function DynamicEvaluationPage() {
                                   <Select
                                     onValueChange={(value) => updateScore(item.id, 'superior', parseInt(value))}
                                   >
-                                    <SelectTrigger className="mt-1">
+                                    <SelectTrigger className="mt-1 bg-white">
                                       <SelectValue placeholder="選択" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -463,7 +463,7 @@ export default function DynamicEvaluationPage() {
                                   <Select
                                     onValueChange={(value) => updateScore(item.id, 'self', parseInt(value))}
                                   >
-                                    <SelectTrigger className="mt-1">
+                                    <SelectTrigger className="mt-1 bg-white">
                                       <SelectValue placeholder="選択" />
                                     </SelectTrigger>
                                     <SelectContent>

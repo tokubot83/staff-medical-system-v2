@@ -1115,7 +1115,7 @@ export default function DynamicInterviewFlow() {
                     onValueChange={(value) => handleResponseSave(question.id, value)}
                   >
                     {question.options.map(option => (
-                      <div key={option.value} className="flex items-start gap-2 p-3 border rounded-lg hover:bg-gray-50">
+                      <div key={option.value} className="flex items-start gap-2 p-3 border rounded-lg bg-white hover:bg-gray-50">
                         <RadioGroupItem value={option.value} id={option.value} className="mt-1" />
                         <Label htmlFor={option.value} className="cursor-pointer flex-grow">
                           {option.label}
