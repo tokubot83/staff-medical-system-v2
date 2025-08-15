@@ -790,7 +790,7 @@ export class DynamicInterviewGenerationService {
     
     const questions: InterviewQuestion[] = recentTrainings.map((training, index) => ({
       id: `training_${index}`,
-      question: `「${training.trainingName}」の研修について、学んだことを実践できていますか？`,
+      question: `「${training.trainingId}」の研修について、学んだことを実践できていますか？`,
       type: 'open',
       required: false,
       source: 'training',
