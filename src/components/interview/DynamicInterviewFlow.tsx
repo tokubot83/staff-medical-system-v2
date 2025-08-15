@@ -1244,6 +1244,7 @@ export default function DynamicInterviewFlow() {
           </Card>
         </div>
       )}
+    )}
 
       {/* Step 6: 完了 */}
       {currentStep === 'completed' && (
