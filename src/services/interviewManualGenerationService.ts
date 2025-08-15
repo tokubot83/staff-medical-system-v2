@@ -677,8 +677,8 @@ export class InterviewManualGenerationService {
     const templateKey = `${request.staffLevel}_${request.jobRole}_${request.duration}min`;
     
     // 既存テンプレートがあれば使用
-    if (V4_INTERVIEW_TEMPLATES[templateKey]) {
-      return V4_INTERVIEW_TEMPLATES[templateKey];
+    if ((V4_INTERVIEW_TEMPLATES as any)[templateKey]) {
+      return (V4_INTERVIEW_TEMPLATES as any)[templateKey];
     }
     
     // なければ動的生成
