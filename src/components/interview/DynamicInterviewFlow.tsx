@@ -10,6 +10,8 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { 
   Search, 
   User, 
@@ -23,7 +25,9 @@ import {
   Target,
   Users,
   Calendar,
-  Printer
+  Printer,
+  X,
+  Eye
 } from 'lucide-react';
 import styles from './DynamicInterviewFlow.module.css';
 import { 
@@ -881,7 +885,10 @@ export default function DynamicInterviewFlow() {
             <Button
               variant={isPrintMode ? 'outline' : 'default'}
               size="sm"
-              onClick={() => setIsPrintMode(false)}
+              onClick={() => {
+                setIsPrintMode(false);
+                setShowPrintPreview(false);
+              }}
             >
               <FileText className="h-4 w-4 mr-1" />
               デジタル入力モード
@@ -895,13 +902,24 @@ export default function DynamicInterviewFlow() {
               印刷用モード
             </Button>
             {isPrintMode && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => window.print()}
-              >
-                印刷
-              </Button>
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowPrintPreview(true)}
+                >
+                  <FileText className="h-4 w-4 mr-1" />
+                  プレビュー
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => window.print()}
+                >
+                  <Printer className="h-4 w-4 mr-1" />
+                  印刷
+                </Button>
+              </>
             )}
           </div>
 
@@ -1202,6 +1220,156 @@ export default function DynamicInterviewFlow() {
           </Card>
         </div>
       )}
+
+      {/* 印刷プレビューモーダル */}
+      <Dialog open={showPrintPreview} onOpenChange={setShowPrintPreview}>
+        <DialogContent className="max-w-[900px] h-[90vh] p-0">
+          <DialogHeader className="px-6 py-4 border-b">
+            <div className="flex justify-between items-center">
+              <DialogTitle className="text-lg font-semibold">印刷プレビュー</DialogTitle>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setShowPrintPreview(false);
+                    setTimeout(() => window.print(), 100);
+                  }}
+                >
+                  <Printer className="h-4 w-4 mr-1" />
+                  印刷実行
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowPrintPreview(false)}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+            <DialogDescription className="text-sm text-gray-600 mt-2">
+              A4サイズ2枚で印刷されます。内容を確認してから印刷してください。
+            </DialogDescription>
+          </DialogHeader>
+          
+          <ScrollArea className="flex-1 p-6 bg-gray-100">
+            <div className="mx-auto" style={{ width: '210mm', minHeight: '297mm' }}>
+              <div className="bg-white shadow-lg" style={{ padding: '10mm 15mm' }}>
+                {/* プレビュー用の印刷レイアウト */}
+                <div className="print-preview-content">
+                  {/* ヘッダー情報 */}
+                  <div className="border-b pb-2 mb-3">
+                    <h1 className="text-base font-bold">面談記録シート</h1>
+                    <div className="flex justify-between text-xs mt-1">
+                      <div>
+                        <span>対象者: </span>
+                        <span className="font-semibold">{session.staffMember?.name || '_______________'}</span>
+                        <span className="ml-4">職種: </span>
+                        <span>{session.staffMember?.position || '_______________'}</span>
+                      </div>
+                      <div>
+                        <span>面談日: ____年____月____日</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* セクション内容 */}
+                  {session.manual?.sections.map((section, sectionIndex) => (
+                    <div key={sectionIndex} className="mb-4" style={{ pageBreakInside: 'avoid' }}>
+                      <div className="bg-gray-50 px-2 py-1 mb-2">
+                        <h2 className="text-sm font-bold">
+                          セクション {sectionIndex + 1}: {section.title}
+                        </h2>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        {section.questions.map((question, questionIndex) => (
+                          <div key={questionIndex} className="pl-2" style={{ pageBreakInside: 'avoid' }}>
+                            <div className="flex items-start gap-2">
+                              <span className="text-xs font-semibold">
+                                Q{sectionIndex + 1}-{questionIndex + 1}.
+                              </span>
+                              <div className="flex-1">
+                                <p className="text-xs mb-1">{question.question}</p>
+                                
+                                {/* 質問タイプ別の回答欄プレビュー */}
+                                {question.type === 'open' && (
+                                  <div className="border-b border-gray-400" style={{ height: '18px' }}></div>
+                                )}
+                                
+                                {question.type === 'open' && (
+                                  <>
+                                    <div className="border-b border-gray-400 mb-1" style={{ height: '18px' }}></div>
+                                    <div className="border-b border-gray-400 mb-1" style={{ height: '18px' }}></div>
+                                    <div className="border-b border-gray-400" style={{ height: '18px' }}></div>
+                                  </>
+                                )}
+                                
+                                {question.type === 'closed' && question.details?.expectedAnswers && (
+                                  <div className="flex gap-3 mt-1">
+                                    {question.details.expectedAnswers.map((option, optionIndex) => (
+                                      <div key={optionIndex} className="flex items-center">
+                                        <span className="inline-block w-3 h-3 border border-black mr-1"></span>
+                                        <span className="text-xs">{option}</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                                
+                                {question.type === 'checklist' && question.details?.expectedAnswers && (
+                                  <div className="space-y-1 mt-1">
+                                    {question.details.expectedAnswers.map((option, optionIndex) => (
+                                      <div key={optionIndex} className="flex items-center">
+                                        <span className="inline-block w-3 h-3 border border-black mr-1"></span>
+                                        <span className="text-xs">{option}</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                                
+                                {question.type === 'scale' && (
+                                  <div className="flex justify-between mt-1">
+                                    {[1, 2, 3, 4, 5].map(value => (
+                                      <div key={value} className="flex flex-col items-center">
+                                        <span className="inline-block w-3 h-3 border border-black mb-1"></span>
+                                        <span className="text-xs">{value}</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* 署名欄 */}
+                  <div className="mt-8 pt-4 border-t border-gray-400">
+                    <div className="space-y-2 text-xs">
+                      <div>
+                        <span>面談終了時刻: ____時____分</span>
+                      </div>
+                      <div className="flex gap-8">
+                        <div>
+                          <span>面談者署名: </span>
+                          <span className="inline-block border-b border-black" style={{ width: '150px' }}></span>
+                        </div>
+                        <div>
+                          <span>対象者署名: </span>
+                          <span className="inline-block border-b border-black" style={{ width: '150px' }}></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ScrollArea>
+        </DialogContent>
+      </Dialog>
 
       {/* Step 6: 完了 */}
       {currentStep === 'completed' && (
