@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import CommonHeader from '@/components/CommonHeader';
 import { 
   FileText, Download, Filter, Calendar, 
   User, Activity, RefreshCw, Trash2,
@@ -107,26 +108,31 @@ export default function AuditLogPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between py-4">
-            <div className="flex items-center space-x-4">
-              <FileText className="h-6 w-6 text-gray-700" />
-              <h1 className="text-2xl font-bold text-gray-900">監査ログ</h1>
-              <Badge variant="secondary">
-                {statistics?.total || 0} 件
-              </Badge>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => loadLogs()}
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <RefreshCw className="h-4 w-4 animate-spin" />
+    <div>
+      <div className="print:hidden">
+        <CommonHeader title="監査ログ" />
+      </div>
+      
+      <div className="min-h-screen bg-gray-50">
+        <div className="bg-white border-b">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between py-4">
+              <div className="flex items-center space-x-4">
+                <FileText className="h-6 w-6 text-gray-700" />
+                <h1 className="text-2xl font-bold text-gray-900">監査ログ</h1>
+                <Badge variant="secondary">
+                  {statistics?.total || 0} 件
+                </Badge>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => loadLogs()}
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <RefreshCw className="h-4 w-4 animate-spin" />
                 ) : (
                   <RefreshCw className="h-4 w-4" />
                 )}
@@ -405,6 +411,7 @@ export default function AuditLogPage() {
             )}
           </CardContent>
         </Card>
+      </div>
       </div>
     </div>
   );

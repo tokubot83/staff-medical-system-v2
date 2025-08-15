@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import CommonHeader from '@/components/CommonHeader';
 import GenericMasterTable from '@/components/admin/GenericMasterTable';
 import DevelopmentMemoTab from '@/components/admin/DevelopmentMemoTab';
 import { masterSchemas } from '@/config/masterSchemas';
@@ -85,24 +86,12 @@ export default function MasterDataPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between py-4">
-            <div className="flex items-center space-x-4">
-              <Database className="h-6 w-6 text-gray-700" />
-              <h1 className="text-2xl font-bold text-gray-900">マスターデータ管理</h1>
-              <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
-                管理者機能
-              </Badge>
-            </div>
-            <div className="flex items-center space-x-2 text-sm text-gray-500">
-              <Shield className="h-4 w-4" />
-              <span>管理者権限</span>
-            </div>
-          </div>
-        </div>
+    <div>
+      <div className="print:hidden">
+        <CommonHeader title="マスターデータ管理" />
       </div>
+      
+      <div className="min-h-screen bg-gray-50">
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="grid grid-cols-12 gap-6">
@@ -276,6 +265,7 @@ export default function MasterDataPage() {
             )}
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
