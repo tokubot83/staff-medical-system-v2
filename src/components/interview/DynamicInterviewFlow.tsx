@@ -32,7 +32,7 @@ import {
   JobRole,
   FacilityType,
   InterviewDuration
-} from '@/services/interviewManualGenerationService';
+} from '@/services/interviewManualGenerationServiceV2';
 import { 
   MotivationTypeDiagnosisService,
   MotivationType,
@@ -968,6 +968,60 @@ export default function DynamicInterviewFlow() {
                         </div>
                       )}
 
+                      {/* ハイブリッド型（5段階評価＋テキスト入力） */}
+                      {question.type === 'hybrid' && question.hybridInput && (
+                        <div className="space-y-4">
+                          {/* 5段階評価 */}
+                          <div>
+                            <Label className="text-sm font-medium mb-2 block">
+                              {question.hybridInput.scaleLabel}
+                            </Label>
+                            <RadioGroup
+                              onValueChange={(value) => {
+                                const current = session.responses.get(question.id) || {};
+                                handleResponseSave(question.id, { ...current, scale: value });
+                              }}
+                            >
+                              <div className="flex justify-between bg-gray-50 p-3 rounded-lg">
+                                {[1, 2, 3, 4, 5].map(value => (
+                                  <div key={value} className="flex flex-col items-center">
+                                    <RadioGroupItem 
+                                      value={String(value)} 
+                                      id={`${question.id}-scale-${value}`}
+                                      className="h-5 w-5"
+                                    />
+                                    <Label 
+                                      htmlFor={`${question.id}-scale-${value}`} 
+                                      className="text-sm mt-1 cursor-pointer"
+                                    >
+                                      {value}
+                                    </Label>
+                                  </div>
+                                ))}
+                              </div>
+                            </RadioGroup>
+                          </div>
+                          
+                          {/* テキスト入力 */}
+                          <div>
+                            <Label className="text-sm font-medium mb-2 block">
+                              {question.hybridInput.textLabel}
+                              {question.hybridInput.requireText && (
+                                <span className="text-red-500 ml-1">*</span>
+                              )}
+                            </Label>
+                            <Textarea
+                              placeholder={question.hybridInput.textPlaceholder}
+                              className="min-h-[80px]"
+                              onChange={(e) => {
+                                const current = session.responses.get(question.id) || {};
+                                handleResponseSave(question.id, { ...current, text: e.target.value });
+                              }}
+                            />
+                          </div>
+                        </div>
+                      )}
+
                       {question.type === 'checklist' && question.checklistItems && (
                         <div className="space-y-2">
                           {question.checklistItems.map(item => (
@@ -1026,7 +1080,21 @@ export default function DynamicInterviewFlow() {
                 >
                   前のセクション
                 </Button>
-                <Button onClick={handleNextSection}>
+                <Button 
+                  onClick={handleNextSection}
+                  disabled={
+                    session.manual.sections[session.currentSectionIndex].questions.some(q => {
+                      const response = session.responses.get(q.id);
+                      // 必須項目のチェック
+                      if (q.required && !response) return true;
+                      // ハイブリッド型でテキスト必須の場合
+                      if (q.type === 'hybrid' && q.hybridInput?.requireText) {
+                        return !response?.text || response.text.trim() === '';
+                      }
+                      return false;
+                    })
+                  }
+                >
                   {session.currentSectionIndex === session.manual.sections.length - 1
                     ? '面談を完了'
                     : '次のセクション'}

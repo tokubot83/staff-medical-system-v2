@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -25,12 +25,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
 import {
   Dialog,
   DialogContent,
@@ -99,7 +93,6 @@ interface AppealCase {
 }
 
 export default function DisclosureManagement() {
-  const [activeTab, setActiveTab] = useState('disclosure');
   const [selectedRecords, setSelectedRecords] = useState<string[]>([]);
   const [showPrintDialog, setShowPrintDialog] = useState(false);
   const [showSNSDialog, setShowSNSDialog] = useState(false);
@@ -253,14 +246,7 @@ export default function DisclosureManagement() {
 
   return (
     <div className={styles.container}>
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid grid-cols-2 w-full max-w-md">
-          <TabsTrigger value="disclosure">評価開示</TabsTrigger>
-          <TabsTrigger value="appeal">異議申立</TabsTrigger>
-        </TabsList>
-
-        {/* 評価開示タブ */}
-        <TabsContent value="disclosure" className="space-y-6">
+      <div className="space-y-6">
           {/* 統計カード */}
           <div className="grid grid-cols-6 gap-4">
             <Card>
@@ -552,9 +538,7 @@ export default function DisclosureManagement() {
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
-
-      </Tabs>
+      </div>
 
       {/* 印刷ダイアログ */}
       <Dialog open={showPrintDialog} onOpenChange={setShowPrintDialog}>
