@@ -2,12 +2,13 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import CommonHeader from '@/components/CommonHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import styles from './Dashboard.module.css';
 import { 
   Shield, 
   User, 
@@ -47,44 +48,32 @@ export default function DashboardPage() {
   const completionRate = Math.round((evaluationProgress.completed / evaluationProgress.total) * 100);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
-      <div className="max-w-7xl mx-auto p-6">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 flex items-center gap-3">
-            <div className="p-3 bg-blue-600 rounded-lg">
-              <BarChart3 className="h-8 w-8 text-white" />
-            </div>
-            新人事評価管理システム
-          </h1>
-          <p className="text-gray-600 mt-3 text-lg">総合評価システムv3 - 評価制度の設計から実行まで統合管理</p>
+    <div>
+      <CommonHeader title="評価管理ダッシュボード" />
+      <div className={styles.container}>
+        <div className={styles.tabNavigation}>
+          {[
+            { id: 'home', label: 'ホーム', icon: '🏠' },
+            { id: 'guide', label: '評価ガイド', icon: '📖' },
+            { id: 'progress', label: '進捗管理', icon: '📊' },
+            { id: 'settings', label: '設定・運用', icon: '⚙️' },
+            { id: 'analysis', label: '分析・レポート', icon: '📈' }
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`${styles.tabButton} ${activeTab === tab.id ? styles.active : ''}`}
+            >
+              <span className={styles.tabIcon}>{tab.icon}</span>
+              <span className={styles.tabLabel}>{tab.label}</span>
+            </button>
+          ))}
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid grid-cols-5 w-full">
-            <TabsTrigger value="home" className="flex items-center gap-2">
-              <Home className="h-4 w-4" />
-              ホーム
-            </TabsTrigger>
-            <TabsTrigger value="guide" className="flex items-center gap-2">
-              <BookOpen className="h-4 w-4" />
-              評価ガイド
-            </TabsTrigger>
-            <TabsTrigger value="progress" className="flex items-center gap-2">
-              <Activity className="h-4 w-4" />
-              進捗管理
-            </TabsTrigger>
-            <TabsTrigger value="settings" className="flex items-center gap-2">
-              <Cog className="h-4 w-4" />
-              設定・運用
-            </TabsTrigger>
-            <TabsTrigger value="analysis" className="flex items-center gap-2">
-              <ChartBar className="h-4 w-4" />
-              分析・レポート
-            </TabsTrigger>
-          </TabsList>
+        <div className={styles.tabContent}>
 
-          {/* ホームタブ */}
-          <TabsContent value="home" className="space-y-6">
+          {activeTab === 'home' && (
+            <div className="space-y-6 p-6">
             {/* メイン機能 - 最重要 */}
             <div className="grid grid-cols-2 gap-6 mb-8">
               {/* 評価制度設計 */}
@@ -380,10 +369,11 @@ export default function DashboardPage() {
             </div>
           </CardContent>
             </Card>
-          </TabsContent>
+            </div>
+          )}
 
-          {/* 評価ガイドタブ */}
-          <TabsContent value="guide" className="space-y-6">
+          {activeTab === 'guide' && (
+            <div className="space-y-6 p-6">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -460,10 +450,11 @@ export default function DashboardPage() {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
+            </div>
+          )}
 
-          {/* 進捗管理タブ */}
-          <TabsContent value="progress" className="space-y-6">
+          {activeTab === 'progress' && (
+            <div className="space-y-6 p-6">
             <div className="grid grid-cols-3 gap-6">
               <Card>
                 <CardHeader>
@@ -565,10 +556,11 @@ export default function DashboardPage() {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
+            </div>
+          )}
 
-          {/* 設定・運用タブ */}
-          <TabsContent value="settings" className="space-y-6">
+          {activeTab === 'settings' && (
+            <div className="space-y-6 p-6">
             <div className="grid grid-cols-2 gap-6">
               <Card>
                 <CardHeader>
@@ -655,10 +647,11 @@ export default function DashboardPage() {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
+            </div>
+          )}
 
-          {/* 分析・レポートタブ */}
-          <TabsContent value="analysis" className="space-y-6">
+          {activeTab === 'analysis' && (
+            <div className="space-y-6 p-6">
             <div className="grid grid-cols-2 gap-6">
               <Card>
                 <CardHeader>
@@ -759,8 +752,9 @@ export default function DashboardPage() {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
-        </Tabs>
+            </div>
+          )}
+        </div>
 
       </div>
     </div>
