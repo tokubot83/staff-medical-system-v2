@@ -723,6 +723,108 @@ export const RETURN_TO_WORK_TEMPLATES = {
         }
       ]
     }
+  },
+
+  // 怪我・事故復帰
+  injury: {
+    30: {
+      sections: [
+        {
+          id: 'physical_recovery',
+          title: '身体回復状況の確認',
+          duration: 10,
+          purpose: '怪我や事故からの回復状況の評価',
+          questions: [
+            {
+              id: 'rtw_inj_1',
+              question: '怪我の回復状況はいかがですか？医師からの診断書や制限事項があれば教えてください。',
+              type: 'open' as const,
+              required: true,
+              details: {
+                purpose: '身体的回復状況の確認',
+                askingTips: ['医療情報の正確な把握', '制限事項の詳細確認'],
+                expectedAnswers: ['回復程度', '医師の指示', '制限事項'],
+                followUpQuestions: ['痛みはありますか？', 'リハビリは続けていますか？'],
+                redFlags: ['完全回復していない', '医師の制限事項がある', '痛みが残っている']
+              }
+            }
+          ],
+          guidance: {
+            introduction: '怪我からの回復を慎重に確認します。',
+            keyPoints: ['安全第一', '段階的復帰'],
+            transitionPhrase: '業務への影響を確認しましょう。'
+          }
+        }
+      ]
+    }
+  },
+
+  // 家族介護復帰
+  family: {
+    30: {
+      sections: [
+        {
+          id: 'care_situation',
+          title: '介護状況と復職準備',
+          duration: 10,
+          purpose: '家族介護の状況と仕事の両立可能性の確認',
+          questions: [
+            {
+              id: 'rtw_fam_1',
+              question: 'ご家族の介護状況と、復職に向けてのサポート体制を教えてください。',
+              type: 'open' as const,
+              required: true,
+              details: {
+                purpose: '介護状況と両立体制の確認',
+                askingTips: ['プライバシーに配慮', '具体的なサポート体制確認'],
+                expectedAnswers: ['介護度', 'サポート体制', '時間制約'],
+                followUpQuestions: ['勤務時間の調整は必要ですか？', '緊急時の対応はどうしますか？'],
+                redFlags: ['サポート体制不十分', '時間的制約が大きい', '精神的負担が重い']
+              }
+            }
+          ],
+          guidance: {
+            introduction: '介護と仕事の両立について相談しましょう。',
+            keyPoints: ['柔軟な働き方', 'サポート体制'],
+            transitionPhrase: '勤務条件の調整を検討します。'
+          }
+        }
+      ]
+    }
+  },
+
+  // その他の理由
+  other: {
+    30: {
+      sections: [
+        {
+          id: 'general_return',
+          title: '復職状況の確認',
+          duration: 10,
+          purpose: '一般的な復職準備状況の確認',
+          questions: [
+            {
+              id: 'rtw_oth_1',
+              question: '復職に向けての準備状況と、何かご相談したいことがあれば教えてください。',
+              type: 'open' as const,
+              required: true,
+              details: {
+                purpose: '復職準備状況の総合的確認',
+                askingTips: ['オープンな質問', '個別事情に配慮'],
+                expectedAnswers: ['準備状況', '不安や心配事', 'サポート要望'],
+                followUpQuestions: ['何かサポートできることはありますか？'],
+                redFlags: ['準備不足', '大きな不安', 'サポート要望']
+              }
+            }
+          ],
+          guidance: {
+            introduction: '復職について何でもお聞かせください。',
+            keyPoints: ['個別対応', '柔軟なサポート'],
+            transitionPhrase: '必要なサポートを提供します。'
+          }
+        }
+      ]
+    }
   }
 };
 
