@@ -818,7 +818,7 @@ export class InterviewManualGenerationService {
         redFlags: this.generateRedFlags(q.question)
       },
       scale: q.scale,
-      checklistItems: q.items?.map(item => ({
+      checklistItems: q.items?.map((item: string) => ({
         item,
         description: `${item}に関する確認`
       }))
