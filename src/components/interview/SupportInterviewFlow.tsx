@@ -69,10 +69,10 @@ function RequestListItem({ request, onSelect, isSelected }: RequestListItemProps
     return icons[category] || <MessageCircle className="w-4 h-4" />;
   };
 
-  const getUrgencyColor = (urgency: string) => {
+  const getUrgencyColor = (urgency: string): "default" | "secondary" | "destructive" | "outline" => {
     switch (urgency) {
       case 'urgent': return 'destructive';
-      case 'high': return 'warning';
+      case 'high': return 'destructive';
       case 'medium': return 'secondary';
       case 'low': return 'outline';
       default: return 'secondary';
