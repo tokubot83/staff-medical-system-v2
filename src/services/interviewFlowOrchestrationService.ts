@@ -214,7 +214,7 @@ export class InterviewFlowOrchestrationService {
       jobRole: staffInfo.position as any, // positionをjobRoleとして使用
       facilityType: 'hospital' as any, // デフォルト値を設定
       interviewType: interviewType as any,
-      duration: options?.duration || 30,
+      duration: (options?.duration || 30) as 15 | 30 | 45 | 60,
       motivationType: staffInfo.motivationType,
       includeEvaluation: options?.includeEvaluation,
       customTopics: options?.customTopics
