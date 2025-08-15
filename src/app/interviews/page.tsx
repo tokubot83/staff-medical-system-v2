@@ -13,7 +13,8 @@ import InterviewSheetSelector from '@/components/interview/InterviewSheetSelecto
 import InterviewSheetWrapper from '@/components/interview/InterviewSheetWrapper'
 import { getExperienceCategory } from '@/utils/experienceUtils'
 import RoleSelectionModal from '@/components/RoleSelectionModal'
-import ImprovedInterviewFlow from '@/components/interview/ImprovedInterviewFlow'
+import DynamicInterviewFlow from '@/components/interview/DynamicInterviewFlow'
+import SupportInterviewFlow from '@/components/interview/SupportInterviewFlow'
 
 // 第1段階実装: タブ順序を業務フローに合わせて修正
 const tabs = [
@@ -21,6 +22,7 @@ const tabs = [
   { id: 'dashboard', label: 'ダッシュボード', icon: '📊', badge: '', isNew: true },
   { id: 'schedule', label: '面談予定', icon: '📅', badge: '', isNew: false },
   { id: 'sheets', label: '面談実施', icon: '📄', badge: '', isNew: false },
+  { id: 'support', label: 'サポート面談', icon: '💬', badge: '', isNew: true },
   { id: 'record', label: '結果記録', icon: '📝', badge: '', isNew: false },
   { id: 'history', label: '履歴・分析', icon: '📈', badge: '', isNew: false },
   { id: 'guide', label: 'ガイド', icon: '❓', badge: '', isNew: true },
@@ -218,6 +220,7 @@ export default function InterviewsPage() {
             />
           )}
           {activeTab === 'sheets' && <InterviewSheetsTab />}
+          {activeTab === 'support' && <SupportInterviewFlow />}
           {activeTab === 'record' && <RecordTab selectedInterview={selectedInterview} />}
           {activeTab === 'guide' && <GuideTab onInterviewTypeClick={handleInterviewTypeClick} />}
           {activeTab === 'settings' && <SettingsTab />}

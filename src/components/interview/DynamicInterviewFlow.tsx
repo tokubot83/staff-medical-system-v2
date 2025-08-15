@@ -62,13 +62,14 @@ interface StaffMember {
 }
 
 // フロー状態の型定義
-type FlowStep = 'staff-select' | 'interview-type' | 'special-type-select' | 'special-context' | 'duration' | 'generating' | 'conducting' | 'completed';
+type FlowStep = 'staff-select' | 'interview-type' | 'special-type-select' | 'special-context' | 'support-request' | 'duration' | 'generating' | 'conducting' | 'completed';
 
 interface InterviewSession {
   staffMember: StaffMember | null;
   interviewType: string;
   specialType?: string; // 特別面談の詳細タイプ
   specialContext?: any; // 特別面談のコンテキスト情報
+  supportRequest?: any; // サポート面談のリクエスト情報
   duration: InterviewDuration;
   includeMotivationDiagnosis: boolean;
   manual: GeneratedInterviewManual | null;

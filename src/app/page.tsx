@@ -531,6 +531,10 @@ export default function Home() {
          <Link href="/evaluation" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
           評価管理
          </Link>
+         <Link href="/dashboard" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-purple-400 flex items-center gap-1">
+          <span className="text-xs bg-purple-500 text-white px-1.5 py-0.5 rounded">v3</span>
+          評価管理（v3）
+         </Link>
          <Link href="/evaluation-design" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-green-400 flex items-center gap-1">
           <span className="text-xs bg-green-500 text-white px-1.5 py-0.5 rounded">NEW</span>
           評価制度設計
