@@ -38,6 +38,7 @@ import { ExperienceLevelMapper, ExperienceLevelsV3 } from '@/services/evaluation
 import DashboardHeader from '@/components/evaluation/DashboardHeader';
 import IntegratedJudgment from '@/components/evaluation/IntegratedJudgment';
 import DisclosureManagement from '@/components/evaluation/DisclosureManagement';
+import AppealManagement from '@/components/evaluation/AppealManagement';
 
 export default function EvaluationExecutionPage() {
   const [activeTab, setActiveTab] = useState('input');
@@ -411,9 +412,9 @@ export default function EvaluationExecutionPage() {
             <DisclosureManagement />
           </TabsContent>
 
-          {/* 異議申立タブは評価開示に統合 */}
+          {/* 異議申立タブ - 独立したコンポーネント */}
           <TabsContent value="appeal" className="mt-6">
-            <DisclosureManagement />
+            <AppealManagement />
           </TabsContent>
         </Tabs>
       </div>
