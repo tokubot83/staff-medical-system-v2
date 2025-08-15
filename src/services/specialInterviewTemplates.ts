@@ -1143,8 +1143,8 @@ export class SpecialInterviewTemplateService {
     if (!templates) return null;
     
     // 指定時間のテンプレートを探す
-    if (templates[duration]) {
-      return templates[duration];
+    if ((templates as any)[duration]) {
+      return (templates as any)[duration];
     }
     
     // なければ近い時間のテンプレートを返す
@@ -1153,7 +1153,7 @@ export class SpecialInterviewTemplateService {
       Math.abs(curr - duration) < Math.abs(prev - duration) ? curr : prev
     );
     
-    return templates[closestDuration];
+    return (templates as any)[closestDuration];
   }
   
   /**
@@ -1176,8 +1176,8 @@ export class SpecialInterviewTemplateService {
     
     if (!templateGroup) return null;
     
-    if (templateGroup[duration]) {
-      return templateGroup[duration];
+    if ((templateGroup as any)[duration]) {
+      return (templateGroup as any)[duration];
     }
     
     // 近い時間のテンプレートを返す
@@ -1186,7 +1186,7 @@ export class SpecialInterviewTemplateService {
       Math.abs(curr - duration) < Math.abs(prev - duration) ? curr : prev
     );
     
-    return templateGroup[closestDuration];
+    return (templateGroup as any)[closestDuration];
   }
   
   /**
