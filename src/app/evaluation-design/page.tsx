@@ -22,12 +22,35 @@ import {
   CheckCircle,
   Clock,
   AlertCircle,
-  Sparkles
+  Sparkles,
+  Rocket,
+  ChevronRight,
+  PlayCircle,
+  Edit3,
+  Save,
+  FileCheck,
+  AlertTriangle,
+  TrendingUp,
+  Zap,
+  BookOpen,
+  HelpCircle,
+  Shield,
+  Database,
+  Layers
 } from 'lucide-react';
 import Link from 'next/link';
 
 export default function EvaluationDesignPage() {
   const [activeTab, setActiveTab] = useState('overview');
+  const [showGuide, setShowGuide] = useState(true);
+
+  // 評価設計のステップ
+  const designSteps = [
+    { id: 1, title: '配点設定', status: 'completed', icon: BarChart3 },
+    { id: 2, title: '項目選定', status: 'current', icon: Settings },
+    { id: 3, title: 'シミュレーション', status: 'upcoming', icon: FlaskConical },
+    { id: 4, title: '承認', status: 'upcoming', icon: FileCheck }
+  ];
 
   // 施設別の設定進捗（モックデータ）
   const facilityProgress = [
@@ -74,6 +97,123 @@ export default function EvaluationDesignPage() {
     <div>
       <CommonHeader title="評価制度設計" />
       <div className={styles.container}>
+        {/* 設計フローガイド */}
+        {showGuide && (
+          <Card className="mb-6 border-2 border-purple-200 bg-gradient-to-r from-purple-50 to-indigo-50">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Rocket className="h-5 w-5 text-purple-600" />
+                  <CardTitle className="text-lg">評価設計フロー</CardTitle>
+                </div>
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => setShowGuide(false)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  ✕
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between mb-4">
+                {designSteps.map((step, index) => (
+                  <React.Fragment key={step.id}>
+                    <div className="flex flex-col items-center flex-1">
+                      <div className={`
+                        p-3 rounded-full mb-2 transition-all
+                        ${step.status === 'completed' ? 'bg-green-100' : ''}
+                        ${step.status === 'current' ? 'bg-purple-100 ring-4 ring-purple-200' : ''}
+                        ${step.status === 'upcoming' ? 'bg-gray-100' : ''}
+                      `}>
+                        <step.icon className={`
+                          h-5 w-5
+                          ${step.status === 'completed' ? 'text-green-600' : ''}
+                          ${step.status === 'current' ? 'text-purple-600' : ''}
+                          ${step.status === 'upcoming' ? 'text-gray-400' : ''}
+                        `} />
+                      </div>
+                      <span className={`
+                        text-sm font-medium
+                        ${step.status === 'current' ? 'text-purple-600' : 'text-gray-600'}
+                      `}>
+                        {step.title}
+                      </span>
+                    </div>
+                    {index < designSteps.length - 1 && (
+                      <ChevronRight className="h-5 w-5 text-gray-400 mb-8" />
+                    )}
+                  </React.Fragment>
+                ))}
+              </div>
+              <Alert className="border-purple-200 bg-purple-50">
+                <Zap className="h-4 w-4 text-purple-600" />
+                <AlertDescription className="text-purple-800">
+                  <strong>現在のタスク：</strong> 各施設の技術評価項目を選定してください。
+                  残り<strong className="text-red-600">2施設</strong>の設定が必要です。
+                </AlertDescription>
+              </Alert>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* クイックアクション */}
+        <div className="mb-6">
+          <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+            <Zap className="h-5 w-5 text-yellow-500" />
+            クイックアクション
+          </h2>
+          <div className="grid grid-cols-4 gap-4">
+            <Link href="/evaluation-design/technical/corporate">
+              <Card className="hover:shadow-xl transition-all cursor-pointer border-2 border-transparent hover:border-blue-400 bg-gradient-to-br from-blue-50 to-blue-100">
+                <CardContent className="p-4 text-center">
+                  <div className="mx-auto mb-2 p-2 bg-blue-500 rounded-full w-fit">
+                    <Shield className="h-6 w-6 text-white" />
+                  </div>
+                  <h3 className="font-bold text-blue-900 text-sm">法人統一項目</h3>
+                  <p className="text-xs text-blue-700 mt-1">30点分を設定</p>
+                </CardContent>
+              </Card>
+            </Link>
+            
+            <Link href="/evaluation-design/technical/facility">
+              <Card className="hover:shadow-xl transition-all cursor-pointer border-2 border-transparent hover:border-green-400 bg-gradient-to-br from-green-50 to-green-100">
+                <CardContent className="p-4 text-center">
+                  <div className="mx-auto mb-2 p-2 bg-green-500 rounded-full w-fit">
+                    <Building className="h-6 w-6 text-white" />
+                  </div>
+                  <h3 className="font-bold text-green-900 text-sm">施設特化項目</h3>
+                  <p className="text-xs text-green-700 mt-1">20点分を設定</p>
+                </CardContent>
+              </Card>
+            </Link>
+            
+            <Link href="/evaluation-design/questions">
+              <Card className="hover:shadow-xl transition-all cursor-pointer border-2 border-transparent hover:border-purple-400 bg-gradient-to-br from-purple-50 to-purple-100">
+                <CardContent className="p-4 text-center">
+                  <div className="mx-auto mb-2 p-2 bg-purple-500 rounded-full w-fit">
+                    <Sparkles className="h-6 w-6 text-white" />
+                  </div>
+                  <h3 className="font-bold text-purple-900 text-sm">AI動的設問</h3>
+                  <p className="text-xs text-purple-700 mt-1">設問管理</p>
+                </CardContent>
+              </Card>
+            </Link>
+            
+            <Link href="/evaluation-design/simulation">
+              <Card className="hover:shadow-xl transition-all cursor-pointer border-2 border-transparent hover:border-orange-400 bg-gradient-to-br from-orange-50 to-orange-100">
+                <CardContent className="p-4 text-center">
+                  <div className="mx-auto mb-2 p-2 bg-orange-500 rounded-full w-fit">
+                    <FlaskConical className="h-6 w-6 text-white" />
+                  </div>
+                  <h3 className="font-bold text-orange-900 text-sm">シミュレーション</h3>
+                  <p className="text-xs text-orange-700 mt-1">影響確認</p>
+                </CardContent>
+              </Card>
+            </Link>
+          </div>
+        </div>
 
         <div className={styles.tabNavigation}>
           {[
@@ -97,8 +237,25 @@ export default function EvaluationDesignPage() {
         <div className={styles.tabContent}>
           {activeTab === 'overview' && (
             <div className="space-y-6 p-6">
+            {/* 重要なアラート */}
+            <Alert className="border-orange-200 bg-orange-50">
+              <AlertTriangle className="h-4 w-4 text-orange-600" />
+              <AlertTitle>設定が必要な項目があります</AlertTitle>
+              <AlertDescription className="mt-2">
+                <div className="flex items-center justify-between">
+                  <span>小原病院と立神リハビリの技術評価項目が未完成です。</span>
+                  <Link href="/evaluation-design/technical">
+                    <Button size="sm" className="ml-4">
+                      今すぐ設定
+                      <ChevronRight className="ml-1 h-4 w-4" />
+                    </Button>
+                  </Link>
+                </div>
+              </AlertDescription>
+            </Alert>
+
             {/* 現在の配分 */}
-            <Card>
+            <Card className="border-2 border-blue-200">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <BarChart3 className="w-5 h-5" />
@@ -154,47 +311,84 @@ export default function EvaluationDesignPage() {
             </Card>
 
             {/* 施設別進捗 */}
-            <Card>
-              <CardHeader>
+            <Card className="border-2 border-gray-200">
+              <CardHeader className="bg-gradient-to-r from-gray-50 to-slate-50">
                 <CardTitle className="flex items-center gap-2">
-                  <Building className="w-5 h-5" />
+                  <Building className="w-5 h-5 text-gray-700" />
                   施設別設定進捗
                 </CardTitle>
                 <CardDescription>
                   各施設の評価設計の進捗状況
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-6">
                 <div className="space-y-4">
                   {facilityProgress.map((facility) => (
-                    <div key={facility.name} className="border rounded-lg p-4">
+                    <div key={facility.name} className="border-2 rounded-lg p-4 hover:shadow-lg transition-shadow
+                      ${facility.status === 'approved' ? 'border-green-200 bg-green-50' : ''}
+                      ${facility.status === 'reviewing' ? 'border-blue-200 bg-blue-50' : ''}
+                      ${facility.status === 'draft' ? 'border-yellow-200 bg-yellow-50' : ''}
+                    ">
                       <div className="flex items-center justify-between mb-3">
-                        <div>
-                          <h4 className="font-medium">{facility.name}</h4>
-                          <p className="text-sm text-gray-600">{facility.type}</p>
+                        <div className="flex items-center gap-3">
+                          <div className={`p-2 rounded-lg
+                            ${facility.status === 'approved' ? 'bg-green-100' : ''}
+                            ${facility.status === 'reviewing' ? 'bg-blue-100' : ''}
+                            ${facility.status === 'draft' ? 'bg-yellow-100' : ''}
+                          `}>
+                            <Building className={`h-5 w-5
+                              ${facility.status === 'approved' ? 'text-green-600' : ''}
+                              ${facility.status === 'reviewing' ? 'text-blue-600' : ''}
+                              ${facility.status === 'draft' ? 'text-yellow-600' : ''}
+                            `} />
+                          </div>
+                          <div>
+                            <h4 className="font-bold text-lg">{facility.name}</h4>
+                            <p className="text-sm text-gray-600">{facility.type}</p>
+                          </div>
                         </div>
                         <div className="flex items-center gap-3">
-                          <span className="text-sm text-gray-500">
+                          <span className="text-xs text-gray-500">
                             最終更新: {facility.lastUpdated}
                           </span>
                           {getStatusBadge(facility.status)}
                         </div>
                       </div>
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-2 gap-4 mb-3">
                         <div>
                           <div className="flex justify-between text-sm mb-1">
-                            <span>技術評価設計</span>
-                            <span>{facility.technical}%</span>
+                            <span className="font-medium">技術評価設計</span>
+                            <span className="font-bold">{facility.technical}%</span>
                           </div>
-                          <Progress value={facility.technical} className="h-2" />
+                          <Progress value={facility.technical} className="h-3" />
                         </div>
                         <div>
                           <div className="flex justify-between text-sm mb-1">
-                            <span>貢献度評価設計</span>
-                            <span>{facility.contribution}%</span>
+                            <span className="font-medium">貢献度評価設計</span>
+                            <span className="font-bold">{facility.contribution}%</span>
                           </div>
-                          <Progress value={facility.contribution} className="h-2" />
+                          <Progress value={facility.contribution} className="h-3" />
                         </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <Link href={`/evaluation-design/facility/${facility.name}`} className="flex-1">
+                          <Button variant="outline" size="sm" className="w-full">
+                            <Edit3 className="w-4 h-4 mr-2" />
+                            設定を編集
+                          </Button>
+                        </Link>
+                        {facility.status === 'draft' && (
+                          <Button variant="default" size="sm">
+                            <Save className="w-4 h-4 mr-2" />
+                            保存
+                          </Button>
+                        )}
+                        {facility.status === 'reviewing' && (
+                          <Button variant="secondary" size="sm">
+                            <FileCheck className="w-4 h-4 mr-2" />
+                            承認待ち
+                          </Button>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -203,47 +397,62 @@ export default function EvaluationDesignPage() {
             </Card>
 
             {/* スケジュール */}
-            <Card>
-              <CardHeader>
+            <Card className="border-2 border-indigo-200">
+              <CardHeader className="bg-gradient-to-r from-indigo-50 to-blue-50">
                 <CardTitle className="flex items-center gap-2">
-                  <Calendar className="w-5 h-5" />
+                  <Calendar className="w-5 h-5 text-indigo-600" />
                   年度スケジュール
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-6">
                 <div className="relative">
-                  <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200"></div>
-                  <div className="space-y-6">
+                  <div className="absolute left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-green-400 via-blue-400 to-gray-300 rounded-full"></div>
+                  <div className="space-y-8">
                     <div className="flex items-start gap-4">
-                      <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white">
-                        <CheckCircle className="w-5 h-5" />
+                      <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center text-white shadow-lg z-10">
+                        <CheckCircle className="w-8 h-8" />
                       </div>
-                      <div className="flex-1">
-                        <h4 className="font-medium">評価設計フェーズ</h4>
-                        <p className="text-sm text-gray-600">12月〜1月</p>
-                        <p className="text-sm mt-1">各施設で評価項目と配分を決定</p>
+                      <div className="flex-1 bg-green-50 rounded-lg p-4 border-l-4 border-green-500">
+                        <div className="flex items-center justify-between">
+                          <h4 className="font-bold text-green-900">評価設計フェーズ</h4>
+                          <Badge className="bg-green-100 text-green-800">進行中</Badge>
+                        </div>
+                        <p className="text-sm text-gray-600 mt-1">12月〜1月</p>
+                        <p className="text-sm mt-2">各施設で評価項目と配分を決定</p>
+                        <div className="mt-3 flex gap-2">
+                          <Button size="sm" variant="outline" className="text-xs">
+                            <BookOpen className="h-3 w-3 mr-1" />
+                            ガイドを見る
+                          </Button>
+                        </div>
                       </div>
                     </div>
                     
                     <div className="flex items-start gap-4">
-                      <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white">
-                        <Clock className="w-5 h-5" />
+                      <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-lg z-10">
+                        <Clock className="w-8 h-8" />
                       </div>
-                      <div className="flex-1">
-                        <h4 className="font-medium">承認・調整フェーズ</h4>
-                        <p className="text-sm text-gray-600">2月</p>
-                        <p className="text-sm mt-1">法人での承認と最終調整</p>
+                      <div className="flex-1 bg-blue-50 rounded-lg p-4 border-l-4 border-blue-500">
+                        <div className="flex items-center justify-between">
+                          <h4 className="font-bold text-blue-900">承認・調整フェーズ</h4>
+                          <Badge className="bg-blue-100 text-blue-800">予定</Badge>
+                        </div>
+                        <p className="text-sm text-gray-600 mt-1">2月</p>
+                        <p className="text-sm mt-2">法人での承認と最終調整</p>
                       </div>
                     </div>
                     
                     <div className="flex items-start gap-4">
-                      <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-white">
-                        <AlertCircle className="w-5 h-5" />
+                      <div className="w-16 h-16 bg-gray-400 rounded-full flex items-center justify-center text-white shadow-lg z-10">
+                        <AlertCircle className="w-8 h-8" />
                       </div>
-                      <div className="flex-1">
-                        <h4 className="font-medium">実施フェーズ</h4>
-                        <p className="text-sm text-gray-600">3月〜</p>
-                        <p className="text-sm mt-1">新年度評価の開始</p>
+                      <div className="flex-1 bg-gray-50 rounded-lg p-4 border-l-4 border-gray-400">
+                        <div className="flex items-center justify-between">
+                          <h4 className="font-bold text-gray-700">実施フェーズ</h4>
+                          <Badge className="bg-gray-100 text-gray-600">未開始</Badge>
+                        </div>
+                        <p className="text-sm text-gray-600 mt-1">3月〜</p>
+                        <p className="text-sm mt-2">新年度評価の開始</p>
                       </div>
                     </div>
                   </div>
