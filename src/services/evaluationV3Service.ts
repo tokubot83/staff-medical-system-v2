@@ -158,79 +158,129 @@ export class EvaluationDesignService {
 
 // 設問選定サービス
 export class QuestionSelectorService {
-  // 設問の自動選定
-  static selectQuestions(
-    middleItem: string,
+  // 設問の自動選定（強化版）
+  static async selectQuestions(
+    categoryCode: string,
     context: {
       facilityType: FacilityTypeV3;
       experienceLevel: string;
       completedTrainings: string[];
       facilityFocus: string[];
+      staffId: string;
+      year: number;
+      jobCategory: JobCategoryV3;
     }
-  ): QuestionDesign[] {
-    // 設問バンクから候補を取得（実際はAPIから）
-    const candidates = this.getQuestionCandidates(middleItem, context);
+  ): Promise<QuestionDesign[]> {
+    // 設問バンクからインポート
+    const { selectQuestionsForStaff, generateDynamicQuestion } = await import('@/data/questionBank');
+    const { TrainingIntegrationService } = await import('@/services/trainingIntegrationService');
     
-    // スコアリングして最適な設問を選定
-    const scored = candidates.map(q => ({
-      ...q,
-      score: this.calculateScore(q, context)
+    // 研修ベースの推奨設問を取得
+    const trainingRecommendations = await TrainingIntegrationService.recommendQuestionsBasedOnTraining({
+      staffId: context.staffId,
+      experienceLevel: context.experienceLevel,
+      year: context.year,
+      categoryCode
+    });
+    
+    // 設問バンクから最適な設問を選定
+    const selectedQuestions = selectQuestionsForStaff({
+      experienceLevel: context.experienceLevel,
+      completedTrainings: context.completedTrainings,
+      facilityType: context.facilityType,
+      jobCategory: context.jobCategory,
+      categoryCode,
+      requiredCount: 10,
+      year: context.year
+    });
+    
+    // QuestionDesign形式に変換
+    const questions: QuestionDesign[] = selectedQuestions.map(q => ({
+      id: q.id,
+      question: q.question,
+      points: q.points,
+      evaluator: q.evaluator as 'superior' | 'self',
+      autoSelected: true,
+      experienceLevels: q.experienceLevels,
+      keywords: q.keywords,
+      usageCount: q.usageCount,
+      selectionReason: this.generateSelectionReason(q, context, trainingRecommendations)
     }));
     
-    // スコア順にソートして必要数を返す
-    return scored
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 10)  // 10問選定
-      .map(({ score, ...q }) => q);
-  }
-  
-  // 設問候補の取得（モック）
-  private static getQuestionCandidates(
-    middleItem: string,
-    context: any
-  ): QuestionDesign[] {
-    // 実際はAPIから取得
-    const baseQuestions: QuestionDesign[] = [
-      {
-        id: `q_${Date.now()}_1`,
-        question: '基本的な看護技術を安全に実施できているか？',
-        points: 1,
-        evaluator: 'superior',
-        autoSelected: true,
-        experienceLevels: ['young'],
-        keywords: ['基本技術', '安全'],
-        usageCount: 0,
-        selectionReason: '経験レベルと研修内容にマッチ'
-      },
-      // ... 他の設問
-    ];
-    
-    return baseQuestions;
-  }
-  
-  // スコア計算
-  private static calculateScore(
-    question: QuestionDesign,
-    context: any
-  ): number {
-    let score = 0;
-    
-    // 研修キーワードマッチ
-    if (context.completedTrainings.some((t: string) => 
-      question.keywords.some(k => t.includes(k))
-    )) {
-      score += 30;
+    // 動的設問の生成（年度と研修に応じて）
+    if (context.completedTrainings.length > 0) {
+      const dynamicQuestion = this.createDynamicQuestion(
+        context.year,
+        context.completedTrainings[0],
+        context.facilityType
+      );
+      if (dynamicQuestion) {
+        questions.push(dynamicQuestion);
+      }
     }
     
-    // 経験年数適合
+    return questions;
+  }
+  
+  // 選定理由の生成
+  private static generateSelectionReason(
+    question: any,
+    context: any,
+    trainingRecommendations: any
+  ): string {
+    const reasons = [];
+    
+    // 研修関連
+    if (trainingRecommendations.mandatoryQuestions.includes(question.id)) {
+      reasons.push('法定研修完了に基づく必須項目');
+    }
+    
+    // 経験レベル
     if (question.experienceLevels.includes(context.experienceLevel)) {
-      score += 25;
+      const levelLabel = ExperienceLevelsV3[context.experienceLevel.toUpperCase().replace('-', '_') as keyof typeof ExperienceLevelsV3]?.label;
+      reasons.push(`${levelLabel}向けの適切な難易度`);
     }
     
-    // 使用頻度（新しい設問を優先）
-    score -= question.usageCount * 5;
+    // 効果性
+    if (question.effectiveness && question.effectiveness > 80) {
+      reasons.push(`高い効果性（${question.effectiveness}%）`);
+    }
     
-    return score;
+    // 新規性
+    if (!question.lastUsedYear || context.year - question.lastUsedYear > 1) {
+      reasons.push('新鮮な設問内容');
+    }
+    
+    return reasons.join('、') || '標準評価項目';
+  }
+  
+  // 動的設問の作成
+  private static createDynamicQuestion(
+    year: number,
+    trainingId: string,
+    facilityType: string
+  ): QuestionDesign | null {
+    // 簡易実装
+    const trainingNames: Record<string, string> = {
+      'infection_control': '感染対策',
+      'safety_management': '医療安全',
+      'personal_info': '個人情報保護'
+    };
+    
+    const trainingName = trainingNames[trainingId];
+    if (!trainingName) return null;
+    
+    return {
+      id: `DQ_${year}_${trainingId}`,
+      question: `${year}年度の${trainingName}研修で学んだ内容を実践できているか？`,
+      points: 1,
+      evaluator: 'both',
+      autoSelected: true,
+      experienceLevels: ['new', 'young', 'midlevel', 'veteran'],
+      keywords: [trainingName, '研修実践', `${year}年度`],
+      usageCount: 0,
+      selectionReason: `${year}年度研修プログラムに連動した動的設問`
+    };
   }
 }
 
