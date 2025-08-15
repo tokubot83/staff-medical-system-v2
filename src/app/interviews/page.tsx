@@ -1354,8 +1354,12 @@ function RecordTab({ selectedInterview }: RecordTabProps) {
   )
 }
 
+// Phase 1: 動的面談フローの実装
+import DynamicInterviewFlow from '@/components/interview/DynamicInterviewFlow'
+
 function InterviewSheetsTab(): React.ReactElement {
-  return <ImprovedInterviewFlow />
+  // 既存のImprovedInterviewFlowから新しいDynamicInterviewFlowへ移行
+  return <DynamicInterviewFlow />
 }
 
 function ReportTab(): React.ReactElement {
