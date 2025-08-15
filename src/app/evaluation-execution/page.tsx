@@ -39,7 +39,6 @@ import { ExperienceLevelMapper, ExperienceLevelsV3 } from '@/services/evaluation
 import DashboardHeader from '@/components/evaluation/DashboardHeader';
 import IntegratedJudgment from '@/components/evaluation/IntegratedJudgment';
 import DisclosureManagement from '@/components/evaluation/DisclosureManagement';
-import AppealManagement from '@/components/evaluation/AppealManagement';
 
 export default function EvaluationExecutionPage() {
   const [activeTab, setActiveTab] = useState('input');
@@ -236,8 +235,7 @@ export default function EvaluationExecutionPage() {
             { id: 'input', label: '評価入力', icon: '✍️' },
             { id: 'review', label: '評価確認', icon: '🔍' },
             { id: 'judgment', label: '総合判定', icon: '⚖️' },
-            { id: 'disclosure', label: '評価開示', icon: '👁️' },
-            { id: 'appeal', label: '異議申立', icon: '📢' }
+            { id: 'disclosure', label: '評価開示・異議申立', icon: '👁️' }
           ].map((tab) => (
             <button
               key={tab.id}
@@ -412,12 +410,6 @@ export default function EvaluationExecutionPage() {
           {activeTab === 'disclosure' && (
             <div className="p-6">
               <DisclosureManagement />
-            </div>
-          )}
-
-          {activeTab === 'appeal' && (
-            <div className="p-6">
-              <AppealManagement />
             </div>
           )}
         </div>
