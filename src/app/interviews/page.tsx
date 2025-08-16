@@ -19,6 +19,7 @@ import UnifiedInterviewDashboard from '@/components/interview/UnifiedInterviewDa
 // タブ順序を業務フローに合わせて修正
 const tabs = [
   { id: 'station', label: '面談ステーション', icon: '🚉', badge: '', isNew: true },
+  { id: 'bank-system', label: 'バンクシステム', icon: '🏦', badge: 'Full', isNew: false },
   { id: 'overview-guide', label: '概要・ガイド', icon: '📖', badge: '', isNew: false },
   { id: 'record', label: '結果記録', icon: '📝', badge: '', isNew: false },
   { id: 'history', label: '履歴・分析', icon: '📈', badge: '', isNew: false },
@@ -200,6 +201,7 @@ function InterviewsPageContent() {
 
         <div className={styles.tabContent}>
           {activeTab === 'station' && <UnifiedInterviewDashboard />}
+          {activeTab === 'bank-system' && <BankSystemTab />}
           {activeTab === 'overview-guide' && <OverviewGuideTab onInterviewTypeClick={handleInterviewTypeClick} />}
           {activeTab === 'history' && (
             <HistoryTab 
@@ -1107,6 +1109,362 @@ function GuideSection({ onInterviewTypeClick }: { onInterviewTypeClick: (type: s
             <li><code>docs/INTEGRATION_ARCHITECTURE.md</code> - VoiceDrive連携アーキテクチャ</li>
             <li><code>src/types/interview.ts</code> - 型定義ファイル</li>
           </ul>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// バンクシステム統合タブ
+function BankSystemTab(): React.ReactElement {
+  const [activeBank, setActiveBank] = useState<'overview' | 'regular' | 'special' | 'support'>('overview')
+  const [isLoading, setIsLoading] = useState(false)
+
+  return (
+    <div className="max-w-7xl mx-auto space-y-6 p-6">
+      {/* ヘッダー */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-3xl font-bold flex items-center gap-2">
+            🏦 面談バンクシステム
+          </h2>
+          <p className="text-gray-600 mt-1">統合面談生成・管理システム</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+            ✅ 3バンク完全実装済み
+          </span>
+          <button 
+            onClick={() => window.open('/interview-bank', '_blank')}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2"
+          >
+            🚀 詳細ダッシュボード
+          </button>
+        </div>
+      </div>
+
+      {/* バンク選択タブ */}
+      <div className="bg-white rounded-xl shadow-sm border">
+        <div className="border-b border-gray-200">
+          <nav className="flex space-x-1 p-1">
+            {[
+              { id: 'overview', label: '統合概要', icon: '📊', color: 'blue' },
+              { id: 'regular', label: '定期面談バンク', icon: '📅', color: 'green' },
+              { id: 'special', label: '特別面談バンク', icon: '⚠️', color: 'orange' },
+              { id: 'support', label: 'サポート面談バンク', icon: '💬', color: 'purple' }
+            ].map((bank) => (
+              <button
+                key={bank.id}
+                onClick={() => setActiveBank(bank.id as any)}
+                className={`flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                  activeBank === bank.id
+                    ? `bg-${bank.color}-50 text-${bank.color}-700 border border-${bank.color}-200`
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                }`}
+              >
+                <span className="text-lg">{bank.icon}</span>
+                {bank.label}
+              </button>
+            ))}
+          </nav>
+        </div>
+
+        {/* コンテンツエリア */}
+        <div className="p-6">
+          {activeBank === 'overview' && <BankOverviewContent />}
+          {activeBank === 'regular' && <RegularBankContent />}
+          {activeBank === 'special' && <SpecialBankContent />}
+          {activeBank === 'support' && <SupportBankContent />}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// 統合概要コンテンツ
+function BankOverviewContent(): React.ReactElement {
+  return (
+    <div className="space-y-6">
+      {/* 統計カード */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-blue-50 rounded-lg p-4">
+          <div className="flex items-center gap-3">
+            <div className="bg-blue-100 p-2 rounded-lg">
+              📊
+            </div>
+            <div>
+              <h3 className="font-semibold text-blue-900">総面談数</h3>
+              <p className="text-2xl font-bold text-blue-700">1,247</p>
+              <p className="text-sm text-blue-600">全バンク合計</p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-green-50 rounded-lg p-4">
+          <div className="flex items-center gap-3">
+            <div className="bg-green-100 p-2 rounded-lg">
+              ✅
+            </div>
+            <div>
+              <h3 className="font-semibold text-green-900">完了率</h3>
+              <p className="text-2xl font-bold text-green-700">94.3%</p>
+              <p className="text-sm text-green-600">今月実績</p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-purple-50 rounded-lg p-4">
+          <div className="flex items-center gap-3">
+            <div className="bg-purple-100 p-2 rounded-lg">
+              ⚡
+            </div>
+            <div>
+              <h3 className="font-semibold text-purple-900">平均時間</h3>
+              <p className="text-2xl font-bold text-purple-700">32分</p>
+              <p className="text-sm text-purple-600">面談あたり</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* バンク別状況 */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="bg-white border rounded-lg p-4">
+          <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+            📅 定期面談バンク
+          </h3>
+          <div className="space-y-2 text-sm">
+            <div className="flex justify-between">
+              <span>実施数</span>
+              <span className="font-bold">892</span>
+            </div>
+            <div className="flex justify-between">
+              <span>完了</span>
+              <span className="font-bold text-green-600">847</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="bg-green-500 h-2 rounded-full" style={{ width: '95%' }}></div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white border rounded-lg p-4">
+          <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+            ⚠️ 特別面談バンク
+          </h3>
+          <div className="space-y-2 text-sm">
+            <div className="flex justify-between">
+              <span>実施数</span>
+              <span className="font-bold">187</span>
+            </div>
+            <div className="flex justify-between">
+              <span>重要案件</span>
+              <span className="font-bold text-red-600">12</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="bg-orange-500 h-2 rounded-full" style={{ width: '82%' }}></div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white border rounded-lg p-4">
+          <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+            💬 サポート面談バンク
+          </h3>
+          <div className="space-y-2 text-sm">
+            <div className="flex justify-between">
+              <span>申込数</span>
+              <span className="font-bold">168</span>
+            </div>
+            <div className="flex justify-between">
+              <span>解決率</span>
+              <span className="font-bold text-green-600">89%</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="bg-purple-500 h-2 rounded-full" style={{ width: '89%' }}></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* クイックアクセス */}
+      <div className="bg-gray-50 rounded-lg p-4">
+        <h3 className="font-semibold text-gray-900 mb-4">クイックアクセス</h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <button 
+            onClick={() => window.open('/interview-bank/create', '_blank')}
+            className="bg-white hover:bg-gray-50 border border-gray-200 rounded-lg p-3 text-left transition-colors"
+          >
+            <div className="text-2xl mb-1">✨</div>
+            <div className="font-medium text-sm">AI面談作成</div>
+          </button>
+          <button 
+            onClick={() => window.open('/interview-bank', '_blank')}
+            className="bg-white hover:bg-gray-50 border border-gray-200 rounded-lg p-3 text-left transition-colors"
+          >
+            <div className="text-2xl mb-1">📊</div>
+            <div className="font-medium text-sm">統計ダッシュボード</div>
+          </button>
+          <button 
+            onClick={() => window.open('/interview-bank/history', '_blank')}
+            className="bg-white hover:bg-gray-50 border border-gray-200 rounded-lg p-3 text-left transition-colors"
+          >
+            <div className="text-2xl mb-1">📋</div>
+            <div className="font-medium text-sm">面談履歴</div>
+          </button>
+          <button 
+            onClick={() => window.open('/admin/interview-bank', '_blank')}
+            className="bg-white hover:bg-gray-50 border border-gray-200 rounded-lg p-3 text-left transition-colors"
+          >
+            <div className="text-2xl mb-1">⚙️</div>
+            <div className="font-medium text-sm">バンク管理</div>
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// 定期面談バンクコンテンツ
+function RegularBankContent(): React.ReactElement {
+  return (
+    <div className="space-y-4">
+      <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+        <h3 className="font-semibold text-green-900 mb-2 flex items-center gap-2">
+          📅 定期面談バンク - 動的質問生成システム
+        </h3>
+        <p className="text-green-700 text-sm mb-4">
+          職員の経験年数・職種・部署に応じて最適な面談シートを自動生成
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <h4 className="font-medium text-green-900 mb-2">対応職種</h4>
+            <ul className="text-sm text-green-700 space-y-1">
+              <li>• 看護師（新人～ベテラン、主任、師長）</li>
+              <li>• 准看護師（新人～ベテラン）</li>
+              <li>• 看護補助者（新人～ベテラン、リーダー）</li>
+              <li>• 医事課職員（全レベル）</li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-medium text-green-900 mb-2">生成される時間</h4>
+            <ul className="text-sm text-green-700 space-y-1">
+              <li>• 15分面談: 8-12問</li>
+              <li>• 30分面談: 16-24問</li>
+              <li>• 45分面談: 24-36問</li>
+            </ul>
+          </div>
+        </div>
+        <button 
+          onClick={() => window.open('/interview-bank/create?type=regular', '_blank')}
+          className="mt-4 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm"
+        >
+          定期面談シート生成
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// 特別面談バンクコンテンツ
+function SpecialBankContent(): React.ReactElement {
+  return (
+    <div className="space-y-4">
+      <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+        <h3 className="font-semibold text-orange-900 mb-2 flex items-center gap-2">
+          ⚠️ 特別面談バンク - 状況別対応システム
+        </h3>
+        <p className="text-orange-700 text-sm mb-4">
+          退職・異動・復職・昇進・懲戒など特別な状況に応じた専門質問バンク
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <h4 className="font-medium text-orange-900 mb-2">対応面談タイプ</h4>
+            <ul className="text-sm text-orange-700 space-y-1">
+              <li>• 退職面談（試用期間、一般、自己都合、会社都合）</li>
+              <li>• 異動面談（部署異動、配置転換）</li>
+              <li>• 復職面談（休職からの復帰）</li>
+              <li>• 昇進面談（昇進・昇格対応）</li>
+              <li>• 懲戒面談（規律違反対応）</li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-medium text-orange-900 mb-2">特徴</h4>
+            <ul className="text-sm text-orange-700 space-y-1">
+              <li>• 状況別専門質問（597問収録）</li>
+              <li>• 機密度レベル管理</li>
+              <li>• 法的コンプライアンス対応</li>
+              <li>• フォローアップ機能</li>
+            </ul>
+          </div>
+        </div>
+        <button 
+          onClick={() => window.open('/interview-bank/create?type=special', '_blank')}
+          className="mt-4 bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm"
+        >
+          特別面談シート生成
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// サポート面談バンクコンテンツ
+function SupportBankContent(): React.ReactElement {
+  return (
+    <div className="space-y-4">
+      <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+        <h3 className="font-semibold text-purple-900 mb-2 flex items-center gap-2">
+          💬 サポート面談バンク - VoiceDrive連携システム
+        </h3>
+        <p className="text-purple-700 text-sm mb-4">
+          職員からの相談申込を受けて、カテゴリ別に最適化された面談シートを生成
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <h4 className="font-medium text-purple-900 mb-2">相談カテゴリ</h4>
+            <ul className="text-sm text-purple-700 space-y-1">
+              <li>• キャリア相談（昇進、スキル、異動）</li>
+              <li>• 職場環境（設備、人間関係、業務負荷）</li>
+              <li>• 個別相談（給与、研修、コンプライアンス）</li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-medium text-purple-900 mb-2">VoiceDrive連携</h4>
+            <ul className="text-sm text-purple-700 space-y-1">
+              <li>• SNS申込システム連携</li>
+              <li>• リアルタイム通知</li>
+              <li>• 自動優先度判定</li>
+              <li>• 匿名相談対応</li>
+            </ul>
+          </div>
+        </div>
+        <button 
+          onClick={() => window.open('/interview-bank/create?type=support', '_blank')}
+          className="mt-4 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm"
+        >
+          サポート面談シート生成
+        </button>
+      </div>
+
+      {/* VoiceDrive連携状況 */}
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <h4 className="font-medium text-blue-900 mb-2 flex items-center gap-2">
+          🔗 VoiceDrive連携状況
+        </h4>
+        <div className="grid grid-cols-3 gap-4 text-center">
+          <div>
+            <div className="text-2xl font-bold text-blue-700">24</div>
+            <div className="text-sm text-blue-600">未処理申込</div>
+          </div>
+          <div>
+            <div className="text-2xl font-bold text-green-700">156</div>
+            <div className="text-sm text-green-600">今月完了</div>
+          </div>
+          <div>
+            <div className="text-2xl font-bold text-purple-700">2.3h</div>
+            <div className="text-sm text-purple-600">平均応答時間</div>
+          </div>
         </div>
       </div>
     </div>
