@@ -1,0 +1,292 @@
+/* 印刷用スタイルシート */
+@media print {
+  /* ページ設定 */
+  @page {
+    size: A4;
+    margin: 20mm;
+  }
+
+  @page :first {
+    margin-top: 30mm;
+  }
+
+  /* 基本レイアウト */
+  body {
+    font-family: 'Yu Gothic', 'Meiryo', 'ヒラギノ角ゴ Pro W3', sans-serif;
+    font-size: 10pt;
+    line-height: 1.6;
+    color: #000;
+    background: white;
+  }
+
+  /* 印刷時に非表示にする要素 */
+  .no-print,
+  .print\\:hidden,
+  button,
+  nav,
+  header,
+  footer,
+  .navigation,
+  .sidebar,
+  .modal,
+  .toast,
+  .tooltip {
+    display: none !important;
+  }
+
+  /* 印刷時のみ表示する要素 */
+  .print-only,
+  .print\\:block {
+    display: block !important;
+  }
+
+  /* ヘッダー・フッター */
+  .print-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 10mm 0 5mm;
+    border-bottom: 2pt solid #333;
+    background: white;
+    z-index: 1000;
+  }
+
+  .print-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 5mm 0;
+    border-top: 1pt solid #666;
+    background: white;
+    text-align: center;
+    font-size: 9pt;
+    color: #666;
+    z-index: 1000;
+  }
+
+  /* ページ番号 */
+  .page-number::before {
+    content: counter(page);
+  }
+
+  .total-pages::before {
+    content: counter(pages);
+  }
+
+  /* 改ページ制御 */
+  .page-break,
+  .page-break-before {
+    page-break-before: always;
+  }
+
+  .page-break-after {
+    page-break-after: always;
+  }
+
+  .avoid-break {
+    page-break-inside: avoid;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* 表の改ページ制御 */
+  table {
+    page-break-inside: avoid;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tbody {
+    display: table-row-group;
+  }
+
+  tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+
+  /* 面談シート専用スタイル */
+  .interview-sheet {
+    padding: 0;
+    margin: 0;
+  }
+
+  .interview-sheet-header {
+    margin-bottom: 10mm;
+    padding-bottom: 5mm;
+    border-bottom: 2pt solid #333;
+  }
+
+  .interview-sheet-title {
+    font-size: 16pt;
+    font-weight: bold;
+    margin-bottom: 5mm;
+  }
+
+  .interview-sheet-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10pt;
+  }
+
+  .interview-sheet-section {
+    margin-bottom: 8mm;
+    page-break-inside: avoid;
+  }
+
+  .interview-sheet-section-title {
+    font-size: 12pt;
+    font-weight: bold;
+    margin-bottom: 3mm;
+    padding: 2mm;
+    background: #f0f0f0;
+    border-left: 3pt solid #333;
+  }
+
+  .interview-sheet-content {
+    padding: 3mm;
+  }
+
+  /* フォーム要素の印刷スタイル */
+  input[type="text"],
+  input[type="date"],
+  input[type="time"],
+  textarea,
+  select {
+    border: none;
+    background: transparent;
+    padding: 0;
+    font-size: 10pt;
+  }
+
+  input[type="checkbox"],
+  input[type="radio"] {
+    margin-right: 2mm;
+  }
+
+  /* チェックボックスとラジオボタンの印刷表示 */
+  input[type="checkbox"]:checked::before {
+    content: "☑";
+    font-size: 10pt;
+  }
+
+  input[type="checkbox"]:not(:checked)::before {
+    content: "☐";
+    font-size: 10pt;
+  }
+
+  input[type="radio"]:checked::before {
+    content: "◉";
+    font-size: 10pt;
+  }
+
+  input[type="radio"]:not(:checked)::before {
+    content: "○";
+    font-size: 10pt;
+  }
+
+  /* テーブルスタイル */
+  table {
+    width: 100%;
+    margin: 5mm 0;
+  }
+
+  th, td {
+    border: 1pt solid #999;
+    padding: 2mm;
+    text-align: left;
+  }
+
+  th {
+    background: #f0f0f0;
+    font-weight: bold;
+  }
+
+  /* 署名欄 */
+  .signature-area {
+    margin-top: 15mm;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .signature-box {
+    width: 45%;
+  }
+
+  .signature-line {
+    border-bottom: 1pt solid #333;
+    margin-top: 10mm;
+    padding-top: 5mm;
+  }
+
+  .signature-label {
+    font-size: 9pt;
+    color: #666;
+  }
+
+  /* グラフ・チャートの印刷対応 */
+  .chart-container {
+    page-break-inside: avoid;
+    max-width: 100%;
+    height: auto !important;
+  }
+
+  canvas {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* カラー印刷対応 */
+  .color-print {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    color-adjust: exact;
+  }
+
+  /* モノクロ印刷用 */
+  @media print and (monochrome) {
+    * {
+      color: #000 !important;
+      background: white !important;
+    }
+    
+    .bg-blue-100 { background: #f0f0f0 !important; }
+    .bg-green-100 { background: #e0e0e0 !important; }
+    .bg-yellow-100 { background: #d0d0d0 !important; }
+    .bg-red-100 { background: #c0c0c0 !important; }
+  }
+}
+
+/* 印刷プレビュー用クラス */
+.print-preview {
+  background: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  padding: 20mm;
+  width: 210mm;
+  min-height: 297mm;
+}
+
+.print-preview-a3 {
+  width: 297mm;
+  min-height: 420mm;
+}
+
+.print-preview-letter {
+  width: 216mm;
+  min-height: 279mm;
+}
+
+.print-preview-landscape {
+  width: 297mm;
+  min-height: 210mm;
+}

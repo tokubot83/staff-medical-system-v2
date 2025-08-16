@@ -29,6 +29,7 @@ import {
   Printer,
   X,
   Eye,
+  Download,
   ArrowRightLeft,
   UserCheck,
   TrendingUp,
@@ -48,6 +49,8 @@ import {
 import ImprovedDigitalInterviewUIFixed from './ImprovedDigitalInterviewUIFixed';
 import ImprovedMotivationDiagnosisModal from './ImprovedMotivationDiagnosisModal';
 import { interviewTemplates } from '@/data/interview-question-bank';
+import PrintPreview from '@/components/PrintPreview';
+import { usePrintPreview } from '@/hooks/usePrintPreview';
 import { InterviewSection, InterviewResponse, QuestionCategory } from '@/types/interview-question-master';
 import { 
   MotivationTypeDiagnosisService,
@@ -163,6 +166,11 @@ export default function DynamicInterviewFlow() {
   const [showPrintPreview, setShowPrintPreview] = useState(false); // 印刷プレビューフラグ
   const [useImprovedUI, setUseImprovedUI] = useState(false); // 改善版UI使用フラグ
   const [showPrintView, setShowPrintView] = useState(false); // バンクシステム印刷ビューフラグ
+  const { print, printElement, isPrinting } = usePrintPreview({
+    title: '面談記録',
+    paperSize: 'A4',
+    orientation: 'portrait'
+  });
 
   // スタッフデータの取得（実際にはAPIから）
   useEffect(() => {
@@ -2294,7 +2302,7 @@ export default function DynamicInterviewFlow() {
               </div>
               
               {/* 完了サマリー */}
-              <div className="w-full max-w-md space-y-3 p-4 bg-gray-50 rounded-lg">
+              <div id="interview-summary" className="w-full max-w-md space-y-3 p-4 bg-gray-50 rounded-lg">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">実施日時:</span>
                   <span>{session.startTime?.toLocaleString('ja-JP')}</span>
@@ -2321,6 +2329,23 @@ export default function DynamicInterviewFlow() {
 
               {/* アクションボタン */}
               <div className="flex gap-3">
+                <Button 
+                  onClick={() => setShowPrintPreview(true)}
+                  variant="outline"
+                  className="no-print"
+                >
+                  <Eye className="h-4 w-4 mr-2" />
+                  印刷プレビュー
+                </Button>
+                <Button 
+                  onClick={() => printElement('interview-summary')}
+                  variant="outline"
+                  disabled={isPrinting}
+                  className="no-print"
+                >
+                  <Printer className="h-4 w-4 mr-2" />
+                  印刷
+                </Button>
                 <Button variant="outline" onClick={() => window.location.href = '/interviews'}>
                   面談一覧に戻る
                 </Button>
@@ -2342,6 +2367,56 @@ export default function DynamicInterviewFlow() {
         onResponseSave={handleResponseSave}
         responses={session.responses}
       />
+      
+      {/* 印刷プレビューモーダル */}
+      {showPrintPreview && (
+        <PrintPreview
+          isOpen={showPrintPreview}
+          onClose={() => setShowPrintPreview(false)}
+          title="面談記録"
+          content={
+            <div className="p-8">
+              <h1 className="text-2xl font-bold mb-4">面談記録</h1>
+              <div className="space-y-4">
+                <div>
+                  <p className="font-semibold">職員情報</p>
+                  <p>氏名: {session.staffMember?.name}</p>
+                  <p>部署: {session.staffMember?.department}</p>
+                  <p>職種: {session.staffMember?.position}</p>
+                </div>
+                <div>
+                  <p className="font-semibold">面談情報</p>
+                  <p>種別: {session.interviewType}</p>
+                  <p>時間: {session.duration}分</p>
+                  <p>実施日時: {session.startTime?.toLocaleString('ja-JP')}</p>
+                </div>
+                {session.manual && (
+                  <div>
+                    <p className="font-semibold">面談内容</p>
+                    {session.manual.sections.map((section, idx) => (
+                      <div key={idx} className="mt-3">
+                        <h3 className="font-semibold">{section.title}</h3>
+                        <p className="text-sm text-gray-600">{section.description}</p>
+                        {section.questions.map((q, qIdx) => (
+                          <div key={qIdx} className="ml-4 mt-2">
+                            <p className="text-sm">{q.question}</p>
+                            {session.responses.get(q.id) && (
+                              <p className="text-sm text-gray-700 ml-4">
+                                回答: {session.responses.get(q.id)}
+                              </p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          }
+          showSettings={true}
+        />
+      )}
     </div>
   );
 }
