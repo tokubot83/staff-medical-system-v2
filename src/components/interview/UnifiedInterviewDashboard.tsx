@@ -383,30 +383,123 @@ export default function UnifiedInterviewDashboard() {
 
   return (
     <div className="space-y-6">
-      {/* ヘッダー */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-2xl font-bold">統合面談ダッシュボード</h2>
-          <p className="text-gray-600 mt-1">すべての面談予約を一元管理</p>
-        </div>
-        <div className="flex gap-2">
-          <Button onClick={loadReservations} variant="outline">
-            <RefreshCw className="h-4 w-4 mr-2" />
-            更新
-          </Button>
-          <Button onClick={() => setShowAddModal(true)} variant="default">
-            <Plus className="h-4 w-4 mr-2" />
-            予約追加
-          </Button>
-          <Button onClick={() => router.push('/interview-bank/create')} variant="outline">
-            新規面談作成
-          </Button>
+      {/* ヘッダー - より目立つデザイン */}
+      <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-6 text-white shadow-lg">
+        <div className="flex justify-between items-start">
+          <div>
+            <h1 className="text-3xl font-bold flex items-center gap-3">
+              <span className="text-4xl">🚉</span>
+              面談ステーション
+            </h1>
+            <p className="text-blue-100 mt-2 text-lg">
+              人事部面談管理センター - すべての面談予約を一元管理
+            </p>
+            <div className="flex gap-4 mt-4">
+              <div className="bg-white/20 rounded-lg px-3 py-1">
+                <span className="text-sm">本日の面談</span>
+                <span className="text-2xl font-bold ml-2">{getTodayReservations().length}</span>
+              </div>
+              <div className="bg-white/20 rounded-lg px-3 py-1">
+                <span className="text-sm">今週の予定</span>
+                <span className="text-2xl font-bold ml-2">{getUpcomingReservations().filter(r => {
+                  const days = Math.ceil((new Date(r.scheduledDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+                  return days <= 7;
+                }).length}</span>
+              </div>
+              <div className="bg-white/20 rounded-lg px-3 py-1">
+                <span className="text-sm">要対応</span>
+                <span className="text-2xl font-bold ml-2">{getOverdueReservations().length}</span>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col gap-2">
+            <Button onClick={() => setShowAddModal(true)} className="bg-white text-blue-700 hover:bg-blue-50">
+              <Plus className="h-5 w-5 mr-2" />
+              手動予約追加
+            </Button>
+            <Button onClick={loadReservations} variant="outline" className="bg-white/10 text-white border-white/30 hover:bg-white/20">
+              <RefreshCw className="h-4 w-4 mr-2" />
+              データ更新
+            </Button>
+          </div>
         </div>
       </div>
 
-      {/* フィルター */}
-      <Card>
-        <CardContent className="pt-6">
+      {/* 業務フローセクション */}
+      <div className="grid grid-cols-4 gap-4">
+        <div className="bg-gradient-to-br from-green-50 to-green-100 border-2 border-green-200 rounded-xl p-4 hover:shadow-lg transition-all">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="bg-green-500 text-white rounded-full p-3">
+              <Plus className="h-6 w-6" />
+            </div>
+            <div>
+              <h3 className="font-bold text-green-900">① 予約受付</h3>
+              <p className="text-sm text-green-700">電話・対面・VoiceDrive</p>
+            </div>
+          </div>
+          <Button 
+            onClick={() => setShowAddModal(true)} 
+            className="w-full bg-green-600 hover:bg-green-700 text-white"
+          >
+            手動で予約を追加
+          </Button>
+        </div>
+
+        <div className="bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-200 rounded-xl p-4 hover:shadow-lg transition-all">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="bg-blue-500 text-white rounded-full p-3">
+              <Calendar className="h-6 w-6" />
+            </div>
+            <div>
+              <h3 className="font-bold text-blue-900">② 予約管理</h3>
+              <p className="text-sm text-blue-700">確認・調整・承認</p>
+            </div>
+          </div>
+          <div className="text-2xl font-bold text-blue-600 text-center">
+            {reservations.filter(r => r.status === 'pending').length}件
+          </div>
+        </div>
+
+        <div className="bg-gradient-to-br from-orange-50 to-orange-100 border-2 border-orange-200 rounded-xl p-4 hover:shadow-lg transition-all">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="bg-orange-500 text-white rounded-full p-3">
+              <Play className="h-6 w-6" />
+            </div>
+            <div>
+              <h3 className="font-bold text-orange-900">③ 面談実施</h3>
+              <p className="text-sm text-orange-700">シート生成・実施</p>
+            </div>
+          </div>
+          <div className="text-2xl font-bold text-orange-600 text-center">
+            本日 {getTodayReservations().length}件
+          </div>
+        </div>
+
+        <div className="bg-gradient-to-br from-purple-50 to-purple-100 border-2 border-purple-200 rounded-xl p-4 hover:shadow-lg transition-all">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="bg-purple-500 text-white rounded-full p-3">
+              <FileText className="h-6 w-6" />
+            </div>
+            <div>
+              <h3 className="font-bold text-purple-900">④ 記録・分析</h3>
+              <p className="text-sm text-purple-700">結果記録・統計</p>
+            </div>
+          </div>
+          <div className="text-2xl font-bold text-purple-600 text-center">
+            {reservations.filter(r => r.status === 'completed').length}件完了
+          </div>
+        </div>
+      </div>
+
+      {/* フィルター - よりコンパクトに */}
+      <Card className="border-2 border-gray-200">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Filter className="h-5 w-5" />
+            検索・フィルター
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
           <div className="flex gap-4 items-center">
             <div className="flex-1">
               <div className="relative">
@@ -456,54 +549,72 @@ export default function UnifiedInterviewDashboard() {
         </Alert>
       )}
 
-      {/* 本日の面談 */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <span className="flex items-center gap-2">
-              <Calendar className="h-5 w-5" />
-              本日の面談予定
-            </span>
-            <Badge variant="secondary">{todayReservations.length} 件</Badge>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+      {/* メインコンテンツエリア */}
+      <div className="grid grid-cols-3 gap-6">
+        {/* 左側：本日の面談（大きく表示） */}
+        <div className="col-span-2">
+          <Card className="border-2 border-blue-200 shadow-lg">
+            <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100">
+              <CardTitle className="flex items-center justify-between">
+                <span className="flex items-center gap-2 text-xl">
+                  <Calendar className="h-6 w-6 text-blue-600" />
+                  <span className="text-blue-900">本日の面談予定</span>
+                </span>
+                <Badge variant="default" className="text-lg px-3 py-1 bg-blue-600">
+                  {todayReservations.length} 件
+                </Badge>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-4">
           {loading ? (
             <div className="text-center py-8 text-gray-500">読み込み中...</div>
           ) : todayReservations.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">本日の面談予定はありません</div>
+            <div className="text-center py-12 bg-gray-50 rounded-lg">
+              <Calendar className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+              <p className="text-gray-500 text-lg">本日の面談予定はありません</p>
+            </div>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-3 max-h-96 overflow-y-auto">
               {todayReservations.map(reservation => (
-                <div key={reservation.id} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                <div key={reservation.id} className="border-2 border-gray-200 rounded-lg p-4 hover:border-blue-400 hover:shadow-md transition-all bg-white">
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
-                      <div className="flex items-center gap-3">
-                        <div className="text-lg font-semibold">{reservation.scheduledTime}</div>
-                        <div>
-                          <div className="font-medium">{reservation.staffName}</div>
+                      <div className="flex items-start gap-4">
+                        {/* 時刻を大きく表示 */}
+                        <div className="bg-blue-100 rounded-lg px-3 py-2 text-center">
+                          <div className="text-2xl font-bold text-blue-700">{reservation.scheduledTime}</div>
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-2">
+                            <div className="font-bold text-lg">{reservation.staffName}</div>
+                            <Badge variant="outline">{getInterviewTypeLabel(reservation)}</Badge>
+                            {getUrgencyBadge(reservation.urgency)}
+                            {getStatusBadge(reservation.status)}
+                          </div>
                           <div className="text-sm text-gray-600">
                             {reservation.department} / {reservation.position}
                           </div>
+                          {reservation.supportTopic && (
+                            <div className="mt-2 bg-gray-50 rounded p-2">
+                              <span className="font-medium text-sm">相談内容:</span>
+                              <p className="text-sm text-gray-700 mt-1">{reservation.supportTopic}</p>
+                            </div>
+                          )}
+                          {reservation.notes && (
+                            <div className="mt-2 text-sm text-gray-600 italic">
+                              📝 {reservation.notes}
+                            </div>
+                          )}
                         </div>
-                        <Badge variant="outline">{getInterviewTypeLabel(reservation)}</Badge>
-                        {getUrgencyBadge(reservation.urgency)}
-                        {getStatusBadge(reservation.status)}
                       </div>
-                      {reservation.notes && (
-                        <div className="mt-2 text-sm text-gray-600">{reservation.notes}</div>
-                      )}
-                      {reservation.supportTopic && (
-                        <div className="mt-2 text-sm">
-                          <span className="font-medium">相談内容:</span> {reservation.supportTopic}
-                        </div>
-                      )}
                     </div>
                     <Button 
                       onClick={() => handleStartInterview(reservation)}
                       disabled={reservation.status !== 'confirmed'}
+                      className="ml-4 bg-blue-600 hover:bg-blue-700 text-white"
+                      size="lg"
                     >
-                      <Play className="h-4 w-4 mr-2" />
+                      <Play className="h-5 w-5 mr-2" />
                       面談開始
                     </Button>
                   </div>
@@ -511,92 +622,110 @@ export default function UnifiedInterviewDashboard() {
               ))}
             </div>
           )}
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+        </div>
 
-      {/* 今後の予定 */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              <span>今後の予定</span>
-              <Badge variant="secondary">{upcomingReservations.length} 件</Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2 max-h-96 overflow-y-auto">
-              {upcomingReservations.map(reservation => (
-                <div key={reservation.id} className="border-l-4 border-blue-400 pl-3 py-2">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <div className="font-medium text-sm">
-                        {new Date(reservation.scheduledDate).toLocaleDateString('ja-JP')} {reservation.scheduledTime}
+        {/* 右側：サイドパネル */}
+        <div className="space-y-4">
+          {/* 今後の予定 */}
+          <Card className="border-2 border-gray-200">
+            <CardHeader className="bg-gradient-to-r from-gray-50 to-gray-100 pb-3">
+              <CardTitle className="flex items-center justify-between text-base">
+                <span className="flex items-center gap-2">
+                  <ChevronRight className="h-5 w-5 text-gray-600" />
+                  今後の予定
+                </span>
+                <Badge variant="secondary">{upcomingReservations.length}</Badge>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-3">
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {upcomingReservations.slice(0, 5).map(reservation => (
+                  <div key={reservation.id} className="border-l-4 border-blue-400 pl-3 py-2 hover:bg-gray-50 rounded">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <div className="font-medium text-sm">
+                          {new Date(reservation.scheduledDate).toLocaleDateString('ja-JP', { 
+                            month: 'short', 
+                            day: 'numeric' 
+                          })} {reservation.scheduledTime}
+                        </div>
+                        <div className="text-xs text-gray-600">
+                          {reservation.staffName}
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          {getInterviewTypeLabel(reservation)}
+                        </div>
                       </div>
-                      <div className="text-sm text-gray-600">
-                        {reservation.staffName} - {getInterviewTypeLabel(reservation)}
-                      </div>
+                      {getStatusBadge(reservation.status)}
                     </div>
-                    {getStatusBadge(reservation.status)}
                   </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+                ))}
+                {upcomingReservations.length > 5 && (
+                  <div className="text-center pt-2">
+                    <span className="text-sm text-gray-500">
+                      他 {upcomingReservations.length - 5} 件
+                    </span>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
 
-        {/* 統計サマリー */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5" />
-              今月の実施状況
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-sm font-medium">定期面談</span>
-                <div className="flex items-center gap-2">
-                  <div className="w-32 bg-gray-200 rounded-full h-2">
-                    <div className="bg-blue-500 h-2 rounded-full" style={{ width: '75%' }}></div>
+          {/* 統計サマリー */}
+          <Card className="border-2 border-gray-200">
+            <CardHeader className="bg-gradient-to-r from-purple-50 to-purple-100 pb-3">
+              <CardTitle className="flex items-center gap-2 text-base">
+                <TrendingUp className="h-5 w-5 text-purple-600" />
+                今月の実施状況
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-4">
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium">定期面談</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-24 bg-gray-200 rounded-full h-2">
+                      <div className="bg-blue-500 h-2 rounded-full" style={{ width: '75%' }}></div>
+                    </div>
+                    <span className="text-xs text-gray-600 font-medium">45/60</span>
                   </div>
-                  <span className="text-sm text-gray-600">45/60</span>
                 </div>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm font-medium">特別面談</span>
-                <div className="flex items-center gap-2">
-                  <div className="w-32 bg-gray-200 rounded-full h-2">
-                    <div className="bg-orange-500 h-2 rounded-full" style={{ width: '100%' }}></div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium">特別面談</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-24 bg-gray-200 rounded-full h-2">
+                      <div className="bg-orange-500 h-2 rounded-full" style={{ width: '100%' }}></div>
+                    </div>
+                    <span className="text-xs text-gray-600 font-medium">5/5</span>
                   </div>
-                  <span className="text-sm text-gray-600">5/5</span>
                 </div>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm font-medium">サポート面談</span>
-                <div className="flex items-center gap-2">
-                  <div className="w-32 bg-gray-200 rounded-full h-2">
-                    <div className="bg-green-500 h-2 rounded-full" style={{ width: '60%' }}></div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium">サポート面談</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-24 bg-gray-200 rounded-full h-2">
+                      <div className="bg-green-500 h-2 rounded-full" style={{ width: '60%' }}></div>
+                    </div>
+                    <span className="text-xs text-gray-600 font-medium">12/20</span>
                   </div>
-                  <span className="text-sm text-gray-600">12/20</span>
                 </div>
               </div>
-            </div>
-            
-            <div className="mt-6 pt-4 border-t">
-              <div className="grid grid-cols-2 gap-4 text-center">
-                <div>
-                  <div className="text-2xl font-bold text-blue-600">92%</div>
-                  <div className="text-xs text-gray-600">実施率</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-green-600">4.5</div>
-                  <div className="text-xs text-gray-600">満足度</div>
+              
+              <div className="mt-4 pt-3 border-t">
+                <div className="grid grid-cols-2 gap-3 text-center">
+                  <div className="bg-blue-50 rounded-lg p-2">
+                    <div className="text-xl font-bold text-blue-600">92%</div>
+                    <div className="text-xs text-gray-600">実施率</div>
+                  </div>
+                  <div className="bg-green-50 rounded-lg p-2">
+                    <div className="text-xl font-bold text-green-600">4.5</div>
+                    <div className="text-xs text-gray-600">満足度</div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
       </div>
       
       {/* 手動予約追加モーダル */}
