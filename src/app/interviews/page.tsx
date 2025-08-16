@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import CommonHeader from '@/components/CommonHeader'
 import DashboardButton from '@/components/DashboardButton'
 import Link from 'next/link'
@@ -32,7 +33,9 @@ const tabs = [
 
 
 export default function InterviewsPage() {
-  const [activeTab, setActiveTab] = useState('overview')
+  const searchParams = useSearchParams()
+  const tabFromUrl = searchParams.get('tab')
+  const [activeTab, setActiveTab] = useState(tabFromUrl || 'overview')
   const [showGuideModal, setShowGuideModal] = useState(false)
   const [selectedInterview, setSelectedInterview] = useState<Interview | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
@@ -50,15 +53,16 @@ export default function InterviewsPage() {
 
   useEffect(() => {
     setInterviews(mockInterviews)
-    
-    // URLパラメータからタブを設定
-    const urlParams = new URLSearchParams(window.location.search)
-    const tabParam = urlParams.get('tab')
-    if (tabParam) {
+  }, [])
+
+  // URLパラメータが変更されたときにタブを更新
+  useEffect(() => {
+    const tabParam = searchParams.get('tab')
+    if (tabParam && tabParam !== activeTab) {
       console.log('Setting active tab from URL:', tabParam)
       setActiveTab(tabParam)
     }
-  }, [])
+  }, [searchParams])
 
   const handleInterviewSelect = (interview: Interview) => {
     setSelectedInterview(interview)
