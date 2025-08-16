@@ -1,7 +1,8 @@
 # Vercel ignore file
 .git
 .gitignore
-*.md
-docs
 node_modules
 .env.local
+# *.md and docs are commented out because they contain necessary TypeScript files
+# *.md
+# docs
