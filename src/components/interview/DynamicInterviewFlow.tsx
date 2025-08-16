@@ -270,10 +270,23 @@ export default function DynamicInterviewFlow() {
       lastInterviewDate: reservation.lastInterviewDate
     };
     
+    // 面談タイプをマッピング（統合ダッシュボードのタイプから内部タイプへ）
+    let mappedInterviewType = reservation.type;
+    if (reservation.type === 'regular') {
+      // 定期面談のサブタイプに応じてマッピング
+      if (reservation.regularType === 'new_employee') {
+        mappedInterviewType = 'new_employee_monthly';
+      } else if (reservation.regularType === 'annual') {
+        mappedInterviewType = 'regular_annual';
+      } else if (reservation.regularType === 'management') {
+        mappedInterviewType = 'management_biannual';
+      }
+    }
+    
     setSession(prev => ({
       ...prev,
       staffMember,
-      interviewType: reservation.type,
+      interviewType: mappedInterviewType,
       specialType: reservation.specialType,
       specialContext: reservation.specialContext,
       supportRequest: {
@@ -287,10 +300,10 @@ export default function DynamicInterviewFlow() {
     
     // 面談タイプに応じて適切なステップに遷移
     if (reservation.type === 'regular') {
-      // 定期面談は時間選択へ
-      setCurrentStep('duration');
+      // 定期面談はバンクモード選択へ（面談シート生成方式選択）
+      setCurrentStep('bank-mode-select');
     } else if (reservation.type === 'special') {
-      // 特別面談も時間選択へ（タイプは予約から取得済み）
+      // 特別面談は時間選択へ（タイプは予約から取得済み）
       setCurrentStep('duration');
     } else if (reservation.type === 'support') {
       // サポート面談も時間選択へ（カテゴリは予約から取得済み）
@@ -374,7 +387,9 @@ export default function DynamicInterviewFlow() {
         let generatedSheet: any;
         const unifiedService = UnifiedBankService.getInstance();
         
-        if (session.interviewType === 'regular_annual') {
+        if (session.interviewType === 'regular_annual' || 
+            session.interviewType === 'new_employee_monthly' || 
+            session.interviewType === 'management_biannual') {
           // 定期面談
           const params: ExtendedInterviewParams = {
             staff: staffProfile,
