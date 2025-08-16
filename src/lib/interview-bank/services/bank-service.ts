@@ -213,7 +213,8 @@ export class InterviewBankService {
       interviewType: 'support',
       duration: 30,
       topics: [request.consultationTopic],
-      focusAreas: this.mapVoiceDriveCategory(request.category)
+      focusAreas: this.mapVoiceDriveCategory(request.category),
+      interviewDate: request.preferredDates?.[0] || new Date()
     };
     
     // 面談を生成

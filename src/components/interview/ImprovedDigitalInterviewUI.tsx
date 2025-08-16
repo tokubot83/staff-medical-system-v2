@@ -54,7 +54,7 @@ interface ImprovedDigitalInterviewUIProps {
     position: string;
     facilityType: string;
     experienceYears: number;
-    interviewDate: Date;
+    interviewDate?: Date;
     interviewerName: string;
   };
   sections: InterviewSection[];
@@ -596,7 +596,7 @@ export default function ImprovedDigitalInterviewUI({
       <footer className="mt-8 bg-white rounded-lg shadow-sm p-4">
         <div className="flex justify-between items-center text-sm text-gray-600">
           <div>
-            <p>面談日: {sessionData.interviewDate.toLocaleDateString('ja-JP')}</p>
+            <p>面談日: {sessionData.interviewDate ? new Date(sessionData.interviewDate).toLocaleDateString('ja-JP') : '未設定'}</p>
             <p>面談者: {sessionData.interviewerName}</p>
           </div>
           <div className="flex items-center space-x-4">
