@@ -107,7 +107,7 @@ const interviewTypeIcons = {
 };
 
 export default function IntegratedBankSystemTab3Column() {
-  const [activeBank, setActiveBank] = useState<'overview' | 'regular' | 'support' | 'special' | 'templates'>('templates');
+  const [activeBank, setActiveBank] = useState<'overview' | 'regular' | 'support' | 'special' | 'templates'>('templates'); // デフォルトを質問テンプレートタブに変更
   const [bankStatistics, setBankStatistics] = useState<BankStatistics | null>(null);
   const [selectedPeriod, setSelectedPeriod] = useState<'1month' | '3months' | '6months' | '1year'>('6months');
   const [loading, setLoading] = useState(true);
