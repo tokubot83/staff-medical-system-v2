@@ -15,7 +15,7 @@ import InterviewSheetWrapper from '@/components/interview/InterviewSheetWrapper'
 import { getExperienceCategory } from '@/utils/experienceUtils'
 import RoleSelectionModal from '@/components/RoleSelectionModal'
 import UnifiedInterviewDashboard from '@/components/interview/UnifiedInterviewDashboard'
-import IntegratedBankSystemTab from '@/components/interview/IntegratedBankSystemTab'
+import IntegratedBankSystemTab3Column from '@/components/interview/IntegratedBankSystemTab3Column'
 import DynamicInterviewFlow from '@/components/interview/DynamicInterviewFlow'
 
 // タブ順序を業務フローに合わせて修正
@@ -212,7 +212,7 @@ function InterviewsPageContent() {
 
         <div className={styles.tabContent}>
           {activeTab === 'station' && <UnifiedInterviewDashboard />}
-          {activeTab === 'bank-system' && <IntegratedBankSystemTab />}
+          {activeTab === 'bank-system' && <IntegratedBankSystemTab3Column />}
           {activeTab === 'sheets' && <DynamicInterviewFlow />}
           {activeTab === 'record' && <RecordTab selectedInterview={selectedInterview} />}
           {activeTab === 'analytics' && <HistoryAnalysisTab interviews={interviews} />}
