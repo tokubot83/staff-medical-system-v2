@@ -7,6 +7,7 @@ import { Progress } from '@/components/ui/progress';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
 import { 
   User, Clock, Target, Heart, Brain, TrendingUp,
   ChevronRight, Save, Printer, CheckCircle, AlertTriangle,
@@ -19,32 +20,38 @@ import {
   QuestionType,
   QuestionCategory 
 } from '@/types/interview-question-master';
-import styles from './ImprovedDigitalInterviewUI.module.css';
 
 // セクションアイコンマップ
-const sectionIcons: Record<QuestionCategory, React.ElementType> = {
-  adaptation: User,
-  skills: Award,
-  performance: Target,
-  health: Brain,
-  growth: TrendingUp,
-  satisfaction: Heart,
-  communication: MessageSquare,
-  leadership: Settings,
-  future: Lightbulb
+const getSectionIcon = (category: QuestionCategory) => {
+  switch(category) {
+    case 'adaptation': return User;
+    case 'skills': return Award;
+    case 'performance': return Target;
+    case 'health': return Brain;
+    case 'growth': return TrendingUp;
+    case 'satisfaction': return Heart;
+    case 'communication': return MessageSquare;
+    case 'leadership': return Settings;
+    case 'future': return Lightbulb;
+    default: return User;
+  }
 };
 
-// セクションカラーマップ
-const sectionColors: Record<QuestionCategory, string> = {
-  adaptation: 'blue',
-  skills: 'purple',
-  performance: 'green',
-  health: 'orange',
-  growth: 'cyan',
-  satisfaction: 'pink',
-  communication: 'indigo',
-  leadership: 'red',
-  future: 'yellow'
+// セクションカラークラスマップ（動的生成を避けるため静的に定義）
+const getSectionColorClasses = (category: QuestionCategory, type: 'bg' | 'text' | 'border') => {
+  const colorMap = {
+    adaptation: { bg: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-500' },
+    skills: { bg: 'bg-purple-50', text: 'text-purple-600', border: 'border-purple-500' },
+    performance: { bg: 'bg-green-50', text: 'text-green-600', border: 'border-green-500' },
+    health: { bg: 'bg-orange-50', text: 'text-orange-600', border: 'border-orange-500' },
+    growth: { bg: 'bg-cyan-50', text: 'text-cyan-600', border: 'border-cyan-500' },
+    satisfaction: { bg: 'bg-pink-50', text: 'text-pink-600', border: 'border-pink-500' },
+    communication: { bg: 'bg-indigo-50', text: 'text-indigo-600', border: 'border-indigo-500' },
+    leadership: { bg: 'bg-red-50', text: 'text-red-600', border: 'border-red-500' },
+    future: { bg: 'bg-yellow-50', text: 'text-yellow-600', border: 'border-yellow-500' }
+  };
+  
+  return colorMap[category]?.[type] || { bg: 'bg-gray-50', text: 'text-gray-600', border: 'border-gray-500' }[type];
 };
 
 interface ImprovedDigitalInterviewUIProps {
@@ -62,7 +69,7 @@ interface ImprovedDigitalInterviewUIProps {
   onComplete: (responses: InterviewResponse[]) => void;
 }
 
-// 5段階評価コンポーネント（参照HTMLベース）
+// 5段階評価コンポーネント
 const ScaleRating: React.FC<{
   questionId: string;
   label: string;
@@ -132,7 +139,6 @@ const ScaleRating: React.FC<{
         onChange={(e) => handleCommentChange(e.target.value)}
       />
       
-      {/* 評価値に応じたフィードバック */}
       {localValue <= 2 && (
         <div className="mt-2 p-2 bg-yellow-50 rounded text-sm text-yellow-800 flex items-start">
           <AlertTriangle className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" />
@@ -187,7 +193,7 @@ const OpenQuestion: React.FC<{
   );
 };
 
-// チェックリスト質問コンポーネント
+// チェックリスト質問コンポーネント（修正版）
 const ChecklistQuestion: React.FC<{
   questionId: string;
   question: string;
@@ -207,10 +213,13 @@ const ChecklistQuestion: React.FC<{
   comment = '',
   onCommentChange
 }) => {
+  const [localSelected, setLocalSelected] = useState<string[]>(selectedItems);
+
   const handleItemToggle = (item: string) => {
-    const newItems = selectedItems.includes(item)
-      ? selectedItems.filter(i => i !== item)
-      : [...selectedItems, item];
+    const newItems = localSelected.includes(item)
+      ? localSelected.filter(i => i !== item)
+      : [...localSelected, item];
+    setLocalSelected(newItems);
     onChange(newItems);
   };
 
@@ -219,18 +228,22 @@ const ChecklistQuestion: React.FC<{
       <h4 className="font-medium text-gray-800 mb-3">{question}</h4>
       <div className="grid grid-cols-2 gap-3 mb-3">
         {items.map((item, index) => (
-          <label 
+          <div 
             key={index} 
-            className="flex items-center space-x-2 p-2 rounded hover:bg-gray-50 cursor-pointer"
+            className="flex items-center space-x-2 p-2 rounded hover:bg-gray-50"
           >
-            <input
-              type="checkbox"
-              checked={selectedItems.includes(item)}
-              onChange={() => handleItemToggle(item)}
-              className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+            <Checkbox
+              id={`${questionId}-${index}`}
+              checked={localSelected.includes(item)}
+              onCheckedChange={() => handleItemToggle(item)}
             />
-            <span className="text-sm">{item}</span>
-          </label>
+            <label 
+              htmlFor={`${questionId}-${index}`}
+              className="text-sm cursor-pointer select-none flex-1"
+            >
+              {item}
+            </label>
+          </div>
         ))}
       </div>
       {allowComment && (
@@ -247,7 +260,7 @@ const ChecklistQuestion: React.FC<{
 };
 
 // メインコンポーネント
-export default function ImprovedDigitalInterviewUI({
+export default function ImprovedDigitalInterviewUIFixed({
   sessionData,
   sections,
   onSave,
@@ -255,10 +268,25 @@ export default function ImprovedDigitalInterviewUI({
 }: ImprovedDigitalInterviewUIProps) {
   const [activeSection, setActiveSection] = useState(0);
   const [responses, setResponses] = useState<Map<string, InterviewResponse>>(new Map());
-  const [startTime, setStartTime] = useState<Date>(new Date());
+  const [startTime] = useState<Date>(new Date());
   const [autoSaveTimer, setAutoSaveTimer] = useState<NodeJS.Timeout | null>(null);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [showSaveIndicator, setShowSaveIndicator] = useState(false);
+
+  // セクションが存在しない場合のフォールバック
+  if (!sections || sections.length === 0) {
+    return (
+      <div className="max-w-7xl mx-auto p-6">
+        <Card>
+          <CardContent className="p-8 text-center">
+            <AlertTriangle className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
+            <p className="text-lg font-medium">面談セクションが設定されていません</p>
+            <p className="text-sm text-gray-600 mt-2">システム管理者にお問い合わせください</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   // 自動保存機能
   useEffect(() => {
@@ -304,13 +332,14 @@ export default function ImprovedDigitalInterviewUI({
   const calculateProgress = () => {
     const totalQuestions = sections.reduce((sum, section) => sum + section.questions.length, 0);
     const answeredQuestions = responses.size;
-    return (answeredQuestions / totalQuestions) * 100;
+    return totalQuestions > 0 ? (answeredQuestions / totalQuestions) * 100 : 0;
   };
 
   const getSectionProgress = (sectionIndex: number) => {
     const section = sections[sectionIndex];
+    if (!section || !section.questions) return 0;
     const answeredInSection = section.questions.filter(q => responses.has(q)).length;
-    return (answeredInSection / section.questions.length) * 100;
+    return section.questions.length > 0 ? (answeredInSection / section.questions.length) * 100 : 0;
   };
 
   const handleComplete = () => {
@@ -318,9 +347,18 @@ export default function ImprovedDigitalInterviewUI({
     onComplete(responseArray);
   };
 
+  const handleSectionChange = (newSection: number) => {
+    if (newSection >= 0 && newSection < sections.length) {
+      setActiveSection(newSection);
+    }
+  };
+
   const currentSection = sections[activeSection];
-  const SectionIcon = sectionIcons[currentSection?.category] || User;
-  const sectionColor = sectionColors[currentSection?.category] || 'blue';
+  if (!currentSection) {
+    return null;
+  }
+
+  const SectionIcon = getSectionIcon(currentSection.category);
 
   return (
     <div className="max-w-7xl mx-auto p-6 bg-gray-50 min-h-screen">
@@ -337,7 +375,6 @@ export default function ImprovedDigitalInterviewUI({
             </p>
           </div>
           <div className="flex items-center space-x-4">
-            {/* 自動保存インジケーター */}
             {showSaveIndicator && (
               <div className="flex items-center text-green-600 animate-pulse">
                 <CheckCircle className="mr-2" size={16} />
@@ -345,7 +382,6 @@ export default function ImprovedDigitalInterviewUI({
               </div>
             )}
             
-            {/* 経過時間表示 */}
             <div className="flex items-center text-gray-600">
               <Clock className="mr-2" size={16} />
               <span className="text-sm">
@@ -396,17 +432,20 @@ export default function ImprovedDigitalInterviewUI({
           <ScrollArea className="h-[600px]">
             <nav className="p-2 space-y-1">
               {sections.map((section, index) => {
-                const Icon = sectionIcons[section.category];
+                const Icon = getSectionIcon(section.category);
                 const progress = getSectionProgress(index);
                 const isActive = activeSection === index;
+                const bgColor = isActive ? getSectionColorClasses(section.category, 'bg') : '';
+                const textColor = isActive ? getSectionColorClasses(section.category, 'text') : 'text-gray-600';
+                const borderColor = isActive ? getSectionColorClasses(section.category, 'border') : '';
                 
                 return (
                   <button
                     key={section.id}
-                    onClick={() => setActiveSection(index)}
+                    onClick={() => handleSectionChange(index)}
                     className={`w-full flex items-center p-3 rounded-md text-left transition-all group ${
                       isActive
-                        ? 'bg-blue-50 text-blue-700 border-l-4 border-blue-500'
+                        ? `${bgColor} ${textColor} border-l-4 ${borderColor}`
                         : 'text-gray-600 hover:bg-gray-50'
                     }`}
                   >
@@ -458,10 +497,10 @@ export default function ImprovedDigitalInterviewUI({
         {/* メインコンテンツエリア */}
         <div className="flex-1">
           <Card>
-            <CardHeader className="bg-blue-50">
+            <CardHeader className={getSectionColorClasses(currentSection.category, 'bg')}>
               <CardTitle className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <SectionIcon className="mr-3 text-blue-600" size={24} />
+                  <SectionIcon className={`mr-3 ${getSectionColorClasses(currentSection.category, 'text')}`} size={24} />
                   {currentSection.title}
                 </div>
                 <Badge variant="outline">
@@ -475,35 +514,40 @@ export default function ImprovedDigitalInterviewUI({
             
             <CardContent className="p-6">
               {/* セクション導入 */}
-              <div className="mb-6 p-4 bg-blue-50 rounded-lg">
-                <h3 className="font-medium text-blue-800 mb-2 flex items-center">
-                  <MessageSquare className="mr-2" size={16} />
-                  セクション開始時の確認
-                </h3>
-                <p className="text-sm text-blue-700">
-                  {currentSection.sectionGuidance.introduction}
-                </p>
-                <ul className="mt-2 space-y-1">
-                  {currentSection.sectionGuidance.keyPoints.map((point, index) => (
-                    <li key={index} className="text-sm text-blue-600 flex items-start">
-                      <span className="mr-2">•</span>
-                      <span>{point}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {currentSection.sectionGuidance && (
+                <div className="mb-6 p-4 bg-blue-50 rounded-lg">
+                  <h3 className="font-medium text-blue-800 mb-2 flex items-center">
+                    <MessageSquare className="mr-2" size={16} />
+                    セクション開始時の確認
+                  </h3>
+                  <p className="text-sm text-blue-700">
+                    {currentSection.sectionGuidance.introduction}
+                  </p>
+                  {currentSection.sectionGuidance.keyPoints && (
+                    <ul className="mt-2 space-y-1">
+                      {currentSection.sectionGuidance.keyPoints.map((point, index) => (
+                        <li key={index} className="text-sm text-blue-600 flex items-start">
+                          <span className="mr-2">•</span>
+                          <span>{point}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              )}
 
-              {/* 質問レンダリング（実際の実装では質問マスターデータから取得） */}
+              {/* 質問表示エリア */}
               <div className="space-y-6">
-                {/* サンプル質問表示 */}
                 <ScaleRating
-                  questionId="sample1"
+                  questionId={`${currentSection.id}-q1`}
                   label="現在の業務へのモチベーションはどの程度ですか？"
                   lowLabel="非常に低い"
                   highLabel="非常に高い"
                   placeholder="モチベーションに影響している要因を具体的に記入してください..."
+                  value={responses.get(`${currentSection.id}-q1`)?.scaleValue}
+                  comment={responses.get(`${currentSection.id}-q1`)?.textValue}
                   onChange={(value, comment) => {
-                    updateResponse('sample1', {
+                    updateResponse(`${currentSection.id}-q1`, {
                       questionType: 'hybrid',
                       scaleValue: value,
                       textValue: comment
@@ -513,7 +557,7 @@ export default function ImprovedDigitalInterviewUI({
                 />
                 
                 <ChecklistQuestion
-                  questionId="sample2"
+                  questionId={`${currentSection.id}-q2`}
                   question="現在直面している課題を選択してください"
                   items={[
                     '業務量の多さ',
@@ -523,20 +567,29 @@ export default function ImprovedDigitalInterviewUI({
                     '評価・承認不足',
                     '将来への不安'
                   ]}
+                  selectedItems={responses.get(`${currentSection.id}-q2`)?.checklistValues}
                   onChange={(items) => {
-                    updateResponse('sample2', {
+                    updateResponse(`${currentSection.id}-q2`, {
                       questionType: 'checklist',
                       checklistValues: items
+                    });
+                  }}
+                  comment={responses.get(`${currentSection.id}-q2-comment`)?.textValue}
+                  onCommentChange={(comment) => {
+                    updateResponse(`${currentSection.id}-q2-comment`, {
+                      questionType: 'text',
+                      textValue: comment
                     });
                   }}
                 />
                 
                 <OpenQuestion
-                  questionId="sample3"
+                  questionId={`${currentSection.id}-q3`}
                   question="今後のキャリア目標について教えてください"
                   placeholder="3-5年後の理想像、身につけたいスキル、挑戦したい役割などを具体的に..."
+                  value={responses.get(`${currentSection.id}-q3`)?.textValue}
                   onChange={(value) => {
-                    updateResponse('sample3', {
+                    updateResponse(`${currentSection.id}-q3`, {
                       questionType: 'text',
                       textValue: value
                     });
@@ -546,24 +599,26 @@ export default function ImprovedDigitalInterviewUI({
               </div>
 
               {/* セクション終了・移行 */}
-              <div className="mt-8 p-4 bg-gray-50 rounded-lg">
-                <p className="text-sm text-gray-600">
-                  {currentSection.sectionGuidance.transitionPhrase}
-                </p>
-              </div>
+              {currentSection.sectionGuidance?.transitionPhrase && (
+                <div className="mt-8 p-4 bg-gray-50 rounded-lg">
+                  <p className="text-sm text-gray-600">
+                    {currentSection.sectionGuidance.transitionPhrase}
+                  </p>
+                </div>
+              )}
 
               {/* ナビゲーションボタン */}
               <div className="flex justify-between mt-6">
                 <Button
                   variant="outline"
-                  onClick={() => setActiveSection(Math.max(0, activeSection - 1))}
+                  onClick={() => handleSectionChange(activeSection - 1)}
                   disabled={activeSection === 0}
                 >
                   前のセクション
                 </Button>
                 
                 <Button
-                  onClick={() => setActiveSection(Math.min(sections.length - 1, activeSection + 1))}
+                  onClick={() => handleSectionChange(activeSection + 1)}
                   disabled={activeSection === sections.length - 1}
                 >
                   次のセクション
@@ -586,6 +641,12 @@ export default function ImprovedDigitalInterviewUI({
                 placeholder="面談中の観察事項、非言語的な反応、フォローアップが必要な事項などを記録..."
                 className="w-full"
                 rows={4}
+                onChange={(e) => {
+                  updateResponse('interviewer-memo', {
+                    questionType: 'text',
+                    textValue: e.target.value
+                  });
+                }}
               />
             </CardContent>
           </Card>

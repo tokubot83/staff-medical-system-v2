@@ -39,7 +39,7 @@ import {
   FacilityType,
   InterviewDuration
 } from '@/services/interviewManualGenerationServiceV2';
-import ImprovedDigitalInterviewUI from './ImprovedDigitalInterviewUI';
+import ImprovedDigitalInterviewUIFixed from './ImprovedDigitalInterviewUIFixed';
 import { interviewTemplates } from '@/data/interview-question-bank';
 import { InterviewSection, InterviewResponse, QuestionCategory } from '@/types/interview-question-master';
 import { 
@@ -1004,7 +1004,7 @@ export default function DynamicInterviewFlow() {
 
           {/* 改善版UIを使用する場合 */}
           {useImprovedUI ? (
-            <ImprovedDigitalInterviewUI
+            <ImprovedDigitalInterviewUIFixed
               sessionData={{
                 staffName: session.staffMember?.name || '',
                 department: session.staffMember?.department || '',
