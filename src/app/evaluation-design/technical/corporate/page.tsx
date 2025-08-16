@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ArrowLeft, Save, Info, Settings, Award, Shield, Users } from 'lucide-react';
+import { ArrowLeft, Save, Info, Settings, Award, Shield, Users, ListChecks, BarChart3, CheckCircle, BookOpen, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import CommonHeader from '@/components/CommonHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -206,19 +206,67 @@ export default function CorporateTechnicalPage() {
           </Link>
         </div>
 
-        <Alert className="mb-6">
-          <Info className="h-4 w-4" />
-          <AlertDescription>
-            法人統一項目（30点）は全施設共通の評価項目です。上司評価と本人評価の配分比率を調整できます。
-          </AlertDescription>
-        </Alert>
+        {/* メインヘッダーカード */}
+        <Card className="mb-6 border-2 border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-blue-500 rounded-lg">
+                  <Settings className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <CardTitle className="text-xl">法人統一評価項目の設計</CardTitle>
+                  <CardDescription className="mt-1">
+                    全施設共通の評価基準（30点満点）を設定します
+                  </CardDescription>
+                </div>
+              </div>
+              <Badge className="bg-blue-100 text-blue-800" variant="secondary">必須設定</Badge>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="p-4 bg-white rounded-lg border border-blue-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <Award className="h-5 w-5 text-blue-600" />
+                  <span className="text-sm font-medium text-gray-700">専門技術</span>
+                </div>
+                <p className="text-2xl font-bold text-blue-600">10点</p>
+              </div>
+              <div className="p-4 bg-white rounded-lg border border-green-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <Users className="h-5 w-5 text-green-600" />
+                  <span className="text-sm font-medium text-gray-700">対人関係</span>
+                </div>
+                <p className="text-2xl font-bold text-green-600">10点</p>
+              </div>
+              <div className="p-4 bg-white rounded-lg border border-red-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <Shield className="h-5 w-5 text-red-600" />
+                  <span className="text-sm font-medium text-gray-700">安全管理</span>
+                </div>
+                <p className="text-2xl font-bold text-red-600">10点</p>
+              </div>
+            </div>
+            <Alert className="mt-4 border-blue-200 bg-blue-50/50">
+              <Info className="h-4 w-4 text-blue-600" />
+              <AlertDescription className="text-blue-800">
+                上司評価と本人評価の配分比率を項目ごとに調整できます。法定研修の受講状況も評価に反映されます。
+              </AlertDescription>
+            </Alert>
+          </CardContent>
+        </Card>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* 左側：項目リスト */}
-          <div className="lg:col-span-1">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">評価項目（30点）</CardTitle>
+          <div className="lg:col-span-1 space-y-4">
+            <Card className="border-2 border-gray-200 shadow-lg hover:shadow-xl transition-shadow">
+              <CardHeader className="bg-gradient-to-br from-gray-50 to-gray-100">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <ListChecks className="h-5 w-5 text-gray-700" />
+                  評価項目一覧
+                </CardTitle>
+                <CardDescription>項目を選択して詳細を設定</CardDescription>
               </CardHeader>
               <CardContent className="p-0">
                 <Tabs value={activeTab} onValueChange={setActiveTab} orientation="vertical">
@@ -227,19 +275,29 @@ export default function CorporateTechnicalPage() {
                       <TabsTrigger
                         key={item.itemCode}
                         value={item.itemCode}
-                        className="w-full justify-start px-4 py-3 data-[state=active]:bg-blue-50"
+                        className="w-full justify-start px-4 py-4 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-50 data-[state=active]:to-indigo-50 data-[state=active]:border-l-4 data-[state=active]:border-blue-500 hover:bg-gray-50 transition-all"
                       >
                         <div className="flex items-center justify-between w-full">
                           <div className="flex items-center gap-3">
-                            {item.itemCode === 'C01' && <Award className="w-4 h-4 text-blue-600" />}
-                            {item.itemCode === 'C02' && <Users className="w-4 h-4 text-green-600" />}
-                            {item.itemCode === 'C03' && <Shield className="w-4 h-4 text-red-600" />}
+                            <div className={`p-2 rounded-lg ${
+                              item.itemCode === 'C01' ? 'bg-blue-100' : 
+                              item.itemCode === 'C02' ? 'bg-green-100' : 
+                              'bg-red-100'
+                            }`}>
+                              {item.itemCode === 'C01' && <Award className="w-5 h-5 text-blue-600" />}
+                              {item.itemCode === 'C02' && <Users className="w-5 h-5 text-green-600" />}
+                              {item.itemCode === 'C03' && <Shield className="w-5 h-5 text-red-600" />}
+                            </div>
                             <div className="text-left">
-                              <div className="font-medium">{item.itemCode}</div>
-                              <div className="text-xs text-gray-600">{item.itemName}</div>
+                              <div className="font-bold text-gray-800">{item.itemCode}</div>
+                              <div className="text-sm text-gray-600">{item.itemName}</div>
                             </div>
                           </div>
-                          <Badge variant="secondary">{item.totalPoints}点</Badge>
+                          <Badge className={`${
+                            item.itemCode === 'C01' ? 'bg-blue-100 text-blue-800' : 
+                            item.itemCode === 'C02' ? 'bg-green-100 text-green-800' : 
+                            'bg-red-100 text-red-800'
+                          }`} variant="secondary">{item.totalPoints}点</Badge>
                         </div>
                       </TabsTrigger>
                     ))}
@@ -248,28 +306,49 @@ export default function CorporateTechnicalPage() {
               </CardContent>
             </Card>
 
-            <Card className="mt-4">
+            <Card className="border-2 border-purple-200 bg-gradient-to-br from-purple-50 to-indigo-50">
               <CardHeader>
-                <CardTitle className="text-lg">配点サマリー</CardTitle>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <BarChart3 className="h-5 w-5 text-purple-600" />
+                  配点サマリー
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 {coreItems.map((item) => (
-                  <div key={item.itemCode} className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span>{item.itemCode}: {item.itemName}</span>
-                      <span className="font-medium">{item.totalPoints}点</span>
+                  <div key={item.itemCode} className="p-3 bg-white rounded-lg border border-purple-100">
+                    <div className="flex justify-between items-center mb-2">
+                      <div className="flex items-center gap-2">
+                        {item.itemCode === 'C01' && <Award className="w-4 h-4 text-blue-600" />}
+                        {item.itemCode === 'C02' && <Users className="w-4 h-4 text-green-600" />}
+                        {item.itemCode === 'C03' && <Shield className="w-4 h-4 text-red-600" />}
+                        <span className="font-medium text-gray-700">{item.itemName}</span>
+                      </div>
+                      <span className="font-bold text-gray-900">{item.totalPoints}点</span>
                     </div>
-                    <Progress value={(item.totalPoints / 30) * 100} className="h-2" />
-                    <div className="flex justify-between text-xs text-gray-600">
-                      <span>上司: {(item.totalPoints * item.superiorRatio / 100).toFixed(1)}点</span>
-                      <span>本人: {(item.totalPoints * item.selfRatio / 100).toFixed(1)}点</span>
+                    <Progress value={(item.totalPoints / 30) * 100} className={`h-3 ${
+                      item.itemCode === 'C01' ? 'bg-blue-100' : 
+                      item.itemCode === 'C02' ? 'bg-green-100' : 
+                      'bg-red-100'
+                    }`} />
+                    <div className="flex justify-between text-xs text-gray-600 mt-2">
+                      <span className="flex items-center gap-1">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                        上司: {(item.totalPoints * item.superiorRatio / 100).toFixed(1)}点
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                        本人: {(item.totalPoints * item.selfRatio / 100).toFixed(1)}点
+                      </span>
                     </div>
                   </div>
                 ))}
-                <div className="pt-3 border-t">
-                  <div className="flex justify-between font-medium">
-                    <span>合計</span>
-                    <span>30点</span>
+                <div className="pt-3 mt-3 border-t-2 border-purple-200">
+                  <div className="flex justify-between items-center">
+                    <span className="text-lg font-bold text-purple-800">合計配点</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl font-bold text-purple-600">30</span>
+                      <span className="text-sm text-purple-600">点</span>
+                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -279,26 +358,49 @@ export default function CorporateTechnicalPage() {
           {/* 右側：詳細設定 */}
           <div className="lg:col-span-2">
             {getActiveItem() && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    {activeTab === 'C01' && <Award className="w-5 h-5 text-blue-600" />}
-                    {activeTab === 'C02' && <Users className="w-5 h-5 text-green-600" />}
-                    {activeTab === 'C03' && <Shield className="w-5 h-5 text-red-600" />}
-                    {getActiveItem()?.itemCode}: {getActiveItem()?.itemName}
-                  </CardTitle>
-                  <CardDescription>
-                    配点: {getActiveItem()?.totalPoints}点
-                  </CardDescription>
+              <Card className="border-2 border-gray-200 shadow-lg hover:shadow-xl transition-shadow">
+                <CardHeader className={`${
+                  activeTab === 'C01' ? 'bg-gradient-to-r from-blue-50 to-blue-100' : 
+                  activeTab === 'C02' ? 'bg-gradient-to-r from-green-50 to-green-100' : 
+                  'bg-gradient-to-r from-red-50 to-red-100'
+                }`}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className={`p-3 rounded-lg ${
+                        activeTab === 'C01' ? 'bg-blue-500' : 
+                        activeTab === 'C02' ? 'bg-green-500' : 
+                        'bg-red-500'
+                      }`}>
+                        {activeTab === 'C01' && <Award className="w-6 h-6 text-white" />}
+                        {activeTab === 'C02' && <Users className="w-6 h-6 text-white" />}
+                        {activeTab === 'C03' && <Shield className="w-6 h-6 text-white" />}
+                      </div>
+                      <div>
+                        <CardTitle className="text-xl">
+                          {getActiveItem()?.itemCode}: {getActiveItem()?.itemName}
+                        </CardTitle>
+                        <CardDescription className="mt-1">
+                          この項目の詳細設定を行います
+                        </CardDescription>
+                      </div>
+                    </div>
+                    <Badge className={`text-lg px-4 py-2 ${
+                      activeTab === 'C01' ? 'bg-blue-500 text-white' : 
+                      activeTab === 'C02' ? 'bg-green-500 text-white' : 
+                      'bg-red-500 text-white'
+                    }`} variant="secondary">
+                      {getActiveItem()?.totalPoints}点
+                    </Badge>
+                  </div>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   {/* 評価者配分 */}
-                  <div className="space-y-4">
-                    <h3 className="font-medium flex items-center gap-2">
-                      <Settings className="w-4 h-4" />
-                      評価者配分
+                  <div className="p-5 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg border border-gray-200">
+                    <h3 className="font-bold text-lg flex items-center gap-2 mb-4">
+                      <Settings className="w-5 h-5 text-gray-700" />
+                      評価者配分設定
                     </h3>
-                    <div className="space-y-4 p-4 bg-gray-50 rounded-lg">
+                    <div className="space-y-4 p-4 bg-white rounded-lg border border-gray-200">
                       <div className="space-y-2">
                         <div className="flex justify-between text-sm">
                           <span>上司評価</span>
@@ -330,34 +432,73 @@ export default function CorporateTechnicalPage() {
                   </div>
 
                   {/* 中項目 */}
-                  <div className="space-y-4">
-                    <h3 className="font-medium">評価項目詳細</h3>
+                  <div className="p-5 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg border border-gray-200">
+                    <h3 className="font-bold text-lg flex items-center gap-2 mb-4">
+                      <ListChecks className="w-5 h-5 text-gray-700" />
+                      評価項目詳細
+                    </h3>
                     <div className="space-y-4">
-                      {getActiveItem()?.subItems.map((subItem) => (
-                        <div key={subItem.id} className="border rounded-lg p-4">
-                          <div className="flex justify-between items-start mb-3">
-                            <div>
-                              <h4 className="font-medium">{subItem.id}: {subItem.name}</h4>
-                              <Badge variant="outline" className="mt-1">{subItem.points}点</Badge>
+                      {getActiveItem()?.subItems.map((subItem, index) => (
+                        <div key={subItem.id} className={`bg-white rounded-lg p-5 border-2 hover:shadow-md transition-shadow ${
+                          activeTab === 'C01' ? 'border-blue-200 hover:border-blue-300' : 
+                          activeTab === 'C02' ? 'border-green-200 hover:border-green-300' : 
+                          'border-red-200 hover:border-red-300'
+                        }`}>
+                          <div className="flex justify-between items-start mb-4">
+                            <div className="flex items-center gap-3">
+                              <div className={`p-2 rounded-lg ${
+                                activeTab === 'C01' ? 'bg-blue-100' : 
+                                activeTab === 'C02' ? 'bg-green-100' : 
+                                'bg-red-100'
+                              }`}>
+                                <span className={`text-lg font-bold ${
+                                  activeTab === 'C01' ? 'text-blue-600' : 
+                                  activeTab === 'C02' ? 'text-green-600' : 
+                                  'text-red-600'
+                                }`}>{index + 1}</span>
+                              </div>
+                              <div>
+                                <h4 className="font-bold text-gray-800">{subItem.name}</h4>
+                                <span className="text-sm text-gray-500">{subItem.id}</span>
+                              </div>
                             </div>
+                            <Badge className={`text-lg px-3 py-1 ${
+                              activeTab === 'C01' ? 'bg-blue-100 text-blue-800' : 
+                              activeTab === 'C02' ? 'bg-green-100 text-green-800' : 
+                              'bg-red-100 text-red-800'
+                            }`} variant="secondary">{subItem.points}点</Badge>
                           </div>
                           
-                          <div className="space-y-3">
-                            <div>
-                              <h5 className="text-sm font-medium text-gray-700 mb-2">評価基準</h5>
-                              <ul className="list-disc list-inside text-sm space-y-1 text-gray-600">
+                          <div className="space-y-4">
+                            <div className="p-3 bg-gray-50 rounded-lg">
+                              <h5 className="text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
+                                <CheckCircle className="w-4 h-4 text-gray-600" />
+                                評価基準
+                              </h5>
+                              <ul className="space-y-2">
                                 {subItem.criteria.map((criterion, idx) => (
-                                  <li key={idx}>{criterion}</li>
+                                  <li key={idx} className="flex items-start gap-2">
+                                    <div className={`w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0 ${
+                                      activeTab === 'C01' ? 'bg-blue-500' : 
+                                      activeTab === 'C02' ? 'bg-green-500' : 
+                                      'bg-red-500'
+                                    }`}></div>
+                                    <span className="text-sm text-gray-700">{criterion}</span>
+                                  </li>
                                 ))}
                               </ul>
                             </div>
                             
                             {subItem.requiredTrainings && (
-                              <div>
-                                <h5 className="text-sm font-medium text-gray-700 mb-2">必須研修</h5>
+                              <div className="p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                                <h5 className="text-sm font-bold text-yellow-800 mb-3 flex items-center gap-2">
+                                  <BookOpen className="w-4 h-4" />
+                                  必須研修
+                                </h5>
                                 <div className="flex flex-wrap gap-2">
                                   {subItem.requiredTrainings.map((training, idx) => (
-                                    <Badge key={idx} variant="secondary" className="text-xs">
+                                    <Badge key={idx} className="bg-yellow-100 text-yellow-800 border border-yellow-300">
+                                      {training.includes('法定') && <AlertCircle className="w-3 h-3 mr-1" />}
                                       {training}
                                     </Badge>
                                   ))}

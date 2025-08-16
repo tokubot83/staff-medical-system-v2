@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { ArrowLeft, Save, Search, Plus, Trash2, Info, Filter, Award, Heart, Brain, Shield, Users, Briefcase } from 'lucide-react';
+import { ArrowLeft, Save, Search, Plus, Trash2, Info, Filter, Award, Heart, Brain, Shield, Users, Briefcase, Building, Sparkles, Target, CheckCircle, BarChart3, Settings, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import CommonHeader from '@/components/CommonHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -165,20 +165,80 @@ export default function FacilitySpecificPage() {
           </Link>
         </div>
 
-        <Alert className="mb-6">
-          <Info className="h-4 w-4" />
-          <AlertDescription>
-            施設特化項目（20点）は、各施設の特性に応じて項目バンクから選択します。
-            施設種別・職種・経験レベルに応じた推奨項目が表示されます。
-          </AlertDescription>
-        </Alert>
+        {/* メインヘッダーカード */}
+        <Card className="mb-6 border-2 border-purple-200 bg-gradient-to-r from-purple-50 to-indigo-50">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-purple-500 rounded-lg">
+                  <Building className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <CardTitle className="text-xl">施設特化評価項目の設計</CardTitle>
+                  <CardDescription className="mt-1">
+                    各施設の特性に合わせた評価項目（20点満点）を選択します
+                  </CardDescription>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Badge className="bg-purple-100 text-purple-800" variant="secondary">カスタマイズ可能</Badge>
+                <Badge className="bg-yellow-100 text-yellow-800" variant="secondary">
+                  <Sparkles className="w-3 h-3 mr-1" />
+                  AI推奨
+                </Badge>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-4 gap-4">
+              <div className="p-4 bg-white rounded-lg border border-blue-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <Shield className="h-5 w-5 text-blue-600" />
+                  <span className="text-sm font-medium text-gray-700">急性期</span>
+                </div>
+                <p className="text-xl font-bold text-blue-600">6項目</p>
+              </div>
+              <div className="p-4 bg-white rounded-lg border border-green-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <Brain className="h-5 w-5 text-green-600" />
+                  <span className="text-sm font-medium text-gray-700">リハビリ</span>
+                </div>
+                <p className="text-xl font-bold text-green-600">5項目</p>
+              </div>
+              <div className="p-4 bg-white rounded-lg border border-purple-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <Heart className="h-5 w-5 text-purple-600" />
+                  <span className="text-sm font-medium text-gray-700">慢性期</span>
+                </div>
+                <p className="text-xl font-bold text-purple-600">4項目</p>
+              </div>
+              <div className="p-4 bg-white rounded-lg border border-orange-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <Users className="h-5 w-5 text-orange-600" />
+                  <span className="text-sm font-medium text-gray-700">認知症</span>
+                </div>
+                <p className="text-xl font-bold text-orange-600">3項目</p>
+              </div>
+            </div>
+            <Alert className="mt-4 border-purple-200 bg-purple-50/50">
+              <Info className="h-4 w-4 text-purple-600" />
+              <AlertDescription className="text-purple-800">
+                職種・経験レベルに応じた推奨項目が自動表示されます。項目バンクから柔軟に選択できます。
+              </AlertDescription>
+            </Alert>
+          </CardContent>
+        </Card>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* 左側：施設選択 */}
-          <div className="lg:col-span-1">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">施設選択</CardTitle>
+          <div className="lg:col-span-1 space-y-4">
+            <Card className="border-2 border-gray-200 shadow-lg hover:shadow-xl transition-shadow">
+              <CardHeader className="bg-gradient-to-br from-gray-50 to-gray-100">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Building className="h-5 w-5 text-gray-700" />
+                  施設一覧
+                </CardTitle>
+                <CardDescription>設定する施設を選択</CardDescription>
               </CardHeader>
               <CardContent className="p-0">
                 <Tabs value={activeFacility} onValueChange={setActiveFacility} orientation="vertical">
@@ -187,24 +247,51 @@ export default function FacilitySpecificPage() {
                       <TabsTrigger
                         key={name}
                         value={name}
-                        className="w-full justify-start px-4 py-3 data-[state=active]:bg-blue-50"
+                        className="w-full justify-start px-4 py-4 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-50 data-[state=active]:to-indigo-50 data-[state=active]:border-l-4 data-[state=active]:border-purple-500 hover:bg-gray-50 transition-all"
                       >
                         <div className="w-full">
-                          <div className="flex justify-between items-center">
-                            <div className="text-left">
-                              <div className="font-medium">{name}</div>
-                              <div className="text-xs text-gray-600">
+                          <div className="flex items-center gap-3 mb-3">
+                            <div className={`p-2 rounded-lg ${
+                              name.includes('小原') ? 'bg-blue-100' : 
+                              name.includes('リハビリ') ? 'bg-green-100' : 
+                              'bg-purple-100'
+                            }`}>
+                              <Building className={`h-4 w-4 ${
+                                name.includes('小原') ? 'text-blue-600' : 
+                                name.includes('リハビリ') ? 'text-green-600' : 
+                                'text-purple-600'
+                              }`} />
+                            </div>
+                            <div className="text-left flex-1">
+                              <div className="font-bold text-gray-800">{name}</div>
+                              <div className="text-sm text-gray-600">
                                 {facilityTypes[config.facilityType as keyof typeof facilityTypes] || config.facilityType}
                               </div>
                             </div>
                           </div>
-                          <div className="mt-2">
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-center">
+                              <span className="text-xs text-gray-600">設定進捗</span>
+                              <span className="text-xs font-bold">{Math.round((config.totalPoints / 20) * 100)}%</span>
+                            </div>
                             <Progress 
                               value={(config.totalPoints / 20) * 100} 
-                              className="h-2"
+                              className={`h-3 ${
+                                config.totalPoints === 20 ? 'bg-green-100' : 
+                                config.totalPoints > 10 ? 'bg-blue-100' : 
+                                'bg-gray-100'
+                              }`}
                             />
-                            <div className="text-xs text-gray-600 mt-1">
-                              {config.totalPoints} / 20点
+                            <div className="flex justify-between items-center">
+                              <span className="text-xs font-medium text-gray-700">
+                                {config.totalPoints} / 20点
+                              </span>
+                              {config.totalPoints === 20 && (
+                                <Badge className="bg-green-100 text-green-700 text-xs">
+                                  <CheckCircle className="w-3 h-3 mr-1" />
+                                  完了
+                                </Badge>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -216,11 +303,24 @@ export default function FacilitySpecificPage() {
             </Card>
 
             {/* 選択済み項目 */}
-            <Card className="mt-4">
+            <Card className="border-2 border-green-200 bg-gradient-to-br from-green-50 to-emerald-50">
               <CardHeader>
-                <CardTitle className="text-lg">選択済み項目</CardTitle>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Target className="h-5 w-5 text-green-600" />
+                  選択済み項目
+                </CardTitle>
                 <CardDescription>
-                  合計: {facilityConfigs[activeFacility].totalPoints} / 20点
+                  <div className="flex items-center justify-between mt-2">
+                    <span>配点合計</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl font-bold text-green-600">{facilityConfigs[activeFacility].totalPoints}</span>
+                      <span className="text-sm text-gray-600">/ 20点</span>
+                    </div>
+                  </div>
+                  <Progress 
+                    value={(facilityConfigs[activeFacility].totalPoints / 20) * 100} 
+                    className="h-2 bg-green-100 mt-2"
+                  />
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-2">
@@ -230,19 +330,30 @@ export default function FacilitySpecificPage() {
                   facilityConfigs[activeFacility].selectedItems.map(selected => {
                     const item = facilitySpecificItems.find(i => i.id === selected.itemId);
                     if (!item) return null;
+                    const category = getItemCategory(item.id);
+                    const categoryInfo = categories[category as keyof typeof categories];
+                    const CategoryIcon = categoryInfo?.icon || Award;
+                    
                     return (
-                      <div key={selected.itemId} className="flex justify-between items-center p-2 bg-gray-50 rounded">
-                        <div className="flex-1">
-                          <div className="text-sm font-medium">{item.name}</div>
-                          <Badge variant="secondary" className="text-xs">{selected.points}点</Badge>
+                      <div key={selected.itemId} className="p-3 bg-white rounded-lg border border-green-200 hover:shadow-sm transition-shadow">
+                        <div className="flex items-start gap-2">
+                          <CategoryIcon className={`w-4 h-4 mt-0.5 text-${categoryInfo?.color || 'gray'}-600`} />
+                          <div className="flex-1">
+                            <div className="font-medium text-gray-800">{item.name}</div>
+                            <div className="flex items-center gap-2 mt-1">
+                              <Badge className="bg-green-100 text-green-700 text-xs">{selected.points}点</Badge>
+                              <span className="text-xs text-gray-500">{categoryInfo?.name}</span>
+                            </div>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                            onClick={() => handleItemToggle(selected.itemId, selected.points)}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
                         </div>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleItemToggle(selected.itemId, selected.points)}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
                       </div>
                     );
                   })
@@ -253,29 +364,47 @@ export default function FacilitySpecificPage() {
 
           {/* 右側：項目バンク */}
           <div className="lg:col-span-3">
-            <Card>
-              <CardHeader>
-                <CardTitle>項目バンク</CardTitle>
-                <CardDescription>
-                  施設特化項目を選択してください（最大20点）
-                </CardDescription>
+            <Card className="border-2 border-gray-200 shadow-lg hover:shadow-xl transition-shadow">
+              <CardHeader className="bg-gradient-to-r from-indigo-50 to-purple-50">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 bg-indigo-500 rounded-lg">
+                      <Sparkles className="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-xl">評価項目バンク</CardTitle>
+                      <CardDescription className="mt-1">
+                        AIが推奨する項目を含む、豊富な項目から選択できます
+                      </CardDescription>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-indigo-100 text-indigo-800">
+                      <BarChart3 className="w-3 h-3 mr-1" />
+                      {filteredItems.length} 項目
+                    </Badge>
+                  </div>
+                </div>
               </CardHeader>
               <CardContent>
                 {/* フィルター */}
-                <div className="space-y-4 mb-6">
-                  <div className="flex gap-2">
-                    <div className="flex-1">
-                      <Input
-                        placeholder="項目を検索..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full"
-                      />
+                <div className="p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg border border-gray-200 mb-6">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Filter className="h-4 w-4 text-gray-600" />
+                      <span className="font-medium text-gray-700">項目を絞り込み</span>
                     </div>
-                    <Button variant="outline" size="icon">
-                      <Search className="w-4 h-4" />
-                    </Button>
-                  </div>
+                    <div className="flex gap-2">
+                      <div className="flex-1 relative">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                        <Input
+                          placeholder="キーワードで検索..."
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          className="pl-10 border-gray-300"
+                        />
+                      </div>
+                    </div>
                   
                   <div className="flex gap-2">
                     <Select value={filterCategory} onValueChange={setFilterCategory}>
@@ -325,11 +454,20 @@ export default function FacilitySpecificPage() {
                     const CategoryIcon = category.icon;
                     
                     return (
-                      <div key={categoryKey}>
-                        <div className="flex items-center gap-2 mb-3">
-                          <CategoryIcon className={`w-5 h-5 text-${category.color}-600`} />
-                          <h3 className="font-medium">{category.name}</h3>
-                          <Badge variant="outline">{items.length}項目</Badge>
+                      <div key={categoryKey} className="p-5 bg-white rounded-lg border border-gray-200">
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center gap-3">
+                            <div className={`p-2 rounded-lg bg-${category.color}-100`}>
+                              <CategoryIcon className={`w-5 h-5 text-${category.color}-600`} />
+                            </div>
+                            <div>
+                              <h3 className="font-bold text-gray-800">{category.name}</h3>
+                              <p className="text-sm text-gray-600">このカテゴリの評価項目</p>
+                            </div>
+                          </div>
+                          <Badge className={`bg-${category.color}-100 text-${category.color}-800`}>
+                            {items.length} 項目
+                          </Badge>
                         </div>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -340,7 +478,11 @@ export default function FacilitySpecificPage() {
                             return (
                               <div 
                                 key={item.id} 
-                                className={`border rounded-lg p-4 ${selected ? 'border-blue-500 bg-blue-50' : ''}`}
+                                className={`border-2 rounded-lg p-4 hover:shadow-md transition-all ${
+                                  selected ? 
+                                  'border-purple-500 bg-gradient-to-br from-purple-50 to-indigo-50' : 
+                                  'border-gray-200 hover:border-purple-300 bg-white'
+                                }`}
                               >
                                 <div className="flex items-start gap-3">
                                   <Checkbox
@@ -354,31 +496,44 @@ export default function FacilitySpecificPage() {
                                         <h4 className="font-medium">{item.name}</h4>
                                         <p className="text-sm text-gray-600 mt-1">{item.description}</p>
                                       </div>
-                                      <Badge variant={selected ? 'default' : 'outline'}>
+                                      <Badge className={`${
+                                        selected ? 
+                                        'bg-purple-500 text-white' : 
+                                        'bg-gray-100 text-gray-700'
+                                      }`}>
                                         {item.points}点
                                       </Badge>
                                     </div>
                                     
                                     {/* 評価基準 */}
-                                    <div className="space-y-1">
-                                      <p className="text-xs font-medium text-gray-700">評価基準:</p>
-                                      <ul className="text-xs text-gray-600 space-y-1">
+                                    <div className="p-2 bg-gray-50 rounded-lg">
+                                      <p className="text-xs font-bold text-gray-700 mb-2 flex items-center gap-1">
+                                        <CheckCircle className="w-3 h-3" />
+                                        評価基準
+                                      </p>
+                                      <ul className="space-y-1">
                                         {item.evaluationCriteria.slice(0, 2).map((criteria, idx) => (
-                                          <li key={idx}>• {criteria}</li>
+                                          <li key={idx} className="flex items-start gap-1">
+                                            <span className="text-purple-500 mt-1">•</span>
+                                            <span className="text-xs text-gray-600">{criteria}</span>
+                                          </li>
                                         ))}
                                         {item.evaluationCriteria.length > 2 && (
-                                          <li className="text-gray-400">他{item.evaluationCriteria.length - 2}項目</li>
+                                          <li className="text-xs text-gray-400 ml-3">他{item.evaluationCriteria.length - 2}項目</li>
                                         )}
                                       </ul>
                                     </div>
                                     
                                     {/* 必須研修 */}
                                     {trainings.length > 0 && (
-                                      <div className="pt-2 border-t">
-                                        <p className="text-xs font-medium text-gray-700 mb-1">必須研修:</p>
+                                      <div className="p-2 bg-yellow-50 rounded-lg border border-yellow-200">
+                                        <p className="text-xs font-bold text-yellow-800 mb-2 flex items-center gap-1">
+                                          <AlertCircle className="w-3 h-3" />
+                                          必須研修
+                                        </p>
                                         <div className="flex flex-wrap gap-1">
                                           {trainings.map(training => (
-                                            <Badge key={training.id} variant="secondary" className="text-xs">
+                                            <Badge key={training.id} className="bg-yellow-100 text-yellow-800 text-xs border border-yellow-300">
                                               {training.name}
                                             </Badge>
                                           ))}
