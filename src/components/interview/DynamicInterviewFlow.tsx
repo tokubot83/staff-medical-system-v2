@@ -353,7 +353,7 @@ export default function DynamicInterviewFlow() {
       interviewType: type
     }));
     // 定期面談の場合はバンクモード選択へ
-    if (type === 'regular_annual') {
+    if (type === 'regular_annual' || type === 'new_employee_monthly' || type === 'management_biannual') {
       setCurrentStep('bank-mode-select');
     } else {
       setCurrentStep('duration');
@@ -1437,7 +1437,7 @@ export default function DynamicInterviewFlow() {
       )}
 
       {/* Step 2.7: 定期面談バンクモード選択 */}
-      {currentStep === 'bank-mode-select' && session.interviewType === 'regular_annual' && (
+      {currentStep === 'bank-mode-select' && (session.interviewType === 'regular_annual' || session.interviewType === 'new_employee_monthly' || session.interviewType === 'management_biannual') && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
