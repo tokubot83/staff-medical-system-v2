@@ -15,6 +15,7 @@ import { DashboardTabContent } from '@/components/interview/DashboardTabContent'
 import { AnalyticsTabContent } from '@/components/interview/AnalyticsTabContent'
 import { getCareerInfoByStaffId, saveCareerInfo } from '@/utils/careerInfoUtils'
 import { EvaluationRecords } from '@/components/evaluation/EvaluationRecords'
+import InterviewBankTab from './components/InterviewBankTab'
 
 // 総合分析タブコンポーネント
 export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
@@ -1155,6 +1156,7 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
   // タブの定義
   const interviewTabs = [
     { id: 'dashboard', label: '概要', icon: '📊' },
+    { id: 'bank', label: '面談バンク', icon: '🏦' },
     { id: 'records', label: '面談記録', icon: '📝' },
     { id: 'analytics', label: '統計・分析', icon: '📈' }
   ]
@@ -1205,6 +1207,18 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
           <DashboardTabContent 
             selectedStaff={selectedStaff}
             staffInterviews={staffInterviews}
+          />
+        </div>
+      )}
+
+      {activeInterviewTab === 'bank' && (
+        <div>
+          {/* 面談バンクタブ */}
+          <InterviewBankTab 
+            staffId={selectedStaff?.id || ''}
+            staffName={selectedStaff?.name}
+            department={selectedStaff?.department}
+            position={selectedStaff?.position}
           />
         </div>
       )}
