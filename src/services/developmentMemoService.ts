@@ -154,6 +154,45 @@ class DevelopmentMemoService {
         status: 'completed',
         tags: ['面談制度', 'ガイド']
       },
+      {
+        id: 'interview-005',
+        category: '面談システム',
+        subcategory: '重要：統合面談ダッシュボード',
+        title: '【最重要】統合面談ダッシュボードの動作フロー',
+        content: `【DB構築前に必ず確認】
+統合面談ダッシュボード(/interviews?tab=dashboard)から面談シート生成への遷移フロー：
+
+1. 面談予約一覧から「面談開始」ボタンをクリック
+2. sessionStorageに予約情報を保存
+3. router.push('/interviews?tab=sheets&fromDashboard=true')で遷移
+4. InterviewsPageがuseSearchParamsでtab=sheetsを検知
+5. DynamicInterviewFlowコンポーネントがレンダリング
+6. DynamicInterviewFlowがuseSearchParamsでfromDashboard=trueを検知
+7. sessionStorageから予約情報を読み込み
+8. 予約タイプに応じて適切な画面へ遷移：
+   - 定期面談 → バンクシステム選択画面
+   - 特別面談・サポート面談 → 時間選択画面
+
+【実装済み機能】
+- Next.js 13+ useSearchParamsフックによるURLパラメータ監視
+- sessionStorageによる予約データ受け渡し
+- router.pushによるSPA的な遷移（ページリロード不要）
+
+【注意事項】
+- window.location.hrefは使用しない（SPAの利点を失う）
+- handleReservationData関数はuseEffect内から呼び出される
+- 予約タイプのマッピング: regular → regular_annual等
+
+【関連ファイル】
+- /src/components/interview/UnifiedInterviewDashboard.tsx (L212-223)
+- /src/app/interviews/page.tsx (L51-61)
+- /src/components/interview/DynamicInterviewFlow.tsx (L173-198, L275-312)`,
+        source: { type: 'file', path: '/src/components/interview/UnifiedInterviewDashboard.tsx', line: 212 },
+        date: '2025-08-16',
+        priority: 'critical',
+        status: 'completed',
+        tags: ['統合ダッシュボード', '面談開始', '遷移フロー', 'DB構築前確認']
+      },
 
       // ===== 評価システム =====
       {
