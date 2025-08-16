@@ -113,7 +113,7 @@ const specialTypeIcons = {
   disciplinary: { icon: <AlertTriangle className="h-4 w-4" />, color: '#ef4444', label: '懲戒面談' }
 };
 
-export default function IntegratedBankSystemTab() {
+export default function IntegratedBankSystemTabEnhanced() {
   const [activeBank, setActiveBank] = useState<'overview' | 'regular' | 'support' | 'special' | 'templates'>('overview');
   const [bankStatistics, setBankStatistics] = useState<BankStatistics | null>(null);
   const [selectedPeriod, setSelectedPeriod] = useState<'1month' | '3months' | '6months' | '1year'>('6months');
