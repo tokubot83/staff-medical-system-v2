@@ -14,8 +14,6 @@ import InterviewSheetSelector from '@/components/interview/InterviewSheetSelecto
 import InterviewSheetWrapper from '@/components/interview/InterviewSheetWrapper'
 import { getExperienceCategory } from '@/utils/experienceUtils'
 import RoleSelectionModal from '@/components/RoleSelectionModal'
-import DynamicInterviewFlow from '@/components/interview/DynamicInterviewFlow'
-import SupportInterviewFlow from '@/components/interview/SupportInterviewFlow'
 import UnifiedInterviewDashboard from '@/components/interview/UnifiedInterviewDashboard'
 
 // タブ順序を業務フローに合わせて修正
@@ -24,8 +22,6 @@ const tabs = [
   { id: 'overview-guide', label: '概要・ガイド', icon: '📖', badge: '', isNew: false },
   { id: 'record', label: '結果記録', icon: '📝', badge: '', isNew: false },
   { id: 'history', label: '履歴・分析', icon: '📈', badge: '', isNew: false },
-  { id: 'sheets', label: '面談実施', icon: '📄', badge: '', isNew: false },
-  { id: 'schedule', label: '面談予定', icon: '📅', badge: '', isNew: false },
   { id: 'settings', label: '設定', icon: '⚙️', badge: '', isNew: false },
 ]
 
@@ -205,23 +201,6 @@ function InterviewsPageContent() {
         <div className={styles.tabContent}>
           {activeTab === 'station' && <UnifiedInterviewDashboard />}
           {activeTab === 'overview-guide' && <OverviewGuideTab onInterviewTypeClick={handleInterviewTypeClick} />}
-          {activeTab === 'schedule' && (
-            <ScheduleTab 
-              interviews={filteredInterviews.filter(i => i.status === 'scheduled')}
-              searchTerm={searchTerm}
-              setSearchTerm={setSearchTerm}
-              selectedFacility={selectedFacility}
-              setSelectedFacility={setSelectedFacility}
-              selectedDepartment={selectedDepartment}
-              setSelectedDepartment={setSelectedDepartment}
-              onInterviewSelect={handleInterviewSelect}
-              onAddClick={() => setShowAddModal(true)}
-              onEditClick={(interview) => {
-                setEditingInterview(interview)
-                setShowAddModal(true)
-              }}
-            />
-          )}
           {activeTab === 'history' && (
             <HistoryTab 
               interviews={filteredInterviews.filter(i => i.status === 'completed')}
@@ -230,7 +209,6 @@ function InterviewsPageContent() {
               onDateRangeChange={setDateRange}
             />
           )}
-          {activeTab === 'sheets' && <InterviewSheetsTab />}
           {activeTab === 'record' && <RecordTab selectedInterview={selectedInterview} />}
           {activeTab === 'settings' && <SettingsTab />}
         </div>
@@ -1135,100 +1113,6 @@ function GuideSection({ onInterviewTypeClick }: { onInterviewTypeClick: (type: s
   )
 }
 
-interface ScheduleTabProps {
-  interviews: Interview[]
-  searchTerm: string
-  setSearchTerm: (value: string) => void
-  selectedFacility: string
-  setSelectedFacility: (value: string) => void
-  selectedDepartment: string
-  setSelectedDepartment: (value: string) => void
-  onInterviewSelect: (interview: Interview) => void
-  onAddClick: () => void
-  onEditClick?: (interview: Interview) => void
-}
-
-function ScheduleTab({ interviews, searchTerm, setSearchTerm, selectedFacility, setSelectedFacility, selectedDepartment, setSelectedDepartment, onInterviewSelect, onAddClick, onEditClick }: ScheduleTabProps) {
-  return (
-    <div className={styles.listContainer}>
-      <div className={styles.searchSection}>
-        <div className={styles.searchBar}>
-          <input
-            type="text"
-            placeholder="職員名または職員IDで検索"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className={styles.searchInput}
-          />
-        </div>
-        <div className={styles.filters}>
-          <select 
-            value={selectedFacility} 
-            onChange={(e) => setSelectedFacility(e.target.value)}
-            className={styles.filterSelect}
-          >
-            <option value="all">全施設</option>
-            <option value="小原病院">小原病院</option>
-            <option value="立神リハビリテーション温泉病院">立神リハビリテーション温泉病院</option>
-          </select>
-          <select 
-            value={selectedDepartment} 
-            onChange={(e) => setSelectedDepartment(e.target.value)}
-            className={styles.filterSelect}
-          >
-            <option value="all">全部署</option>
-            <option value="外科病棟">外科病棟</option>
-            <option value="内科病棟">内科病棟</option>
-            <option value="救急科">救急科</option>
-            <option value="地域包括ケア病棟">地域包括ケア病棟</option>
-            <option value="外来">外来</option>
-            <option value="緩和ケア病棟">緩和ケア病棟</option>
-          </select>
-        </div>
-      </div>
-
-      <div className={styles.listHeader}>
-        <h2>面談予定 ({interviews.length}件)</h2>
-        <button className={styles.addButton} onClick={onAddClick}>
-          + 新規面談を追加
-        </button>
-      </div>
-
-      <div className={styles.interviewGrid}>
-        {interviews.map((interview) => (
-          <div key={interview.id} className={styles.interviewCard} onClick={() => onInterviewSelect(interview)}>
-            <div className={styles.cardHeader}>
-              <div className={styles.cardDate}>
-                <div className={styles.dateDay}>{new Date(interview.bookingDate).getDate()}</div>
-                <div className={styles.dateMonth}>{new Date(interview.bookingDate).toLocaleDateString('ja-JP', { month: 'short' })}</div>
-              </div>
-              <div className={styles.cardInfo}>
-                <h3>{interview.employeeName}</h3>
-                <p className={styles.staffId}>{interview.employeeId}</p>
-                <p className={styles.interviewTime}>{interview.startTime} - {interview.interviewType}</p>
-                <p className={styles.interviewPurpose}>{interview.description}</p>
-              </div>
-              <div className={styles.cardActions}>
-                <button 
-                  className={styles.actionButton} 
-                  onClick={(e) => { 
-                    e.stopPropagation();
-                    if (onEditClick) onEditClick(interview);
-                  }}
-                >
-                  編集
-                </button>
-                <button className={styles.actionButton} onClick={(e) => { e.stopPropagation(); }}>
-                  キャンセル
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
 
 interface HistoryTabProps {
   interviews: Interview[]
@@ -1395,11 +1279,6 @@ function RecordTab({ selectedInterview }: RecordTabProps) {
   )
 }
 
-// Phase 1: 動的面談フローの実装 (すでにインポート済み)
-function InterviewSheetsTab(): React.ReactElement {
-  // 既存のImprovedInterviewFlowから新しいDynamicInterviewFlowへ移行
-  return <DynamicInterviewFlow />
-}
 
 function ReportTab(): React.ReactElement {
   return (
