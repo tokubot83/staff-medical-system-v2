@@ -1,0 +1,274 @@
+/* 改善されたデジタル面談UIスタイルシート */
+
+.container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+/* セクションカラー定義 */
+.sectionBlue { background-color: #eff6ff; }
+.sectionPurple { background-color: #f3e8ff; }
+.sectionGreen { background-color: #f0fdf4; }
+.sectionOrange { background-color: #fff7ed; }
+.sectionCyan { background-color: #ecfeff; }
+.sectionPink { background-color: #fdf2f8; }
+.sectionIndigo { background-color: #eef2ff; }
+.sectionRed { background-color: #fef2f2; }
+.sectionYellow { background-color: #fefce8; }
+
+/* アニメーション効果 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* カード効果 */
+.questionCard {
+  animation: fadeIn 0.3s ease-out;
+  transition: all 0.3s ease;
+}
+
+.questionCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* スケール評価ボタン */
+.scaleButton {
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.scaleButton:hover {
+  transform: scale(1.1);
+}
+
+.scaleButton.active {
+  animation: pulse 1s infinite;
+}
+
+.scaleButton.active::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  opacity: 0.5;
+  animation: pulse 1s infinite;
+}
+
+/* サイドナビゲーション */
+.sideNav {
+  position: sticky;
+  top: 1.5rem;
+  max-height: calc(100vh - 3rem);
+}
+
+.navItem {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.navItem:hover {
+  background-color: rgba(59, 130, 246, 0.05);
+}
+
+.navItem.active {
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, transparent 100%);
+  border-left: 4px solid #3b82f6;
+}
+
+.navItem.completed::after {
+  content: '✓';
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #10b981;
+  font-weight: bold;
+}
+
+/* プログレスバー */
+.progressBar {
+  background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+  transition: width 0.5s ease;
+  border-radius: 4px;
+}
+
+/* 自動保存インジケーター */
+.autoSaveIndicator {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.autoSaveIndicator.saving {
+  animation: pulse 0.5s infinite;
+}
+
+/* テキストエリア */
+.textareaField {
+  transition: all 0.3s ease;
+  border: 1px solid #e5e7eb;
+}
+
+.textareaField:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  outline: none;
+}
+
+/* チェックボックス */
+.checkboxItem {
+  transition: all 0.2s ease;
+}
+
+.checkboxItem:hover {
+  background-color: #f9fafb;
+  transform: translateX(2px);
+}
+
+.checkboxItem input:checked + label {
+  color: #3b82f6;
+  font-weight: 500;
+}
+
+/* アラート・フィードバック */
+.feedbackAlert {
+  animation: slideIn 0.3s ease-out;
+  border-left: 4px solid currentColor;
+}
+
+.feedbackAlert.warning {
+  background-color: #fef3c7;
+  border-color: #f59e0b;
+  color: #92400e;
+}
+
+.feedbackAlert.success {
+  background-color: #d1fae5;
+  border-color: #10b981;
+  color: #065f46;
+}
+
+.feedbackAlert.info {
+  background-color: #dbeafe;
+  border-color: #3b82f6;
+  color: #1e40af;
+}
+
+/* ボタン効果 */
+.primaryButton {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.primaryButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.primaryButton:active {
+  transform: translateY(0);
+}
+
+/* セクションヘッダー */
+.sectionHeader {
+  position: relative;
+  overflow: hidden;
+}
+
+.sectionHeader::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 1024px) {
+  .sideNav {
+    position: relative;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  
+  .container {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .scaleButton {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 0.875rem;
+  }
+  
+  .questionCard {
+    padding: 1rem;
+  }
+}
+
+/* 印刷用スタイル */
+@media print {
+  .sideNav,
+  .autoSaveIndicator,
+  .primaryButton {
+    display: none !important;
+  }
+  
+  .container {
+    background: white;
+  }
+  
+  .questionCard {
+    page-break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #e5e7eb;
+  }
+  
+  .sectionHeader {
+    background: white !important;
+    border-bottom: 2px solid #000;
+  }
+}
