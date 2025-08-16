@@ -40,7 +40,15 @@ import {
   Users,
   CheckCircle2,
   AlertCircle,
-  TrendingUp
+  TrendingUp,
+  Brain,
+  Zap,
+  Database,
+  Award,
+  Settings,
+  BarChart3,
+  Lightbulb,
+  ListChecks
 } from 'lucide-react';
 import Link from 'next/link';
 import { QuestionBank, selectQuestionsForStaff, Question } from '@/data/questionBank';
@@ -158,7 +166,85 @@ export default function QuestionManagementPage() {
         </div>
       </div>
 
+      {/* メインヘッダーカード */}
       <div className="max-w-7xl mx-auto p-6">
+        <Card className="mb-6 border-2 border-purple-200 bg-gradient-to-r from-purple-50 to-indigo-50">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-purple-500 rounded-lg">
+                  <Brain className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <CardTitle className="text-xl">AI動的設問システム</CardTitle>
+                  <CardDescription className="mt-1">
+                    職員の成長段階に合わせた最適な評価設問を自動生成します
+                  </CardDescription>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Badge className="bg-purple-100 text-purple-800" variant="secondary">
+                  <Zap className="w-3 h-3 mr-1" />
+                  AI最適化
+                </Badge>
+                <Badge className="bg-green-100 text-green-800" variant="secondary">
+                  <CheckCircle2 className="w-3 h-3 mr-1" />
+                  {questions.length} 設問
+                </Badge>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-4 gap-4">
+              <div className="p-4 bg-white rounded-lg border border-purple-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <Database className="h-5 w-5 text-purple-600" />
+                  <span className="text-sm font-medium text-gray-700">設問バンク</span>
+                </div>
+                <p className="text-2xl font-bold text-purple-600">{questions.length}</p>
+                <p className="text-xs text-gray-600 mt-1">利用可能設問</p>
+              </div>
+              <div className="p-4 bg-white rounded-lg border border-blue-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <BookOpen className="h-5 w-5 text-blue-600" />
+                  <span className="text-sm font-medium text-gray-700">研修連動</span>
+                </div>
+                <p className="text-2xl font-bold text-blue-600">
+                  {questions.filter(q => q.requiredTrainings && q.requiredTrainings.length > 0).length}
+                </p>
+                <p className="text-xs text-gray-600 mt-1">研修基準設問</p>
+              </div>
+              <div className="p-4 bg-white rounded-lg border border-green-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <Lightbulb className="h-5 w-5 text-green-600" />
+                  <span className="text-sm font-medium text-gray-700">自動生成</span>
+                </div>
+                <p className="text-2xl font-bold text-green-600">15</p>
+                <p className="text-xs text-gray-600 mt-1">今月作成</p>
+              </div>
+              <div className="p-4 bg-white rounded-lg border border-orange-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <TrendingUp className="h-5 w-5 text-orange-600" />
+                  <span className="text-sm font-medium text-gray-700">効果性</span>
+                </div>
+                <p className="text-2xl font-bold text-orange-600">
+                  {Math.round(
+                    questions.reduce((sum, q) => sum + (q.effectiveness || 0), 0) / 
+                    questions.filter(q => q.effectiveness).length
+                  )}%
+                </p>
+                <p className="text-xs text-gray-600 mt-1">平均スコア</p>
+              </div>
+            </div>
+            <Alert className="mt-4 border-purple-200 bg-purple-50/50">
+              <Sparkles className="h-4 w-4 text-purple-600" />
+              <AlertDescription className="text-purple-800">
+                AIが各職員の研修履歴、経験年数、スキルレベルを分析し、最適な評価設問を自動選定します。
+              </AlertDescription>
+            </Alert>
+          </CardContent>
+        </Card>
+
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid grid-cols-3 w-full max-w-md">
             <TabsTrigger value="bank">設問バンク</TabsTrigger>
@@ -168,27 +254,45 @@ export default function QuestionManagementPage() {
 
           {/* 設問バンクタブ */}
           <TabsContent value="bank" className="space-y-6 mt-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>設問バンク管理</CardTitle>
-                <CardDescription>
-                  評価に使用する設問を管理し、動的選定の基準を設定します
-                </CardDescription>
+            <Card className="border-2 border-gray-200 shadow-lg hover:shadow-xl transition-shadow">
+              <CardHeader className="bg-gradient-to-r from-gray-50 to-gray-100">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 bg-gray-600 rounded-lg">
+                      <Database className="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-xl">設問バンク管理</CardTitle>
+                      <CardDescription className="mt-1">
+                        評価設問の一元管理と動的選定基準の設定
+                      </CardDescription>
+                    </div>
+                  </div>
+                  <Button className="bg-purple-600 hover:bg-purple-700 text-white">
+                    <Plus className="w-4 h-4 mr-2" />
+                    新規設問追加
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent>
                 {/* フィルター */}
-                <div className="flex gap-4 mb-6">
-                  <div className="flex-1">
-                    <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                      <Input
-                        placeholder="設問を検索..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-10"
-                      />
-                    </div>
+                <div className="p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg border border-gray-200 mb-6">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Filter className="h-4 w-4 text-gray-600" />
+                    <span className="font-medium text-gray-700">設問を絞り込み</span>
                   </div>
+                  <div className="flex gap-3">
+                    <div className="flex-1">
+                      <div className="relative">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                        <Input
+                          placeholder="キーワードで検索..."
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className="pl-10 border-gray-300 bg-white"
+                        />
+                      </div>
+                    </div>
                   <Select value={selectedCategory} onValueChange={setSelectedCategory}>
                     <SelectTrigger className="w-[200px]">
                       <SelectValue />
@@ -211,10 +315,7 @@ export default function QuestionManagementPage() {
                       <SelectItem value="veteran">ベテラン</SelectItem>
                     </SelectContent>
                   </Select>
-                  <Button variant="outline">
-                    <Plus className="w-4 h-4 mr-2" />
-                    新規追加
-                  </Button>
+                  </div>
                 </div>
 
                 {/* 設問リスト */}
@@ -295,37 +396,53 @@ export default function QuestionManagementPage() {
 
                 {/* 統計情報 */}
                 <div className="grid grid-cols-4 gap-4 mt-6">
-                  <Card>
+                  <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
                     <CardContent className="p-4">
-                      <div className="text-2xl font-bold">{questions.length}</div>
-                      <p className="text-sm text-gray-600">総設問数</p>
+                      <div className="flex items-center justify-between mb-2">
+                        <ListChecks className="h-5 w-5 text-blue-600" />
+                        <Badge className="bg-blue-600 text-white">全体</Badge>
+                      </div>
+                      <div className="text-2xl font-bold text-blue-900">{questions.length}</div>
+                      <p className="text-sm text-blue-700">総設問数</p>
                     </CardContent>
                   </Card>
-                  <Card>
+                  <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200">
                     <CardContent className="p-4">
-                      <div className="text-2xl font-bold">
+                      <div className="flex items-center justify-between mb-2">
+                        <BookOpen className="h-5 w-5 text-green-600" />
+                        <Badge className="bg-green-600 text-white">連動</Badge>
+                      </div>
+                      <div className="text-2xl font-bold text-green-900">
                         {questions.filter(q => q.requiredTrainings && q.requiredTrainings.length > 0).length}
                       </div>
-                      <p className="text-sm text-gray-600">研修連動設問</p>
+                      <p className="text-sm text-green-700">研修連動設問</p>
                     </CardContent>
                   </Card>
-                  <Card>
+                  <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
                     <CardContent className="p-4">
-                      <div className="text-2xl font-bold">
+                      <div className="flex items-center justify-between mb-2">
+                        <FileText className="h-5 w-5 text-purple-600" />
+                        <Badge className="bg-purple-600 text-white">テンプレート</Badge>
+                      </div>
+                      <div className="text-2xl font-bold text-purple-900">
                         {questions.filter(q => q.template).length}
                       </div>
-                      <p className="text-sm text-gray-600">テンプレート</p>
+                      <p className="text-sm text-purple-700">テンプレート数</p>
                     </CardContent>
                   </Card>
-                  <Card>
+                  <Card className="bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200">
                     <CardContent className="p-4">
-                      <div className="text-2xl font-bold">
+                      <div className="flex items-center justify-between mb-2">
+                        <BarChart3 className="h-5 w-5 text-orange-600" />
+                        <Badge className="bg-orange-600 text-white">効果</Badge>
+                      </div>
+                      <div className="text-2xl font-bold text-orange-900">
                         {Math.round(
                           questions.reduce((sum, q) => sum + (q.effectiveness || 0), 0) / 
                           questions.filter(q => q.effectiveness).length
                         )}%
                       </div>
-                      <p className="text-sm text-gray-600">平均効果性</p>
+                      <p className="text-sm text-orange-700">平均効果性</p>
                     </CardContent>
                   </Card>
                 </div>
@@ -335,16 +452,41 @@ export default function QuestionManagementPage() {
 
           {/* 動的プレビュータブ */}
           <TabsContent value="preview" className="space-y-6 mt-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>動的設問プレビュー</CardTitle>
-                <CardDescription>
-                  実際の条件で設問がどのように選定されるかを確認します
-                </CardDescription>
+            <Card className="border-2 border-indigo-200 shadow-lg hover:shadow-xl transition-shadow">
+              <CardHeader className="bg-gradient-to-r from-indigo-50 to-purple-50">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 bg-indigo-500 rounded-lg">
+                      <Lightbulb className="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-xl">動的設問プレビュー</CardTitle>
+                      <CardDescription className="mt-1">
+                        実際の条件でAIが選定する設問をシミュレーション
+                      </CardDescription>
+                    </div>
+                  </div>
+                  <Button 
+                    onClick={generatePreview}
+                    disabled={isGenerating}
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white"
+                  >
+                    {isGenerating ? (
+                      <><RefreshCw className="w-4 h-4 mr-2 animate-spin" /> 生成中...</>
+                    ) : (
+                      <><Zap className="w-4 h-4 mr-2" /> プレビュー生成</>
+                    )}
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent>
                 {/* プレビュー設定 */}
-                <div className="grid grid-cols-3 gap-4 mb-6">
+                <div className="p-5 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg border border-gray-200 mb-6">
+                  <h3 className="font-bold text-lg flex items-center gap-2 mb-4">
+                    <Settings className="h-5 w-5 text-gray-700" />
+                    シミュレーション設定
+                  </h3>
+                  <div className="grid grid-cols-3 gap-4">
                   <div>
                     <Label>経験レベル</Label>
                     <Select defaultValue="young">
@@ -386,6 +528,7 @@ export default function QuestionManagementPage() {
                     </Select>
                   </div>
                 </div>
+                </div>
 
                 <div className="mb-6">
                   <Label>完了済み研修</Label>
@@ -398,17 +541,17 @@ export default function QuestionManagementPage() {
                       <CheckCircle2 className="w-3 h-3 mr-1" />
                       医療安全研修
                     </Badge>
-                    <Badge className="bg-gray-100 text-gray-800">
-                      <AlertCircle className="w-3 h-3 mr-1" />
-                      個人情報保護研修（未受講）
+                    <Badge className="bg-green-100 text-green-800">
+                      <CheckCircle2 className="w-3 h-3 mr-1" />
+                      身体拘束適正化研修
                     </Badge>
                   </div>
                 </div>
 
-                <Button 
+                <Button
                   onClick={generatePreview}
                   disabled={isGenerating}
-                  className="w-full mb-6"
+                  className="w-full"
                 >
                   {isGenerating ? (
                     <>
@@ -418,60 +561,69 @@ export default function QuestionManagementPage() {
                   ) : (
                     <>
                       <Sparkles className="w-4 h-4 mr-2" />
-                      動的設問をプレビュー
+                      これらの条件で設問をプレビュー
                     </>
                   )}
                 </Button>
 
                 {/* プレビュー結果 */}
                 {previewData && (
-                  <div className="space-y-4">
-                    <Alert>
-                      <Sparkles className="h-4 w-4" />
-                      <AlertTitle>動的選定結果</AlertTitle>
+                  <div className="mt-6 space-y-4">
+                    <Alert className="border-indigo-200 bg-indigo-50">
+                      <CheckCircle2 className="h-4 w-4 text-indigo-600" />
+                      <AlertTitle>プレビュー生成完了</AlertTitle>
                       <AlertDescription>
-                        若手看護師向けに{previewData.questions.length}問の設問が自動選定されました
+                        カテゴリー「{previewData.categoryName}」で{previewData.questions.length}件の設問が選定されました
                       </AlertDescription>
                     </Alert>
 
                     <div className="space-y-3">
+                      <h4 className="font-semibold">選定された設問:</h4>
                       {previewData.questions.map((q, index) => (
-                        <div key={q.id} className="border rounded-lg p-4">
-                          <div className="flex items-start justify-between mb-2">
-                            <span className="text-sm font-medium text-gray-600">
-                              設問 {index + 1}
-                            </span>
-                            <div className="flex gap-2">
-                              {q.requiredTrainings && q.requiredTrainings.length > 0 && (
-                                <Badge className="bg-blue-100 text-blue-800">
-                                  <BookOpen className="w-3 h-3 mr-1" />
-                                  研修連動
-                                </Badge>
-                              )}
+                        <div key={q.id} className="p-3 bg-white border rounded-lg">
+                          <div className="flex justify-between items-start">
+                            <div className="flex-1">
+                              <p className="font-medium">{index + 1}. {q.question}</p>
+                              <div className="flex gap-2 mt-2">
+                                <Badge variant="outline">{q.points}点</Badge>
+                                {getEvaluatorBadge(q.evaluator)}
+                                {q.requiredTrainings && q.requiredTrainings.length > 0 && (
+                                  <Badge className="bg-blue-100 text-blue-800">
+                                    <BookOpen className="w-3 h-3 mr-1" />
+                                    研修連動
+                                  </Badge>
+                                )}
+                              </div>
                             </div>
-                          </div>
-                          <p className="text-sm mb-2">{q.question}</p>
-                          <div className="flex items-center justify-between">
-                            <div className="flex gap-2">
-                              {getEvaluatorBadge(q.evaluator)}
-                            </div>
-                            <p className="text-xs text-gray-500">配点: {q.points}点</p>
                           </div>
                         </div>
                       ))}
                     </div>
 
-                    {/* 動的生成設問 */}
-                    {previewData.autoGenerated.length > 0 && (
-                      <div className="mt-6">
-                        <h4 className="font-medium mb-3">動的生成設問</h4>
+                    {previewData.trainingBased.length > 0 && (
+                      <div>
+                        <h4 className="font-semibold mb-2">研修ベース推奨設問:</h4>
                         <div className="space-y-2">
-                          {previewData.autoGenerated.map((question, index) => (
-                            <div key={index} className="border border-purple-200 rounded-lg p-4 bg-purple-50">
-                              <div className="flex items-start gap-2">
-                                <Sparkles className="w-4 h-4 text-purple-600 mt-0.5" />
-                                <p className="text-sm">{question}</p>
-                              </div>
+                          {previewData.trainingBased.map((q, index) => (
+                            <div key={index} className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                              <p className="text-sm">{q}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {previewData.autoGenerated.length > 0 && (
+                      <div>
+                        <h4 className="font-semibold mb-2">AI自動生成設問:</h4>
+                        <div className="space-y-2">
+                          {previewData.autoGenerated.map((q, index) => (
+                            <div key={index} className="p-3 bg-purple-50 border border-purple-200 rounded-lg">
+                              <p className="text-sm">{q}</p>
+                              <Badge className="mt-2 bg-purple-100 text-purple-800">
+                                <Sparkles className="w-3 h-3 mr-1" />
+                                AI生成
+                              </Badge>
                             </div>
                           ))}
                         </div>
@@ -489,58 +641,52 @@ export default function QuestionManagementPage() {
               <CardHeader>
                 <CardTitle>設問テンプレート</CardTitle>
                 <CardDescription>
-                  変数を使用して動的に設問を生成するテンプレートを管理します
+                  よく使用される設問の組み合わせをテンプレートとして管理
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Alert className="mb-6">
-                  <Sparkles className="h-4 w-4" />
-                  <AlertTitle>テンプレート機能</AlertTitle>
-                  <AlertDescription>
-                    年度、研修名、施設名などの変数を使用して、状況に応じた設問を自動生成できます
-                  </AlertDescription>
-                </Alert>
-
-                <div className="space-y-4">
-                  <div className="border rounded-lg p-4">
-                    <div className="flex items-start justify-between mb-2">
-                      <Badge>テンプレート</Badge>
-                      <Button variant="outline" size="sm">
-                        <Edit className="w-4 h-4 mr-2" />
-                        編集
-                      </Button>
-                    </div>
-                    <p className="text-sm font-mono bg-gray-100 p-2 rounded">
-                      {'{{year}}年度の{{training}}研修で学んだ内容を実践できているか？'}
-                    </p>
-                    <div className="flex gap-2 mt-3">
-                      <Badge variant="secondary">変数: year</Badge>
-                      <Badge variant="secondary">変数: training</Badge>
-                    </div>
-                  </div>
-
-                  <div className="border rounded-lg p-4">
-                    <div className="flex items-start justify-between mb-2">
-                      <Badge>テンプレート</Badge>
-                      <Button variant="outline" size="sm">
-                        <Edit className="w-4 h-4 mr-2" />
-                        編集
-                      </Button>
-                    </div>
-                    <p className="text-sm font-mono bg-gray-100 p-2 rounded">
-                      {'{{facility}}の特性を理解し、{{specialty}}ケアを適切に提供できているか？'}
-                    </p>
-                    <div className="flex gap-2 mt-3">
-                      <Badge variant="secondary">変数: facility</Badge>
-                      <Badge variant="secondary">変数: specialty</Badge>
-                    </div>
-                  </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <Card>
+                    <CardContent className="p-4">
+                      <h3 className="font-semibold mb-2">新人向けテンプレート</h3>
+                      <p className="text-sm text-gray-600 mb-3">基本的な技術と姿勢を評価</p>
+                      <div className="flex justify-between items-center">
+                        <Badge>15設問</Badge>
+                        <Button size="sm" variant="outline">使用する</Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4">
+                      <h3 className="font-semibold mb-2">中堅向けテンプレート</h3>
+                      <p className="text-sm text-gray-600 mb-3">応用技術とリーダーシップを評価</p>
+                      <div className="flex justify-between items-center">
+                        <Badge>20設問</Badge>
+                        <Button size="sm" variant="outline">使用する</Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4">
+                      <h3 className="font-semibold mb-2">ベテラン向けテンプレート</h3>
+                      <p className="text-sm text-gray-600 mb-3">専門性と指導力を評価</p>
+                      <div className="flex justify-between items-center">
+                        <Badge>18設問</Badge>
+                        <Button size="sm" variant="outline">使用する</Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-4">
+                      <h3 className="font-semibold mb-2">管理職向けテンプレート</h3>
+                      <p className="text-sm text-gray-600 mb-3">マネジメント能力を評価</p>
+                      <div className="flex justify-between items-center">
+                        <Badge>22設問</Badge>
+                        <Button size="sm" variant="outline">使用する</Button>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
-
-                <Button className="w-full mt-6">
-                  <Plus className="w-4 h-4 mr-2" />
-                  新規テンプレートを作成
-                </Button>
               </CardContent>
             </Card>
           </TabsContent>

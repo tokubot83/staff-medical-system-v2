@@ -405,6 +405,7 @@ export default function FacilitySpecificPage() {
                         />
                       </div>
                     </div>
+                  </div>
                   
                   <div className="flex gap-2">
                     <Select value={filterCategory} onValueChange={setFilterCategory}>
