@@ -15,6 +15,7 @@ import { getExperienceCategory } from '@/utils/experienceUtils'
 import RoleSelectionModal from '@/components/RoleSelectionModal'
 import DynamicInterviewFlow from '@/components/interview/DynamicInterviewFlow'
 import SupportInterviewFlow from '@/components/interview/SupportInterviewFlow'
+import UnifiedInterviewDashboard from '@/components/interview/UnifiedInterviewDashboard'
 
 // 第1段階実装: タブ順序を業務フローに合わせて修正
 const tabs = [
@@ -193,7 +194,7 @@ export default function InterviewsPage() {
 
         <div className={styles.tabContent}>
           {activeTab === 'overview' && <OverviewTab />}
-          {activeTab === 'dashboard' && <DashboardTab />}
+          {activeTab === 'dashboard' && <UnifiedInterviewDashboard />}
           {activeTab === 'schedule' && (
             <ScheduleTab 
               interviews={filteredInterviews.filter(i => i.status === 'scheduled')}

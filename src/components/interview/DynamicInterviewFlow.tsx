@@ -165,6 +165,19 @@ export default function DynamicInterviewFlow() {
   // スタッフデータの取得（実際にはAPIから）
   useEffect(() => {
     fetchStaffData();
+    
+    // ダッシュボードからの予約情報を取得
+    const urlParams = new URLSearchParams(window.location.search);
+    const fromDashboard = urlParams.get('fromDashboard');
+    
+    if (fromDashboard === 'true') {
+      const reservationData = sessionStorage.getItem('interviewReservation');
+      if (reservationData) {
+        const reservation = JSON.parse(reservationData);
+        handleReservationData(reservation);
+        sessionStorage.removeItem('interviewReservation');
+      }
+    }
   }, []);
 
   const fetchStaffData = async () => {
@@ -240,6 +253,57 @@ export default function DynamicInterviewFlow() {
     }
     
     setCurrentStep('interview-type');
+  };
+
+  // 予約データから面談を開始
+  const handleReservationData = (reservation: any) => {
+    // 予約情報からスタッフ情報を設定
+    const staffMember: StaffMember = {
+      id: reservation.staffId,
+      name: reservation.staffName,
+      department: reservation.department,
+      position: reservation.position,
+      jobRole: determineJobRole(reservation.position),
+      experienceYears: reservation.experienceYears,
+      experienceMonths: reservation.experienceYears * 12,
+      facilityType: 'acute' as FacilityType,
+      lastInterviewDate: reservation.lastInterviewDate
+    };
+    
+    setSession(prev => ({
+      ...prev,
+      staffMember,
+      interviewType: reservation.type,
+      specialType: reservation.specialType,
+      specialContext: reservation.specialContext,
+      supportRequest: {
+        category: reservation.supportCategory,
+        topic: reservation.supportTopic,
+        details: reservation.supportDetails,
+        urgency: reservation.urgency
+      },
+      useBankSystem: true // ダッシュボードからは常にバンクシステムを使用
+    }));
+    
+    // 面談タイプに応じて適切なステップに遷移
+    if (reservation.type === 'regular') {
+      // 定期面談は時間選択へ
+      setCurrentStep('duration');
+    } else if (reservation.type === 'special') {
+      // 特別面談も時間選択へ（タイプは予約から取得済み）
+      setCurrentStep('duration');
+    } else if (reservation.type === 'support') {
+      // サポート面談も時間選択へ（カテゴリは予約から取得済み）
+      setCurrentStep('duration');
+    }
+  };
+  
+  const determineJobRole = (position: string): JobRole => {
+    if (position.includes('看護師')) return 'nurse';
+    if (position.includes('准看護師')) return 'assistant-nurse';
+    if (position.includes('看護補助')) return 'nursing-aide';
+    if (position.includes('医事')) return 'medical-clerk';
+    return 'nurse'; // デフォルト
   };
 
   // 面談種類選択
