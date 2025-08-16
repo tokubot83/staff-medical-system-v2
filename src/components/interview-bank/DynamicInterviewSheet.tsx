@@ -315,8 +315,8 @@ export default function DynamicInterviewSheet({
                 </div>
                 <div>
                   <p><strong>経験年数:</strong> {staffProfile.experienceYears}年{staffProfile.experienceMonths}ヶ月</p>
-                  <p><strong>面談日:</strong> {new Date(sheetData.params.interviewDate).toLocaleDateString('ja-JP')}</p>
-                  <p><strong>所要時間:</strong> {sheetData.params.duration}分</p>
+                  <p><strong>面談日:</strong> {sheetData.params?.interviewDate ? new Date(sheetData.params.interviewDate).toLocaleDateString('ja-JP') : new Date().toLocaleDateString('ja-JP')}</p>
+                  <p><strong>所要時間:</strong> {sheetData.params?.duration || 30}分</p>
                 </div>
               </div>
             </div>

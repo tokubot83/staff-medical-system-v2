@@ -420,6 +420,14 @@ export default function DynamicInterviewFlow() {
           }
         }
         
+        // 生成されたシートにparamsが含まれていることを確認
+        if (!generatedSheet.params) {
+          generatedSheet.params = {
+            interviewDate: new Date(),
+            duration: session.duration
+          };
+        }
+        
         // バンクシステムのデータをセッションに保存
         setSession(prev => ({
           ...prev,
