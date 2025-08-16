@@ -1,1 +1,7 @@
-test
+# Vercel ignore file
+.git
+.gitignore
+*.md
+docs
+node_modules
+.env.local
