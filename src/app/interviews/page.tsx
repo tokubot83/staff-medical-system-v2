@@ -19,7 +19,7 @@ import UnifiedInterviewDashboard from '@/components/interview/UnifiedInterviewDa
 // タブ順序を業務フローに合わせて修正
 const tabs = [
   { id: 'station', label: '面談ステーション', icon: '🚉', badge: '', isNew: true },
-  { id: 'bank-system', label: 'バンクシステム', icon: '🏦', badge: 'Full', isNew: false },
+  { id: 'bank-system', label: '面談バンク', icon: '🏦', badge: 'Full', isNew: false },
   { id: 'overview-guide', label: '概要・ガイド', icon: '📖', badge: '', isNew: false },
   { id: 'record', label: '結果記録', icon: '📝', badge: '', isNew: false },
   { id: 'history', label: '履歴・分析', icon: '📈', badge: '', isNew: false },
@@ -1115,7 +1115,7 @@ function GuideSection({ onInterviewTypeClick }: { onInterviewTypeClick: (type: s
   )
 }
 
-// バンクシステム統合タブ
+// 面談バンク統合タブ
 function BankSystemTab(): React.ReactElement {
   const [activeBank, setActiveBank] = useState<'overview' | 'regular' | 'special' | 'support'>('overview')
   const [isLoading, setIsLoading] = useState(false)
@@ -1126,7 +1126,7 @@ function BankSystemTab(): React.ReactElement {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-3xl font-bold flex items-center gap-2">
-            🏦 面談バンクシステム
+            🏦 面談バンク
           </h2>
           <p className="text-gray-600 mt-1">統合面談生成・管理システム</p>
         </div>
