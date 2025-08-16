@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -273,6 +273,29 @@ export default function ImprovedDigitalInterviewUIFixed({
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [showSaveIndicator, setShowSaveIndicator] = useState(false);
 
+  const handleAutoSave = useCallback(() => {
+    const responseArray = Array.from(responses.values());
+    onSave(responseArray);
+    setLastSaved(new Date());
+    setShowSaveIndicator(true);
+    setTimeout(() => setShowSaveIndicator(false), 3000);
+  }, [responses, onSave]);
+
+  // 自動保存機能
+  useEffect(() => {
+    if (autoSaveTimer) clearTimeout(autoSaveTimer);
+    
+    const timer = setTimeout(() => {
+      handleAutoSave();
+    }, 30000); // 30秒ごとに自動保存
+    
+    setAutoSaveTimer(timer);
+    
+    return () => {
+      if (autoSaveTimer) clearTimeout(autoSaveTimer);
+    };
+  }, [responses, handleAutoSave, autoSaveTimer]);
+
   // セクションが存在しない場合のフォールバック
   if (!sections || sections.length === 0) {
     return (
@@ -288,28 +311,6 @@ export default function ImprovedDigitalInterviewUIFixed({
     );
   }
 
-  // 自動保存機能
-  useEffect(() => {
-    if (autoSaveTimer) clearTimeout(autoSaveTimer);
-    
-    const timer = setTimeout(() => {
-      handleAutoSave();
-    }, 30000); // 30秒ごとに自動保存
-    
-    setAutoSaveTimer(timer);
-    
-    return () => {
-      if (autoSaveTimer) clearTimeout(autoSaveTimer);
-    };
-  }, [responses]);
-
-  const handleAutoSave = () => {
-    const responseArray = Array.from(responses.values());
-    onSave(responseArray);
-    setLastSaved(new Date());
-    setShowSaveIndicator(true);
-    setTimeout(() => setShowSaveIndicator(false), 3000);
-  };
 
   const updateResponse = (questionId: string, response: Partial<InterviewResponse>) => {
     const existing = responses.get(questionId) || {

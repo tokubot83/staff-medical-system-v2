@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import CommonHeader from '@/components/CommonHeader';
 import { 
   Clock, Plus, Play, Pause, Trash2, Edit, 
   Calendar, RefreshCw, CheckCircle, XCircle,
@@ -167,12 +168,13 @@ export default function SchedulerPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <CommonHeader title="バッチ処理スケジューラー" />
+      
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between py-4">
+          <div className="flex items-center justify-between py-3">
             <div className="flex items-center space-x-4">
-              <Clock className="h-6 w-6 text-gray-700" />
-              <h1 className="text-2xl font-bold text-gray-900">バッチ処理スケジューラー</h1>
+              <Clock className="h-5 w-5 text-gray-600" />
               <Badge variant="secondary">
                 {statistics?.total || 0} タスク
               </Badge>

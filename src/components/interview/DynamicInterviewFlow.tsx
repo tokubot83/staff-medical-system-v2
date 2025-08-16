@@ -40,6 +40,7 @@ import {
   InterviewDuration
 } from '@/services/interviewManualGenerationServiceV2';
 import ImprovedDigitalInterviewUIFixed from './ImprovedDigitalInterviewUIFixed';
+import ImprovedMotivationDiagnosisModal from './ImprovedMotivationDiagnosisModal';
 import { interviewTemplates } from '@/data/interview-question-bank';
 import { InterviewSection, InterviewResponse, QuestionCategory } from '@/types/interview-question-master';
 import { 
@@ -1550,54 +1551,15 @@ export default function DynamicInterviewFlow() {
         </Card>
       )}
 
-      {/* 動機タイプ診断モーダル（初回のみ） */}
-      {showMotivationDiagnosis && motivationQuestions.length > 0 && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <Card className="max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <CardHeader className="bg-gradient-to-r from-purple-50 to-blue-50">
-              <CardTitle className="flex items-center gap-2">
-                <Brain className="h-5 w-5" />
-                動機タイプ診断
-              </CardTitle>
-              <p className="text-sm text-gray-600 mt-2">
-                {session.staffMember?.name}さんの動機タイプを診断します（初回のみ）
-              </p>
-            </CardHeader>
-            <CardContent className="space-y-6 pt-6">
-              {motivationQuestions.slice(0, 3).map((question, index) => (
-                <div key={question.id} className="space-y-3">
-                  <Label className="text-base font-medium">
-                    Q{index + 1}. {question.question}
-                  </Label>
-                  <RadioGroup
-                    onValueChange={(value) => handleResponseSave(question.id, value)}
-                  >
-                    {question.options.map(option => (
-                      <div key={option.value} className="flex items-start gap-2 p-3 border rounded-lg bg-white hover:bg-gray-50">
-                        <RadioGroupItem value={option.value} id={option.value} className="mt-1" />
-                        <Label htmlFor={option.value} className="cursor-pointer flex-grow">
-                          {option.label}
-                        </Label>
-                      </div>
-                    ))}
-                  </RadioGroup>
-                </div>
-              ))}
-              
-              <div className="flex justify-end pt-4">
-                <Button 
-                  onClick={() => setShowMotivationDiagnosis(false)}
-                  disabled={
-                    motivationQuestions.slice(0, 3).some(q => !session.responses.has(q.id))
-                  }
-                >
-                  診断を完了して次へ
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+      {/* 動機タイプ診断モーダル（初回のみ） - 改善版UI */}
+      <ImprovedMotivationDiagnosisModal
+        isOpen={showMotivationDiagnosis && motivationQuestions.length > 0}
+        onClose={() => setShowMotivationDiagnosis(false)}
+        staffName={session.staffMember?.name || ''}
+        questions={motivationQuestions}
+        onResponseSave={handleResponseSave}
+        responses={session.responses}
+      />
     </div>
   );
 }

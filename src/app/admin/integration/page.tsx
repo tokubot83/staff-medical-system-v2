@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import CommonHeader from '@/components/CommonHeader';
 import { 
   Link2, Shield, AlertCircle, CheckCircle, 
   Settings, TestTube, Save, RefreshCw,
@@ -55,12 +56,13 @@ export default function IntegrationPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <CommonHeader title="外部システム連携設定" />
+      
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between py-4">
+          <div className="flex items-center justify-between py-3">
             <div className="flex items-center space-x-4">
-              <Link2 className="h-6 w-6 text-gray-700" />
-              <h1 className="text-2xl font-bold text-gray-900">外部システム連携設定</h1>
+              <Link2 className="h-5 w-5 text-gray-600" />
               <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
                 開発中
               </Badge>
