@@ -62,8 +62,8 @@ import {
 } from '@/services/specialInterviewTemplates';
 // 面談バンクシステムのインポート
 import { generateInterviewSheet, generateMotivationFollowUp, generateInterviewSummary } from '@/lib/interview-bank/services/generator';
-import { generateSupportInterviewFromVoiceDrive, generateSupportInterview } from '@/lib/interview-bank/services/support-generator';
-import { generateSpecialInterview, SpecialInterviewType as SpecialInterviewBankType } from '@/lib/interview-bank/services/special-generator';
+import { generateSupportInterviewFromVoiceDrive, generateSupportInterview, SupportGenerationParams } from '@/lib/interview-bank/services/support-generator';
+import { generateSpecialInterview, SpecialInterviewType as SpecialInterviewBankType, SpecialGenerationParams } from '@/lib/interview-bank/services/special-generator';
 import { ExtendedInterviewParams, StaffProfile, PositionDetail } from '@/lib/interview-bank/types-extended';
 import { UnifiedBankService, UnifiedInterviewParams } from '@/lib/interview-bank/services/unified-bank-service';
 import DynamicInterviewSheet from '@/components/interview-bank/DynamicInterviewSheet';
@@ -317,7 +317,7 @@ export default function DynamicInterviewFlow() {
           
         } else if (session.interviewType === 'special') {
           // 特別面談
-          const specialParams = {
+          const specialParams: SpecialGenerationParams = {
             interviewType: 'special' as const,
             specialType: session.specialType as SpecialInterviewBankType,
             subType: session.specialContext?.subType,
@@ -326,11 +326,27 @@ export default function DynamicInterviewFlow() {
             duration: session.duration,
             interviewDate: new Date()
           };
-          generatedSheet = generateSpecialInterview(specialParams, staffProfile as any);
+          // StaffBankProfileを作成
+          const staffBankProfile = {
+            id: session.staffMember!.id,
+            name: session.staffMember!.name,
+            department: session.staffMember!.department,
+            position: session.staffMember!.position,
+            experienceLevel: determineExperienceLevel(session.staffMember!.experienceYears),
+            experienceYears: session.staffMember!.experienceYears,
+            experienceMonths: session.staffMember!.experienceMonths,
+            facility: '医療施設',
+            facilityType: session.staffMember!.facilityType as any,
+            hireDate: new Date(Date.now() - (session.staffMember!.experienceYears * 365 + session.staffMember!.experienceMonths * 30) * 24 * 60 * 60 * 1000),
+            lastInterviewDate: session.staffMember!.lastInterviewDate ? new Date(session.staffMember!.lastInterviewDate) : null,
+            nextScheduledDate: null,
+            interviewCount: 0
+          };
+          generatedSheet = generateSpecialInterview(specialParams, staffBankProfile);
           
         } else if (session.interviewType === 'support') {
           // サポート面談
-          const supportParams = {
+          const supportParams: SupportGenerationParams = {
             interviewType: 'support' as const,
             category: session.supportRequest?.category || 'other',
             urgency: session.supportRequest?.urgency || 'medium' as const,
@@ -339,7 +355,23 @@ export default function DynamicInterviewFlow() {
             duration: session.duration,
             interviewDate: new Date()
           };
-          generatedSheet = generateSupportInterview(supportParams, staffProfile as any);
+          // StaffBankProfileを作成
+          const staffBankProfile = {
+            id: session.staffMember!.id,
+            name: session.staffMember!.name,
+            department: session.staffMember!.department,
+            position: session.staffMember!.position,
+            experienceLevel: determineExperienceLevel(session.staffMember!.experienceYears),
+            experienceYears: session.staffMember!.experienceYears,
+            experienceMonths: session.staffMember!.experienceMonths,
+            facility: '医療施設',
+            facilityType: session.staffMember!.facilityType as any,
+            hireDate: new Date(Date.now() - (session.staffMember!.experienceYears * 365 + session.staffMember!.experienceMonths * 30) * 24 * 60 * 60 * 1000),
+            lastInterviewDate: session.staffMember!.lastInterviewDate ? new Date(session.staffMember!.lastInterviewDate) : null,
+            nextScheduledDate: null,
+            interviewCount: 0
+          };
+          generatedSheet = generateSupportInterview(supportParams, staffBankProfile);
         } else {
           // デフォルトは定期面談
           const params: ExtendedInterviewParams = {
