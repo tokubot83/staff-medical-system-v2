@@ -2,7 +2,7 @@
 
 /**
  * 職員カルテ - 面談バンクタブコンポーネント
- * 面談バンクシステムの結果を表示し、履歴管理を行う
+ * 質問テンプレート管理・手動追加機能を含む
  */
 
 import React, { useState, useEffect } from 'react';
@@ -17,6 +17,10 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Select,
   SelectContent,
@@ -24,6 +28,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
 import {
   ChartContainer,
   ChartTooltip,
@@ -59,11 +81,26 @@ import {
   Lightbulb,
   DollarSign,
   Zap,
-  Shield
+  Shield,
+  Plus,
+  Search,
+  Settings,
+  Edit,
+  Trash2,
+  Save,
+  Copy,
+  Database,
+  BookOpen,
+  Filter,
+  Tag,
+  Import,
+  Download
 } from 'lucide-react';
 
 import { InterviewBankService } from '@/lib/interview-bank/services/bank-service';
-import { BankInterviewResult, MotivationType } from '@/lib/interview-bank/types';
+import { BankInterviewResult, MotivationType, BankQuestion } from '@/lib/interview-bank/types';
+import { questionBank } from '@/lib/interview-bank/database/question-bank';
+import { supportQuestions, supportQuestionsByCategory } from '@/lib/interview-bank/database/support-questions';
 import { formatDistanceToNow } from 'date-fns';
 import { ja } from 'date-fns/locale';
 
@@ -109,12 +146,45 @@ export default function InterviewBankTab({
   const [staffProfile, setStaffProfile] = useState<any>(null);
   const [statistics, setStatistics] = useState<any>(null);
   const [nextRecommendation, setNextRecommendation] = useState<any>(null);
+  const [questionTemplates, setQuestionTemplates] = useState<BankQuestion[]>([]);
+  const [customQuestions, setCustomQuestions] = useState<BankQuestion[]>([]);
+  const [templateFilter, setTemplateFilter] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [isTemplateManagerOpen, setIsTemplateManagerOpen] = useState(false);
+  const [isNewQuestionDialogOpen, setIsNewQuestionDialogOpen] = useState(false);
+  const [editingQuestion, setEditingQuestion] = useState<BankQuestion | null>(null);
+  const [newQuestion, setNewQuestion] = useState<Partial<BankQuestion>>({
+    content: '',
+    type: 'textarea',
+    category: 'general',
+    priority: 1,
+    minDuration: 15,
+    tags: [],
+    experienceLevels: ['new', 'junior', 'midlevel', 'veteran']
+  });
 
   const bankService = InterviewBankService.getInstance();
 
   useEffect(() => {
     loadInterviewData();
+    loadQuestionTemplates();
   }, [staffId, filterType, selectedPeriod]);
+
+  const loadQuestionTemplates = async () => {
+    try {
+      // 標準質問バンクを読み込み
+      const allQuestions = [...questionBank, ...supportQuestions];
+      setQuestionTemplates(allQuestions);
+      
+      // カスタム質問を読み込み（localStorage から）
+      const savedCustomQuestions = localStorage.getItem(`custom_questions_${staffId}`);
+      if (savedCustomQuestions) {
+        setCustomQuestions(JSON.parse(savedCustomQuestions));
+      }
+    } catch (error) {
+      console.error('Failed to load question templates:', error);
+    }
+  };
 
   const loadInterviewData = async () => {
     setLoading(true);
@@ -233,6 +303,463 @@ export default function InterviewBankTab({
           </div>
         </CardContent>
       </Card>
+    );
+  };
+
+  // 質問テンプレート管理コンポーネント
+  const QuestionTemplateManager = () => {
+    const filteredQuestions = questionTemplates.filter(q => {
+      const matchesFilter = templateFilter === 'all' || q.category === templateFilter;
+      const matchesSearch = searchQuery === '' || 
+        q.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (q.tags && q.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())));
+      return matchesFilter && matchesSearch;
+    });
+
+    const categories = Array.from(new Set(questionTemplates.map(q => q.category)));
+
+    return (
+      <div className="space-y-4">
+        {/* 検索・フィルタ */}
+        <div className="flex gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="質問を検索..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-8"
+            />
+          </div>
+          <Select value={templateFilter} onValueChange={setTemplateFilter}>
+            <SelectTrigger className="w-48">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">すべてのカテゴリ</SelectItem>
+              {categories.map(category => (
+                <SelectItem key={category} value={category}>
+                  {category}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button onClick={() => setIsNewQuestionDialogOpen(true)}>
+            <Plus className="h-4 w-4 mr-2" />
+            新規質問
+          </Button>
+        </div>
+
+        {/* 質問リスト */}
+        <ScrollArea className="h-96">
+          <div className="space-y-2">
+            {filteredQuestions.map(question => (
+              <Card key={question.id} className="p-4">
+                <div className="flex justify-between items-start">
+                  <div className="flex-1 space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline">{question.category}</Badge>
+                      <Badge variant="secondary">優先度: {question.priority}</Badge>
+                      <Badge variant="outline">{question.minDuration}分</Badge>
+                    </div>
+                    <p className="text-sm font-medium">{question.content}</p>
+                    {question.placeholder && (
+                      <p className="text-xs text-muted-foreground">
+                        ヒント: {question.placeholder}
+                      </p>
+                    )}
+                    {question.tags && question.tags.length > 0 && (
+                      <div className="flex gap-1 flex-wrap">
+                        {question.tags.map(tag => (
+                          <Badge key={tag} variant="outline" className="text-xs">
+                            <Tag className="h-3 w-3 mr-1" />
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setEditingQuestion(question)}
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => copyQuestion(question)}
+                    >
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </ScrollArea>
+
+        {/* 統計情報 */}
+        <div className="grid grid-cols-3 gap-4 pt-4 border-t">
+          <Card className="p-3 text-center">
+            <p className="text-sm text-muted-foreground">総質問数</p>
+            <p className="text-lg font-bold">{questionTemplates.length}</p>
+          </Card>
+          <Card className="p-3 text-center">
+            <p className="text-sm text-muted-foreground">カスタム質問</p>
+            <p className="text-lg font-bold">{customQuestions.length}</p>
+          </Card>
+          <Card className="p-3 text-center">
+            <p className="text-sm text-muted-foreground">カテゴリ数</p>
+            <p className="text-lg font-bold">{categories.length}</p>
+          </Card>
+        </div>
+      </div>
+    );
+  };
+
+  // 質問作成・編集ダイアログ
+  const QuestionEditorDialog = () => {
+    const question = editingQuestion || newQuestion;
+    const isEditing = editingQuestion !== null;
+
+    const handleSave = () => {
+      if (!question.content || !question.category) return;
+
+      const questionToSave: BankQuestion = {
+        id: isEditing ? editingQuestion!.id : `custom_${Date.now()}`,
+        content: question.content!,
+        type: question.type || 'textarea',
+        category: question.category!,
+        priority: question.priority || 1,
+        minDuration: question.minDuration || 15,
+        tags: question.tags || [],
+        experienceLevels: question.experienceLevels || ['new', 'junior', 'midlevel', 'veteran'],
+        placeholder: question.placeholder,
+        sectionId: question.sectionId || 'custom',
+        departments: question.departments,
+        facilityTypes: question.facilityTypes,
+        positionLevels: question.positionLevels
+      };
+
+      if (isEditing) {
+        // 編集の場合
+        const updatedQuestions = customQuestions.map(q => 
+          q.id === editingQuestion!.id ? questionToSave : q
+        );
+        setCustomQuestions(updatedQuestions);
+        localStorage.setItem(`custom_questions_${staffId}`, JSON.stringify(updatedQuestions));
+      } else {
+        // 新規作成の場合
+        const updatedQuestions = [...customQuestions, questionToSave];
+        setCustomQuestions(updatedQuestions);
+        localStorage.setItem(`custom_questions_${staffId}`, JSON.stringify(updatedQuestions));
+      }
+
+      // リセット
+      setEditingQuestion(null);
+      setNewQuestion({
+        content: '',
+        type: 'textarea',
+        category: 'general',
+        priority: 1,
+        minDuration: 15,
+        tags: [],
+        experienceLevels: ['new', 'junior', 'midlevel', 'veteran']
+      });
+      setIsNewQuestionDialogOpen(false);
+    };
+
+    return (
+      <Dialog 
+        open={isNewQuestionDialogOpen || isEditing} 
+        onOpenChange={(open) => {
+          if (!open) {
+            setIsNewQuestionDialogOpen(false);
+            setEditingQuestion(null);
+          }
+        }}
+      >
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>
+              {isEditing ? '質問を編集' : '新しい質問を作成'}
+            </DialogTitle>
+            <DialogDescription>
+              面談で使用する質問を作成・編集します
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="grid gap-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="question-content">質問内容</Label>
+              <Textarea
+                id="question-content"
+                placeholder="質問内容を入力してください"
+                value={question.content || ''}
+                onChange={(e) => {
+                  if (isEditing) {
+                    setEditingQuestion({...editingQuestion!, content: e.target.value});
+                  } else {
+                    setNewQuestion({...newQuestion, content: e.target.value});
+                  }
+                }}
+                rows={3}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="question-type">質問タイプ</Label>
+                <Select 
+                  value={question.type || 'textarea'}
+                  onValueChange={(value) => {
+                    if (isEditing) {
+                      setEditingQuestion({...editingQuestion!, type: value as any});
+                    } else {
+                      setNewQuestion({...newQuestion, type: value as any});
+                    }
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="textarea">長文回答</SelectItem>
+                    <SelectItem value="text">短文回答</SelectItem>
+                    <SelectItem value="scale">評価スケール</SelectItem>
+                    <SelectItem value="radio">単一選択</SelectItem>
+                    <SelectItem value="checkbox">複数選択</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="question-category">カテゴリ</Label>
+                <Input
+                  id="question-category"
+                  placeholder="例: 職場環境, スキル開発"
+                  value={question.category || ''}
+                  onChange={(e) => {
+                    if (isEditing) {
+                      setEditingQuestion({...editingQuestion!, category: e.target.value});
+                    } else {
+                      setNewQuestion({...newQuestion, category: e.target.value});
+                    }
+                  }}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="question-priority">優先度</Label>
+                <Select 
+                  value={String(question.priority || 1)}
+                  onValueChange={(value) => {
+                    if (isEditing) {
+                      setEditingQuestion({...editingQuestion!, priority: Number(value)});
+                    } else {
+                      setNewQuestion({...newQuestion, priority: Number(value)});
+                    }
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1">1 (必須)</SelectItem>
+                    <SelectItem value="2">2 (重要)</SelectItem>
+                    <SelectItem value="3">3 (オプション)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="question-duration">推定時間（分）</Label>
+                <Input
+                  id="question-duration"
+                  type="number"
+                  min="5"
+                  max="60"
+                  value={question.minDuration || 15}
+                  onChange={(e) => {
+                    if (isEditing) {
+                      setEditingQuestion({...editingQuestion!, minDuration: Number(e.target.value)});
+                    } else {
+                      setNewQuestion({...newQuestion, minDuration: Number(e.target.value)});
+                    }
+                  }}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="question-placeholder">ヒント・補足説明</Label>
+              <Input
+                id="question-placeholder"
+                placeholder="回答者向けのヒントや説明"
+                value={question.placeholder || ''}
+                onChange={(e) => {
+                  if (isEditing) {
+                    setEditingQuestion({...editingQuestion!, placeholder: e.target.value});
+                  } else {
+                    setNewQuestion({...newQuestion, placeholder: e.target.value});
+                  }
+                }}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>対象経験レベル</Label>
+              <div className="flex gap-4 flex-wrap">
+                {['new', 'junior', 'midlevel', 'veteran'].map(level => (
+                  <div key={level} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`level-${level}`}
+                      checked={question.experienceLevels?.includes(level as any) || false}
+                      onCheckedChange={(checked) => {
+                        const currentLevels = question.experienceLevels || [];
+                        const newLevels = checked
+                          ? [...currentLevels, level as any]
+                          : currentLevels.filter(l => l !== level);
+                        
+                        if (isEditing) {
+                          setEditingQuestion({...editingQuestion!, experienceLevels: newLevels});
+                        } else {
+                          setNewQuestion({...newQuestion, experienceLevels: newLevels});
+                        }
+                      }}
+                    />
+                    <Label htmlFor={`level-${level}`} className="text-sm">
+                      {level === 'new' ? '新人' :
+                       level === 'junior' ? '若手' :
+                       level === 'midlevel' ? '中堅' : 'ベテラン'}
+                    </Label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="question-tags">タグ（カンマ区切り）</Label>
+              <Input
+                id="question-tags"
+                placeholder="例: 看護師, キャリア, 必須"
+                value={question.tags?.join(', ') || ''}
+                onChange={(e) => {
+                  const tags = e.target.value.split(',').map(tag => tag.trim()).filter(Boolean);
+                  if (isEditing) {
+                    setEditingQuestion({...editingQuestion!, tags});
+                  } else {
+                    setNewQuestion({...newQuestion, tags});
+                  }
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-2">
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                setIsNewQuestionDialogOpen(false);
+                setEditingQuestion(null);
+              }}
+            >
+              キャンセル
+            </Button>
+            <Button onClick={handleSave}>
+              <Save className="h-4 w-4 mr-2" />
+              保存
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  };
+
+  // 質問をコピーする関数
+  const copyQuestion = (question: BankQuestion) => {
+    const copiedQuestion = {
+      ...question,
+      id: `copy_${Date.now()}`,
+      content: `${question.content} (コピー)`
+    };
+    const updatedQuestions = [...customQuestions, copiedQuestion];
+    setCustomQuestions(updatedQuestions);
+    localStorage.setItem(`custom_questions_${staffId}`, JSON.stringify(updatedQuestions));
+  };
+
+  // カスタム質問セット管理
+  const CustomQuestionSets = () => {
+    return (
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <h3 className="text-lg font-semibold">カスタム質問セット</h3>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm">
+              <Import className="h-4 w-4 mr-2" />
+              インポート
+            </Button>
+            <Button variant="outline" size="sm">
+              <Download className="h-4 w-4 mr-2" />
+              エクスポート
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid gap-4">
+          {customQuestions.length === 0 ? (
+            <Card className="p-6 text-center">
+              <Database className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+              <p className="text-muted-foreground">カスタム質問がありません</p>
+              <p className="text-sm text-muted-foreground mt-2">
+                「新規質問」ボタンから質問を作成してください
+              </p>
+            </Card>
+          ) : (
+            customQuestions.map(question => (
+              <Card key={question.id} className="p-4">
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline">{question.category}</Badge>
+                      <Badge variant="secondary">カスタム</Badge>
+                    </div>
+                    <p className="font-medium mb-1">{question.content}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {question.type} · {question.minDuration}分 · 優先度{question.priority}
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setEditingQuestion(question)}
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => {
+                        const updatedQuestions = customQuestions.filter(q => q.id !== question.id);
+                        setCustomQuestions(updatedQuestions);
+                        localStorage.setItem(`custom_questions_${staffId}`, JSON.stringify(updatedQuestions));
+                      }}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+            ))
+          )}
+        </div>
+      </div>
     );
   };
 
@@ -482,6 +1009,62 @@ export default function InterviewBankTab({
               <SelectItem value="all">全期間</SelectItem>
             </SelectContent>
           </Select>
+          <Sheet open={isTemplateManagerOpen} onOpenChange={setIsTemplateManagerOpen}>
+            <SheetTrigger asChild>
+              <Button variant="outline">
+                <Settings className="h-4 w-4 mr-2" />
+                質問管理
+              </Button>
+            </SheetTrigger>
+            <SheetContent className="w-[800px] sm:max-w-[800px]">
+              <SheetHeader>
+                <SheetTitle className="flex items-center gap-2">
+                  <BookOpen className="h-5 w-5" />
+                  質問テンプレート管理
+                </SheetTitle>
+                <SheetDescription>
+                  面談で使用する質問の管理と新規作成を行います
+                </SheetDescription>
+              </SheetHeader>
+              <div className="mt-6">
+                <Tabs defaultValue="templates" className="space-y-4">
+                  <TabsList>
+                    <TabsTrigger value="templates">標準テンプレート</TabsTrigger>
+                    <TabsTrigger value="custom">カスタム質問</TabsTrigger>
+                    <TabsTrigger value="support">サポート質問</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="templates">
+                    <QuestionTemplateManager />
+                  </TabsContent>
+                  <TabsContent value="custom">
+                    <CustomQuestionSets />
+                  </TabsContent>
+                  <TabsContent value="support">
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-semibold">サポート面談質問バンク</h3>
+                      <div className="grid gap-2">
+                        {Object.entries(supportQuestionsByCategory).map(([category, questionIds]) => (
+                          <Card key={category} className="p-4">
+                            <div className="flex justify-between items-center">
+                              <div>
+                                <p className="font-medium">{category}</p>
+                                <p className="text-sm text-muted-foreground">
+                                  {questionIds.length}問の質問
+                                </p>
+                              </div>
+                              <Badge variant="outline">
+                                VoiceDrive連携
+                              </Badge>
+                            </div>
+                          </Card>
+                        ))}
+                      </div>
+                    </div>
+                  </TabsContent>
+                </Tabs>
+              </div>
+            </SheetContent>
+          </Sheet>
           <Button>
             新規面談を開始
           </Button>
@@ -610,6 +1193,9 @@ export default function InterviewBankTab({
           <MotivationTypeDisplay />
         </div>
       </div>
+
+      {/* 質問編集ダイアログ */}
+      <QuestionEditorDialog />
     </div>
   );
 }

@@ -15,14 +15,13 @@ import InterviewSheetWrapper from '@/components/interview/InterviewSheetWrapper'
 import { getExperienceCategory } from '@/utils/experienceUtils'
 import RoleSelectionModal from '@/components/RoleSelectionModal'
 import UnifiedInterviewDashboard from '@/components/interview/UnifiedInterviewDashboard'
+import IntegratedBankSystemTab from '@/components/interview/IntegratedBankSystemTab'
 
-// タブ順序を業務フローに合わせて修正
+// タブ順序を業務フローに合わせて修正 - 冗長なタブを削除
 const tabs = [
-  { id: 'station', label: '面談ステーション', icon: '🚉', badge: '', isNew: true },
-  { id: 'bank-system', label: '面談バンク', icon: '🏦', badge: 'Full', isNew: false },
+  { id: 'station', label: '統合面談ダッシュボード', icon: '🏛️', badge: 'Unified', isNew: true },
+  { id: 'bank-system', label: '面談バンクシステム', icon: '🏦', badge: 'Full', isNew: false },
   { id: 'overview-guide', label: '概要・ガイド', icon: '📖', badge: '', isNew: false },
-  { id: 'record', label: '結果記録', icon: '📝', badge: '', isNew: false },
-  { id: 'history', label: '履歴・分析', icon: '📈', badge: '', isNew: false },
   { id: 'settings', label: '設定', icon: '⚙️', badge: '', isNew: false },
 ]
 
@@ -201,17 +200,8 @@ function InterviewsPageContent() {
 
         <div className={styles.tabContent}>
           {activeTab === 'station' && <UnifiedInterviewDashboard />}
-          {activeTab === 'bank-system' && <BankSystemTab />}
+          {activeTab === 'bank-system' && <IntegratedBankSystemTab />}
           {activeTab === 'overview-guide' && <OverviewGuideTab onInterviewTypeClick={handleInterviewTypeClick} />}
-          {activeTab === 'history' && (
-            <HistoryTab 
-              interviews={filteredInterviews.filter(i => i.status === 'completed')}
-              onInterviewSelect={handleInterviewSelect}
-              dateRange={dateRange}
-              onDateRangeChange={setDateRange}
-            />
-          )}
-          {activeTab === 'record' && <RecordTab selectedInterview={selectedInterview} />}
           {activeTab === 'settings' && <SettingsTab />}
         </div>
       </div>
@@ -1115,66 +1105,572 @@ function GuideSection({ onInterviewTypeClick }: { onInterviewTypeClick: (type: s
   )
 }
 
-// 面談バンク統合タブ
-function BankSystemTab(): React.ReactElement {
-  const [activeBank, setActiveBank] = useState<'overview' | 'regular' | 'special' | 'support'>('overview')
-  const [isLoading, setIsLoading] = useState(false)
+// 面談バンク質問管理タブ
+// 削除済み - 統合バンクシステムに置き換え
+function BankSystemTab_Deleted(): React.ReactElement {
+  return (
+    <div className="p-6 text-center">
+      <p className="text-muted-foreground">このタブは統合バンクシステムに置き換えられました。</p>
+    </div>
+  );
+}
+
+// 元のBankSystemTab実装（削除済み）
+function BankSystemTab_Original(): React.ReactElement {
+  const [activeSection, setActiveSection] = useState<string>('basic_info')
+  const [selectedQuestion, setSelectedQuestion] = useState<any>(null)
+  const [isEditing, setIsEditing] = useState(false)
+  const [questions, setQuestions] = useState<any[]>([])
+  const [searchTerm, setSearchTerm] = useState('')
+
+  // セクション定義
+  const sections = [
+    { id: 'basic_info', label: '基本情報', icon: '👤', color: 'blue', count: 12 },
+    { id: 'career_development', label: 'キャリア・成長', icon: '📈', color: 'green', count: 18 },
+    { id: 'work_environment', label: '職場環境', icon: '🏢', color: 'purple', count: 15 },
+    { id: 'skills_performance', label: 'スキル・パフォーマンス', icon: '⭐', color: 'orange', count: 22 },
+    { id: 'team_collaboration', label: 'チーム・連携', icon: '🤝', color: 'teal', count: 14 },
+    { id: 'work_life_balance', label: 'ワークライフバランス', icon: '⚖️', color: 'indigo', count: 10 },
+    { id: 'future_goals', label: '今後の目標', icon: '🎯', color: 'red', count: 16 },
+    { id: 'feedback_improvement', label: 'フィードバック・改善', icon: '💡', color: 'yellow', count: 13 }
+  ]
+
+  // モックデータ
+  useEffect(() => {
+    const mockQuestions = [
+      {
+        id: 'q001',
+        section: 'basic_info',
+        text: '現在の業務内容について教えてください',
+        type: 'textarea',
+        category: 'regular',
+        priority: 1,
+        usageCount: 245,
+        isRequired: true,
+        tags: ['基本', '業務内容'],
+        createdAt: '2024-01-15',
+        createdBy: '田中師長'
+      },
+      {
+        id: 'q002',
+        section: 'basic_info',
+        text: '職場環境についてどう感じていますか？',
+        type: 'scale',
+        category: 'regular',
+        priority: 2,
+        usageCount: 198,
+        isRequired: true,
+        options: ['非常に良い', '良い', '普通', '改善が必要', '不満'],
+        tags: ['職場環境', '満足度'],
+        createdAt: '2024-02-01',
+        createdBy: '鈴木主任'
+      },
+      {
+        id: 'q003',
+        section: 'career_development',
+        text: '今後のキャリアプランについて教えてください',
+        type: 'textarea',
+        category: 'regular',
+        priority: 1,
+        usageCount: 156,
+        isRequired: false,
+        tags: ['キャリア', '将来'],
+        createdAt: '2024-02-10',
+        createdBy: '佐々木師長'
+      }
+    ]
+    setQuestions(mockQuestions)
+  }, [])
+
+  const filteredQuestions = questions.filter(q => 
+    q.section === activeSection && 
+    (searchTerm === '' || q.text.toLowerCase().includes(searchTerm.toLowerCase()))
+  )
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 p-6">
+    <div className="max-w-7xl mx-auto p-6">
       {/* ヘッダー */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-3xl font-bold flex items-center gap-2">
-            🏦 面談バンク
+            🏦 面談バンク質問管理
           </h2>
-          <p className="text-gray-600 mt-1">統合面談生成・管理システム</p>
+          <p className="text-gray-600 mt-1">質問テンプレートの確認・編集・追加</p>
         </div>
         <div className="flex items-center gap-3">
-          <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-            ✅ 3バンク完全実装済み
+          <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+            📊 総質問数: {questions.length}
           </span>
           <button 
-            onClick={() => window.open('/interview-bank', '_blank')}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2"
+            onClick={() => setIsEditing(true)}
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2"
           >
-            🚀 詳細ダッシュボード
+            ➕ 新規質問追加
           </button>
         </div>
       </div>
 
-      {/* バンク選択タブ */}
-      <div className="bg-white rounded-xl shadow-sm border">
-        <div className="border-b border-gray-200">
-          <nav className="flex space-x-1 p-1">
-            {[
-              { id: 'overview', label: '統合概要', icon: '📊', color: 'blue' },
-              { id: 'regular', label: '定期面談バンク', icon: '📅', color: 'green' },
-              { id: 'special', label: '特別面談バンク', icon: '⚠️', color: 'orange' },
-              { id: 'support', label: 'サポート面談バンク', icon: '💬', color: 'purple' }
-            ].map((bank) => (
+      <div className="flex gap-6">
+        {/* 左サイドバー - セクション一覧 */}
+        <div className="w-80 bg-white rounded-xl shadow-sm border">
+          <div className="p-4 border-b">
+            <h3 className="font-semibold text-gray-900 mb-3">質問セクション</h3>
+            <input
+              type="text"
+              placeholder="質問を検索..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+            />
+          </div>
+          
+          <div className="p-2 max-h-96 overflow-y-auto">
+            {sections.map((section) => (
               <button
-                key={bank.id}
-                onClick={() => setActiveBank(bank.id as any)}
-                className={`flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
-                  activeBank === bank.id
-                    ? `bg-${bank.color}-50 text-${bank.color}-700 border border-${bank.color}-200`
+                key={section.id}
+                onClick={() => setActiveSection(section.id)}
+                className={`w-full flex items-center justify-between p-3 rounded-lg text-left transition-colors mb-1 ${
+                  activeSection === section.id
+                    ? `bg-${section.color}-50 text-${section.color}-700 border border-${section.color}-200`
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 }`}
               >
-                <span className="text-lg">{bank.icon}</span>
-                {bank.label}
+                <div className="flex items-center gap-3">
+                  <span className="text-lg">{section.icon}</span>
+                  <div>
+                    <div className="font-medium text-sm">{section.label}</div>
+                    <div className="text-xs text-gray-500">{section.count}問</div>
+                  </div>
+                </div>
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+                  {section.count}
+                </span>
               </button>
             ))}
-          </nav>
+          </div>
         </div>
 
-        {/* コンテンツエリア */}
-        <div className="p-6">
-          {activeBank === 'overview' && <BankOverviewContent />}
-          {activeBank === 'regular' && <RegularBankContent />}
-          {activeBank === 'special' && <SpecialBankContent />}
-          {activeBank === 'support' && <SupportBankContent />}
+        {/* 中央エリア - 質問リスト */}
+        <div className="flex-1 bg-white rounded-xl shadow-sm border">
+          <div className="p-4 border-b">
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold text-gray-900">
+                {sections.find(s => s.id === activeSection)?.label || ''}の質問一覧
+              </h3>
+              <span className="text-sm text-gray-500">
+                {filteredQuestions.length}件の質問
+              </span>
+            </div>
+          </div>
+          
+          <div className="divide-y max-h-96 overflow-y-auto">
+            {filteredQuestions.length === 0 ? (
+              <div className="p-8 text-center text-gray-500">
+                <div className="text-4xl mb-2">📝</div>
+                <p>該当する質問がありません</p>
+                <p className="text-sm">新しい質問を追加してください</p>
+              </div>
+            ) : (
+              filteredQuestions.map((question) => (
+                <div
+                  key={question.id}
+                  onClick={() => setSelectedQuestion(question)}
+                  className={`p-4 cursor-pointer transition-colors ${
+                    selectedQuestion?.id === question.id ? 'bg-blue-50' : 'hover:bg-gray-50'
+                  }`}
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-sm font-medium text-gray-700">
+                          {question.text}
+                        </span>
+                        {question.isRequired && (
+                          <span className="bg-red-100 text-red-700 text-xs px-2 py-1 rounded-full">
+                            必須
+                          </span>
+                        )}
+                      </div>
+                      
+                      <div className="flex items-center gap-4 text-xs text-gray-500">
+                        <span>形式: {question.type}</span>
+                        <span>使用回数: {question.usageCount}</span>
+                        <span>優先度: {question.priority}</span>
+                      </div>
+                      
+                      <div className="flex flex-wrap gap-1 mt-2">
+                        {question.tags.map((tag: string) => (
+                          <span key={tag} className="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div className="text-right text-xs text-gray-500">
+                      <div>{question.createdAt}</div>
+                      <div>{question.createdBy}</div>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        {/* 右パネル - 質問詳細・編集 */}
+        <div className="w-80 bg-white rounded-xl shadow-sm border">
+          <div className="p-4 border-b">
+            <h3 className="font-semibold text-gray-900">質問詳細</h3>
+          </div>
+          
+          <div className="p-4">
+            {selectedQuestion ? (
+              <QuestionDetailPanel
+                question={selectedQuestion}
+                onEdit={() => setIsEditing(true)}
+                onDelete={(id) => {
+                  setQuestions(questions.filter(q => q.id !== id))
+                  setSelectedQuestion(null)
+                }}
+              />
+            ) : (
+              <div className="text-center text-gray-500 py-8">
+                <div className="text-4xl mb-2">👈</div>
+                <p>質問を選択してください</p>
+                <p className="text-sm">詳細情報と編集機能が表示されます</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* 質問編集モーダル */}
+      {isEditing && (
+        <QuestionEditModal
+          question={selectedQuestion}
+          sections={sections}
+          onSave={(questionData) => {
+            if (selectedQuestion) {
+              // 編集
+              setQuestions(questions.map(q => 
+                q.id === selectedQuestion.id ? { ...q, ...questionData } : q
+              ))
+            } else {
+              // 新規追加
+              const newQuestion = {
+                id: `q${String(questions.length + 1).padStart(3, '0')}`,
+                ...questionData,
+                usageCount: 0,
+                createdAt: new Date().toISOString().split('T')[0],
+                createdBy: '現在のユーザー'
+              }
+              setQuestions([...questions, newQuestion])
+            }
+            setIsEditing(false)
+            setSelectedQuestion(null)
+          }}
+          onCancel={() => {
+            setIsEditing(false)
+            setSelectedQuestion(null)
+          }}
+        />
+      )}
+    </div>
+  )
+}
+
+// 質問詳細パネル
+interface QuestionDetailPanelProps {
+  question: any
+  onEdit: () => void
+  onDelete: (id: string) => void
+}
+
+function QuestionDetailPanel({ question, onEdit, onDelete }: QuestionDetailPanelProps): React.ReactElement {
+  const handleDelete = () => {
+    if (window.confirm('この質問を削除しますか？この操作は元に戻すことができません。')) {
+      onDelete(question.id)
+    }
+  }
+
+  return (
+    <div className="space-y-4">
+      {/* 質問内容 */}
+      <div>
+        <label className="text-sm font-medium text-gray-700 block mb-2">質問文</label>
+        <div className="bg-gray-50 p-3 rounded-lg text-sm">
+          {question.text}
+        </div>
+      </div>
+
+      {/* 基本情報 */}
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="text-sm font-medium text-gray-700 block mb-1">回答形式</label>
+          <div className="text-sm text-gray-600">{question.type}</div>
+        </div>
+        <div>
+          <label className="text-sm font-medium text-gray-700 block mb-1">優先度</label>
+          <div className="text-sm text-gray-600">{question.priority}</div>
+        </div>
+      </div>
+
+      {/* 選択肢（該当する場合） */}
+      {question.options && (
+        <div>
+          <label className="text-sm font-medium text-gray-700 block mb-2">選択肢</label>
+          <div className="space-y-1">
+            {question.options.map((option: string, index: number) => (
+              <div key={index} className="text-sm text-gray-600 bg-gray-50 px-2 py-1 rounded">
+                {index + 1}. {option}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* 使用統計 */}
+      <div className="border-t pt-4">
+        <h4 className="font-medium text-gray-900 mb-3">使用統計</h4>
+        <div className="grid grid-cols-2 gap-4 text-sm">
+          <div>
+            <span className="text-gray-600">使用回数:</span>
+            <span className="font-medium ml-2">{question.usageCount}回</span>
+          </div>
+          <div>
+            <span className="text-gray-600">必須項目:</span>
+            <span className="font-medium ml-2">{question.isRequired ? 'はい' : 'いいえ'}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* タグ */}
+      <div>
+        <label className="text-sm font-medium text-gray-700 block mb-2">タグ</label>
+        <div className="flex flex-wrap gap-1">
+          {question.tags.map((tag: string) => (
+            <span key={tag} className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded">
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* 作成情報 */}
+      <div className="border-t pt-4 text-xs text-gray-500">
+        <div>作成日: {question.createdAt}</div>
+        <div>作成者: {question.createdBy}</div>
+      </div>
+
+      {/* アクションボタン */}
+      <div className="flex gap-2 pt-4">
+        <button
+          onClick={onEdit}
+          className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm"
+        >
+          📝 編集
+        </button>
+        <button
+          onClick={handleDelete}
+          className="flex-1 bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg text-sm"
+        >
+          🗑️ 削除
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// 質問編集モーダル
+interface QuestionEditModalProps {
+  question: any | null
+  sections: any[]
+  onSave: (questionData: any) => void
+  onCancel: () => void
+}
+
+function QuestionEditModal({ question, sections, onSave, onCancel }: QuestionEditModalProps): React.ReactElement {
+  const [formData, setFormData] = useState({
+    text: question?.text || '',
+    type: question?.type || 'textarea',
+    section: question?.section || 'basic_info',
+    category: question?.category || 'regular',
+    priority: question?.priority || 1,
+    isRequired: question?.isRequired || false,
+    tags: question?.tags?.join(', ') || '',
+    options: question?.options?.join('\n') || ''
+  })
+
+  const questionTypes = [
+    { value: 'textarea', label: 'テキストエリア（長文）' },
+    { value: 'text', label: 'テキスト（短文）' },
+    { value: 'scale', label: '評価スケール' },
+    { value: 'single_choice', label: '単一選択' },
+    { value: 'multiple_choice', label: '複数選択' },
+    { value: 'rating', label: '評点' },
+    { value: 'date', label: '日付' }
+  ]
+
+  const categories = [
+    { value: 'regular', label: '定期面談' },
+    { value: 'special', label: '特別面談' },
+    { value: 'support', label: 'サポート面談' }
+  ]
+
+  const handleSave = () => {
+    if (!formData.text.trim()) {
+      alert('質問文を入力してください')
+      return
+    }
+
+    const questionData = {
+      ...formData,
+      tags: formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+      options: formData.options ? formData.options.split('\n').map(opt => opt.trim()).filter(opt => opt) : undefined
+    }
+
+    onSave(questionData)
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <div className="p-6 border-b">
+          <h3 className="text-xl font-semibold">
+            {question ? '質問を編集' : '新しい質問を追加'}
+          </h3>
+        </div>
+
+        <div className="p-6 space-y-6">
+          {/* 質問文 */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              質問文 <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              value={formData.text}
+              onChange={(e) => setFormData({ ...formData, text: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg resize-none"
+              rows={3}
+              placeholder="面談で聞きたい質問を入力してください"
+            />
+          </div>
+
+          {/* 基本設定 */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">回答形式</label>
+              <select
+                value={formData.type}
+                onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+              >
+                {questionTypes.map(type => (
+                  <option key={type.value} value={type.value}>{type.label}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">セクション</label>
+              <select
+                value={formData.section}
+                onChange={(e) => setFormData({ ...formData, section: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+              >
+                {sections.map(section => (
+                  <option key={section.id} value={section.id}>{section.label}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">面談カテゴリ</label>
+              <select
+                value={formData.category}
+                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+              >
+                {categories.map(cat => (
+                  <option key={cat.value} value={cat.value}>{cat.label}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">優先度</label>
+              <select
+                value={formData.priority}
+                onChange={(e) => setFormData({ ...formData, priority: parseInt(e.target.value) })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+              >
+                <option value={1}>高 (1)</option>
+                <option value={2}>中 (2)</option>
+                <option value={3}>低 (3)</option>
+              </select>
+            </div>
+
+            <div className="flex items-center">
+              <label className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={formData.isRequired}
+                  onChange={(e) => setFormData({ ...formData, isRequired: e.target.checked })}
+                  className="rounded"
+                />
+                <span className="text-sm font-medium text-gray-700">必須項目</span>
+              </label>
+            </div>
+          </div>
+
+          {/* 選択肢（該当する場合） */}
+          {(formData.type === 'scale' || formData.type === 'single_choice' || formData.type === 'multiple_choice' || formData.type === 'rating') && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                選択肢（1行に1つずつ入力）
+              </label>
+              <textarea
+                value={formData.options}
+                onChange={(e) => setFormData({ ...formData, options: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg resize-none"
+                rows={4}
+                placeholder="選択肢1&#10;選択肢2&#10;選択肢3"
+              />
+            </div>
+          )}
+
+          {/* タグ */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              タグ（カンマ区切り）
+            </label>
+            <input
+              type="text"
+              value={formData.tags}
+              onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+              placeholder="基本, 業務内容, 重要"
+            />
+          </div>
+        </div>
+
+        {/* フッター */}
+        <div className="p-6 border-t bg-gray-50 flex justify-end gap-3">
+          <button
+            onClick={onCancel}
+            className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+          >
+            キャンセル
+          </button>
+          <button
+            onClick={handleSave}
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+          >
+            {question ? '更新' : '追加'}
+          </button>
         </div>
       </div>
     </div>
