@@ -12,7 +12,6 @@ import {
 import {
   BankInterviewResult,
   InterviewType,
-  MotivationType,
   BankQuestion,
   BankSection,
   StaffBankProfile

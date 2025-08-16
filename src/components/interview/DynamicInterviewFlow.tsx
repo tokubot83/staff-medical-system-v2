@@ -267,6 +267,13 @@ export default function DynamicInterviewFlow() {
 
   // マニュアル生成
   const generateManual = async () => {
+    console.log('generateManual called with session:', {
+      interviewType: session.interviewType,
+      specialType: session.specialType,
+      useBankSystem: session.useBankSystem,
+      staffMember: session.staffMember
+    });
+    
     setCurrentStep('generating');
     setIsGenerating(true);
     
@@ -275,6 +282,7 @@ export default function DynamicInterviewFlow() {
       
       // バンクシステムを使用する場合（全ての面談タイプで使用）
       if (session.useBankSystem) {
+        console.log('Using bank system for interview type:', session.interviewType);
         // スタッフプロファイルを作成
         const staffProfile: StaffProfile = {
           id: session.staffMember!.id,
@@ -342,7 +350,13 @@ export default function DynamicInterviewFlow() {
             nextScheduledDate: null,
             interviewCount: 0
           };
-          generatedSheet = generateSpecialInterview(specialParams, staffBankProfile);
+          try {
+            generatedSheet = generateSpecialInterview(specialParams, staffBankProfile);
+            console.log('Special interview sheet generated successfully');
+          } catch (error) {
+            console.error('Error generating special interview:', error);
+            throw error;
+          }
           
         } else if (session.interviewType === 'support') {
           // サポート面談
@@ -371,7 +385,13 @@ export default function DynamicInterviewFlow() {
             nextScheduledDate: null,
             interviewCount: 0
           };
-          generatedSheet = generateSupportInterview(supportParams, staffBankProfile);
+          try {
+            generatedSheet = generateSupportInterview(supportParams, staffBankProfile);
+            console.log('Support interview sheet generated successfully');
+          } catch (error) {
+            console.error('Error generating support interview:', error);
+            throw error;
+          }
         } else {
           // デフォルトは定期面談
           const params: ExtendedInterviewParams = {
@@ -537,7 +557,9 @@ export default function DynamicInterviewFlow() {
     } catch (error) {
       console.error('Manual generation failed:', error);
       setIsGenerating(false);
-      alert('マニュアル生成に失敗しました: ' + error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      alert(`面談シート生成に失敗しました:\n${errorMessage}\n\n詳細はブラウザのコンソールをご確認ください。`);
+      setCurrentStep('interview-type'); // エラー時は面談タイプ選択に戻る
     }
   };
 
