@@ -14,6 +14,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { VoiceDriveService } from '@/services/voicedriveIntegrationService';
 import { useRouter } from 'next/navigation';
+import { mockInterviews } from '@/data/mockInterviews';
 
 // 面談予約の統合型定義
 interface UnifiedInterviewReservation {
@@ -69,8 +70,14 @@ export default function UnifiedInterviewDashboard() {
       // 実際の実装では各サービスから予約データを取得
       const mockData = await getMockReservations();
       
-      // VoiceDriveからのサポート面談予約を取得
-      const voiceDriveReservations = await VoiceDriveService.getInterviewRequests();
+      // VoiceDriveからのサポート面談予約を取得（エラーハンドリング追加）
+      let voiceDriveReservations: any[] = [];
+      try {
+        voiceDriveReservations = await VoiceDriveService.getInterviewRequests();
+      } catch (vdError) {
+        console.warn('VoiceDrive連携エラー（本番環境でない場合は無視）:', vdError);
+        // VoiceDrive連携がエラーの場合はモックデータのみを使用
+      }
       
       // データを統合
       const unified = [...mockData, ...convertVoiceDriveToUnified(voiceDriveReservations)];
@@ -105,60 +112,101 @@ export default function UnifiedInterviewDashboard() {
   };
 
   const getMockReservations = async (): Promise<UnifiedInterviewReservation[]> => {
-    // モックデータ
+    // mockInterviewsから実際のデータを変換
     const today = new Date();
-    return [
-      {
-        id: 'reg-001',
-        type: 'regular',
-        regularType: 'new_employee',
-        staffId: 'S001',
-        staffName: '山田花子',
-        department: '内科病棟',
-        position: '看護師',
-        experienceYears: 0,
-        scheduledDate: today,
-        scheduledTime: '09:00',
-        duration: 30,
-        status: 'confirmed',
-        createdAt: new Date()
-      },
-      {
-        id: 'spec-001',
-        type: 'special',
-        specialType: 'exit',
-        staffId: 'S002',
-        staffName: '佐藤太郎',
-        department: '外科病棟',
-        position: '看護師',
-        experienceYears: 5,
-        scheduledDate: today,
-        scheduledTime: '14:00',
-        duration: 45,
-        status: 'confirmed',
-        urgency: 'high',
-        notes: '他施設への転職のため',
-        createdAt: new Date()
-      },
-      {
-        id: 'sup-001',
-        type: 'support',
-        staffId: 'S003',
-        staffName: '鈴木一郎',
-        department: '救急科',
-        position: '看護師',
-        experienceYears: 8,
-        scheduledDate: today,
-        scheduledTime: '16:00',
-        duration: 30,
-        status: 'pending',
-        urgency: 'medium',
-        supportCategory: 'workplace',
-        supportTopic: '人間関係の相談',
-        supportDetails: 'チーム内のコミュニケーション改善について',
-        createdAt: new Date()
-      }
-    ];
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    
+    // 本日の面談用にいくつかのデータの日付を今日に変更
+    const convertedData: UnifiedInterviewReservation[] = mockInterviews
+      .filter(interview => interview.status === 'scheduled')
+      .map((interview, index) => {
+        // 最初の5件を今日の日付に、残りは元の日付を使用
+        const scheduledDate = index < 5 ? today : new Date(interview.bookingDate);
+        
+        // 面談タイプの判定と変換
+        let type: 'regular' | 'special' | 'support' = 'regular';
+        let regularType: 'new_employee' | 'annual' | 'management' | undefined;
+        let specialType: 'exit' | 'transfer' | 'return' | 'promotion' | 'disciplinary' | undefined;
+        let supportCategory: string | undefined;
+        let supportTopic: string | undefined;
+        
+        switch (interview.interviewType) {
+          case 'new_employee_monthly':
+            type = 'regular';
+            regularType = 'new_employee';
+            break;
+          case 'regular_annual':
+            type = 'regular';
+            regularType = 'annual';
+            break;
+          case 'management_biannual':
+            type = 'regular';
+            regularType = 'management';
+            break;
+          case 'exit_interview':
+            type = 'special';
+            specialType = 'exit';
+            break;
+          case 'return_to_work':
+            type = 'special';
+            specialType = 'return';
+            break;
+          case 'career_support':
+            type = 'support';
+            supportCategory = 'career';
+            supportTopic = interview.requestedTopics?.join(', ') || 'キャリア相談';
+            break;
+          case 'workplace_support':
+            type = 'support';
+            supportCategory = 'workplace';
+            supportTopic = interview.requestedTopics?.join(', ') || '職場環境相談';
+            break;
+          case 'individual_consultation':
+            type = 'support';
+            supportCategory = 'other';
+            supportTopic = interview.requestedTopics?.join(', ') || '個別相談';
+            break;
+          default:
+            type = 'support';
+            supportCategory = 'other';
+            break;
+        }
+        
+        // 経験年数を推定（新人は0年、一般は3年、管理職は10年として設定）
+        let experienceYears = 3;
+        if (interview.employeeName?.includes('新田') || interview.employeeName?.includes('佐々木')) {
+          experienceYears = 0;
+        } else if (interview.employeeName?.includes('斎藤') || interview.employeeName?.includes('村田')) {
+          experienceYears = 10;
+        } else if (interview.employeeName?.includes('清水')) {
+          experienceYears = 15;
+        }
+        
+        return {
+          id: interview.id,
+          type,
+          regularType,
+          specialType,
+          staffId: interview.employeeId,
+          staffName: interview.employeeName,
+          department: interview.department,
+          position: interview.position,
+          experienceYears,
+          scheduledDate,
+          scheduledTime: interview.startTime,
+          duration: interview.duration,
+          status: interview.status === 'scheduled' ? 'confirmed' : 'pending',
+          urgency: interview.urgencyLevel as any,
+          supportCategory,
+          supportTopic,
+          supportDetails: interview.description,
+          notes: interview.employeeNotes,
+          createdAt: new Date(interview.createdAt)
+        };
+      });
+    
+    return convertedData;
   };
 
   const handleStartInterview = (reservation: UnifiedInterviewReservation) => {
