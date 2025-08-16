@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import CommonHeader from '@/components/CommonHeader'
 import DashboardButton from '@/components/DashboardButton'
@@ -32,7 +32,7 @@ const tabs = [
 ]
 
 
-export default function InterviewsPage() {
+function InterviewsPageContent() {
   const searchParams = useSearchParams()
   const tabFromUrl = searchParams.get('tab')
   const [activeTab, setActiveTab] = useState(tabFromUrl || 'overview')
@@ -1421,5 +1421,13 @@ function SettingsTab(): React.ReactElement {
         <p>面談設定機能は現在開発中です</p>
       </div>
     </div>
+  )
+}
+
+export default function InterviewsPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <InterviewsPageContent />
+    </Suspense>
   )
 }
