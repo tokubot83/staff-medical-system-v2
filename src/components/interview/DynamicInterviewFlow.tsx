@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -138,6 +139,7 @@ const mapToQuestionCategory = (title: string): QuestionCategory => {
 };
 
 export default function DynamicInterviewFlow() {
+  const searchParams = useSearchParams();
   const [currentStep, setCurrentStep] = useState<FlowStep>('staff-select');
   const [session, setSession] = useState<InterviewSession>({
     staffMember: null,
@@ -165,14 +167,14 @@ export default function DynamicInterviewFlow() {
   // スタッフデータの取得（実際にはAPIから）
   useEffect(() => {
     fetchStaffData();
-    
-    // ダッシュボードからの予約情報を取得
-    const urlParams = new URLSearchParams(window.location.search);
-    const fromDashboard = urlParams.get('fromDashboard');
+  }, []);
+
+  // URLパラメータの変化を監視してダッシュボードからの遷移を処理
+  useEffect(() => {
+    const fromDashboard = searchParams.get('fromDashboard');
     
     console.log('DynamicInterviewFlow: Checking dashboard params');
     console.log('fromDashboard:', fromDashboard);
-    console.log('URL:', window.location.href);
     console.log('SessionStorage keys:', Object.keys(sessionStorage));
     
     if (fromDashboard === 'true') {
@@ -192,7 +194,8 @@ export default function DynamicInterviewFlow() {
         console.warn('No reservation data found in sessionStorage');
       }
     }
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   const fetchStaffData = async () => {
     // モックデータ（実際にはAPIコール）
