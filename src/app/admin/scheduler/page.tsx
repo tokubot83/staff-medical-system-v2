@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import CommonHeader from '@/components/CommonHeader';
 import { 
   Clock, Plus, Play, Pause, Trash2, Edit, 
@@ -48,16 +48,16 @@ export default function SchedulerPage() {
     enabled: true,
   });
 
-  useEffect(() => {
-    loadTasks();
-  }, [filter]);
-
-  const loadTasks = () => {
+  const loadTasks = useCallback(() => {
     const filteredTasks = schedulerService.getTasks(filter);
     setTasks(filteredTasks);
     const stats = schedulerService.getStatistics();
     setStatistics(stats);
-  };
+  }, [filter]);
+
+  useEffect(() => {
+    loadTasks();
+  }, [loadTasks]);
 
   const handleCreateTask = () => {
     const newTask = schedulerService.createTask({

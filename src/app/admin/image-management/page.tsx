@@ -6,6 +6,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import { Trash2, Download, Upload, Search, Filter, Eye, Users, HardDrive, AlertCircle } from 'lucide-react';
 import { imageStorage, ImageMetadata, StoredImage } from '@/lib/image/imageStorage';
 import { formatFileSize } from '@/lib/image/imageUtils';
@@ -429,10 +430,13 @@ export default function ImageManagementPage() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <img
+                  <Image
                     src={selectedImage.preview}
                     alt={selectedImage.metadata.fileName}
+                    width={500}
+                    height={500}
                     className="w-full h-auto rounded-lg"
+                    unoptimized
                   />
                 </div>
                 

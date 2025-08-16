@@ -195,7 +195,7 @@ export default function MasterDataPage() {
                 ) : selectedMaster === 'imageManagement' ? (
                   <div className="text-center py-8">
                     <div className="max-w-md mx-auto">
-                      <Image className="h-16 w-16 mx-auto text-gray-400 mb-4" />
+                      <Image className="h-16 w-16 mx-auto text-gray-400 mb-4" aria-hidden="true" />
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">画像管理</h3>
                       <p className="text-gray-600 mb-6">
                         職員の画像やファイルを管理します。アップロード、削除、ストレージ監視が可能です。
@@ -204,7 +204,7 @@ export default function MasterDataPage() {
                         onClick={() => window.location.href = '/admin/image-management'}
                         className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
                       >
-                        <Image className="h-5 w-5 mr-2" />
+                        <Image className="h-5 w-5 mr-2" aria-hidden="true" />
                         画像管理ページを開く
                       </button>
                     </div>

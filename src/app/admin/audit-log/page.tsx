@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import CommonHeader from '@/components/CommonHeader';
 import { 
   FileText, Download, Filter, Calendar, 
@@ -37,12 +37,7 @@ export default function AuditLogPage() {
   const [selectedLog, setSelectedLog] = useState<AuditLog | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    loadLogs();
-    loadMetadata();
-  }, [filter]);
-
-  const loadLogs = () => {
+  const loadLogs = useCallback(() => {
     setIsLoading(true);
     setTimeout(() => {
       const filteredLogs = auditLogService.getLogs(filter);
@@ -51,7 +46,12 @@ export default function AuditLogPage() {
       setStatistics(stats);
       setIsLoading(false);
     }, 300);
-  };
+  }, [filter]);
+
+  useEffect(() => {
+    loadLogs();
+    loadMetadata();
+  }, [loadLogs]);
 
   const loadMetadata = () => {
     setCategories(auditLogService.getCategories());

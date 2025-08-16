@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,11 +43,11 @@ export default function RokenVeteranAssistantNurseEvaluationV4Pattern5() {
     'D': 0.40
   };
 
-  const calculateTechnicalScore = () => {
+  const calculateTechnicalScore = useCallback(() => {
     const superiorTotal = Object.values(technicalScores.superiorEval).reduce((a, b) => a + b, 0) / 4;
     const selfTotal = Object.values(technicalScores.selfEval).reduce((a, b) => a + b, 0) / 4;
     return (superiorTotal * 0.6 + selfTotal * 0.4) * 50;
-  };
+  }, [technicalScores]);
 
   const calculateContributionScore = (percentile: number) => {
     if (percentile <= 10) return 25;

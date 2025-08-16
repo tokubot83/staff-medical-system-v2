@@ -79,7 +79,7 @@ export default function EvaluationAnalyticsPage() {
     });
     
     setSummaryData(data);
-  }, [selectedYear]);
+  }, [selectedYear, facilities, jobCategories]);
 
   // フィルタリング
   const filteredData = summaryData.filter(item => {
