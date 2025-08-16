@@ -210,11 +210,16 @@ export default function UnifiedInterviewDashboard() {
   };
 
   const handleStartInterview = (reservation: UnifiedInterviewReservation) => {
+    console.log('handleStartInterview called with reservation:', reservation);
+    
     // セッションストレージに予約情報を保存
     sessionStorage.setItem('interviewReservation', JSON.stringify(reservation));
+    console.log('Saved to sessionStorage:', sessionStorage.getItem('interviewReservation'));
     
     // DynamicInterviewFlowに遷移
-    router.push('/interviews?tab=sheets&fromDashboard=true');
+    const url = '/interviews?tab=sheets&fromDashboard=true';
+    console.log('Navigating to:', url);
+    router.push(url);
   };
 
   const getTodayReservations = () => {

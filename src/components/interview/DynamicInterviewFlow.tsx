@@ -170,12 +170,26 @@ export default function DynamicInterviewFlow() {
     const urlParams = new URLSearchParams(window.location.search);
     const fromDashboard = urlParams.get('fromDashboard');
     
+    console.log('DynamicInterviewFlow: Checking dashboard params');
+    console.log('fromDashboard:', fromDashboard);
+    console.log('URL:', window.location.href);
+    console.log('SessionStorage keys:', Object.keys(sessionStorage));
+    
     if (fromDashboard === 'true') {
       const reservationData = sessionStorage.getItem('interviewReservation');
+      console.log('Reservation data from sessionStorage:', reservationData);
+      
       if (reservationData) {
-        const reservation = JSON.parse(reservationData);
-        handleReservationData(reservation);
-        sessionStorage.removeItem('interviewReservation');
+        try {
+          const reservation = JSON.parse(reservationData);
+          console.log('Parsed reservation:', reservation);
+          handleReservationData(reservation);
+          sessionStorage.removeItem('interviewReservation');
+        } catch (error) {
+          console.error('Failed to parse reservation data:', error);
+        }
+      } else {
+        console.warn('No reservation data found in sessionStorage');
       }
     }
   }, []);
@@ -257,6 +271,8 @@ export default function DynamicInterviewFlow() {
 
   // 予約データから面談を開始
   const handleReservationData = (reservation: any) => {
+    console.log('handleReservationData called with:', reservation);
+    
     // 予約情報からスタッフ情報を設定
     const staffMember: StaffMember = {
       id: reservation.staffId,

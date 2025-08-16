@@ -50,6 +50,14 @@ export default function InterviewsPage() {
 
   useEffect(() => {
     setInterviews(mockInterviews)
+    
+    // URLパラメータからタブを設定
+    const urlParams = new URLSearchParams(window.location.search)
+    const tabParam = urlParams.get('tab')
+    if (tabParam) {
+      console.log('Setting active tab from URL:', tabParam)
+      setActiveTab(tabParam)
+    }
   }, [])
 
   const handleInterviewSelect = (interview: Interview) => {
