@@ -622,12 +622,12 @@ export default function UnifiedInterviewDashboard() {
               ))}
             </div>
           )}
-            </CardContent>
-          </Card>
-        </div>
+        </CardContent>
+      </Card>
+    </div>
 
-        {/* 右側：サイドパネル */}
-        <div className="space-y-4">
+    {/* 右側：サイドパネル */}
+    <div className="space-y-4">
           {/* 今後の予定 */}
           <Card className="border-2 border-gray-200">
             <CardHeader className="bg-gradient-to-r from-gray-50 to-gray-100 pb-3">
@@ -726,6 +726,7 @@ export default function UnifiedInterviewDashboard() {
               </div>
             </CardContent>
           </Card>
+        </div>
       </div>
       
       {/* 手動予約追加モーダル */}
