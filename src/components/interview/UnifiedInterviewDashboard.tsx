@@ -235,8 +235,8 @@ export default function UnifiedInterviewDashboard() {
     sessionStorage.setItem('interviewReservation', JSON.stringify(reservation));
     console.log('Saved to sessionStorage:', sessionStorage.getItem('interviewReservation'));
     
-    // DynamicInterviewFlowに遷移
-    const url = '/interviews?tab=sheets&fromDashboard=true';
+    // 面談バンクシステムタブ（DynamicInterviewFlow）に遷移
+    const url = '/interviews?tab=bank-system&fromDashboard=true';
     console.log('Navigating to:', url);
     router.push(url);
   };

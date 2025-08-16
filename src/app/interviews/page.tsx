@@ -16,12 +16,15 @@ import { getExperienceCategory } from '@/utils/experienceUtils'
 import RoleSelectionModal from '@/components/RoleSelectionModal'
 import UnifiedInterviewDashboard from '@/components/interview/UnifiedInterviewDashboard'
 import IntegratedBankSystemTab from '@/components/interview/IntegratedBankSystemTab'
+import DynamicInterviewFlow from '@/components/interview/DynamicInterviewFlow'
 
-// タブ順序を業務フローに合わせて修正 - 冗長なタブを削除
+// タブ順序を業務フローに合わせて修正
 const tabs = [
-  { id: 'station', label: '統合面談ダッシュボード', icon: '🏛️', badge: 'Unified', isNew: true },
-  { id: 'bank-system', label: '面談バンクシステム', icon: '🏦', badge: 'Full', isNew: false },
+  { id: 'station', label: '面談ステーション', icon: '🚉', badge: '', isNew: false },
   { id: 'overview-guide', label: '概要・ガイド', icon: '📖', badge: '', isNew: false },
+  { id: 'record', label: '結果記録', icon: '📝', badge: '', isNew: false },
+  { id: 'analytics', label: '履歴・分析', icon: '📊', badge: '', isNew: false },
+  { id: 'sheets', label: '面談実施', icon: '📋', badge: '', isNew: false },
   { id: 'settings', label: '設定', icon: '⚙️', badge: '', isNew: false },
 ]
 
@@ -54,7 +57,15 @@ function InterviewsPageContent() {
     const tabParam = searchParams.get('tab')
     if (tabParam && tabParam !== activeTab) {
       console.log('Setting active tab from URL:', tabParam)
-      setActiveTab(tabParam)
+      
+      // 有効なタブIDかチェック
+      const validTabIds = tabs.map(tab => tab.id)
+      if (validTabIds.includes(tabParam)) {
+        setActiveTab(tabParam)
+      } else {
+        console.warn(`Invalid tab '${tabParam}' detected. Falling back to 'sheets'`)
+        setActiveTab('sheets') // 面談開始時の適切なフォールバック先
+      }
     }
   }, [searchParams])
 
@@ -200,7 +211,9 @@ function InterviewsPageContent() {
 
         <div className={styles.tabContent}>
           {activeTab === 'station' && <UnifiedInterviewDashboard />}
-          {activeTab === 'bank-system' && <IntegratedBankSystemTab />}
+          {activeTab === 'sheets' && <DynamicInterviewFlow />}
+          {activeTab === 'record' && <RecordTab selectedInterview={selectedInterview} />}
+          {activeTab === 'analytics' && <HistoryAnalysisTab interviews={interviews} />}
           {activeTab === 'overview-guide' && <OverviewGuideTab onInterviewTypeClick={handleInterviewTypeClick} />}
           {activeTab === 'settings' && <SettingsTab />}
         </div>

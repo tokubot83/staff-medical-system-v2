@@ -459,6 +459,16 @@ export class VoiceDriveIntegrationService {
   ): Promise<Response> {
     const url = `${this.mcpConfig.endpoint}${path}`;
     
+    // 開発環境でMCPサーバーが利用できない場合はスキップ
+    if (process.env.NODE_ENV === 'development' && !this.mcpConfig.apiKey) {
+      console.warn(`MCP Server not configured in development environment. Skipping: ${path}`);
+      // モックレスポンスを返す
+      return new Response(JSON.stringify([]), { 
+        status: 200, 
+        headers: { 'Content-Type': 'application/json' } 
+      });
+    }
+    
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), this.mcpConfig.timeout);
     
@@ -473,6 +483,17 @@ export class VoiceDriveIntegrationService {
       
     } catch (error) {
       clearTimeout(timeoutId);
+      
+      // 開発環境では接続エラーをワーニングレベルに下げる
+      if (process.env.NODE_ENV === 'development') {
+        console.warn(`MCP Server connection failed (development mode): ${error}`);
+        // モックレスポンスを返す
+        return new Response(JSON.stringify([]), { 
+          status: 200, 
+          headers: { 'Content-Type': 'application/json' } 
+        });
+      }
+      
       throw error;
     }
   }
