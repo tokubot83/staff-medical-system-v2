@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Calendar, Clock, User, AlertTriangle, CheckCircle, 
   ChevronRight, Play, FileText, Users, TrendingUp,
-  Filter, Search, RefreshCw, Bell, Activity, Plus
+  Filter, Search, RefreshCw, Bell, Activity, Plus, FilterX
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -17,6 +17,10 @@ import { useRouter } from 'next/navigation';
 import { mockInterviews } from '@/data/mockInterviews';
 import ManualReservationModal from './ManualReservationModal';
 import InterviewStatisticsChart from '@/components/charts/InterviewStatisticsChart';
+import AdvancedSearchModal, { AdvancedSearchFilters } from '@/components/search/AdvancedSearchModal';
+import SearchResults from '@/components/search/SearchResults';
+import { AdvancedSearchService } from '@/utils/searchUtils';
+import InterviewTemplateManager from '@/components/templates/InterviewTemplateManager';
 
 // 面談予約の統合型定義
 export interface UnifiedInterviewReservation {
@@ -67,6 +71,12 @@ export default function UnifiedInterviewDashboard() {
   const [showUrgentOnly, setShowUrgentOnly] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showStatistics, setShowStatistics] = useState(false);
+  const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
+  const [searchResults, setSearchResults] = useState<UnifiedInterviewReservation[]>([]);
+  const [isSearchMode, setIsSearchMode] = useState(false);
+  const [currentSearchFilters, setCurrentSearchFilters] = useState<AdvancedSearchFilters | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
+  const [showTemplateManager, setShowTemplateManager] = useState(false);
 
   useEffect(() => {
     loadReservations();
@@ -229,6 +239,71 @@ export default function UnifiedInterviewDashboard() {
     const url = '/interviews?tab=sheets&fromDashboard=true';
     console.log('Navigating to:', url);
     router.push(url);
+  };
+
+  // 高度な検索処理
+  const handleAdvancedSearch = async (filters: AdvancedSearchFilters) => {
+    setIsSearching(true);
+    setCurrentSearchFilters(filters);
+    
+    try {
+      // 検索履歴に保存
+      AdvancedSearchService.saveSearchHistory(filters);
+      
+      // 検索実行
+      const results = AdvancedSearchService.searchReservations(reservations, filters);
+      setSearchResults(results);
+      setIsSearchMode(true);
+    } catch (error) {
+      console.error('検索エラー:', error);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  // 検索モードを終了
+  const handleClearSearch = () => {
+    setIsSearchMode(false);
+    setSearchResults([]);
+    setCurrentSearchFilters(null);
+    setSearchTerm('');
+  };
+
+  // クイック検索（基本検索バーでの検索）
+  const handleQuickSearch = (query: string) => {
+    setSearchTerm(query);
+    if (query.trim()) {
+      const results = AdvancedSearchService.quickSearch(reservations, query);
+      setSearchResults(results);
+      setIsSearchMode(true);
+      setCurrentSearchFilters({
+        keyword: query,
+        staffName: '',
+        staffId: '',
+        departments: [],
+        positions: [],
+        experienceYears: {},
+        interviewTypes: [],
+        interviewSubTypes: [],
+        statuses: [],
+        urgencyLevels: [],
+        dateRange: {},
+        timeSlots: [],
+        tags: [],
+        notes: '',
+        hasFiles: false,
+        isOverdue: false,
+        sortBy: 'date',
+        sortOrder: 'desc'
+      });
+    } else {
+      handleClearSearch();
+    }
+  };
+
+  // 検索結果から面談開始
+  const handleStartInterviewFromSearch = (reservation: UnifiedInterviewReservation) => {
+    handleStartInterview(reservation);
   };
 
   // 手動予約の追加処理
@@ -419,6 +494,10 @@ export default function UnifiedInterviewDashboard() {
               <Plus className="h-5 w-5 mr-2" />
               手動予約追加
             </Button>
+            <Button onClick={() => setShowTemplateManager(true)} variant="outline" className="bg-white/10 text-white border-white/30 hover:bg-white/20">
+              <FileText className="h-4 w-4 mr-2" />
+              テンプレート管理
+            </Button>
             <Button onClick={loadReservations} variant="outline" className="bg-white/10 text-white border-white/30 hover:bg-white/20">
               <RefreshCw className="h-4 w-4 mr-2" />
               データ更新
@@ -493,43 +572,65 @@ export default function UnifiedInterviewDashboard() {
         </div>
       </div>
 
-      {/* フィルター - よりコンパクトに */}
+      {/* 検索・フィルター */}
       <Card className="border-2 border-gray-200">
         <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center gap-2">
-            <Filter className="h-5 w-5" />
-            検索・フィルター
+          <CardTitle className="text-lg flex items-center justify-between">
+            <span className="flex items-center gap-2">
+              <Search className="h-5 w-5" />
+              検索・フィルター
+            </span>
+            {isSearchMode && (
+              <Button variant="outline" size="sm" onClick={handleClearSearch}>
+                <FilterX className="h-4 w-4 mr-2" />
+                検索クリア
+              </Button>
+            )}
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex gap-4 items-center">
-            <div className="flex-1">
-              <div className="relative">
+          <div className="space-y-3">
+            {/* 検索バー */}
+            <div className="flex gap-2">
+              <div className="flex-1 relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input
-                  type="text"
-                  placeholder="職員名、部署で検索..."
+                  placeholder="職員名、部署、面談内容で検索..."
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={(e) => handleQuickSearch(e.target.value)}
                   className="pl-10"
                 />
               </div>
+              <Button
+                variant="outline"
+                onClick={() => setShowAdvancedSearch(true)}
+                className="flex-shrink-0"
+              >
+                <Filter className="h-4 w-4 mr-2" />
+                高度な検索
+              </Button>
             </div>
-            <Tabs value={filterType} onValueChange={(v) => setFilterType(v as any)}>
-              <TabsList>
-                <TabsTrigger value="all">すべて</TabsTrigger>
-                <TabsTrigger value="regular">定期</TabsTrigger>
-                <TabsTrigger value="special">特別</TabsTrigger>
-                <TabsTrigger value="support">サポート</TabsTrigger>
-              </TabsList>
-            </Tabs>
-            <Button
-              variant={showUrgentOnly ? "default" : "outline"}
-              onClick={() => setShowUrgentOnly(!showUrgentOnly)}
-            >
-              <AlertTriangle className="h-4 w-4 mr-2" />
-              緊急のみ
-            </Button>
+
+            {/* フィルター */}
+            {!isSearchMode && (
+              <div className="flex gap-4 items-center">
+                <Tabs value={filterType} onValueChange={(v) => setFilterType(v as any)}>
+                  <TabsList>
+                    <TabsTrigger value="all">すべて</TabsTrigger>
+                    <TabsTrigger value="regular">定期</TabsTrigger>
+                    <TabsTrigger value="special">特別</TabsTrigger>
+                    <TabsTrigger value="support">サポート</TabsTrigger>
+                  </TabsList>
+                </Tabs>
+                <Button
+                  variant={showUrgentOnly ? "default" : "outline"}
+                  onClick={() => setShowUrgentOnly(!showUrgentOnly)}
+                >
+                  <AlertTriangle className="h-4 w-4 mr-2" />
+                  緊急のみ
+                </Button>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -552,7 +653,19 @@ export default function UnifiedInterviewDashboard() {
       )}
 
       {/* メインコンテンツエリア */}
-      <div className="grid grid-cols-3 gap-6">
+      {isSearchMode ? (
+        /* 検索結果表示 */
+        <SearchResults
+          results={searchResults}
+          filters={currentSearchFilters!}
+          isLoading={isSearching}
+          onResultClick={(reservation) => {
+            console.log('検索結果クリック:', reservation);
+          }}
+          onStartInterview={handleStartInterviewFromSearch}
+        />
+      ) : (
+        <div className="grid grid-cols-3 gap-6">
         {/* 左側：本日の面談（大きく表示） */}
         <div className="col-span-2">
           <Card className="border-2 border-blue-200 shadow-lg">
@@ -730,6 +843,7 @@ export default function UnifiedInterviewDashboard() {
           </Card>
         </div>
       </div>
+      )}
 
       {/* 統計・分析セクション */}
       <Card className="border-2 border-purple-200 shadow-lg">
@@ -761,6 +875,24 @@ export default function UnifiedInterviewDashboard() {
         isOpen={showAddModal}
         onClose={() => setShowAddModal(false)}
         onSubmit={handleAddManualReservation}
+      />
+
+      {/* 高度な検索モーダル */}
+      <AdvancedSearchModal
+        isOpen={showAdvancedSearch}
+        onClose={() => setShowAdvancedSearch(false)}
+        onSearch={handleAdvancedSearch}
+        initialFilters={currentSearchFilters || undefined}
+      />
+
+      {/* テンプレート管理モーダル */}
+      <InterviewTemplateManager
+        isOpen={showTemplateManager}
+        onClose={() => setShowTemplateManager(false)}
+        onSelectTemplate={(template) => {
+          console.log('選択されたテンプレート:', template);
+          setShowTemplateManager(false);
+        }}
       />
     </div>
   );
