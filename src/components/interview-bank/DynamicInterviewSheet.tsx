@@ -29,7 +29,7 @@ import {
 } from '@/lib/interview-bank/types-extended';
 
 interface DynamicInterviewSheetProps {
-  sheetData: GeneratedInterviewSheet;
+  sheetData: GeneratedInterviewSheet | any; // GeneratedBankSheetも受け入れる
   staffProfile: StaffProfile;
   onSave?: (data: any) => void;
   onPrint?: () => void;
@@ -305,7 +305,7 @@ export default function DynamicInterviewSheet({
             <div>
               <CardTitle className="text-2xl flex items-center">
                 <FileText className="mr-3 text-blue-600" size={28} />
-                定期面談シート - {staffProfile.name}
+                {sheetData.title || '定期面談シート'} - {staffProfile.name}
               </CardTitle>
               <div className="text-sm text-gray-600 mt-2 grid grid-cols-2 gap-4">
                 <div>

@@ -76,6 +76,12 @@ export function generateSpecialInterview(
     title,
     description: generateDescription(params),
     sections,
+    params: {
+      interviewDate: params.interviewDate || new Date(),
+      duration: duration
+    },
+    totalQuestions: sections.reduce((total, section) => total + section.questions.length, 0),
+    estimatedDuration: duration,
     metadata: {
       generatedAt: new Date(),
       generationParams: params,
@@ -85,7 +91,7 @@ export function generateSpecialInterview(
       specialType: params.specialType,
       subType: params.subType
     }
-  };
+  } as any;
 }
 
 /**

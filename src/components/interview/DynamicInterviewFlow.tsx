@@ -351,8 +351,31 @@ export default function DynamicInterviewFlow() {
             interviewCount: 0
           };
           try {
-            generatedSheet = generateSpecialInterview(specialParams, staffBankProfile);
+            const bankSheet = generateSpecialInterview(specialParams, staffBankProfile);
             console.log('Special interview sheet generated successfully');
+            
+            // BankSection を InterviewSectionInstance に変換
+            generatedSheet = {
+              ...bankSheet,
+              sections: bankSheet.sections.map((section: any, index: number) => ({
+                sectionId: section.id,
+                name: section.title,
+                type: 'general', // デフォルトタイプ
+                questions: section.questions.map((q: any) => ({
+                  questionId: q.id,
+                  content: q.questionText,
+                  type: q.questionType === 'single_choice' ? 'radio' : 
+                        q.questionType === 'multiple_choice' ? 'checkbox' :
+                        q.questionType === 'date' ? 'text' :
+                        q.questionType === 'information' ? 'text' :
+                        q.questionType || 'textarea',
+                  required: q.priority === 1,
+                  options: q.options ? q.options.map((opt: string) => ({ value: opt, label: opt })) : undefined,
+                  placeholder: q.placeholder
+                })),
+                order: section.order || index
+              }))
+            };
           } catch (error) {
             console.error('Error generating special interview:', error);
             throw error;
@@ -386,8 +409,31 @@ export default function DynamicInterviewFlow() {
             interviewCount: 0
           };
           try {
-            generatedSheet = generateSupportInterview(supportParams, staffBankProfile);
+            const bankSheet = generateSupportInterview(supportParams, staffBankProfile);
             console.log('Support interview sheet generated successfully');
+            
+            // BankSection を InterviewSectionInstance に変換
+            generatedSheet = {
+              ...bankSheet,
+              sections: bankSheet.sections.map((section: any, index: number) => ({
+                sectionId: section.id,
+                name: section.title,
+                type: 'general', // デフォルトタイプ
+                questions: section.questions.map((q: any) => ({
+                  questionId: q.id,
+                  content: q.questionText,
+                  type: q.questionType === 'single_choice' ? 'radio' : 
+                        q.questionType === 'multiple_choice' ? 'checkbox' :
+                        q.questionType === 'date' ? 'text' :
+                        q.questionType === 'information' ? 'text' :
+                        q.questionType || 'textarea',
+                  required: q.priority === 1,
+                  options: q.options ? q.options.map((opt: string) => ({ value: opt, label: opt })) : undefined,
+                  placeholder: q.placeholder
+                })),
+                order: section.order || index
+              }))
+            };
           } catch (error) {
             console.error('Error generating support interview:', error);
             throw error;

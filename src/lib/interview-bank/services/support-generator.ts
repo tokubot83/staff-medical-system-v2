@@ -106,6 +106,12 @@ export function generateSupportInterview(
     title: `サポート面談 - ${getCategoryLabel(params.category)}`,
     description: params.consultationTopic,
     sections,
+    params: {
+      interviewDate: params.interviewDate || new Date(),
+      duration: params.duration
+    },
+    totalQuestions: sections.reduce((total, section) => total + section.questions.length, 0),
+    estimatedDuration: params.duration,
     metadata: {
       generatedAt: new Date(),
       generationParams: params,
@@ -113,7 +119,7 @@ export function generateSupportInterview(
       estimatedDuration: params.duration,
       voiceDriveRequestId: params.voiceDriveRequestId
     }
-  };
+  } as any;
 }
 
 /**
