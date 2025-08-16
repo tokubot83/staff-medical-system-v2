@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-// VoiceDriveService import removed - using mock data only
+import { VoiceDriveIntegrationService } from '@/services/voicedriveIntegrationService';
 import { useRouter } from 'next/navigation';
 import { mockInterviews } from '@/data/mockInterviews';
 
@@ -70,9 +70,18 @@ export default function UnifiedInterviewDashboard() {
       // 実際の実装では各サービスから予約データを取得
       const mockData = await getMockReservations();
       
-      // VoiceDrive連携は将来実装予定
-      // 現在はモックデータのみ使用
-      const unified = [...mockData];
+      // VoiceDriveからのサポート面談予約を取得（エラーハンドリング追加）
+      let voiceDriveReservations: any[] = [];
+      try {
+        const voiceDriveRequests = await VoiceDriveIntegrationService.fetchInterviewRequests();
+        voiceDriveReservations = voiceDriveRequests || [];
+      } catch (vdError) {
+        console.warn('VoiceDrive連携エラー（本番環境でない場合は無視）:', vdError);
+        // VoiceDrive連携がエラーの場合はモックデータのみを使用
+      }
+      
+      // データを統合
+      const unified = [...mockData, ...convertVoiceDriveToUnified(voiceDriveReservations)];
       
       setReservations(unified);
     } catch (error) {
