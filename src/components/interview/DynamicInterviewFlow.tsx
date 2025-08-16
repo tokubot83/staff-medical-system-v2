@@ -39,6 +39,9 @@ import {
   FacilityType,
   InterviewDuration
 } from '@/services/interviewManualGenerationServiceV2';
+import ImprovedDigitalInterviewUI from './ImprovedDigitalInterviewUI';
+import { interviewTemplates } from '@/data/interview-question-bank';
+import { InterviewSection, InterviewResponse, QuestionCategory } from '@/types/interview-question-master';
 import { 
   MotivationTypeDiagnosisService,
   MotivationType,
@@ -85,6 +88,38 @@ interface InterviewSession {
   endTime: Date | null;
 }
 
+// デフォルトセクション生成ヘルパー関数
+const generateDefaultSections = (manual: GeneratedInterviewManual): InterviewSection[] => {
+  // 既存のマニュアルデータを改善版UI用のセクション形式に変換
+  return manual.sections.map((section, index) => ({
+    id: `section-${index}`,
+    title: section.title,
+    category: mapToQuestionCategory(section.title),
+    description: section.purpose,
+    estimatedMinutes: section.duration,
+    questions: section.questions.map(q => q.id),
+    sectionGuidance: {
+      introduction: section.guidance.introduction,
+      keyPoints: section.guidance.keyPoints,
+      transitionPhrase: section.guidance.transitionPhrase
+    }
+  }));
+};
+
+// タイトルから質問カテゴリーへのマッピング
+const mapToQuestionCategory = (title: string): QuestionCategory => {
+  if (title.includes('適応') || title.includes('人間関係')) return 'adaptation';
+  if (title.includes('技術') || title.includes('スキル')) return 'skills';
+  if (title.includes('業務') || title.includes('成果')) return 'performance';
+  if (title.includes('健康') || title.includes('ストレス')) return 'health';
+  if (title.includes('成長') || title.includes('キャリア')) return 'growth';
+  if (title.includes('満足') || title.includes('モチベーション')) return 'satisfaction';
+  if (title.includes('コミュニケーション')) return 'communication';
+  if (title.includes('リーダー') || title.includes('管理')) return 'leadership';
+  if (title.includes('今後') || title.includes('将来')) return 'future';
+  return 'performance'; // デフォルト
+};
+
 export default function DynamicInterviewFlow() {
   const [currentStep, setCurrentStep] = useState<FlowStep>('staff-select');
   const [session, setSession] = useState<InterviewSession>({
@@ -107,6 +142,7 @@ export default function DynamicInterviewFlow() {
   const [showMotivationDiagnosis, setShowMotivationDiagnosis] = useState(false);
   const [isPrintMode, setIsPrintMode] = useState(false); // 印刷モードフラグ
   const [showPrintPreview, setShowPrintPreview] = useState(false); // 印刷プレビューフラグ
+  const [useImprovedUI, setUseImprovedUI] = useState(false); // 改善版UI使用フラグ
 
   // スタッフデータの取得（実際にはAPIから）
   useEffect(() => {
@@ -883,20 +919,36 @@ export default function DynamicInterviewFlow() {
           {/* モード切り替えボタン */}
           <div className="flex justify-end gap-2 print:hidden">
             <Button
-              variant={isPrintMode ? 'outline' : 'default'}
+              variant={useImprovedUI ? 'default' : 'outline'}
               size="sm"
               onClick={() => {
+                setUseImprovedUI(true);
                 setIsPrintMode(false);
                 setShowPrintPreview(false);
               }}
             >
               <FileText className="h-4 w-4 mr-1" />
-              デジタル入力モード
+              改善版デジタル入力
+            </Button>
+            <Button
+              variant={!useImprovedUI && !isPrintMode ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => {
+                setUseImprovedUI(false);
+                setIsPrintMode(false);
+                setShowPrintPreview(false);
+              }}
+            >
+              <FileText className="h-4 w-4 mr-1" />
+              従来版デジタル入力
             </Button>
             <Button
               variant={isPrintMode ? 'default' : 'outline'}
               size="sm"
-              onClick={() => setIsPrintMode(true)}
+              onClick={() => {
+                setIsPrintMode(true);
+                setUseImprovedUI(false);
+              }}
             >
               <FileText className="h-4 w-4 mr-1" />
               印刷用モード
@@ -950,8 +1002,37 @@ export default function DynamicInterviewFlow() {
             </CardContent>
           </Card>
 
-          {/* セクション表示 - 印刷モード時は全セクション、通常時は現在のセクションのみ */}
-          {isPrintMode ? (
+          {/* 改善版UIを使用する場合 */}
+          {useImprovedUI ? (
+            <ImprovedDigitalInterviewUI
+              sessionData={{
+                staffName: session.staffMember?.name || '',
+                department: session.staffMember?.department || '',
+                position: session.staffMember?.position || '',
+                facilityType: session.staffMember?.facilityType || '',
+                experienceYears: session.staffMember?.experienceYears || 0,
+                interviewDate: new Date(),
+                interviewerName: '面談者名' // 実際にはログインユーザー名を使用
+              }}
+              sections={
+                // 適切なテンプレートを探すか、デフォルトのセクションを生成
+                interviewTemplates.find(t => 
+                  t.facilityType === session.staffMember?.facilityType &&
+                  t.jobRole === session.staffMember?.jobRole &&
+                  t.duration === session.duration
+                )?.sections || generateDefaultSections(session.manual)
+              }
+              onSave={(responses: InterviewResponse[]) => {
+                console.log('自動保存:', responses);
+                // 実際にはAPIに保存
+              }}
+              onComplete={(responses: InterviewResponse[]) => {
+                console.log('面談完了:', responses);
+                setCurrentStep('completed');
+                // 実際にはAPIに保存して完了処理
+              }}
+            />
+          ) : isPrintMode ? (
             // 印刷モード：全セクションを一括表示
             <>
               {session.manual.sections.map((section, sectionIndex) => (
