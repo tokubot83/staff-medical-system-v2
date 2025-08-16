@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"  // 開発環境用にSQLiteを使用（本番はPostgreSQLに変更）
   url      = env("DATABASE_URL")
 }
 
@@ -176,28 +176,6 @@ model EvaluationMatrix {
   @@map("evaluation_matrix")
 }
 
-// 面談記録
-model Interview {
-  id               String   @id @default(cuid())
-  employeeId       String
-  interviewerId    String
-  date             DateTime
-  type             String   // regular, career, health, exit
-  topics           String[] // 話題のリスト
-  satisfaction     Float?   // 0-100
-  stressLevel      Float?   // 0-100
-  engagement       Float?   // 0-100
-  notes            String?
-  followUpRequired Boolean  @default(false)
-  nextDate         DateTime?
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-  
-  employee     Employee @relation(fields: [employeeId], references: [id])
-  interviewer  Employee @relation("InterviewerRelation", fields: [interviewerId], references: [id])
-  
-  @@map("interviews")
-}
 
 // 研修履歴
 model Training {
@@ -231,8 +209,8 @@ model HealthRecord {
   stressIndex         Float    // 0-100
   bmi                 Float?
   bloodPressure       String?
-  risks               String[] // 健康リスク項目
-  recommendations     String[] // 推奨事項
+  risks               String? // 健康リスク項目（JSON形式）
+  recommendations     String? // 推奨事項（JSON形式）
   nextCheckupDate     DateTime
   occupationalDoctor  String?  // 産業医所見
   createdAt           DateTime @default(now())
@@ -291,9 +269,9 @@ model AssignmentHistory {
   updatedAt    DateTime @updatedAt
   
   employee   Employee   @relation(fields: [employeeId], references: [id])
-  department Department @relation(fields: [departmentId], references: [id])
-  position   Position   @relation(fields: [positionId], references: [id])
-  facility   Facility   @relation(fields: [facilityId], references: [id])
+  // department Department @relation(fields: [departmentId], references: [id])
+  // position   Position   @relation(fields: [positionId], references: [id])
+  // facility   Facility   @relation(fields: [facilityId], references: [id])
   
   @@map("assignment_history")
 }
@@ -339,13 +317,13 @@ model AuditLog {
 
 // 動機タイプマスター
 model MotivationType {
-  id           String   @id @db.VarChar(20)
-  typeName     String   @map("type_name") @db.VarChar(50)
-  label        String   @db.VarChar(100)
-  description  String   @db.Text
-  icon         String?  @db.VarChar(50)
-  color        String?  @db.VarChar(50)
-  approach     String   @db.Text
+  id           String   @id
+  typeName     String   @map("type_name")
+  label        String
+  description  String
+  icon         String?
+  color        String?
+  approach     String
   keywords     Json?
   displayOrder Int      @default(0) @map("display_order")
   isActive     Boolean  @default(true) @map("is_active")
@@ -366,12 +344,12 @@ model MotivationType {
 model StaffMotivationHistory {
   id               String           @id @default(cuid())
   employeeId       String           @map("employee_id")
-  motivationTypeId String           @map("motivation_type_id") @db.VarChar(20)
+  motivationTypeId String           @map("motivation_type_id")
   interviewId      String?          @map("interview_id")
-  assessmentDate   DateTime         @map("assessment_date") @db.Date
+  assessmentDate   DateTime         @map("assessment_date")
   assessedBy       String?          @map("assessed_by")
   confidenceLevel  ConfidenceLevel  @default(MEDIUM) @map("confidence_level")
-  notes            String?          @db.Text
+  notes            String?
   isPrimary        Boolean          @default(true) @map("is_primary")
   createdAt        DateTime         @default(now()) @map("created_at")
   updatedAt        DateTime         @updatedAt @map("updated_at")
@@ -395,10 +373,10 @@ enum ConfidenceLevel {
 // 動機タイプ別推奨アクション
 model MotivationTypeAction {
   id                String         @id @default(cuid())
-  motivationTypeId  String         @map("motivation_type_id") @db.VarChar(20)
+  motivationTypeId  String         @map("motivation_type_id")
   actionCategory    ActionCategory @map("action_category")
-  actionName        String         @map("action_name") @db.VarChar(200)
-  actionDescription String?        @map("action_description") @db.Text
+  actionName        String         @map("action_name")
+  actionDescription String?        @map("action_description")
   priority          Int            @default(5)
   isActive          Boolean        @default(true) @map("is_active")
   createdAt         DateTime       @default(now()) @map("created_at")
@@ -423,11 +401,11 @@ enum ActionCategory {
 // 動機タイプ組み合わせ相性
 model MotivationTypeCompatibility {
   id                 String             @id @default(cuid())
-  typeId1            String             @map("type_id_1") @db.VarChar(20)
-  typeId2            String             @map("type_id_2") @db.VarChar(20)
+  typeId1            String             @map("type_id_1")
+  typeId2            String             @map("type_id_2")
   compatibilityLevel CompatibilityLevel @map("compatibility_level")
-  description        String?            @db.Text
-  managementTips     String?            @map("management_tips") @db.Text
+  description        String?
+  managementTips     String?            @map("management_tips")
   createdAt          DateTime           @default(now()) @map("created_at")
 
   // Relations
@@ -452,30 +430,200 @@ model Interview {
   employeeId           String                   @map("employee_id")
   interviewerId        String                   @map("interviewer_id")
   interviewDate        DateTime                 @map("interview_date")
-  interviewType        String                   @map("interview_type") @db.VarChar(50)
+  interviewType        String                   @map("interview_type")
   duration             Int?                     // 面談時間（分）
   
   // 動機タイプ関連フィールド（v5追加）
-  motivationTypeId     String?                  @map("motivation_type_id") @db.VarChar(20)
+  motivationTypeId     String?                  @map("motivation_type_id")
   motivationConfidence ConfidenceLevel?         @map("motivation_confidence")
-  typeSpecificNotes    String?                  @map("type_specific_notes") @db.Text
+  typeSpecificNotes    String?                  @map("type_specific_notes")
   
   // 既存フィールド
-  overallEvaluation    String?                  @map("overall_evaluation") @db.VarChar(50)
-  potentialEvaluation  String?                  @map("potential_evaluation") @db.VarChar(50)
-  turnoverRisk         String?                  @map("turnover_risk") @db.VarChar(20)
-  developmentPlan      String?                  @map("development_plan") @db.Text
+  overallEvaluation    String?                  @map("overall_evaluation")
+  potentialEvaluation  String?                  @map("potential_evaluation")
+  turnoverRisk         String?                  @map("turnover_risk")
+  developmentPlan      String?                  @map("development_plan")
   nextActionItems      Json?                    @map("next_action_items")
-  notes                String?                  @db.Text
+  notes                String?
   createdAt            DateTime                 @default(now()) @map("created_at")
   updatedAt            DateTime                 @updatedAt @map("updated_at")
 
   // Relations
   employee           Employee                   @relation(fields: [employeeId], references: [id])
+  interviewer        Employee                   @relation("InterviewerRelation", fields: [interviewerId], references: [id])
   motivationType     MotivationType?            @relation(fields: [motivationTypeId], references: [id])
   motivationHistory  StaffMotivationHistory[]
 
   @@index([employeeId])
   @@index([motivationTypeId])
   @@map("interviews")
+}
+
+// ============================================
+// 面談予約システム
+// ============================================
+
+// 面談予約テーブル
+model InterviewReservation {
+  id               String   @id @default(cuid())
+  type             InterviewReservationType
+  subType          String?  @map("sub_type")
+  status           ReservationStatus @default(PENDING)
+  urgency          UrgencyLevel?
+  
+  // 職員情報
+  staffId          String   @map("staff_id")
+  staffName        String   @map("staff_name")
+  department       String
+  position         String
+  experienceYears  Int      @default(0) @map("experience_years")
+  
+  // 予約詳細
+  scheduledDate    DateTime @map("scheduled_date")
+  scheduledTime    String   @map("scheduled_time") // HH:MM形式
+  duration         Int      @default(30)
+  location         String?
+  onlineUrl        String?  @map("online_url")
+  
+  // 定期面談用
+  regularType      RegularInterviewType? @map("regular_type")
+  regularCycle     String?  @map("regular_cycle")
+  
+  // 特別面談用
+  specialType      SpecialInterviewType? @map("special_type")
+  specialContext   Json?    @map("special_context")
+  specialReason    String?  @map("special_reason")
+  
+  // サポート面談用
+  supportCategory  String?  @map("support_category")
+  supportTopic     String?  @map("support_topic")
+  supportDetails   String?  @map("support_details")
+  voicedriveRequestId String? @unique @map("voicedrive_request_id")
+  
+  // メタデータ
+  source           ReservationSource @default(SYSTEM)
+  createdBy        String   @map("created_by")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+  notes            String?
+  
+  // Relations
+  // employee         Employee @relation(fields: [staffId], references: [id])
+  logs             InterviewReservationLog[]
+  notifications    InterviewNotificationQueue[]
+  
+  @@index([staffId])
+  @@index([scheduledDate, scheduledTime])
+  @@index([status])
+  @@index([type])
+  @@index([source])
+  @@index([voicedriveRequestId])
+  @@map("interview_reservations")
+}
+
+// 予約操作ログテーブル
+model InterviewReservationLog {
+  id            Int      @id @default(autoincrement())
+  reservationId String   @map("reservation_id")
+  action        LogAction
+  performedBy   String   @map("performed_by")
+  performedAt   DateTime @default(now()) @map("performed_at")
+  changes       Json?
+  reason        String?
+  
+  // Relations
+  reservation   InterviewReservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  
+  @@index([reservationId])
+  @@index([performedAt])
+  @@map("interview_reservation_logs")
+}
+
+// 通知キューテーブル
+model InterviewNotificationQueue {
+  id               Int      @id @default(autoincrement())
+  reservationId    String   @map("reservation_id")
+  recipientId      String   @map("recipient_id")
+  notificationType NotificationType @map("notification_type")
+  channel          NotificationChannel
+  scheduledAt      DateTime @map("scheduled_at")
+  sentAt           DateTime? @map("sent_at")
+  status           NotificationStatus @default(PENDING)
+  retryCount       Int      @default(0) @map("retry_count")
+  errorMessage     String?  @map("error_message")
+  
+  // Relations
+  reservation      InterviewReservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  
+  @@index([status, scheduledAt])
+  @@index([recipientId])
+  @@map("interview_notification_queue")
+}
+
+// Enums
+enum InterviewReservationType {
+  REGULAR @map("regular")
+  SPECIAL @map("special")
+  SUPPORT @map("support")
+}
+
+enum ReservationStatus {
+  PENDING    @map("pending")
+  CONFIRMED  @map("confirmed")
+  IN_PROGRESS @map("in_progress")
+  COMPLETED  @map("completed")
+  CANCELLED  @map("cancelled")
+}
+
+enum UrgencyLevel {
+  LOW    @map("low")
+  MEDIUM @map("medium")
+  HIGH   @map("high")
+  URGENT @map("urgent")
+}
+
+enum RegularInterviewType {
+  NEW_EMPLOYEE @map("new_employee")
+  ANNUAL      @map("annual")
+  MANAGEMENT  @map("management")
+}
+
+enum SpecialInterviewType {
+  EXIT        @map("exit")
+  TRANSFER    @map("transfer")
+  RETURN      @map("return")
+  PROMOTION   @map("promotion")
+  DISCIPLINARY @map("disciplinary")
+}
+
+enum ReservationSource {
+  MANUAL     @map("manual")
+  VOICEDRIVE @map("voicedrive")
+  SYSTEM     @map("system")
+}
+
+enum LogAction {
+  CREATED   @map("created")
+  UPDATED   @map("updated")
+  CANCELLED @map("cancelled")
+  COMPLETED @map("completed")
+}
+
+enum NotificationType {
+  RESERVATION_CREATED @map("reservation_created")
+  REMINDER           @map("reminder")
+  CANCELLED          @map("cancelled")
+  RESCHEDULED        @map("rescheduled")
+}
+
+enum NotificationChannel {
+  EMAIL @map("email")
+  APP   @map("app")
+  SMS   @map("sms")
+}
+
+enum NotificationStatus {
+  PENDING @map("pending")
+  SENT    @map("sent")
+  FAILED  @map("failed")
 }

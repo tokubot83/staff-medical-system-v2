@@ -18,16 +18,14 @@ import DynamicInterviewFlow from '@/components/interview/DynamicInterviewFlow'
 import SupportInterviewFlow from '@/components/interview/SupportInterviewFlow'
 import UnifiedInterviewDashboard from '@/components/interview/UnifiedInterviewDashboard'
 
-// 第1段階実装: タブ順序を業務フローに合わせて修正
+// タブ順序を業務フローに合わせて修正
 const tabs = [
-  { id: 'overview', label: '面談概要', icon: '🏠', badge: '', isNew: false },
-  { id: 'dashboard', label: 'ダッシュボード', icon: '📊', badge: '', isNew: true },
-  { id: 'schedule', label: '面談予定', icon: '📅', badge: '', isNew: false },
-  { id: 'sheets', label: '面談実施', icon: '📄', badge: '', isNew: false },
-  { id: 'support', label: 'サポート面談', icon: '💬', badge: '', isNew: true },
+  { id: 'station', label: '面談ステーション', icon: '🚉', badge: '', isNew: true },
+  { id: 'overview-guide', label: '概要・ガイド', icon: '📖', badge: '', isNew: false },
   { id: 'record', label: '結果記録', icon: '📝', badge: '', isNew: false },
   { id: 'history', label: '履歴・分析', icon: '📈', badge: '', isNew: false },
-  { id: 'guide', label: 'ガイド', icon: '❓', badge: '', isNew: true },
+  { id: 'sheets', label: '面談実施', icon: '📄', badge: '', isNew: false },
+  { id: 'schedule', label: '面談予定', icon: '📅', badge: '', isNew: false },
   { id: 'settings', label: '設定', icon: '⚙️', badge: '', isNew: false },
 ]
 
@@ -35,7 +33,7 @@ const tabs = [
 function InterviewsPageContent() {
   const searchParams = useSearchParams()
   const tabFromUrl = searchParams.get('tab')
-  const [activeTab, setActiveTab] = useState(tabFromUrl || 'overview')
+  const [activeTab, setActiveTab] = useState(tabFromUrl || 'station')
   const [showGuideModal, setShowGuideModal] = useState(false)
   const [selectedInterview, setSelectedInterview] = useState<Interview | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
@@ -205,8 +203,8 @@ function InterviewsPageContent() {
         </div>
 
         <div className={styles.tabContent}>
-          {activeTab === 'overview' && <OverviewTab />}
-          {activeTab === 'dashboard' && <UnifiedInterviewDashboard />}
+          {activeTab === 'station' && <UnifiedInterviewDashboard />}
+          {activeTab === 'overview-guide' && <OverviewGuideTab onInterviewTypeClick={handleInterviewTypeClick} />}
           {activeTab === 'schedule' && (
             <ScheduleTab 
               interviews={filteredInterviews.filter(i => i.status === 'scheduled')}
@@ -233,9 +231,7 @@ function InterviewsPageContent() {
             />
           )}
           {activeTab === 'sheets' && <InterviewSheetsTab />}
-          {activeTab === 'support' && <SupportInterviewFlow />}
           {activeTab === 'record' && <RecordTab selectedInterview={selectedInterview} />}
-          {activeTab === 'guide' && <GuideTab onInterviewTypeClick={handleInterviewTypeClick} />}
           {activeTab === 'settings' && <SettingsTab />}
         </div>
       </div>
@@ -267,8 +263,12 @@ function InterviewsPageContent() {
   )
 }
 
-// 面談概要タブコンポーネント
-function OverviewTab(): React.ReactElement {
+// 概要・ガイド統合タブコンポーネント
+interface OverviewGuideTabProps {
+  onInterviewTypeClick: (type: string) => void
+}
+
+function OverviewGuideTab({ onInterviewTypeClick }: OverviewGuideTabProps): React.ReactElement {
   return (
     <div className={styles.overviewContent}>
       {/* 面談システム概要 */}
@@ -643,6 +643,9 @@ function OverviewTab(): React.ReactElement {
           </Link>
         </div>
       </div>
+      
+      {/* ガイドセクション */}
+      <GuideSection onInterviewTypeClick={onInterviewTypeClick} />
     </div>
   )
 }
@@ -763,14 +766,10 @@ function DashboardTab(): React.ReactElement {
   )
 }
 
-// 第1段階実装: 新規追加 - ガイドタブ
-interface GuideTabProps {
-  onInterviewTypeClick: (type: string) => void
-}
-
-function GuideTab({ onInterviewTypeClick }: GuideTabProps): React.ReactElement {
+// ガイドセクション（概要・ガイドタブに統合済み）
+function GuideSection({ onInterviewTypeClick }: { onInterviewTypeClick: (type: string) => void }): React.ReactElement {
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
+    <div className="max-w-7xl mx-auto space-y-6 mt-8">
       <h2 className="text-2xl font-bold text-gray-800 mb-6">面談管理システム ガイド</h2>
       
       {/* システム概要 */}

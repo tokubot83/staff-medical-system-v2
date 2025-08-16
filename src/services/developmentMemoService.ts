@@ -428,6 +428,119 @@ class DevelopmentMemoService {
         status: 'pending',
         tags: ['バッチ', '次期実装']
       },
+      
+      // ===== 面談予約システム データベース構築 =====
+      {
+        id: 'db-reservation-001',
+        category: '面談予約システム',
+        subcategory: 'データベース構築',
+        title: '面談予約システム データベース実装完了',
+        content: `
+【実装日】2025年1月16日
+
+【実装内容】
+1. Prismaスキーマ定義完了
+   - InterviewReservation（面談予約テーブル）
+   - InterviewReservationLog（操作ログテーブル）
+   - InterviewNotificationQueue（通知キューテーブル）
+   
+2. データ永続化処理実装
+   - Prismaクライアント設定（src/lib/database/prisma.ts）
+   - CRUD操作クラス（src/lib/database/interviewReservationDb.ts）
+   - トランザクション処理、ログ記録機能
+
+3. 開発環境設定
+   - SQLiteデータベース設定（開発用）
+   - .env設定ファイル作成
+   - DATABASE_URL="file:./dev.db"
+
+【本番環境移行時の注意】
+- prisma/schema.prismaのdatasourceをPostgreSQLに変更
+- .envのDATABASE_URLをPostgreSQL接続文字列に変更
+- npx prisma migrate deployでマイグレーション実行
+
+【関連ファイル】
+- prisma/schema.prisma（スキーマ定義）
+- src/lib/database/interviewReservationDb.ts（DB操作）
+- src/app/api/interviews/reservations/（APIエンドポイント）
+- docs/database/interview_reservation_schema.md（設計書）
+        `,
+        source: { type: 'file', path: '/prisma/schema.prisma', line: 487 },
+        date: '2025-01-16',
+        priority: 'critical',
+        status: 'completed',
+        tags: ['データベース', 'Prisma', '面談予約', '永続化']
+      },
+      {
+        id: 'db-reservation-002',
+        category: '面談予約システム',
+        subcategory: 'DB構築時実装再開',
+        title: '【重要】DB構築時実装再開指示書',
+        content: `
+【作成日】2025年1月16日
+【状態】DB構築前準備完了
+
+【完了済み】
+✅ フロントエンド（ダッシュボード・手動予約モーダル）
+✅ APIエンドポイント（CRUD・統計・一括処理）
+✅ データベーススキーマ（Prisma定義）
+✅ データ永続化クラス（DB操作処理）
+
+【DB構築時の作業手順】
+1. データベース環境設定
+   - PostgreSQL: .envのDATABASE_URL変更
+   - SQLite（開発）: そのまま使用可能
+
+2. マイグレーション実行
+   - npx prisma generate
+   - npx prisma migrate dev --name init
+
+3. APIとDBの接続
+   - /api/interviews/reservations/配下のファイル
+   - メモリ配列からInterviewReservationDbクラスに切り替え
+
+4. 動作確認
+   - 手動予約の作成・表示・更新・削除
+   - VoiceDrive連携テスト
+
+【詳細指示書】
+/docs/database-implementation-guide-20250116.md
+        `,
+        source: { type: 'file', path: '/docs/database-implementation-guide-20250116.md' },
+        date: '2025-01-16',
+        priority: 'critical',
+        status: 'pending',
+        tags: ['DB構築', '実装再開', '面談予約']
+      },
+      {
+        id: 'db-reservation-003',
+        category: '面談予約システム',
+        subcategory: 'データベース移行',
+        title: 'データベースマイグレーション手順',
+        content: `
+【開発環境でのテスト】
+1. npx prisma generate（Prismaクライアント生成）
+2. npx prisma migrate dev --name init（初回マイグレーション）
+3. npx prisma studio（データ確認）
+
+【本番環境への移行】
+1. PostgreSQLデータベースを準備
+2. .envのDATABASE_URLを本番DB接続文字列に変更
+3. prisma/schema.prismaのproviderを"postgresql"に変更
+4. npx prisma migrate deploy（本番マイグレーション）
+5. APIエンドポイントの動作確認
+
+【注意事項】
+- SQLiteとPostgreSQLの型の違いに注意
+- @db.VarChar等のPostgreSQL固有の属性は削除済み
+- 配列型はJSON型に変更済み（SQLite対応）
+        `,
+        source: { type: 'file', path: '/src/lib/database/migrations/001_create_interview_reservations.sql' },
+        date: '2025-01-16',
+        priority: 'important',
+        status: 'pending',
+        tags: ['マイグレーション', 'PostgreSQL', 'SQLite']
+      },
     ];
   }
 
