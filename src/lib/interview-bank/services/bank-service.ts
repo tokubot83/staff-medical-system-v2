@@ -21,7 +21,7 @@ import {
   GeneratedBankSheet
 } from '../types';
 
-import { InterviewBankGenerator } from './generator';
+import { generateInterviewSheet, generateMotivationFollowUp, generateInterviewSummary } from './generator';
 import { VoiceDriveIntegrationService, VoiceDriveInterviewRequest } from '@/services/voicedriveIntegrationService';
 
 // 面談バンクサービス設定
@@ -70,7 +70,6 @@ export interface InterviewProgress {
 export class InterviewBankService {
   private static instance: InterviewBankService;
   private repository: InterviewBankRepository;
-  private generator: InterviewBankGenerator;
   private config: BankServiceConfig;
   private syncTimer?: NodeJS.Timeout;
   private progressMap: Map<string, InterviewProgress> = new Map();
@@ -85,9 +84,8 @@ export class InterviewBankService {
       ...config
     };
     
-    // リポジトリとジェネレーターの初期化
+    // リポジトリの初期化
     this.repository = InterviewBankRepositoryFactory.getInstance(this.config.repositoryType);
-    this.generator = new InterviewBankGenerator();
     
     // 自動同期の設定
     if (this.config.autoSync) {
@@ -119,7 +117,17 @@ export class InterviewBankService {
     progress: InterviewProgress;
   }> {
     // 面談シートを生成
-    const sheet = await this.generator.generateInterviewSheet(staffProfile, params);
+    const sheet = generateInterviewSheet({
+      staff: staffProfile,
+      duration: params.duration || 30,
+      interviewType: params.interviewType,
+      interviewDate: params.interviewDate || new Date(),
+      interviewerId: params.interviewerId,
+      interviewerName: params.interviewerName,
+      focusAreas: params.focusAreas,
+      customSections: params.customSections,
+      excludeSections: params.excludeSections
+    } as any);
     
     // 面談結果の初期データを作成
     const result: BankInterviewResult = {
