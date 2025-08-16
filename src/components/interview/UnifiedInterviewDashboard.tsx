@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Calendar, Clock, User, AlertTriangle, CheckCircle, 
   ChevronRight, Play, FileText, Users, TrendingUp,
-  Filter, Search, RefreshCw, Bell, Activity
+  Filter, Search, RefreshCw, Bell, Activity, Plus
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -15,9 +15,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { VoiceDriveIntegrationService } from '@/services/voicedriveIntegrationService';
 import { useRouter } from 'next/navigation';
 import { mockInterviews } from '@/data/mockInterviews';
+import ManualReservationModal from './ManualReservationModal';
 
 // 面談予約の統合型定義
-interface UnifiedInterviewReservation {
+export interface UnifiedInterviewReservation {
   id: string;
   type: 'regular' | 'special' | 'support';
   subType?: string;
@@ -49,6 +50,10 @@ interface UnifiedInterviewReservation {
   notes?: string;
   createdAt: Date;
   updatedAt?: Date;
+  
+  // 予約ソース
+  source?: 'manual' | 'voicedrive' | 'system';
+  createdBy?: string;
 }
 
 export default function UnifiedInterviewDashboard() {
@@ -59,6 +64,7 @@ export default function UnifiedInterviewDashboard() {
   const [filterType, setFilterType] = useState<'all' | 'regular' | 'special' | 'support'>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [showUrgentOnly, setShowUrgentOnly] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   useEffect(() => {
     loadReservations();
@@ -223,6 +229,40 @@ export default function UnifiedInterviewDashboard() {
     router.push(url);
   };
 
+  // 手動予約の追加処理
+  const handleAddManualReservation = (reservation: Partial<UnifiedInterviewReservation>) => {
+    const newReservation: UnifiedInterviewReservation = {
+      id: reservation.id || `MANUAL-${Date.now()}`,
+      type: reservation.type || 'regular',
+      staffId: reservation.staffId || '',
+      staffName: reservation.staffName || '',
+      department: reservation.department || '',
+      position: reservation.position || '',
+      experienceYears: reservation.experienceYears || 0,
+      scheduledDate: reservation.scheduledDate || new Date(),
+      scheduledTime: reservation.scheduledTime || '10:00',
+      status: 'confirmed',
+      urgency: reservation.urgency,
+      regularType: reservation.regularType,
+      specialType: reservation.specialType,
+      supportCategory: reservation.supportCategory,
+      supportTopic: reservation.supportTopic,
+      notes: reservation.notes,
+      createdAt: new Date(),
+      source: 'manual',
+      createdBy: reservation.createdBy || '管理者'
+    };
+
+    // 予約リストに追加
+    setReservations(prev => [...prev, newReservation]);
+    
+    // 実際の実装では、ここでAPIを呼び出してデータベースに保存
+    console.log('Manual reservation added:', newReservation);
+    
+    // モーダルを閉じる
+    setShowAddModal(false);
+  };
+
   const getTodayReservations = () => {
     const today = new Date();
     return reservations.filter(r => {
@@ -354,7 +394,11 @@ export default function UnifiedInterviewDashboard() {
             <RefreshCw className="h-4 w-4 mr-2" />
             更新
           </Button>
-          <Button onClick={() => router.push('/interview-bank/create')}>
+          <Button onClick={() => setShowAddModal(true)} variant="default">
+            <Plus className="h-4 w-4 mr-2" />
+            予約追加
+          </Button>
+          <Button onClick={() => router.push('/interview-bank/create')} variant="outline">
             新規面談作成
           </Button>
         </div>
@@ -554,6 +598,13 @@ export default function UnifiedInterviewDashboard() {
           </CardContent>
         </Card>
       </div>
+      
+      {/* 手動予約追加モーダル */}
+      <ManualReservationModal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        onSubmit={handleAddManualReservation}
+      />
     </div>
   );
 }
