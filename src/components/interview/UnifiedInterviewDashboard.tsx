@@ -216,10 +216,10 @@ export default function UnifiedInterviewDashboard() {
     sessionStorage.setItem('interviewReservation', JSON.stringify(reservation));
     console.log('Saved to sessionStorage:', sessionStorage.getItem('interviewReservation'));
     
-    // DynamicInterviewFlowに遷移
+    // DynamicInterviewFlowに遷移（window.locationで強制リロード）
     const url = '/interviews?tab=sheets&fromDashboard=true';
     console.log('Navigating to:', url);
-    router.push(url);
+    window.location.href = url;
   };
 
   const getTodayReservations = () => {
