@@ -27,7 +27,12 @@ import {
   Calendar,
   Printer,
   X,
-  Eye
+  Eye,
+  ArrowRightLeft,
+  UserCheck,
+  TrendingUp,
+  AlertTriangle,
+  UserX
 } from 'lucide-react';
 import styles from './DynamicInterviewFlow.module.css';
 import { 
@@ -55,9 +60,12 @@ import {
   ReturnReason,
   IncidentLevel
 } from '@/services/specialInterviewTemplates';
-// 定期面談バンクシステムのインポート
+// 面談バンクシステムのインポート
 import { generateInterviewSheet, generateMotivationFollowUp, generateInterviewSummary } from '@/lib/interview-bank/services/generator';
+import { generateSupportInterviewFromVoiceDrive, generateSupportInterview } from '@/lib/interview-bank/services/support-generator';
+import { generateSpecialInterview, SpecialInterviewType as SpecialInterviewBankType } from '@/lib/interview-bank/services/special-generator';
 import { ExtendedInterviewParams, StaffProfile, PositionDetail } from '@/lib/interview-bank/types-extended';
+import { UnifiedBankService, UnifiedInterviewParams } from '@/lib/interview-bank/services/unified-bank-service';
 import DynamicInterviewSheet from '@/components/interview-bank/DynamicInterviewSheet';
 import DynamicInterviewSheetPrint from '@/components/interview-bank/DynamicInterviewSheetPrint';
 
@@ -265,8 +273,8 @@ export default function DynamicInterviewFlow() {
     try {
       let manual: GeneratedInterviewManual | null = null;
       
-      // 定期面談バンクシステムを使用する場合
-      if (session.useBankSystem && session.interviewType === 'regular_annual') {
+      // バンクシステムを使用する場合（全ての面談タイプで使用）
+      if (session.useBankSystem) {
         // スタッフプロファイルを作成
         const staffProfile: StaffProfile = {
           id: session.staffMember!.id,
@@ -290,19 +298,61 @@ export default function DynamicInterviewFlow() {
           licenses: extractLicenses(session.staffMember!.jobRole)
         };
         
-        // 面談パラメータを作成
-        const params: ExtendedInterviewParams = {
-          staff: staffProfile,
-          interviewDate: new Date(),
-          duration: session.duration,
-          interviewerId: 'INT001',
-          interviewerName: '面談担当者',
-          includePositionQuestions: true,
-          includeFacilityQuestions: true
-        };
+        // 統一バンクサービスを使用して適切な面談シートを生成
+        let generatedSheet: any;
+        const unifiedService = UnifiedBankService.getInstance();
         
-        // バンクシステムでシートを生成
-        const generatedSheet = generateInterviewSheet(params);
+        if (session.interviewType === 'regular_annual') {
+          // 定期面談
+          const params: ExtendedInterviewParams = {
+            staff: staffProfile,
+            interviewDate: new Date(),
+            duration: session.duration,
+            interviewerId: 'INT001',
+            interviewerName: '面談担当者',
+            includePositionQuestions: true,
+            includeFacilityQuestions: true
+          };
+          generatedSheet = generateInterviewSheet(params);
+          
+        } else if (session.interviewType === 'special') {
+          // 特別面談
+          const specialParams = {
+            interviewType: 'special' as const,
+            specialType: session.specialType as SpecialInterviewBankType,
+            subType: session.specialContext?.subType,
+            reason: session.specialContext?.reason,
+            confidentialLevel: session.specialContext?.confidentialLevel || 'normal' as const,
+            duration: session.duration,
+            interviewDate: new Date()
+          };
+          generatedSheet = generateSpecialInterview(specialParams, staffProfile as any);
+          
+        } else if (session.interviewType === 'support') {
+          // サポート面談
+          const supportParams = {
+            interviewType: 'support' as const,
+            category: session.supportRequest?.category || 'other',
+            urgency: session.supportRequest?.urgency || 'medium' as const,
+            consultationTopic: session.supportRequest?.topic || '',
+            consultationDetails: session.supportRequest?.details || '',
+            duration: session.duration,
+            interviewDate: new Date()
+          };
+          generatedSheet = generateSupportInterview(supportParams, staffProfile as any);
+        } else {
+          // デフォルトは定期面談
+          const params: ExtendedInterviewParams = {
+            staff: staffProfile,
+            interviewDate: new Date(),
+            duration: session.duration,
+            interviewerId: 'INT001',
+            interviewerName: '面談担当者',
+            includePositionQuestions: true,
+            includeFacilityQuestions: true
+          };
+          generatedSheet = generateInterviewSheet(params);
+        }
         
         // 動機タイプ診断が必要な場合は追加質問を生成
         if (session.includeMotivationDiagnosis) {
@@ -735,7 +785,8 @@ export default function DynamicInterviewFlow() {
                 onClick={() => {
                   setSession(prev => ({
                     ...prev,
-                    interviewType: 'special'
+                    interviewType: 'special',
+                    useBankSystem: true // バンクシステムを使用
                   }));
                   setCurrentStep('special-type-select');
                 }}
@@ -748,19 +799,27 @@ export default function DynamicInterviewFlow() {
                       特定の状況に応じた面談
                     </p>
                     <ul className="text-xs text-gray-500 space-y-1">
-                      <li>• 復職面談</li>
-                      <li>• インシデント後</li>
                       <li>• 退職面談</li>
+                      <li>• 異動面談</li>
+                      <li>• 復職面談</li>
+                      <li>• 昇進面談</li>
                     </ul>
-                    <span className="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded">Phase 2実装</span>
+                    <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">バンク対応</span>
                   </div>
                 </CardContent>
               </Card>
 
               {/* サポート面談 */}
               <Card 
-                className="cursor-pointer hover:border-green-500 transition-colors opacity-50"
-                onClick={() => alert('サポート面談は開発中です')}
+                className="cursor-pointer hover:border-green-500 transition-colors"
+                onClick={() => {
+                  setSession(prev => ({
+                    ...prev,
+                    interviewType: 'support',
+                    useBankSystem: true // バンクシステムを使用
+                  }));
+                  setCurrentStep('support-request');
+                }}
               >
                 <CardContent className="p-6">
                   <div className="flex flex-col items-center text-center space-y-3">
@@ -772,9 +831,10 @@ export default function DynamicInterviewFlow() {
                     <ul className="text-xs text-gray-500 space-y-1">
                       <li>• キャリア相談</li>
                       <li>• 職場環境</li>
-                      <li>• 個別相談</li>
+                      <li>• 人間関係</li>
+                      <li>• ワークライフ</li>
                     </ul>
-                    <span className="text-xs bg-gray-200 px-2 py-1 rounded">開発中</span>
+                    <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">バンク対応</span>
                   </div>
                 </CardContent>
               </Card>
@@ -793,6 +853,123 @@ export default function DynamicInterviewFlow() {
         </Card>
       )}
 
+      {/* Step 2.5: サポート面談の詳細入力 */}
+      {currentStep === 'support-request' && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Users className="h-5 w-5" />
+              サポート面談の詳細
+            </CardTitle>
+            <p className="text-sm text-gray-600 mt-2">
+              {session.staffMember?.name}さんの相談内容を入力してください
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Label>相談カテゴリ</Label>
+              <RadioGroup 
+                defaultValue="career"
+                onValueChange={(value) => {
+                  setSession(prev => ({
+                    ...prev,
+                    supportRequest: { ...prev.supportRequest, category: value }
+                  }));
+                }}
+              >
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="career" id="career" />
+                    <Label htmlFor="career">キャリア相談</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="workplace" id="workplace" />
+                    <Label htmlFor="workplace">職場環境</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="relationships" id="relationships" />
+                    <Label htmlFor="relationships">人間関係</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="worklife" id="worklife" />
+                    <Label htmlFor="worklife">ワークライフ</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="health" id="health" />
+                    <Label htmlFor="health">健康・メンタル</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="skills" id="skills" />
+                    <Label htmlFor="skills">スキル・研修</Label>
+                  </div>
+                </div>
+              </RadioGroup>
+            </div>
+            
+            <div>
+              <Label>相談のタイトル</Label>
+              <Input
+                placeholder="相談内容を簡潔に..."
+                onChange={(e) => {
+                  setSession(prev => ({
+                    ...prev,
+                    supportRequest: { ...prev.supportRequest, topic: e.target.value }
+                  }));
+                }}
+              />
+            </div>
+            
+            <div>
+              <Label>相談内容の詳細</Label>
+              <Textarea
+                placeholder="具体的な相談内容を入力してください..."
+                rows={4}
+                onChange={(e) => {
+                  setSession(prev => ({
+                    ...prev,
+                    supportRequest: { ...prev.supportRequest, details: e.target.value }
+                  }));
+                }}
+              />
+            </div>
+            
+            <div>
+              <Label>緊急度</Label>
+              <RadioGroup 
+                defaultValue="medium"
+                onValueChange={(value) => {
+                  setSession(prev => ({
+                    ...prev,
+                    supportRequest: { ...prev.supportRequest, urgency: value }
+                  }));
+                }}
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="low" id="low" />
+                  <Label htmlFor="low">低</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="medium" id="medium" />
+                  <Label htmlFor="medium">中</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="high" id="high" />
+                  <Label htmlFor="high">高</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="urgent" id="urgent" />
+                  <Label htmlFor="urgent">緊急</Label>
+                </div>
+              </RadioGroup>
+            </div>
+            
+            <Button onClick={() => setCurrentStep('duration')} className="w-full">
+              次へ進む
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Step 2.5: 特別面談種類選択 */}
       {currentStep === 'special-type-select' && (
         <Card>
@@ -806,69 +983,22 @@ export default function DynamicInterviewFlow() {
             </p>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* 復職面談 */}
-              <Card 
-                className="cursor-pointer hover:border-blue-500 transition-colors"
-                onClick={() => {
-                  setSession(prev => ({
-                    ...prev,
-                    specialType: 'return_to_work'
-                  }));
-                  setCurrentStep('special-context');
-                }}
-              >
-                <CardContent className="p-6">
-                  <div className="flex flex-col items-center text-center space-y-3">
-                    <User className="h-10 w-10 text-blue-500" />
-                    <h3 className="font-semibold">復職面談</h3>
-                    <p className="text-sm text-gray-600">
-                      休職からの復帰支援
-                    </p>
-                    <ul className="text-xs text-gray-500 space-y-1">
-                      <li>• 産休・育休</li>
-                      <li>• 病気療養</li>
-                      <li>• メンタルヘルス</li>
-                    </ul>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* インシデント後面談 */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {/* 退職面談 */}
               <Card 
                 className="cursor-pointer hover:border-red-500 transition-colors"
                 onClick={() => {
                   setSession(prev => ({
                     ...prev,
-                    specialType: 'incident_followup'
+                    specialType: 'exit',
+                    specialContext: { subType: 'voluntary', reason: '退職' }
                   }));
-                  setCurrentStep('special-context');
+                  setCurrentStep('duration');
                 }}
               >
                 <CardContent className="p-6">
                   <div className="flex flex-col items-center text-center space-y-3">
-                    <AlertCircle className="h-10 w-10 text-red-500" />
-                    <h3 className="font-semibold">インシデント後面談</h3>
-                    <p className="text-sm text-gray-600">
-                      事故・ミス後のフォロー
-                    </p>
-                    <ul className="text-xs text-gray-500 space-y-1">
-                      <li>• ヒヤリハット</li>
-                      <li>• 医療事故</li>
-                      <li>• 再発防止</li>
-                    </ul>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* 退職面談 */}
-              <Card 
-                className="cursor-pointer hover:border-gray-500 transition-colors"
-                onClick={() => alert('退職面談は既存機能をご利用ください')}
-              >
-                <CardContent className="p-6">
-                  <div className="flex flex-col items-center text-center space-y-3">
-                    <User className="h-10 w-10 text-gray-500" />
+                    <User className="h-10 w-10 text-red-500" />
                     <h3 className="font-semibold">退職面談</h3>
                     <p className="text-sm text-gray-600">
                       退職予定者との面談
@@ -878,7 +1008,118 @@ export default function DynamicInterviewFlow() {
                       <li>• 引き継ぎ</li>
                       <li>• 組織改善</li>
                     </ul>
-                    <span className="text-xs bg-gray-200 px-2 py-1 rounded mt-2">既存機能</span>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* 異動面談 */}
+              <Card 
+                className="cursor-pointer hover:border-blue-500 transition-colors"
+                onClick={() => {
+                  setSession(prev => ({
+                    ...prev,
+                    specialType: 'transfer',
+                    specialContext: { reason: '部署異動' }
+                  }));
+                  setCurrentStep('duration');
+                }}
+              >
+                <CardContent className="p-6">
+                  <div className="flex flex-col items-center text-center space-y-3">
+                    <ArrowRightLeft className="h-10 w-10 text-blue-500" />
+                    <h3 className="font-semibold">異動面談</h3>
+                    <p className="text-sm text-gray-600">
+                      部署異動の説明と準備
+                    </p>
+                    <ul className="text-xs text-gray-500 space-y-1">
+                      <li>• 異動理由説明</li>
+                      <li>• 新部署紹介</li>
+                      <li>• 不安解消</li>
+                    </ul>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* 復職面談 */}
+              <Card 
+                className="cursor-pointer hover:border-green-500 transition-colors"
+                onClick={() => {
+                  setSession(prev => ({
+                    ...prev,
+                    specialType: 'return',
+                    specialContext: { reason: '休職からの復帰' }
+                  }));
+                  setCurrentStep('duration');
+                }}
+              >
+                <CardContent className="p-6">
+                  <div className="flex flex-col items-center text-center space-y-3">
+                    <UserCheck className="h-10 w-10 text-green-500" />
+                    <h3 className="font-semibold">復職面談</h3>
+                    <p className="text-sm text-gray-600">
+                      休職からの復帰支援
+                    </p>
+                    <ul className="text-xs text-gray-500 space-y-1">
+                      <li>• 健康状態確認</li>
+                      <li>• 段階的復職</li>
+                      <li>• サポート体制</li>
+                    </ul>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* 昇進面談 */}
+              <Card 
+                className="cursor-pointer hover:border-purple-500 transition-colors"
+                onClick={() => {
+                  setSession(prev => ({
+                    ...prev,
+                    specialType: 'promotion',
+                    specialContext: { subType: 'general', reason: '昇進' }
+                  }));
+                  setCurrentStep('duration');
+                }}
+              >
+                <CardContent className="p-6">
+                  <div className="flex flex-col items-center text-center space-y-3">
+                    <TrendingUp className="h-10 w-10 text-purple-500" />
+                    <h3 className="font-semibold">昇進面談</h3>
+                    <p className="text-sm text-gray-600">
+                      昇進に関する説明と準備
+                    </p>
+                    <ul className="text-xs text-gray-500 space-y-1">
+                      <li>• 新役職説明</li>
+                      <li>• 責任と期待</li>
+                      <li>• サポート</li>
+                    </ul>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* 懲戒面談 */}
+              <Card 
+                className="cursor-pointer hover:border-orange-500 transition-colors"
+                onClick={() => {
+                  setSession(prev => ({
+                    ...prev,
+                    specialType: 'disciplinary',
+                    specialContext: { confidentialLevel: 'high', reason: '指導' }
+                  }));
+                  setCurrentStep('duration');
+                }}
+              >
+                <CardContent className="p-6">
+                  <div className="flex flex-col items-center text-center space-y-3">
+                    <AlertTriangle className="h-10 w-10 text-orange-500" />
+                    <h3 className="font-semibold">懲戒面談</h3>
+                    <p className="text-sm text-gray-600">
+                      規律違反への対応
+                    </p>
+                    <ul className="text-xs text-gray-500 space-y-1">
+                      <li>• 事実確認</li>
+                      <li>• 改善指導</li>
+                      <li>• 再発防止</li>
+                    </ul>
                   </div>
                 </CardContent>
               </Card>
