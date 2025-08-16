@@ -41,11 +41,11 @@ export default function ImprovedMotivationDiagnosisModal({
   const [selectedAnswers, setSelectedAnswers] = useState<Map<string, string>>(new Map());
   const [showConfirmation, setShowConfirmation] = useState(false);
 
-  if (!isOpen) return null;
-
   const currentQuestion = questions[currentQuestionIndex];
   const totalQuestions = Math.min(3, questions.length); // 最初の3問のみ
   const progress = ((currentQuestionIndex + 1) / totalQuestions) * 100;
+
+  if (!isOpen) return null;
 
   // アイコンマップ
   const getOptionIcon = (optionValue: string) => {
