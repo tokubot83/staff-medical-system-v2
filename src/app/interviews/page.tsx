@@ -596,9 +596,21 @@ function OverviewTab(): React.ReactElement {
       <div className={styles.quickAccess}>
         <h2 className={styles.quickAccessTitle}>クイックアクセス</h2>
         <div className={styles.quickAccessGrid}>
+          <Link href="/interview-bank" className={styles.quickAccessCard}>
+            <span className={styles.quickIcon}>🏦</span>
+            <span>面談バンクシステム</span>
+          </Link>
           <Link href="/interview-sheets" className={styles.quickAccessCard}>
             <span className={styles.quickIcon}>📄</span>
             <span>面談シート</span>
+          </Link>
+          <Link href="/interviews/support/voicedrive" className={styles.quickAccessCard}>
+            <span className={styles.quickIcon}>💬</span>
+            <span>VoiceDrive連携</span>
+          </Link>
+          <Link href="/interview-bank/create" className={styles.quickAccessCard}>
+            <span className={styles.quickIcon}>✨</span>
+            <span>AI面談作成</span>
           </Link>
           <Link href="#" className={styles.quickAccessCard} onClick={(e) => { e.preventDefault(); }}>
             <span className={styles.quickIcon}>📅</span>
@@ -608,9 +620,13 @@ function OverviewTab(): React.ReactElement {
             <span className={styles.quickIcon}>📋</span>
             <span>面談記録</span>
           </Link>
-          <Link href="#" className={styles.quickAccessCard} onClick={(e) => { e.preventDefault(); }}>
+          <Link href="/interview-bank" className={styles.quickAccessCard}>
             <span className={styles.quickIcon}>📊</span>
-            <span>実施統計</span>
+            <span>統計ダッシュボード</span>
+          </Link>
+          <Link href="/admin/interview-bank" className={styles.quickAccessCard}>
+            <span className={styles.quickIcon}>⚙️</span>
+            <span>バンク管理</span>
           </Link>
         </div>
       </div>
@@ -642,7 +658,17 @@ function DashboardTab(): React.ReactElement {
 
   return (
     <div className={styles.dashboardContainer}>
-      <h2>面談管理ダッシュボード</h2>
+      <div className={styles.dashboardHeader}>
+        <h2>面談管理ダッシュボード</h2>
+        <div className={styles.dashboardActions}>
+          <Link href="/interview-bank" className={styles.primaryButton}>
+            🏦 面談バンクシステムへ
+          </Link>
+          <Link href="/interview-bank/create" className={styles.secondaryButton}>
+            ✨ AI面談作成
+          </Link>
+        </div>
+      </div>
       
       <div className={styles.dashboardGrid}>
         {/* 本日のタスク */}
