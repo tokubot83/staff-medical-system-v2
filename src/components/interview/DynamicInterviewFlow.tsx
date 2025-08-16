@@ -55,6 +55,11 @@ import {
   ReturnReason,
   IncidentLevel
 } from '@/services/specialInterviewTemplates';
+// 定期面談バンクシステムのインポート
+import { generateInterviewSheet, generateMotivationFollowUp, generateInterviewSummary } from '@/lib/interview-bank/services/generator';
+import { ExtendedInterviewParams, StaffProfile, PositionDetail } from '@/lib/interview-bank/types-extended';
+import DynamicInterviewSheet from '@/components/interview-bank/DynamicInterviewSheet';
+import DynamicInterviewSheetPrint from '@/components/interview-bank/DynamicInterviewSheetPrint';
 
 // 職員データの型定義
 interface StaffMember {
@@ -72,7 +77,7 @@ interface StaffMember {
 }
 
 // フロー状態の型定義
-type FlowStep = 'staff-select' | 'interview-type' | 'special-type-select' | 'special-context' | 'support-request' | 'duration' | 'generating' | 'conducting' | 'completed';
+type FlowStep = 'staff-select' | 'interview-type' | 'special-type-select' | 'special-context' | 'support-request' | 'duration' | 'bank-mode-select' | 'generating' | 'conducting' | 'completed';
 
 interface InterviewSession {
   staffMember: StaffMember | null;
@@ -87,6 +92,9 @@ interface InterviewSession {
   currentSectionIndex: number;
   startTime: Date | null;
   endTime: Date | null;
+  useBankSystem?: boolean; // 定期面談バンクシステムを使用するか
+  bankGeneratedSheet?: any; // バンクシステムで生成されたシート
+  bankResponses?: Record<string, any>; // バンクシステムの回答データ
 }
 
 // デフォルトセクション生成ヘルパー関数
@@ -144,6 +152,7 @@ export default function DynamicInterviewFlow() {
   const [isPrintMode, setIsPrintMode] = useState(false); // 印刷モードフラグ
   const [showPrintPreview, setShowPrintPreview] = useState(false); // 印刷プレビューフラグ
   const [useImprovedUI, setUseImprovedUI] = useState(false); // 改善版UI使用フラグ
+  const [showPrintView, setShowPrintView] = useState(false); // バンクシステム印刷ビューフラグ
 
   // スタッフデータの取得（実際にはAPIから）
   useEffect(() => {
@@ -231,7 +240,12 @@ export default function DynamicInterviewFlow() {
       ...prev,
       interviewType: type
     }));
-    setCurrentStep('duration');
+    // 定期面談の場合はバンクモード選択へ
+    if (type === 'regular_annual') {
+      setCurrentStep('bank-mode-select');
+    } else {
+      setCurrentStep('duration');
+    }
   };
 
   // 時間選択
@@ -249,7 +263,76 @@ export default function DynamicInterviewFlow() {
     setIsGenerating(true);
     
     try {
-      let manual: GeneratedInterviewManual;
+      let manual: GeneratedInterviewManual | null = null;
+      
+      // 定期面談バンクシステムを使用する場合
+      if (session.useBankSystem && session.interviewType === 'regular_annual') {
+        // スタッフプロファイルを作成
+        const staffProfile: StaffProfile = {
+          id: session.staffMember!.id,
+          name: session.staffMember!.name,
+          employeeNumber: session.staffMember!.id,
+          hireDate: new Date(Date.now() - (session.staffMember!.experienceYears * 365 + session.staffMember!.experienceMonths * 30) * 24 * 60 * 60 * 1000),
+          experienceLevel: determineExperienceLevel(session.staffMember!.experienceYears),
+          experienceYears: session.staffMember!.experienceYears,
+          experienceMonths: session.staffMember!.experienceMonths,
+          position: {
+            id: mapToPositionId(session.staffMember!.position),
+            name: session.staffMember!.position,
+            category: mapToProfessionCategory(session.staffMember!.jobRole),
+            level: mapToPositionLevel(session.staffMember!.position),
+            hierarchyLevel: mapToHierarchyLevel(session.staffMember!.position)
+          },
+          positionLevel: mapToPositionLevel(session.staffMember!.position),
+          facility: session.staffMember!.facilityType,
+          department: mapToDepartmentType(session.staffMember!.department),
+          profession: session.staffMember!.jobRole,
+          licenses: extractLicenses(session.staffMember!.jobRole)
+        };
+        
+        // 面談パラメータを作成
+        const params: ExtendedInterviewParams = {
+          staff: staffProfile,
+          interviewDate: new Date(),
+          duration: session.duration,
+          interviewerId: 'INT001',
+          interviewerName: '面談担当者',
+          includePositionQuestions: true,
+          includeFacilityQuestions: true
+        };
+        
+        // バンクシステムでシートを生成
+        const generatedSheet = generateInterviewSheet(params);
+        
+        // 動機タイプ診断が必要な場合は追加質問を生成
+        if (session.includeMotivationDiagnosis) {
+          const motivationFollowUp = generateMotivationFollowUp(
+            'growth', // デフォルト、後で診断結果に基づいて更新
+            staffProfile.experienceLevel,
+            session.duration
+          );
+          // 動機タイプ診断セクションに追加
+          const motivationSection = generatedSheet.sections.find(s => s.type === 'motivation_assessment');
+          if (motivationSection) {
+            motivationSection.questions.push(...motivationFollowUp);
+          }
+        }
+        
+        // バンクシステムのデータをセッションに保存
+        setSession(prev => ({
+          ...prev,
+          bankGeneratedSheet: generatedSheet,
+          bankResponses: {},
+          startTime: new Date()
+        }));
+        
+        setTimeout(() => {
+          setIsGenerating(false);
+          setCurrentStep('conducting');
+        }, 2000);
+        
+        return; // バンクシステムの場合はここで終了
+      }
       
       // 特別面談の場合
       if (session.interviewType === 'special' && session.specialType) {
@@ -340,7 +423,7 @@ export default function DynamicInterviewFlow() {
         }
         
       } else {
-        // 通常の定期面談
+        // 通常の定期面談（従来テンプレート）
         const staffLevel = determineStaffLevel(session.staffMember!.experienceMonths);
         
         const request: ManualGenerationRequest = {
@@ -356,16 +439,18 @@ export default function DynamicInterviewFlow() {
         manual = await InterviewManualGenerationService.generateManual(request);
       }
       
-      setSession(prev => ({
-        ...prev,
-        manual,
-        startTime: new Date()
-      }));
-      
-      setTimeout(() => {
-        setIsGenerating(false);
-        setCurrentStep('conducting');
-      }, 2000);
+      if (manual) {
+        setSession(prev => ({
+          ...prev,
+          manual,
+          startTime: new Date()
+        }));
+        
+        setTimeout(() => {
+          setIsGenerating(false);
+          setCurrentStep('conducting');
+        }, 2000);
+      }
       
     } catch (error) {
       console.error('Manual generation failed:', error);
@@ -383,6 +468,78 @@ export default function DynamicInterviewFlow() {
     if (months < 84) return 'senior';
     if (months < 120) return 'veteran';
     return 'leader';
+  };
+  
+  // バンクシステム用の経験レベル判定
+  const determineExperienceLevel = (years: number): 'new' | 'junior' | 'midlevel' | 'veteran' => {
+    if (years <= 1) return 'new';
+    if (years <= 3) return 'junior';
+    if (years <= 10) return 'midlevel';
+    return 'veteran';
+  };
+  
+  // 役職をポジションIDにマッピング
+  const mapToPositionId = (position: string): string => {
+    const positionMap: Record<string, string> = {
+      '看護師': 'ward_nurse',
+      '主任看護師': 'ward_chief_nurse',
+      '病棟師長': 'ward_manager',
+      '外来師長': 'op_manager',
+      '看護補助者': 'na_staff',
+      'リーダー看護補助者': 'na_leader',
+      '准看護師': 'lpn_staff',
+      '医事課職員': 'ma_staff',
+      '医事課課長': 'ma_manager'
+    };
+    return positionMap[position] || 'staff';
+  };
+  
+  // 職種をプロフェッションカテゴリーにマッピング
+  const mapToProfessionCategory = (jobRole: string): 'nursing' | 'medical_affairs' | 'rehabilitation' | 'administration' => {
+    if (jobRole.includes('看護')) return 'nursing';
+    if (jobRole.includes('医事')) return 'medical_affairs';
+    if (jobRole.includes('リハビリ') || jobRole === 'PT' || jobRole === 'OT' || jobRole === 'ST') return 'rehabilitation';
+    return 'administration';
+  };
+  
+  // 役職をポジションレベルにマッピング
+  const mapToPositionLevel = (position: string): 'staff' | 'leader' | 'chief' | 'assistant_manager' | 'manager' | 'director' => {
+    if (position.includes('師長')) return 'manager';
+    if (position.includes('課長')) return 'manager';
+    if (position.includes('主任')) return 'chief';
+    if (position.includes('リーダー')) return 'leader';
+    return 'staff';
+  };
+  
+  // 役職を階層レベルにマッピング
+  const mapToHierarchyLevel = (position: string): number => {
+    if (position.includes('師長') || position.includes('課長')) return 6;
+    if (position.includes('主任')) return 4;
+    if (position.includes('リーダー')) return 3;
+    if (position.includes('シニア')) return 2;
+    return 1;
+  };
+  
+  // 部署をデパートメントタイプにマッピング
+  const mapToDepartmentType = (department: string): 'ward' | 'outpatient' | 'emergency' | 'icu' | 'operating_room' | 'rehabilitation' | 'administration' => {
+    if (department.includes('病棟')) return 'ward';
+    if (department.includes('外来')) return 'outpatient';
+    if (department.includes('救急')) return 'emergency';
+    if (department.includes('ICU')) return 'icu';
+    if (department.includes('手術')) return 'operating_room';
+    if (department.includes('リハビリ')) return 'rehabilitation';
+    return 'administration';
+  };
+  
+  // 職種から資格を抽出
+  const extractLicenses = (jobRole: string): string[] => {
+    const licenses: string[] = [];
+    if (jobRole.includes('看護師') && !jobRole.includes('准')) licenses.push('看護師');
+    if (jobRole.includes('准看護師')) licenses.push('准看護師');
+    if (jobRole === 'PT') licenses.push('理学療法士');
+    if (jobRole === 'OT') licenses.push('作業療法士');
+    if (jobRole === 'ST') licenses.push('言語聴覚士');
+    return licenses;
   };
 
   // 回答の保存
@@ -824,6 +981,95 @@ export default function DynamicInterviewFlow() {
         </Card>
       )}
 
+      {/* Step 2.7: 定期面談バンクモード選択 */}
+      {currentStep === 'bank-mode-select' && session.interviewType === 'regular_annual' && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <FileText className="h-5 w-5" />
+              面談シート生成方式を選択
+            </CardTitle>
+            <p className="text-sm text-gray-600 mt-2">
+              {session.staffMember?.name}さんの面談シートをどのように準備しますか？
+            </p>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* 定期面談バンクシステム（推奨） */}
+              <Card 
+                className="cursor-pointer hover:border-blue-500 transition-colors border-2"
+                onClick={() => {
+                  setSession(prev => ({ ...prev, useBankSystem: true }));
+                  setCurrentStep('duration');
+                }}
+              >
+                <CardContent className="p-6">
+                  <div className="flex flex-col space-y-3">
+                    <div className="flex items-center gap-2">
+                      <Brain className="h-8 w-8 text-blue-500" />
+                      <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded font-semibold">推奨</span>
+                    </div>
+                    <h3 className="font-semibold text-lg">定期面談バンク（AI最適化）</h3>
+                    <p className="text-sm text-gray-600">
+                      職員のプロファイルに基づいて最適な質問を自動選択
+                    </p>
+                    <ul className="text-xs text-gray-500 space-y-1">
+                      <li>✓ 経験年数・役職に応じた質問</li>
+                      <li>✓ 施設・部署特有の質問を含む</li>
+                      <li>✓ 動機タイプに基づくフォローアップ</li>
+                      <li>✓ 時間に応じた質問数の最適化</li>
+                    </ul>
+                    <div className="mt-3 p-2 bg-blue-50 rounded text-xs">
+                      <strong>適している場合:</strong>
+                      <br />効率的で個別最適化された面談を実施したい
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* 従来のテンプレート方式 */}
+              <Card 
+                className="cursor-pointer hover:border-gray-500 transition-colors"
+                onClick={() => {
+                  setSession(prev => ({ ...prev, useBankSystem: false }));
+                  setCurrentStep('duration');
+                }}
+              >
+                <CardContent className="p-6">
+                  <div className="flex flex-col space-y-3">
+                    <div className="flex items-center gap-2">
+                      <FileText className="h-8 w-8 text-gray-500" />
+                    </div>
+                    <h3 className="font-semibold text-lg">従来のテンプレート</h3>
+                    <p className="text-sm text-gray-600">
+                      固定フォーマットの面談シートを使用
+                    </p>
+                    <ul className="text-xs text-gray-500 space-y-1">
+                      <li>• 標準的な質問セット</li>
+                      <li>• 職種・経験年数別のテンプレート</li>
+                      <li>• 固定された質問順序</li>
+                      <li>• 従来通りの面談フロー</li>
+                    </ul>
+                    <div className="mt-3 p-2 bg-gray-50 rounded text-xs">
+                      <strong>適している場合:</strong>
+                      <br />従来の方式に慣れている・標準化を重視
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            <Alert className="mt-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                定期面談バンクシステムは、{session.staffMember?.experienceYears}年{session.staffMember?.experienceMonths % 12}ヶ月の経験と
+                {session.staffMember?.position}の役職を考慮して、最適な質問を選択します。
+              </AlertDescription>
+            </Alert>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Step 3: 時間選択 */}
       {currentStep === 'duration' && (
         <Card>
@@ -914,8 +1160,97 @@ export default function DynamicInterviewFlow() {
         </Card>
       )}
 
-      {/* Step 5: 面談実施 */}
-      {currentStep === 'conducting' && session.manual && (
+      {/* Step 5: 面談実施 - バンクシステム */}
+      {currentStep === 'conducting' && session.useBankSystem && session.bankGeneratedSheet && (
+        <div className="space-y-6">
+          {/* モード切り替えボタン */}
+          <div className="flex justify-end gap-2 print:hidden">
+            <Button
+              variant={!showPrintView ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setShowPrintView(false)}
+            >
+              <FileText className="h-4 w-4 mr-1" />
+              デジタル入力
+            </Button>
+            <Button
+              variant={showPrintView ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setShowPrintView(true)}
+            >
+              <Printer className="h-4 w-4 mr-1" />
+              印刷プレビュー
+            </Button>
+          </div>
+
+          {/* バンクシステムの面談シート */}
+          {!showPrintView ? (
+            <DynamicInterviewSheet
+              sheetData={session.bankGeneratedSheet}
+              staffProfile={{
+                id: session.staffMember!.id,
+                name: session.staffMember!.name,
+                employeeNumber: session.staffMember!.id,
+                hireDate: new Date(Date.now() - (session.staffMember!.experienceYears * 365 + session.staffMember!.experienceMonths * 30) * 24 * 60 * 60 * 1000),
+                experienceLevel: determineExperienceLevel(session.staffMember!.experienceYears),
+                experienceYears: session.staffMember!.experienceYears,
+                experienceMonths: session.staffMember!.experienceMonths,
+                position: {
+                  id: mapToPositionId(session.staffMember!.position),
+                  name: session.staffMember!.position,
+                  category: mapToProfessionCategory(session.staffMember!.jobRole),
+                  level: mapToPositionLevel(session.staffMember!.position),
+                  hierarchyLevel: mapToHierarchyLevel(session.staffMember!.position)
+                },
+                positionLevel: mapToPositionLevel(session.staffMember!.position),
+                facility: session.staffMember!.facilityType,
+                department: mapToDepartmentType(session.staffMember!.department),
+                profession: session.staffMember!.jobRole,
+                licenses: extractLicenses(session.staffMember!.jobRole)
+              }}
+              onSave={(data) => {
+                setSession(prev => ({
+                  ...prev,
+                  bankResponses: data.responses,
+                  endTime: new Date()
+                }));
+                setCurrentStep('completed');
+              }}
+              readOnly={false}
+            />
+          ) : (
+            <DynamicInterviewSheetPrint
+              sheetData={session.bankGeneratedSheet}
+              staffProfile={{
+                id: session.staffMember!.id,
+                name: session.staffMember!.name,
+                employeeNumber: session.staffMember!.id,
+                hireDate: new Date(Date.now() - (session.staffMember!.experienceYears * 365 + session.staffMember!.experienceMonths * 30) * 24 * 60 * 60 * 1000),
+                experienceLevel: determineExperienceLevel(session.staffMember!.experienceYears),
+                experienceYears: session.staffMember!.experienceYears,
+                experienceMonths: session.staffMember!.experienceMonths,
+                position: {
+                  id: mapToPositionId(session.staffMember!.position),
+                  name: session.staffMember!.position,
+                  category: mapToProfessionCategory(session.staffMember!.jobRole),
+                  level: mapToPositionLevel(session.staffMember!.position),
+                  hierarchyLevel: mapToHierarchyLevel(session.staffMember!.position)
+                },
+                positionLevel: mapToPositionLevel(session.staffMember!.position),
+                facility: session.staffMember!.facilityType,
+                department: mapToDepartmentType(session.staffMember!.department),
+                profession: session.staffMember!.jobRole,
+                licenses: extractLicenses(session.staffMember!.jobRole)
+              }}
+              responses={session.bankResponses || {}}
+              motivationType={session.staffMember?.motivationType}
+            />
+          )}
+        </div>
+      )}
+
+      {/* Step 5: 面談実施 - 従来テンプレート */}
+      {currentStep === 'conducting' && !session.useBankSystem && session.manual && (
         <div className="space-y-6">
           {/* モード切り替えボタン */}
           <div className="flex justify-end gap-2 print:hidden">
