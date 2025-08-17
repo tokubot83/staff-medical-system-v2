@@ -261,6 +261,18 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
         facilityType: 'chronic',
         lastInterviewDate: '2023-12-20',
         motivationType: 'affiliation'
+      },
+      {
+        id: 'STAFF004',
+        name: '佐藤花子',
+        department: '医事課',
+        position: '医事課職員',
+        jobRole: 'medical-clerk',
+        experienceYears: 3,
+        experienceMonths: 36,
+        facilityType: 'acute',
+        lastInterviewDate: '2024-01-15',
+        motivationType: 'stability'
       }
     ];
     
@@ -430,7 +442,7 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
           positionLevel: mapToPositionLevel(session.staffMember!.position),
           facility: session.staffMember!.facilityType,
           department: mapToDepartmentType(session.staffMember!.department),
-          profession: session.staffMember!.jobRole,
+          profession: mapJobRoleToProfession(session.staffMember!.jobRole),
           licenses: extractLicenses(session.staffMember!.jobRole)
         };
         
@@ -916,10 +928,47 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
     const licenses: string[] = [];
     if (jobRole.includes('看護師') && !jobRole.includes('准')) licenses.push('看護師');
     if (jobRole.includes('准看護師')) licenses.push('准看護師');
-    if (jobRole === 'PT') licenses.push('理学療法士');
-    if (jobRole === 'OT') licenses.push('作業療法士');
-    if (jobRole === 'ST') licenses.push('言語聴覚士');
+    if (jobRole === 'pt' || jobRole === 'PT' || jobRole === 'therapist-pt') licenses.push('理学療法士');
+    if (jobRole === 'ot' || jobRole === 'OT' || jobRole === 'therapist-ot') licenses.push('作業療法士');
+    if (jobRole === 'st' || jobRole === 'ST' || jobRole === 'therapist-st') licenses.push('言語聴覚士');
+    if (jobRole === 'medical-clerk' || jobRole.includes('医事')) licenses.push('医療事務');
     return licenses;
+  };
+  
+  // jobRoleを正しいProfessionTypeにマッピング
+  const mapJobRoleToProfession = (jobRole: string): ProfessionType => {
+    const mapping: Record<string, ProfessionType> = {
+      'nurse': 'nurse',
+      'assistant-nurse': 'assistant-nurse',
+      'nursing-aide': 'care-worker',
+      'care-worker': 'care-worker',
+      'pt': 'therapist-pt',
+      'PT': 'therapist-pt',
+      'ot': 'therapist-ot',
+      'OT': 'therapist-ot',
+      'st': 'therapist-st',
+      'ST': 'therapist-st',
+      'medical-clerk': 'medical-clerk',
+      'nutritionist': 'nutritionist',
+      'pharmacist': 'pharmacist',
+      'social-worker': 'social-worker',
+      'counselor': 'counselor',
+      'general-affairs': 'general-affairs',
+      'facility': 'facility',
+      'care-manager': 'care-manager'
+    };
+    
+    // デフォルトは医事課職員または総務として扱う
+    if (jobRole.includes('医事')) return 'medical-clerk';
+    if (jobRole.includes('総務')) return 'general-affairs';
+    if (jobRole.includes('栄養')) return 'nutritionist';
+    if (jobRole.includes('薬剤')) return 'pharmacist';
+    if (jobRole.includes('相談')) return 'social-worker';
+    if (jobRole.includes('カウンセ')) return 'counselor';
+    if (jobRole.includes('施設')) return 'facility';
+    if (jobRole.includes('ケアマネ')) return 'care-manager';
+    
+    return mapping[jobRole] || 'general-affairs';
   };
 
   // 回答の保存
