@@ -591,7 +591,44 @@ export default function UnifiedInterviewBankSystem() {
                       className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleTypeSelect(type.id);
+                        // 面談タイプを設定して直接フローマネージャーを表示
+                        setSelectedType(type.id);
+                        
+                        // デフォルトの質問を設定
+                        let defaultQuestions: BankQuestion[] = [];
+                        switch (type.id) {
+                          case 'regular':
+                            // 基本的な質問を5問程度選択
+                            defaultQuestions = questionBank.slice(0, 5).map(q => ({
+                              id: q.id,
+                              text: q.content,
+                              category: q.category,
+                              section: q.section,
+                              difficulty: q.priority === 1 ? '必須' : q.priority === 2 ? '推奨' : 'オプション',
+                              type: q.type
+                            }));
+                            break;
+                          case 'support':
+                            // サポート質問を3問程度選択
+                            defaultQuestions = mockSupportQuestions.slice(0, 3).map(q => ({
+                              id: q.id,
+                              text: q.questionText,
+                              category: q.category,
+                              type: q.questionType
+                            }));
+                            break;
+                          case 'special':
+                            // 特別面談質問を3問程度選択
+                            defaultQuestions = mockSpecialQuestions.slice(0, 3).map(q => ({
+                              id: q.id,
+                              text: q.questionText,
+                              category: q.category,
+                              type: q.questionType
+                            }));
+                            break;
+                        }
+                        setSelectedQuestions(defaultQuestions);
+                        setShowFlowManager(true);
                       }}
                     >
                       <ListChecks className="w-4 h-4 mr-2" />
