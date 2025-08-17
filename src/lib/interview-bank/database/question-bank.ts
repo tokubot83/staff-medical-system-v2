@@ -3,8 +3,9 @@
 
 import { InterviewQuestion } from '../types';
 import { comprehensiveSkillQuestions } from './comprehensive-skill-questions';
+import { essentialEngagementQuestions } from './essential-engagement-questions';
 
-// 抽象的な質問（既存）と具体的スキル質問（新規）を統合
+// 抽象的な質問（既存）と具体的スキル質問（新規）、エンゲージメント質問を統合
 const abstractQuestions: InterviewQuestion[] = [
   // ===========================
   // 動機タイプ判定セクション
@@ -578,13 +579,25 @@ const abstractQuestions: InterviewQuestion[] = [
   }
 ];
 
-// 抽象的な質問と具体的スキル質問を統合
-export const questionBank: InterviewQuestion[] = [
-  ...abstractQuestions,
-  ...comprehensiveSkillQuestions
+// 全ての質問を統合（重複を除去）
+const allQuestions = [
+  ...essentialEngagementQuestions,  // 最優先：エンゲージメント・定着関連
+  ...comprehensiveSkillQuestions,    // 職種別具体的スキル
+  ...abstractQuestions               // 既存の抽象的質問
 ];
+
+// IDの重複を除去（最初に出現したものを優先）
+const uniqueQuestions = new Map<string, InterviewQuestion>();
+allQuestions.forEach(q => {
+  if (!uniqueQuestions.has(q.id)) {
+    uniqueQuestions.set(q.id, q);
+  }
+});
+
+export const questionBank: InterviewQuestion[] = Array.from(uniqueQuestions.values());
 
 // 質問の総数を確認
 console.log(`Total questions in bank: ${questionBank.length}`);
-console.log(`Abstract questions: ${abstractQuestions.length}`);
+console.log(`Essential engagement questions: ${essentialEngagementQuestions.length}`);
 console.log(`Comprehensive skill questions: ${comprehensiveSkillQuestions.length}`);
+console.log(`Abstract questions: ${abstractQuestions.length}`);

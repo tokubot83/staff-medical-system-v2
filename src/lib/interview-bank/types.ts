@@ -37,7 +37,8 @@ export interface InterviewQuestion {
   content: string;
   type: QuestionType;
   category: QuestionCategory;
-  section: SectionType;
+  section?: SectionType;  // オプショナルに変更（後方互換性のため）
+  sectionId?: string;     // セクションIDも追加
   priority: 1 | 2 | 3; // 1:必須, 2:推奨, 3:オプション
   minDuration: InterviewDuration; // この質問が含まれる最小時間
   tags: string[];

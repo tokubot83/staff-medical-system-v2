@@ -66,6 +66,11 @@ function calculateQuestionScore(
   // 基本優先度スコア (1:必須=100, 2:推奨=50, 3:オプション=10)
   score += question.priority === 1 ? 100 : question.priority === 2 ? 50 : 10;
   
+  // scoreWeightがある場合は重みを適用（具体的スキル質問は高い重みを持つ）
+  if (question.scoreWeight) {
+    score *= question.scoreWeight;
+  }
+  
   // 経験年数マッチング
   if (question.experienceLevels?.includes(criteria.experienceLevel)) {
     score += 30;
@@ -144,10 +149,10 @@ function selectQuestions(
   
   scoredQuestions.sort((a, b) => b.score - a.score);
   
-  // 必須質問を優先的に選択
+  // 必須質問を優先的に選択（優先度1を全て選択し、スコア順で取得）
   const requiredQuestions = scoredQuestions
     .filter(sq => sq.question.priority === 1)
-    .slice(0, Math.min(maxCount, Math.ceil(maxCount * 0.6)))
+    .slice(0, Math.min(maxCount, Math.ceil(maxCount * 0.8))) // 80%を必須質問に割り当て
     .map(sq => sq.question);
   
   // 残りの枠で推奨・オプション質問を追加
@@ -169,8 +174,12 @@ function generateSection(
 ): InterviewSectionInstance {
   const questionCount = determineQuestionCount(sectionDef.type, criteria.duration, criteria.positionLevel);
   
-  // セクションに関連する質問を取得
-  const sectionQuestions = questionBank.filter(q => q.sectionId === sectionDef.id || q.category === sectionDef.type);
+  // セクションに関連する質問を取得（sectionIdまたはsectionタイプでマッチング）
+  const sectionQuestions = questionBank.filter(q => 
+    q.sectionId === sectionDef.id || 
+    q.section === sectionDef.type ||
+    q.category === sectionDef.type
+  );
   
   // 質問を選択（プロファイルを渡す）
   const selectedQuestions = selectQuestions(sectionQuestions, criteria, questionCount, profile);
