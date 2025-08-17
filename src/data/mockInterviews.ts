@@ -1,9 +1,13 @@
 import { Interview, InterviewType, InterviewStatus } from '@/types/interview';
 import { tanakaMisakiInterviews } from './tanakaMisakiInterviews';
+import { additionalMockInterviews } from './additionalMockInterviews';
 
 export const mockInterviews: Interview[] = [
   // 田中美咲さんの面談記録を追加
   ...tanakaMisakiInterviews,
+  
+  // 多様な職種・経験レベルの追加デモデータ
+  ...additionalMockInterviews,
   
   // === 定期面談予約（実施予定） ===
   // 新入職員月次面談
