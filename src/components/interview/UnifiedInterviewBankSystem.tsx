@@ -47,11 +47,86 @@ import {
 
 import { UnifiedBankService, BankStatistics } from '@/lib/interview-bank/services/unified-bank-service';
 import { InterviewBankService } from '@/lib/interview-bank/services/bank-service';
-import { BankQuestion } from '@/lib/interview-bank/types';
+import { InterviewQuestion } from '@/lib/interview-bank/types';
 import { questionBank } from '@/lib/interview-bank/database/question-bank';
-import { supportQuestions } from '@/lib/interview-bank/database/support-questions';
-import { specialQuestions } from '@/lib/interview-bank/database/special-questions';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
+// BankQuestion型の定義（統一型）
+interface BankQuestion {
+  id: string;
+  text: string;
+  category: string;
+  difficulty?: string;
+  type?: string;
+}
+
+// サポート面談・特別面談の質問型（既存の型）
+interface LegacyBankQuestion {
+  id: string;
+  category: string;
+  questionText: string;
+  questionType: string;
+  tags?: string[];
+  priority?: number;
+  estimatedTime?: number;
+  metadata?: any;
+}
+
+// 暫定的にハードコードされた質問データ（サポート面談用）
+const mockSupportQuestions: LegacyBankQuestion[] = [
+  {
+    id: 'sp_career_001',
+    category: 'career_development',
+    questionText: '現在のキャリアプランについて教えてください',
+    questionType: 'text',
+    tags: ['キャリア', 'サポート面談'],
+    priority: 1
+  },
+  {
+    id: 'sp_career_002',
+    category: 'career_development',
+    questionText: '目指している役職や資格はありますか？',
+    questionType: 'text',
+    tags: ['キャリア', '昇進', '資格'],
+    priority: 1
+  },
+  {
+    id: 'sp_workplace_001',
+    category: 'workplace',
+    questionText: '現在の職場環境で改善してほしい点はありますか？',
+    questionType: 'text',
+    tags: ['職場環境', 'サポート面談'],
+    priority: 1
+  }
+];
+
+// 暫定的にハードコードされた質問データ（特別面談用）
+const mockSpecialQuestions: LegacyBankQuestion[] = [
+  {
+    id: 'exit_001',
+    category: 'exit_interview',
+    questionText: '退職を決意した主な理由を教えてください',
+    questionType: 'text',
+    tags: ['退職面談', '退職理由', '重要'],
+    priority: 1
+  },
+  {
+    id: 'exit_002',
+    category: 'exit_interview',
+    questionText: '職場環境で良かった点を教えてください',
+    questionType: 'text',
+    tags: ['退職面談', '職場評価'],
+    priority: 2
+  },
+  {
+    id: 'transfer_001',
+    category: 'transfer',
+    questionText: '異動先での不安や心配事はありますか？',
+    questionType: 'text',
+    tags: ['異動面談', '不安要素'],
+    priority: 1
+  }
+];
 
 // 面談タイプの定義
 const interviewTypes = [
@@ -162,13 +237,34 @@ export default function UnifiedInterviewBankSystem() {
     let questions: BankQuestion[] = [];
     switch (typeId) {
       case 'regular':
-        questions = questionBank;
+        // InterviewQuestion型からBankQuestion型に変換
+        questions = questionBank.map(q => ({
+          id: q.id,
+          text: q.content,
+          category: q.category,
+          difficulty: q.priority === 1 ? '必須' : q.priority === 2 ? '推奨' : 'オプション',
+          type: q.type
+        }));
         break;
       case 'support':
-        questions = supportQuestions;
+        // LegacyBankQuestion型からBankQuestion型に変換
+        questions = mockSupportQuestions.map(q => ({
+          id: q.id,
+          text: q.questionText,
+          category: q.category,
+          difficulty: q.priority === 1 ? '必須' : q.priority === 2 ? '推奨' : 'オプション',
+          type: q.questionType
+        }));
         break;
       case 'special':
-        questions = specialQuestions;
+        // LegacyBankQuestion型からBankQuestion型に変換
+        questions = mockSpecialQuestions.map(q => ({
+          id: q.id,
+          text: q.questionText,
+          category: q.category,
+          difficulty: q.priority === 1 ? '必須' : q.priority === 2 ? '推奨' : 'オプション',
+          type: q.questionType
+        }));
         break;
     }
     setAvailableQuestions(questions);
