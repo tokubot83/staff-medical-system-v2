@@ -69,6 +69,13 @@ function selectSkillQuestions(
   experienceLevel: string,
   maxCount: number
 ): InterviewQuestion[] {
+  // デバッグ用：入力値を確認
+  console.log('[v4-generator] selectSkillQuestions input:', {
+    profession,
+    facilityType,
+    experienceLevel,
+    professionLabel: getProfessionLabel(profession)
+  });
   
   // 職種×施設×経験レベルでフィルタリング
   const relevantQuestions = allQuestions.filter(q => {
@@ -119,6 +126,14 @@ function selectSkillQuestions(
     q.tags && q.tags.includes('全職種') && !q.tags.some(tag => tag === profession || tag === professionLabel)
   );
 
+  // デバッグ用：選択された質問を確認
+  console.log('[v4-generator] Question selection:', {
+    totalRelevant: relevantQuestions.length,
+    specificCount: specificQuestions.length,
+    genericCount: genericQuestions.length,
+    firstSpecific: specificQuestions[0]?.content?.substring(0, 50),
+    firstGeneric: genericQuestions[0]?.content?.substring(0, 50)
+  });
 
   // 優先度でソート（priority 1 > 2 > 3）
   specificQuestions.sort((a, b) => a.priority - b.priority);
