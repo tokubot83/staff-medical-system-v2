@@ -350,7 +350,7 @@ export class UnifiedBankService {
   /**
    * 統計情報取得（エイリアス）
    */
-  async getStatistics(period?: { start?: Date; end?: Date } = {}): Promise<BankStatistics> {
+  async getStatistics(period: { start?: Date; end?: Date } = {}): Promise<BankStatistics> {
     return this.getUnifiedStatistics(period as any);
   }
   
