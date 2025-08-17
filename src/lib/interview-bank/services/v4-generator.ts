@@ -69,6 +69,7 @@ function selectSkillQuestions(
   experienceLevel: string,
   maxCount: number
 ): InterviewQuestion[] {
+  
   // 職種×施設×経験レベルでフィルタリング
   const relevantQuestions = allQuestions.filter(q => {
     // スキル評価セクションの質問のみ
@@ -81,12 +82,18 @@ function selectSkillQuestions(
       return false;
     }
 
-    // 職種マッチング
-    const professionMatch = q.tags.some(tag => 
+    // 職種マッチング - 職種固有の質問を優先
+    const professionLabel = getProfessionLabel(profession);
+    const hasSpecificProfessionTag = q.tags.some(tag => 
       tag === profession || 
-      tag === getProfessionLabel(profession) ||
-      tag === '全職種'
+      tag === professionLabel
     );
+    
+    // 全職種タグは職種固有の質問がない場合のフォールバック
+    const hasGenericTag = q.tags.includes('全職種');
+    
+    // 職種固有の質問を優先、なければ全職種を使用
+    const professionMatch = hasSpecificProfessionTag || (!hasSpecificProfessionTag && hasGenericTag);
 
     // 施設タイプマッチング
     const facilityMatch = q.tags.some(tag =>
@@ -103,29 +110,38 @@ function selectSkillQuestions(
     return professionMatch && facilityMatch && experienceMatch;
   });
 
-  // 優先度でソート（priority 1 > 2 > 3）
-  relevantQuestions.sort((a, b) => a.priority - b.priority);
+  // 職種固有の質問と汎用質問を分離
+  const professionLabel = getProfessionLabel(profession);
+  const specificQuestions = relevantQuestions.filter(q => 
+    q.tags && q.tags.some(tag => tag === profession || tag === professionLabel)
+  );
+  const genericQuestions = relevantQuestions.filter(q => 
+    q.tags && q.tags.includes('全職種') && !q.tags.some(tag => tag === profession || tag === professionLabel)
+  );
 
-  // 必須質問（priority 1）を優先的に選択
-  const requiredQuestions = relevantQuestions.filter(q => q.priority === 1);
-  const recommendedQuestions = relevantQuestions.filter(q => q.priority === 2);
-  const optionalQuestions = relevantQuestions.filter(q => q.priority === 3);
+
+  // 優先度でソート（priority 1 > 2 > 3）
+  specificQuestions.sort((a, b) => a.priority - b.priority);
+  genericQuestions.sort((a, b) => a.priority - b.priority);
 
   const selectedQuestions: InterviewQuestion[] = [];
 
-  // 必須質問を全て追加（最大数まで）
-  selectedQuestions.push(...requiredQuestions.slice(0, maxCount));
-
-  // 残り枠で推奨質問を追加
-  const remainingSlots = maxCount - selectedQuestions.length;
+  // まず職種固有の質問を優先的に選択
+  const specificRequired = specificQuestions.filter(q => q.priority === 1);
+  const specificRecommended = specificQuestions.filter(q => q.priority === 2);
+  
+  selectedQuestions.push(...specificRequired.slice(0, maxCount));
+  
+  let remainingSlots = maxCount - selectedQuestions.length;
   if (remainingSlots > 0) {
-    selectedQuestions.push(...recommendedQuestions.slice(0, remainingSlots));
+    selectedQuestions.push(...specificRecommended.slice(0, remainingSlots));
   }
 
-  // まだ枠があればオプション質問を追加
-  const finalSlots = maxCount - selectedQuestions.length;
-  if (finalSlots > 0) {
-    selectedQuestions.push(...optionalQuestions.slice(0, finalSlots));
+  // まだ枠があれば汎用質問を追加
+  remainingSlots = maxCount - selectedQuestions.length;
+  if (remainingSlots > 0) {
+    const genericRequired = genericQuestions.filter(q => q.priority === 1);
+    selectedQuestions.push(...genericRequired.slice(0, remainingSlots));
   }
 
   return selectedQuestions;
