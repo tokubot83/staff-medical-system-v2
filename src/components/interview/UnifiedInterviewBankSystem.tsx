@@ -42,7 +42,14 @@ import {
   Shield,
   MessageCircle,
   FileText,
-  CheckCircle
+  CheckCircle,
+  Settings,
+  Edit3,
+  PlayCircle,
+  ListChecks,
+  History,
+  Star,
+  Trash2
 } from 'lucide-react';
 
 import { UnifiedBankService, BankStatistics } from '@/lib/interview-bank/services/unified-bank-service';
@@ -270,10 +277,10 @@ export default function UnifiedInterviewBankSystem() {
     setAvailableQuestions(questions);
   };
 
-  // クイックスタートハンドラ
-  const handleQuickStart = (typeId: string) => {
-    // 詳細ボタンと同じ動作にして、質問選択画面を表示
-    handleTypeSelect(typeId);
+  // バンク管理ハンドラ
+  const handleBankManagement = (typeId: string) => {
+    setSelectedType(typeId);
+    setCurrentStep(5); // 管理画面用の新しいステップ
   };
 
   return (
@@ -460,27 +467,64 @@ export default function UnifiedInterviewBankSystem() {
                   ))}
                 </div>
 
-                {/* アクションボタン */}
-                <div className="mt-6 flex gap-2">
-                  <Button 
-                    className="flex-1"
-                    variant="outline"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleTypeSelect(type.id);
-                    }}
-                  >
-                    詳細
-                  </Button>
-                  <Button 
-                    className={`flex-1 bg-gradient-to-r ${type.gradient} text-white`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleQuickStart(type.id);
-                    }}
-                  >
-                    開始
-                  </Button>
+                {/* アクションセクション - 目的別に分離 */}
+                <div className="mt-6 space-y-4">
+                  {/* 面談実施セクション */}
+                  <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <PlayCircle className="w-4 h-4 text-blue-600" />
+                      <span className="text-sm font-semibold text-blue-900">面談を実施する</span>
+                    </div>
+                    <p className="text-xs text-blue-700 mb-3">
+                      質問を選択・カスタマイズして面談を開始
+                    </p>
+                    <Button 
+                      className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleTypeSelect(type.id);
+                      }}
+                    >
+                      <ListChecks className="w-4 h-4 mr-2" />
+                      質問を選んで開始
+                    </Button>
+                  </div>
+
+                  {/* バンク管理セクション */}
+                  <div className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Settings className="w-4 h-4 text-gray-600" />
+                      <span className="text-sm font-semibold text-gray-900">バンクを管理する</span>
+                    </div>
+                    <p className="text-xs text-gray-700 mb-3">
+                      質問の追加・編集・削除
+                    </p>
+                    <Button 
+                      className="w-full"
+                      variant="outline"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleBankManagement(type.id);
+                      }}
+                    >
+                      <Edit3 className="w-4 h-4 mr-2" />
+                      質問を追加・編集
+                    </Button>
+                  </div>
+                </div>
+
+                {/* 統計情報 */}
+                <div className="mt-4 pt-4 border-t border-gray-200">
+                  <div className="flex items-center justify-between text-xs text-gray-600">
+                    <div className="flex items-center gap-1">
+                      <History className="w-3 h-3" />
+                      <span>最近使用: 2日前</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Star className="w-3 h-3" />
+                      <span>利用頻度: 高</span>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -636,6 +680,218 @@ export default function UnifiedInterviewBankSystem() {
                 次へ進む ({selectedQuestions.length}問選択中)
               </Button>
             </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* バンク管理画面（ステップ5） */}
+      {currentStep === 5 && selectedType && (
+        <Card className="border-0 shadow-lg">
+          <CardHeader className="bg-gradient-to-r from-gray-50 to-white">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Settings className="w-6 h-6 text-gray-600" />
+                <div>
+                  <CardTitle>
+                    {interviewTypes.find(t => t.id === selectedType)?.title} - 管理
+                  </CardTitle>
+                  <CardDescription>
+                    質問の追加・編集・削除とバンクのカスタマイズ
+                  </CardDescription>
+                </div>
+              </div>
+              <Button 
+                variant="ghost" 
+                onClick={() => setCurrentStep(1)}
+              >
+                戻る
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent className="p-6">
+            <Tabs defaultValue="questions" className="space-y-4">
+              <TabsList className="grid grid-cols-4 w-full">
+                <TabsTrigger value="questions">質問管理</TabsTrigger>
+                <TabsTrigger value="sets">質問セット</TabsTrigger>
+                <TabsTrigger value="recent">最近の追加</TabsTrigger>
+                <TabsTrigger value="statistics">利用統計</TabsTrigger>
+              </TabsList>
+
+              {/* 質問管理タブ */}
+              <TabsContent value="questions" className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <div className="flex gap-2">
+                    <Button className="bg-green-600 hover:bg-green-700">
+                      <Plus className="w-4 h-4 mr-2" />
+                      新規質問追加
+                    </Button>
+                    <Button variant="outline">
+                      <Database className="w-4 h-4 mr-2" />
+                      一括インポート
+                    </Button>
+                  </div>
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
+                      type="text"
+                      placeholder="質問を検索..."
+                      className="pl-10 pr-4 py-2 w-64"
+                    />
+                  </div>
+                </div>
+
+                <ScrollArea className="h-96">
+                  <div className="space-y-2">
+                    {availableQuestions.slice(0, 10).map((question) => (
+                      <Card key={question.id} className="p-4">
+                        <div className="flex justify-between items-start">
+                          <div className="flex-1">
+                            <p className="font-medium mb-2">{question.text}</p>
+                            <div className="flex gap-2">
+                              <Badge variant="outline">{question.category}</Badge>
+                              <Badge variant="secondary">{question.difficulty}</Badge>
+                              {question.type && <Badge>{question.type}</Badge>}
+                            </div>
+                          </div>
+                          <div className="flex gap-2">
+                            <Button size="sm" variant="ghost">
+                              <Edit3 className="w-4 h-4" />
+                            </Button>
+                            <Button size="sm" variant="ghost" className="text-red-600">
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                </ScrollArea>
+              </TabsContent>
+
+              {/* 質問セットタブ */}
+              <TabsContent value="sets" className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <Card className="p-4 border-2 border-blue-200 bg-blue-50">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
+                        <h4 className="font-semibold">よく使う質問セット</h4>
+                      </div>
+                      <Badge>5セット</Badge>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="p-2 bg-white rounded-lg flex justify-between items-center">
+                        <span className="text-sm">新人看護師向け基本セット</span>
+                        <Button size="sm" variant="ghost">使用</Button>
+                      </div>
+                      <div className="p-2 bg-white rounded-lg flex justify-between items-center">
+                        <span className="text-sm">中堅職員キャリア面談セット</span>
+                        <Button size="sm" variant="ghost">使用</Button>
+                      </div>
+                      <div className="p-2 bg-white rounded-lg flex justify-between items-center">
+                        <span className="text-sm">管理職評価面談セット</span>
+                        <Button size="sm" variant="ghost">使用</Button>
+                      </div>
+                    </div>
+                  </Card>
+
+                  <Card className="p-4">
+                    <h4 className="font-semibold mb-3">カスタムセット作成</h4>
+                    <p className="text-sm text-gray-600 mb-4">
+                      頻繁に使用する質問の組み合わせを保存できます
+                    </p>
+                    <Button className="w-full" variant="outline">
+                      <Plus className="w-4 h-4 mr-2" />
+                      新しいセットを作成
+                    </Button>
+                  </Card>
+                </div>
+              </TabsContent>
+
+              {/* 最近の追加タブ */}
+              <TabsContent value="recent" className="space-y-4">
+                <Card className="p-4">
+                  <h4 className="font-semibold mb-3 flex items-center gap-2">
+                    <History className="w-5 h-5" />
+                    最近追加した質問
+                  </h4>
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-3 p-3 bg-green-50 rounded-lg border border-green-200">
+                      <Badge className="bg-green-600">新規</Badge>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium">仕事のやりがいについて教えてください</p>
+                        <p className="text-xs text-gray-600 mt-1">2日前に追加 • カテゴリ: モチベーション</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 p-3 bg-green-50 rounded-lg border border-green-200">
+                      <Badge className="bg-green-600">新規</Badge>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium">チーム内でのコミュニケーションについて</p>
+                        <p className="text-xs text-gray-600 mt-1">5日前に追加 • カテゴリ: チームワーク</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                      <Badge className="bg-yellow-600">編集</Badge>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium">今後のキャリアプランについて</p>
+                        <p className="text-xs text-gray-600 mt-1">1週間前に編集 • カテゴリ: キャリア</p>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              </TabsContent>
+
+              {/* 利用統計タブ */}
+              <TabsContent value="statistics" className="space-y-4">
+                <div className="grid grid-cols-3 gap-4">
+                  <Card className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-gray-600">総質問数</p>
+                        <p className="text-2xl font-bold">{availableQuestions.length}</p>
+                      </div>
+                      <BookOpen className="w-8 h-8 text-blue-200" />
+                    </div>
+                  </Card>
+                  <Card className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-gray-600">今月の利用回数</p>
+                        <p className="text-2xl font-bold">23</p>
+                      </div>
+                      <TrendingUp className="w-8 h-8 text-green-200" />
+                    </div>
+                  </Card>
+                  <Card className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-gray-600">平均選択数</p>
+                        <p className="text-2xl font-bold">8.5</p>
+                      </div>
+                      <BarChart3 className="w-8 h-8 text-purple-200" />
+                    </div>
+                  </Card>
+                </div>
+
+                <Card className="p-4">
+                  <h4 className="font-semibold mb-3">最もよく使われる質問TOP5</h4>
+                  <div className="space-y-2">
+                    {[
+                      { text: "現在の業務について満足度を教えてください", count: 45 },
+                      { text: "職場の人間関係はいかがですか", count: 42 },
+                      { text: "今後の目標について教えてください", count: 38 },
+                      { text: "改善してほしい点はありますか", count: 35 },
+                      { text: "スキルアップのために取り組んでいることは", count: 32 }
+                    ].map((item, index) => (
+                      <div key={index} className="flex justify-between items-center p-2 hover:bg-gray-50 rounded">
+                        <span className="text-sm">{index + 1}. {item.text}</span>
+                        <Badge variant="outline">{item.count}回</Badge>
+                      </div>
+                    ))}
+                  </div>
+                </Card>
+              </TabsContent>
+            </Tabs>
           </CardContent>
         </Card>
       )}
