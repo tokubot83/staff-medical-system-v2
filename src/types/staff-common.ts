@@ -12,6 +12,16 @@ export type StaffLevel =
   | 'chief'         // 主任
   | 'manager';      // 管理職
 
+// 経験レベル定義（面談シート用）
+export type ExperienceLevel = 
+  | 'new'           // 新人
+  | 'junior'        // 若手
+  | 'midlevel'      // 中堅
+  | 'senior'        // 上級
+  | 'veteran'       // ベテラン
+  | 'supervisor'    // 主任
+  | 'manager';      // 管理職
+
 // 職種定義
 export type JobRole = 
   | 'nurse'               // 看護師

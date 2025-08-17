@@ -8,6 +8,7 @@ import { ExtendedInterviewParams } from '../types-extended';
 import { questionBank } from '../database/question-bank';
 import { facilitySpecificQuestions } from '../database/facility-specific-questions';
 import { commonStatusQuestions } from '../database/common-status-questions';
+import { managementQuestions } from '../database/management-questions';
 import { 
   skillEvaluationSections,
   commonStatusSection,
@@ -20,7 +21,8 @@ import {
 const allQuestions: InterviewQuestion[] = [
   ...questionBank,
   ...facilitySpecificQuestions,
-  ...commonStatusQuestions
+  ...commonStatusQuestions,
+  ...managementQuestions
 ];
 
 /**
@@ -61,6 +63,13 @@ const facilityTypeMapping: Record<string, string> = {
 };
 
 /**
+ * 管理職かどうかを判定
+ */
+function isManagementPosition(experienceLevel: string): boolean {
+  return experienceLevel === 'supervisor' || experienceLevel === 'manager';
+}
+
+/**
  * 第1セクション（スキル評価）の質問を選択
  */
 function selectSkillQuestions(
@@ -74,7 +83,8 @@ function selectSkillQuestions(
     profession,
     facilityType,
     experienceLevel,
-    professionLabel: getProfessionLabel(profession)
+    professionLabel: getProfessionLabel(profession),
+    isManagement: isManagementPosition(experienceLevel)
   };
   console.log('[v4-generator] selectSkillQuestions input:', JSON.stringify(debugInfo, null, 2));
   
@@ -118,7 +128,50 @@ function selectSkillQuestions(
     return professionMatch && facilityMatch && experienceMatch;
   });
 
-  // 職種固有の質問と汎用質問を分離
+  // 管理職の場合は管理職用質問を優先
+  if (isManagementPosition(experienceLevel)) {
+    const managementLabel = experienceLevel === 'supervisor' ? '主任' : '師長';
+    const managementQuestions = relevantQuestions.filter(q => 
+      q.tags && (q.tags.includes(managementLabel) || q.tags.includes('管理職'))
+    );
+    const nonManagementQuestions = relevantQuestions.filter(q => 
+      !q.tags || (!q.tags.includes(managementLabel) && !q.tags.includes('管理職'))
+    );
+
+    console.log('[v4-generator] Management questions found:', managementQuestions.length);
+    
+    // 管理職質問を優先度でソート
+    managementQuestions.sort((a, b) => a.priority - b.priority);
+    nonManagementQuestions.sort((a, b) => a.priority - b.priority);
+
+    const selectedQuestions: InterviewQuestion[] = [];
+    
+    // 管理職用質問を優先的に選択
+    const mgmtRequired = managementQuestions.filter(q => q.priority === 1);
+    const mgmtRecommended = managementQuestions.filter(q => q.priority === 2);
+    
+    selectedQuestions.push(...mgmtRequired.slice(0, maxCount));
+    
+    let remainingSlots = maxCount - selectedQuestions.length;
+    if (remainingSlots > 0) {
+      selectedQuestions.push(...mgmtRecommended.slice(0, remainingSlots));
+    }
+    
+    // まだ枠があれば通常の質問を追加
+    remainingSlots = maxCount - selectedQuestions.length;
+    if (remainingSlots > 0) {
+      selectedQuestions.push(...nonManagementQuestions.slice(0, remainingSlots));
+    }
+    
+    console.log('[v4-generator] Final selected questions (management):');
+    selectedQuestions.forEach((q, idx) => {
+      console.log(`  ${idx + 1}. ${q.content?.substring(0, 40)}... [tags: ${q.tags?.slice(0, 2).join(', ')}]`);
+    });
+    
+    return selectedQuestions;
+  }
+
+  // 通常職員の場合は従来のロジック
   const professionLabel = getProfessionLabel(profession);
   const specificQuestions = relevantQuestions.filter(q => 
     q.tags && q.tags.some(tag => tag === profession || tag === professionLabel)

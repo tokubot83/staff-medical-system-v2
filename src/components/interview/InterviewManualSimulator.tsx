@@ -92,9 +92,9 @@ export default function InterviewManualSimulator() {
       case 'midlevel': return 'midlevel';
       case 'senior':
       case 'veteran': return 'veteran';
-      case 'lead':
-      case 'chief':
-      case 'manager': return 'leader';
+      case 'leader': return 'senior';  // リーダーは上級扱い
+      case 'chief': return 'supervisor';  // 主任
+      case 'manager': return 'manager';  // 師長・管理職
       default: return 'midlevel';
     }
   }

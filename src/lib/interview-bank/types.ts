@@ -1,7 +1,7 @@
 // 定期面談バンク - 型定義
 // 入職年月日から自動算出される経験年数分類
 
-export type ExperienceLevel = 'new' | 'junior' | 'midlevel' | 'veteran' | 'leader';
+export type ExperienceLevel = 'new' | 'junior' | 'midlevel' | 'senior' | 'veteran' | 'supervisor' | 'manager';
 export type FacilityType = 'acute' | 'chronic' | 'roken' | 'grouphome' | 'clinic' | 'outpatient';
 export type ProfessionType = 
   | 'nurse' 
