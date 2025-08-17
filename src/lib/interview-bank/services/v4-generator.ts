@@ -181,14 +181,19 @@ function getProfessionLabel(profession: string): string {
   const labels: Record<string, string> = {
     'nurse': '看護師',
     'assistant_nurse': '准看護師',
+    'assistant-nurse': '准看護師',  // ハイフン付き
     'nursing_assistant': '看護補助者',
+    'nursing-assistant': '看護補助者',  // ハイフン付き
     'care_worker': '介護職',
-    'care-worker': '介護職',  // ハイフン付きもサポート
+    'care-worker': '介護職',  // ハイフン付き
     'therapist_pt': '理学療法士',
+    'therapist-pt': '理学療法士',  // ハイフン付き
     'therapist_ot': '作業療法士',
+    'therapist-ot': '作業療法士',  // ハイフン付き
     'therapist_st': '言語聴覚士',
+    'therapist-st': '言語聴覚士',  // ハイフン付き
     'medical_clerk': '医事課',
-    'medical-clerk': '医事課'  // ハイフン付きもサポート
+    'medical-clerk': '医事課'  // ハイフン付き
   };
   return labels[profession] || profession;
 }
