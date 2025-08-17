@@ -177,12 +177,19 @@ function selectSkillQuestions(
 function selectStatusQuestions(duration: number): InterviewQuestion[] {
   const maxCount = duration >= 45 ? 5 : duration >= 30 ? 4 : 3;
   
+  console.log('[v4-generator] selectStatusQuestions called with duration:', duration);
+  console.log('[v4-generator] commonStatusQuestions count:', commonStatusQuestions.length);
+  console.log('[v4-generator] First status question:', commonStatusQuestions[0]?.content);
+  
   // 優先度でソート
   const sortedQuestions = [...commonStatusQuestions].sort((a, b) => a.priority - b.priority);
   
   // 必須質問を優先的に選択
   const requiredQuestions = sortedQuestions.filter(q => q.priority === 1);
   const recommendedQuestions = sortedQuestions.filter(q => q.priority === 2);
+  
+  console.log('[v4-generator] Required questions:', requiredQuestions.length);
+  console.log('[v4-generator] Recommended questions:', recommendedQuestions.length);
   
   const selectedQuestions: InterviewQuestion[] = [];
   selectedQuestions.push(...requiredQuestions.slice(0, maxCount));
@@ -191,6 +198,11 @@ function selectStatusQuestions(duration: number): InterviewQuestion[] {
   if (remainingSlots > 0) {
     selectedQuestions.push(...recommendedQuestions.slice(0, remainingSlots));
   }
+  
+  console.log('[v4-generator] Selected status questions:', selectedQuestions.length);
+  selectedQuestions.forEach((q, idx) => {
+    console.log(`  ${idx + 1}. ${q.content?.substring(0, 40)}...`);
+  });
   
   return selectedQuestions;
 }
@@ -281,6 +293,8 @@ export function generateV4InterviewSheet(params: ExtendedInterviewParams): Inter
   // ========================================
   const statusQuestions = selectStatusQuestions(duration);
   
+  console.log('[v4-generator] Adding status section with questions:', statusQuestions.length);
+  
   sections.push({
     ...commonStatusSection,
     questions: statusQuestions,
@@ -346,11 +360,19 @@ export function generateV4InterviewSheet(params: ExtendedInterviewParams): Inter
   // 最終セクション：アクションプラン
   // ========================================
   const actionQuestions = allQuestions
-    .filter(q => q.category === 'action_planning' || q.type === 'action')
+    .filter(q => 
+      q.category === 'action_planning' || 
+      q.category === 'action_items' ||
+      q.type === 'action' ||
+      q.sectionId === 'action_plan'
+    )
     .slice(0, 2);
+  
+  console.log('[v4-generator] Action questions from DB:', actionQuestions.length);
   
   if (actionQuestions.length === 0) {
     // フォールバック質問
+    console.log('[v4-generator] No action questions found, adding fallback question');
     actionQuestions.push({
       id: 'action-default-001',
       content: '今回の面談を踏まえて、次回までに取り組みたいことを教えてください。',
@@ -363,6 +385,8 @@ export function generateV4InterviewSheet(params: ExtendedInterviewParams): Inter
       tags: ['共通', 'アクション']
     });
   }
+  
+  console.log('[v4-generator] Adding action section with questions:', actionQuestions.length);
   
   sections.push({
     ...actionPlanSection,
