@@ -113,7 +113,7 @@ export function generateInterviewSheet(params: GeneratorParams): InterviewSheetT
       professionType,
       experienceLevel,
       duration,
-      includesMotivationDiagnosis,
+      includesMotivationDiagnosis: includeMotivationDiagnosis,
       createdAt: new Date()
     },
     title: generateSheetTitle(professionType, experienceLevel, duration),
