@@ -240,18 +240,28 @@ export default function DynamicInterviewSheet({
 
   // 質問タイプに応じたコンポーネントを返す
   const renderQuestion = (question: InterviewQuestionInstance, section: InterviewSectionInstance) => {
+    // questionIdがない場合はidを使用
+    const questionId = question.questionId || question.id;
+    if (!questionId) {
+      console.warn('Question missing ID:', question);
+      return null;
+    }
+    
+    // questionオブジェクトにquestionIdを追加（互換性のため）
+    const normalizedQuestion = { ...question, questionId };
+    
     switch (question.type) {
       case 'scale':
-        return <ScaleRating key={question.questionId} question={question} section={section} />;
+        return <ScaleRating key={questionId} question={normalizedQuestion} section={section} />;
       case 'textarea':
-        return <TextAreaQuestion key={question.questionId} question={question} section={section} />;
+        return <TextAreaQuestion key={questionId} question={normalizedQuestion} section={section} />;
       case 'radio':
-        return <RadioQuestion key={question.questionId} question={question} section={section} />;
+        return <RadioQuestion key={questionId} question={normalizedQuestion} section={section} />;
       case 'checkbox':
-        return <CheckboxQuestion key={question.questionId} question={question} section={section} />;
+        return <CheckboxQuestion key={questionId} question={normalizedQuestion} section={section} />;
       case 'text':
         return (
-          <div key={question.questionId} className="mb-6 p-4 border rounded-lg bg-white shadow-sm">
+          <div key={questionId} className="mb-6 p-4 border rounded-lg bg-white shadow-sm">
             <Label className="font-medium text-gray-800 mb-3 block">
               {question.content}
               {question.required && <span className="text-red-500 ml-1">*</span>}
@@ -260,12 +270,15 @@ export default function DynamicInterviewSheet({
               type="text"
               placeholder={question.placeholder || "回答を入力してください..."}
               disabled={readOnly}
-              value={responses[section.sectionId]?.[question.questionId] || ''}
-              onChange={(e) => updateResponse(section.sectionId, question.questionId, e.target.value)}
+              value={responses[section.sectionId]?.[questionId] || ''}
+              onChange={(e) => updateResponse(section.sectionId, questionId, e.target.value)}
             />
           </div>
         );
+      case 'open':  // 開放型質問をtextareaとして処理
+        return <TextAreaQuestion key={questionId} question={normalizedQuestion} section={section} />;
       default:
+        console.warn('Unknown question type:', question.type);
         return null;
     }
   };
@@ -284,13 +297,16 @@ export default function DynamicInterviewSheet({
     const iconMap: Record<string, any> = {
       'motivation_assessment': Brain,
       'current_status': Activity,
+      'status_check': Activity,  // 現状確認セクション
       'skill_evaluation': Target,
       'goal_setting': Award,
       'support_planning': Users,
       'career_development': TrendingUp,
+      'organization_contribution': Users,  // 組織貢献セクション
       'team_environment': Users,
       'health_wellbeing': Heart,
       'feedback_reflection': MessageSquare,
+      'action_planning': ArrowRight,  // アクションプランセクション
       'action_plan': ArrowRight
     };
     return iconMap[sectionType] || FileText;
