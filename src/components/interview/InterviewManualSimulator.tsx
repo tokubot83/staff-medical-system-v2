@@ -1,28 +1,30 @@
 'use client'
 
 import React, { useState } from 'react'
-import { 
-  InterviewManualGenerationService,
-  ManualGenerationRequest,
-  GeneratedInterviewManual,
-  StaffLevel,
-  JobRole,
-  FacilityType,
-  InterviewDuration
-} from '@/services/interviewManualGenerationServiceV2'
 import { InterviewType } from '@/types/interview'
 import styles from './InterviewManualSimulator.module.css'
+import { UnifiedBankService, UnifiedInterviewParams } from '@/lib/interview-bank/services/unified-bank-service'
+import { StaffProfile, PositionDetail } from '@/lib/interview-bank/types-extended'
+import DynamicInterviewSheet from '@/components/interview-bank/DynamicInterviewSheet'
+import { 
+  StaffLevel, 
+  JobRole, 
+  FacilityType,
+  calculateExperienceYears,
+  getJobRoleLabel,
+  getFacilityTypeLabel
+} from '@/types/staff-common'
 
 export default function InterviewManualSimulator() {
   const [staffLevel, setStaffLevel] = useState<StaffLevel>('general')
   const [jobRole, setJobRole] = useState<JobRole>('nurse')
   const [facilityType, setFacilityType] = useState<FacilityType>('acute')
   const [interviewType, setInterviewType] = useState<InterviewType>('regular_annual')
-  const [duration, setDuration] = useState<InterviewDuration>(30)
-  const [generatedManual, setGeneratedManual] = useState<GeneratedInterviewManual | null>(null)
+  const [duration, setDuration] = useState<number>(30)
+  const [generatedSheet, setGeneratedSheet] = useState<any>(null)
   const [isGenerating, setIsGenerating] = useState(false)
   const [showComparison, setShowComparison] = useState(false)
-  const [comparisonManual, setComparisonManual] = useState<GeneratedInterviewManual | null>(null)
+  const [comparisonSheet, setComparisonSheet] = useState<any>(null)
 
   const staffLevels: { value: StaffLevel; label: string; description: string }[] = [
     { value: 'new', label: '新人', description: '1年未満' },
@@ -63,225 +65,189 @@ export default function InterviewManualSimulator() {
     { value: 'goal_setting', label: '目標設定面談', description: '目標設定・評価' }
   ]
 
-  const durations: { value: InterviewDuration; label: string }[] = [
+  const durations: { value: number; label: string }[] = [
     { value: 15, label: '15分（簡易版）' },
     { value: 30, label: '30分（標準版）' },
     { value: 45, label: '45分（詳細版）' },
     { value: 60, label: '60分（完全版）' }
   ]
 
+  // 経験年数を計算
+  const calculateExperienceYears = (level: StaffLevel): number => {
+    const experienceMap: Record<StaffLevel, number> = {
+      'new': 0,
+      'junior': 1,
+      'general': 2,
+      'midlevel': 4,
+      'senior': 6,
+      'veteran': 8,
+      'leader': 10,
+      'chief': 12,
+      'manager': 15
+    }
+    return experienceMap[level] || 2
+  }
+
+  // 職種を適切な形式に変換
+  const convertJobRole = (role: JobRole): string => {
+    const roleMap: Record<JobRole, string> = {
+      'nurse': '看護師',
+      'assistant-nurse': '准看護師',
+      'nursing-aide': '看護補助者',
+      'care-worker': '介護職員',
+      'care-assistant': '介護補助者',
+      'pt': '理学療法士',
+      'ot': '作業療法士',
+      'st': '言語聴覚士'
+    }
+    return roleMap[role] || '看護師'
+  }
+
+  // 施設タイプを適切な形式に変換
+  const convertFacilityType = (facility: FacilityType): string => {
+    const facilityMap: Record<FacilityType, string> = {
+      'acute': '急性期病院',
+      'chronic': '慢性期病院',
+      'roken': '介護老人保健施設',
+      'grouphome': 'グループホーム',
+      'outpatient': '外来'
+    }
+    return facilityMap[facility] || '急性期病院'
+  }
+
   const handleGenerate = async () => {
     setIsGenerating(true)
     try {
-      const request: ManualGenerationRequest = {
-        staffLevel,
-        jobRole,
-        facilityType,
-        interviewType,
-        duration
+      const unifiedService = UnifiedBankService.getInstance()
+      
+      // スタッフプロファイルの作成
+      const staffProfile: StaffProfile = {
+        staffId: `SIM-${Date.now()}`,
+        name: 'シミュレーション職員',
+        department: '看護部',
+        position: convertJobRole(jobRole),
+        experienceYears: calculateExperienceYears(staffLevel),
+        experienceMonths: 0,
+        facility: convertFacilityType(facilityType),
+        qualifications: [],
+        lastInterviewDate: new Date(Date.now() - 180 * 24 * 60 * 60 * 1000).toISOString(), // 6ヶ月前
+        interests: [],
+        challenges: []
       }
+
+      // 面談パラメータの作成
+      const params: UnifiedInterviewParams = {
+        type: interviewType === 'regular_annual' ? 'regular' : 
+              interviewType.includes('support') ? 'support' : 
+              'special',
+        staffProfile,
+        duration,
+        interviewDate: new Date().toISOString(),
+        interviewer: '人事担当者',
+        isNewEmployee: staffLevel === 'new',
+        isManager: staffLevel === 'manager' || staffLevel === 'chief'
+      }
+
+      // 特別面談の場合の追加パラメータ
+      if (params.type === 'special') {
+        params.specialType = 'career'
+        params.specialContext = {
+          reason: 'キャリア相談',
+          details: 'シミュレーション用の特別面談'
+        }
+      }
+
+      // サポート面談の場合の追加パラメータ
+      if (params.type === 'support') {
+        params.supportCategory = 'workplace'
+        params.supportTopic = '職場環境改善'
+        params.supportDetails = 'シミュレーション用のサポート面談'
+      }
+
+      // 面談シートの生成
+      const sheet = await unifiedService.generateInterview(params)
+      setGeneratedSheet(sheet)
       
-      const manual = await InterviewManualGenerationService.generateManual(request)
-      setGeneratedManual(manual)
-      
-      if (showComparison && comparisonManual) {
-        setComparisonManual(null)
+      if (showComparison && comparisonSheet) {
+        setComparisonSheet(null)
       }
     } catch (error) {
-      console.error('マニュアル生成エラー:', error)
-      alert('マニュアルの生成に失敗しました')
+      console.error('シート生成エラー:', error)
+      alert('面談シートの生成に失敗しました')
     } finally {
       setIsGenerating(false)
     }
   }
 
   const handleCompare = async () => {
-    if (!generatedManual) return
+    if (!generatedSheet) return
     
     setIsGenerating(true)
     try {
-      const compareRequest: ManualGenerationRequest = {
-        staffLevel,
-        jobRole,
-        facilityType,
-        interviewType,
-        duration
-      }
+      const unifiedService = UnifiedBankService.getInstance()
       
-      const manual = await InterviewManualGenerationService.generateManual(compareRequest)
-      setComparisonManual(manual)
+      // 比較用のプロファイル（現在の設定を使用）
+      const staffProfile: StaffProfile = {
+        staffId: `SIM-CMP-${Date.now()}`,
+        name: 'シミュレーション職員（比較）',
+        department: '看護部',
+        position: convertJobRole(jobRole),
+        experienceYears: calculateExperienceYears(staffLevel),
+        experienceMonths: 0,
+        facility: convertFacilityType(facilityType),
+        qualifications: [],
+        lastInterviewDate: new Date(Date.now() - 180 * 24 * 60 * 60 * 1000).toISOString(),
+        interests: [],
+        challenges: []
+      }
+
+      const params: UnifiedInterviewParams = {
+        type: interviewType === 'regular_annual' ? 'regular' : 
+              interviewType.includes('support') ? 'support' : 
+              'special',
+        staffProfile,
+        duration,
+        interviewDate: new Date().toISOString(),
+        interviewer: '人事担当者',
+        isNewEmployee: staffLevel === 'new',
+        isManager: staffLevel === 'manager' || staffLevel === 'chief'
+      }
+
+      if (params.type === 'special') {
+        params.specialType = 'career'
+        params.specialContext = {
+          reason: 'キャリア相談',
+          details: 'シミュレーション用の特別面談（比較）'
+        }
+      }
+
+      if (params.type === 'support') {
+        params.supportCategory = 'workplace'
+        params.supportTopic = '職場環境改善'
+        params.supportDetails = 'シミュレーション用のサポート面談（比較）'
+      }
+
+      const sheet = await unifiedService.generateInterview(params)
+      setComparisonSheet(sheet)
       setShowComparison(true)
     } catch (error) {
-      console.error('比較マニュアル生成エラー:', error)
+      console.error('比較シート生成エラー:', error)
     } finally {
       setIsGenerating(false)
     }
   }
 
   const exportToPDF = () => {
-    if (!generatedManual) return
+    if (!generatedSheet) return
     
-    const printContent = document.getElementById('manual-content')
-    if (!printContent) return
-    
-    const printWindow = window.open('', '_blank')
-    if (!printWindow) return
-    
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>${generatedManual.title}</title>
-          <style>
-            body { font-family: 'Noto Sans JP', sans-serif; padding: 20px; }
-            h1 { color: #2c3e50; border-bottom: 2px solid #3498db; }
-            h2 { color: #34495e; margin-top: 30px; }
-            h3 { color: #555; }
-            .section { margin: 20px 0; padding: 15px; background: #f8f9fa; }
-            .question { margin: 10px 0; padding: 10px; background: white; border-left: 3px solid #3498db; }
-            .meta-info { color: #666; font-size: 0.9em; }
-            @media print { .no-print { display: none; } }
-          </style>
-        </head>
-        <body>${printContent.innerHTML}</body>
-      </html>
-    `)
-    printWindow.document.close()
-    printWindow.print()
+    window.print()
   }
-
-  const renderManualContent = (manual: GeneratedInterviewManual, isComparison = false) => (
-    <div className={styles.manualContent} id={isComparison ? 'comparison-content' : 'manual-content'}>
-      <div className={styles.manualHeader}>
-        <h2>{manual.title}</h2>
-        <div className={styles.metaInfo}>
-          <span>生成日時: {new Date(manual.generatedAt).toLocaleString()}</span>
-          <span>推定時間: {manual.estimatedDuration}分</span>
-        </div>
-      </div>
-
-      <div className={styles.staffInfo}>
-        <h3>対象職員情報</h3>
-        <div className={styles.infoGrid}>
-          <div>職種: {manual.staffInfo.jobRole}</div>
-          <div>レベル: {manual.staffInfo.levelDescription}</div>
-          <div>施設: {manual.staffInfo.facility}</div>
-        </div>
-      </div>
-
-      <div className={styles.overview}>
-        <h3>面談概要</h3>
-        <div className={styles.overviewSection}>
-          <h4>目的</h4>
-          <p>{manual.overview.purpose}</p>
-        </div>
-        <div className={styles.overviewSection}>
-          <h4>目標</h4>
-          <ul>
-            {manual.overview.objectives.map((obj, idx) => (
-              <li key={idx}>{obj}</li>
-            ))}
-          </ul>
-        </div>
-        <div className={styles.overviewSection}>
-          <h4>重要ポイント</h4>
-          <ul>
-            {manual.overview.keyPoints.map((point, idx) => (
-              <li key={idx}>{point}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
-      <div className={styles.sections}>
-        <h3>面談セクション</h3>
-        {manual.sections.map((section, sectionIdx) => (
-          <div key={sectionIdx} className={styles.section}>
-            <div className={styles.sectionHeader}>
-              <h4>{section.title}</h4>
-              <span className={styles.duration}>{section.duration}分</span>
-            </div>
-            
-            <div className={styles.questions}>
-              {section.questions.map((q, qIdx) => (
-                <div key={qIdx} className={styles.question}>
-                  <div className={styles.questionHeader}>
-                    <span className={styles.questionNumber}>Q{sectionIdx + 1}-{qIdx + 1}</span>
-                    <span className={styles.questionType}>{q.type}</span>
-                  </div>
-                  <p className={styles.questionText}>{q.question}</p>
-                  
-                  {q.details && (
-                    <div className={styles.questionDetails}>
-                      <div className={styles.purpose}>
-                        <strong>目的:</strong> {q.details.purpose}
-                      </div>
-                      {q.details.askingTips && q.details.askingTips.length > 0 && (
-                        <div className={styles.tips}>
-                          <strong>質問のコツ:</strong>
-                          <ul>
-                            {q.details.askingTips.map((tip, tipIdx) => (
-                              <li key={tipIdx}>{tip}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                  
-                  {q.hybridInput && (
-                    <div className={styles.hybridInput}>
-                      <div className={styles.scaleInput}>
-                        <label>{q.hybridInput.scaleLabel}</label>
-                        <div className={styles.scaleOptions}>
-                          {[1, 2, 3, 4, 5].map(n => (
-                            <span key={n} className={styles.scaleOption}>{n}</span>
-                          ))}
-                        </div>
-                      </div>
-                      <div className={styles.textInput}>
-                        <label>{q.hybridInput.textLabel}</label>
-                        <textarea 
-                          placeholder={q.hybridInput.textPlaceholder}
-                          disabled
-                          className={styles.textArea}
-                        />
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className={styles.timeAllocation}>
-        <h3>時間配分</h3>
-        <div className={styles.timeChart}>
-          {manual.timeAllocation.map((time, idx) => (
-            <div key={idx} className={styles.timeItem}>
-              <div className={styles.timeBar}>
-                <div 
-                  className={styles.timeProgress} 
-                  style={{ width: `${time.percentage}%` }}
-                />
-              </div>
-              <div className={styles.timeLabel}>
-                <span>{time.section}</span>
-                <span>{time.minutes}分 ({time.percentage}%)</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  )
 
   return (
     <div className={styles.simulator}>
       <div className={styles.header}>
         <h1>🎯 面談マニュアルシミュレーター</h1>
-        <p>条件を選択して、動的に生成される面談マニュアルを確認できます</p>
+        <p>条件を選択して、実際の面談で使用される質問内容を確認できます</p>
       </div>
 
       <div className={styles.controls}>
@@ -349,7 +315,7 @@ export default function InterviewManualSimulator() {
           <label>面談時間</label>
           <select 
             value={duration} 
-            onChange={(e) => setDuration(Number(e.target.value) as InterviewDuration)}
+            onChange={(e) => setDuration(Number(e.target.value))}
             className={styles.select}
           >
             {durations.map(d => (
@@ -366,10 +332,10 @@ export default function InterviewManualSimulator() {
             disabled={isGenerating}
             className={styles.generateButton}
           >
-            {isGenerating ? '生成中...' : '🔄 マニュアル生成'}
+            {isGenerating ? '生成中...' : '🔄 面談シート生成'}
           </button>
           
-          {generatedManual && (
+          {generatedSheet && (
             <>
               <button 
                 onClick={handleCompare}
@@ -389,35 +355,61 @@ export default function InterviewManualSimulator() {
         </div>
       </div>
 
-      {generatedManual && (
+      {generatedSheet && (
         <div className={showComparison ? styles.comparisonView : styles.singleView}>
-          <div className={styles.manualPanel}>
-            {renderManualContent(generatedManual)}
+          <div className={styles.sheetPanel}>
+            <div className={styles.sheetHeader}>
+              <h2>生成された面談シート</h2>
+              <div className={styles.sheetMeta}>
+                <span>バージョン: {generatedSheet.metadata?.version || 'v6'}</span>
+                <span>生成日時: {new Date().toLocaleString()}</span>
+              </div>
+            </div>
+            <DynamicInterviewSheet 
+              interviewSheet={generatedSheet}
+              isReadOnly={true}
+              onUpdate={() => {}}
+            />
           </div>
           
-          {showComparison && comparisonManual && (
-            <div className={styles.manualPanel}>
-              {renderManualContent(comparisonManual, true)}
+          {showComparison && comparisonSheet && (
+            <div className={styles.sheetPanel}>
+              <div className={styles.sheetHeader}>
+                <h2>比較用面談シート</h2>
+                <div className={styles.sheetMeta}>
+                  <span>バージョン: {comparisonSheet.metadata?.version || 'v6'}</span>
+                  <span>生成日時: {new Date().toLocaleString()}</span>
+                </div>
+              </div>
+              <DynamicInterviewSheet 
+                interviewSheet={comparisonSheet}
+                isReadOnly={true}
+                onUpdate={() => {}}
+              />
             </div>
           )}
         </div>
       )}
 
-      {!generatedManual && !isGenerating && (
+      {!generatedSheet && !isGenerating && (
         <div className={styles.placeholder}>
           <div className={styles.placeholderContent}>
             <span className={styles.placeholderIcon}>📋</span>
-            <h3>面談マニュアルを生成してみましょう</h3>
-            <p>上部の条件を選択して「マニュアル生成」ボタンをクリックすると、</p>
-            <p>選択した条件に最適化された面談マニュアルが表示されます。</p>
+            <h3>面談シートを生成してみましょう</h3>
+            <p>上部の条件を選択して「面談シート生成」ボタンをクリックすると、</p>
+            <p>実際の面談で使用される質問シートが表示されます。</p>
             <div className={styles.features}>
               <div className={styles.feature}>
                 <span>✅</span>
-                <span>職種別・レベル別の最適化</span>
+                <span>面談ステーションと同じ質問DB使用</span>
               </div>
               <div className={styles.feature}>
                 <span>✅</span>
-                <span>1問1答形式での質問生成</span>
+                <span>v4/v5/v6面談シートの実装済み内容</span>
+              </div>
+              <div className={styles.feature}>
+                <span>✅</span>
+                <span>職種別・レベル別の最適化</span>
               </div>
               <div className={styles.feature}>
                 <span>✅</span>
@@ -425,7 +417,11 @@ export default function InterviewManualSimulator() {
               </div>
               <div className={styles.feature}>
                 <span>✅</span>
-                <span>時間配分の自動計算</span>
+                <span>PT/OT/ST専用質問も完備</span>
+              </div>
+              <div className={styles.feature}>
+                <span>✅</span>
+                <span>実際の面談と同じ内容を確認可能</span>
               </div>
             </div>
           </div>

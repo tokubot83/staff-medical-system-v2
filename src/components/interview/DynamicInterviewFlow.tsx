@@ -39,14 +39,11 @@ import {
 } from 'lucide-react';
 import styles from './DynamicInterviewFlow.module.css';
 import { 
-  InterviewManualGenerationService, 
-  ManualGenerationRequest,
-  GeneratedInterviewManual,
   StaffLevel,
   JobRole,
   FacilityType,
   InterviewDuration
-} from '@/services/interviewManualGenerationServiceV2';
+} from '@/types/staff-common';
 import ImprovedDigitalInterviewUIFixed from './ImprovedDigitalInterviewUIFixed';
 import ImprovedMotivationDiagnosisModal from './ImprovedMotivationDiagnosisModal';
 import { interviewTemplates } from '@/data/interview-question-bank';

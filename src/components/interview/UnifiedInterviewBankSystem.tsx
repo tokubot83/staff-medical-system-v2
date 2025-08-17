@@ -642,7 +642,7 @@ export default function UnifiedInterviewBankSystem() {
       )}
 
       {/* 質問選択画面（ステップ2以降） */}
-      {currentStep >= 2 && selectedType && (
+      {!showFlowManager && currentStep >= 2 && currentStep < 5 && selectedType && (
         <Card className="border-0 shadow-lg">
           <CardHeader className="bg-gradient-to-r from-gray-50 to-white">
             <div className="flex items-center justify-between">
@@ -794,11 +794,14 @@ export default function UnifiedInterviewBankSystem() {
       )}
 
       {/* フローマネージャー表示 */}
-      {showFlowManager && selectedType && (
+      {showFlowManager && selectedType && selectedQuestions.length > 0 && (
         <InterviewBankFlowManager
           selectedQuestions={selectedQuestions}
           interviewType={selectedType}
-          onBack={() => setShowFlowManager(false)}
+          onBack={() => {
+            setShowFlowManager(false);
+            setCurrentStep(2);
+          }}
           onComplete={(settings, questions) => {
             console.log('面談設定:', settings);
             console.log('選択された質問:', questions);
@@ -807,6 +810,7 @@ export default function UnifiedInterviewBankSystem() {
             setShowFlowManager(false);
             setCurrentStep(1);
             setSelectedQuestions([]);
+            setSelectedType(null);
           }}
         />
       )}

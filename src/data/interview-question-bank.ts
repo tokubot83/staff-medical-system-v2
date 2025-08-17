@@ -4,7 +4,7 @@
  */
 
 import { QuestionMaster, QuestionCategory, InterviewTemplate } from '@/types/interview-question-master';
-import { FacilityType, JobRole, StaffLevel } from '@/services/interviewManualGenerationServiceV2';
+import { FacilityType, JobRole, StaffLevel } from '@/types/staff-common';
 
 // ==========================================
 // 1. 職場適応・人間関係カテゴリの質問

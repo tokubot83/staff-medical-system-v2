@@ -3,7 +3,7 @@
  * v4・v5面談シートを統合した質問管理システム
  */
 
-import { FacilityType, JobRole, StaffLevel } from '@/services/interviewManualGenerationServiceV2';
+import { FacilityType, JobRole, StaffLevel } from '@/types/staff-common';
 
 // 質問カテゴリー
 export type QuestionCategory = 

@@ -67,6 +67,11 @@ interface Staff {
   experienceYears: number;
   employmentStatus: string;
   profileImage?: string;
+  position?: string;
+  joinDate?: string;
+  email?: string;
+  phone?: string;
+  facility?: string;
 }
 
 // 質問の型定義
@@ -141,40 +146,134 @@ export default function InterviewBankFlowManager({
   });
   const [searchTerm, setSearchTerm] = useState('');
   const [staffList, setStaffList] = useState<Staff[]>([]);
+  const [isLoadingStaff, setIsLoadingStaff] = useState(true);
 
-  // モックデータ - 実際にはAPIから取得
+  // 実際の職員データを取得
   useEffect(() => {
-    // 職員リストの取得
-    const mockStaffList: Staff[] = [
-      {
-        id: '1',
-        name: '山田太郎',
-        facilityType: '特別養護老人ホーム',
-        department: '看護部',
-        profession: '看護師',
-        experienceYears: 5,
-        employmentStatus: '正職員'
-      },
-      {
-        id: '2',
-        name: '佐藤花子',
-        facilityType: '特別養護老人ホーム',
-        department: 'リハビリ部',
-        profession: '理学療法士',
-        experienceYears: 3,
-        employmentStatus: '正職員'
-      },
-      {
-        id: '3',
-        name: '田中次郎',
-        facilityType: 'デイサービス',
-        department: '介護部',
-        profession: '介護職員',
-        experienceYears: 1,
-        employmentStatus: '正職員'
+    const loadStaffData = async () => {
+      setIsLoadingStaff(true);
+      try {
+        // LocalStorageから職員データを取得
+        const staffData: Staff[] = [];
+        
+        // LocalStorageのキーを走査
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key && key.startsWith('staff_')) {
+            try {
+              const data = JSON.parse(localStorage.getItem(key) || '{}');
+              if (data.id && data.name) {
+                // 経験年数の計算
+                let experienceYears = 0;
+                if (data.joinDate) {
+                  const joinDate = new Date(data.joinDate);
+                  const now = new Date();
+                  experienceYears = Math.floor((now.getTime() - joinDate.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
+                }
+                
+                staffData.push({
+                  id: data.id,
+                  name: data.name,
+                  facilityType: data.facility || data.facilityType || '特別養護老人ホーム',
+                  department: data.department || '未設定',
+                  profession: data.position || data.profession || '職員',
+                  experienceYears: experienceYears || data.experienceYears || 0,
+                  employmentStatus: data.employmentStatus || '正職員',
+                  position: data.position,
+                  joinDate: data.joinDate,
+                  email: data.email,
+                  phone: data.phone,
+                  facility: data.facility
+                });
+              }
+            } catch (err) {
+              console.error('Error parsing staff data:', err);
+            }
+          }
+        }
+        
+        // データがない場合はサンプルデータを追加
+        if (staffData.length === 0) {
+          const sampleStaff: Staff[] = [
+            {
+              id: 'sample_1',
+              name: '山田太郎',
+              facilityType: '特別養護老人ホーム',
+              department: '看護部',
+              profession: '看護師',
+              experienceYears: 5,
+              employmentStatus: '正職員',
+              position: '看護師',
+              joinDate: '2019-04-01',
+              email: 'yamada@example.com'
+            },
+            {
+              id: 'sample_2',
+              name: '佐藤花子',
+              facilityType: '特別養護老人ホーム',
+              department: 'リハビリ部',
+              profession: '理学療法士',
+              experienceYears: 3,
+              employmentStatus: '正職員',
+              position: '理学療法士',
+              joinDate: '2021-04-01',
+              email: 'sato@example.com'
+            },
+            {
+              id: 'sample_3',
+              name: '田中次郎',
+              facilityType: 'デイサービス',
+              department: '介護部',
+              profession: '介護職員',
+              experienceYears: 1,
+              employmentStatus: '正職員',
+              position: '介護職員',
+              joinDate: '2023-04-01',
+              email: 'tanaka@example.com'
+            },
+            {
+              id: 'sample_4',
+              name: '鈴木美咲',
+              facilityType: '特別養護老人ホーム',
+              department: 'リハビリ部',
+              profession: '作業療法士',
+              experienceYears: 7,
+              employmentStatus: '正職員',
+              position: '作業療法士',
+              joinDate: '2017-04-01',
+              email: 'suzuki@example.com'
+            },
+            {
+              id: 'sample_5',
+              name: '高橋健一',
+              facilityType: '特別養護老人ホーム',
+              department: '介護部',
+              profession: '介護主任',
+              experienceYears: 10,
+              employmentStatus: '正職員',
+              position: '介護主任',
+              joinDate: '2014-04-01',
+              email: 'takahashi@example.com'
+            }
+          ];
+          
+          // サンプルデータをLocalStorageに保存
+          sampleStaff.forEach(staff => {
+            localStorage.setItem(`staff_${staff.id}`, JSON.stringify(staff));
+          });
+          
+          setStaffList(sampleStaff);
+        } else {
+          setStaffList(staffData);
+        }
+      } catch (error) {
+        console.error('Failed to load staff data:', error);
+      } finally {
+        setIsLoadingStaff(false);
       }
-    ];
-    setStaffList(mockStaffList);
+    };
+    
+    loadStaffData();
   }, []);
 
   // 推奨質問数の計算
@@ -345,7 +444,16 @@ export default function InterviewBankFlowManager({
             {/* 職員リスト */}
             <ScrollArea className="h-[400px] border rounded-lg">
               <div className="p-4 space-y-2">
-                {filteredStaffList.map((staff) => (
+                {isLoadingStaff ? (
+                  <div className="text-center py-8">
+                    <p className="text-gray-500">職員データを読み込み中...</p>
+                  </div>
+                ) : filteredStaffList.length === 0 ? (
+                  <div className="text-center py-8">
+                    <p className="text-gray-500">該当する職員が見つかりません</p>
+                  </div>
+                ) : (
+                  filteredStaffList.map((staff) => (
                   <div
                     key={staff.id}
                     className={`
@@ -379,7 +487,8 @@ export default function InterviewBankFlowManager({
                       </div>
                     </div>
                   </div>
-                ))}
+                ))
+                )}
               </div>
             </ScrollArea>
 
