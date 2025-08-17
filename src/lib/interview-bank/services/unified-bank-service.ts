@@ -347,6 +347,13 @@ export class UnifiedBankService {
   /**
    * 統合統計取得
    */
+  /**
+   * 統計情報取得（エイリアス）
+   */
+  async getStatistics(period?: { start?: Date; end?: Date } = {}): Promise<BankStatistics> {
+    return this.getUnifiedStatistics(period as any);
+  }
+  
   async getUnifiedStatistics(period?: { start: Date; end: Date }): Promise<BankStatistics> {
     const stats = await this.interviewService.getStatistics({
       dateFrom: period?.start,

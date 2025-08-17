@@ -156,8 +156,12 @@ export interface InterviewRequestAnalytics {
 
 export class VoiceDriveIntegrationService {
   private static mcpConfig: MCPServerConfig = {
-    endpoint: process.env.MCP_SERVER_ENDPOINT || 'http://localhost:3001/api/mcp',
-    apiKey: process.env.MCP_API_KEY || '',
+    endpoint: process.env.NEXT_PUBLIC_MCP_SERVER_ENDPOINT || (
+      typeof window !== 'undefined' && window.location.hostname !== 'localhost' 
+        ? '' // 本番環境では無効化
+        : 'http://localhost:3001/api/mcp'
+    ),
+    apiKey: process.env.NEXT_PUBLIC_MCP_API_KEY || '',
     syncInterval: 60000, // 1分
     retryAttempts: 3,
     timeout: 30000
@@ -457,6 +461,16 @@ export class VoiceDriveIntegrationService {
     path: string,
     options: RequestInit
   ): Promise<Response> {
+    // 本番環境またはMCPサーバーが設定されていない場合はスキップ
+    if (!this.mcpConfig.endpoint || this.mcpConfig.endpoint === '') {
+      console.warn(`MCP Server not configured. Skipping: ${path}`);
+      // モックレスポンスを返す
+      return new Response(JSON.stringify([]), { 
+        status: 200, 
+        headers: { 'Content-Type': 'application/json' } 
+      });
+    }
+    
     const url = `${this.mcpConfig.endpoint}${path}`;
     
     // 開発環境でMCPサーバーが利用できない場合はスキップ

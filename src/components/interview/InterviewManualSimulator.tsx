@@ -84,6 +84,7 @@ export default function InterviewManualSimulator() {
         name: 'シミュレーション職員',
         department: '看護部',
         position: getJobRoleLabel(jobRole),
+        profession: getJobRoleLabel(jobRole), // professionフィールドを追加
         experienceYears: calculateExperienceYears(staffLevel),
         experienceMonths: 0,
         facility: getFacilityTypeLabel(facilityType),
@@ -130,9 +131,20 @@ export default function InterviewManualSimulator() {
       }
 
       // 面談シートの生成
+      console.log('Generating interview with params:', params)
       const result = await unifiedService.generateUnifiedInterview(params)
-      setGeneratedSheet(result.sheet)
-      setGeneratedSheet(sheet)
+      console.log('Generated result:', result)
+      
+      // resultがsheetを持っているか、result自体がsheetか確認
+      if (result && result.sheet) {
+        console.log('Setting sheet from result.sheet:', result.sheet)
+        setGeneratedSheet(result.sheet)
+      } else if (result) {
+        console.log('Setting result as sheet:', result)
+        setGeneratedSheet(result)
+      } else {
+        console.error('No valid sheet generated')
+      }
       
       if (showComparison && comparisonSheet) {
         setComparisonSheet(null)
@@ -158,6 +170,7 @@ export default function InterviewManualSimulator() {
         name: 'シミュレーション職員（比較）',
         department: '看護部',
         position: getJobRoleLabel(jobRole),
+        profession: getJobRoleLabel(jobRole), // professionフィールドを追加
         experienceYears: calculateExperienceYears(staffLevel),
         experienceMonths: 0,
         facility: getFacilityTypeLabel(facilityType),
@@ -203,8 +216,12 @@ export default function InterviewManualSimulator() {
       }
 
       const result = await unifiedService.generateUnifiedInterview(params)
-      setComparisonSheet(result.sheet)
-      setComparisonSheet(sheet)
+      
+      if (result && result.sheet) {
+        setComparisonSheet(result.sheet)
+      } else if (result) {
+        setComparisonSheet(result)
+      }
       setShowComparison(true)
     } catch (error) {
       console.error('比較シート生成エラー:', error)
@@ -337,7 +354,7 @@ export default function InterviewManualSimulator() {
             <div className={styles.sheetHeader}>
               <h2>生成された面談シート</h2>
               <div className={styles.sheetMeta}>
-                <span>バージョン: {generatedSheet.metadata?.version || 'v6'}</span>
+                <span>バージョン: {generatedSheet?.metadata?.version || 'v6'}</span>
                 <span>生成日時: {new Date().toLocaleString()}</span>
               </div>
             </div>
