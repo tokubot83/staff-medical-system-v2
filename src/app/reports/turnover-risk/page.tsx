@@ -409,7 +409,7 @@ function TurnoverRiskReportContent() {
                   </div>
                   <div>
                     <p className="text-gray-600">必要投資</p>
-                    <p className="font-medium">¥{intervention.cost.toLocaleString()}</p>
+                    <p className="font-medium">¥{(intervention.cost ?? 0).toLocaleString()}</p>
                   </div>
                   <div>
                     <p className="text-gray-600">ROI</p>

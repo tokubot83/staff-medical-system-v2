@@ -256,10 +256,10 @@ function CohortInterventionEffectContent() {
                       {item.施策}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {item.投資額.toLocaleString()}
+                      {(item.投資額 ?? 0).toLocaleString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {item.削減コスト.toLocaleString()}
+                      {(item.削減コスト ?? 0).toLocaleString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       <span className={`font-semibold ${item.ROI > 100 ? 'text-green-600' : 'text-yellow-600'}`}>

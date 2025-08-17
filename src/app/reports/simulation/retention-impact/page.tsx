@@ -515,7 +515,7 @@ function Content() {
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <h4 className="font-semibold text-gray-900 mb-2">施策投資額</h4>
                     <p className="text-2xl font-bold text-blue-600">
-                      ¥{impactPrediction.totalCost.toLocaleString()}
+                      ¥{(impactPrediction.totalCost ?? 0).toLocaleString()}
                     </p>
                     <p className="text-sm text-gray-600 mt-1">
                       選択した{selectedStrategies.length}つの施策の合計
@@ -525,7 +525,7 @@ function Content() {
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <h4 className="font-semibold text-gray-900 mb-2">予想削減コスト</h4>
                     <p className="text-2xl font-bold text-green-600">
-                      ¥{Math.round((impactPrediction.baseline.turnoverRate - impactPrediction.predicted.turnoverRate) * currentTurnoverRisk.total * 500000).toLocaleString()}
+                      ¥{Math.round(((impactPrediction.baseline?.turnoverRate ?? 0) - (impactPrediction.predicted?.turnoverRate ?? 0)) * (currentTurnoverRisk?.total ?? 0) * 500000).toLocaleString()}
                     </p>
                     <p className="text-sm text-gray-600 mt-1">
                       離職率改善による採用・研修コスト削減

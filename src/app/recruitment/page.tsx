@@ -104,7 +104,7 @@ export default function RecruitmentPage() {
               <p><strong>部門:</strong> {job.department}</p>
               <p><strong>雇用形態:</strong> {job.employmentType}</p>
               <p><strong>募集人数:</strong> {job.numberOfPositions}名</p>
-              <p><strong>給与:</strong> {job.salary.min.toLocaleString()}円～{job.salary.max.toLocaleString()}円</p>
+              <p><strong>給与:</strong> {(job.salary.min ?? 0).toLocaleString()}円～{(job.salary.max ?? 0).toLocaleString()}円</p>
               <p><strong>応募締切:</strong> {new Date(job.closingDate).toLocaleDateString()}</p>
             </div>
             <div className={styles.jobStats}>
@@ -889,7 +889,7 @@ export default function RecruitmentPage() {
                 <p>メール: {selectedApplicant.email}</p>
                 <p>電話: {selectedApplicant.phone}</p>
                 <p>生年月日: {new Date(selectedApplicant.birthDate).toLocaleDateString()}</p>
-                <p>希望給与: {selectedApplicant.desiredSalary.toLocaleString()}円</p>
+                <p>希望給与: {(selectedApplicant.desiredSalary ?? 0).toLocaleString()}円</p>
                 <p>入職可能日: {new Date(selectedApplicant.availableStartDate).toLocaleDateString()}</p>
               </section>
               {selectedApplicant.evaluations.length > 0 && (

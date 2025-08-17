@@ -358,7 +358,7 @@ function Content() {
                     <div className="flex justify-between items-center pt-4 border-t">
                       <div className="flex gap-6 text-sm">
                         <span>参加者: <span className="font-semibold">{intervention.participants}名</span></span>
-                        <span>投資額: <span className="font-semibold">¥{intervention.cost.toLocaleString()}</span></span>
+                        <span>投資額: <span className="font-semibold">¥{(intervention.cost ?? 0).toLocaleString()}</span></span>
                         <span>ROI: <span className="font-semibold text-green-600">{intervention.roi}%</span></span>
                       </div>
                       <div className="flex gap-2">

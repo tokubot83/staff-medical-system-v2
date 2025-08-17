@@ -308,7 +308,7 @@ function WorkEnvironmentReportContent() {
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
                   <div>
                     <p className="text-gray-600">必要投資</p>
-                    <p className="font-medium">¥{improvement.cost.toLocaleString()}</p>
+                    <p className="font-medium">¥{(improvement.cost ?? 0).toLocaleString()}</p>
                   </div>
                   <div>
                     <p className="text-gray-600">実施期間</p>

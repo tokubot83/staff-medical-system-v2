@@ -474,7 +474,7 @@ export default function UnifiedInterviewBankSystem() {
                 <div>
                   <p className="text-sm text-gray-600">総面談数</p>
                   <p className="text-3xl font-bold text-blue-700">
-                    {statistics.totalInterviews.toLocaleString()}
+                    {(statistics.totalInterviews ?? 0).toLocaleString()}
                   </p>
                   <p className="text-xs text-gray-500 mt-1">全バンク合計</p>
                 </div>

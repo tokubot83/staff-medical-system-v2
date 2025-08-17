@@ -424,7 +424,7 @@ function OrganizationOptimizationReportContent() {
                       </div>
                       <div>
                         <span className="text-gray-600">必要投資: </span>
-                        <span className="font-medium">¥{rec.cost.toLocaleString()}</span>
+                        <span className="font-medium">¥{(rec.cost ?? 0).toLocaleString()}</span>
                       </div>
                     </div>
                   </div>

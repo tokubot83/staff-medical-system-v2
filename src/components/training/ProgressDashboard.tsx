@@ -199,7 +199,7 @@ export default function ProgressDashboard() {
             <Users size={24} />
           </div>
           <div className="cardContent">
-            <div className="cardValue">{data.overview.totalEmployees.toLocaleString()}</div>
+            <div className="cardValue">{data.overview.totalEmployees?.toLocaleString() || '0'}</div>
             <div className="cardLabel">総職員数</div>
             <div className="cardSubtext">
               研修対象: {data.overview.activeTrainees}名

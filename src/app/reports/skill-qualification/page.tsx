@@ -431,7 +431,7 @@ function SkillQualificationReportContent() {
                   </div>
                   <div>
                     <p className="text-gray-600">予算</p>
-                    <p className="font-medium">¥{plan.budget.toLocaleString()}</p>
+                    <p className="font-medium">¥{(plan.budget ?? 0).toLocaleString()}</p>
                   </div>
                   <div>
                     <p className="text-gray-600">期待成果</p>

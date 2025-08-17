@@ -187,11 +187,11 @@ function RetentionSimulatorContent() {
           </div>
           <div className="bg-gray-50 p-4 rounded-lg">
             <p className="text-sm text-gray-600">採用コスト/人</p>
-            <p className="text-2xl font-bold">¥{recruitmentCost.toLocaleString()}</p>
+            <p className="text-2xl font-bold">¥{(recruitmentCost ?? 0).toLocaleString()}</p>
           </div>
           <div className="bg-gray-50 p-4 rounded-lg">
             <p className="text-sm text-gray-600">年間採用コスト</p>
-            <p className="text-2xl font-bold">¥{(Math.round(currentHeadcount * (100 - baseRetentionRate) / 100) * recruitmentCost).toLocaleString()}</p>
+            <p className="text-2xl font-bold">¥{(Math.round(currentHeadcount * (100 - baseRetentionRate) / 100) * (recruitmentCost ?? 0)).toLocaleString()}</p>
           </div>
         </div>
 
@@ -213,7 +213,7 @@ function RetentionSimulatorContent() {
                   <div>
                     <h4 className="font-medium">{intervention.name}</h4>
                     <p className="text-sm text-gray-600 mt-1">
-                      効果: +{intervention.effect}% | 投資額: ¥{intervention.cost.toLocaleString()}
+                      効果: +{intervention.effect}% | 投資額: ¥{(intervention.cost ?? 0).toLocaleString()}
                     </p>
                   </div>
                   <input
@@ -234,7 +234,7 @@ function RetentionSimulatorContent() {
                 総投資額: ¥{interventions
                   .filter(i => selectedInterventions.includes(i.id))
                   .reduce((sum, i) => sum + i.cost, 0)
-                  .toLocaleString()}
+                  .toLocaleString() ?? '0'}
               </p>
             </div>
             <button

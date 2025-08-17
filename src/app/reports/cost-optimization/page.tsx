@@ -293,7 +293,7 @@ function CostOptimizationReportContent() {
                       ¥{(dept.avgCost / 10000).toFixed(0)}万
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      ¥{dept.costPerPatient.toLocaleString()}
+                      ¥{(dept.costPerPatient ?? 0).toLocaleString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
@@ -338,7 +338,7 @@ function CostOptimizationReportContent() {
               <div key={index} className="flex items-center justify-between bg-white p-3 rounded border">
                 <span className="text-sm font-medium text-gray-900">{dept.name}</span>
                 <div className="flex items-center space-x-4">
-                  <span className="text-sm text-gray-600">{dept.hours.toLocaleString()}時間</span>
+                  <span className="text-sm text-gray-600">{(dept.hours ?? 0).toLocaleString()}時間</span>
                   <span className="text-sm font-medium">¥{(dept.amount / 1000000).toFixed(1)}百万</span>
                 </div>
               </div>

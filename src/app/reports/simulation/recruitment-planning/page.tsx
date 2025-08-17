@@ -322,7 +322,7 @@ function Content() {
                       <Tooltip 
                         formatter={(value) => {
                           const numValue = typeof value === 'number' ? value : parseFloat(value as string);
-                          return `¥${numValue.toLocaleString()}`;
+                          return `¥${(numValue ?? 0).toLocaleString()}`;
                         }}
                         contentStyle={{ 
                           backgroundColor: '#ffffff', 
@@ -382,7 +382,7 @@ function Content() {
                 <div className="mt-4">
                   <p className="text-sm text-gray-600">総採用コスト</p>
                   <p className="text-3xl font-bold text-blue-600">
-                    ¥{recruitmentCost.reduce((sum, c) => sum + c.合計, 0).toLocaleString()}
+                    ¥{(recruitmentCost.reduce((sum, c) => sum + (c.合計 ?? 0), 0) ?? 0).toLocaleString()}
                   </p>
                 </div>
               </CardContent>
@@ -476,7 +476,7 @@ function Content() {
                     現在の「{recruitmentStrategy === 'balanced' ? 'バランス型' : 
                             recruitmentStrategy === 'experienced' ? '経験者重視' :
                             recruitmentStrategy === 'newgrad' ? '新卒重視' : '柔軟雇用重視'}」
-                    戦略での総コストは¥{recruitmentCost.reduce((sum, c) => sum + c.合計, 0).toLocaleString()}です。
+                    戦略での総コストは¥{(recruitmentCost.reduce((sum, c) => sum + (c.合計 ?? 0), 0) ?? 0).toLocaleString()}です。
                     {recruitmentStrategy !== 'flexible' && '柔軟雇用重視戦略に変更することで、コストを20-30%削減できる可能性があります。'}
                   </p>
                 </div>

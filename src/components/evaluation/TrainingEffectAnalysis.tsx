@@ -320,11 +320,11 @@ export default function TrainingEffectAnalysis() {
               <div className="roiDetail">
                 <div className="detailItem">
                   <span className="label">投資額</span>
-                  <span className="value">¥{data.roiAnalysis.totalInvestment.toLocaleString()}</span>
+                  <span className="value">¥{(data.roiAnalysis.totalInvestment ?? 0).toLocaleString()}</span>
                 </div>
                 <div className="detailItem">
                   <span className="label">効果額</span>
-                  <span className="value positive">¥{data.roiAnalysis.totalBenefit.toLocaleString()}</span>
+                  <span className="value positive">¥{(data.roiAnalysis.totalBenefit ?? 0).toLocaleString()}</span>
                 </div>
                 <div className="detailItem">
                   <span className="label">回収期間</span>
@@ -347,7 +347,7 @@ export default function TrainingEffectAnalysis() {
                         }}
                       />
                     </div>
-                    <span className="itemValue">¥{item.value.toLocaleString()}</span>
+                    <span className="itemValue">¥{(item.value ?? 0).toLocaleString()}</span>
                   </div>
                 ))}
               </div>

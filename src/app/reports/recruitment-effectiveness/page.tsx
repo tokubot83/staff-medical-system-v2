@@ -153,7 +153,7 @@ function RecruitmentEffectivenessReportContent() {
             <div className="bg-gray-50 p-4 rounded-lg">
               <MetricWithComment
                 label="採用単価"
-                value={`¥${reportData.overview.costPerHire.toLocaleString()}`}
+                value={`¥${(reportData.overview.costPerHire ?? 0).toLocaleString()}`}
                 comment={reportData.overview.costPerHire > 400000 ? {
                   id: 'cost-high',
                   type: 'warning',
@@ -199,8 +199,8 @@ function RecruitmentEffectivenessReportContent() {
                   <tr key={index}>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{channel.channel}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{channel.hires}名</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">¥{channel.cost.toLocaleString()}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">¥{Math.round(channel.cost / channel.hires).toLocaleString()}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">¥{(channel.cost ?? 0).toLocaleString()}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">¥{Math.round((channel.cost ?? 0) / (channel.hires || 1)).toLocaleString()}</td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="w-full bg-gray-200 rounded-full h-2.5 mr-2">
@@ -311,7 +311,7 @@ function RecruitmentEffectivenessReportContent() {
           <div className="bg-white border rounded-lg p-6">
             <div className="mb-4">
               <p className="text-sm text-gray-600">総採用コスト</p>
-              <p className="text-3xl font-bold text-gray-900">¥{reportData.costAnalysis.totalCost.toLocaleString()}</p>
+              <p className="text-3xl font-bold text-gray-900">¥{(reportData.costAnalysis.totalCost ?? 0).toLocaleString()}</p>
             </div>
             <div className="space-y-2">
               {reportData.costAnalysis.byCategory.map((category, index) => (
@@ -325,7 +325,7 @@ function RecruitmentEffectivenessReportContent() {
                     </div>
                   </div>
                   <span className="text-sm font-medium text-gray-900 w-32 text-right">
-                    ¥{category.amount.toLocaleString()}
+                    ¥{(category.amount ?? 0).toLocaleString()}
                   </span>
                 </div>
               ))}
@@ -335,7 +335,7 @@ function RecruitmentEffectivenessReportContent() {
               <div className="grid grid-cols-3 gap-4 text-sm">
                 <div>
                   <p className="text-gray-600">平均収益貢献</p>
-                  <p className="font-medium">¥{reportData.costAnalysis.roi.avgRevenuePerEmployee.toLocaleString()}/年</p>
+                  <p className="font-medium">¥{(reportData.costAnalysis.roi.avgRevenuePerEmployee ?? 0).toLocaleString()}/年</p>
                 </div>
                 <div>
                   <p className="text-gray-600">投資回収期間</p>
