@@ -70,12 +70,13 @@ function selectSkillQuestions(
   maxCount: number
 ): InterviewQuestion[] {
   // デバッグ用：入力値を確認
-  console.log('[v4-generator] selectSkillQuestions input:', {
+  const debugInfo = {
     profession,
     facilityType,
     experienceLevel,
     professionLabel: getProfessionLabel(profession)
-  });
+  };
+  console.log('[v4-generator] selectSkillQuestions input:', JSON.stringify(debugInfo, null, 2));
   
   // 職種×施設×経験レベルでフィルタリング
   const relevantQuestions = allQuestions.filter(q => {
@@ -127,13 +128,15 @@ function selectSkillQuestions(
   );
 
   // デバッグ用：選択された質問を確認
-  console.log('[v4-generator] Question selection:', {
+  const selectionDebug = {
     totalRelevant: relevantQuestions.length,
     specificCount: specificQuestions.length,
     genericCount: genericQuestions.length,
     firstSpecific: specificQuestions[0]?.content?.substring(0, 50),
+    specificTags: specificQuestions[0]?.tags?.slice(0, 3),
     firstGeneric: genericQuestions[0]?.content?.substring(0, 50)
-  });
+  };
+  console.log('[v4-generator] Question selection:', JSON.stringify(selectionDebug, null, 2));
 
   // 優先度でソート（priority 1 > 2 > 3）
   specificQuestions.sort((a, b) => a.priority - b.priority);
@@ -158,6 +161,12 @@ function selectSkillQuestions(
     const genericRequired = genericQuestions.filter(q => q.priority === 1);
     selectedQuestions.push(...genericRequired.slice(0, remainingSlots));
   }
+
+  // デバッグ用：最終選択された質問を確認
+  console.log('[v4-generator] Final selected questions:');
+  selectedQuestions.forEach((q, idx) => {
+    console.log(`  ${idx + 1}. ${q.content?.substring(0, 40)}... [tags: ${q.tags?.slice(0, 2).join(', ')}]`);
+  });
 
   return selectedQuestions;
 }
