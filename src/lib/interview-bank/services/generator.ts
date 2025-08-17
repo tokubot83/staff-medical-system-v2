@@ -23,6 +23,39 @@ import { questionBank } from '../database/question-bank';
 import { sectionDefinitions } from '../database/sections';
 import { positionQuestionMapping } from '../types-extended';
 
+// 質問の条件チェック
+function checkQuestionConditions(
+  question: InterviewQuestion,
+  criteria: QuestionSelectionCriteria,
+  profile: StaffProfile
+): boolean {
+  if (!question.conditions || question.conditions.length === 0) {
+    return true; // 条件がない場合は常に対象
+  }
+  
+  for (const condition of question.conditions) {
+    switch (condition.type) {
+      case 'profession':
+        // 職種チェック
+        if (condition.operator === 'equals' && !condition.values.includes(profile.profession)) {
+          return false;
+        }
+        break;
+      case 'experienceLevel':
+        if (!condition.values.includes(criteria.experienceLevel)) {
+          return false;
+        }
+        break;
+      case 'facilityType':
+        if (!condition.values.includes(criteria.facility)) {
+          return false;
+        }
+        break;
+    }
+  }
+  return true;
+}
+
 // 質問の優先度スコアを計算
 function calculateQuestionScore(
   question: InterviewQuestion,
@@ -95,10 +128,16 @@ function determineQuestionCount(
 function selectQuestions(
   availableQuestions: InterviewQuestion[],
   criteria: QuestionSelectionCriteria,
-  maxCount: number
+  maxCount: number,
+  profile: StaffProfile
 ): InterviewQuestion[] {
+  // 条件に合致する質問のみをフィルタリング
+  const eligibleQuestions = availableQuestions.filter(q => 
+    checkQuestionConditions(q, criteria, profile)
+  );
+  
   // スコアを計算してソート
-  const scoredQuestions = availableQuestions.map(q => ({
+  const scoredQuestions = eligibleQuestions.map(q => ({
     question: q,
     score: calculateQuestionScore(q, criteria)
   }));
@@ -125,15 +164,16 @@ function selectQuestions(
 function generateSection(
   sectionDef: InterviewSection,
   criteria: QuestionSelectionCriteria,
-  sectionIndex: number
+  sectionIndex: number,
+  profile: StaffProfile
 ): InterviewSectionInstance {
   const questionCount = determineQuestionCount(sectionDef.type, criteria.duration, criteria.positionLevel);
   
   // セクションに関連する質問を取得
   const sectionQuestions = questionBank.filter(q => q.sectionId === sectionDef.id || q.category === sectionDef.type);
   
-  // 質問を選択
-  const selectedQuestions = selectQuestions(sectionQuestions, criteria, questionCount);
+  // 質問を選択（プロファイルを渡す）
+  const selectedQuestions = selectQuestions(sectionQuestions, criteria, questionCount, profile);
   
   // 質問インスタンスに変換
   const questionInstances: InterviewQuestionInstance[] = selectedQuestions.map((q, index) => ({
@@ -214,7 +254,7 @@ export function generateInterviewSheet(params: ExtendedInterviewParams): Generat
   selectedSectionTypes.forEach((sectionType, index) => {
     const sectionDef = sectionDefinitions.find(s => s.type === sectionType);
     if (sectionDef) {
-      const section = generateSection(sectionDef, criteria, index);
+      const section = generateSection(sectionDef, criteria, index, params.staff);
       sections.push(section);
       totalQuestions += section.questions.length;
     }

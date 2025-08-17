@@ -2,8 +2,10 @@
 // 既存の面談シートから抽出した全質問を整理
 
 import { InterviewQuestion } from '../types';
+import { comprehensiveSkillQuestions } from './comprehensive-skill-questions';
 
-export const questionBank: InterviewQuestion[] = [
+// 抽象的な質問（既存）と具体的スキル質問（新規）を統合
+const abstractQuestions: InterviewQuestion[] = [
   // ===========================
   // 動機タイプ判定セクション
   // ===========================
@@ -576,5 +578,13 @@ export const questionBank: InterviewQuestion[] = [
   }
 ];
 
+// 抽象的な質問と具体的スキル質問を統合
+export const questionBank: InterviewQuestion[] = [
+  ...abstractQuestions,
+  ...comprehensiveSkillQuestions
+];
+
 // 質問の総数を確認
 console.log(`Total questions in bank: ${questionBank.length}`);
+console.log(`Abstract questions: ${abstractQuestions.length}`);
+console.log(`Comprehensive skill questions: ${comprehensiveSkillQuestions.length}`);
