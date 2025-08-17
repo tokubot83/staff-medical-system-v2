@@ -466,7 +466,7 @@ export default function UnifiedInterviewBankSystem() {
       </div>
 
       {/* 統計サマリー */}
-      {statistics && (
+      {!showFlowManager && statistics && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card className="border-0 shadow-md bg-gradient-to-br from-blue-50 to-white">
             <CardContent className="p-6">
@@ -531,7 +531,7 @@ export default function UnifiedInterviewBankSystem() {
       )}
 
       {/* メインコンテンツ - 面談タイプ選択 */}
-      {currentStep === 1 && (
+      {!showFlowManager && currentStep === 1 && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {interviewTypes.map((type) => (
             <Card 
@@ -783,7 +783,12 @@ export default function UnifiedInterviewBankSystem() {
               </Button>
               <Button 
                 className="bg-gradient-to-r from-blue-600 to-purple-600 text-white"
-                onClick={() => setShowFlowManager(true)}
+                onClick={() => {
+                  console.log('次へ進むボタンクリック');
+                  console.log('選択された質問数:', selectedQuestions.length);
+                  console.log('選択されたタイプ:', selectedType);
+                  setShowFlowManager(true);
+                }}
                 disabled={selectedQuestions.length === 0}
               >
                 次へ進む ({selectedQuestions.length}問選択中)
@@ -794,13 +799,12 @@ export default function UnifiedInterviewBankSystem() {
       )}
 
       {/* フローマネージャー表示 */}
-      {showFlowManager && selectedType && selectedQuestions.length > 0 && (
+      {showFlowManager && selectedType && (
         <InterviewBankFlowManager
           selectedQuestions={selectedQuestions}
           interviewType={selectedType}
           onBack={() => {
             setShowFlowManager(false);
-            setCurrentStep(2);
           }}
           onComplete={(settings, questions) => {
             console.log('面談設定:', settings);
