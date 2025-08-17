@@ -4,6 +4,8 @@
 import { InterviewQuestion } from '../types';
 import { comprehensiveSkillQuestions } from './comprehensive-skill-questions';
 import { essentialEngagementQuestions } from './essential-engagement-questions';
+import { allCommonQuestions } from './common-questions';
+import { allFacilitySkillQuestions } from './facility-skill-questions';
 
 // 抽象的な質問（既存）と具体的スキル質問（新規）、エンゲージメント質問を統合
 const abstractQuestions: InterviewQuestion[] = [

@@ -2185,7 +2185,7 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
                       )}
 
                       {/* 注意すべき回答 */}
-                      {question.details.redFlags && question.details.redFlags.length > 0 && (
+                      {question.details?.redFlags && question.details.redFlags.length > 0 && (
                         <Alert className="mt-3">
                           <AlertCircle className="h-4 w-4" />
                           <AlertDescription>
@@ -2359,7 +2359,7 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
                                 
                                 {question.type === 'closed' && question.details?.expectedAnswers && (
                                   <div className="flex gap-3 mt-1">
-                                    {question.details.expectedAnswers.map((option, optionIndex) => (
+                                    {question.details?.expectedAnswers?.map((option, optionIndex) => (
                                       <div key={optionIndex} className="flex items-center">
                                         <span className="inline-block w-3 h-3 border border-black mr-1"></span>
                                         <span className="text-xs">{option}</span>
@@ -2370,7 +2370,7 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
                                 
                                 {question.type === 'checklist' && question.details?.expectedAnswers && (
                                   <div className="space-y-1 mt-1">
-                                    {question.details.expectedAnswers.map((option, optionIndex) => (
+                                    {question.details?.expectedAnswers?.map((option, optionIndex) => (
                                       <div key={optionIndex} className="flex items-center">
                                         <span className="inline-block w-3 h-3 border border-black mr-1"></span>
                                         <span className="text-xs">{option}</span>
