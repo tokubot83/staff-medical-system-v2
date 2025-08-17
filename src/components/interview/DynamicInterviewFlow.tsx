@@ -64,6 +64,7 @@ import {
   ReturnReason,
   IncidentLevel
 } from '@/services/specialInterviewTemplates';
+import { V6InterviewTemplateService } from '@/services/v6InterviewTemplateService';
 // 面談バンクシステムのインポート
 import { generateInterviewSheet, generateMotivationFollowUp, generateInterviewSummary } from '@/lib/interview-bank/services/generator';
 import { generateSupportInterviewFromVoiceDrive, generateSupportInterview, SupportGenerationParams } from '@/lib/interview-bank/services/support-generator';
@@ -610,6 +611,82 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
         }, 2000);
         
         return; // バンクシステムの場合はここで終了
+      }
+      
+      // v6テンプレートを使用する場合
+      if (session.useV6Template) {
+        console.log('Using v6 template system');
+        
+        const v6Template = V6InterviewTemplateService.getTemplate({
+          staffName: session.staffMember!.name,
+          department: session.staffMember!.department,
+          position: session.staffMember!.position,
+          experienceYears: session.staffMember!.experienceYears,
+          experienceMonths: session.staffMember!.experienceMonths,
+          interviewType: session.interviewType,
+          duration: session.duration,
+          includeMotivationDiagnosis: session.staffMember!.experienceYears <= 1
+        });
+        
+        // v6テンプレートをマニュアル形式に変換
+        manual = {
+          id: `v6_${Date.now()}`,
+          title: v6Template.title,
+          generatedAt: new Date(),
+          estimatedDuration: v6Template.totalDuration,
+          staffInfo: {
+            level: determineStaffLevel(session.staffMember!.experienceMonths),
+            jobRole: session.staffMember!.jobRole,
+            facility: session.staffMember!.facilityType,
+            levelDescription: ''
+          },
+          overview: {
+            purpose: v6Template.description,
+            objectives: ['統一された評価基準', '経験年数別の最適化', '動機タイプの把握'],
+            keyPoints: v6Template.sections.map(s => s.title),
+            preparationItems: ['面談シート準備', '前回記録確認', '静かな環境確保']
+          },
+          sections: v6Template.sections.map(section => ({
+            id: section.id,
+            title: section.title,
+            duration: section.timeAllocation,
+            questions: section.questions.map(q => ({
+              id: q.id,
+              question: q.content,
+              type: q.type === 'motivation' ? 'choice' : q.type,
+              required: q.required,
+              scale: q.scaleMin && q.scaleMax ? {
+                min: q.scaleMin,
+                max: q.scaleMax,
+                labels: q.scaleLabels
+              } : undefined,
+              options: q.motivationOptions?.map(opt => opt.label) || q.choices
+            }))
+          })),
+          timeAllocation: v6Template.sections.map(s => ({
+            section: s.title,
+            minutes: s.timeAllocation,
+            percentage: Math.round((s.timeAllocation / v6Template.totalDuration) * 100)
+          })),
+          guidelines: {
+            dos: ['リラックスした雰囲気作り', '傾聴の姿勢', '適切なフィードバック'],
+            donts: ['評価的な態度', '時間の圧迫', 'プライバシー侵害'],
+            tips: ['v6統一基準に従う', '動機タイプを考慮']
+          }
+        };
+        
+        setSession(prev => ({
+          ...prev,
+          manual,
+          startTime: new Date()
+        }));
+        
+        setTimeout(() => {
+          setIsGenerating(false);
+          setCurrentStep('conducting');
+        }, 2000);
+        
+        return; // v6テンプレートの場合はここで終了
       }
       
       // 特別面談の場合
@@ -1502,15 +1579,15 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
                 </CardContent>
               </Card>
 
-              {/* 従来のテンプレート方式（現在はバンクシステムを使用） */}
+              {/* 従来のテンプレート方式（v6統一版） */}
               <Card 
                 className="cursor-pointer hover:border-gray-500 transition-colors"
                 onClick={() => {
-                  // 従来テンプレートも暫定的にバンクシステムを使用
+                  // v6テンプレートを使用
                   setSession(prev => ({ 
                     ...prev, 
-                    useBankSystem: true,  // 暫定的にtrueに設定
-                    bankMode: 'basic'    // ベーシックモードを使用
+                    useBankSystem: false,  // バンクシステムは使用しない
+                    useV6Template: true    // v6テンプレートを使用
                   }));
                   setCurrentStep('duration');
                 }}
@@ -1519,21 +1596,20 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
                   <div className="flex flex-col space-y-3">
                     <div className="flex items-center gap-2">
                       <FileText className="h-8 w-8 text-gray-500" />
+                      <Badge variant="secondary" className="text-xs">v6</Badge>
                     </div>
                     <h3 className="font-semibold text-lg">従来のテンプレート</h3>
                     <p className="text-sm text-gray-600">
-                      固定フォーマットの面談シートを使用
+                      v6統一版の面談シートを使用
                     </p>
                     <ul className="text-xs text-gray-500 space-y-1">
-                      <li>• 標準的な質問セット</li>
-                      <li>• 職種・経験年数別のテンプレート</li>
-                      <li>• 固定された質問順序</li>
-                      <li>• 従来通りの面談フロー</li>
+                      <li>• 統一された経験年数分類</li>
+                      <li>• 職種・経験年数別の最適化</li>
+                      <li>• 新人は動機タイプ診断付き</li>
+                      <li>• 印刷対応フォーマット</li>
                     </ul>
-                    <div className="mt-3 p-2 bg-orange-50 rounded text-xs">
-                      <span className="text-orange-600">※ 現在はベーシックモードで代替</span>
-                      <br />
-                      <span className="text-xs text-gray-600">従来方式は開発中</span>
+                    <div className="mt-3 p-2 bg-green-50 rounded text-xs">
+                      <span className="text-green-600">✓ 利用可能</span>
                     </div>
                   </div>
                 </CardContent>
