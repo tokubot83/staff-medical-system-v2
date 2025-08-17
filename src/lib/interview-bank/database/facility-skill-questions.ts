@@ -466,3 +466,6 @@ export const allFacilitySkillQuestions: InterviewQuestion[] = [
   ...rokenSkillQuestions,
   ...chronicSkillQuestions
 ];
+
+// デフォルトエクスポートも追加（互換性のため）
+export default allFacilitySkillQuestions;

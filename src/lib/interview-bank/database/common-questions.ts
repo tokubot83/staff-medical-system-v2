@@ -458,3 +458,6 @@ export const allCommonQuestions: InterviewQuestion[] = [
   ...commonActionPlanQuestions,
   ...commonInterviewerNotesQuestions
 ];
+
+// デフォルトエクスポートも追加（互換性のため）
+export default allCommonQuestions;

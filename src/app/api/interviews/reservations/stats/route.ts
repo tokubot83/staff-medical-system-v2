@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+// 動的レンダリングを強制
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/interviews/reservations/stats
  * 面談予約の統計情報を取得
