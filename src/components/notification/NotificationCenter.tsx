@@ -408,7 +408,7 @@ export default function NotificationCenter() {
                               <div className="flex items-center gap-4 mt-2">
                                 <span className="text-xs text-muted-foreground flex items-center gap-1">
                                   <Clock className="w-3 h-3" />
-                                  {notification.createdAt.toLocaleString()}
+                                  {notification.createdAt ? notification.createdAt.toLocaleString() : '日時不明'}
                                 </span>
                                 
                                 {notification.dueDate && (
