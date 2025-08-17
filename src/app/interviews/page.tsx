@@ -16,12 +16,14 @@ import { getExperienceCategory } from '@/utils/experienceUtils'
 import RoleSelectionModal from '@/components/RoleSelectionModal'
 import UnifiedInterviewDashboard from '@/components/interview/UnifiedInterviewDashboard'
 import UnifiedInterviewBankSystem from '@/components/interview/UnifiedInterviewBankSystem'
+import InterviewManualSimulator from '@/components/interview/InterviewManualSimulator'
 
 // タブ順序を業務フローに合わせて修正
 const tabs = [
   { id: 'station', label: '面談ステーション', icon: '🚉', badge: '', isNew: false },
   { id: 'bank-system', label: '面談バンク', icon: '🏦', badge: '', isNew: false },
   { id: 'overview-guide', label: '概要・ガイド', icon: '📖', badge: '', isNew: false },
+  { id: 'simulator', label: 'マニュアルシミュレーター', icon: '🎯', badge: 'New', isNew: true },
   { id: 'record', label: '結果記録', icon: '📝', badge: '', isNew: false },
   { id: 'analytics', label: '履歴・分析', icon: '📊', badge: '', isNew: false },
   { id: 'settings', label: '設定', icon: '⚙️', badge: '', isNew: false },
@@ -214,6 +216,7 @@ function InterviewsPageContent() {
           {activeTab === 'record' && <RecordTab selectedInterview={selectedInterview} />}
           {activeTab === 'analytics' && <HistoryAnalysisTab interviews={interviews} />}
           {activeTab === 'overview-guide' && <OverviewGuideTab onInterviewTypeClick={handleInterviewTypeClick} />}
+          {activeTab === 'simulator' && <InterviewManualSimulator />}
           {activeTab === 'settings' && <SettingsTab />}
         </div>
       </div>

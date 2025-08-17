@@ -81,6 +81,7 @@ import {
 } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import InterviewBankFlowManager from './InterviewBankFlowManager';
 
 // BankQuestion型の定義（統一型）
 interface BankQuestion {
@@ -254,6 +255,7 @@ export default function UnifiedInterviewBankSystem() {
     type: 'textarea'
   });
   const [importText, setImportText] = useState('');
+  const [showFlowManager, setShowFlowManager] = useState(false);
 
   // 統計情報の取得
   useEffect(() => {
@@ -781,7 +783,7 @@ export default function UnifiedInterviewBankSystem() {
               </Button>
               <Button 
                 className="bg-gradient-to-r from-blue-600 to-purple-600 text-white"
-                onClick={() => setCurrentStep(3)}
+                onClick={() => setShowFlowManager(true)}
                 disabled={selectedQuestions.length === 0}
               >
                 次へ進む ({selectedQuestions.length}問選択中)
@@ -791,8 +793,26 @@ export default function UnifiedInterviewBankSystem() {
         </Card>
       )}
 
+      {/* フローマネージャー表示 */}
+      {showFlowManager && selectedType && (
+        <InterviewBankFlowManager
+          selectedQuestions={selectedQuestions}
+          interviewType={selectedType}
+          onBack={() => setShowFlowManager(false)}
+          onComplete={(settings, questions) => {
+            console.log('面談設定:', settings);
+            console.log('選択された質問:', questions);
+            // TODO: 実際の面談シート生成・保存処理
+            alert('面談シートが生成されました！');
+            setShowFlowManager(false);
+            setCurrentStep(1);
+            setSelectedQuestions([]);
+          }}
+        />
+      )}
+
       {/* バンク管理画面（ステップ5） */}
-      {currentStep === 5 && selectedType && (
+      {!showFlowManager && currentStep === 5 && selectedType && (
         <Card className="border-0 shadow-lg">
           <CardHeader className="bg-gradient-to-r from-gray-50 to-white">
             <div className="flex items-center justify-between">

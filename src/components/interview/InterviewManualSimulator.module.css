@@ -1,0 +1,503 @@
+.simulator {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 12px;
+}
+
+.header h1 {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.header p {
+  font-size: 16px;
+  opacity: 0.95;
+}
+
+.controls {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-bottom: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.controlGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.controlGroup label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.select {
+  padding: 10px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.select:hover {
+  border-color: #667eea;
+}
+
+.select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.actions {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 15px;
+  padding-top: 10px;
+  border-top: 1px solid #e0e0e0;
+  margin-top: 10px;
+}
+
+.generateButton,
+.compareButton,
+.exportButton {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.generateButton {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.generateButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.generateButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.compareButton {
+  background: #3498db;
+  color: white;
+}
+
+.compareButton:hover:not(:disabled) {
+  background: #2980b9;
+  transform: translateY(-2px);
+}
+
+.exportButton {
+  background: #27ae60;
+  color: white;
+}
+
+.exportButton:hover {
+  background: #229954;
+  transform: translateY(-2px);
+}
+
+.singleView,
+.comparisonView {
+  display: grid;
+  gap: 20px;
+}
+
+.comparisonView {
+  grid-template-columns: 1fr 1fr;
+}
+
+.manualPanel {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.manualContent {
+  padding: 30px;
+}
+
+.manualHeader {
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 20px;
+  margin-bottom: 30px;
+}
+
+.manualHeader h2 {
+  font-size: 24px;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.metaInfo {
+  display: flex;
+  gap: 20px;
+  font-size: 14px;
+  color: #666;
+}
+
+.staffInfo {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+
+.staffInfo h3 {
+  font-size: 18px;
+  color: #34495e;
+  margin-bottom: 15px;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  font-size: 14px;
+}
+
+.overview {
+  margin-bottom: 30px;
+}
+
+.overview h3 {
+  font-size: 18px;
+  color: #34495e;
+  margin-bottom: 20px;
+}
+
+.overviewSection {
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.overviewSection h4 {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.overviewSection p {
+  color: #666;
+  line-height: 1.6;
+}
+
+.overviewSection ul {
+  list-style: none;
+  padding: 0;
+}
+
+.overviewSection li {
+  padding: 5px 0;
+  padding-left: 20px;
+  position: relative;
+  color: #666;
+}
+
+.overviewSection li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: #667eea;
+}
+
+.sections h3 {
+  font-size: 18px;
+  color: #34495e;
+  margin-bottom: 20px;
+}
+
+.section {
+  margin-bottom: 30px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.sectionHeader {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sectionHeader h4 {
+  font-size: 16px;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.duration {
+  background: #667eea;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.questions {
+  padding: 20px;
+}
+
+.question {
+  background: #f8f9fa;
+  border-left: 3px solid #667eea;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+}
+
+.questionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.questionNumber {
+  background: #667eea;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.questionType {
+  background: #e0e0e0;
+  color: #555;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.questionText {
+  font-size: 15px;
+  color: #2c3e50;
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+.questionDetails {
+  background: white;
+  padding: 15px;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.purpose {
+  margin-bottom: 10px;
+  color: #555;
+  font-size: 14px;
+}
+
+.tips {
+  color: #555;
+  font-size: 14px;
+}
+
+.tips ul {
+  margin-top: 5px;
+  padding-left: 20px;
+}
+
+.tips li {
+  padding: 3px 0;
+}
+
+.hybridInput {
+  margin-top: 15px;
+  padding: 15px;
+  background: white;
+  border-radius: 4px;
+}
+
+.scaleInput {
+  margin-bottom: 15px;
+}
+
+.scaleInput label {
+  display: block;
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.scaleOptions {
+  display: flex;
+  gap: 10px;
+}
+
+.scaleOption {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-weight: 600;
+  color: #555;
+  background: white;
+}
+
+.textInput label {
+  display: block;
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.textArea {
+  width: 100%;
+  min-height: 60px;
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 14px;
+  resize: vertical;
+  background: #f8f9fa;
+}
+
+.timeAllocation {
+  margin-top: 30px;
+  padding-top: 30px;
+  border-top: 2px solid #e0e0e0;
+}
+
+.timeAllocation h3 {
+  font-size: 18px;
+  color: #34495e;
+  margin-bottom: 20px;
+}
+
+.timeChart {
+  space-y: 15px;
+}
+
+.timeItem {
+  margin-bottom: 15px;
+}
+
+.timeBar {
+  height: 30px;
+  background: #f0f0f0;
+  border-radius: 15px;
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+
+.timeProgress {
+  height: 100%;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  transition: width 0.5s ease;
+}
+
+.timeLabel {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #666;
+  padding: 0 5px;
+}
+
+.placeholder {
+  background: white;
+  border-radius: 12px;
+  padding: 60px 20px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.placeholderContent {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.placeholderIcon {
+  font-size: 64px;
+  display: block;
+  margin-bottom: 20px;
+}
+
+.placeholderContent h3 {
+  font-size: 24px;
+  color: #2c3e50;
+  margin-bottom: 15px;
+}
+
+.placeholderContent p {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 5px;
+}
+
+.features {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  text-align: left;
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #555;
+}
+
+.feature span:first-child {
+  font-size: 18px;
+}
+
+@media (max-width: 768px) {
+  .controls {
+    grid-template-columns: 1fr;
+  }
+  
+  .comparisonView {
+    grid-template-columns: 1fr;
+  }
+  
+  .features {
+    grid-template-columns: 1fr;
+  }
+  
+  .infoGrid {
+    grid-template-columns: 1fr;
+  }
+}
