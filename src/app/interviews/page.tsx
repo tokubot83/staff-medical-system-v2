@@ -21,9 +21,9 @@ import InterviewManualSimulator from '@/components/interview/InterviewManualSimu
 // タブ順序を業務フローに合わせて修正
 const tabs = [
   { id: 'station', label: '面談ステーション', icon: '🚉', badge: '', isNew: false },
-  { id: 'bank-system', label: '面談バンク', icon: '🏦', badge: '', isNew: false },
-  { id: 'overview-guide', label: '概要・ガイド', icon: '📖', badge: '', isNew: false },
-  { id: 'simulator', label: 'マニュアルシミュレーター', icon: '🎯', badge: 'New', isNew: true },
+  { id: 'bank-system', label: 'バンク', icon: '🏦', badge: '', isNew: false },
+  { id: 'overview-guide', label: 'ガイド', icon: '📖', badge: '', isNew: false },
+  { id: 'simulator', label: 'シュミレーター', icon: '🎯', badge: '', isNew: false },
   { id: 'record', label: '結果記録', icon: '📝', badge: '', isNew: false },
   { id: 'analytics', label: '履歴・分析', icon: '📊', badge: '', isNew: false },
   { id: 'settings', label: '設定', icon: '⚙️', badge: '', isNew: false },
