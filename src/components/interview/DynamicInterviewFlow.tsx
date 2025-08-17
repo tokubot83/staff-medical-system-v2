@@ -2035,14 +2035,16 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
                         </div>
                         
                         {/* 質問の詳細情報 */}
-                        <div className="text-sm text-gray-600 bg-blue-50 p-3 rounded">
-                          <p className="font-medium mb-1">💡 質問のポイント</p>
-                          <ul className="space-y-1">
-                            {question.details.askingTips.map((tip, i) => (
-                              <li key={i}>• {tip}</li>
-                            ))}
-                          </ul>
-                        </div>
+                        {question.details?.askingTips && question.details.askingTips.length > 0 && (
+                          <div className="text-sm text-gray-600 bg-blue-50 p-3 rounded">
+                            <p className="font-medium mb-1">💡 質問のポイント</p>
+                            <ul className="space-y-1">
+                              {question.details.askingTips.map((tip, i) => (
+                                <li key={i}>• {tip}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
 
                       {/* 回答入力エリア */}
                       {isPrintMode ? (
