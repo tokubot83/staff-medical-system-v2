@@ -499,11 +499,17 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
           generatedSheet = generateV4InterviewSheet(params);
           
           // デバッグ：生成された質問を確認
-          if (generatedSheet && generatedSheet.sections && generatedSheet.sections[0]) {
-            console.log('[DynamicInterviewFlow] First section questions:');
-            generatedSheet.sections[0].questions.slice(0, 3).forEach((q: any, idx: number) => {
-              console.log(`  ${idx + 1}. ${q.content?.substring(0, 50)}...`);
-              console.log(`     tags: ${q.tags?.slice(0, 3).join(', ')}`);
+          if (generatedSheet && generatedSheet.sections) {
+            console.log('[DynamicInterviewFlow] Generated sections:', generatedSheet.sections.length);
+            generatedSheet.sections.forEach((section: any, sIdx: number) => {
+              console.log(`[DynamicInterviewFlow] Section ${sIdx + 1}: ${section.name}`);
+              if (section.questions && section.questions.length > 0) {
+                console.log(`  Questions: ${section.questions.length}`);
+                console.log(`  First question: ${section.questions[0].content?.substring(0, 50)}...`);
+                if (section.questions[0].tags) {
+                  console.log(`  Tags: ${section.questions[0].tags?.slice(0, 3).join(', ')}`);
+                }
+              }
             });
           }
           

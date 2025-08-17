@@ -392,6 +392,14 @@ export function generateV4InterviewSheet(params: ExtendedInterviewParams): Inter
     skillQuestionCount
   );
   
+  console.log('[v4-generator] Skill section key:', skillSectionKey);
+  console.log('[v4-generator] Skill section name:', skillSection.name);
+  console.log('[v4-generator] Adding skill questions to section:', skillQuestions.length);
+  if (skillQuestions.length > 0) {
+    console.log('[v4-generator] First skill question for section:', skillQuestions[0].content?.substring(0, 60));
+    console.log('[v4-generator] Question tags:', skillQuestions[0].tags);
+  }
+  
   sections.push({
     ...skillSection,
     questions: skillQuestions,
