@@ -100,6 +100,22 @@ function selectSkillQuestions(
       return false;
     }
 
+    // 管理職の場合は管理職タグをチェック（最優先）
+    if (isManagementPosition(experienceLevel)) {
+      const hasManagementTag = q.tags.some(tag => 
+        tag === '管理職' || 
+        tag === '主任' || 
+        tag === '師長'
+      );
+      if (hasManagementTag) {
+        // 管理職質問は経験レベルのみチェック
+        const experienceMatch = !q.experienceLevels || 
+          q.experienceLevels.length === 0 ||
+          q.experienceLevels.includes(experienceLevel);
+        return experienceMatch;
+      }
+    }
+
     // 職種マッチング - 職種固有の質問を優先
     const professionLabel = getProfessionLabel(profession);
     const hasSpecificProfessionTag = q.tags.some(tag => 
@@ -138,7 +154,11 @@ function selectSkillQuestions(
       !q.tags || (!q.tags.includes(managementLabel) && !q.tags.includes('管理職'))
     );
 
+    console.log('[v4-generator] Total relevant questions:', relevantQuestions.length);
     console.log('[v4-generator] Management questions found:', managementQuestions.length);
+    if (managementQuestions.length > 0) {
+      console.log('[v4-generator] First management question:', managementQuestions[0].content?.substring(0, 50));
+    }
     
     // 管理職質問を優先度でソート
     managementQuestions.sort((a, b) => a.priority - b.priority);
