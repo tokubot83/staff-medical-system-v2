@@ -49,7 +49,10 @@ import {
   ListChecks,
   History,
   Star,
-  Trash2
+  Trash2,
+  Upload,
+  Save,
+  AlertCircle
 } from 'lucide-react';
 
 import { UnifiedBankService, BankStatistics } from '@/lib/interview-bank/services/unified-bank-service';
@@ -57,6 +60,25 @@ import { InterviewBankService } from '@/lib/interview-bank/services/bank-service
 import { InterviewQuestion } from '@/lib/interview-bank/types';
 import { questionBank } from '@/lib/interview-bank/database/question-bank';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 // BankQuestion型の定義（統一型）
 interface BankQuestion {
@@ -220,6 +242,16 @@ export default function UnifiedInterviewBankSystem() {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedQuestions, setSelectedQuestions] = useState<BankQuestion[]>([]);
   const [availableQuestions, setAvailableQuestions] = useState<BankQuestion[]>([]);
+  const [isNewQuestionDialogOpen, setIsNewQuestionDialogOpen] = useState(false);
+  const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
+  const [editingQuestion, setEditingQuestion] = useState<BankQuestion | null>(null);
+  const [newQuestion, setNewQuestion] = useState<Partial<BankQuestion>>({
+    text: '',
+    category: '',
+    difficulty: '推奨',
+    type: 'textarea'
+  });
+  const [importText, setImportText] = useState('');
 
   // 統計情報の取得
   useEffect(() => {
@@ -281,6 +313,79 @@ export default function UnifiedInterviewBankSystem() {
   const handleBankManagement = (typeId: string) => {
     setSelectedType(typeId);
     setCurrentStep(5); // 管理画面用の新しいステップ
+  };
+
+  // 質問削除ハンドラ
+  const handleDeleteQuestion = (questionId: string) => {
+    setAvailableQuestions(prev => prev.filter(q => q.id !== questionId));
+    // 実際のアプリではDBからも削除
+    console.log('質問を削除:', questionId);
+  };
+
+  // 質問保存ハンドラ
+  const handleSaveQuestion = () => {
+    if (!newQuestion.text || !newQuestion.category) {
+      return;
+    }
+
+    const questionToSave: BankQuestion = {
+      id: editingQuestion?.id || `q_${Date.now()}`,
+      text: newQuestion.text,
+      category: newQuestion.category,
+      difficulty: newQuestion.difficulty || '推奨',
+      type: newQuestion.type || 'textarea'
+    };
+
+    if (editingQuestion) {
+      // 編集モード
+      setAvailableQuestions(prev => 
+        prev.map(q => q.id === editingQuestion.id ? questionToSave : q)
+      );
+    } else {
+      // 新規追加モード
+      setAvailableQuestions(prev => [...prev, questionToSave]);
+    }
+
+    // リセット
+    setIsNewQuestionDialogOpen(false);
+    setEditingQuestion(null);
+    setNewQuestion({
+      text: '',
+      category: '',
+      difficulty: '推奨',
+      type: 'textarea'
+    });
+  };
+
+  // 一括インポートハンドラ
+  const handleImport = () => {
+    try {
+      const lines = importText.split('\n').filter(line => line.trim());
+      const importedQuestions: BankQuestion[] = [];
+
+      lines.forEach((line, index) => {
+        // CSV形式: 質問文,カテゴリ,難易度,タイプ
+        const parts = line.split(',').map(part => part.trim());
+        if (parts[0]) {
+          importedQuestions.push({
+            id: `import_${Date.now()}_${index}`,
+            text: parts[0],
+            category: parts[1] || '一般',
+            difficulty: parts[2] || '推奨',
+            type: parts[3] || 'textarea'
+          });
+        }
+      });
+
+      if (importedQuestions.length > 0) {
+        setAvailableQuestions(prev => [...prev, ...importedQuestions]);
+        setIsImportDialogOpen(false);
+        setImportText('');
+        console.log(`${importedQuestions.length}件の質問をインポートしました`);
+      }
+    } catch (error) {
+      console.error('インポートエラー:', error);
+    }
   };
 
   return (
@@ -721,11 +826,26 @@ export default function UnifiedInterviewBankSystem() {
               <TabsContent value="questions" className="space-y-4">
                 <div className="flex justify-between items-center">
                   <div className="flex gap-2">
-                    <Button className="bg-green-600 hover:bg-green-700">
+                    <Button 
+                      className="bg-green-600 hover:bg-green-700"
+                      onClick={() => {
+                        setEditingQuestion(null);
+                        setNewQuestion({
+                          text: '',
+                          category: '',
+                          difficulty: '推奨',
+                          type: 'textarea'
+                        });
+                        setIsNewQuestionDialogOpen(true);
+                      }}
+                    >
                       <Plus className="w-4 h-4 mr-2" />
                       新規質問追加
                     </Button>
-                    <Button variant="outline">
+                    <Button 
+                      variant="outline"
+                      onClick={() => setIsImportDialogOpen(true)}
+                    >
                       <Database className="w-4 h-4 mr-2" />
                       一括インポート
                     </Button>
@@ -754,10 +874,27 @@ export default function UnifiedInterviewBankSystem() {
                             </div>
                           </div>
                           <div className="flex gap-2">
-                            <Button size="sm" variant="ghost">
+                            <Button 
+                              size="sm" 
+                              variant="ghost"
+                              onClick={() => {
+                                setEditingQuestion(question);
+                                setNewQuestion(question);
+                                setIsNewQuestionDialogOpen(true);
+                              }}
+                            >
                               <Edit3 className="w-4 h-4" />
                             </Button>
-                            <Button size="sm" variant="ghost" className="text-red-600">
+                            <Button 
+                              size="sm" 
+                              variant="ghost" 
+                              className="text-red-600"
+                              onClick={() => {
+                                if (confirm('この質問を削除しますか？')) {
+                                  handleDeleteQuestion(question.id);
+                                }
+                              }}
+                            >
                               <Trash2 className="w-4 h-4" />
                             </Button>
                           </div>
@@ -937,6 +1074,184 @@ export default function UnifiedInterviewBankSystem() {
           </Button>
         </div>
       </div>
+
+      {/* 新規質問追加・編集ダイアログ */}
+      <Dialog open={isNewQuestionDialogOpen} onOpenChange={setIsNewQuestionDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>
+              {editingQuestion ? '質問を編集' : '新規質問を追加'}
+            </DialogTitle>
+            <DialogDescription>
+              面談で使用する質問を{editingQuestion ? '編集' : '作成'}します
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="grid gap-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="question-text">質問内容 *</Label>
+              <Textarea
+                id="question-text"
+                placeholder="質問内容を入力してください"
+                value={newQuestion.text || ''}
+                onChange={(e) => setNewQuestion({...newQuestion, text: e.target.value})}
+                rows={3}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="question-category">カテゴリ *</Label>
+                <Input
+                  id="question-category"
+                  placeholder="例: スキル評価、キャリア"
+                  value={newQuestion.category || ''}
+                  onChange={(e) => setNewQuestion({...newQuestion, category: e.target.value})}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="question-difficulty">優先度</Label>
+                <Select 
+                  value={newQuestion.difficulty || '推奨'}
+                  onValueChange={(value) => setNewQuestion({...newQuestion, difficulty: value})}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="必須">必須</SelectItem>
+                    <SelectItem value="推奨">推奨</SelectItem>
+                    <SelectItem value="オプション">オプション</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label>回答形式</Label>
+              <RadioGroup 
+                value={newQuestion.type || 'textarea'}
+                onValueChange={(value) => setNewQuestion({...newQuestion, type: value})}
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="textarea" id="type-textarea" />
+                  <Label htmlFor="type-textarea">長文回答</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="text" id="type-text" />
+                  <Label htmlFor="type-text">短文回答</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="scale" id="type-scale" />
+                  <Label htmlFor="type-scale">評価スケール（1-5）</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="radio" id="type-radio" />
+                  <Label htmlFor="type-radio">単一選択</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="checkbox" id="type-checkbox" />
+                  <Label htmlFor="type-checkbox">複数選択</Label>
+                </div>
+              </RadioGroup>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                setIsNewQuestionDialogOpen(false);
+                setEditingQuestion(null);
+              }}
+            >
+              キャンセル
+            </Button>
+            <Button 
+              onClick={handleSaveQuestion}
+              disabled={!newQuestion.text || !newQuestion.category}
+            >
+              <Save className="w-4 h-4 mr-2" />
+              {editingQuestion ? '更新' : '追加'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* 一括インポートダイアログ */}
+      <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>質問を一括インポート</DialogTitle>
+            <DialogDescription>
+              CSV形式またはテキスト形式で質問を一括で追加できます
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <Alert>
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                <strong>形式:</strong> 1行につき1つの質問を入力してください<br/>
+                <strong>CSV形式:</strong> 質問文,カテゴリ,優先度,回答形式<br/>
+                <strong>例:</strong> 現在の業務で困っていることは？,職場環境,必須,textarea
+              </AlertDescription>
+            </Alert>
+
+            <div className="space-y-2">
+              <Label htmlFor="import-text">インポートデータ</Label>
+              <Textarea
+                id="import-text"
+                placeholder="質問データを貼り付けてください&#10;例:&#10;現在の業務で困っていることは？,職場環境,必須,textarea&#10;キャリアプランについて教えてください,キャリア,推奨,textarea"
+                value={importText}
+                onChange={(e) => setImportText(e.target.value)}
+                rows={10}
+                className="font-mono text-sm"
+              />
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <Button 
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  // サンプルデータを挿入
+                  setImportText(
+`現在の業務で最も改善したい点は何ですか？,業務改善,必須,textarea
+チームワークを向上させるために必要なことは？,チーム連携,推奨,textarea
+自己成長のために取り組んでいることを教えてください,成長・学習,推奨,textarea
+ワークライフバランスについての満足度は？,職場環境,必須,scale
+上司からのサポートは十分ですか？,上司関係,必須,radio`
+                  );
+                }}
+              >
+                <Upload className="w-4 h-4 mr-2" />
+                サンプルデータを挿入
+              </Button>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                setIsImportDialogOpen(false);
+                setImportText('');
+              }}
+            >
+              キャンセル
+            </Button>
+            <Button 
+              onClick={handleImport}
+              disabled={!importText.trim()}
+            >
+              <Database className="w-4 h-4 mr-2" />
+              インポート
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
