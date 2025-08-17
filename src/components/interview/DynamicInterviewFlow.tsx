@@ -339,8 +339,8 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
         topic: reservation.supportTopic,
         details: reservation.supportDetails,
         urgency: reservation.urgency
-      },
-      useBankSystem: true // ダッシュボードからは常にバンクシステムを使用
+      }
+      // useBankSystemは選択画面で決定させる（削除）
     }));
     
     // 面談タイプに応じて適切なステップに遷移
