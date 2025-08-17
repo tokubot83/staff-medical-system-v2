@@ -481,7 +481,25 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
             includePositionQuestions: true,
             includeFacilityQuestions: true
           };
+          
+          // デバッグ：職種情報を確認
+          console.log('[DynamicInterviewFlow] Calling generateV4InterviewSheet with:', {
+            profession: staffProfile.profession,
+            experienceLevel: staffProfile.experienceLevel,
+            facilityType: staffProfile.facilityType,
+            name: staffProfile.name
+          });
+          
           generatedSheet = generateV4InterviewSheet(params);
+          
+          // デバッグ：生成された質問を確認
+          if (generatedSheet && generatedSheet.sections && generatedSheet.sections[0]) {
+            console.log('[DynamicInterviewFlow] First section questions:');
+            generatedSheet.sections[0].questions.slice(0, 3).forEach((q: any, idx: number) => {
+              console.log(`  ${idx + 1}. ${q.content?.substring(0, 50)}...`);
+              console.log(`     tags: ${q.tags?.slice(0, 3).join(', ')}`);
+            });
+          }
           
         } else if (session.interviewType === 'special') {
           // 特別面談
