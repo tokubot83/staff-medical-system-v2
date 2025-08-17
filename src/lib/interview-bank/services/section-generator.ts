@@ -33,8 +33,8 @@ const facilitySkillQuestionsMap: Record<string, InterviewQuestion[]> = {
   outpatient: outpatientSkillQuestions,
   roken: rokenSkillQuestions,
   chronic: chronicSkillQuestions,
-  clinic: [], // クリニック用は今後追加
-  grouphome: [] // グループホーム用は今後追加
+  clinic: chronicSkillQuestions, // クリニックは慢性期と同じ質問を使用
+  grouphome: rokenSkillQuestions // グループホームは老健と同じ質問を使用
 };
 
 // セクションタイプごとの共通質問マッピング

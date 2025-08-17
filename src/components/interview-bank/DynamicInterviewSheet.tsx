@@ -305,16 +305,16 @@ export default function DynamicInterviewSheet({
             <div>
               <CardTitle className="text-2xl flex items-center">
                 <FileText className="mr-3 text-blue-600" size={28} />
-                {sheetData.title || '定期面談シート'} - {staffProfile.name}
+                定期面談シート - {staffProfile?.name || 'シミュレーション職員'}
               </CardTitle>
               <div className="text-sm text-gray-600 mt-2 grid grid-cols-2 gap-4">
                 <div>
-                  <p><strong>部署:</strong> {staffProfile.department}</p>
-                  <p><strong>職種:</strong> {staffProfile.profession}</p>
-                  <p><strong>役職:</strong> {staffProfile.position.name}</p>
+                  <p><strong>部署:</strong> {staffProfile?.department || '看護部'}</p>
+                  <p><strong>職種:</strong> {staffProfile?.profession || '看護師'}</p>
+                  <p><strong>役職:</strong> {staffProfile?.position?.name || staffProfile?.position || '一般職'}</p>
                 </div>
                 <div>
-                  <p><strong>経験年数:</strong> {staffProfile.experienceYears}年{staffProfile.experienceMonths}ヶ月</p>
+                  <p><strong>経験年数:</strong> {staffProfile?.experienceYears || 0}年{staffProfile?.experienceMonths || 0}ヶ月</p>
                   <p><strong>面談日:</strong> {sheetData.params?.interviewDate ? new Date(sheetData.params.interviewDate).toLocaleDateString('ja-JP') : new Date().toLocaleDateString('ja-JP')}</p>
                   <p><strong>所要時間:</strong> {sheetData.params?.duration || 30}分</p>
                 </div>

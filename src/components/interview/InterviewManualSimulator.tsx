@@ -25,6 +25,7 @@ export default function InterviewManualSimulator() {
   const [isGenerating, setIsGenerating] = useState(false)
   const [showComparison, setShowComparison] = useState(false)
   const [comparisonSheet, setComparisonSheet] = useState<any>(null)
+  const [staffProfile, setStaffProfile] = useState<any>(null)
 
   const staffLevels: { value: StaffLevel; label: string; description: string }[] = [
     { value: 'new', label: '新人', description: '1年未満' },
@@ -79,7 +80,7 @@ export default function InterviewManualSimulator() {
       const unifiedService = UnifiedBankService.getInstance()
       
       // スタッフプロファイルの作成
-      const staffProfile: StaffProfile = {
+      const newStaffProfile: StaffProfile = {
         staffId: `SIM-${Date.now()}`,
         name: 'シミュレーション職員',
         department: '看護部',
@@ -93,6 +94,7 @@ export default function InterviewManualSimulator() {
         interests: [],
         challenges: []
       }
+      setStaffProfile(newStaffProfile)
 
       // 面談パラメータの作成
       const bankType = interviewType === 'regular_annual' ? 'regular' as const : 
@@ -328,7 +330,7 @@ export default function InterviewManualSimulator() {
             {isGenerating ? '生成中...' : '🔄 面談シート生成'}
           </button>
           
-          {generatedSheet && (
+          {generatedSheet && staffProfile && (
             <>
               <button 
                 onClick={handleCompare}
@@ -348,7 +350,7 @@ export default function InterviewManualSimulator() {
         </div>
       </div>
 
-      {generatedSheet && (
+      {generatedSheet && staffProfile && (
         <div className={showComparison ? styles.comparisonView : styles.singleView}>
           <div className={styles.sheetPanel}>
             <div className={styles.sheetHeader}>
@@ -359,9 +361,10 @@ export default function InterviewManualSimulator() {
               </div>
             </div>
             <DynamicInterviewSheet 
-              interviewSheet={generatedSheet}
-              isReadOnly={true}
-              onUpdate={() => {}}
+              sheetData={generatedSheet}
+              staffProfile={staffProfile}
+              readOnly={true}
+              onSave={() => {}}
             />
           </div>
           
@@ -375,9 +378,10 @@ export default function InterviewManualSimulator() {
                 </div>
               </div>
               <DynamicInterviewSheet 
-                interviewSheet={comparisonSheet}
-                isReadOnly={true}
-                onUpdate={() => {}}
+                sheetData={comparisonSheet}
+                staffProfile={staffProfile}
+                readOnly={true}
+                onSave={() => {}}
               />
             </div>
           )}
