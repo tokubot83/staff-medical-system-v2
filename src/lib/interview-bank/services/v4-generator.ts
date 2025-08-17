@@ -183,10 +183,12 @@ function getProfessionLabel(profession: string): string {
     'assistant_nurse': '准看護師',
     'nursing_assistant': '看護補助者',
     'care_worker': '介護職',
+    'care-worker': '介護職',  // ハイフン付きもサポート
     'therapist_pt': '理学療法士',
     'therapist_ot': '作業療法士',
     'therapist_st': '言語聴覚士',
-    'medical_clerk': '医事課'
+    'medical_clerk': '医事課',
+    'medical-clerk': '医事課'  // ハイフン付きもサポート
   };
   return labels[profession] || profession;
 }
@@ -222,8 +224,8 @@ function needsFacilitySpecificQuestion(question: InterviewQuestion): boolean {
 export function generateV4InterviewSheet(params: ExtendedInterviewParams): InterviewSheetOutput {
   const { staff, interviewType, duration = 30 } = params;
   
-  // マッピング適用
-  const profession = professionMapping[staff.profession] || staff.profession;
+  // マッピング適用（ハイフンをアンダースコアに変換しない）
+  const profession = staff.profession; // マッピングを使わず直接使用
   const experienceLevel = experienceLevelMapping[staff.experienceLevel] || staff.experienceLevel;
   const facilityType = facilityTypeMapping[staff.facilityType || 'acute'] || 'acute';
   
@@ -232,9 +234,11 @@ export function generateV4InterviewSheet(params: ExtendedInterviewParams): Inter
   // ========================================
   // 第1セクション：スキル評価（職種×経験レベル別）
   // ========================================
-  const skillSectionKey = `${profession}_${experienceLevel}`;
+  // ハイフンをアンダースコアに変換してセクションキーを作成
+  const professionKey = profession.replace(/-/g, '_');
+  const skillSectionKey = `${professionKey}_${experienceLevel}`;
   const skillSection = skillEvaluationSections[skillSectionKey] || 
-                       skillEvaluationSections[`${profession}_junior`] ||
+                       skillEvaluationSections[`${professionKey}_junior`] ||
                        skillEvaluationSections['nurse_junior']; // フォールバック
   
   const skillQuestionCount = duration >= 45 ? 6 : duration >= 30 ? 5 : 3;
