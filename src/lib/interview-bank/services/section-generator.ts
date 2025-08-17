@@ -132,10 +132,14 @@ export function generateSectionInstance(
   duration: InterviewDuration,
   sectionIndex: number
 ): InterviewSectionInstance {
+  // デバッグログ
+  console.log('generateSectionInstance - profession:', profession, 'facilityType:', facilityType);
+  
   // セクション名をカスタマイズ（スキル評価の場合）
   let sectionName = section.name;
   if (section.type === 'skill_evaluation') {
     sectionName = getSkillEvaluationTitle(facilityType, profession);
+    console.log('Skill evaluation title:', sectionName);
   }
 
   // 質問を選択

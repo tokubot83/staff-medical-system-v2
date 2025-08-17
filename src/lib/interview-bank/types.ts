@@ -2,8 +2,22 @@
 // 入職年月日から自動算出される経験年数分類
 
 export type ExperienceLevel = 'new' | 'junior' | 'midlevel' | 'veteran' | 'leader';
-export type FacilityType = 'acute' | 'chronic' | 'roken' | 'grouphome' | 'clinic';
-export type ProfessionType = 'nurse' | 'assistant-nurse' | 'nursing-aide' | 'care-worker' | 'pt' | 'ot' | 'st' | 'admin';
+export type FacilityType = 'acute' | 'chronic' | 'roken' | 'grouphome' | 'clinic' | 'outpatient';
+export type ProfessionType = 
+  | 'nurse' 
+  | 'assistant-nurse' 
+  | 'care-worker' 
+  | 'care-manager'
+  | 'therapist-pt' 
+  | 'therapist-ot' 
+  | 'therapist-st' 
+  | 'medical-clerk'
+  | 'nutritionist'
+  | 'pharmacist'
+  | 'social-worker'
+  | 'counselor'
+  | 'general-affairs'
+  | 'facility';
 export type InterviewDuration = 15 | 30 | 45 | 60;
 export type QuestionType = 'text' | 'textarea' | 'radio' | 'checkbox' | 'scale' | 'matrix';
 export type MotivationType = 'growth' | 'recognition' | 'stability' | 'teamwork' | 'efficiency' | 'compensation' | 'creativity';
