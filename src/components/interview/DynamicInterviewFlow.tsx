@@ -370,11 +370,20 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
   };
   
   const determineJobRole = (position: string): JobRole => {
-    if (position.includes('看護師')) return 'nurse';
+    if (position.includes('看護師') && !position.includes('准看護師')) return 'nurse';
     if (position.includes('准看護師')) return 'assistant-nurse';
     if (position.includes('看護補助')) return 'nursing-aide';
+    if (position.includes('介護')) return 'care-worker';
+    if (position.includes('理学療法士') || position.includes('PT')) return 'pt';
+    if (position.includes('作業療法士') || position.includes('OT')) return 'ot';
+    if (position.includes('言語聴覚士') || position.includes('ST')) return 'st';
     if (position.includes('医事')) return 'medical-clerk';
-    return 'nurse'; // デフォルト
+    if (position.includes('栄養')) return 'nutritionist';
+    if (position.includes('薬剤')) return 'pharmacist';
+    if (position.includes('相談員') || position.includes('ソーシャル')) return 'social-worker';
+    if (position.includes('総務')) return 'general-affairs';
+    if (position.includes('施設')) return 'facility';
+    return 'general-affairs'; // デフォルトを事務系に変更
   };
 
   // 面談種類選択
