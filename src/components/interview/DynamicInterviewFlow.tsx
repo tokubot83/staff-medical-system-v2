@@ -453,7 +453,7 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
           name: session.staffMember!.name,
           employeeNumber: session.staffMember!.id,
           hireDate: new Date(Date.now() - (session.staffMember!.experienceYears * 365 + session.staffMember!.experienceMonths * 30) * 24 * 60 * 60 * 1000),
-          experienceLevel: determineExperienceLevel(session.staffMember!.experienceYears),
+          experienceLevel: determineExperienceLevel(session.staffMember!.experienceYears, session.staffMember!.position),
           experienceYears: session.staffMember!.experienceYears,
           experienceMonths: session.staffMember!.experienceMonths,
           position: {
@@ -524,7 +524,7 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
             name: session.staffMember!.name,
             department: session.staffMember!.department,
             position: session.staffMember!.position,
-            experienceLevel: determineExperienceLevel(session.staffMember!.experienceYears),
+            experienceLevel: determineExperienceLevel(session.staffMember!.experienceYears, session.staffMember!.position),
             experienceYears: session.staffMember!.experienceYears,
             experienceMonths: session.staffMember!.experienceMonths,
             facility: '医療施設',
@@ -582,7 +582,7 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
             name: session.staffMember!.name,
             department: session.staffMember!.department,
             position: session.staffMember!.position,
-            experienceLevel: determineExperienceLevel(session.staffMember!.experienceYears),
+            experienceLevel: determineExperienceLevel(session.staffMember!.experienceYears, session.staffMember!.position),
             experienceYears: session.staffMember!.experienceYears,
             experienceMonths: session.staffMember!.experienceMonths,
             facility: '医療施設',
@@ -904,11 +904,26 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
     return 'leader';
   };
   
-  // バンクシステム用の経験レベル判定
-  const determineExperienceLevel = (years: number): 'new' | 'junior' | 'midlevel' | 'veteran' => {
+  // バンクシステム用の経験レベル判定（役職も考慮）
+  const determineExperienceLevel = (years: number, position?: string): 'new' | 'junior' | 'midlevel' | 'senior' | 'veteran' | 'supervisor' | 'manager' => {
+    // 役職から判定（最優先）
+    if (position) {
+      if (position.includes('師長') || position.includes('部長') || position.includes('課長')) {
+        return 'manager';
+      }
+      if (position.includes('主任') || position.includes('係長') || position.includes('副師長')) {
+        return 'supervisor';
+      }
+      if (position.includes('リーダー')) {
+        return 'senior';
+      }
+    }
+    
+    // 経験年数から判定
     if (years <= 1) return 'new';
     if (years <= 3) return 'junior';
-    if (years <= 10) return 'midlevel';
+    if (years <= 7) return 'midlevel';
+    if (years <= 10) return 'senior';
     return 'veteran';
   };
   
