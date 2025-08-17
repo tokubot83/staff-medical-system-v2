@@ -1,32 +1,8 @@
 // 面談フロー統合オーケストレーションサービス
 // 面談の準備から実施、データ反映まで一連のフローを管理
 
-// import { InterviewManualGenerationService, ManualGenerationRequest, GeneratedInterviewManual } from './interviewManualGenerationService'; // 削除済み
+import { InterviewManualGenerationService, ManualGenerationRequest, GeneratedInterviewManual } from './interviewManualGenerationService';
 import { StaffLevel, JobRole, FacilityType, InterviewDuration } from '@/types/staff-common';
-
-// 暫定的な型定義
-export interface ManualGenerationRequest {
-  staffLevel: StaffLevel;
-  jobRole: JobRole;
-  facilityType: FacilityType;
-  interviewType: string;
-  interviewCategory?: string;
-  duration: InterviewDuration;
-  customTopics?: string[];
-  motivationType?: string;
-}
-
-export interface GeneratedInterviewManual {
-  id: string;
-  title: string;
-  generatedAt: Date;
-  estimatedDuration: number;
-  staffInfo: any;
-  overview: any;
-  sections: any[];
-  timeAllocation: any[];
-  guidelines: any;
-}
 import { DynamicInterviewGenerationService, StaffContext, DynamicInterviewSheet } from './dynamicInterviewGenerationService';
 import { interviewDataService, InterviewData } from './interview/interviewDataService';
 

@@ -384,24 +384,28 @@ export default function DynamicInterviewSheet({
             <CardContent className="space-y-2 text-sm">
               <div>
                 <span className="font-medium">施設:</span>
-                <span className="ml-2">{staffProfile.facility}</span>
+                <span className="ml-2">{staffProfile?.facility || '未設定'}</span>
               </div>
-              <div>
-                <span className="font-medium">入職日:</span>
-                <span className="ml-2">
-                  {new Date(staffProfile.hireDate).toLocaleDateString('ja-JP')}
-                </span>
-              </div>
-              <div>
-                <span className="font-medium">経験レベル:</span>
-                <span className="ml-2">
-                  {staffProfile.experienceLevel === 'new' && '新人'}
-                  {staffProfile.experienceLevel === 'junior' && '若手'}
-                  {staffProfile.experienceLevel === 'midlevel' && '中堅'}
-                  {staffProfile.experienceLevel === 'veteran' && 'ベテラン'}
-                </span>
-              </div>
-              {staffProfile.licenses.length > 0 && (
+              {staffProfile?.hireDate && (
+                <div>
+                  <span className="font-medium">入職日:</span>
+                  <span className="ml-2">
+                    {new Date(staffProfile.hireDate).toLocaleDateString('ja-JP')}
+                  </span>
+                </div>
+              )}
+              {staffProfile?.experienceLevel && (
+                <div>
+                  <span className="font-medium">経験レベル:</span>
+                  <span className="ml-2">
+                    {staffProfile.experienceLevel === 'new' && '新人'}
+                    {staffProfile.experienceLevel === 'junior' && '若手'}
+                    {staffProfile.experienceLevel === 'midlevel' && '中堅'}
+                    {staffProfile.experienceLevel === 'veteran' && 'ベテラン'}
+                  </span>
+                </div>
+              )}
+              {staffProfile?.licenses && staffProfile.licenses.length > 0 && (
                 <div>
                   <span className="font-medium">資格:</span>
                   <div className="ml-2 mt-1">
