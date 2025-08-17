@@ -224,5 +224,72 @@ export const managementQuestions: InterviewQuestion[] = [
     minDuration: 15,
     tags: ['主任', '師長', '管理職', 'リーダーシップ'],
     experienceLevels: ['supervisor', 'manager']
+  },
+
+  // ========================================
+  // 管理職向けキャリア開発質問
+  // ========================================
+  {
+    id: 'mgmt-career-001',
+    content: '管理職としてのキャリアビジョンと、今後5年間で達成したい目標は何ですか？',
+    type: 'open',
+    category: 'career_development',
+    section: 'career_development',
+    sectionId: 'career_development',
+    priority: 1,
+    minDuration: 15,
+    tags: ['主任', '師長', '管理職', 'キャリア'],
+    experienceLevels: ['supervisor', 'manager'],
+    followUp: '目標達成のために必要なスキルや経験は何だと考えていますか？'
+  },
+  {
+    id: 'mgmt-career-002',
+    content: '経営層への昇進や、より大きな責任を担うことについてどう考えていますか？',
+    type: 'open',
+    category: 'career_development',
+    section: 'career_development',
+    sectionId: 'career_development',
+    priority: 2,
+    minDuration: 15,
+    tags: ['師長', '管理職', 'キャリア'],
+    experienceLevels: ['manager']
+  },
+  {
+    id: 'mgmt-career-003',
+    content: '自身の管理スキル向上のために取り組んでいる学習や研修はありますか？',
+    type: 'open',
+    category: 'career_development',
+    section: 'career_development',
+    sectionId: 'career_development',
+    priority: 1,
+    minDuration: 15,
+    tags: ['主任', '師長', '管理職', '成長'],
+    experienceLevels: ['supervisor', 'manager'],
+    followUp: 'MBA取得や管理職研修への参加意向はありますか？'
+  },
+  {
+    id: 'mgmt-career-004',
+    content: '他部署や他施設での管理経験を積むことに興味はありますか？',
+    type: 'scale',
+    category: 'career_development',
+    section: 'career_development',
+    sectionId: 'career_development',
+    priority: 2,
+    minDuration: 15,
+    tags: ['主任', '師長', '管理職', 'キャリア'],
+    experienceLevels: ['supervisor', 'manager']
+  },
+  {
+    id: 'mgmt-career-005',
+    content: '後継者育成について、どのような計画や取り組みをしていますか？',
+    type: 'open',
+    category: 'career_development',
+    section: 'career_development',
+    sectionId: 'career_development',
+    priority: 1,
+    minDuration: 15,
+    tags: ['師長', '管理職', '人材育成'],
+    experienceLevels: ['manager'],
+    followUp: '次期リーダー候補として期待している職員はいますか？'
   }
 ];

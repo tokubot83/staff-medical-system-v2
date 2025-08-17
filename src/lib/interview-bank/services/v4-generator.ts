@@ -295,6 +295,37 @@ function selectCareerQuestions(
             q.experienceLevels.includes(experienceLevel));
   });
 
+  // 管理職の場合は管理職用質問を優先
+  if (isManagementPosition(experienceLevel)) {
+    const managementLabel = experienceLevel === 'supervisor' ? '主任' : '師長';
+    const managementCareerQuestions = relevantQuestions.filter(q => 
+      q.tags && (q.tags.includes(managementLabel) || q.tags.includes('管理職'))
+    );
+    const nonManagementCareerQuestions = relevantQuestions.filter(q => 
+      !q.tags || (!q.tags.includes(managementLabel) && !q.tags.includes('管理職'))
+    );
+
+    console.log('[v4-generator] Career questions - Management:', managementCareerQuestions.length, 'General:', nonManagementCareerQuestions.length);
+
+    // 管理職質問を優先度でソート
+    managementCareerQuestions.sort((a, b) => a.priority - b.priority);
+    nonManagementCareerQuestions.sort((a, b) => a.priority - b.priority);
+
+    const selectedQuestions: InterviewQuestion[] = [];
+    
+    // 管理職用質問を優先的に選択
+    selectedQuestions.push(...managementCareerQuestions.slice(0, maxCount));
+    
+    // まだ枠があれば一般質問を追加
+    const remainingSlots = maxCount - selectedQuestions.length;
+    if (remainingSlots > 0) {
+      selectedQuestions.push(...nonManagementCareerQuestions.slice(0, remainingSlots));
+    }
+    
+    return selectedQuestions;
+  }
+
+  // 通常職員の場合は従来のロジック
   relevantQuestions.sort((a, b) => a.priority - b.priority);
   return relevantQuestions.slice(0, maxCount);
 }
