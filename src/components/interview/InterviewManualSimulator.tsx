@@ -3,8 +3,8 @@
 import React, { useState } from 'react'
 import { InterviewType } from '@/types/interview'
 import styles from './InterviewManualSimulator.module.css'
-import { UnifiedBankService, UnifiedInterviewParams } from '@/lib/interview-bank/services/unified-bank-service'
-import { StaffBankProfile as StaffProfile } from '@/lib/interview-bank/types'
+import { generateV4InterviewSheet } from '@/lib/interview-bank/services/v4-generator'
+import { ExtendedInterviewParams, StaffProfile as ExtendedStaffProfile } from '@/lib/interview-bank/types-extended'
 import DynamicInterviewSheet from '@/components/interview-bank/DynamicInterviewSheet'
 import { 
   StaffLevel, 
@@ -12,7 +12,8 @@ import {
   FacilityType,
   calculateExperienceYears,
   getJobRoleLabel,
-  getFacilityTypeLabel
+  getFacilityTypeLabel,
+  ExperienceLevel
 } from '@/types/staff-common'
 
 export default function InterviewManualSimulator() {
@@ -73,79 +74,68 @@ export default function InterviewManualSimulator() {
     { value: 60, label: '60分（完全版）' }
   ]
 
+  // StaffLevelをExperienceLevelにマッピング
+  const getExperienceLevel = (staffLevel: StaffLevel): ExperienceLevel => {
+    switch (staffLevel) {
+      case 'new': return 'new';
+      case 'junior': return 'junior';
+      case 'general': 
+      case 'midlevel': return 'midlevel';
+      case 'senior':
+      case 'veteran': return 'veteran';
+      case 'lead':
+      case 'chief':
+      case 'manager': return 'leader';
+      default: return 'midlevel';
+    }
+  }
+
 
   const handleGenerate = async () => {
     setIsGenerating(true)
     try {
-      const unifiedService = UnifiedBankService.getInstance()
-      
-      // スタッフプロファイルの作成
-      const newStaffProfile: StaffProfile = {
-        staffId: `SIM-${Date.now()}`,
+      // ExtendedStaffProfile用のスタッフプロファイルを作成
+      const experienceLevel = getExperienceLevel(staffLevel);
+      const newStaffProfile: ExtendedStaffProfile = {
+        id: `SIM-${Date.now()}`,
         name: 'シミュレーション職員',
         department: '看護部',
-        position: getJobRoleLabel(jobRole),
-        profession: jobRole, // 実際のjobRole値を使用
+        profession: jobRole,
+        facilityType: facilityType,
+        experienceLevel: experienceLevel,
+        positionLevel: staffLevel === 'manager' ? 'manager' : staffLevel === 'chief' ? 'chief' : 'staff',
         experienceYears: calculateExperienceYears(staffLevel),
-        experienceMonths: 0,
-        facility: facilityType, // 実際のfacilityType値を使用
-        qualifications: [],
-        lastInterviewDate: new Date(Date.now() - 180 * 24 * 60 * 60 * 1000).toISOString(), // 6ヶ月前
-        interests: [],
-        challenges: []
+        position: {
+          name: getJobRoleLabel(jobRole),
+          level: staffLevel,
+          responsibilities: []
+        },
+        hireDate: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000 * calculateExperienceYears(staffLevel)).toISOString(),
+        motivationType: 'growth'
       }
       setStaffProfile(newStaffProfile)
 
-      // 面談パラメータの作成
-      const bankType = interviewType === 'regular_annual' ? 'regular' as const : 
-                      interviewType.includes('support') ? 'support' as const : 
-                      'special' as const
-
-      const params: UnifiedInterviewParams = {
-        bankType,
-        staffProfile,
-        baseParams: {
-          duration,
-          interviewDate: new Date(),
-          interviewType: interviewType as any,
-          interviewerId: 'simulator',
-          interviewerName: '人事担当者',
-          metadata: {
-            isNewEmployee: staffLevel === 'new',
-            isManager: staffLevel === 'manager' || staffLevel === 'chief'
-          }
-        },
-        regularParams: bankType === 'regular' ? {
-          focusAreas: [],
-          customSections: []
-        } : undefined,
-        supportParams: bankType === 'support' ? {
-          category: 'workplace',
-          urgency: 'medium' as const,
-          consultationTopic: '職場環境改善',
-          consultationDetails: 'シミュレーション用のサポート面談'
-        } : undefined,
-        specialParams: bankType === 'special' ? {
-          specialType: 'career' as any,
-          reason: 'キャリア相談',
-          confidentialLevel: 'normal' as const
-        } : undefined
+      // v4-generatorを使用してシートを生成
+      const params: ExtendedInterviewParams = {
+        staff: newStaffProfile,
+        duration: duration,
+        interviewType: interviewType,
+        interviewDate: new Date(),
+        interviewerId: 'simulator',
+        interviewerName: '人事担当者',
+        includePositionQuestions: true,
+        includeFacilityQuestions: true
       }
 
-      // 面談シートの生成
       console.log('Generating interview with params:', params)
-      const result = await unifiedService.generateUnifiedInterview(params)
-      console.log('Generated result:', result)
+      const generatedSheet = generateV4InterviewSheet(params)
+      console.log('Generated sheet:', generatedSheet)
       
-      // resultがsheetを持っているか、result自体がsheetか確認
-      if (result && result.sheet) {
-        console.log('Setting sheet from result.sheet:', result.sheet)
-        setGeneratedSheet(result.sheet)
-      } else if (result) {
-        console.log('Setting result as sheet:', result)
-        setGeneratedSheet(result)
+      if (generatedSheet) {
+        setGeneratedSheet(generatedSheet)
       } else {
         console.error('No valid sheet generated')
+        throw new Error('生成に失敗しました')
       }
       
       if (showComparison && comparisonSheet) {
@@ -164,67 +154,47 @@ export default function InterviewManualSimulator() {
     
     setIsGenerating(true)
     try {
-      const unifiedService = UnifiedBankService.getInstance()
-      
       // 比較用のプロファイル（現在の設定を使用）
-      const staffProfile: StaffProfile = {
-        staffId: `SIM-CMP-${Date.now()}`,
+      const experienceLevel = getExperienceLevel(staffLevel);
+      const staffProfile: ExtendedStaffProfile = {
+        id: `SIM-CMP-${Date.now()}`,
         name: 'シミュレーション職員（比較）',
         department: '看護部',
-        position: getJobRoleLabel(jobRole),
-        profession: jobRole, // 実際のjobRole値を使用
+        profession: jobRole,
+        facilityType: facilityType,
+        experienceLevel: experienceLevel,
+        positionLevel: staffLevel === 'manager' ? 'manager' : staffLevel === 'chief' ? 'chief' : 'staff',
         experienceYears: calculateExperienceYears(staffLevel),
-        experienceMonths: 0,
-        facility: facilityType, // 実際のfacilityType値を使用
-        qualifications: [],
-        lastInterviewDate: new Date(Date.now() - 180 * 24 * 60 * 60 * 1000).toISOString(),
-        interests: [],
-        challenges: []
-      }
-
-      const bankType = interviewType === 'regular_annual' ? 'regular' as const : 
-                      interviewType.includes('support') ? 'support' as const : 
-                      'special' as const
-
-      const params: UnifiedInterviewParams = {
-        bankType,
-        staffProfile,
-        baseParams: {
-          duration,
-          interviewDate: new Date(),
-          interviewType: interviewType as any,
-          interviewerId: 'simulator',
-          interviewerName: '人事担当者',
-          metadata: {
-            isNewEmployee: staffLevel === 'new',
-            isManager: staffLevel === 'manager' || staffLevel === 'chief'
-          }
+        position: {
+          name: getJobRoleLabel(jobRole),
+          level: staffLevel,
+          responsibilities: []
         },
-        regularParams: bankType === 'regular' ? {
-          focusAreas: [],
-          customSections: []
-        } : undefined,
-        supportParams: bankType === 'support' ? {
-          category: 'workplace',
-          urgency: 'medium' as const,
-          consultationTopic: '職場環境改善',
-          consultationDetails: 'シミュレーション用のサポート面談（比較）'
-        } : undefined,
-        specialParams: bankType === 'special' ? {
-          specialType: 'career' as any,
-          reason: 'キャリア相談',
-          confidentialLevel: 'normal' as const
-        } : undefined
+        hireDate: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000 * calculateExperienceYears(staffLevel)).toISOString(),
+        motivationType: 'growth'
       }
 
-      const result = await unifiedService.generateUnifiedInterview(params)
-      
-      if (result && result.sheet) {
-        setComparisonSheet(result.sheet)
-      } else if (result) {
-        setComparisonSheet(result)
+      // v4-generatorを使用してシートを生成
+      const params: ExtendedInterviewParams = {
+        staff: staffProfile,
+        duration: duration,
+        interviewType: interviewType,
+        interviewDate: new Date(),
+        interviewerId: 'simulator-compare',
+        interviewerName: '人事担当者',
+        includePositionQuestions: true,
+        includeFacilityQuestions: true
       }
-      setShowComparison(true)
+
+      console.log('Generating comparison sheet with params:', params)
+      const comparisonSheet = generateV4InterviewSheet(params)
+      
+      if (comparisonSheet) {
+        setComparisonSheet(comparisonSheet)
+        setShowComparison(true)
+      } else {
+        console.error('No valid comparison sheet generated')
+      }
     } catch (error) {
       console.error('比較シート生成エラー:', error)
     } finally {
