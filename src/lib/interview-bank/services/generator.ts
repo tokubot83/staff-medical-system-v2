@@ -17,8 +17,10 @@ import {
   ExperienceLevel,
   FacilityType,
   InterviewDuration,
-  QuestionType
+  QuestionType,
+  ProfessionType
 } from '../types';
+import { generateInterviewSections, calculateSectionTimeAllocation, validateSections } from './section-generator';
 import { questionBank } from '../database/question-bank';
 import { sectionDefinitions } from '../database/sections';
 import { positionQuestionMapping } from '../types-extended';
@@ -212,68 +214,28 @@ function generateSection(
 
 // メインの生成関数
 export function generateInterviewSheet(params: ExtendedInterviewParams): GeneratedInterviewSheet {
-  const criteria: QuestionSelectionCriteria = {
-    experienceLevel: params.staff.experienceLevel,
-    positionLevel: params.staff.positionLevel,
-    department: params.staff.department,
-    facility: params.staff.facility,
-    duration: params.duration,
-    motivationType: undefined // 初回は未定
-  };
-  
-  // 役職に基づいて必要なセクションを決定
-  const positionConfig = positionQuestionMapping[params.staff.positionLevel];
-  const requiredSectionTypes = positionConfig.requiredSections;
-  const optionalSectionTypes = positionConfig.optionalSections;
-  
-  // 時間に応じてセクション数を調整
-  const maxSections = {
-    15: 3,
-    30: 5,
-    45: 7,
-    60: 10
-  };
-  
-  const totalSectionCount = Math.min(
-    requiredSectionTypes.length + optionalSectionTypes.length,
-    maxSections[params.duration]
-  );
-  
-  // セクションを選択
-  const selectedSectionTypes = [
-    ...requiredSectionTypes,
-    ...optionalSectionTypes.slice(0, totalSectionCount - requiredSectionTypes.length)
-  ];
-  
-  // カスタムセクションの追加/除外を処理
-  if (params.customSections) {
-    selectedSectionTypes.push(...params.customSections.filter(s => !selectedSectionTypes.includes(s)));
-  }
-  if (params.excludeSections) {
-    const excludeSet = new Set(params.excludeSections);
-    const filteredTypes = selectedSectionTypes.filter(s => !excludeSet.has(s));
-    selectedSectionTypes.length = 0;
-    selectedSectionTypes.push(...filteredTypes);
-  }
-  
-  // セクションインスタンスを生成
-  const sections: InterviewSectionInstance[] = [];
-  let totalQuestions = 0;
-  
-  selectedSectionTypes.forEach((sectionType, index) => {
-    const sectionDef = sectionDefinitions.find(s => s.type === sectionType);
-    if (sectionDef) {
-      const section = generateSection(sectionDef, criteria, index, params.staff);
-      sections.push(section);
-      totalQuestions += section.questions.length;
-    }
-  });
-  
-  // 推定所要時間を計算（1質問あたり約2-3分）
-  const estimatedDuration = Math.min(
-    totalQuestions * 2.5,
+  // 新しいセクション生成ロジックを使用
+  const sections = generateInterviewSections(
+    params.staff.facility as FacilityType,
+    params.staff.profession as ProfessionType,
+    params.staff.experienceLevel,
     params.duration
   );
+  
+  // セクションの検証
+  const validation = validateSections(sections);
+  if (!validation.isValid) {
+    console.warn('セクション検証エラー:', validation.errors);
+  }
+  
+  // 質問総数を計算
+  const totalQuestions = sections.reduce((sum, section) => sum + section.questions.length, 0);
+  
+  // セクションごとの時間配分を計算
+  const timeAllocation = calculateSectionTimeAllocation(sections, params.duration);
+  
+  // 推定所要時間を計算
+  const estimatedDuration = params.duration;
   
   return {
     id: `sheet_${Date.now()}`,
