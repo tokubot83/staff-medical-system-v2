@@ -623,17 +623,33 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
       // v6テンプレートを使用する場合
       if (session.useV6Template) {
         console.log('Using v6 template system');
-        
-        const v6Template = V6InterviewTemplateService.getTemplate({
-          staffName: session.staffMember!.name,
-          department: session.staffMember!.department,
-          position: session.staffMember!.position,
-          experienceYears: session.staffMember!.experienceYears,
-          experienceMonths: session.staffMember!.experienceMonths,
-          interviewType: session.interviewType,
+        console.log('Current session state:', {
+          staffMember: session.staffMember,
           duration: session.duration,
-          includeMotivationDiagnosis: session.staffMember!.experienceYears <= 1
+          interviewType: session.interviewType
         });
+        
+        // スタッフメンバーが設定されていない場合はエラー
+        if (!session.staffMember) {
+          throw new Error('スタッフメンバーが選択されていません。スタッフを選択してから再度お試しください。');
+        }
+        
+        let v6Template;
+        try {
+          v6Template = V6InterviewTemplateService.getTemplate({
+            staffName: session.staffMember!.name,
+            department: session.staffMember!.department,
+            position: session.staffMember!.position,
+            experienceYears: session.staffMember!.experienceYears,
+            experienceMonths: session.staffMember!.experienceMonths,
+            interviewType: session.interviewType,
+            duration: session.duration,
+            includeMotivationDiagnosis: session.staffMember!.experienceYears <= 1
+          });
+        } catch (templateError) {
+          console.error('V6 template generation error:', templateError);
+          throw new Error(`v6テンプレート取得エラー: ${templateError instanceof Error ? templateError.message : String(templateError)}`);
+        }
         
         // v6テンプレートをマニュアル形式に変換
         manual = {
