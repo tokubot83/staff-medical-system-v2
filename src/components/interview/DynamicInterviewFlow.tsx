@@ -384,7 +384,13 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
       ...prev,
       duration
     }));
-    generateManual();
+    
+    // v6テンプレートの場合はスタッフ選択画面へ
+    if (session.useV6Template && !session.staffMember) {
+      setCurrentStep('staff-selection');
+    } else {
+      generateManual();
+    }
   };
 
   // マニュアル生成
@@ -1590,6 +1596,7 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
                     useBankSystem: false,  // バンクシステムは使用しない
                     useV6Template: true    // v6テンプレートを使用
                   }));
+                  // 時間選択画面へ移動（従来通りの手順）
                   setCurrentStep('duration');
                 }}
               >
@@ -1811,8 +1818,8 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
         </div>
       )}
 
-      {/* Step 5: 面談実施 - 従来テンプレート */}
-      {currentStep === 'conducting' && !session.useBankSystem && session.manual && (
+      {/* Step 5: 面談実施 - 従来テンプレート（v6含む） */}
+      {currentStep === 'conducting' && (session.useV6Template || (!session.useBankSystem && session.manual)) && session.manual && (
         <div className="space-y-6">
           {/* モード切り替えボタン */}
           <div className="flex justify-end gap-2 print:hidden">
