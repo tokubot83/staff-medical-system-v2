@@ -141,7 +141,12 @@ const mapToQuestionCategory = (title: string): QuestionCategory => {
   return 'performance'; // デフォルト
 };
 
-export default function DynamicInterviewFlow() {
+interface DynamicInterviewFlowProps {
+  initialReservation?: any; // UnifiedInterviewReservation型
+  onComplete?: () => void;
+}
+
+export default function DynamicInterviewFlow({ initialReservation, onComplete }: DynamicInterviewFlowProps = {}) {
   const searchParams = useSearchParams();
   const [currentStep, setCurrentStep] = useState<FlowStep>('staff-select');
   const [session, setSession] = useState<InterviewSession>({
@@ -177,8 +182,19 @@ export default function DynamicInterviewFlow() {
     fetchStaffData();
   }, []);
 
-  // URLパラメータの変化を監視してダッシュボードからの遷移を処理
+  // propsから予約情報が渡された場合の処理
   useEffect(() => {
+    if (initialReservation) {
+      console.log('Processing initial reservation from props:', initialReservation);
+      handleReservationData(initialReservation);
+    }
+  }, [initialReservation]);
+
+  // URLパラメータの変化を監視してダッシュボードからの遷移を処理（後方互換性のため残す）
+  useEffect(() => {
+    // propsからの初期化が優先される
+    if (initialReservation) return;
+    
     const fromDashboard = searchParams.get('fromDashboard');
     
     console.log('DynamicInterviewFlow: Checking dashboard params');
@@ -877,6 +893,10 @@ export default function DynamicInterviewFlow() {
     await InterviewFlowOrchestrationService.distributeInterviewData(sessionMaster);
     
     setCurrentStep('completed');
+    // 完了時のコールバックを呼び出し
+    if (onComplete) {
+      onComplete();
+    }
   };
 
   // プログレスバーの計算
@@ -1670,6 +1690,10 @@ export default function DynamicInterviewFlow() {
                   endTime: new Date()
                 }));
                 setCurrentStep('completed');
+    // 完了時のコールバックを呼び出し
+    if (onComplete) {
+      onComplete();
+    }
               }}
               readOnly={false}
             />
@@ -1820,6 +1844,10 @@ export default function DynamicInterviewFlow() {
               onComplete={(responses: InterviewResponse[]) => {
                 console.log('面談完了:', responses);
                 setCurrentStep('completed');
+    // 完了時のコールバックを呼び出し
+    if (onComplete) {
+      onComplete();
+    }
                 // 実際にはAPIに保存して完了処理
               }}
             />

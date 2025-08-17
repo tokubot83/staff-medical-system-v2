@@ -17,16 +17,14 @@ import RoleSelectionModal from '@/components/RoleSelectionModal'
 import UnifiedInterviewDashboard from '@/components/interview/UnifiedInterviewDashboard'
 // import IntegratedBankSystemTab3Column from '@/components/interview/IntegratedBankSystemTab3Column' // 旧版（段階的に削除予定）
 import UnifiedInterviewBankSystem from '@/components/interview/UnifiedInterviewBankSystem' // 新統一版
-import DynamicInterviewFlow from '@/components/interview/DynamicInterviewFlow'
 
 // タブ順序を業務フローに合わせて修正
 const tabs = [
   { id: 'station', label: '面談ステーション', icon: '🚉', badge: '', isNew: false },
-  { id: 'bank-system', label: '面談バンク', icon: '🏦', badge: 'Enhanced', isNew: true },
+  { id: 'bank-system', label: '面談バンク', icon: '🏦', badge: '', isNew: false },
   { id: 'overview-guide', label: '概要・ガイド', icon: '📖', badge: '', isNew: false },
   { id: 'record', label: '結果記録', icon: '📝', badge: '', isNew: false },
   { id: 'analytics', label: '履歴・分析', icon: '📊', badge: '', isNew: false },
-  { id: 'sheets', label: '面談実施', icon: '📋', badge: '', isNew: false },
   { id: 'settings', label: '設定', icon: '⚙️', badge: '', isNew: false },
 ]
 
@@ -65,8 +63,8 @@ function InterviewsPageContent() {
       if (validTabIds.includes(tabParam)) {
         setActiveTab(tabParam)
       } else {
-        console.warn(`Invalid tab '${tabParam}' detected. Falling back to 'sheets'`)
-        setActiveTab('sheets') // 面談開始時の適切なフォールバック先
+        console.warn(`Invalid tab '${tabParam}' detected. Falling back to 'station'`)
+        setActiveTab('station') // 面談開始時の適切なフォールバック先
       }
     }
   }, [searchParams])
@@ -214,7 +212,6 @@ function InterviewsPageContent() {
         <div className={styles.tabContent}>
           {activeTab === 'station' && <UnifiedInterviewDashboard />}
           {activeTab === 'bank-system' && <UnifiedInterviewBankSystem />}
-          {activeTab === 'sheets' && <DynamicInterviewFlow />}
           {activeTab === 'record' && <RecordTab selectedInterview={selectedInterview} />}
           {activeTab === 'analytics' && <HistoryAnalysisTab interviews={interviews} />}
           {activeTab === 'overview-guide' && <OverviewGuideTab onInterviewTypeClick={handleInterviewTypeClick} />}

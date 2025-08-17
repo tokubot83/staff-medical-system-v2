@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Calendar, Clock, User, AlertTriangle, CheckCircle, 
   ChevronRight, Play, FileText, Users, TrendingUp,
-  Filter, Search, RefreshCw, Bell, Activity, Plus, FilterX
+  Filter, Search, RefreshCw, Bell, Activity, Plus, FilterX, ArrowLeft
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,7 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { VoiceDriveIntegrationService } from '@/services/voicedriveIntegrationService';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { mockInterviews } from '@/data/mockInterviews';
 import ManualReservationModal from './ManualReservationModal';
 import InterviewStatisticsChart from '@/components/charts/InterviewStatisticsChart';
@@ -21,6 +21,7 @@ import AdvancedSearchModal, { AdvancedSearchFilters } from '@/components/search/
 import SearchResults from '@/components/search/SearchResults';
 import { AdvancedSearchService } from '@/utils/searchUtils';
 import InterviewTemplateManager from '@/components/templates/InterviewTemplateManager';
+import DynamicInterviewFlow from './DynamicInterviewFlow';
 
 // 面談予約の統合型定義
 export interface UnifiedInterviewReservation {
@@ -63,6 +64,7 @@ export interface UnifiedInterviewReservation {
 
 export default function UnifiedInterviewDashboard() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [reservations, setReservations] = useState<UnifiedInterviewReservation[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -77,10 +79,33 @@ export default function UnifiedInterviewDashboard() {
   const [currentSearchFilters, setCurrentSearchFilters] = useState<AdvancedSearchFilters | null>(null);
   const [isSearching, setIsSearching] = useState(false);
   const [showTemplateManager, setShowTemplateManager] = useState(false);
+  
+  // サブビュー表示制御
+  const [showInterviewFlow, setShowInterviewFlow] = useState(false);
+  const [currentReservation, setCurrentReservation] = useState<UnifiedInterviewReservation | null>(null);
 
   useEffect(() => {
     loadReservations();
   }, [selectedDate]);
+
+  // URLパラメータの監視
+  useEffect(() => {
+    const view = searchParams.get('view');
+    const reservationId = searchParams.get('reservationId');
+    
+    if (view === 'interview-flow' && reservationId) {
+      // URLから面談フロー表示が指定された場合
+      const reservation = reservations.find(r => r.id === reservationId);
+      if (reservation) {
+        setCurrentReservation(reservation);
+        setShowInterviewFlow(true);
+      }
+    } else {
+      // デフォルトビューに戻る
+      setShowInterviewFlow(false);
+      setCurrentReservation(null);
+    }
+  }, [searchParams, reservations]);
 
   const loadReservations = async () => {
     setLoading(true);
@@ -231,14 +256,23 @@ export default function UnifiedInterviewDashboard() {
   const handleStartInterview = (reservation: UnifiedInterviewReservation) => {
     console.log('handleStartInterview called with reservation:', reservation);
     
-    // セッションストレージに予約情報を保存
-    sessionStorage.setItem('interviewReservation', JSON.stringify(reservation));
-    console.log('Saved to sessionStorage:', sessionStorage.getItem('interviewReservation'));
-    
-    // DynamicInterviewFlowに遷移
-    const url = '/interviews?tab=sheets&fromDashboard=true';
+    // URLパラメータでサブビューに切り替え
+    const url = `/interviews?tab=station&view=interview-flow&reservationId=${reservation.id}`;
     console.log('Navigating to:', url);
+    
+    // 状態を設定
+    setCurrentReservation(reservation);
+    setShowInterviewFlow(true);
+    
+    // URLを更新
     router.push(url);
+  };
+
+  // 面談フローから戻る処理
+  const handleBackToDashboard = () => {
+    setShowInterviewFlow(false);
+    setCurrentReservation(null);
+    router.push('/interviews?tab=station');
   };
 
   // 高度な検索処理
@@ -458,6 +492,48 @@ export default function UnifiedInterviewDashboard() {
   const upcomingReservations = getFilteredReservations(getUpcomingReservations());
   const overdueReservations = getFilteredReservations(getOverdueReservations());
 
+  // 面談フロー表示中の場合
+  if (showInterviewFlow && currentReservation) {
+    return (
+      <div className="space-y-4">
+        {/* ヘッダーバー */}
+        <div className="flex items-center justify-between p-4 bg-white border-b">
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              onClick={handleBackToDashboard}
+              className="flex items-center gap-2"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              面談ステーションに戻る
+            </Button>
+            <div className="text-sm text-gray-600">
+              <span className="font-medium">{currentReservation.staffName}</span>
+              {' - '}
+              <span>{currentReservation.department} / {currentReservation.position}</span>
+            </div>
+          </div>
+          <Badge variant="outline">
+            {currentReservation.type === 'regular' ? '定期面談' :
+             currentReservation.type === 'special' ? '特別面談' : 'サポート面談'}
+          </Badge>
+        </div>
+
+        {/* DynamicInterviewFlowコンポーネント */}
+        <div className="px-6">
+          <DynamicInterviewFlow 
+            initialReservation={currentReservation}
+            onComplete={() => {
+              handleBackToDashboard();
+              loadReservations(); // 完了後にリストを更新
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  // 通常のダッシュボード表示
   return (
     <div className="space-y-6">
       {/* ヘッダー - より目立つデザイン */}
