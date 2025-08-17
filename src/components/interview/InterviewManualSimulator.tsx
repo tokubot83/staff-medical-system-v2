@@ -85,10 +85,10 @@ export default function InterviewManualSimulator() {
         name: 'シミュレーション職員',
         department: '看護部',
         position: getJobRoleLabel(jobRole),
-        profession: getJobRoleLabel(jobRole), // professionフィールドを追加
+        profession: jobRole, // 実際のjobRole値を使用
         experienceYears: calculateExperienceYears(staffLevel),
         experienceMonths: 0,
-        facility: getFacilityTypeLabel(facilityType),
+        facility: facilityType, // 実際のfacilityType値を使用
         qualifications: [],
         lastInterviewDate: new Date(Date.now() - 180 * 24 * 60 * 60 * 1000).toISOString(), // 6ヶ月前
         interests: [],
@@ -172,10 +172,10 @@ export default function InterviewManualSimulator() {
         name: 'シミュレーション職員（比較）',
         department: '看護部',
         position: getJobRoleLabel(jobRole),
-        profession: getJobRoleLabel(jobRole), // professionフィールドを追加
+        profession: jobRole, // 実際のjobRole値を使用
         experienceYears: calculateExperienceYears(staffLevel),
         experienceMonths: 0,
-        facility: getFacilityTypeLabel(facilityType),
+        facility: facilityType, // 実際のfacilityType値を使用
         qualifications: [],
         lastInterviewDate: new Date(Date.now() - 180 * 24 * 60 * 60 * 1000).toISOString(),
         interests: [],

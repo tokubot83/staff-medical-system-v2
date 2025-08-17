@@ -214,10 +214,14 @@ function generateSection(
 
 // メインの生成関数
 export function generateInterviewSheet(params: ExtendedInterviewParams): GeneratedInterviewSheet {
+  // facilityのnullチェックとデフォルト値設定
+  const facilityType = (params.staff?.facility || 'acute') as FacilityType;
+  const professionType = (params.staff?.profession || 'nurse') as ProfessionType;
+  
   // 新しいセクション生成ロジックを使用
   const sections = generateInterviewSections(
-    params.staff.facility as FacilityType,
-    params.staff.profession as ProfessionType,
+    facilityType,
+    professionType,
     params.staff.experienceLevel,
     params.duration
   );
