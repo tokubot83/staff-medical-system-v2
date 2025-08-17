@@ -2,7 +2,20 @@
 // 職員からの面談申込に基づいて動的に面談マニュアルを生成
 
 import { VoiceDriveInterviewRequest, VoiceDriveInterviewCategory } from './voicedriveIntegrationService';
-import { GeneratedInterviewManual, StaffLevel, JobRole, FacilityType } from './interviewManualGenerationService';
+import { StaffLevel, JobRole, FacilityType } from '@/types/staff-common';
+
+// GeneratedInterviewManual型の定義（暫定）
+export interface GeneratedInterviewManual {
+  id: string;
+  title: string;
+  generatedAt: Date;
+  estimatedDuration: number;
+  staffInfo: any;
+  overview: any;
+  sections: any[];
+  timeAllocation: any[];
+  guidelines: any;
+}
 import { MotivationTypeDiagnosisService } from './motivationTypeDiagnosisService';
 
 // サポート面談カテゴリ詳細定義

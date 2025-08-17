@@ -372,11 +372,82 @@ export default function InterviewBankFlowManager({
   };
 
   // 面談シート生成
-  const handleGenerateSheet = () => {
+  const handleGenerateSheet = async () => {
     if (!selectedStaff || selectedQuestions.length === 0) return;
     
-    // 設定と質問を親コンポーネントに渡す
-    onComplete(interviewSettings, selectedQuestions);
+    try {
+      // UnifiedBankServiceを使用してシートを生成
+      const { UnifiedBankService } = await import('@/lib/interview-bank/services/unified-bank-service');
+      const { StaffBankProfile } = await import('@/lib/interview-bank/types');
+      
+      const unifiedService = UnifiedBankService.getInstance();
+      
+      // StaffBankProfileの作成
+      const staffProfile: StaffBankProfile = {
+        staffId: selectedStaff.id,
+        name: selectedStaff.name,
+        department: selectedStaff.department,
+        position: selectedStaff.profession,
+        experienceYears: selectedStaff.experienceYears,
+        experienceMonths: 0,
+        facility: selectedStaff.facilityType,
+        qualifications: [],
+        lastInterviewDate: new Date(Date.now() - 180 * 24 * 60 * 60 * 1000).toISOString(),
+        interests: [],
+        challenges: []
+      };
+      
+      // 面談パラメータの作成
+      const interviewParams = {
+        bankType: interviewType === 'regular' ? 'regular' as const : 
+                  interviewType === 'support' ? 'support' as const : 
+                  'special' as const,
+        staffProfile,
+        baseParams: {
+          duration: interviewSettings.duration,
+          interviewDate: new Date(interviewSettings.interviewDate),
+          interviewType: interviewType as any,
+          interviewerId: 'admin',
+          interviewerName: '面談担当者',
+          metadata: {
+            location: interviewSettings.location,
+            memo: interviewSettings.memo,
+            selectedQuestions: selectedQuestions.map(q => q.id)
+          }
+        },
+        regularParams: interviewType === 'regular' ? {
+          focusAreas: [],
+          customSections: selectedQuestions.filter(q => q.isCustom).map(q => ({
+            id: q.id,
+            name: q.section || 'カスタム',
+            questions: [{ id: q.id, content: q.text, type: q.type || 'text' }]
+          }))
+        } : undefined,
+        supportParams: interviewType === 'support' ? {
+          category: 'workplace',
+          urgency: 'medium' as const,
+          consultationTopic: '職場環境',
+          consultationDetails: interviewSettings.memo || ''
+        } : undefined,
+        specialParams: interviewType === 'special' ? {
+          specialType: 'other' as any,
+          reason: interviewSettings.memo || '特別面談',
+          confidentialLevel: 'normal' as const
+        } : undefined
+      };
+      
+      // シート生成
+      const result = await unifiedService.generateUnifiedInterview(interviewParams);
+      
+      // 成功時の処理
+      console.log('面談シート生成成功:', result);
+      
+      // 設定と質問を親コンポーネントに渡す
+      onComplete(interviewSettings, selectedQuestions);
+    } catch (error) {
+      console.error('面談シート生成エラー:', error);
+      alert('面談シートの生成に失敗しました。');
+    }
   };
 
   // フィルタリングされた職員リスト

@@ -3,7 +3,7 @@
 
 import { DynamicInterviewGenerationService } from './dynamicInterviewGenerationService';
 import { MotivationTypeDiagnosisService } from './motivationTypeDiagnosisService';
-import { InterviewManualGenerationService } from './interviewManualGenerationService';
+// import { InterviewManualGenerationService } from './interviewManualGenerationService'; // 削除済み
 import { InterviewFlowOrchestrationService } from './interviewFlowOrchestrationService';
 import { SpecialInterviewTemplateService } from './specialInterviewTemplates';
 import { VoiceDriveIntegrationService } from './voicedriveIntegrationService';

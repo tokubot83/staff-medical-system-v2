@@ -1,11 +1,26 @@
 // 特別面談テンプレートサービス
 // 復職面談、インシデント後面談、退職面談のテンプレート管理
 
-import { 
-  ManualSection, 
-  DetailedQuestion,
-  InterviewDuration 
-} from './interviewManualGenerationService';
+import { InterviewDuration } from '@/types/staff-common';
+
+// 面談マニュアル関連の型定義（暫定）
+export interface ManualSection {
+  title: string;
+  duration: number;
+  questions: DetailedQuestion[];
+  guidance?: any;
+}
+
+export interface DetailedQuestion {
+  id: string;
+  question: string;
+  type: string;
+  required: boolean;
+  details?: any;
+  scale?: any;
+  checklistItems?: any[];
+  hybridInput?: any;
+}
 
 // 特別面談の種類
 export type SpecialInterviewType = 
