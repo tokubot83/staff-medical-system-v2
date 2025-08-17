@@ -272,9 +272,8 @@ export default function UnifiedInterviewBankSystem() {
 
   // クイックスタートハンドラ
   const handleQuickStart = (typeId: string) => {
-    setSelectedType(typeId);
-    setCurrentStep(4);
-    // TODO: 面談開始画面への遷移
+    // 詳細ボタンと同じ動作にして、質問選択画面を表示
+    handleTypeSelect(typeId);
   };
 
   return (
