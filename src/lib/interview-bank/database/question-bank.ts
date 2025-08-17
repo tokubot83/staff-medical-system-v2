@@ -581,7 +581,9 @@ const abstractQuestions: InterviewQuestion[] = [
 
 // 全ての質問を統合（重複を除去）
 const allQuestions = [
-  ...essentialEngagementQuestions,  // 最優先：エンゲージメント・定着関連
+  ...allCommonQuestions,             // v4/v5シートからの共通質問
+  ...allFacilitySkillQuestions,      // 施設別スキル質問
+  ...essentialEngagementQuestions,   // エンゲージメント・定着関連
   ...comprehensiveSkillQuestions,    // 職種別具体的スキル
   ...abstractQuestions               // 既存の抽象的質問
 ];

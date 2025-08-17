@@ -57,8 +57,10 @@ import {
 
 import { UnifiedBankService, BankStatistics } from '@/lib/interview-bank/services/unified-bank-service';
 import { InterviewBankService } from '@/lib/interview-bank/services/bank-service';
-import { InterviewQuestion } from '@/lib/interview-bank/types';
+import { InterviewQuestion, InterviewSectionInstance } from '@/lib/interview-bank/types';
 import { questionBank } from '@/lib/interview-bank/database/question-bank';
+import { generateInterviewSections, generateSectionPreview } from '@/lib/interview-bank/services/section-generator';
+import { sectionDefinitions } from '@/lib/interview-bank/database/section-definitions';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Dialog,
