@@ -1502,11 +1502,16 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
                 </CardContent>
               </Card>
 
-              {/* 従来のテンプレート方式 */}
+              {/* 従来のテンプレート方式（現在はバンクシステムを使用） */}
               <Card 
                 className="cursor-pointer hover:border-gray-500 transition-colors"
                 onClick={() => {
-                  setSession(prev => ({ ...prev, useBankSystem: false }));
+                  // 従来テンプレートも暫定的にバンクシステムを使用
+                  setSession(prev => ({ 
+                    ...prev, 
+                    useBankSystem: true,  // 暫定的にtrueに設定
+                    bankMode: 'basic'    // ベーシックモードを使用
+                  }));
                   setCurrentStep('duration');
                 }}
               >
@@ -1525,9 +1530,10 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
                       <li>• 固定された質問順序</li>
                       <li>• 従来通りの面談フロー</li>
                     </ul>
-                    <div className="mt-3 p-2 bg-gray-50 rounded text-xs">
-                      <strong>適している場合:</strong>
-                      <br />従来の方式に慣れている・標準化を重視
+                    <div className="mt-3 p-2 bg-orange-50 rounded text-xs">
+                      <span className="text-orange-600">※ 現在はベーシックモードで代替</span>
+                      <br />
+                      <span className="text-xs text-gray-600">従来方式は開発中</span>
                     </div>
                   </div>
                 </CardContent>

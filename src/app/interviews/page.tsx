@@ -15,8 +15,7 @@ import InterviewSheetWrapper from '@/components/interview/InterviewSheetWrapper'
 import { getExperienceCategory } from '@/utils/experienceUtils'
 import RoleSelectionModal from '@/components/RoleSelectionModal'
 import UnifiedInterviewDashboard from '@/components/interview/UnifiedInterviewDashboard'
-// import IntegratedBankSystemTab3Column from '@/components/interview/IntegratedBankSystemTab3Column' // 旧版（段階的に削除予定）
-import UnifiedInterviewBankSystem from '@/components/interview/UnifiedInterviewBankSystem' // 新統一版
+import UnifiedInterviewBankSystem from '@/components/interview/UnifiedInterviewBankSystem'
 
 // タブ順序を業務フローに合わせて修正
 const tabs = [
