@@ -165,8 +165,10 @@ export default function UnifiedInterviewDashboard() {
     const convertedData: UnifiedInterviewReservation[] = mockInterviews
       .filter(interview => interview.status === 'scheduled')
       .map((interview, index) => {
-        // 最初の5件を今日の日付に、残りは元の日付を使用
-        const scheduledDate = index < 5 ? today : new Date(interview.bookingDate);
+        // bookingDateが今日の日付、または最初の15件を今日の日付に設定
+        const bookingDateStr = interview.bookingDate;
+        const isToday = bookingDateStr === today.toISOString().split('T')[0];
+        const scheduledDate = isToday || index < 15 ? today : new Date(interview.bookingDate);
         
         // 面談タイプの判定と変換
         let type: 'regular' | 'special' | 'support' = 'regular';
@@ -185,6 +187,7 @@ export default function UnifiedInterviewDashboard() {
             regularType = 'annual';
             break;
           case 'management_biannual':
+          case 'management_assessment':
             type = 'regular';
             regularType = 'management';
             break;
