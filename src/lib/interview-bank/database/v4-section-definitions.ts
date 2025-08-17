@@ -233,13 +233,13 @@ export const skillEvaluationSections: Record<string, InterviewSectionDefinition>
   }
 };
 
-// 第2セクション：全員共通の現状確認セクション
+// 第1セクション：全員共通の現状確認セクション（アイスブレイク含む）
 export const commonStatusSection: InterviewSectionDefinition = {
   id: 'status_check',
-  name: '職員の現状確認（モチベーション・健康・エンゲージメント）',
+  name: '導入・現状確認',
   type: 'status_check',
   color: 'bg-green-50',
-  description: '心身の健康状態、職場満足度、継続意向の確認',
+  description: '近況の確認、前回からの変化、心身の健康状態の把握',
   recommendedDuration: 8,
   questions: []
 };

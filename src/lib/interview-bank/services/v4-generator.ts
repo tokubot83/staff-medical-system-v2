@@ -277,7 +277,18 @@ export function generateV4InterviewSheet(params: ExtendedInterviewParams): Inter
   const sections: InterviewSectionInstance[] = [];
   
   // ========================================
-  // 第1セクション：スキル評価（職種×経験レベル別）
+  // 第1セクション：現状確認（全員共通） - アイスブレイクから始める
+  // ========================================
+  const statusQuestions = selectStatusQuestions(duration);
+  
+  sections.push({
+    ...commonStatusSection,
+    questions: statusQuestions,
+    actualDuration: commonStatusSection.recommendedDuration
+  });
+  
+  // ========================================
+  // 第2セクション：スキル評価（職種×経験レベル別）
   // ========================================
   // ハイフンをアンダースコアに変換してセクションキーを作成
   const professionKey = profession.replace(/-/g, '_');
@@ -298,17 +309,6 @@ export function generateV4InterviewSheet(params: ExtendedInterviewParams): Inter
     ...skillSection,
     questions: skillQuestions,
     actualDuration: skillSection.recommendedDuration
-  });
-  
-  // ========================================
-  // 第2セクション：現状確認（全員共通）
-  // ========================================
-  const statusQuestions = selectStatusQuestions(duration);
-  
-  sections.push({
-    ...commonStatusSection,
-    questions: statusQuestions,
-    actualDuration: commonStatusSection.recommendedDuration
   });
   
   // ========================================

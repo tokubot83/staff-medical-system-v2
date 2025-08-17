@@ -1,7 +1,32 @@
-// 第2セクション：職員の現状確認（全職種・全施設・全世代共通）
+// 第1セクション：職員の現状確認（全職種・全施設・全世代共通）
 import { InterviewQuestion } from '../types';
 
 export const commonStatusQuestions: InterviewQuestion[] = [
+  // アイスブレイク・導入質問（最優先）
+  {
+    id: 'common-status-000-a',
+    content: '最近の調子はいかがですか？お変わりありませんか？',
+    type: 'open',
+    category: 'general_status',
+    section: 'status_check',
+    sectionId: 'status_check',
+    priority: 1,
+    minDuration: 15,
+    tags: ['共通', 'アイスブレイク', '現状確認', '導入'],
+    followUp: '何か気になることがあれば、遠慮なくお話しください。'
+  },
+  {
+    id: 'common-status-000-b',
+    content: '前回の面談から今日まで、何か変化はありましたか？',
+    type: 'open',
+    category: 'general_status',
+    section: 'status_check',
+    sectionId: 'status_check',
+    priority: 1,
+    minDuration: 15,
+    tags: ['共通', '変化確認', '現状確認', '導入'],
+    followUp: '良い変化でも、困った変化でも、どちらでも結構です。'
+  },
   {
     id: 'common-status-001',
     content: '現在の仕事に対するモチベーションはどの程度ですか？',
@@ -9,7 +34,7 @@ export const commonStatusQuestions: InterviewQuestion[] = [
     category: 'motivation',
     section: 'status_check',
     sectionId: 'status_check',
-    priority: 1,
+    priority: 2,
     minDuration: 15,
     tags: ['共通', 'モチベーション', '現状確認'],
     followUp: 'モチベーションに影響している要因があれば教えてください。'
@@ -21,7 +46,7 @@ export const commonStatusQuestions: InterviewQuestion[] = [
     category: 'health',
     section: 'status_check',
     sectionId: 'status_check',
-    priority: 1,
+    priority: 2,
     minDuration: 15,
     tags: ['共通', '健康', 'ストレス', '現状確認'],
     followUp: '休暇は適切に取れていますか？睡眠時間は確保できていますか？'
@@ -33,7 +58,7 @@ export const commonStatusQuestions: InterviewQuestion[] = [
     category: 'team_collaboration',
     section: 'status_check',
     sectionId: 'status_check',
-    priority: 1,
+    priority: 2,
     minDuration: 15,
     tags: ['共通', '人間関係', 'チーム', '現状確認'],
     followUp: '特に相談しやすい人、逆に関わりづらい人はいますか？'
@@ -45,7 +70,7 @@ export const commonStatusQuestions: InterviewQuestion[] = [
     category: 'work_life_balance',
     section: 'status_check',
     sectionId: 'status_check',
-    priority: 1,
+    priority: 2,
     minDuration: 15,
     tags: ['共通', 'ワークライフバランス', '現状確認'],
     followUp: '残業時間や持ち帰り仕事の状況を教えてください。'

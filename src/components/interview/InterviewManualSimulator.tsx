@@ -27,6 +27,15 @@ export default function InterviewManualSimulator() {
   const [showComparison, setShowComparison] = useState(false)
   const [comparisonSheet, setComparisonSheet] = useState<any>(null)
   const [staffProfile, setStaffProfile] = useState<any>(null)
+  const [comparisonStaffProfile, setComparisonStaffProfile] = useState<any>(null)
+  const [showComparisonModal, setShowComparisonModal] = useState(false)
+  
+  // 比較用の条件を別途管理
+  const [compareStaffLevel, setCompareStaffLevel] = useState<StaffLevel>('general')
+  const [compareJobRole, setCompareJobRole] = useState<JobRole>('nurse')
+  const [compareFacilityType, setCompareFacilityType] = useState<FacilityType>('acute')
+  const [compareInterviewType, setCompareInterviewType] = useState<InterviewType>('regular_annual')
+  const [compareDuration, setCompareDuration] = useState<number>(30)
 
   const staffLevels: { value: StaffLevel; label: string; description: string }[] = [
     { value: 'new', label: '新人', description: '1年未満' },
@@ -149,36 +158,47 @@ export default function InterviewManualSimulator() {
     }
   }
 
-  const handleCompare = async () => {
+  const handleOpenComparisonModal = () => {
     if (!generatedSheet) return
     
+    // 現在の条件を比較用の初期値として設定
+    setCompareStaffLevel(staffLevel)
+    setCompareJobRole(jobRole)
+    setCompareFacilityType(facilityType)
+    setCompareInterviewType(interviewType)
+    setCompareDuration(duration)
+    setShowComparisonModal(true)
+  }
+
+  const handleGenerateComparison = async () => {
     setIsGenerating(true)
     try {
-      // 比較用のプロファイル（現在の設定を使用）
-      const experienceLevel = getExperienceLevel(staffLevel);
-      const staffProfile: ExtendedStaffProfile = {
+      // 比較用のプロファイル（変更された条件を使用）
+      const experienceLevel = getExperienceLevel(compareStaffLevel);
+      const compareProfile: ExtendedStaffProfile = {
         id: `SIM-CMP-${Date.now()}`,
         name: 'シミュレーション職員（比較）',
         department: '看護部',
-        profession: jobRole,
-        facilityType: facilityType,
+        profession: compareJobRole,
+        facilityType: compareFacilityType,
         experienceLevel: experienceLevel,
-        positionLevel: staffLevel === 'manager' ? 'manager' : staffLevel === 'chief' ? 'chief' : 'staff',
-        experienceYears: calculateExperienceYears(staffLevel),
+        positionLevel: compareStaffLevel === 'manager' ? 'manager' : compareStaffLevel === 'chief' ? 'chief' : 'staff',
+        experienceYears: calculateExperienceYears(compareStaffLevel),
         position: {
-          name: getJobRoleLabel(jobRole),
-          level: staffLevel,
+          name: getJobRoleLabel(compareJobRole),
+          level: compareStaffLevel,
           responsibilities: []
         },
-        hireDate: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000 * calculateExperienceYears(staffLevel)).toISOString(),
+        hireDate: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000 * calculateExperienceYears(compareStaffLevel)).toISOString(),
         motivationType: 'growth'
       }
+      setComparisonStaffProfile(compareProfile)
 
       // v4-generatorを使用してシートを生成
       const params: ExtendedInterviewParams = {
-        staff: staffProfile,
-        duration: duration,
-        interviewType: interviewType,
+        staff: compareProfile,
+        duration: compareDuration,
+        interviewType: compareInterviewType,
         interviewDate: new Date(),
         interviewerId: 'simulator-compare',
         interviewerName: '人事担当者',
@@ -192,6 +212,7 @@ export default function InterviewManualSimulator() {
       if (comparisonSheet) {
         setComparisonSheet(comparisonSheet)
         setShowComparison(true)
+        setShowComparisonModal(false)
       } else {
         console.error('No valid comparison sheet generated')
       }
@@ -303,7 +324,7 @@ export default function InterviewManualSimulator() {
           {generatedSheet && staffProfile && (
             <>
               <button 
-                onClick={handleCompare}
+                onClick={handleOpenComparisonModal}
                 disabled={isGenerating}
                 className={styles.compareButton}
               >
@@ -329,6 +350,18 @@ export default function InterviewManualSimulator() {
                 <span>バージョン: {generatedSheet?.metadata?.version || 'v6'}</span>
                 <span>生成日時: {new Date().toLocaleString()}</span>
               </div>
+              {showComparison && (
+                <div className={styles.conditionSummary}>
+                  <h4>条件</h4>
+                  <ul>
+                    <li>職種: {getJobRoleLabel(jobRole)}</li>
+                    <li>レベル: {staffLevels.find(l => l.value === staffLevel)?.label}</li>
+                    <li>施設: {getFacilityTypeLabel(facilityType)}</li>
+                    <li>種別: {interviewTypes.find(t => t.value === interviewType)?.label}</li>
+                    <li>時間: {duration}分</li>
+                  </ul>
+                </div>
+              )}
             </div>
             <DynamicInterviewSheet 
               sheetData={generatedSheet}
@@ -338,7 +371,7 @@ export default function InterviewManualSimulator() {
             />
           </div>
           
-          {showComparison && comparisonSheet && (
+          {showComparison && comparisonSheet && comparisonStaffProfile && (
             <div className={styles.sheetPanel}>
               <div className={styles.sheetHeader}>
                 <h2>比較用面談シート</h2>
@@ -346,10 +379,30 @@ export default function InterviewManualSimulator() {
                   <span>バージョン: {comparisonSheet.metadata?.version || 'v6'}</span>
                   <span>生成日時: {new Date().toLocaleString()}</span>
                 </div>
+                <div className={styles.conditionSummary}>
+                  <h4>条件</h4>
+                  <ul>
+                    <li className={compareJobRole !== jobRole ? styles.diff : ''}>
+                      職種: {getJobRoleLabel(compareJobRole)}
+                    </li>
+                    <li className={compareStaffLevel !== staffLevel ? styles.diff : ''}>
+                      レベル: {staffLevels.find(l => l.value === compareStaffLevel)?.label}
+                    </li>
+                    <li className={compareFacilityType !== facilityType ? styles.diff : ''}>
+                      施設: {getFacilityTypeLabel(compareFacilityType)}
+                    </li>
+                    <li className={compareInterviewType !== interviewType ? styles.diff : ''}>
+                      種別: {interviewTypes.find(t => t.value === compareInterviewType)?.label}
+                    </li>
+                    <li className={compareDuration !== duration ? styles.diff : ''}>
+                      時間: {compareDuration}分
+                    </li>
+                  </ul>
+                </div>
               </div>
               <DynamicInterviewSheet 
                 sheetData={comparisonSheet}
-                staffProfile={staffProfile}
+                staffProfile={comparisonStaffProfile}
                 readOnly={true}
                 onSave={() => {}}
               />
@@ -390,6 +443,158 @@ export default function InterviewManualSimulator() {
                 <span>✅</span>
                 <span>実際の面談と同じ内容を確認可能</span>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 比較条件設定モーダル */}
+      {showComparisonModal && (
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <div className={styles.modalHeader}>
+              <h2>比較条件の設定</h2>
+              <button 
+                onClick={() => setShowComparisonModal(false)}
+                className={styles.closeButton}
+              >
+                ✕
+              </button>
+            </div>
+            
+            <div className={styles.modalBody}>
+              <p className={styles.modalDescription}>
+                比較用の条件を変更して、異なる設定での面談シートを生成できます。
+              </p>
+              
+              <div className={styles.modalControls}>
+                <div className={styles.controlGroup}>
+                  <label>職種</label>
+                  <select 
+                    value={compareJobRole} 
+                    onChange={(e) => setCompareJobRole(e.target.value as JobRole)}
+                    className={styles.select}
+                  >
+                    {jobRoles.map(role => (
+                      <option key={role.value} value={role.value}>
+                        {role.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className={styles.controlGroup}>
+                  <label>経験レベル</label>
+                  <select 
+                    value={compareStaffLevel} 
+                    onChange={(e) => setCompareStaffLevel(e.target.value as StaffLevel)}
+                    className={styles.select}
+                  >
+                    {staffLevels.map(level => (
+                      <option key={level.value} value={level.value}>
+                        {level.label} ({level.description})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className={styles.controlGroup}>
+                  <label>施設タイプ</label>
+                  <select 
+                    value={compareFacilityType} 
+                    onChange={(e) => setCompareFacilityType(e.target.value as FacilityType)}
+                    className={styles.select}
+                  >
+                    {facilityTypes.map(type => (
+                      <option key={type.value} value={type.value}>
+                        {type.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className={styles.controlGroup}>
+                  <label>面談種別</label>
+                  <select 
+                    value={compareInterviewType} 
+                    onChange={(e) => setCompareInterviewType(e.target.value as InterviewType)}
+                    className={styles.select}
+                  >
+                    {interviewTypes.map(type => (
+                      <option key={type.value} value={type.value}>
+                        {type.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className={styles.controlGroup}>
+                  <label>面談時間</label>
+                  <select 
+                    value={compareDuration} 
+                    onChange={(e) => setCompareDuration(Number(e.target.value))}
+                    className={styles.select}
+                  >
+                    {durations.map(d => (
+                      <option key={d.value} value={d.value}>
+                        {d.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              
+              <div className={styles.comparisonPreview}>
+                <div className={styles.comparisonRow}>
+                  <div className={styles.comparisonColumn}>
+                    <h4>現在の条件</h4>
+                    <ul>
+                      <li>職種: {getJobRoleLabel(jobRole)}</li>
+                      <li>レベル: {staffLevels.find(l => l.value === staffLevel)?.label}</li>
+                      <li>施設: {getFacilityTypeLabel(facilityType)}</li>
+                      <li>種別: {interviewTypes.find(t => t.value === interviewType)?.label}</li>
+                      <li>時間: {duration}分</li>
+                    </ul>
+                  </div>
+                  <div className={styles.comparisonArrow}>→</div>
+                  <div className={styles.comparisonColumn}>
+                    <h4>比較条件</h4>
+                    <ul>
+                      <li className={compareJobRole !== jobRole ? styles.changed : ''}>
+                        職種: {getJobRoleLabel(compareJobRole)}
+                      </li>
+                      <li className={compareStaffLevel !== staffLevel ? styles.changed : ''}>
+                        レベル: {staffLevels.find(l => l.value === compareStaffLevel)?.label}
+                      </li>
+                      <li className={compareFacilityType !== facilityType ? styles.changed : ''}>
+                        施設: {getFacilityTypeLabel(compareFacilityType)}
+                      </li>
+                      <li className={compareInterviewType !== interviewType ? styles.changed : ''}>
+                        種別: {interviewTypes.find(t => t.value === compareInterviewType)?.label}
+                      </li>
+                      <li className={compareDuration !== duration ? styles.changed : ''}>
+                        時間: {compareDuration}分
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className={styles.modalFooter}>
+              <button 
+                onClick={() => setShowComparisonModal(false)}
+                className={styles.cancelButton}
+              >
+                キャンセル
+              </button>
+              <button 
+                onClick={handleGenerateComparison}
+                disabled={isGenerating}
+                className={styles.generateButton}
+              >
+                {isGenerating ? '生成中...' : '比較シートを生成'}
+              </button>
             </div>
           </div>
         </div>
