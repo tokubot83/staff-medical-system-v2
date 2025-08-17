@@ -68,6 +68,7 @@ import {
 import { V6InterviewTemplateService } from '@/services/v6InterviewTemplateService';
 // 面談バンクシステムのインポート
 import { generateInterviewSheet, generateMotivationFollowUp, generateInterviewSummary } from '@/lib/interview-bank/services/generator';
+import { generateV4InterviewSheet } from '@/lib/interview-bank/services/v4-generator';
 import { generateSupportInterviewFromVoiceDrive, generateSupportInterview, SupportGenerationParams } from '@/lib/interview-bank/services/support-generator';
 import { generateSpecialInterview, SpecialInterviewType as SpecialInterviewBankType, SpecialGenerationParams } from '@/lib/interview-bank/services/special-generator';
 import { ExtendedInterviewParams, StaffProfile, PositionDetail } from '@/lib/interview-bank/types-extended';
@@ -423,6 +424,23 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
       // バンクシステムを使用する場合（全ての面談タイプで使用）
       if (session.useBankSystem) {
         console.log('Using bank system for interview type:', session.interviewType);
+        
+        // デバッグ: 元データを確認
+        console.log('=== DEBUG: Staff Member Raw Data ===', {
+          name: session.staffMember!.name,
+          department: session.staffMember!.department,
+          position: session.staffMember!.position,
+          jobRole: session.staffMember!.jobRole,
+          facilityType: session.staffMember!.facilityType
+        });
+        
+        // デバッグ: マッピング後の値を確認
+        const mappedProfession = mapJobRoleToProfession(session.staffMember!.jobRole);
+        console.log('=== DEBUG: Mapped Profession ===', {
+          original: session.staffMember!.jobRole,
+          mapped: mappedProfession
+        });
+        
         // スタッフプロファイルを作成
         const staffProfile: StaffProfile = {
           id: session.staffMember!.id,
@@ -442,7 +460,7 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
           positionLevel: mapToPositionLevel(session.staffMember!.position),
           facility: session.staffMember!.facilityType,
           department: mapToDepartmentType(session.staffMember!.department),
-          profession: mapJobRoleToProfession(session.staffMember!.jobRole),
+          profession: mappedProfession,  // デバッグ済みの値を使用
           licenses: extractLicenses(session.staffMember!.jobRole)
         };
         
@@ -463,7 +481,7 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
             includePositionQuestions: true,
             includeFacilityQuestions: true
           };
-          generatedSheet = generateInterviewSheet(params);
+          generatedSheet = generateV4InterviewSheet(params);
           
         } else if (session.interviewType === 'special') {
           // 特別面談
@@ -591,7 +609,7 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
             includePositionQuestions: true,
             includeFacilityQuestions: true
           };
-          generatedSheet = generateInterviewSheet(params);
+          generatedSheet = generateV4InterviewSheet(params);
         }
         
         // 動機タイプ診断が必要な場合は追加質問を生成

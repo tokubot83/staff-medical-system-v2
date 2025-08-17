@@ -6,6 +6,8 @@ import { comprehensiveSkillQuestions } from './comprehensive-skill-questions';
 import { essentialEngagementQuestions } from './essential-engagement-questions';
 import { allCommonQuestions } from './common-questions';
 import { allFacilitySkillQuestions } from './facility-skill-questions';
+import { facilitySpecificQuestions } from './facility-specific-questions';
+import { commonStatusQuestions } from './common-status-questions';
 
 // 抽象的な質問（既存）と具体的スキル質問（新規）、エンゲージメント質問を統合
 const abstractQuestions: InterviewQuestion[] = [
@@ -585,6 +587,8 @@ const abstractQuestions: InterviewQuestion[] = [
 const allQuestions = [
   ...allCommonQuestions,             // v4/v5シートからの共通質問
   ...allFacilitySkillQuestions,      // 施設別スキル質問
+  ...facilitySpecificQuestions,      // 施設タイプ別の具体的質問
+  ...commonStatusQuestions,           // 第2セクション共通質問
   ...essentialEngagementQuestions,   // エンゲージメント・定着関連
   ...comprehensiveSkillQuestions,    // 職種別具体的スキル
   ...abstractQuestions               // 既存の抽象的質問
