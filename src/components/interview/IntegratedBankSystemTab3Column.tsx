@@ -956,7 +956,7 @@ export default function IntegratedBankSystemTab3Column() {
         <div>
           <h2 className="text-2xl font-bold flex items-center gap-2">
             <Database className="w-6 h-6" />
-            統合面談バンクシステム（3カラム強化版）
+            面談バンク
           </h2>
           <p className="text-muted-foreground">
             570問以上の質問テンプレートを3カラムレイアウトで効率的に管理
