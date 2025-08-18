@@ -1184,10 +1184,9 @@ export default function InterviewBankTab({
       
       {/* フルスクリーン質問管理モーダル */}
       <Dialog open={isFullscreenManagerOpen} onOpenChange={setIsFullscreenManagerOpen}>
-        <DialogContent className="max-w-[95vw] w-full h-[90vh] p-0">
-          <div className="flex flex-col h-full">
+        <DialogContent className="max-w-[95vw] w-full max-h-[90vh] h-[90vh] flex flex-col p-0">
             {/* ヘッダー */}
-            <div className="flex items-center justify-between p-6 border-b bg-gray-50">
+            <div className="flex items-center justify-between p-6 border-b bg-gray-50 shrink-0">
               <div className="flex items-center gap-3">
                 <BookOpen className="h-6 w-6 text-primary" />
                 <div>
@@ -1214,7 +1213,7 @@ export default function InterviewBankTab({
             </div>
             
             {/* コンテンツエリア */}
-            <div className="flex-1 overflow-y-auto p-6 bg-white">
+            <div className="flex-1 min-h-0 overflow-y-auto p-6 bg-white">
               {useEnhancedManager ? (
                 <EnhancedQuestionManager
                   questions={questionTemplates}
@@ -1266,7 +1265,7 @@ export default function InterviewBankTab({
             </div>
             
             {/* フッター */}
-            <div className="flex items-center justify-between p-4 border-t bg-gray-50">
+            <div className="flex items-center justify-between p-4 border-t bg-gray-50 shrink-0">
               <div className="text-sm text-muted-foreground">
                 総質問数: {questionTemplates.length + customQuestions.length}問 | 
                 カスタム質問: {customQuestions.length}問
@@ -1287,7 +1286,6 @@ export default function InterviewBankTab({
                 </Button>
               </div>
             </div>
-          </div>
         </DialogContent>
       </Dialog>
     </div>

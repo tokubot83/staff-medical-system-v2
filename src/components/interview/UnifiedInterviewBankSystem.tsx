@@ -1326,25 +1326,23 @@ export default function UnifiedInterviewBankSystem() {
 
       {/* 質問管理モーダル */}
       <Dialog open={showQuestionManager} onOpenChange={setShowQuestionManager}>
-        <DialogContent className="max-w-[95vw] w-full h-[90vh] p-0">
-          <div className="flex flex-col h-full">
-            <div className="flex items-center justify-between p-4 border-b">
-              <div className="flex items-center gap-3">
-                <Database className="h-6 w-6 text-primary" />
-                <div>
-                  <h2 className="text-xl font-semibold">面談バンク質問管理</h2>
-                  <p className="text-sm text-muted-foreground">
-                    面談タイプと時間に応じた質問セットを管理
-                  </p>
-                </div>
+        <DialogContent className="max-w-[95vw] w-full max-h-[90vh] h-[90vh] flex flex-col p-0">
+          <div className="flex items-center justify-between p-4 border-b shrink-0">
+            <div className="flex items-center gap-3">
+              <Database className="h-6 w-6 text-primary" />
+              <div>
+                <h2 className="text-xl font-semibold">面談バンク質問管理</h2>
+                <p className="text-sm text-muted-foreground">
+                  面談タイプと時間に応じた質問セットを管理
+                </p>
               </div>
             </div>
-            <div className="flex-1 overflow-y-auto p-6">
-              <BankQuestionManager 
-                onClose={() => setShowQuestionManager(false)} 
-                interviewType={selectedType as 'regular' | 'support' | 'special' || 'regular'}
-              />
-            </div>
+          </div>
+          <div className="flex-1 min-h-0 overflow-y-auto">
+            <BankQuestionManager 
+              onClose={() => setShowQuestionManager(false)} 
+              interviewType={selectedType as 'regular' | 'support' | 'special' || 'regular'}
+            />
           </div>
         </DialogContent>
       </Dialog>

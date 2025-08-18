@@ -1002,9 +1002,9 @@ export default function BankQuestionManager({ onClose, interviewType }: BankQues
   };
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="w-full">
       {/* プログレスバー */}
-      <div className="px-6 pt-6 pb-4">
+      <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
           <div className="flex gap-8">
             {progressSteps.map((step, index) => (
@@ -1036,7 +1036,7 @@ export default function BankQuestionManager({ onClose, interviewType }: BankQues
       </div>
 
       {/* メインコンテンツ */}
-      <div className="flex-1 overflow-y-auto px-6 pb-6">
+      <div className="w-full">
         {currentStep === 'duration' && <DurationSelection />}
         {currentStep === 'category' && <CategorySelection />}
         {currentStep === 'special-type' && <SpecialTypeSelection />}
