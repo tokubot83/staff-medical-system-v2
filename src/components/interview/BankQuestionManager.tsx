@@ -1,0 +1,629 @@
+'use client';
+
+import React, { useState, useMemo, useEffect } from 'react';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Progress } from '@/components/ui/progress';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import {
+  Clock,
+  Users,
+  Plus,
+  Edit,
+  Trash2,
+  Save,
+  AlertCircle,
+  CheckCircle,
+  Info,
+  ChevronRight,
+  Timer,
+  Target,
+  FileText,
+  Sparkles,
+  BarChart3,
+  Package,
+  Settings,
+  Copy,
+  Download,
+  Upload,
+} from 'lucide-react';
+import { ExperienceLevel, BankQuestion } from '@/lib/interview-bank/types';
+
+interface BankQuestionManagerProps {
+  onClose?: () => void;
+}
+
+// 面談タイプの定義
+const interviewTypes = [
+  { id: 'regular', label: '定期面談', icon: FileText, color: 'blue' },
+  { id: 'special', label: '特別面談', icon: AlertCircle, color: 'orange' },
+  { id: 'support', label: 'サポート面談', icon: Users, color: 'green' },
+];
+
+// 面談時間の定義
+const interviewDurations = [
+  { value: 15, label: '15分', description: '簡易確認' },
+  { value: 30, label: '30分', description: '標準面談' },
+  { value: 45, label: '45分', description: '詳細面談' },
+];
+
+// 経験レベルの定義
+const experienceLevels = [
+  { id: 'new', label: '新人', years: '1年未満', color: 'green' },
+  { id: 'junior', label: '若手', years: '1-3年', color: 'blue' },
+  { id: 'midlevel', label: '中堅', years: '3-10年', color: 'purple' },
+  { id: 'veteran', label: 'ベテラン', years: '10年以上', color: 'orange' },
+];
+
+// セクションの定義
+const interviewSections = [
+  { id: 'intro', label: '導入', defaultTime: 3, icon: Info },
+  { id: 'current', label: '現状確認', defaultTime: 10, icon: Target },
+  { id: 'challenges', label: '課題探索', defaultTime: 10, icon: AlertCircle },
+  { id: 'goals', label: '目標設定', defaultTime: 5, icon: Target },
+  { id: 'closing', label: 'まとめ', defaultTime: 2, icon: CheckCircle },
+];
+
+// 質問配分の型定義
+interface QuestionAllocation {
+  sectionId: string;
+  experienceLevel: ExperienceLevel;
+  questions: BankQuestion[];
+  requiredTime: number;
+  priority: 1 | 2 | 3;
+}
+
+export default function BankQuestionManager({ onClose }: BankQuestionManagerProps) {
+  const [currentStep, setCurrentStep] = useState<'type' | 'duration' | 'matrix'>('type');
+  const [selectedType, setSelectedType] = useState<string>('');
+  const [selectedDuration, setSelectedDuration] = useState<number>(0);
+  const [allocations, setAllocations] = useState<QuestionAllocation[]>([]);
+  const [editingCell, setEditingCell] = useState<{
+    section: string;
+    level: ExperienceLevel;
+  } | null>(null);
+  const [showAddDialog, setShowAddDialog] = useState(false);
+  const [bulkAddMode, setBulkAddMode] = useState(false);
+  const [selectedQuestions, setSelectedQuestions] = useState<Set<string>>(new Set());
+  const [timeWarning, setTimeWarning] = useState<string>('');
+
+  // 現在の質問データ（ダミーデータ）
+  const [questionBank, setQuestionBank] = useState<BankQuestion[]>([
+    {
+      id: 'q1',
+      content: '現在の業務で最も充実感を感じる瞬間はどんな時ですか？',
+      type: 'textarea',
+      category: '現状確認',
+      sectionId: 'current',
+      priority: 1,
+      minDuration: 2,
+      tags: ['モチベーション', '仕事満足度'],
+      experienceLevels: ['new', 'junior', 'midlevel', 'veteran'],
+    },
+    // ... 実際はもっと多くの質問
+  ]);
+
+  // 時間計算
+  const totalAllocatedTime = useMemo(() => {
+    return allocations.reduce((sum, allocation) => sum + allocation.requiredTime, 0);
+  }, [allocations]);
+
+  const remainingTime = selectedDuration - totalAllocatedTime;
+
+  // 時間警告のチェック
+  useEffect(() => {
+    if (selectedDuration > 0) {
+      if (remainingTime < 0) {
+        setTimeWarning(`時間が${Math.abs(remainingTime)}分超過しています`);
+      } else if (remainingTime > 5) {
+        setTimeWarning(`まだ${remainingTime}分の余裕があります`);
+      } else {
+        setTimeWarning('');
+      }
+    }
+  }, [remainingTime, selectedDuration]);
+
+  // マトリクスセルの質問数を取得
+  const getQuestionCount = (sectionId: string, level: ExperienceLevel): number => {
+    const allocation = allocations.find(
+      a => a.sectionId === sectionId && a.experienceLevel === level
+    );
+    return allocation?.questions.length || 0;
+  };
+
+  // マトリクスセルの推定時間を取得
+  const getEstimatedTime = (sectionId: string, level: ExperienceLevel): number => {
+    const allocation = allocations.find(
+      a => a.sectionId === sectionId && a.experienceLevel === level
+    );
+    return allocation?.requiredTime || 0;
+  };
+
+  // Step 1: 面談タイプ選択
+  const TypeSelection = () => (
+    <div className="space-y-6">
+      <div>
+        <h3 className="text-lg font-semibold mb-2">面談タイプを選択</h3>
+        <p className="text-sm text-muted-foreground mb-4">
+          管理する質問セットの面談タイプを選択してください
+        </p>
+      </div>
+      
+      <div className="grid grid-cols-3 gap-4">
+        {interviewTypes.map(type => {
+          const Icon = type.icon;
+          return (
+            <Card
+              key={type.id}
+              className={`cursor-pointer transition-all hover:shadow-lg ${
+                selectedType === type.id ? 'ring-2 ring-primary' : ''
+              }`}
+              onClick={() => setSelectedType(type.id)}
+            >
+              <CardContent className="pt-6">
+                <div className="flex flex-col items-center text-center space-y-3">
+                  <div className={`p-3 rounded-full bg-${type.color}-100`}>
+                    <Icon className={`h-8 w-8 text-${type.color}-600`} />
+                  </div>
+                  <h4 className="font-semibold">{type.label}</h4>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+
+      <div className="flex justify-end">
+        <Button
+          onClick={() => setCurrentStep('duration')}
+          disabled={!selectedType}
+        >
+          次へ
+          <ChevronRight className="h-4 w-4 ml-2" />
+        </Button>
+      </div>
+    </div>
+  );
+
+  // Step 2: 面談時間選択
+  const DurationSelection = () => (
+    <div className="space-y-6">
+      <div>
+        <h3 className="text-lg font-semibold mb-2">面談時間を選択</h3>
+        <p className="text-sm text-muted-foreground mb-4">
+          質問セットを構成する面談時間を選択してください
+        </p>
+      </div>
+
+      <div className="grid grid-cols-3 gap-4">
+        {interviewDurations.map(duration => (
+          <Card
+            key={duration.value}
+            className={`cursor-pointer transition-all hover:shadow-lg ${
+              selectedDuration === duration.value ? 'ring-2 ring-primary' : ''
+            }`}
+            onClick={() => setSelectedDuration(duration.value)}
+          >
+            <CardContent className="pt-6">
+              <div className="text-center space-y-2">
+                <div className="flex items-center justify-center mb-3">
+                  <Clock className="h-6 w-6 text-muted-foreground mr-2" />
+                  <span className="text-2xl font-bold">{duration.label}</span>
+                </div>
+                <p className="text-sm text-muted-foreground">{duration.description}</p>
+                <div className="pt-3">
+                  <Badge variant="outline">
+                    推奨質問数: {Math.floor(duration.value / 3)}問
+                  </Badge>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <div className="flex justify-between">
+        <Button variant="outline" onClick={() => setCurrentStep('type')}>
+          戻る
+        </Button>
+        <Button
+          onClick={() => setCurrentStep('matrix')}
+          disabled={!selectedDuration}
+        >
+          次へ
+          <ChevronRight className="h-4 w-4 ml-2" />
+        </Button>
+      </div>
+    </div>
+  );
+
+  // Step 3: マトリクス管理
+  const MatrixManagement = () => (
+    <div className="space-y-6">
+      {/* ヘッダー情報 */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-lg font-semibold">質問配分マトリクス</h3>
+          <p className="text-sm text-muted-foreground">
+            {interviewTypes.find(t => t.id === selectedType)?.label} - {selectedDuration}分
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={() => setBulkAddMode(true)}>
+            <Upload className="h-4 w-4 mr-2" />
+            一括インポート
+          </Button>
+          <Button variant="outline" size="sm">
+            <Download className="h-4 w-4 mr-2" />
+            エクスポート
+          </Button>
+          <Button variant="outline" size="sm">
+            <Copy className="h-4 w-4 mr-2" />
+            テンプレート保存
+          </Button>
+        </div>
+      </div>
+
+      {/* 時間配分バー */}
+      <Card>
+        <CardContent className="pt-4">
+          <div className="space-y-3">
+            <div className="flex items-center justify-between text-sm">
+              <span>時間配分</span>
+              <span className="font-medium">
+                {totalAllocatedTime} / {selectedDuration}分
+              </span>
+            </div>
+            <div className="relative h-10 bg-gray-100 rounded-lg overflow-hidden">
+              <div className="absolute inset-0 flex">
+                {interviewSections.map((section, index) => {
+                  const width = (section.defaultTime / selectedDuration) * 100;
+                  const colors = ['bg-blue-400', 'bg-green-400', 'bg-orange-400', 'bg-purple-400', 'bg-pink-400'];
+                  return (
+                    <div
+                      key={section.id}
+                      className={`${colors[index % colors.length]} flex items-center justify-center text-xs text-white font-medium`}
+                      style={{ width: `${width}%` }}
+                    >
+                      {section.label} {Math.floor((section.defaultTime / selectedDuration) * selectedDuration)}分
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            {timeWarning && (
+              <Alert className={remainingTime < 0 ? 'border-red-500' : 'border-yellow-500'}>
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>{timeWarning}</AlertDescription>
+              </Alert>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* マトリクステーブル */}
+      <Card>
+        <CardContent className="p-0">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b">
+                  <th className="p-4 text-left font-medium">セクション</th>
+                  {experienceLevels.map(level => (
+                    <th key={level.id} className="p-4 text-center">
+                      <div>
+                        <div className="font-medium">{level.label}</div>
+                        <div className="text-xs text-muted-foreground">{level.years}</div>
+                      </div>
+                    </th>
+                  ))}
+                  <th className="p-4 text-center font-medium">アクション</th>
+                </tr>
+              </thead>
+              <tbody>
+                {interviewSections.map(section => {
+                  const Icon = section.icon;
+                  return (
+                    <tr key={section.id} className="border-b hover:bg-gray-50">
+                      <td className="p-4">
+                        <div className="flex items-center gap-2">
+                          <Icon className="h-4 w-4 text-muted-foreground" />
+                          <span className="font-medium">{section.label}</span>
+                        </div>
+                      </td>
+                      {experienceLevels.map(level => (
+                        <td key={level.id} className="p-4 text-center">
+                          <button
+                            className="w-full p-3 rounded-lg border-2 border-dashed border-gray-300 hover:border-primary hover:bg-primary/5 transition-all"
+                            onClick={() => {
+                              setEditingCell({ section: section.id, level: level.id as ExperienceLevel });
+                              setShowAddDialog(true);
+                            }}
+                          >
+                            <div className="space-y-1">
+                              <div className="font-semibold text-lg">
+                                {getQuestionCount(section.id, level.id as ExperienceLevel)}問
+                              </div>
+                              <div className="text-xs text-muted-foreground">
+                                {getEstimatedTime(section.id, level.id as ExperienceLevel)}分
+                              </div>
+                            </div>
+                          </button>
+                        </td>
+                      ))}
+                      <td className="p-4 text-center">
+                        <div className="flex justify-center gap-2">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => {
+                              // セクション一括編集
+                            }}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button size="sm" variant="ghost">
+                            <Settings className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+                {/* 合計行 */}
+                <tr className="bg-gray-50 font-semibold">
+                  <td className="p-4">合計</td>
+                  {experienceLevels.map(level => {
+                    const totalQuestions = interviewSections.reduce(
+                      (sum, section) => sum + getQuestionCount(section.id, level.id as ExperienceLevel),
+                      0
+                    );
+                    const totalTime = interviewSections.reduce(
+                      (sum, section) => sum + getEstimatedTime(section.id, level.id as ExperienceLevel),
+                      0
+                    );
+                    return (
+                      <td key={level.id} className="p-4 text-center">
+                        <div className="space-y-1">
+                          <div>{totalQuestions}問</div>
+                          <div className="text-xs text-muted-foreground">{totalTime}分</div>
+                        </div>
+                      </td>
+                    );
+                  })}
+                  <td className="p-4"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* アクションボタン */}
+      <div className="flex justify-between">
+        <Button variant="outline" onClick={() => setCurrentStep('duration')}>
+          戻る
+        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={onClose}>
+            キャンセル
+          </Button>
+          <Button>
+            <Save className="h-4 w-4 mr-2" />
+            保存
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+
+  // 質問追加・編集ダイアログ
+  const QuestionEditDialog = () => {
+    if (!editingCell) return null;
+
+    return (
+      <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
+        <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>
+              質問を管理 - {interviewSections.find(s => s.id === editingCell.section)?.label} / 
+              {experienceLevels.find(l => l.id === editingCell.level)?.label}
+            </DialogTitle>
+            <DialogDescription>
+              このセクションと経験レベルに適した質問を選択または追加してください
+            </DialogDescription>
+          </DialogHeader>
+
+          <Tabs defaultValue="select" className="mt-4">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="select">既存から選択</TabsTrigger>
+              <TabsTrigger value="add">新規追加</TabsTrigger>
+              <TabsTrigger value="bulk">一括追加</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="select" className="space-y-4">
+              <div className="relative">
+                <Input
+                  placeholder="質問を検索..."
+                  className="pl-10"
+                />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              </div>
+              <ScrollArea className="h-64">
+                <div className="space-y-2">
+                  {questionBank
+                    .filter(q => q.sectionId === editingCell.section)
+                    .map(question => (
+                      <Card key={question.id} className="p-3">
+                        <div className="flex items-start gap-3">
+                          <Checkbox
+                            checked={selectedQuestions.has(question.id)}
+                            onCheckedChange={(checked) => {
+                              const newSelected = new Set(selectedQuestions);
+                              if (checked) {
+                                newSelected.add(question.id);
+                              } else {
+                                newSelected.delete(question.id);
+                              }
+                              setSelectedQuestions(newSelected);
+                            }}
+                          />
+                          <div className="flex-1">
+                            <p className="text-sm font-medium">{question.content}</p>
+                            <div className="flex gap-2 mt-2">
+                              <Badge variant="outline" className="text-xs">
+                                {question.minDuration}分
+                              </Badge>
+                              <Badge variant="secondary" className="text-xs">
+                                優先度: {question.priority}
+                              </Badge>
+                            </div>
+                          </div>
+                        </div>
+                      </Card>
+                    ))}
+                </div>
+              </ScrollArea>
+            </TabsContent>
+
+            <TabsContent value="add" className="space-y-4">
+              <div className="space-y-4">
+                <div>
+                  <Label>質問内容</Label>
+                  <Textarea
+                    placeholder="質問を入力してください..."
+                    rows={3}
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label>推定時間（分）</Label>
+                    <Input type="number" min="1" max="10" defaultValue="3" />
+                  </div>
+                  <div>
+                    <Label>優先度</Label>
+                    <Select defaultValue="2">
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="1">必須</SelectItem>
+                        <SelectItem value="2">推奨</SelectItem>
+                        <SelectItem value="3">任意</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="bulk" className="space-y-4">
+              <Alert>
+                <Info className="h-4 w-4" />
+                <AlertDescription>
+                  1行に1つの質問を入力してください。各質問は自動的に3分の推定時間で登録されます。
+                </AlertDescription>
+              </Alert>
+              <Textarea
+                placeholder="質問1&#10;質問2&#10;質問3..."
+                rows={8}
+              />
+            </TabsContent>
+          </Tabs>
+
+          <DialogFooter className="mt-6">
+            <Button variant="outline" onClick={() => setShowAddDialog(false)}>
+              キャンセル
+            </Button>
+            <Button onClick={() => {
+              // 質問を追加する処理
+              setShowAddDialog(false);
+              setEditingCell(null);
+            }}>
+              追加
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
+  };
+
+  return (
+    <div className="p-6">
+      {/* プログレスバー */}
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex gap-8">
+            {['type', 'duration', 'matrix'].map((step, index) => (
+              <div
+                key={step}
+                className={`flex items-center gap-2 ${
+                  currentStep === step ? 'text-primary font-medium' : 'text-muted-foreground'
+                }`}
+              >
+                <div
+                  className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                    currentStep === step
+                      ? 'bg-primary text-white'
+                      : index < ['type', 'duration', 'matrix'].indexOf(currentStep)
+                      ? 'bg-primary/20 text-primary'
+                      : 'bg-gray-100'
+                  }`}
+                >
+                  {index + 1}
+                </div>
+                <span className="hidden sm:inline">
+                  {step === 'type' && '面談タイプ'}
+                  {step === 'duration' && '時間選択'}
+                  {step === 'matrix' && '質問配分'}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <Progress
+          value={
+            currentStep === 'type' ? 33 : currentStep === 'duration' ? 66 : 100
+          }
+          className="h-2"
+        />
+      </div>
+
+      {/* メインコンテンツ */}
+      {currentStep === 'type' && <TypeSelection />}
+      {currentStep === 'duration' && <DurationSelection />}
+      {currentStep === 'matrix' && <MatrixManagement />}
+
+      {/* ダイアログ */}
+      <QuestionEditDialog />
+    </div>
+  );
+}

@@ -52,7 +52,8 @@ import {
   Trash2,
   Upload,
   Save,
-  AlertCircle
+  AlertCircle,
+  X
 } from 'lucide-react';
 
 import { UnifiedBankService, BankStatistics } from '@/lib/interview-bank/services/unified-bank-service';
@@ -82,6 +83,7 @@ import {
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import InterviewBankFlowManager from './InterviewBankFlowManager';
+import BankQuestionManager from './BankQuestionManager';
 
 // BankQuestion型の定義（統一型）
 interface BankQuestion {
@@ -256,6 +258,7 @@ export default function UnifiedInterviewBankSystem() {
   });
   const [importText, setImportText] = useState('');
   const [showFlowManager, setShowFlowManager] = useState(false);
+  const [showQuestionManager, setShowQuestionManager] = useState(false);
 
   // 統計情報の取得
   useEffect(() => {
@@ -650,7 +653,7 @@ export default function UnifiedInterviewBankSystem() {
                       variant="outline"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleBankManagement(type.id);
+                        setShowQuestionManager(true);
                       }}
                     >
                       <Edit3 className="w-4 h-4 mr-2" />
@@ -1317,6 +1320,35 @@ export default function UnifiedInterviewBankSystem() {
               インポート
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* 質問管理モーダル */}
+      <Dialog open={showQuestionManager} onOpenChange={setShowQuestionManager}>
+        <DialogContent className="max-w-[95vw] w-full h-[90vh] p-0 overflow-hidden">
+          <div className="flex flex-col h-full">
+            <div className="flex items-center justify-between p-4 border-b">
+              <div className="flex items-center gap-3">
+                <Database className="h-6 w-6 text-primary" />
+                <div>
+                  <h2 className="text-xl font-semibold">面談バンク質問管理</h2>
+                  <p className="text-sm text-muted-foreground">
+                    面談タイプと時間に応じた質問セットを管理
+                  </p>
+                </div>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowQuestionManager(false)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="flex-1 overflow-auto">
+              <BankQuestionManager onClose={() => setShowQuestionManager(false)} />
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
