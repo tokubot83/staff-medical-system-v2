@@ -68,12 +68,20 @@ export default function InterviewManualSimulator() {
     { value: 'outpatient', label: '外来' }
   ]
 
-  const interviewTypes: { value: InterviewType; label: string; description: string }[] = [
-    { value: 'regular_annual', label: '定期面談', description: '年次・半期の定期面談' },
-    { value: 'career_support', label: 'キャリア支援面談', description: 'キャリア開発・成長支援' },
-    { value: 'workplace_support', label: '職場環境支援面談', description: '職場の課題・人間関係' },
-    { value: 'individual_consultation', label: '個別相談', description: '個別の悩み・相談' },
-    { value: 'goal_setting', label: '目標設定面談', description: '目標設定・評価' }
+  const interviewTypes: { value: InterviewType; label: string; description: string; classification: 'regular' | 'special' | 'support' }[] = [
+    // 定期面談
+    { value: 'new_employee_monthly', label: '新入職員月次面談', description: '入職1年未満の定期面談', classification: 'regular' },
+    { value: 'regular_annual', label: '一般職員年次面談', description: '年次の定期面談', classification: 'regular' },
+    { value: 'management_biannual', label: '管理職半年面談', description: '管理職向け半期面談', classification: 'regular' },
+    // 特別面談
+    { value: 'return_to_work', label: '復職面談', description: '休職からの復職時面談', classification: 'special' },
+    { value: 'incident_followup', label: 'インシデント後面談', description: 'インシデント発生後のフォロー', classification: 'special' },
+    { value: 'exit_interview', label: '退職面談', description: '退職時の面談', classification: 'special' },
+    // サポート面談
+    { value: 'feedback', label: 'フィードバック面談', description: '人事評価後のフィードバック', classification: 'support' },
+    { value: 'career_support', label: 'キャリア支援面談', description: 'キャリア開発・成長支援', classification: 'support' },
+    { value: 'workplace_support', label: '職場環境支援面談', description: '職場の課題・人間関係', classification: 'support' },
+    { value: 'individual_consultation', label: '個別相談面談', description: '個別の悩み・相談', classification: 'support' }
   ]
 
   const durations: { value: number; label: string }[] = [
@@ -289,11 +297,27 @@ export default function InterviewManualSimulator() {
             onChange={(e) => setInterviewType(e.target.value as InterviewType)}
             className={styles.select}
           >
-            {interviewTypes.map(type => (
-              <option key={type.value} value={type.value}>
-                {type.label}
-              </option>
-            ))}
+            <optgroup label="定期面談">
+              {interviewTypes.filter(t => t.classification === 'regular').map(type => (
+                <option key={type.value} value={type.value}>
+                  {type.label} - {type.description}
+                </option>
+              ))}
+            </optgroup>
+            <optgroup label="特別面談">
+              {interviewTypes.filter(t => t.classification === 'special').map(type => (
+                <option key={type.value} value={type.value}>
+                  {type.label} - {type.description}
+                </option>
+              ))}
+            </optgroup>
+            <optgroup label="サポート面談">
+              {interviewTypes.filter(t => t.classification === 'support').map(type => (
+                <option key={type.value} value={type.value}>
+                  {type.label} - {type.description}
+                </option>
+              ))}
+            </optgroup>
           </select>
         </div>
 
@@ -520,11 +544,27 @@ export default function InterviewManualSimulator() {
                     onChange={(e) => setCompareInterviewType(e.target.value as InterviewType)}
                     className={styles.select}
                   >
-                    {interviewTypes.map(type => (
-                      <option key={type.value} value={type.value}>
-                        {type.label}
-                      </option>
-                    ))}
+                    <optgroup label="定期面談">
+                      {interviewTypes.filter(t => t.classification === 'regular').map(type => (
+                        <option key={type.value} value={type.value}>
+                          {type.label} - {type.description}
+                        </option>
+                      ))}
+                    </optgroup>
+                    <optgroup label="特別面談">
+                      {interviewTypes.filter(t => t.classification === 'special').map(type => (
+                        <option key={type.value} value={type.value}>
+                          {type.label} - {type.description}
+                        </option>
+                      ))}
+                    </optgroup>
+                    <optgroup label="サポート面談">
+                      {interviewTypes.filter(t => t.classification === 'support').map(type => (
+                        <option key={type.value} value={type.value}>
+                          {type.label} - {type.description}
+                        </option>
+                      ))}
+                    </optgroup>
                   </select>
                 </div>
 
