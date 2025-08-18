@@ -103,6 +103,7 @@ import { questionBank } from '@/lib/interview-bank/database/question-bank';
 import { supportQuestions, supportQuestionsByCategory } from '@/lib/interview-bank/database/support-questions';
 import { formatDistanceToNow } from 'date-fns';
 import { ja } from 'date-fns/locale';
+import EnhancedQuestionManager from './EnhancedQuestionManager';
 
 interface InterviewBankTabProps {
   staffId: string;
@@ -151,6 +152,7 @@ export default function InterviewBankTab({
   const [templateFilter, setTemplateFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isTemplateManagerOpen, setIsTemplateManagerOpen] = useState(false);
+  const [useEnhancedManager, setUseEnhancedManager] = useState(true); // 新しい管理UIを使用するフラグ
   const [isNewQuestionDialogOpen, setIsNewQuestionDialogOpen] = useState(false);
   const [editingQuestion, setEditingQuestion] = useState<BankQuestion | null>(null);
   const [newQuestion, setNewQuestion] = useState<Partial<BankQuestion>>({
@@ -1016,52 +1018,79 @@ export default function InterviewBankTab({
                 質問管理
               </Button>
             </SheetTrigger>
-            <SheetContent className="w-[800px] sm:max-w-[800px]">
+            <SheetContent className="w-[90vw] max-w-[1400px]">
               <SheetHeader>
-                <SheetTitle className="flex items-center gap-2">
-                  <BookOpen className="h-5 w-5" />
-                  質問テンプレート管理
+                <SheetTitle className="flex items-center justify-between">
+                  <span className="flex items-center gap-2">
+                    <BookOpen className="h-5 w-5" />
+                    質問テンプレート管理
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <Label className="text-sm font-normal">管理UI:</Label>
+                    <Select value={useEnhancedManager ? 'enhanced' : 'classic'} onValueChange={(v) => setUseEnhancedManager(v === 'enhanced')}>
+                      <SelectTrigger className="w-32">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="enhanced">新UI</SelectItem>
+                        <SelectItem value="classic">従来UI</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </SheetTitle>
                 <SheetDescription>
                   面談で使用する質問の管理と新規作成を行います
                 </SheetDescription>
               </SheetHeader>
               <div className="mt-6">
-                <Tabs defaultValue="templates" className="space-y-4">
-                  <TabsList>
-                    <TabsTrigger value="templates">標準テンプレート</TabsTrigger>
-                    <TabsTrigger value="custom">カスタム質問</TabsTrigger>
-                    <TabsTrigger value="support">サポート質問</TabsTrigger>
-                  </TabsList>
-                  <TabsContent value="templates">
-                    <QuestionTemplateManager />
-                  </TabsContent>
-                  <TabsContent value="custom">
-                    <CustomQuestionSets />
-                  </TabsContent>
-                  <TabsContent value="support">
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-semibold">サポート面談質問バンク</h3>
-                      <div className="grid gap-2">
-                        {Object.entries(supportQuestionsByCategory).map(([category, questionIds]) => (
-                          <Card key={category} className="p-4">
-                            <div className="flex justify-between items-center">
-                              <div>
-                                <p className="font-medium">{category}</p>
-                                <p className="text-sm text-muted-foreground">
-                                  {questionIds.length}問の質問
-                                </p>
+                {useEnhancedManager ? (
+                  <EnhancedQuestionManager
+                    questions={questionTemplates}
+                    customQuestions={customQuestions}
+                    onQuestionsUpdate={setQuestionTemplates}
+                    onCustomQuestionsUpdate={(updated) => {
+                      setCustomQuestions(updated);
+                      localStorage.setItem(`custom_questions_${staffId}`, JSON.stringify(updated));
+                    }}
+                    staffId={staffId}
+                  />
+                ) : (
+                  <Tabs defaultValue="templates" className="space-y-4">
+                    <TabsList>
+                      <TabsTrigger value="templates">標準テンプレート</TabsTrigger>
+                      <TabsTrigger value="custom">カスタム質問</TabsTrigger>
+                      <TabsTrigger value="support">サポート質問</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="templates">
+                      <QuestionTemplateManager />
+                    </TabsContent>
+                    <TabsContent value="custom">
+                      <CustomQuestionSets />
+                    </TabsContent>
+                    <TabsContent value="support">
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-semibold">サポート面談質問バンク</h3>
+                        <div className="grid gap-2">
+                          {Object.entries(supportQuestionsByCategory).map(([category, questionIds]) => (
+                            <Card key={category} className="p-4">
+                              <div className="flex justify-between items-center">
+                                <div>
+                                  <p className="font-medium">{category}</p>
+                                  <p className="text-sm text-muted-foreground">
+                                    {questionIds.length}問の質問
+                                  </p>
+                                </div>
+                                <Badge variant="outline">
+                                  VoiceDrive連携
+                                </Badge>
                               </div>
-                              <Badge variant="outline">
-                                VoiceDrive連携
-                              </Badge>
-                            </div>
-                          </Card>
-                        ))}
+                            </Card>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  </TabsContent>
-                </Tabs>
+                    </TabsContent>
+                  </Tabs>
+                )}
               </div>
             </SheetContent>
           </Sheet>

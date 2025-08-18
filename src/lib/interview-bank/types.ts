@@ -268,3 +268,20 @@ export interface MotivationAction {
   riskFactors: string[];
   successIndicators: string[];
 }
+
+// バンク用の質問型（簡易版）
+export interface BankQuestion {
+  id: string;
+  content: string;
+  type: QuestionType;
+  category: string;
+  sectionId?: string;
+  priority: 1 | 2 | 3;
+  minDuration: number;
+  tags?: string[];
+  placeholder?: string;
+  experienceLevels?: ExperienceLevel[];
+  departments?: string[];
+  facilityTypes?: FacilityType[];
+  positionLevels?: string[];
+}
