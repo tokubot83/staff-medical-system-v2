@@ -1108,49 +1108,13 @@ export default function EvaluationManagement() {
           {/* ガイドタブ */}
           {activeTab === 'guide' && (
             <div className={styles.guideContent}>
-              <h2>評価管理システム ガイド</h2>
+              <h2>評価管理システム 操作ガイド</h2>
               
               <div className={styles.guideSection}>
-                <h3>📊 システム概要</h3>
+                <h3>📚 基本的な使い方</h3>
                 <div className={styles.guideText}>
-                  <p>本システムは、技術評価50点と組織貢献評価50点の合計100点満点で職員を評価する総合評価システムです。</p>
-                  <p>年3回の評価実施（3月技術評価、8月・12月賞与査定）により、公平で透明性の高い評価を実現します。</p>
-                </div>
-              </div>
-
-              <div className={styles.guideSection}>
-                <h3>📅 年間評価スケジュール</h3>
-                <div className={styles.scheduleTable}>
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>実施月</th>
-                        <th>評価種別</th>
-                        <th>配点</th>
-                        <th>対象期間</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>3月</td>
-                        <td>技術評価</td>
-                        <td>50点</td>
-                        <td>年度全体</td>
-                      </tr>
-                      <tr>
-                        <td>8月</td>
-                        <td>夏季賞与査定</td>
-                        <td>25点</td>
-                        <td>12-5月実績</td>
-                      </tr>
-                      <tr>
-                        <td>12月</td>
-                        <td>冬季賞与査定</td>
-                        <td>25点</td>
-                        <td>6-11月実績</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                  <p>評価システムの詳細な仕組みについては「評価概要」タブをご覧ください。</p>
+                  <p>このガイドでは、システムの操作方法と評価業務フローを説明します。</p>
                 </div>
               </div>
 
