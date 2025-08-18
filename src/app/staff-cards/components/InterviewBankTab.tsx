@@ -94,7 +94,8 @@ import {
   Filter,
   Tag,
   Import,
-  Download
+  Download,
+  X
 } from 'lucide-react';
 
 import { InterviewBankService } from '@/lib/interview-bank/services/bank-service';
@@ -153,6 +154,7 @@ export default function InterviewBankTab({
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isTemplateManagerOpen, setIsTemplateManagerOpen] = useState(false);
   const [useEnhancedManager, setUseEnhancedManager] = useState(true); // 新しい管理UIを使用するフラグ
+  const [isFullscreenManagerOpen, setIsFullscreenManagerOpen] = useState(false); // フルスクリーンモーダル用
   const [isNewQuestionDialogOpen, setIsNewQuestionDialogOpen] = useState(false);
   const [editingQuestion, setEditingQuestion] = useState<BankQuestion | null>(null);
   const [newQuestion, setNewQuestion] = useState<Partial<BankQuestion>>({
@@ -1011,11 +1013,20 @@ export default function InterviewBankTab({
               <SelectItem value="all">全期間</SelectItem>
             </SelectContent>
           </Select>
-          <Sheet open={isTemplateManagerOpen} onOpenChange={setIsTemplateManagerOpen}>
+          <Button 
+            variant="outline"
+            onClick={() => setIsFullscreenManagerOpen(true)}
+          >
+            <Settings className="h-4 w-4 mr-2" />
+            質問管理
+          </Button>
+          
+          {/* 旧Sheetベースの実装（非表示） */}
+          <Sheet open={false} onOpenChange={setIsTemplateManagerOpen}>
             <SheetTrigger asChild>
-              <Button variant="outline">
+              <Button variant="outline" className="hidden">
                 <Settings className="h-4 w-4 mr-2" />
-                質問管理
+                旧質問管理
               </Button>
             </SheetTrigger>
             <SheetContent className="w-[90vw] max-w-[1400px]">
@@ -1170,6 +1181,122 @@ export default function InterviewBankTab({
 
       {/* 質問編集ダイアログ */}
       <QuestionEditorDialog />
+      
+      {/* フルスクリーン質問管理モーダル */}
+      <Dialog open={isFullscreenManagerOpen} onOpenChange={setIsFullscreenManagerOpen}>
+        <DialogContent className="max-w-[95vw] w-full h-[90vh] p-0 overflow-hidden">
+          <div className="flex flex-col h-full">
+            {/* ヘッダー */}
+            <div className="flex items-center justify-between p-6 border-b bg-gray-50">
+              <div className="flex items-center gap-3">
+                <BookOpen className="h-6 w-6 text-primary" />
+                <div>
+                  <h2 className="text-xl font-semibold">質問テンプレート管理</h2>
+                  <p className="text-sm text-muted-foreground">
+                    {staffName}さんの面談で使用する質問の管理
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <Label className="text-sm font-normal">表示モード:</Label>
+                  <Select value={useEnhancedManager ? 'enhanced' : 'classic'} onValueChange={(v) => setUseEnhancedManager(v === 'enhanced')}>
+                    <SelectTrigger className="w-32">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="enhanced">新UI</SelectItem>
+                      <SelectItem value="classic">従来UI</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsFullscreenManagerOpen(false)}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+            
+            {/* コンテンツエリア */}
+            <div className="flex-1 overflow-auto p-6 bg-white">
+              {useEnhancedManager ? (
+                <EnhancedQuestionManager
+                  questions={questionTemplates}
+                  customQuestions={customQuestions}
+                  onQuestionsUpdate={setQuestionTemplates}
+                  onCustomQuestionsUpdate={(updated) => {
+                    setCustomQuestions(updated);
+                    localStorage.setItem(`custom_questions_${staffId}`, JSON.stringify(updated));
+                  }}
+                  staffId={staffId}
+                />
+              ) : (
+                <Tabs defaultValue="templates" className="space-y-4">
+                  <TabsList className="grid w-full grid-cols-3">
+                    <TabsTrigger value="templates">標準テンプレート</TabsTrigger>
+                    <TabsTrigger value="custom">カスタム質問</TabsTrigger>
+                    <TabsTrigger value="support">サポート質問</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="templates" className="mt-6">
+                    <QuestionTemplateManager />
+                  </TabsContent>
+                  <TabsContent value="custom" className="mt-6">
+                    <CustomQuestionSets />
+                  </TabsContent>
+                  <TabsContent value="support" className="mt-6">
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-semibold">サポート面談質問バンク</h3>
+                      <div className="grid gap-2">
+                        {Object.entries(supportQuestionsByCategory).map(([category, questionIds]) => (
+                          <Card key={category} className="p-4">
+                            <div className="flex justify-between items-center">
+                              <div>
+                                <p className="font-medium">{category}</p>
+                                <p className="text-sm text-muted-foreground">
+                                  {questionIds.length}問の質問
+                                </p>
+                              </div>
+                              <Badge variant="outline">
+                                VoiceDrive連携
+                              </Badge>
+                            </div>
+                          </Card>
+                        ))}
+                      </div>
+                    </div>
+                  </TabsContent>
+                </Tabs>
+              )}
+            </div>
+            
+            {/* フッター */}
+            <div className="flex items-center justify-between p-4 border-t bg-gray-50">
+              <div className="text-sm text-muted-foreground">
+                総質問数: {questionTemplates.length + customQuestions.length}問 | 
+                カスタム質問: {customQuestions.length}問
+              </div>
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline"
+                  onClick={() => setIsFullscreenManagerOpen(false)}
+                >
+                  閉じる
+                </Button>
+                <Button onClick={() => {
+                  // 保存処理など
+                  setIsFullscreenManagerOpen(false);
+                }}>
+                  <Save className="h-4 w-4 mr-2" />
+                  保存して閉じる
+                </Button>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
