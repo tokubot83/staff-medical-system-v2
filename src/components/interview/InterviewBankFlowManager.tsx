@@ -54,7 +54,13 @@ import {
   FileText,
   Settings,
   ArrowUpDown,
-  Search
+  Search,
+  Library,
+  Sparkles,
+  ChevronDown,
+  ChevronUp,
+  Eye,
+  X
 } from 'lucide-react';
 
 // 職員の型定義
@@ -147,6 +153,11 @@ export default function InterviewBankFlowManager({
   const [searchTerm, setSearchTerm] = useState('');
   const [staffList, setStaffList] = useState<Staff[]>([]);
   const [isLoadingStaff, setIsLoadingStaff] = useState(true);
+  const [expandedSections, setExpandedSections] = useState<string[]>([]);
+  const [showBankDialog, setShowBankDialog] = useState(false);
+  const [selectedSectionForBank, setSelectedSectionForBank] = useState<string>('');
+  const [bankQuestions, setBankQuestions] = useState<BankQuestion[]>([]);
+  const [selectedBankQuestions, setSelectedBankQuestions] = useState<string[]>([]);
 
   // 実際の職員データを取得
   useEffect(() => {
@@ -309,6 +320,80 @@ export default function InterviewBankFlowManager({
     }
 
     return baseSections;
+  };
+
+  // 質問バンクから該当セクションの質問を読み込み
+  const loadBankQuestionsForSection = async (sectionId: string) => {
+    try {
+      // 質問バンクから読み込み（実際のデータソースに応じて調整）
+      const { questionBank } = await import('@/lib/interview-bank/database/question-bank');
+      
+      // セクションに関連する質問をフィルタリング
+      const relevantQuestions = questionBank
+        .filter(q => {
+          // セクションIDが一致するか、関連するタグを持つ質問を取得
+          if (q.sectionId === sectionId) return true;
+          
+          // セクションに応じた質問をマッピング
+          switch (sectionId) {
+            case 'opening':
+              return q.category === 'motivation_engagement' || q.tags?.includes('導入');
+            case 'current_status':
+              return q.category === 'current_situation' || q.tags?.includes('現状');
+            case 'challenges':
+              return q.category === 'challenges' || q.tags?.includes('課題');
+            case 'goals':
+              return q.category === 'goals' || q.tags?.includes('目標');
+            case 'support':
+              return q.category === 'support' || q.tags?.includes('サポート');
+            case 'closing':
+              return q.tags?.includes('まとめ') || q.tags?.includes('フィードバック');
+            case 'training':
+              return q.tags?.includes('研修') || q.tags?.includes('教育');
+            case 'expertise':
+              return q.tags?.includes('専門性') || q.tags?.includes('スキル');
+            default:
+              return false;
+          }
+        })
+        .map(q => ({
+          id: q.id,
+          text: q.content,
+          category: q.category,
+          section: sectionId,
+          difficulty: q.priority === 1 ? '必須' : q.priority === 2 ? '推奨' : 'オプション',
+          type: q.type
+        }));
+      
+      setBankQuestions(relevantQuestions);
+    } catch (error) {
+      console.error('質問バンクの読み込みエラー:', error);
+      // フォールバック: サンプル質問を設定
+      setBankQuestions([
+        {
+          id: `sample_${sectionId}_1`,
+          text: `${getSectionsForStaff(selectedStaff).find(s => s.id === sectionId)?.name}に関する質問1`,
+          category: 'sample',
+          section: sectionId,
+          difficulty: '推奨'
+        },
+        {
+          id: `sample_${sectionId}_2`,
+          text: `${getSectionsForStaff(selectedStaff).find(s => s.id === sectionId)?.name}に関する質問2`,
+          category: 'sample',
+          section: sectionId,
+          difficulty: 'オプション'
+        }
+      ]);
+    }
+  };
+
+  // 質問バンクから選択した質問を追加
+  const handleAddBankQuestions = () => {
+    const questionsToAdd = bankQuestions.filter(q => selectedBankQuestions.includes(q.id));
+    setSelectedQuestions(prev => [...prev, ...questionsToAdd]);
+    setShowBankDialog(false);
+    setSelectedBankQuestions([]);
   };
 
   // 職員選択ハンドラ
@@ -730,7 +815,8 @@ export default function InterviewBankFlowManager({
           <CardHeader>
             <CardTitle>質問のカスタマイズ</CardTitle>
             <CardDescription>
-              選択した質問の確認と調整、独自質問の追加ができます。
+              面談バンクから質問を選択したり、独自の質問を追加できます。
+              推奨質問数: {getRecommendedQuestionCount(interviewSettings.duration)}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -740,60 +826,170 @@ export default function InterviewBankFlowManager({
                 const sectionQuestions = selectedQuestions.filter(
                   q => q.section === section.id || (!q.section && section.id === 'current_status')
                 );
+                const isExpanded = expandedSections.includes(section.id);
                 
                 return (
-                  <div key={section.id} className="border rounded-lg p-4">
-                    <div className="flex items-center justify-between mb-3">
-                      <h3 className="font-medium">{section.name}</h3>
-                      <Badge variant="secondary">
-                        {sectionQuestions.length}問
-                      </Badge>
+                  <div key={section.id} className="border-2 rounded-xl overflow-hidden hover:border-blue-300 transition-all">
+                    {/* セクションヘッダー */}
+                    <div 
+                      className="bg-gradient-to-r from-gray-50 to-white p-4 cursor-pointer"
+                      onClick={() => {
+                        setExpandedSections(prev => 
+                          prev.includes(section.id) 
+                            ? prev.filter(s => s !== section.id)
+                            : [...prev, section.id]
+                        );
+                      }}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <FileText className="w-5 h-5 text-blue-600" />
+                          </div>
+                          <div>
+                            <h3 className="font-semibold text-gray-900">{section.name}</h3>
+                            <p className="text-xs text-gray-500 mt-0.5">
+                              {sectionQuestions.length > 0 
+                                ? `${sectionQuestions.length}問選択中`
+                                : '質問を追加してください'}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Badge 
+                            variant={sectionQuestions.length > 0 ? "default" : "secondary"}
+                            className="text-xs"
+                          >
+                            {sectionQuestions.length}問
+                          </Badge>
+                          {isExpanded ? (
+                            <ChevronUp className="w-5 h-5 text-gray-400" />
+                          ) : (
+                            <ChevronDown className="w-5 h-5 text-gray-400" />
+                          )}
+                        </div>
+                      </div>
                     </div>
                     
-                    <div className="space-y-2">
-                      {sectionQuestions.map((question, index) => (
-                        <div
-                          key={question.id}
-                          className="flex items-start justify-between p-3 bg-gray-50 rounded-lg"
-                        >
-                          <div className="flex-1">
-                            <p className="text-sm">{index + 1}. {question.text}</p>
-                            {question.isCustom && (
-                              <Badge variant="outline" className="mt-1 text-xs">
-                                独自質問
-                              </Badge>
-                            )}
-                          </div>
+                    {/* セクション内容（展開時） */}
+                    {isExpanded && (
+                      <div className="p-4 bg-white border-t">
+                        {/* 質問リスト */}
+                        <div className="space-y-2 mb-4">
+                          {sectionQuestions.length > 0 ? (
+                            sectionQuestions.map((question, index) => (
+                              <div
+                                key={question.id}
+                                className="group flex items-start gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                              >
+                                <div className="flex-shrink-0 w-7 h-7 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center text-xs font-semibold">
+                                  {index + 1}
+                                </div>
+                                <div className="flex-1">
+                                  <p className="text-sm text-gray-800">{question.text}</p>
+                                  <div className="flex items-center gap-2 mt-1">
+                                    {question.isCustom && (
+                                      <Badge variant="outline" className="text-xs">
+                                        <Sparkles className="w-3 h-3 mr-1" />
+                                        独自質問
+                                      </Badge>
+                                    )}
+                                    {question.difficulty && (
+                                      <Badge 
+                                        variant={question.difficulty === '必須' ? 'destructive' : 'secondary'}
+                                        className="text-xs"
+                                      >
+                                        {question.difficulty}
+                                      </Badge>
+                                    )}
+                                  </div>
+                                </div>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                  onClick={() => handleRemoveQuestion(question.id)}
+                                >
+                                  <X className="w-4 h-4 text-red-500" />
+                                </Button>
+                              </div>
+                            ))
+                          ) : (
+                            <div className="text-center py-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
+                              <FileText className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                              <p className="text-sm text-gray-500">
+                                このセクションにはまだ質問がありません
+                              </p>
+                              <p className="text-xs text-gray-400 mt-1">
+                                下のボタンから質問を追加してください
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                        
+                        {/* アクションボタン */}
+                        <div className="flex gap-2">
                           <Button
-                            variant="ghost"
+                            variant="outline"
                             size="sm"
-                            onClick={() => handleRemoveQuestion(question.id)}
+                            className="flex-1"
+                            onClick={() => {
+                              setSelectedSectionForBank(section.id);
+                              // 質問バンクから該当セクションの質問を読み込み
+                              loadBankQuestionsForSection(section.id);
+                              setShowBankDialog(true);
+                            }}
                           >
-                            <Trash2 className="w-4 h-4 text-red-500" />
+                            <Library className="w-4 h-4 mr-2" />
+                            バンクから選択
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex-1"
+                            onClick={() => {
+                              setNewCustomQuestion(prev => ({ ...prev, section: section.id }));
+                              setIsCustomQuestionDialogOpen(true);
+                            }}
+                          >
+                            <Sparkles className="w-4 h-4 mr-2" />
+                            独自質問を作成
                           </Button>
                         </div>
-                      ))}
-                      
-                      {sectionQuestions.length === 0 && (
-                        <p className="text-sm text-gray-500 text-center py-2">
-                          このセクションに質問がありません
-                        </p>
-                      )}
-                    </div>
+                      </div>
+                    )}
                   </div>
                 );
               })}
             </div>
 
-            {/* 独自質問追加ボタン */}
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={() => setIsCustomQuestionDialogOpen(true)}
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              独自質問を追加
-            </Button>
+            {/* クイックアクション */}
+            <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <AlertCircle className="w-5 h-5 text-blue-600" />
+                  <span className="text-sm font-medium text-blue-900">
+                    ヒント: 各セクションをクリックして展開し、質問を追加してください
+                  </span>
+                </div>
+                <Button
+                  variant="link"
+                  size="sm"
+                  className="text-blue-600"
+                  onClick={() => {
+                    // すべてのセクションを展開/折りたたみ
+                    const allSections = getSectionsForStaff(selectedStaff).map(s => s.id);
+                    setExpandedSections(prev => 
+                      prev.length === allSections.length ? [] : allSections
+                    );
+                  }}
+                >
+                  {expandedSections.length === getSectionsForStaff(selectedStaff).length
+                    ? 'すべて折りたたむ'
+                    : 'すべて展開'}
+                </Button>
+              </div>
+            </div>
 
             {/* 質問数サマリー */}
             <Alert className="bg-blue-50 border-blue-200">
@@ -922,13 +1118,168 @@ export default function InterviewBankFlowManager({
         </Card>
       )}
 
+      {/* 質問バンクから選択ダイアログ */}
+      <Dialog open={showBankDialog} onOpenChange={setShowBankDialog}>
+        <DialogContent className="max-w-3xl max-h-[80vh]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Library className="w-5 h-5 text-blue-600" />
+              質問バンクから選択
+            </DialogTitle>
+            <DialogDescription>
+              「{getSectionsForStaff(selectedStaff).find(s => s.id === selectedSectionForBank)?.name}」
+              セクションに適した質問を選択してください
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            {/* 検索バー */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Input
+                placeholder="質問を検索..."
+                className="pl-10"
+                onChange={(e) => {
+                  const searchTerm = e.target.value.toLowerCase();
+                  // 検索機能の実装（必要に応じて）
+                }}
+              />
+            </div>
+            
+            {/* 質問リスト */}
+            <ScrollArea className="h-[400px] border rounded-lg p-4">
+              <div className="space-y-2">
+                {bankQuestions.length > 0 ? (
+                  bankQuestions.map((question) => {
+                    const isSelected = selectedBankQuestions.includes(question.id);
+                    const isAlreadyAdded = selectedQuestions.some(q => q.id === question.id);
+                    
+                    return (
+                      <div
+                        key={question.id}
+                        className={`
+                          p-3 rounded-lg border-2 transition-all cursor-pointer
+                          ${isAlreadyAdded 
+                            ? 'bg-gray-100 border-gray-300 opacity-50 cursor-not-allowed' 
+                            : isSelected 
+                            ? 'bg-blue-50 border-blue-400' 
+                            : 'hover:bg-gray-50 border-gray-200'}
+                        `}
+                        onClick={() => {
+                          if (isAlreadyAdded) return;
+                          setSelectedBankQuestions(prev =>
+                            prev.includes(question.id)
+                              ? prev.filter(id => id !== question.id)
+                              : [...prev, question.id]
+                          );
+                        }}
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className="flex-shrink-0 mt-0.5">
+                            <input
+                              type="checkbox"
+                              checked={isSelected || isAlreadyAdded}
+                              disabled={isAlreadyAdded}
+                              onChange={() => {}}
+                              className="w-4 h-4 text-blue-600 rounded border-gray-300"
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-sm text-gray-800">{question.text}</p>
+                            <div className="flex items-center gap-2 mt-1">
+                              {question.difficulty && (
+                                <Badge 
+                                  variant={
+                                    question.difficulty === '必須' ? 'destructive' : 
+                                    question.difficulty === '推奨' ? 'default' : 
+                                    'secondary'
+                                  }
+                                  className="text-xs"
+                                >
+                                  {question.difficulty}
+                                </Badge>
+                              )}
+                              {question.type && (
+                                <Badge variant="outline" className="text-xs">
+                                  {question.type}
+                                </Badge>
+                              )}
+                              {isAlreadyAdded && (
+                                <Badge variant="secondary" className="text-xs">
+                                  <CheckCircle className="w-3 h-3 mr-1" />
+                                  追加済み
+                                </Badge>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className="text-center py-8">
+                    <Library className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                    <p className="text-sm text-gray-500">
+                      このセクションに適した質問を読み込み中...
+                    </p>
+                  </div>
+                )}
+              </div>
+            </ScrollArea>
+            
+            {/* 選択状況 */}
+            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <span className="text-sm text-gray-600">
+                {selectedBankQuestions.length}問選択中
+              </span>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setSelectedBankQuestions([])}
+                  disabled={selectedBankQuestions.length === 0}
+                >
+                  選択をクリア
+                </Button>
+              </div>
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowBankDialog(false);
+                setSelectedBankQuestions([]);
+              }}
+            >
+              キャンセル
+            </Button>
+            <Button
+              onClick={handleAddBankQuestions}
+              disabled={selectedBankQuestions.length === 0}
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              {selectedBankQuestions.length}問を追加
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       {/* 独自質問追加ダイアログ */}
       <Dialog open={isCustomQuestionDialogOpen} onOpenChange={setIsCustomQuestionDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>独自質問の追加</DialogTitle>
+            <DialogTitle className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-purple-600" />
+              独自質問の作成
+            </DialogTitle>
             <DialogDescription>
-              面談で使用する独自の質問を追加できます。
+              {newCustomQuestion.section && 
+                `「${getSectionsForStaff(selectedStaff).find(s => s.id === newCustomQuestion.section)?.name}」セクションに`
+              }
+              独自の質問を追加します
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">

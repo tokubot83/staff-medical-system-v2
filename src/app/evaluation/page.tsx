@@ -158,37 +158,81 @@ export default function EvaluationManagement() {
           {/* 評価概要タブ */}
           {activeTab === 'overview' && (
             <div className={styles.overviewContent}>
-              {/* 評価システム概要 */}
+              {/* 評価システム概要 - 旧システムの要素を統合 */}
               <div className={styles.systemOverview}>
-                <h2 className={styles.systemTitle}>人事評価システム概要</h2>
-                <div className={styles.scoreDistribution}>
-                  <div className={styles.scoreCard}>
-                    <div className={styles.scoreValue}>100点</div>
-                    <div className={styles.scoreLabel}>年間総合評価</div>
-                  </div>
-                  <div className={styles.scoreBreakdown}>
-                    <div className={styles.scoreItem}>
-                      <Target className={styles.scoreIcon} />
-                      <span className={styles.scoreText}>技術評価</span>
-                      <span className={styles.scorePoints}>50点</span>
+                <h2 className={styles.systemTitle}>
+                  <span className={styles.titleIcon}>📊</span>
+                  人事評価システム概要
+                </h2>
+                <p className={styles.systemSubtitle}>
+                  公平・透明・成長支援を重視した総合評価制度
+                </p>
+                
+                {/* ビジュアル強化: 評価配分の円グラフ風表示 */}
+                <div className={styles.scoreVisualization}>
+                  <div className={styles.scoreDistribution}>
+                    <div className={styles.scoreCard}>
+                      <div className={styles.scoreCircle}>
+                        <div className={styles.scoreValue}>100点</div>
+                        <div className={styles.scoreLabel}>年間総合評価</div>
+                      </div>
                     </div>
-                    <div className={styles.scorePlus}>+</div>
-                    <div className={styles.scoreItem}>
-                      <Users className={styles.scoreIcon} />
-                      <span className={styles.scoreText}>貢献度評価</span>
-                      <span className={styles.scorePoints}>50点</span>
+                    <div className={styles.scoreBreakdown}>
+                      <div className={styles.scoreComponent}>
+                        <div className={styles.componentIcon}>
+                          <Target size={32} />
+                        </div>
+                        <div className={styles.componentInfo}>
+                          <span className={styles.componentTitle}>技術評価</span>
+                          <span className={styles.componentPoints}>50点</span>
+                          <span className={styles.componentDesc}>専門スキル・知識</span>
+                        </div>
+                      </div>
+                      <div className={styles.scorePlus}>+</div>
+                      <div className={styles.scoreComponent}>
+                        <div className={styles.componentIcon}>
+                          <Users size={32} />
+                        </div>
+                        <div className={styles.componentInfo}>
+                          <span className={styles.componentTitle}>組織貢献度</span>
+                          <span className={styles.componentPoints}>50点</span>
+                          <span className={styles.componentDesc}>施設・法人への貢献</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* 評価の特徴 */}
+                  <div className={styles.systemFeatures}>
+                    <div className={styles.featureItem}>
+                      <span className={styles.featureIcon}>⚖️</span>
+                      <span className={styles.featureText}>絶対評価と相対評価の併用</span>
+                    </div>
+                    <div className={styles.featureItem}>
+                      <span className={styles.featureIcon}>📈</span>
+                      <span className={styles.featureText}>成長支援重視の評価制度</span>
+                    </div>
+                    <div className={styles.featureItem}>
+                      <span className={styles.featureIcon}>🎯</span>
+                      <span className={styles.featureText}>職種別カスタマイズ評価</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* 実施スケジュール */}
+              {/* 実施スケジュール - ビジュアル強化版 */}
               <div className={styles.scheduleOverview}>
-                <h2 className={styles.scheduleTitle}>年間実施スケジュール（4月〜翌年3月）</h2>
+                <h2 className={styles.scheduleTitle}>
+                  <span className={styles.titleIcon}>📅</span>
+                  年間実施スケジュール
+                </h2>
                 <div className={styles.yearIndicator}>
-                  <span className={styles.yearLabel}>年度開始 → </span>
-                  <span className={styles.yearPeriod}>4月スタート</span>
-                  <span className={styles.yearLabel}> → 翌年3月終了</span>
+                  <div className={styles.yearFlow}>
+                    <span className={styles.yearStart}>4月</span>
+                    <div className={styles.yearArrow}></div>
+                    <span className={styles.yearEnd}>翌年3月</span>
+                  </div>
+                  <span className={styles.yearDesc}>年度評価期間</span>
                 </div>
                 <div className={styles.scheduleTimeline}>
                   <div className={styles.scheduleItem}>
@@ -246,9 +290,15 @@ export default function EvaluationManagement() {
                 </div>
               </div>
 
-              {/* 2大評価フローの詳細 */}
+              {/* 2大評価フローの詳細 - カード型デザイン強化 */}
               <div className={styles.flowOverview}>
-                <h2 className={styles.flowTitle}>評価フロー詳細</h2>
+                <h2 className={styles.flowTitle}>
+                  <span className={styles.titleIcon}>🔄</span>
+                  評価フロー詳細
+                </h2>
+                <p className={styles.flowSubtitle}>
+                  2つの評価軸で多面的に職員を評価
+                </p>
                 <div className={styles.flowCards}>
                   {/* 技術評価フロー */}
                   <div className={styles.flowCard}>
@@ -319,6 +369,44 @@ export default function EvaluationManagement() {
                       評価を開始 <ChevronRight size={16} />
                     </Link>
                   </div>
+                </div>
+              </div>
+
+              {/* クイックアクセスパネル - 新規追加 */}
+              <div className={styles.quickAccessPanel}>
+                <h3 className={styles.panelTitle}>
+                  <span className={styles.titleIcon}>⚡</span>
+                  クイックアクセス
+                </h3>
+                <div className={styles.quickAccessGrid}>
+                  <Link href="/evaluation/technical" className={styles.quickAccessCard}>
+                    <div className={styles.accessCardIcon}>
+                      <Target size={24} />
+                    </div>
+                    <span className={styles.accessCardTitle}>技術評価</span>
+                    <span className={styles.accessCardDesc}>年度末評価入力</span>
+                  </Link>
+                  <Link href="/evaluation/contribution" className={styles.quickAccessCard}>
+                    <div className={styles.accessCardIcon}>
+                      <Users size={24} />
+                    </div>
+                    <span className={styles.accessCardTitle}>貢献度評価</span>
+                    <span className={styles.accessCardDesc}>賞与査定入力</span>
+                  </Link>
+                  <Link href="/evaluation/integrated-v2" className={styles.quickAccessCard}>
+                    <div className={styles.accessCardIcon}>
+                      <Award size={24} />
+                    </div>
+                    <span className={styles.accessCardTitle}>統合評価</span>
+                    <span className={styles.accessCardDesc}>総合評価確認</span>
+                  </Link>
+                  <Link href="/evaluation/reports" className={styles.quickAccessCard}>
+                    <div className={styles.accessCardIcon}>
+                      <FileText size={24} />
+                    </div>
+                    <span className={styles.accessCardTitle}>レポート</span>
+                    <span className={styles.accessCardDesc}>評価結果出力</span>
+                  </Link>
                 </div>
               </div>
 
