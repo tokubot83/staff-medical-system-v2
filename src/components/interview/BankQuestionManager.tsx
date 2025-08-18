@@ -128,6 +128,7 @@ interface QuestionAllocation {
 }
 
 export default function BankQuestionManager({ onClose, interviewType }: BankQuestionManagerProps) {
+  const [isStepFooterVisible, setIsStepFooterVisible] = useState(true);
   // 面談タイプに応じて初期ステップを設定
   const getInitialStep = () => {
     if (interviewType === 'regular') return 'duration';
@@ -252,15 +253,7 @@ export default function BankQuestionManager({ onClose, interviewType }: BankQues
         ))}
       </div>
 
-      <div className="flex justify-end">
-        <Button
-          onClick={() => setCurrentStep(getNextStep() as any)}
-          disabled={!selectedDuration}
-        >
-          次へ
-          <ChevronRight className="h-4 w-4 ml-2" />
-        </Button>
-      </div>
+      {/* ボタンは固定フッターに移動 */}
     </div>
   );
 
@@ -301,18 +294,7 @@ export default function BankQuestionManager({ onClose, interviewType }: BankQues
         })}
       </div>
 
-      <div className="flex justify-between">
-        <Button variant="outline" onClick={() => setCurrentStep('duration')}>
-          戻る
-        </Button>
-        <Button
-          onClick={() => setCurrentStep('matrix')}
-          disabled={!selectedCategory}
-        >
-          次へ
-          <ChevronRight className="h-4 w-4 ml-2" />
-        </Button>
-      </div>
+      {/* ボタンは固定フッターに移動 */}
     </div>
   );
 
@@ -353,18 +335,7 @@ export default function BankQuestionManager({ onClose, interviewType }: BankQues
         })}
       </div>
 
-      <div className="flex justify-between">
-        <Button variant="outline" onClick={() => setCurrentStep('duration')}>
-          戻る
-        </Button>
-        <Button
-          onClick={() => setCurrentStep('matrix')}
-          disabled={!selectedSpecialType}
-        >
-          次へ
-          <ChevronRight className="h-4 w-4 ml-2" />
-        </Button>
-      </div>
+      {/* ボタンは固定フッターに移動 */}
     </div>
   );
 
@@ -533,21 +504,7 @@ export default function BankQuestionManager({ onClose, interviewType }: BankQues
             </CardContent>
           </Card>
 
-          {/* アクションボタン */}
-          <div className="flex justify-between">
-            <Button variant="outline" onClick={() => setCurrentStep('duration')}>
-              戻る
-            </Button>
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={onClose}>
-                キャンセル
-              </Button>
-              <Button>
-                <Save className="h-4 w-4 mr-2" />
-                保存
-              </Button>
-            </div>
-          </div>
+          {/* アクションボタン - 固定フッターに移動 */}
         </div>
       );
     }
@@ -685,21 +642,7 @@ export default function BankQuestionManager({ onClose, interviewType }: BankQues
             </CardContent>
           </Card>
 
-          {/* アクションボタン */}
-          <div className="flex justify-between">
-            <Button variant="outline" onClick={() => setCurrentStep('category')}>
-              戻る
-            </Button>
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={onClose}>
-                キャンセル
-              </Button>
-              <Button>
-                <Save className="h-4 w-4 mr-2" />
-                保存
-              </Button>
-            </div>
-          </div>
+          {/* アクションボタン - 固定フッターに移動 */}
         </div>
       );
     }
@@ -821,21 +764,7 @@ export default function BankQuestionManager({ onClose, interviewType }: BankQues
             </AlertDescription>
           </Alert>
 
-          {/* アクションボタン */}
-          <div className="flex justify-between">
-            <Button variant="outline" onClick={() => setCurrentStep('special-type')}>
-              戻る
-            </Button>
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={onClose}>
-                キャンセル
-              </Button>
-              <Button>
-                <Save className="h-4 w-4 mr-2" />
-                保存
-              </Button>
-            </div>
-          </div>
+          {/* アクションボタン - 固定フッターに移動 */}
         </div>
       );
     }
@@ -1002,7 +931,7 @@ export default function BankQuestionManager({ onClose, interviewType }: BankQues
   };
 
   return (
-    <div className="w-full">
+    <div className="h-full flex flex-col">
       {/* プログレスバー */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
@@ -1036,12 +965,86 @@ export default function BankQuestionManager({ onClose, interviewType }: BankQues
       </div>
 
       {/* メインコンテンツ */}
-      <div className="w-full">
+      <div className="flex-1 overflow-y-auto pb-20">
         {currentStep === 'duration' && <DurationSelection />}
         {currentStep === 'category' && <CategorySelection />}
         {currentStep === 'special-type' && <SpecialTypeSelection />}
         {currentStep === 'matrix' && <MatrixManagement />}
       </div>
+
+      {/* 固定フッター - 全ステップで表示 */}
+      {
+        <div className="absolute bottom-0 left-0 right-0 bg-white border-t p-4 shadow-lg">
+          <div className="flex justify-between items-center">
+            {/* 左側：戻る/キャンセル */}
+            <Button 
+              variant="outline"
+              onClick={() => {
+                if (currentStep === 'duration') {
+                  if (onClose) onClose();
+                } else if (currentStep === 'category') {
+                  setCurrentStep('duration');
+                } else if (currentStep === 'special-type') {
+                  setCurrentStep('duration');
+                } else if (currentStep === 'matrix') {
+                  if (interviewType === 'support') {
+                    setCurrentStep('category');
+                  } else if (interviewType === 'special') {
+                    setCurrentStep('special-type');
+                  } else {
+                    setCurrentStep('duration');
+                  }
+                }
+              }}
+              className="min-w-[100px]"
+            >
+              {currentStep === 'duration' ? 'キャンセル' : '戻る'}
+            </Button>
+
+            {/* 中央：現在のステップ表示 */}
+            <div className="text-sm text-muted-foreground">
+              {currentStep === 'duration' && '面談時間を選択'}
+              {currentStep === 'category' && 'カテゴリを選択'}
+              {currentStep === 'special-type' && '種別を選択'}
+              {currentStep === 'matrix' && '質問を配分'}
+            </div>
+
+            {/* 右側：次へ/保存 */}
+            {currentStep === 'matrix' ? (
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={onClose}>
+                  キャンセル
+                </Button>
+                <Button className="min-w-[100px]">
+                  <Save className="h-4 w-4 mr-2" />
+                  保存
+                </Button>
+              </div>
+            ) : (
+              <Button
+                onClick={() => {
+                  if (currentStep === 'duration' && selectedDuration) {
+                    setCurrentStep(getNextStep() as any);
+                  } else if (currentStep === 'category' && selectedCategory) {
+                    setCurrentStep('matrix');
+                  } else if (currentStep === 'special-type' && selectedSpecialType) {
+                    setCurrentStep('matrix');
+                  }
+                }}
+                disabled={
+                  (currentStep === 'duration' && !selectedDuration) ||
+                  (currentStep === 'category' && !selectedCategory) ||
+                  (currentStep === 'special-type' && !selectedSpecialType)
+                }
+                className="min-w-[100px]"
+              >
+                次へ
+                <ChevronRight className="h-4 w-4 ml-2" />
+              </Button>
+            )}
+          </div>
+        </div>
+      }
 
       {/* ダイアログ */}
       <QuestionEditDialog />
