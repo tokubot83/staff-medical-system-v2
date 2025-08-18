@@ -54,11 +54,17 @@ import {
   Copy,
   Download,
   Upload,
+  UserX,
+  ArrowRightLeft,
+  UserCheck,
+  TrendingUp,
+  Heart,
 } from 'lucide-react';
 import { ExperienceLevel, BankQuestion } from '@/lib/interview-bank/types';
 
 interface BankQuestionManagerProps {
   onClose?: () => void;
+  interviewType: 'regular' | 'support' | 'special';
 }
 
 // 面談タイプの定義
@@ -92,6 +98,24 @@ const interviewSections = [
   { id: 'closing', label: 'まとめ', defaultTime: 2, icon: CheckCircle },
 ];
 
+// サポート面談のカテゴリ
+const supportCategories = [
+  { id: 'workplace', label: '職場環境の悩み', icon: Users, description: '職場の雰囲気や環境に関する相談' },
+  { id: 'relationship', label: '人間関係の相談', icon: Heart, description: '同僚や上司との関係についての相談' },
+  { id: 'career', label: 'キャリア相談', icon: Target, description: '今後のキャリアパスについての相談' },
+  { id: 'mental', label: 'メンタルヘルス', icon: Heart, description: '心の健康に関する相談' },
+  { id: 'workload', label: '業務負荷の調整', icon: BarChart3, description: '業務量や負担に関する相談' },
+];
+
+// 特別面談の種別
+const specialTypes = [
+  { id: 'exit', label: '退職面談', icon: UserX, description: '退職予定者との面談' },
+  { id: 'return', label: '復職面談', icon: UserCheck, description: '休職からの復職者との面談' },
+  { id: 'promotion', label: '昇進面談', icon: TrendingUp, description: '昇進予定者との面談' },
+  { id: 'transfer', label: '異動面談', icon: ArrowRightLeft, description: '部署異動者との面談' },
+  { id: 'incident', label: 'インシデント面談', icon: AlertTriangle, description: '問題発生後の面談' },
+];
+
 // 質問配分の型定義
 interface QuestionAllocation {
   sectionId: string;
@@ -101,10 +125,17 @@ interface QuestionAllocation {
   priority: 1 | 2 | 3;
 }
 
-export default function BankQuestionManager({ onClose }: BankQuestionManagerProps) {
-  const [currentStep, setCurrentStep] = useState<'type' | 'duration' | 'matrix'>('type');
-  const [selectedType, setSelectedType] = useState<string>('');
+export default function BankQuestionManager({ onClose, interviewType }: BankQuestionManagerProps) {
+  // 面談タイプに応じて初期ステップを設定
+  const getInitialStep = () => {
+    if (interviewType === 'regular') return 'duration';
+    return 'duration'; // support, specialも最初は時間選択から
+  };
+  
+  const [currentStep, setCurrentStep] = useState<'duration' | 'category' | 'special-type' | 'matrix'>(getInitialStep());
   const [selectedDuration, setSelectedDuration] = useState<number>(0);
+  const [selectedCategory, setSelectedCategory] = useState<string>(''); // サポート面談用
+  const [selectedSpecialType, setSelectedSpecialType] = useState<string>(''); // 特別面談用
   const [allocations, setAllocations] = useState<QuestionAllocation[]>([]);
   const [editingCell, setEditingCell] = useState<{
     section: string;
@@ -167,58 +198,27 @@ export default function BankQuestionManager({ onClose }: BankQuestionManagerProp
     return allocation?.requiredTime || 0;
   };
 
-  // Step 1: 面談タイプ選択
-  const TypeSelection = () => (
-    <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-semibold mb-2">面談タイプを選択</h3>
-        <p className="text-sm text-muted-foreground mb-4">
-          管理する質問セットの面談タイプを選択してください
-        </p>
-      </div>
-      
-      <div className="grid grid-cols-3 gap-4">
-        {interviewTypes.map(type => {
-          const Icon = type.icon;
-          return (
-            <Card
-              key={type.id}
-              className={`cursor-pointer transition-all hover:shadow-lg ${
-                selectedType === type.id ? 'ring-2 ring-primary' : ''
-              }`}
-              onClick={() => setSelectedType(type.id)}
-            >
-              <CardContent className="pt-6">
-                <div className="flex flex-col items-center text-center space-y-3">
-                  <div className={`p-3 rounded-full bg-${type.color}-100`}>
-                    <Icon className={`h-8 w-8 text-${type.color}-600`} />
-                  </div>
-                  <h4 className="font-semibold">{type.label}</h4>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+  // 次のステップを決定する関数
+  const getNextStep = () => {
+    if (interviewType === 'regular') {
+      return 'matrix';
+    } else if (interviewType === 'support') {
+      return 'category';
+    } else if (interviewType === 'special') {
+      return 'special-type';
+    }
+    return 'matrix';
+  };
 
-      <div className="flex justify-end">
-        <Button
-          onClick={() => setCurrentStep('duration')}
-          disabled={!selectedType}
-        >
-          次へ
-          <ChevronRight className="h-4 w-4 ml-2" />
-        </Button>
-      </div>
-    </div>
-  );
-
-  // Step 2: 面談時間選択
+  // Step 1: 面談時間選択
   const DurationSelection = () => (
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-semibold mb-2">面談時間を選択</h3>
         <p className="text-sm text-muted-foreground mb-4">
+          {interviewType === 'regular' && '定期面談の'}
+          {interviewType === 'support' && 'サポート面談の'}
+          {interviewType === 'special' && '特別面談の'}
           質問セットを構成する面談時間を選択してください
         </p>
       </div>
@@ -250,13 +250,114 @@ export default function BankQuestionManager({ onClose }: BankQuestionManagerProp
         ))}
       </div>
 
+      <div className="flex justify-end">
+        <Button
+          onClick={() => setCurrentStep(getNextStep() as any)}
+          disabled={!selectedDuration}
+        >
+          次へ
+          <ChevronRight className="h-4 w-4 ml-2" />
+        </Button>
+      </div>
+    </div>
+  );
+
+  // Step 2a: カテゴリ選択（サポート面談用）
+  const CategorySelection = () => (
+    <div className="space-y-6">
+      <div>
+        <h3 className="text-lg font-semibold mb-2">相談カテゴリを選択</h3>
+        <p className="text-sm text-muted-foreground mb-4">
+          サポート面談の相談内容に応じたカテゴリを選択してください
+        </p>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        {supportCategories.map(category => {
+          const Icon = category.icon;
+          return (
+            <Card
+              key={category.id}
+              className={`cursor-pointer transition-all hover:shadow-lg ${
+                selectedCategory === category.id ? 'ring-2 ring-primary' : ''
+              }`}
+              onClick={() => setSelectedCategory(category.id)}
+            >
+              <CardContent className="pt-6">
+                <div className="flex flex-col space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-green-100">
+                      <Icon className="h-6 w-6 text-green-600" />
+                    </div>
+                    <h4 className="font-semibold">{category.label}</h4>
+                  </div>
+                  <p className="text-sm text-muted-foreground">{category.description}</p>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+
       <div className="flex justify-between">
-        <Button variant="outline" onClick={() => setCurrentStep('type')}>
+        <Button variant="outline" onClick={() => setCurrentStep('duration')}>
           戻る
         </Button>
         <Button
           onClick={() => setCurrentStep('matrix')}
-          disabled={!selectedDuration}
+          disabled={!selectedCategory}
+        >
+          次へ
+          <ChevronRight className="h-4 w-4 ml-2" />
+        </Button>
+      </div>
+    </div>
+  );
+
+  // Step 2b: 種別選択（特別面談用）
+  const SpecialTypeSelection = () => (
+    <div className="space-y-6">
+      <div>
+        <h3 className="text-lg font-semibold mb-2">特別面談の種別を選択</h3>
+        <p className="text-sm text-muted-foreground mb-4">
+          実施する特別面談の種別を選択してください
+        </p>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        {specialTypes.map(type => {
+          const Icon = type.icon;
+          return (
+            <Card
+              key={type.id}
+              className={`cursor-pointer transition-all hover:shadow-lg ${
+                selectedSpecialType === type.id ? 'ring-2 ring-primary' : ''
+              }`}
+              onClick={() => setSelectedSpecialType(type.id)}
+            >
+              <CardContent className="pt-6">
+                <div className="flex flex-col space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-orange-100">
+                      <Icon className="h-6 w-6 text-orange-600" />
+                    </div>
+                    <h4 className="font-semibold">{type.label}</h4>
+                  </div>
+                  <p className="text-sm text-muted-foreground">{type.description}</p>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+
+      <div className="flex justify-between">
+        <Button variant="outline" onClick={() => setCurrentStep('duration')}>
+          戻る
+        </Button>
+        <Button
+          onClick={() => setCurrentStep('matrix')}
+          disabled={!selectedSpecialType}
         >
           次へ
           <ChevronRight className="h-4 w-4 ml-2" />
@@ -273,7 +374,10 @@ export default function BankQuestionManager({ onClose }: BankQuestionManagerProp
         <div>
           <h3 className="text-lg font-semibold">質問配分マトリクス</h3>
           <p className="text-sm text-muted-foreground">
-            {interviewTypes.find(t => t.id === selectedType)?.label} - {selectedDuration}分
+            {interviewType === 'regular' && '定期面談'}
+            {interviewType === 'support' && `サポート面談 - ${supportCategories.find(c => c.id === selectedCategory)?.label || ''}`}
+            {interviewType === 'special' && `特別面談 - ${specialTypes.find(t => t.id === selectedSpecialType)?.label || ''}`}
+            {' '}- {selectedDuration}分
           </p>
         </div>
         <div className="flex gap-2">
@@ -429,7 +533,18 @@ export default function BankQuestionManager({ onClose }: BankQuestionManagerProp
 
       {/* アクションボタン */}
       <div className="flex justify-between">
-        <Button variant="outline" onClick={() => setCurrentStep('duration')}>
+        <Button 
+          variant="outline" 
+          onClick={() => {
+            if (interviewType === 'support') {
+              setCurrentStep('category');
+            } else if (interviewType === 'special') {
+              setCurrentStep('special-type');
+            } else {
+              setCurrentStep('duration');
+            }
+          }}
+        >
           戻る
         </Button>
         <div className="flex gap-2">
@@ -576,13 +691,39 @@ export default function BankQuestionManager({ onClose }: BankQuestionManagerProp
     );
   };
 
+  // プログレスステップの定義
+  const getProgressSteps = () => {
+    if (interviewType === 'regular') {
+      return ['duration', 'matrix'];
+    } else if (interviewType === 'support') {
+      return ['duration', 'category', 'matrix'];
+    } else if (interviewType === 'special') {
+      return ['duration', 'special-type', 'matrix'];
+    }
+    return ['duration', 'matrix'];
+  };
+
+  const progressSteps = getProgressSteps();
+  const currentStepIndex = progressSteps.indexOf(currentStep);
+  const progressValue = ((currentStepIndex + 1) / progressSteps.length) * 100;
+
+  const getStepLabel = (step: string) => {
+    switch (step) {
+      case 'duration': return '時間選択';
+      case 'category': return 'カテゴリ選択';
+      case 'special-type': return '種別選択';
+      case 'matrix': return '質問配分';
+      default: return '';
+    }
+  };
+
   return (
     <div className="p-6">
       {/* プログレスバー */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-2">
           <div className="flex gap-8">
-            {['type', 'duration', 'matrix'].map((step, index) => (
+            {progressSteps.map((step, index) => (
               <div
                 key={step}
                 className={`flex items-center gap-2 ${
@@ -593,7 +734,7 @@ export default function BankQuestionManager({ onClose }: BankQuestionManagerProp
                   className={`w-8 h-8 rounded-full flex items-center justify-center ${
                     currentStep === step
                       ? 'bg-primary text-white'
-                      : index < ['type', 'duration', 'matrix'].indexOf(currentStep)
+                      : index < currentStepIndex
                       ? 'bg-primary/20 text-primary'
                       : 'bg-gray-100'
                   }`}
@@ -601,25 +742,19 @@ export default function BankQuestionManager({ onClose }: BankQuestionManagerProp
                   {index + 1}
                 </div>
                 <span className="hidden sm:inline">
-                  {step === 'type' && '面談タイプ'}
-                  {step === 'duration' && '時間選択'}
-                  {step === 'matrix' && '質問配分'}
+                  {getStepLabel(step)}
                 </span>
               </div>
             ))}
           </div>
         </div>
-        <Progress
-          value={
-            currentStep === 'type' ? 33 : currentStep === 'duration' ? 66 : 100
-          }
-          className="h-2"
-        />
+        <Progress value={progressValue} className="h-2" />
       </div>
 
       {/* メインコンテンツ */}
-      {currentStep === 'type' && <TypeSelection />}
       {currentStep === 'duration' && <DurationSelection />}
+      {currentStep === 'category' && <CategorySelection />}
+      {currentStep === 'special-type' && <SpecialTypeSelection />}
       {currentStep === 'matrix' && <MatrixManagement />}
 
       {/* ダイアログ */}
