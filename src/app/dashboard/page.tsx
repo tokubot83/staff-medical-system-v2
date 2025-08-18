@@ -617,6 +617,154 @@ export default function DashboardPage() {
 
           {activeTab === 'guide' && (
             <div className="space-y-6 p-6">
+            {/* 評価システム概要 - ビジュアル強化版 */}
+            <Card className="border-2 border-purple-200 bg-gradient-to-br from-purple-50 to-blue-50">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-xl">
+                  <span className="text-2xl">📊</span>
+                  人事評価システム概要
+                </CardTitle>
+                <CardDescription className="text-gray-700">
+                  公平・透明・成長支援を重視した総合評価制度
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {/* ビジュアル強化: 評価配分の円グラフ風表示 */}
+                <div className="mb-8">
+                  <div className="flex items-center justify-center gap-8">
+                    <div className="relative">
+                      <div className="w-40 h-40 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex flex-col items-center justify-center text-white shadow-xl">
+                        <div className="text-3xl font-bold">100点</div>
+                        <div className="text-sm">年間総合評価</div>
+                      </div>
+                    </div>
+                    <div className="flex-1 space-y-4">
+                      <div className="flex items-center gap-4 p-4 bg-white rounded-lg shadow-md border-l-4 border-blue-500">
+                        <Target className="h-10 w-10 text-blue-500" />
+                        <div className="flex-1">
+                          <div className="font-semibold text-gray-800">技術評価</div>
+                          <div className="text-2xl font-bold text-blue-600">50点</div>
+                          <div className="text-xs text-gray-600">専門スキル・知識（年1回）</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4 p-4 bg-white rounded-lg shadow-md border-l-4 border-purple-500">
+                        <Users className="h-10 w-10 text-purple-500" />
+                        <div className="flex-1">
+                          <div className="font-semibold text-gray-800">組織貢献度</div>
+                          <div className="text-2xl font-bold text-purple-600">50点</div>
+                          <div className="text-xs text-gray-600">施設・法人への貢献（年2回）</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* 評価の特徴 */}
+                  <div className="flex justify-center gap-4 mt-6">
+                    <Badge className="bg-blue-100 text-blue-800 px-3 py-1">
+                      ⚖️ 絶対評価と相対評価の併用
+                    </Badge>
+                    <Badge className="bg-green-100 text-green-800 px-3 py-1">
+                      📈 成長支援重視
+                    </Badge>
+                    <Badge className="bg-purple-100 text-purple-800 px-3 py-1">
+                      🎯 職種別カスタマイズ
+                    </Badge>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* 年間実施スケジュール - タイムライン表示 */}
+            <Card className="border-2 border-green-200">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Calendar className="h-5 w-5 text-green-600" />
+                  年間実施スケジュール
+                </CardTitle>
+                <CardDescription>
+                  評価実施の年間タイムライン（4月〜翌年3月）
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="relative">
+                  {/* タイムライン */}
+                  <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gray-300"></div>
+                  
+                  <div className="space-y-6">
+                    {/* 8月: 夏季賞与査定 */}
+                    <div className="flex gap-4">
+                      <div className="relative z-10 flex items-center justify-center w-16 h-16 bg-blue-500 text-white rounded-full shadow-lg">
+                        <div className="text-center">
+                          <div className="text-xs font-bold">8月</div>
+                          <div className="text-xs">①</div>
+                        </div>
+                      </div>
+                      <div className="flex-1 p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                        <h4 className="font-semibold text-blue-900">夏季賞与査定</h4>
+                        <p className="text-sm text-gray-700 mt-1">12月〜5月実績の貢献度評価</p>
+                        <div className="mt-2 flex items-center gap-2">
+                          <Badge className="bg-blue-100 text-blue-800">25点満点</Badge>
+                          <span className="text-xs text-gray-600">施設12.5点＋法人12.5点</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* 12月: 冬季賞与査定 */}
+                    <div className="flex gap-4">
+                      <div className="relative z-10 flex items-center justify-center w-16 h-16 bg-purple-500 text-white rounded-full shadow-lg">
+                        <div className="text-center">
+                          <div className="text-xs font-bold">12月</div>
+                          <div className="text-xs">②</div>
+                        </div>
+                      </div>
+                      <div className="flex-1 p-4 bg-purple-50 rounded-lg border-l-4 border-purple-500">
+                        <h4 className="font-semibold text-purple-900">冬季賞与査定</h4>
+                        <p className="text-sm text-gray-700 mt-1">6月〜11月実績の貢献度評価</p>
+                        <div className="mt-2 flex items-center gap-2">
+                          <Badge className="bg-purple-100 text-purple-800">25点満点</Badge>
+                          <span className="text-xs text-gray-600">施設12.5点＋法人12.5点</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* 3月: 技術評価 */}
+                    <div className="flex gap-4">
+                      <div className="relative z-10 flex items-center justify-center w-16 h-16 bg-green-500 text-white rounded-full shadow-lg">
+                        <div className="text-center">
+                          <div className="text-xs font-bold">3月</div>
+                          <div className="text-xs">③</div>
+                        </div>
+                      </div>
+                      <div className="flex-1 p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
+                        <h4 className="font-semibold text-green-900">技術評価実施</h4>
+                        <p className="text-sm text-gray-700 mt-1">職種別専門技術・スキル評価</p>
+                        <div className="mt-2 flex items-center gap-2">
+                          <Badge className="bg-green-100 text-green-800">50点満点</Badge>
+                          <span className="text-xs text-gray-600">法人統一30点＋施設特化20点</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* 年度総合評価 */}
+                    <div className="flex gap-4">
+                      <div className="relative z-10 flex items-center justify-center w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 text-white rounded-full shadow-lg">
+                        <Award className="h-8 w-8" />
+                      </div>
+                      <div className="flex-1 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border-l-4 border-orange-500">
+                        <h4 className="font-semibold text-orange-900">年度総合評価確定</h4>
+                        <p className="text-sm text-gray-700 mt-1">
+                          貢献度評価（8月25点＋12月25点）＋ 技術評価（3月50点）
+                        </p>
+                        <div className="mt-2">
+                          <span className="text-2xl font-bold text-orange-600">= 100点満点</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* ステップバイステップガイド */}
             <Card className="border-2 border-blue-200">
               <CardHeader>
@@ -653,62 +801,179 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
 
+            {/* 2大評価フローの詳細カード */}
             <div className="grid grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Info className="h-5 w-5" />
-                    100点満点評価システム
+              {/* 技術評価フロー */}
+              <Card className="border-2 border-blue-200 hover:shadow-xl transition-all">
+                <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50">
+                  <CardTitle className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Target className="h-5 w-5 text-blue-600" />
+                      ①技術評価
+                    </div>
+                    <Badge className="bg-blue-600 text-white">50点</Badge>
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
-                    <h4 className="font-semibold text-blue-800 mb-2">技術評価（50点）</h4>
-                    <ul className="text-sm space-y-1 text-gray-600">
-                      <li>• 法人統一項目：30点</li>
-                      <li>• 施設特化項目：20点</li>
-                      <li>• 職種・経験に応じた評価</li>
-                    </ul>
+                <CardContent className="pt-4">
+                  <div className="mb-4 p-3 bg-blue-50 rounded-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Calendar className="h-4 w-4 text-blue-600" />
+                      <span className="text-sm font-semibold text-blue-800">3月実施（年度末評価）</span>
+                    </div>
                   </div>
-                  <div className="p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
-                    <h4 className="font-semibold text-green-800 mb-2">貢献度評価（50点）</h4>
-                    <ul className="text-sm space-y-1 text-gray-600">
-                      <li>• 施設貢献度：25点</li>
-                      <li>• 法人貢献度：25点</li>
-                      <li>• 年2回評価（7月・12月）</li>
-                    </ul>
+                  <div className="space-y-3">
+                    <p className="text-sm text-gray-700">職種別の専門技術・スキルを評価</p>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                        <span className="text-sm">法人統一項目</span>
+                        <Badge variant="outline">30点</Badge>
+                      </div>
+                      <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                        <span className="text-sm">施設特化項目</span>
+                        <Badge variant="outline">20点</Badge>
+                      </div>
+                    </div>
+                    <div className="pt-3 space-y-2">
+                      <Link href="/evaluation/core-v2">
+                        <Button className="w-full" size="sm" variant="outline">
+                          <PlayCircle className="mr-2 h-4 w-4" />
+                          新V2版で評価開始
+                        </Button>
+                      </Link>
+                      <Link href="/evaluation/facility-specific">
+                        <Button className="w-full" size="sm" variant="ghost">
+                          施設特化項目を設定
+                        </Button>
+                      </Link>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <ListChecks className="h-5 w-5" />
-                    評価プロセス
+              {/* 貢献度評価フロー */}
+              <Card className="border-2 border-purple-200 hover:shadow-xl transition-all">
+                <CardHeader className="bg-gradient-to-r from-purple-50 to-pink-50">
+                  <CardTitle className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Users className="h-5 w-5 text-purple-600" />
+                      ②組織貢献度評価
+                    </div>
+                    <Badge className="bg-purple-600 text-white">50点</Badge>
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="pt-4">
                   <div className="space-y-3">
-                    {[
-                      { phase: '制度設計', icon: Settings, color: 'blue' },
-                      { phase: '評価実施', icon: ClipboardList, color: 'purple' },
-                      { phase: '総合判定', icon: CheckCircle, color: 'green' },
-                      { phase: '評価開示', icon: Eye, color: 'orange' },
-                      { phase: '異議申立', icon: MessageSquare, color: 'red' },
-                    ].map((item, index) => (
-                      <div key={index} className="flex items-center gap-3">
-                        <div className={`p-2 bg-${item.color}-100 rounded-lg`}>
-                          <item.icon className={`h-4 w-4 text-${item.color}-600`} />
-                        </div>
-                        <span className="font-medium">{item.phase}</span>
-                        {index < 4 && <ArrowRight className="h-4 w-4 text-gray-400 ml-auto" />}
+                    <div className="p-3 bg-purple-50 rounded-lg">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Calendar className="h-4 w-4 text-purple-600" />
+                        <span className="text-sm font-semibold text-purple-800">年2回実施</span>
                       </div>
-                    ))}
+                      <div className="grid grid-cols-2 gap-2 text-xs">
+                        <div className="p-2 bg-white rounded">
+                          <span className="font-medium">8月:</span> 夏季査定
+                        </div>
+                        <div className="p-2 bg-white rounded">
+                          <span className="font-medium">12月:</span> 冬季査定
+                        </div>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-700">組織への貢献度を相対評価</p>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                        <span className="text-sm">施設貢献度（年間）</span>
+                        <Badge variant="outline">25点</Badge>
+                      </div>
+                      <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                        <span className="text-sm">法人貢献度（年間）</span>
+                        <Badge variant="outline">25点</Badge>
+                      </div>
+                    </div>
+                    <div className="pt-3">
+                      <Link href="/evaluation/contribution">
+                        <Button className="w-full" size="sm" variant="outline">
+                          <PlayCircle className="mr-2 h-4 w-4" />
+                          貢献度評価を開始
+                        </Button>
+                      </Link>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
             </div>
+
+            {/* クイックアクセスパネル */}
+            <Card className="border-2 border-orange-200 bg-gradient-to-r from-orange-50 to-yellow-50">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Zap className="h-5 w-5 text-orange-600" />
+                  クイックアクセス
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-4 gap-3">
+                  <Link href="/evaluation/technical">
+                    <div className="p-4 bg-white rounded-lg border hover:border-orange-400 hover:shadow-md transition-all cursor-pointer text-center">
+                      <Target className="h-6 w-6 text-blue-600 mx-auto mb-2" />
+                      <div className="text-sm font-medium">技術評価</div>
+                      <div className="text-xs text-gray-600">年度末評価</div>
+                    </div>
+                  </Link>
+                  <Link href="/evaluation/contribution">
+                    <div className="p-4 bg-white rounded-lg border hover:border-orange-400 hover:shadow-md transition-all cursor-pointer text-center">
+                      <Users className="h-6 w-6 text-purple-600 mx-auto mb-2" />
+                      <div className="text-sm font-medium">貢献度評価</div>
+                      <div className="text-xs text-gray-600">賞与査定</div>
+                    </div>
+                  </Link>
+                  <Link href="/evaluation/integrated-v2">
+                    <div className="p-4 bg-white rounded-lg border hover:border-orange-400 hover:shadow-md transition-all cursor-pointer text-center">
+                      <Award className="h-6 w-6 text-green-600 mx-auto mb-2" />
+                      <div className="text-sm font-medium">統合評価</div>
+                      <div className="text-xs text-gray-600">総合確認</div>
+                    </div>
+                  </Link>
+                  <Link href="/evaluation/reports">
+                    <div className="p-4 bg-white rounded-lg border hover:border-orange-400 hover:shadow-md transition-all cursor-pointer text-center">
+                      <FileText className="h-6 w-6 text-orange-600 mx-auto mb-2" />
+                      <div className="text-sm font-medium">レポート</div>
+                      <div className="text-xs text-gray-600">結果出力</div>
+                    </div>
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* 評価プロセス全体像 */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <ListChecks className="h-5 w-5" />
+                  評価プロセス全体像
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {[
+                    { phase: '制度設計', icon: Settings, color: 'blue', desc: '評価項目・配点の設定' },
+                    { phase: '評価実施', icon: ClipboardList, color: 'purple', desc: '自己評価・上司評価の入力' },
+                    { phase: '総合判定', icon: CheckCircle, color: 'green', desc: '100点満点での最終評価' },
+                    { phase: '評価開示', icon: Eye, color: 'orange', desc: '本人への評価結果通知' },
+                    { phase: '異議申立', icon: MessageSquare, color: 'red', desc: '評価への異議申立対応' },
+                  ].map((item, index) => (
+                    <div key={index} className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+                      <div className={`p-2 bg-${item.color}-100 rounded-lg`}>
+                        <item.icon className={`h-4 w-4 text-${item.color}-600`} />
+                      </div>
+                      <div className="flex-1">
+                        <span className="font-medium">{item.phase}</span>
+                        <p className="text-xs text-gray-600 mt-1">{item.desc}</p>
+                      </div>
+                      {index < 4 && <ArrowRight className="h-4 w-4 text-gray-400" />}
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
 
             <Card className="border-2 border-yellow-200">
               <CardHeader>
