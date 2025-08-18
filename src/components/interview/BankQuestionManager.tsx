@@ -59,6 +59,7 @@ import {
   UserCheck,
   TrendingUp,
   Heart,
+  AlertTriangle,
 } from 'lucide-react';
 import { ExperienceLevel, BankQuestion } from '@/lib/interview-bank/types';
 
