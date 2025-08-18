@@ -983,9 +983,25 @@ export default function DashboardPage() {
                   <div className="space-y-3">
                     <p className="text-sm text-gray-700">職種別の専門技術・スキルを評価</p>
                     <div className="space-y-2">
-                      <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                        <span className="text-sm">法人統一項目</span>
-                        <Badge variant="outline">30点</Badge>
+                      <div className="p-2 bg-gray-50 rounded">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-medium">法人統一項目</span>
+                          <Badge variant="outline">30点</Badge>
+                        </div>
+                        <div className="ml-2 space-y-1">
+                          <div className="flex items-center justify-between text-xs text-gray-600">
+                            <span>• C01: 専門技術・スキル</span>
+                            <span>10点（上司70%/本人30%）</span>
+                          </div>
+                          <div className="flex items-center justify-between text-xs text-gray-600">
+                            <span>• C02: 対人関係・ケア</span>
+                            <span>10点（上司50%/本人50%）</span>
+                          </div>
+                          <div className="flex items-center justify-between text-xs text-gray-600">
+                            <span>• C03: 安全・品質管理</span>
+                            <span>10点（上司80%/本人20%）</span>
+                          </div>
+                        </div>
                       </div>
                       <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
                         <span className="text-sm">施設特化項目</span>

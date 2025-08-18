@@ -508,25 +508,60 @@ export default function HRSystemGuidePage() {
               </div>
               <div className="space-y-4">
                 <div className="bg-purple-50 rounded-lg p-4 border-l-4 border-purple-500">
-                  <h4 className="font-semibold text-purple-800 mb-2">技術評価（50点）- 360度評価</h4>
-                  <div className="grid md:grid-cols-2 gap-3">
-                    <div>
-                      <p className="text-sm text-gray-700 mb-2">評価の内訳：</p>
-                      <ul className="text-sm text-gray-600 space-y-1">
-                        <li>• 上司評価：60%（30点）</li>
-                        <li>• 自己評価：40%（20点）</li>
-                      </ul>
+                  <h4 className="font-semibold text-purple-800 mb-2">技術評価（50点）</h4>
+                  
+                  {/* 法人統一評価項目 */}
+                  <div className="bg-purple-100 rounded-lg p-3 mb-3">
+                    <h5 className="font-semibold text-purple-900 mb-2">1. 法人統一評価項目（30点）</h5>
+                    <div className="space-y-2">
+                      <div className="bg-white rounded p-2">
+                        <div className="flex justify-between items-start mb-1">
+                          <span className="text-sm font-medium text-gray-800">C01: 専門技術・スキル</span>
+                          <span className="text-sm text-gray-600">10点</span>
+                        </div>
+                        <p className="text-xs text-gray-600 mb-1">上司評価70%（7点）/ 本人評価30%（3点）</p>
+                        <ul className="text-xs text-gray-500 ml-3">
+                          <li>• 基本技術、応用技術、記録・報告</li>
+                        </ul>
+                      </div>
+                      
+                      <div className="bg-white rounded p-2">
+                        <div className="flex justify-between items-start mb-1">
+                          <span className="text-sm font-medium text-gray-800">C02: 対人関係・ケア</span>
+                          <span className="text-sm text-gray-600">10点</span>
+                        </div>
+                        <p className="text-xs text-gray-600 mb-1">上司評価50%（5点）/ 本人評価50%（5点）</p>
+                        <ul className="text-xs text-gray-500 ml-3">
+                          <li>• 基本的対応、権利擁護</li>
+                        </ul>
+                      </div>
+                      
+                      <div className="bg-white rounded p-2">
+                        <div className="flex justify-between items-start mb-1">
+                          <span className="text-sm font-medium text-gray-800">C03: 安全・品質管理</span>
+                          <span className="text-sm text-gray-600">10点</span>
+                        </div>
+                        <p className="text-xs text-gray-600 mb-1">上司評価80%（8点）/ 本人評価20%（2点）</p>
+                        <ul className="text-xs text-gray-500 ml-3">
+                          <li>• 医療安全、感染対策、身体拘束適正化</li>
+                        </ul>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm text-gray-700 mb-2">評価項目：</p>
-                      <ul className="text-sm text-gray-600 space-y-1">
-                        <li>• 看護技術・専門知識</li>
-                        <li>• 患者ケアの質</li>
-                        <li>• 医療安全への取り組み</li>
-                        <li>• チーム医療への貢献</li>
+                  </div>
+                  
+                  {/* 施設特化評価項目 */}
+                  <div className="bg-purple-100 rounded-lg p-3">
+                    <h5 className="font-semibold text-purple-900 mb-2">2. 施設特化評価項目（20点）</h5>
+                    <div className="bg-white rounded p-2">
+                      <p className="text-sm text-gray-700 mb-1">各施設独自の評価基準</p>
+                      <ul className="text-xs text-gray-600 space-y-1 ml-3">
+                        <li>• 施設の特性に応じた専門スキル</li>
+                        <li>• 施設固有の業務への対応力</li>
+                        <li>• 地域特性を踏まえたケア実践</li>
                       </ul>
                     </div>
                   </div>
+                  
                   <div className="bg-white rounded p-2 mt-3">
                     <p className="text-xs text-gray-600">
                       各項目をS（100%）〜D（40%）の5段階で評価し、重み付け計算で点数化
@@ -706,8 +741,10 @@ export default function HRSystemGuidePage() {
                   <p><strong>第3条（評価シートによる点数化）</strong></p>
                   <p className="ml-4">
                     職員の評価は、以下の2大要素により100点満点で採点する：<br/>
-                    (1) 技術評価（50点）：360度評価により専門技術・知識を評価<br/>
-                    　　・上司評価60%（30点）、自己評価40%（20点）<br/>
+                    (1) 技術評価（50点）<br/>
+                    　　・法人統一評価項目（30点）：全施設共通の評価基準<br/>
+                    　　　項目ごとに上司評価と本人評価の配分比率を設定<br/>
+                    　　・施設特化評価項目（20点）：各施設独自の評価基準<br/>
                     (2) 組織貢献度評価（50点）：年2回の賞与査定時に評価<br/>
                     　　・施設貢献度（12.5点×2期＝25点）：施設内活動ポイントの相対評価<br/>
                     　　・法人貢献度（12.5点×2期＝25点）：法人全体活動ポイントの相対評価
@@ -757,7 +794,12 @@ export default function HRSystemGuidePage() {
                   <p className="mt-4"><strong>第7条（評価項目）</strong></p>
                   <p className="ml-4">
                     評価は以下の項目により構成される：<br/>
-                    (1) 技術評価（50点）：360度評価方式による専門技術の評価<br/>
+                    (1) 技術評価（50点）<br/>
+                    　　・法人統一評価項目（30点）：全施設共通の評価基準<br/>
+                    　　　- C01: 専門技術・スキル（10点）上司70%/本人30%<br/>
+                    　　　- C02: 対人関係・ケア（10点）上司50%/本人50%<br/>
+                    　　　- C03: 安全・品質管理（10点）上司80%/本人20%<br/>
+                    　　・施設特化評価項目（20点）：各施設独自の評価基準<br/>
                     (2) 組織貢献度評価（50点）：年2回の賞与査定時評価<br/>
                     　　・施設貢献度（12.5点×2期＝25点）<br/>
                     　　・法人貢献度（12.5点×2期＝25点）
