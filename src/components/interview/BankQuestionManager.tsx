@@ -842,36 +842,7 @@ export default function BankQuestionManager({ onClose, interviewType }: BankQues
 
     // デフォルト（到達しないはず）
     return null;
-  }
-
-      {/* アクションボタン */}
-      <div className="flex justify-between">
-        <Button 
-          variant="outline" 
-          onClick={() => {
-            if (interviewType === 'support') {
-              setCurrentStep('category');
-            } else if (interviewType === 'special') {
-              setCurrentStep('special-type');
-            } else {
-              setCurrentStep('duration');
-            }
-          }}
-        >
-          戻る
-        </Button>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={onClose}>
-            キャンセル
-          </Button>
-          <Button>
-            <Save className="h-4 w-4 mr-2" />
-            保存
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
+  };
 
   // 質問追加・編集ダイアログ
   const QuestionEditDialog = () => {
