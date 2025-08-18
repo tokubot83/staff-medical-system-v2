@@ -1184,7 +1184,7 @@ export default function InterviewBankTab({
       
       {/* フルスクリーン質問管理モーダル */}
       <Dialog open={isFullscreenManagerOpen} onOpenChange={setIsFullscreenManagerOpen}>
-        <DialogContent className="max-w-[95vw] w-full h-[90vh] p-0 overflow-hidden">
+        <DialogContent className="max-w-[95vw] w-full h-[90vh] p-0">
           <div className="flex flex-col h-full">
             {/* ヘッダー */}
             <div className="flex items-center justify-between p-6 border-b bg-gray-50">
@@ -1210,18 +1210,11 @@ export default function InterviewBankTab({
                     </SelectContent>
                   </Select>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setIsFullscreenManagerOpen(false)}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
               </div>
             </div>
             
             {/* コンテンツエリア */}
-            <div className="flex-1 overflow-auto p-6 bg-white">
+            <div className="flex-1 overflow-y-auto p-6 bg-white">
               {useEnhancedManager ? (
                 <EnhancedQuestionManager
                   questions={questionTemplates}

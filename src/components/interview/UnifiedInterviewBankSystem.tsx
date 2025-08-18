@@ -1326,7 +1326,7 @@ export default function UnifiedInterviewBankSystem() {
 
       {/* 質問管理モーダル */}
       <Dialog open={showQuestionManager} onOpenChange={setShowQuestionManager}>
-        <DialogContent className="max-w-[95vw] w-full h-[90vh] p-0 overflow-hidden" hideCloseButton>
+        <DialogContent className="max-w-[95vw] w-full h-[90vh] p-0">
           <div className="flex flex-col h-full">
             <div className="flex items-center justify-between p-4 border-b">
               <div className="flex items-center gap-3">
@@ -1338,15 +1338,8 @@ export default function UnifiedInterviewBankSystem() {
                   </p>
                 </div>
               </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setShowQuestionManager(false)}
-              >
-                <X className="h-4 w-4" />
-              </Button>
             </div>
-            <div className="flex-1 overflow-auto">
+            <div className="flex-1 overflow-y-auto p-6">
               <BankQuestionManager 
                 onClose={() => setShowQuestionManager(false)} 
                 interviewType={selectedType as 'regular' | 'support' | 'special' || 'regular'}
