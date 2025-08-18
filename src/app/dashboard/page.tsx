@@ -765,6 +765,165 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
 
+            {/* 2軸評価マトリックス - 評価結果の決定方法 */}
+            <Card className="border-2 border-indigo-200 bg-gradient-to-r from-indigo-50 to-purple-50">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-xl">
+                  <BarChart3 className="h-5 w-5 text-indigo-600" />
+                  2軸評価マトリックス - 総合評価の決定方法
+                </CardTitle>
+                <CardDescription className="text-gray-700">
+                  施設内評価と法人内評価を組み合わせて、最終的な7段階評価（S+〜D）が決定されます
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {/* 評価ランクの説明 */}
+                <div className="mb-6">
+                  <h4 className="font-semibold text-gray-700 mb-3">各軸での評価分布（5段階）</h4>
+                  <div className="grid grid-cols-5 gap-2 mb-4">
+                    <div className="text-center p-3 bg-gradient-to-b from-yellow-100 to-yellow-200 rounded-lg border border-yellow-300">
+                      <div className="text-2xl font-bold text-yellow-800">S</div>
+                      <div className="text-xs text-gray-600">上位10%</div>
+                      <div className="text-xs font-semibold">卓越</div>
+                    </div>
+                    <div className="text-center p-3 bg-gradient-to-b from-green-100 to-green-200 rounded-lg border border-green-300">
+                      <div className="text-2xl font-bold text-green-800">A</div>
+                      <div className="text-xs text-gray-600">上位11-30%</div>
+                      <div className="text-xs font-semibold">優秀</div>
+                    </div>
+                    <div className="text-center p-3 bg-gradient-to-b from-blue-100 to-blue-200 rounded-lg border border-blue-300">
+                      <div className="text-2xl font-bold text-blue-800">B</div>
+                      <div className="text-xs text-gray-600">上位31-70%</div>
+                      <div className="text-xs font-semibold">標準</div>
+                    </div>
+                    <div className="text-center p-3 bg-gradient-to-b from-orange-100 to-orange-200 rounded-lg border border-orange-300">
+                      <div className="text-2xl font-bold text-orange-800">C</div>
+                      <div className="text-xs text-gray-600">上位71-90%</div>
+                      <div className="text-xs font-semibold">要改善</div>
+                    </div>
+                    <div className="text-center p-3 bg-gradient-to-b from-red-100 to-red-200 rounded-lg border border-red-300">
+                      <div className="text-2xl font-bold text-red-800">D</div>
+                      <div className="text-xs text-gray-600">下位10%</div>
+                      <div className="text-xs font-semibold">要支援</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* マトリックス表 */}
+                <div className="mb-6">
+                  <h4 className="font-semibold text-gray-700 mb-3">2軸を組み合わせた総合評価マトリックス</h4>
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr>
+                          <th className="border border-gray-300 p-3 bg-gray-100 text-sm">法人内＼施設内</th>
+                          <th className="border border-gray-300 p-3 bg-yellow-100 text-sm font-bold">S</th>
+                          <th className="border border-gray-300 p-3 bg-green-100 text-sm font-bold">A</th>
+                          <th className="border border-gray-300 p-3 bg-blue-100 text-sm font-bold">B</th>
+                          <th className="border border-gray-300 p-3 bg-orange-100 text-sm font-bold">C</th>
+                          <th className="border border-gray-300 p-3 bg-red-100 text-sm font-bold">D</th>
+                        </tr>
+                      </thead>
+                      <tbody className="text-center text-sm font-semibold">
+                        <tr>
+                          <td className="border border-gray-300 p-3 bg-yellow-100 font-bold">S</td>
+                          <td className="border border-gray-300 p-3 bg-green-100 text-lg">A</td>
+                          <td className="border border-gray-300 p-3 bg-green-200 text-lg">A+</td>
+                          <td className="border border-gray-300 p-3 bg-yellow-100 text-lg">S</td>
+                          <td className="border border-gray-300 p-3 bg-yellow-100 text-lg">S</td>
+                          <td className="border border-gray-300 p-3 bg-yellow-200 text-lg font-bold">S+</td>
+                        </tr>
+                        <tr>
+                          <td className="border border-gray-300 p-3 bg-green-100 font-bold">A</td>
+                          <td className="border border-gray-300 p-3 bg-blue-100 text-lg">B</td>
+                          <td className="border border-gray-300 p-3 bg-green-100 text-lg">A</td>
+                          <td className="border border-gray-300 p-3 bg-green-100 text-lg">A</td>
+                          <td className="border border-gray-300 p-3 bg-green-200 text-lg">A+</td>
+                          <td className="border border-gray-300 p-3 bg-yellow-100 text-lg">S</td>
+                        </tr>
+                        <tr>
+                          <td className="border border-gray-300 p-3 bg-blue-100 font-bold">B</td>
+                          <td className="border border-gray-300 p-3 bg-orange-100 text-lg">C</td>
+                          <td className="border border-gray-300 p-3 bg-blue-100 text-lg">B</td>
+                          <td className="border border-gray-300 p-3 bg-blue-100 text-lg">B</td>
+                          <td className="border border-gray-300 p-3 bg-green-100 text-lg">A</td>
+                          <td className="border border-gray-300 p-3 bg-green-200 text-lg">A+</td>
+                        </tr>
+                        <tr>
+                          <td className="border border-gray-300 p-3 bg-orange-100 font-bold">C</td>
+                          <td className="border border-gray-300 p-3 bg-red-100 text-lg">D</td>
+                          <td className="border border-gray-300 p-3 bg-orange-100 text-lg">C</td>
+                          <td className="border border-gray-300 p-3 bg-orange-100 text-lg">C</td>
+                          <td className="border border-gray-300 p-3 bg-blue-100 text-lg">B</td>
+                          <td className="border border-gray-300 p-3 bg-green-100 text-lg">A</td>
+                        </tr>
+                        <tr>
+                          <td className="border border-gray-300 p-3 bg-red-100 font-bold">D</td>
+                          <td className="border border-gray-300 p-3 bg-red-200 text-lg">D</td>
+                          <td className="border border-gray-300 p-3 bg-red-100 text-lg">D</td>
+                          <td className="border border-gray-300 p-3 bg-orange-100 text-lg">C</td>
+                          <td className="border border-gray-300 p-3 bg-orange-100 text-lg">C</td>
+                          <td className="border border-gray-300 p-3 bg-blue-100 text-lg">B</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="mt-4 p-3 bg-indigo-50 rounded-lg">
+                    <p className="text-sm text-gray-700">
+                      <strong>最終評価：</strong>7段階（S+, S, A+, A, B, C, D）で総合的な評価が決定されます
+                    </p>
+                  </div>
+                </div>
+
+                {/* 具体例での説明 */}
+                <div className="bg-white rounded-lg p-4">
+                  <h4 className="font-semibold text-gray-700 mb-3">評価の具体例</h4>
+                  <div className="space-y-3">
+                    <div className="p-3 bg-gray-50 rounded-lg">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Badge className="bg-blue-100 text-blue-800">例1</Badge>
+                        <span className="text-sm font-medium">小規模施設で頑張っている職員</span>
+                      </div>
+                      <div className="grid grid-cols-3 gap-2 text-sm">
+                        <div className="text-center">
+                          <p className="text-xs text-gray-600">施設内評価</p>
+                          <p className="font-bold text-green-600">A</p>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-xs text-gray-600">法人内評価</p>
+                          <p className="font-bold text-blue-600">B</p>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-xs text-gray-600">総合評価</p>
+                          <p className="font-bold text-lg text-green-600">A</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="p-3 bg-gray-50 rounded-lg">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Badge className="bg-purple-100 text-purple-800">例2</Badge>
+                        <span className="text-sm font-medium">法人全体で高いスキルを持つ職員</span>
+                      </div>
+                      <div className="grid grid-cols-3 gap-2 text-sm">
+                        <div className="text-center">
+                          <p className="text-xs text-gray-600">施設内評価</p>
+                          <p className="font-bold text-blue-600">B</p>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-xs text-gray-600">法人内評価</p>
+                          <p className="font-bold text-yellow-600">S</p>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-xs text-gray-600">総合評価</p>
+                          <p className="font-bold text-lg text-yellow-600">S</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* ステップバイステップガイド */}
             <Card className="border-2 border-blue-200">
               <CardHeader>

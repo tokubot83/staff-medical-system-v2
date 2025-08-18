@@ -1071,61 +1071,6 @@ export default function InterviewBankTab({
         </div>
       </div>
 
-      {/* サマリーカード */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">総面談回数</p>
-                <p className="text-2xl font-bold">{statistics?.totalCount || 0}</p>
-              </div>
-              <FileText className="h-8 w-8 text-muted-foreground" />
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">完了率</p>
-                <p className="text-2xl font-bold">
-                  {statistics?.averageCompletionRate?.toFixed(0) || 0}%
-                </p>
-              </div>
-              <Target className="h-8 w-8 text-muted-foreground" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">平均時間</p>
-                <p className="text-2xl font-bold">
-                  {statistics?.averageDuration?.toFixed(0) || 0}分
-                </p>
-              </div>
-              <Clock className="h-8 w-8 text-muted-foreground" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">完了数</p>
-                <p className="text-2xl font-bold">{statistics?.completedCount || 0}</p>
-              </div>
-              <Award className="h-8 w-8 text-muted-foreground" />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
       {/* メインコンテンツ */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
