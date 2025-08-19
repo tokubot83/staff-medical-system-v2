@@ -54,7 +54,6 @@ import {
 } from 'lucide-react';
 
 export default function DashboardPage() {
-  const [activeTab, setActiveTab] = useState('home');
   const [evaluationProgress] = useState({
     total: 125,
     completed: 78,
@@ -62,6 +61,8 @@ export default function DashboardPage() {
     notStarted: 15
   });
   const [showWorkflowGuide, setShowWorkflowGuide] = useState(true);
+  const [activeTab, setActiveTab] = useState<'home' | 'guide' | 'progress' | 'settings' | 'reports'>('guide');
+  const [storyActiveTab, setStoryActiveTab] = useState<'新人' | '一般' | '中堅' | 'ベテラン' | '管理職'>('新人');
 
   const completionRate = Math.round((evaluationProgress.completed / evaluationProgress.total) * 100);
 
@@ -71,6 +72,15 @@ export default function DashboardPage() {
     { id: 2, title: '評価実施', status: 'current', icon: ClipboardList },
     { id: 3, title: '集計・分析', status: 'upcoming', icon: BarChart3 },
     { id: 4, title: 'フィードバック', status: 'upcoming', icon: MessageSquare }
+  ];
+
+  // 世代別ストーリータブの定義
+  const storyTabs = [
+    { id: '新人', label: '新人（1年目）', icon: '🌱', character: '田中さん' },
+    { id: '一般', label: '一般（2-3年）', icon: '🌿', character: '佐藤さん' },
+    { id: '中堅', label: '中堅（4-10年）', icon: '🌳', character: '山田さん' },
+    { id: 'ベテラン', label: 'ベテラン（11年以上）', icon: '🎋', character: '高橋さん' },
+    { id: '管理職', label: '管理職（主任・師長）', icon: '👑', character: '伊藤主任' }
   ];
 
   return (
@@ -618,22 +628,48 @@ export default function DashboardPage() {
           {activeTab === 'guide' && (
             <div className="space-y-6 p-6">
             
-            {/* ストーリーテリング要素 - 田中さんの評価ジャーニー */}
+            {/* 世代別評価ストーリー */}
             <Card className="border-2 border-indigo-300 bg-gradient-to-r from-indigo-50 via-purple-50 to-blue-50">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-xl">
                   <span className="text-2xl">🌟</span>
-                  田中さんの1年間評価ストーリー
+                  世代別 1年間評価ストーリー
                 </CardTitle>
                 <CardDescription className="text-gray-700">
-                  新人職員でも評価の流れが直感的にわかるように、実際の事例で説明します
+                  あなたの経験年数に合わせたストーリーで、評価の流れを直感的に理解できます
                 </CardDescription>
+                
+                {/* 世代別タブナビゲーション */}
+                <div className="flex flex-wrap gap-2 mt-4">
+                  {storyTabs.map((tab) => (
+                    <button
+                      key={tab.id}
+                      onClick={() => setStoryActiveTab(tab.id)}
+                      className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                        storyActiveTab === tab.id
+                          ? 'bg-indigo-600 text-white shadow-md'
+                          : 'bg-white text-gray-700 hover:bg-indigo-50'
+                      }`}
+                    >
+                      <span className="mr-1">{tab.icon}</span>
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
-                  {/* タイムライン形式のストーリー */}
-                  <div className="relative">
-                    <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-indigo-300"></div>
+                  {/* 世代別ストーリーコンテンツ */}
+                  {storyActiveTab === '新人' && (
+                    <div>
+                      <div className="mb-4 p-3 bg-green-50 rounded-lg border-l-4 border-green-500">
+                        <h3 className="font-semibold text-green-900">🌱 田中さん（新卒看護師・1年目）</h3>
+                        <p className="text-sm text-green-700 mt-1">循環器病棟配属。基本業務を覚えながら、評価制度も一から学んでいきます。</p>
+                      </div>
+                      
+                      {/* タイムライン形式のストーリー */}
+                      <div className="relative">
+                        <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-indigo-300"></div>
                     
                     <div className="space-y-8">
                       {/* 4月 - 入職 */}
@@ -870,14 +906,391 @@ export default function DashboardPage() {
                     </div>
                   </div>
                   
-                  {/* まとめ */}
-                  <div className="bg-gradient-to-r from-green-100 to-blue-100 p-4 rounded-lg border-2 border-green-300">
-                    <h4 className="font-semibold text-green-800 mb-2">🎓 田中さんから後輩へのメッセージ</h4>
-                    <p className="text-sm text-gray-700 italic">
-                      "最初は難しそうに見えた評価制度も、実際は自分の成長を確認できる良い機会でした。
-                      年間を通じて段階的に評価されるので、焦らず一歩ずつ成長していけば大丈夫です！"
-                    </p>
-                  </div>
+                      {/* まとめ */}
+                      <div className="bg-gradient-to-r from-green-100 to-blue-100 p-4 rounded-lg border-2 border-green-300">
+                        <h4 className="font-semibold text-green-800 mb-2">🎓 田中さんから後輩へのメッセージ</h4>
+                        <p className="text-sm text-gray-700 italic">
+                          "最初は難しそうに見えた評価制度も、実際は自分の成長を確認できる良い機会でした。
+                          年間を通じて段階的に評価されるので、焦らず一歩ずつ成長していけば大丈夫です！"
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 一般（2-3年目）佐藤さんのストーリー */}
+                  {storyActiveTab === '一般' && (
+                    <div>
+                      <div className="mb-4 p-3 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                        <h3 className="font-semibold text-blue-900">🌿 佐藤さん（一般看護師・3年目）</h3>
+                        <p className="text-sm text-blue-700 mt-1">プリセプター業務開始。後輩指導と専門性向上に励んでいます。</p>
+                      </div>
+                      
+                      <div className="relative">
+                        <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-blue-300"></div>
+                        
+                        <div className="space-y-8">
+                          <div className="flex gap-6">
+                            <div className="relative z-10 flex items-center justify-center w-16 h-16 bg-orange-500 text-white rounded-full shadow-lg">
+                              <div className="text-center">
+                                <div className="text-xs font-bold">3月</div>
+                                <div className="text-xs">技術</div>
+                              </div>
+                            </div>
+                            <div className="flex-1 p-4 bg-orange-50 rounded-lg border-l-4 border-orange-500">
+                              <h4 className="font-semibold text-orange-900 mb-2">🎯 3年目の技術評価</h4>
+                              <p className="text-sm text-gray-700 mb-3">
+                                佐藤さんは今年からプリセプターとして新人指導も担当。
+                                専門技術に加えて指導力も評価の対象になりました。
+                              </p>
+                              <div className="grid grid-cols-2 gap-2 mb-3">
+                                <div className="bg-white p-2 rounded text-xs">
+                                  <div className="font-medium text-green-700">法人統一項目</div>
+                                  <div>技術+指導力: 42/50点</div>
+                                </div>
+                                <div className="bg-white p-2 rounded text-xs">
+                                  <div className="font-medium text-blue-700">施設特化項目</div>
+                                  <div>循環器専門: 16/20点</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="flex gap-6">
+                            <div className="relative z-10 flex items-center justify-center w-16 h-16 bg-yellow-500 text-white rounded-full shadow-lg">
+                              <div className="text-center">
+                                <div className="text-xs font-bold">4月</div>
+                                <div className="text-xs">結果</div>
+                              </div>
+                            </div>
+                            <div className="flex-1 p-4 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
+                              <h4 className="font-semibold text-yellow-900 mb-2">🏆 佐藤さんの総合評価</h4>
+                              
+                              <div className="bg-white p-3 rounded mb-3 border-2 border-orange-200">
+                                <div className="text-xs font-semibold text-orange-700 mb-2">📊 STEP 1: 100点満点での集計</div>
+                                <div className="text-center">
+                                  <div className="text-xl font-bold text-gray-800">合計 82/100点</div>
+                                </div>
+                              </div>
+                              
+                              <div className="bg-gradient-to-r from-yellow-100 to-orange-100 p-3 rounded mb-3 border-2 border-yellow-400">
+                                <div className="text-xs font-semibold text-orange-800 mb-2">✨ 2軸評価結果</div>
+                                <div className="grid grid-cols-2 gap-4 mb-3">
+                                  <div className="text-center">
+                                    <div className="text-xs text-gray-600">施設内評価</div>
+                                    <div className="text-2xl font-bold text-yellow-600">S</div>
+                                    <div className="text-xs">150名中12位（上位8%）</div>
+                                  </div>
+                                  <div className="text-center">
+                                    <div className="text-xs text-gray-600">法人内評価</div>
+                                    <div className="text-2xl font-bold text-green-600">A</div>
+                                    <div className="text-xs">300名中48位（上位16%）</div>
+                                  </div>
+                                </div>
+                                <div className="text-center p-3 bg-white rounded">
+                                  <div className="text-3xl font-bold text-yellow-600">S評価</div>
+                                  <div className="text-xs text-gray-700 mt-1">施設内S × 法人内A = 総合S評価</div>
+                                </div>
+                              </div>
+                              
+                              <div className="bg-white p-3 rounded border-l-4 border-yellow-400">
+                                <div className="text-xs text-gray-600 mb-1">💭 佐藤さんの気持ち</div>
+                                <p className="text-sm italic">
+                                  "プリセプターとしての指導力が評価されて嬉しい！3年目になって責任も増えたけど、
+                                  その分評価も高くなるんですね。後輩指導にもっと力を入れようと思います。"
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 中堅（4-10年目）山田さんのストーリー */}
+                  {storyActiveTab === '中堅' && (
+                    <div>
+                      <div className="mb-4 p-3 bg-green-50 rounded-lg border-l-4 border-green-500">
+                        <h3 className="font-semibold text-green-900">🌳 山田さん（中堅看護師・7年目）</h3>
+                        <p className="text-sm text-green-700 mt-1">リーダー業務、QC活動主導、研修講師として活躍中。</p>
+                      </div>
+                      
+                      <div className="relative">
+                        <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-green-300"></div>
+                        
+                        <div className="space-y-8">
+                          <div className="flex gap-6">
+                            <div className="relative z-10 flex items-center justify-center w-16 h-16 bg-purple-500 text-white rounded-full shadow-lg">
+                              <div className="text-center">
+                                <div className="text-xs font-bold">3月</div>
+                                <div className="text-xs">技術</div>
+                              </div>
+                            </div>
+                            <div className="flex-1 p-4 bg-purple-50 rounded-lg border-l-4 border-purple-500">
+                              <h4 className="font-semibold text-purple-900 mb-2">🎯 中堅としての技術評価</h4>
+                              <p className="text-sm text-gray-700 mb-3">
+                                山田さんは認定看護師資格も取得し、病棟のQC活動リーダーとして活動。
+                                高度な専門技術と後輩育成力が評価のポイントです。
+                              </p>
+                              <div className="grid grid-cols-2 gap-2 mb-3">
+                                <div className="bg-white p-2 rounded text-xs">
+                                  <div className="font-medium text-green-700">法人統一項目</div>
+                                  <div>高度技術+教育: 46/50点</div>
+                                </div>
+                                <div className="bg-white p-2 rounded text-xs">
+                                  <div className="font-medium text-blue-700">施設特化項目</div>
+                                  <div>専門資格活用: 18/20点</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="flex gap-6">
+                            <div className="relative z-10 flex items-center justify-center w-16 h-16 bg-yellow-500 text-white rounded-full shadow-lg">
+                              <div className="text-center">
+                                <div className="text-xs font-bold">4月</div>
+                                <div className="text-xs">結果</div>
+                              </div>
+                            </div>
+                            <div className="flex-1 p-4 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
+                              <h4 className="font-semibold text-yellow-900 mb-2">🏆 山田さんの総合評価</h4>
+                              
+                              <div className="bg-white p-3 rounded mb-3 border-2 border-orange-200">
+                                <div className="text-xs font-semibold text-orange-700 mb-2">📊 STEP 1: 100点満点での集計</div>
+                                <div className="text-center">
+                                  <div className="text-xl font-bold text-gray-800">合計 88/100点</div>
+                                </div>
+                              </div>
+                              
+                              <div className="bg-gradient-to-r from-yellow-100 to-orange-100 p-3 rounded mb-3 border-2 border-yellow-400">
+                                <div className="text-xs font-semibold text-orange-800 mb-2">✨ 2軸評価結果</div>
+                                <div className="grid grid-cols-2 gap-4 mb-3">
+                                  <div className="text-center">
+                                    <div className="text-xs text-gray-600">施設内評価</div>
+                                    <div className="text-2xl font-bold text-green-600">A</div>
+                                    <div className="text-xs">150名中22位（上位15%）</div>
+                                  </div>
+                                  <div className="text-center">
+                                    <div className="text-xs text-gray-600">法人内評価</div>
+                                    <div className="text-2xl font-bold text-yellow-600">S</div>
+                                    <div className="text-xs">300名中18位（上位6%）</div>
+                                  </div>
+                                </div>
+                                <div className="text-center p-3 bg-white rounded">
+                                  <div className="text-3xl font-bold text-yellow-600">S評価</div>
+                                  <div className="text-xs text-gray-700 mt-1">施設内A × 法人内S = 総合S評価</div>
+                                </div>
+                              </div>
+                              
+                              <div className="bg-white p-3 rounded border-l-4 border-yellow-400">
+                                <div className="text-xs text-gray-600 mb-1">💭 山田さんの気持ち</div>
+                                <p className="text-sm italic">
+                                  "法人全体で上位6%に入れたのは、認定看護師として法人内研修で講師をしたことが
+                                  評価されたのかな。中堅として専門性と教育力の両方が求められるけど、やりがいを感じます！"
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ベテラン（11年以上）高橋さんのストーリー */}
+                  {storyActiveTab === 'ベテラン' && (
+                    <div>
+                      <div className="mb-4 p-3 bg-purple-50 rounded-lg border-l-4 border-purple-500">
+                        <h3 className="font-semibold text-purple-900">🎋 高橋さん（ベテラン看護師・15年目）</h3>
+                        <p className="text-sm text-purple-700 mt-1">専門看護師として病棟教育担当。法人内での専門性が高く評価されています。</p>
+                      </div>
+                      
+                      <div className="relative">
+                        <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-purple-300"></div>
+                        
+                        <div className="space-y-8">
+                          <div className="flex gap-6">
+                            <div className="relative z-10 flex items-center justify-center w-16 h-16 bg-indigo-500 text-white rounded-full shadow-lg">
+                              <div className="text-center">
+                                <div className="text-xs font-bold">3月</div>
+                                <div className="text-xs">技術</div>
+                              </div>
+                            </div>
+                            <div className="flex-1 p-4 bg-indigo-50 rounded-lg border-l-4 border-indigo-500">
+                              <h4 className="font-semibold text-indigo-900 mb-2">🎯 ベテランとしての技術評価</h4>
+                              <p className="text-sm text-gray-700 mb-3">
+                                高橋さんは専門看護師として、法人内の教育プログラム開発も担当。
+                                15年の経験を活かした高度な専門性と組織貢献が評価されます。
+                              </p>
+                              <div className="grid grid-cols-2 gap-2 mb-3">
+                                <div className="bg-white p-2 rounded text-xs">
+                                  <div className="font-medium text-green-700">法人統一項目</div>
+                                  <div>専門性+組織貢献: 48/50点</div>
+                                </div>
+                                <div className="bg-white p-2 rounded text-xs">
+                                  <div className="font-medium text-blue-700">施設特化項目</div>
+                                  <div>教育プログラム: 19/20点</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="flex gap-6">
+                            <div className="relative z-10 flex items-center justify-center w-16 h-16 bg-yellow-500 text-white rounded-full shadow-lg">
+                              <div className="text-center">
+                                <div className="text-xs font-bold">4月</div>
+                                <div className="text-xs">結果</div>
+                              </div>
+                            </div>
+                            <div className="flex-1 p-4 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
+                              <h4 className="font-semibold text-yellow-900 mb-2">🏆 高橋さんの総合評価</h4>
+                              
+                              <div className="bg-white p-3 rounded mb-3 border-2 border-orange-200">
+                                <div className="text-xs font-semibold text-orange-700 mb-2">📊 STEP 1: 100点満点での集計</div>
+                                <div className="text-center">
+                                  <div className="text-xl font-bold text-gray-800">合計 92/100点</div>
+                                </div>
+                              </div>
+                              
+                              <div className="bg-gradient-to-r from-yellow-100 to-orange-100 p-3 rounded mb-3 border-2 border-yellow-400">
+                                <div className="text-xs font-semibold text-orange-800 mb-2">✨ 2軸評価結果</div>
+                                <div className="grid grid-cols-2 gap-4 mb-3">
+                                  <div className="text-center">
+                                    <div className="text-xs text-gray-600">施設内評価</div>
+                                    <div className="text-2xl font-bold text-yellow-600">S</div>
+                                    <div className="text-xs">150名中3位（上位2%）</div>
+                                  </div>
+                                  <div className="text-center">
+                                    <div className="text-xs text-gray-600">法人内評価</div>
+                                    <div className="text-2xl font-bold text-yellow-600">S</div>
+                                    <div className="text-xs">300名中8位（上位3%）</div>
+                                  </div>
+                                </div>
+                                <div className="text-center p-3 bg-white rounded">
+                                  <div className="text-3xl font-bold text-orange-600">S+評価</div>
+                                  <div className="text-xs text-gray-700 mt-1">施設内S × 法人内S = 総合S+評価</div>
+                                </div>
+                                <div className="mt-2 p-2 bg-orange-50 rounded text-xs">
+                                  <span className="font-semibold text-orange-800">S+評価の意味：</span>
+                                  <span className="text-orange-700">
+                                    「法人の宝」級の職員。専門性と組織貢献の両方で最高レベル
+                                  </span>
+                                </div>
+                              </div>
+                              
+                              <div className="bg-white p-3 rounded border-l-4 border-yellow-400">
+                                <div className="text-xs text-gray-600 mb-1">💭 高橋さんの気持ち</div>
+                                <p className="text-sm italic">
+                                  "15年間積み重ねてきた経験と専門性が最高の形で評価されて感無量です。
+                                  S+評価は法人内でも数名しかいない。この評価に恥じないよう、
+                                  後輩たちの成長支援にもっと力を注いでいきたいと思います。"
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 管理職（主任・師長）伊藤主任のストーリー */}
+                  {storyActiveTab === '管理職' && (
+                    <div>
+                      <div className="mb-4 p-3 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
+                        <h3 className="font-semibold text-yellow-900">👑 伊藤主任（循環器病棟主任・管理職3年目）</h3>
+                        <p className="text-sm text-yellow-700 mt-1">管理職用評価シートでマネジメント業務が評価されます。</p>
+                      </div>
+                      
+                      <div className="relative">
+                        <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-yellow-300"></div>
+                        
+                        <div className="space-y-8">
+                          <div className="flex gap-6">
+                            <div className="relative z-10 flex items-center justify-center w-16 h-16 bg-red-500 text-white rounded-full shadow-lg">
+                              <div className="text-center">
+                                <div className="text-xs font-bold">3月</div>
+                                <div className="text-xs">管理</div>
+                              </div>
+                            </div>
+                            <div className="flex-1 p-4 bg-red-50 rounded-lg border-l-4 border-red-500">
+                              <h4 className="font-semibold text-red-900 mb-2">🎯 管理職としての評価</h4>
+                              <p className="text-sm text-gray-700 mb-3">
+                                伊藤主任は管理職用の特別な評価シートを使用。
+                                スタッフ時代の技術評価に加え、マネジメント能力が大きなウェイトを占めます。
+                              </p>
+                              <div className="bg-white p-3 rounded mb-3">
+                                <h5 className="text-xs font-semibold text-red-700 mb-2">管理職用評価項目</h5>
+                                <div className="grid grid-cols-2 gap-2 text-xs">
+                                  <div className="p-2 bg-red-50 rounded">
+                                    <div className="font-medium">スタッフ育成</div>
+                                    <div>18/20点</div>
+                                  </div>
+                                  <div className="p-2 bg-red-50 rounded">
+                                    <div className="font-medium">病棟運営</div>
+                                    <div>17/20点</div>
+                                  </div>
+                                  <div className="p-2 bg-red-50 rounded">
+                                    <div className="font-medium">数値管理</div>
+                                    <div>15/20点</div>
+                                  </div>
+                                  <div className="p-2 bg-red-50 rounded">
+                                    <div className="font-medium">専門技術</div>
+                                    <div>16/20点</div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="flex gap-6">
+                            <div className="relative z-10 flex items-center justify-center w-16 h-16 bg-yellow-500 text-white rounded-full shadow-lg">
+                              <div className="text-center">
+                                <div className="text-xs font-bold">4月</div>
+                                <div className="text-xs">結果</div>
+                              </div>
+                            </div>
+                            <div className="flex-1 p-4 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
+                              <h4 className="font-semibold text-yellow-900 mb-2">🏆 伊藤主任の総合評価</h4>
+                              
+                              <div className="bg-white p-3 rounded mb-3 border-2 border-orange-200">
+                                <div className="text-xs font-semibold text-orange-700 mb-2">📊 管理職評価（100点満点）</div>
+                                <div className="text-center">
+                                  <div className="text-xl font-bold text-gray-800">合計 86/100点</div>
+                                </div>
+                              </div>
+                              
+                              <div className="bg-gradient-to-r from-yellow-100 to-orange-100 p-3 rounded mb-3 border-2 border-yellow-400">
+                                <div className="text-xs font-semibold text-orange-800 mb-2">✨ 管理職向け2軸評価</div>
+                                <div className="grid grid-cols-2 gap-4 mb-3">
+                                  <div className="text-center">
+                                    <div className="text-xs text-gray-600">施設内管理職評価</div>
+                                    <div className="text-2xl font-bold text-green-600">A</div>
+                                    <div className="text-xs">主任・師長12名中4位</div>
+                                  </div>
+                                  <div className="text-center">
+                                    <div className="text-xs text-gray-600">法人内管理職評価</div>
+                                    <div className="text-2xl font-bold text-green-600">A</div>
+                                    <div className="text-xs">法人管理職45名中12位</div>
+                                  </div>
+                                </div>
+                                <div className="text-center p-3 bg-white rounded">
+                                  <div className="text-3xl font-bold text-yellow-600">A+評価</div>
+                                  <div className="text-xs text-gray-700 mt-1">施設内A × 法人内A = 総合A+評価</div>
+                                </div>
+                              </div>
+                              
+                              <div className="bg-white p-3 rounded border-l-4 border-yellow-400">
+                                <div className="text-xs text-gray-600 mb-1">💭 伊藤主任の気持ち</div>
+                                <p className="text-sm italic">
+                                  "管理職になってから評価の視点が大きく変わりました。個人の技術よりも、
+                                  いかにスタッフを成長させ、病棟全体のパフォーマンスを上げるかが重要。
+                                  まだまだ学ぶことが多いですが、やりがいのある仕事です。"
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
