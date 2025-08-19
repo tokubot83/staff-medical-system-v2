@@ -38,12 +38,12 @@ export interface ItemSet {
   totalPoints: number; // 合計点
 }
 
-// 経験レベル定義
+// 経験レベル定義（面談制度と統一）
 export const experienceLevels = {
   new: '新人（1年目）',
-  junior: '初級（2-3年目）',
-  midlevel: '中級（4-7年目）',
-  veteran: 'ベテラン（8年目以上）',
+  junior: '若手（2-3年目）',        // 面談制度「一般」と統一
+  midlevel: '中堅（4-10年目）',      // 面談制度と年数統一
+  veteran: 'ベテラン（11年目以上）', // 面談制度と年数統一  
   chief: '主任級',
   manager: '師長級'
 };
