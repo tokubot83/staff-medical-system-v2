@@ -2171,6 +2171,38 @@ function SettingsTab(): React.ReactElement {
   )
 }
 
+// 履歴・分析タブコンポーネント
+interface HistoryAnalysisTabProps {
+  interviews: Interview[]
+}
+
+function HistoryAnalysisTab({ interviews }: HistoryAnalysisTabProps): React.ReactElement {
+  return (
+    <div className={styles.historyContainer}>
+      <h2>面談履歴・分析</h2>
+      <div className={styles.analysisContent}>
+        <div className={styles.statsGrid}>
+          <div className={styles.statCard}>
+            <h3>実施済み面談</h3>
+            <p className={styles.statValue}>{interviews.filter(i => i.status === 'completed').length}</p>
+          </div>
+          <div className={styles.statCard}>
+            <h3>予定面談</h3>
+            <p className={styles.statValue}>{interviews.filter(i => i.status === 'scheduled').length}</p>
+          </div>
+          <div className={styles.statCard}>
+            <h3>総面談数</h3>
+            <p className={styles.statValue}>{interviews.length}</p>
+          </div>
+        </div>
+        <div className={styles.comingSoon}>
+          <p>詳細な分析機能は現在開発中です</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function InterviewsPage() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
