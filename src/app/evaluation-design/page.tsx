@@ -336,7 +336,7 @@ export default function EvaluationDesignPage() {
           </Alert>
         )}
 
-        {/* 年間タイムライン（横スクロール） */}
+        {/* 年間タイムライン（縦表示） */}
         <Card className="mb-6">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -348,60 +348,173 @@ export default function EvaluationDesignPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto pb-4">
-              <div className="flex gap-4 min-w-max">
-                {yearSchedule.map((month) => (
-                  <Card key={month.month} className={`min-w-64 ${getMonthCardClass(month)}`}>
+            <div className="space-y-4">
+              {yearSchedule.map((month, index) => {
+                const isExpanded = month.status === 'current';
+                const taskProgress = month.tasks.length > 0 
+                  ? Math.round((month.tasks.filter(t => t.completed).length / month.tasks.length) * 100)
+                  : 0;
+
+                return (
+                  <Card key={month.month} className={`transition-all ${getMonthCardClass(month)}`}>
                     <CardHeader className="pb-3">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
+                      <div className="flex items-center justify-between cursor-pointer">
+                        <div className="flex items-center gap-3">
                           {getStatusIcon(month.status)}
-                          <h3 className="font-bold">{month.name}</h3>
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <h3 className="font-bold text-lg">{month.name}</h3>
+                              {month.highlight && (
+                                <Badge className="bg-purple-600">重要</Badge>
+                              )}
+                            </div>
+                            {month.keyTasks && (
+                              <div className="text-sm text-purple-600 font-medium mt-1">
+                                {month.keyTasks[0]}
+                              </div>
+                            )}
+                          </div>
                         </div>
-                        {month.highlight && (
-                          <Badge className="bg-purple-600">重要</Badge>
-                        )}
+                        <div className="flex items-center gap-3">
+                          {month.tasks.length > 0 && (
+                            <div className="text-right">
+                              <div className="text-sm font-medium">{taskProgress}%</div>
+                              <div className="text-xs text-gray-500">
+                                {month.tasks.filter(t => t.completed).length}/{month.tasks.length} 完了
+                              </div>
+                            </div>
+                          )}
+                          <ChevronRight className={`h-5 w-5 transition-transform ${
+                            isExpanded ? 'rotate-90' : ''
+                          }`} />
+                        </div>
                       </div>
-                      {month.keyTasks && (
-                        <div className="text-xs text-purple-600 font-medium">
-                          {month.keyTasks[0]}
-                        </div>
+                      
+                      {/* 進捗バー */}
+                      {month.tasks.length > 0 && (
+                        <Progress value={taskProgress} className="mt-3 h-2" />
                       )}
                     </CardHeader>
-                    <CardContent className="pt-0">
-                      {month.tasks.length > 0 ? (
-                        <div className="space-y-1">
-                          {month.tasks.slice(0, 3).map((task, idx) => (
-                            <div key={idx} className="flex items-center gap-2 text-xs">
+
+                    {/* 展開時の詳細表示 */}
+                    {isExpanded && (
+                      <CardContent className="pt-0">
+                        <div className="space-y-4">
+                          {/* タスクリスト */}
+                          <div>
+                            <h4 className="font-semibold mb-3">タスク一覧</h4>
+                            <div className="space-y-3">
+                              {month.tasks.map((task, idx) => (
+                                <div key={idx} className="flex items-center justify-between p-3 rounded-lg border">
+                                  <div className="flex items-center gap-3">
+                                    <div className={`w-3 h-3 rounded-full ${
+                                      task.completed ? 'bg-green-500' : 
+                                      task.urgent ? 'bg-red-500' : 'bg-gray-300'
+                                    }`} />
+                                    <div>
+                                      <span className={`${
+                                        task.completed ? 'line-through text-gray-500' : 
+                                        task.urgent ? 'font-semibold text-red-700' : ''
+                                      }`}>
+                                        {task.title}
+                                      </span>
+                                      {task.urgent && !task.completed && (
+                                        <Badge variant="destructive" className="ml-2 text-xs">緊急</Badge>
+                                      )}
+                                    </div>
+                                  </div>
+                                  
+                                  {/* タスクアクション */}
+                                  <div className="flex gap-2">
+                                    {!task.completed && task.urgent && (
+                                      <Button size="sm" variant="outline">
+                                        開始
+                                      </Button>
+                                    )}
+                                    {task.completed && (
+                                      <Button size="sm" variant="ghost">
+                                        <Eye className="h-4 w-4" />
+                                      </Button>
+                                    )}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* クイックアクション */}
+                          <div>
+                            <h4 className="font-semibold mb-3">クイックアクション</h4>
+                            <div className="grid grid-cols-2 gap-3">
+                              {currentMonth === 1 && (
+                                <Link href="/evaluation-design/wizard">
+                                  <Button className="w-full justify-start">
+                                    <Settings className="h-4 w-4 mr-2" />
+                                    評価設計ウィザード
+                                  </Button>
+                                </Link>
+                              )}
+                              {(currentMonth === 6 || currentMonth === 12) && (
+                                <>
+                                  <Button variant="outline" className="w-full justify-start">
+                                    <Upload className="h-4 w-4 mr-2" />
+                                    データ取込
+                                  </Button>
+                                  <Button variant="outline" className="w-full justify-start">
+                                    <FileSpreadsheet className="h-4 w-4 mr-2" />
+                                    テンプレート
+                                  </Button>
+                                </>
+                              )}
+                              {currentMonth === 3 && (
+                                <Button variant="outline" className="w-full justify-start">
+                                  <FileCheck className="h-4 w-4 mr-2" />
+                                  技術評価開始
+                                </Button>
+                              )}
+                              <Link href="/evaluation-design/timeline">
+                                <Button variant="ghost" className="w-full justify-start">
+                                  <Calendar className="h-4 w-4 mr-2" />
+                                  詳細スケジュール
+                                </Button>
+                              </Link>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    )}
+
+                    {/* 折りたたみ時のサマリー表示 */}
+                    {!isExpanded && month.tasks.length > 0 && (
+                      <CardContent className="pt-0">
+                        <div className="text-sm text-gray-600">
+                          {month.tasks.slice(0, 2).map((task, idx) => (
+                            <div key={idx} className="flex items-center gap-2 mb-1">
                               <div className={`w-1.5 h-1.5 rounded-full ${
                                 task.completed ? 'bg-green-500' : 'bg-gray-300'
                               }`} />
-                              <span className={task.completed ? 'line-through text-gray-500' : ''}>
-                                {task.title.length > 20 ? task.title.substring(0, 20) + '...' : task.title}
+                              <span className={task.completed ? 'line-through' : ''}>
+                                {task.title.length > 40 ? task.title.substring(0, 40) + '...' : task.title}
                               </span>
                             </div>
                           ))}
-                          {month.tasks.length > 3 && (
-                            <div className="text-xs text-gray-500">
-                              他{month.tasks.length - 3}件...
+                          {month.tasks.length > 2 && (
+                            <div className="text-xs text-gray-400 ml-4">
+                              他{month.tasks.length - 2}件...
                             </div>
                           )}
                         </div>
-                      ) : (
-                        <div className="text-xs text-gray-400">予定なし</div>
-                      )}
-                      
-                      {month.status === 'current' && (
-                        <Link href="/evaluation-design/timeline">
-                          <Button size="sm" className="w-full mt-3">
-                            詳細を見る
-                          </Button>
-                        </Link>
-                      )}
-                    </CardContent>
+                      </CardContent>
+                    )}
+
+                    {!isExpanded && month.tasks.length === 0 && (
+                      <CardContent className="pt-0">
+                        <div className="text-sm text-gray-400">予定されているタスクはありません</div>
+                      </CardContent>
+                    )}
                   </Card>
-                ))}
-              </div>
+                );
+              })}
             </div>
           </CardContent>
         </Card>
