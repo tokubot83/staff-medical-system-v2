@@ -194,9 +194,9 @@ export default function EvaluationDesignPage() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'completed':
-        return <CheckCircle className="h-4 w-4 text-green-600" />;
+        return <CheckCircle className="h-5 w-5 text-gray-500" />;
       case 'current':
-        return <Clock className="h-4 w-4 text-blue-600" />;
+        return <Clock className="h-6 w-6 text-blue-600 animate-pulse drop-shadow-lg" />;
       case 'upcoming':
         return <AlertCircle className="h-4 w-4 text-gray-400" />;
       default:
@@ -206,15 +206,18 @@ export default function EvaluationDesignPage() {
 
   const getMonthCardClass = (month: MonthData) => {
     if (month.status === 'current') {
-      return 'border-2 border-blue-500 bg-gradient-to-br from-blue-50 to-indigo-50 shadow-xl';
-    }
-    if (month.highlight) {
-      return 'border-2 border-purple-400 bg-gradient-to-br from-purple-50 to-pink-50 shadow-lg';
+      // 当月は強烈に強調：青い光る境界線と鮮やかなグラデーション
+      return 'border-4 border-blue-500 bg-gradient-to-br from-blue-100 via-indigo-50 to-purple-100 shadow-2xl ring-2 ring-blue-200 ring-opacity-50';
     }
     if (month.status === 'completed') {
-      return 'border border-green-300 bg-gradient-to-br from-green-50 to-emerald-50 shadow-md';
+      // 完了した月はグレー系で落ち着いた表示
+      return 'border border-gray-300 bg-gradient-to-br from-gray-100 to-slate-100 shadow-sm opacity-75';
     }
-    return 'border border-gray-200 bg-gradient-to-br from-white to-gray-50';
+    if (month.highlight && month.status !== 'completed') {
+      // 重要な未来の月は紫系
+      return 'border-2 border-purple-400 bg-gradient-to-br from-purple-50 to-pink-50 shadow-lg';
+    }
+    return 'border border-gray-200 bg-gradient-to-br from-white to-gray-50 shadow-sm';
   };
 
   return (
@@ -242,21 +245,25 @@ export default function EvaluationDesignPage() {
 
         {/* 今月のタスク（大きく表示） */}
         {currentMonthData && currentMonthData.tasks.length > 0 && (
-          <Card className="mb-6 border-2 border-blue-500 bg-gradient-to-r from-blue-50 to-indigo-50">
+          <Card className="mb-6 border-4 border-blue-600 bg-gradient-to-r from-blue-100 via-indigo-100 to-purple-100 shadow-2xl ring-4 ring-blue-200 ring-opacity-30">
             <CardHeader>
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-3 bg-blue-500 rounded-full">
-                    <Calendar className="h-6 w-6 text-white" />
+                <div className="flex items-center gap-4">
+                  <div className="p-4 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-full shadow-lg animate-pulse">
+                    <Calendar className="h-8 w-8 text-white drop-shadow-lg" />
                   </div>
                   <div>
-                    <CardTitle className="text-2xl">{currentMonthData.name}の重要タスク</CardTitle>
-                    <CardDescription className="text-lg">
+                    <CardTitle className="text-3xl font-bold bg-gradient-to-r from-blue-700 to-indigo-800 bg-clip-text text-transparent">
+                      {currentMonthData.name}の重要タスク
+                    </CardTitle>
+                    <CardDescription className="text-xl font-medium text-indigo-700">
                       {currentMonthData.keyTasks ? currentMonthData.keyTasks[0] : '通常業務'}
                     </CardDescription>
                   </div>
                 </div>
-                <Badge className="bg-blue-600 text-white px-4 py-2">実施中</Badge>
+                <Badge className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white px-6 py-3 text-lg font-semibold shadow-lg animate-pulse">
+                  🎯 実施中
+                </Badge>
               </div>
             </CardHeader>
             <CardContent>
@@ -378,15 +385,34 @@ export default function EvaluationDesignPage() {
                           {getStatusIcon(month.status)}
                           <div>
                             <div className="flex items-center gap-2">
-                              <h3 className="font-bold text-lg">{month.name}</h3>
-                              {month.highlight && (
-                                <Badge className="bg-purple-600">重要</Badge>
+                              <h3 className={`font-bold text-lg ${
+                                month.status === 'current' 
+                                  ? 'text-blue-800 text-2xl' 
+                                  : month.status === 'completed' 
+                                    ? 'text-gray-600' 
+                                    : 'text-gray-800'
+                              }`}>
+                                {month.name}
+                              </h3>
+                              {month.highlight && month.status !== 'completed' && (
+                                <Badge className={month.status === 'current' ? 'bg-blue-600 animate-pulse' : 'bg-purple-600'}>
+                                  重要
+                                </Badge>
+                              )}
+                              {month.status === 'completed' && (
+                                <Badge className="bg-gray-400 text-white">完了</Badge>
                               )}
                             </div>
                             {month.keyTasks && (
                               <div className="flex items-center gap-1 mt-1">
-                                <Star className="w-3 h-3 text-purple-500" />
-                                <div className="text-sm text-purple-600 font-medium">
+                                <Star className={`w-3 h-3 ${
+                                  month.status === 'completed' ? 'text-gray-400' : 
+                                  month.status === 'current' ? 'text-blue-500' : 'text-purple-500'
+                                }`} />
+                                <div className={`text-sm font-medium ${
+                                  month.status === 'completed' ? 'text-gray-500' : 
+                                  month.status === 'current' ? 'text-blue-600' : 'text-purple-600'
+                                }`}>
                                   {month.keyTasks[0]}
                                 </div>
                               </div>
@@ -396,21 +422,37 @@ export default function EvaluationDesignPage() {
                         <div className="flex items-center gap-3">
                           {month.tasks.length > 0 && (
                             <div className="text-right">
-                              <div className="text-sm font-medium">{taskProgress}%</div>
-                              <div className="text-xs text-gray-500">
+                              <div className={`text-sm font-medium ${
+                                month.status === 'current' ? 'text-blue-700 font-bold' : 
+                                month.status === 'completed' ? 'text-gray-500' : 'text-gray-700'
+                              }`}>
+                                {taskProgress}%
+                              </div>
+                              <div className={`text-xs ${
+                                month.status === 'completed' ? 'text-gray-400' : 'text-gray-500'
+                              }`}>
                                 {month.tasks.filter(t => t.completed).length}/{month.tasks.length} 完了
                               </div>
                             </div>
                           )}
                           <ChevronRight className={`h-5 w-5 transition-transform ${
                             isExpanded ? 'rotate-90' : ''
+                          } ${
+                            month.status === 'current' ? 'text-blue-600' : 
+                            month.status === 'completed' ? 'text-gray-400' : 'text-gray-600'
                           }`} />
                         </div>
                       </div>
                       
                       {/* 進捗バー */}
                       {month.tasks.length > 0 && (
-                        <Progress value={taskProgress} className="mt-3 h-2" />
+                        <Progress 
+                          value={taskProgress} 
+                          className={`mt-3 h-3 ${
+                            month.status === 'current' ? 'ring-2 ring-blue-200' : 
+                            month.status === 'completed' ? 'opacity-50' : ''
+                          }`}
+                        />
                       )}
                     </CardHeader>
 
@@ -534,12 +576,20 @@ export default function EvaluationDesignPage() {
                                 <div className="w-5 h-5 border-2 border-gray-300 rounded-full" />
                               )}
                               <span className={`${
-                                task.completed ? 'text-green-700 font-medium' : 'text-gray-700'
+                                task.completed ? 
+                                  month.status === 'completed' ? 'text-gray-600 font-medium' : 'text-green-700 font-medium' 
+                                  : month.status === 'completed' ? 'text-gray-600' : 'text-gray-700'
                               }`}>
                                 {task.title.length > 35 ? task.title.substring(0, 35) + '...' : task.title}
                               </span>
                               {task.completed && (
-                                <Badge className="bg-green-100 text-green-800 text-xs ml-auto">✓</Badge>
+                                <Badge className={`text-xs ml-auto ${
+                                  month.status === 'completed' 
+                                    ? 'bg-gray-200 text-gray-600' 
+                                    : 'bg-green-100 text-green-800'
+                                }`}>
+                                  ✓
+                                </Badge>
                               )}
                             </div>
                           ))}
