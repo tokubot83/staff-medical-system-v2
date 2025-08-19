@@ -158,57 +158,84 @@ export default function EvaluationDesignPage() {
           </Card>
         )}
 
-        {/* クイックアクション */}
+        {/* メイン機能へのアクセス */}
         <div className="mb-6">
           <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
             <Zap className="h-5 w-5 text-yellow-500" />
-            クイックアクション
+            評価管理メニュー
           </h2>
-          <div className="grid grid-cols-4 gap-4">
-            <Link href="/evaluation-design/technical/corporate">
-              <Card className="hover:shadow-xl transition-all cursor-pointer border-2 border-transparent hover:border-blue-400 bg-gradient-to-br from-blue-50 to-blue-100">
-                <CardContent className="p-4 text-center">
-                  <div className="mx-auto mb-2 p-2 bg-blue-500 rounded-full w-fit">
-                    <Shield className="h-6 w-6 text-white" />
+          <div className="grid grid-cols-2 gap-4">
+            {/* 年間スケジュール管理 - 新機能 */}
+            <Link href="/evaluation-design/timeline">
+              <Card className="hover:shadow-xl transition-all cursor-pointer border-2 border-transparent hover:border-purple-400 bg-gradient-to-br from-purple-50 to-indigo-100">
+                <CardContent className="p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="p-3 bg-purple-500 rounded-full">
+                      <Calendar className="h-8 w-8 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-bold text-purple-900 text-lg mb-1">年間スケジュール管理</h3>
+                      <p className="text-sm text-purple-700 mb-2">月別タスクで評価業務を管理</p>
+                      <Badge className="bg-purple-100 text-purple-800">推奨</Badge>
+                    </div>
                   </div>
-                  <h3 className="font-bold text-blue-900 text-sm">法人統一項目</h3>
-                  <p className="text-xs text-blue-700 mt-1">30点分を設定</p>
                 </CardContent>
               </Card>
             </Link>
             
-            <Link href="/evaluation-design/technical/facility">
-              <Card className="hover:shadow-xl transition-all cursor-pointer border-2 border-transparent hover:border-green-400 bg-gradient-to-br from-green-50 to-green-100">
-                <CardContent className="p-4 text-center">
-                  <div className="mx-auto mb-2 p-2 bg-green-500 rounded-full w-fit">
-                    <Building className="h-6 w-6 text-white" />
+            {/* 設計ウィザード - 新機能 */}
+            <Link href="/evaluation-design/wizard">
+              <Card className="hover:shadow-xl transition-all cursor-pointer border-2 border-transparent hover:border-blue-400 bg-gradient-to-br from-blue-50 to-cyan-100">
+                <CardContent className="p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="p-3 bg-blue-500 rounded-full">
+                      <Settings className="h-8 w-8 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-bold text-blue-900 text-lg mb-1">評価設計ウィザード</h3>
+                      <p className="text-sm text-blue-700 mb-2">ステップごとに評価制度を設計</p>
+                      <Badge className="bg-blue-100 text-blue-800">簡単設定</Badge>
+                    </div>
                   </div>
-                  <h3 className="font-bold text-green-900 text-sm">施設特化項目</h3>
-                  <p className="text-xs text-green-700 mt-1">20点分を設定</p>
                 </CardContent>
               </Card>
             </Link>
-            
+          </div>
+          
+          {/* 従来機能（小さく表示） */}
+          <div className="grid grid-cols-4 gap-3 mt-4">
             <Link href="/evaluation-design/questions">
-              <Card className="hover:shadow-xl transition-all cursor-pointer border-2 border-transparent hover:border-purple-400 bg-gradient-to-br from-purple-50 to-purple-100">
-                <CardContent className="p-4 text-center">
-                  <div className="mx-auto mb-2 p-2 bg-purple-500 rounded-full w-fit">
-                    <Sparkles className="h-6 w-6 text-white" />
-                  </div>
-                  <h3 className="font-bold text-purple-900 text-sm">AI動的設問</h3>
-                  <p className="text-xs text-purple-700 mt-1">設問管理</p>
+              <Card className="hover:shadow-lg transition-all cursor-pointer border border-gray-200">
+                <CardContent className="p-3 text-center">
+                  <Sparkles className="h-5 w-5 text-gray-600 mx-auto mb-1" />
+                  <p className="text-xs text-gray-700">AI動的設問</p>
                 </CardContent>
               </Card>
             </Link>
             
             <Link href="/evaluation-design/simulation">
-              <Card className="hover:shadow-xl transition-all cursor-pointer border-2 border-transparent hover:border-orange-400 bg-gradient-to-br from-orange-50 to-orange-100">
-                <CardContent className="p-4 text-center">
-                  <div className="mx-auto mb-2 p-2 bg-orange-500 rounded-full w-fit">
-                    <FlaskConical className="h-6 w-6 text-white" />
-                  </div>
-                  <h3 className="font-bold text-orange-900 text-sm">シミュレーション</h3>
-                  <p className="text-xs text-orange-700 mt-1">影響確認</p>
+              <Card className="hover:shadow-lg transition-all cursor-pointer border border-gray-200">
+                <CardContent className="p-3 text-center">
+                  <FlaskConical className="h-5 w-5 text-gray-600 mx-auto mb-1" />
+                  <p className="text-xs text-gray-700">シミュレーション</p>
+                </CardContent>
+              </Card>
+            </Link>
+            
+            <Link href="/evaluation-design/technical/corporate">
+              <Card className="hover:shadow-lg transition-all cursor-pointer border border-gray-200">
+                <CardContent className="p-3 text-center">
+                  <Shield className="h-5 w-5 text-gray-600 mx-auto mb-1" />
+                  <p className="text-xs text-gray-700">法人統一項目</p>
+                </CardContent>
+              </Card>
+            </Link>
+            
+            <Link href="/evaluation-design/technical/facility">
+              <Card className="hover:shadow-lg transition-all cursor-pointer border border-gray-200">
+                <CardContent className="p-3 text-center">
+                  <Building className="h-5 w-5 text-gray-600 mx-auto mb-1" />
+                  <p className="text-xs text-gray-700">施設特化項目</p>
                 </CardContent>
               </Card>
             </Link>
