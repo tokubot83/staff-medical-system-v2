@@ -5,6 +5,7 @@ import { InterviewType } from '@/types/interview'
 import styles from './InterviewManualSimulator.module.css'
 import { generateV4InterviewSheet } from '@/lib/interview-bank/services/v4-generator'
 import { ExtendedInterviewParams, StaffProfile as ExtendedStaffProfile } from '@/lib/interview-bank/types-extended'
+import { UnifiedInterviewGeneratorService } from '@/lib/interview-bank/services/unified-generator-service'
 import DynamicInterviewSheet from '@/components/interview-bank/DynamicInterviewSheet'
 import { 
   StaffLevel, 
@@ -67,6 +68,20 @@ export default function InterviewManualSimulator() {
     { value: 'grouphome', label: 'グループホーム' },
     { value: 'outpatient', label: '外来' }
   ]
+
+  // getSubTypeFromInterviewTypeヘルパー関数を追加
+  const getSubTypeFromInterviewType = (interviewType: InterviewType): string => {
+    const typeMap: Record<string, string> = {
+      'return_to_work': 'return',
+      'incident_followup': 'incident',
+      'exit_interview': 'exit',
+      'feedback': 'feedback',
+      'career_support': 'career',
+      'workplace_support': 'consultation',
+      'individual_consultation': 'consultation'
+    }
+    return typeMap[interviewType] || interviewType
+  }
 
   const interviewTypes: { value: InterviewType; label: string; description: string; classification: 'regular' | 'special' | 'support' }[] = [
     // 定期面談
@@ -132,20 +147,57 @@ export default function InterviewManualSimulator() {
       }
       setStaffProfile(newStaffProfile)
 
-      // v4-generatorを使用してシートを生成
-      const params: ExtendedInterviewParams = {
-        staff: newStaffProfile,
-        duration: duration,
-        interviewType: interviewType,
-        interviewDate: new Date(),
-        interviewerId: 'simulator',
-        interviewerName: '人事担当者',
-        includePositionQuestions: true,
-        includeFacilityQuestions: true
+      // 面談タイプの分類を判定
+      const classification = interviewTypes.find(t => t.value === interviewType)?.classification || 'regular'
+      
+      let generatedSheet;
+      
+      if (classification === 'regular') {
+        // 定期面談はv4-generatorを使用
+        const params: ExtendedInterviewParams = {
+          staff: newStaffProfile,
+          duration: duration,
+          interviewType: interviewType,
+          interviewDate: new Date(),
+          interviewerId: 'simulator',
+          interviewerName: '人事担当者',
+          includePositionQuestions: true,
+          includeFacilityQuestions: true
+        }
+        console.log('Generating regular interview with v4-generator:', params)
+        generatedSheet = generateV4InterviewSheet(params)
+      } else {
+        // サポート面談・特別面談は統合サービスを使用
+        const unifiedParams = {
+          interviewType: classification as 'support' | 'special',
+          subType: getSubTypeFromInterviewType(interviewType),
+          duration: duration,
+          staffProfile: {
+            staffId: newStaffProfile.id,
+            staffName: newStaffProfile.name,
+            profession: newStaffProfile.profession,
+            experienceLevel: newStaffProfile.experienceLevel,
+            facility: newStaffProfile.facilityType,
+            department: newStaffProfile.department,
+            position: newStaffProfile.position.name,
+            yearsOfService: newStaffProfile.experienceYears,
+            yearsOfExperience: newStaffProfile.experienceYears,
+            hasManagementExperience: ['chief', 'manager'].includes(staffLevel)
+          },
+          reservation: {
+            id: `SIM-RES-${Date.now()}`,
+            type: interviewType,
+            category: classification,
+            duration: duration,
+            scheduledDate: new Date(),
+            consultationDetails: '',
+            urgency: 'medium'
+          }
+        }
+        console.log('Generating support/special interview with unified service:', unifiedParams)
+        generatedSheet = await UnifiedInterviewGeneratorService.generate(unifiedParams)
       }
-
-      console.log('Generating interview with params:', params)
-      const generatedSheet = generateV4InterviewSheet(params)
+      
       console.log('Generated sheet:', generatedSheet)
       
       if (generatedSheet) {
@@ -202,20 +254,56 @@ export default function InterviewManualSimulator() {
       }
       setComparisonStaffProfile(compareProfile)
 
-      // v4-generatorを使用してシートを生成
-      const params: ExtendedInterviewParams = {
-        staff: compareProfile,
-        duration: compareDuration,
-        interviewType: compareInterviewType,
-        interviewDate: new Date(),
-        interviewerId: 'simulator-compare',
-        interviewerName: '人事担当者',
-        includePositionQuestions: true,
-        includeFacilityQuestions: true
+      // 面談タイプの分類を判定
+      const classification = interviewTypes.find(t => t.value === compareInterviewType)?.classification || 'regular'
+      
+      let comparisonSheet;
+      
+      if (classification === 'regular') {
+        // 定期面談はv4-generatorを使用
+        const params: ExtendedInterviewParams = {
+          staff: compareProfile,
+          duration: compareDuration,
+          interviewType: compareInterviewType,
+          interviewDate: new Date(),
+          interviewerId: 'simulator-compare',
+          interviewerName: '人事担当者',
+          includePositionQuestions: true,
+          includeFacilityQuestions: true
+        }
+        console.log('Generating comparison regular interview with v4-generator:', params)
+        comparisonSheet = generateV4InterviewSheet(params)
+      } else {
+        // サポート面談・特別面談は統合サービスを使用
+        const unifiedParams = {
+          interviewType: classification as 'support' | 'special',
+          subType: getSubTypeFromInterviewType(compareInterviewType),
+          duration: compareDuration,
+          staffProfile: {
+            staffId: compareProfile.id,
+            staffName: compareProfile.name,
+            profession: compareProfile.profession,
+            experienceLevel: compareProfile.experienceLevel,
+            facility: compareProfile.facilityType,
+            department: compareProfile.department,
+            position: compareProfile.position.name,
+            yearsOfService: compareProfile.experienceYears,
+            yearsOfExperience: compareProfile.experienceYears,
+            hasManagementExperience: ['chief', 'manager'].includes(compareStaffLevel)
+          },
+          reservation: {
+            id: `SIM-CMP-RES-${Date.now()}`,
+            type: compareInterviewType,
+            category: classification,
+            duration: compareDuration,
+            scheduledDate: new Date(),
+            consultationDetails: '',
+            urgency: 'medium'
+          }
+        }
+        console.log('Generating comparison support/special interview with unified service:', unifiedParams)
+        comparisonSheet = await UnifiedInterviewGeneratorService.generate(unifiedParams)
       }
-
-      console.log('Generating comparison sheet with params:', params)
-      const comparisonSheet = generateV4InterviewSheet(params)
       
       if (comparisonSheet) {
         setComparisonSheet(comparisonSheet)
@@ -242,6 +330,10 @@ export default function InterviewManualSimulator() {
       <div className={styles.header}>
         <h1>🎯 面談マニュアルシミュレーター</h1>
         <p>条件を選択して、実際の面談で使用される質問内容を確認できます</p>
+        <div className={styles.featureNotice}>
+          <span className={styles.badge}>NEW</span>
+          サポート面談（キャリア相談・個別相談・フィードバック）と特別面談（退職・復職・インシデント）に対応しました
+        </div>
       </div>
 
       <div className={styles.controls}>
