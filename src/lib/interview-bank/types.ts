@@ -21,6 +21,60 @@ export type ProfessionType =
 export type InterviewDuration = 15 | 30 | 45 | 60;
 export type QuestionType = 'text' | 'textarea' | 'radio' | 'checkbox' | 'scale' | 'matrix';
 export type MotivationType = 'growth' | 'recognition' | 'stability' | 'teamwork' | 'efficiency' | 'compensation' | 'creativity';
+export type InterviewType = 'regular' | 'support' | 'special';
+
+// バンク用質問型定義（新しい面談用）
+export interface BankQuestion {
+  id: string;
+  text?: string;
+  content?: string;
+  type: QuestionType | 'hybrid' | 'checklist' | 'open';
+  category: string;
+  tags: string[];
+  isRequired?: boolean;
+  required?: boolean;
+  placeholder?: string;
+  options?: string[] | QuestionOption[];
+  scaleLabel?: string;
+  textLabel?: string;
+  textPlaceholder?: string;
+  isDynamic?: boolean;
+  isReadOnly?: boolean;
+  defaultValue?: string;
+}
+
+// バンクセクション定義
+export interface BankSection {
+  id: string;
+  title: string;
+  name?: string;
+  description?: string;
+  duration: number;
+  questions: BankQuestion[];
+  order?: number;
+}
+
+// 生成されたバンクシート
+export interface GeneratedBankSheet {
+  id: string;
+  title: string;
+  type: InterviewType;
+  subType?: string;
+  duration: number;
+  sections: BankSection[];
+  totalQuestions: number;
+  generatedAt: Date;
+  metadata?: Record<string, any>;
+}
+
+// バンク生成パラメータ
+export interface BankGenerationParams {
+  interviewType: InterviewType;
+  duration: number;
+  staffLevel: string;
+  jobRole: string;
+  facilityType: string;
+}
 
 // 経験年数の自動算出関数
 export function calculateExperienceLevel(hireDate: Date): { level: ExperienceLevel; years: number; months: number } {

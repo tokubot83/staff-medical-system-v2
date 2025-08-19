@@ -48,6 +48,41 @@ export default function DynamicInterviewSheet({
   const [completionStatus, setCompletionStatus] = useState<Record<string, boolean>>({});
   const [motivationType, setMotivationType] = useState<MotivationType | null>(null);
   const [autoSaveTimer, setAutoSaveTimer] = useState<NodeJS.Timeout | null>(null);
+  
+  // GeneratedBankSheetからGeneratedInterviewSheetに変換
+  const normalizedSheetData = React.useMemo(() => {
+    // GeneratedBankSheetの場合の変換処理
+    if (!sheetData.sections?.[0]?.sectionId) {
+      return {
+        ...sheetData,
+        sections: sheetData.sections.map((section: any, index: number) => ({
+          sectionId: section.id || `section_${index}`,
+          name: section.title || section.name,
+          description: section.description,
+          type: section.type || 'general',
+          questions: section.questions.map((q: any) => ({
+            questionId: q.id,
+            content: q.text || q.content || q.question,
+            type: q.type,
+            required: q.isRequired || q.required || false,
+            placeholder: q.placeholder,
+            options: q.options?.map((opt: any) => 
+              typeof opt === 'string' 
+                ? { value: opt, label: opt }
+                : opt
+            ),
+            // hybrid質問用の追加フィールド
+            scaleLabel: q.scaleLabel,
+            textLabel: q.textLabel,
+            textPlaceholder: q.textPlaceholder,
+            isReadOnly: q.isReadOnly,
+            defaultValue: q.defaultValue
+          }))
+        }))
+      };
+    }
+    return sheetData;
+  }, [sheetData]);
 
   // 回答を更新
   const updateResponse = (sectionId: string, questionId: string, value: any) => {
@@ -359,11 +394,11 @@ export default function DynamicInterviewSheet({
   // セクション完了状況の更新
   useEffect(() => {
     const newStatus: Record<string, boolean> = {};
-    sheetData.sections.forEach(section => {
+    normalizedSheetData.sections.forEach(section => {
       newStatus[section.sectionId] = checkSectionCompletion(section);
     });
     setCompletionStatus(newStatus);
-  }, [responses]);
+  }, [responses, normalizedSheetData]);
 
   // セクションアイコンを取得
   const getSectionIcon = (sectionType: string) => {
@@ -436,7 +471,7 @@ export default function DynamicInterviewSheet({
             </CardHeader>
             <CardContent className="p-0">
               <nav className="space-y-1 p-4">
-                {sheetData.sections.map((section, index) => {
+                {normalizedSheetData.sections.map((section, index) => {
                   const Icon = getSectionIcon(section.type);
                   const isComplete = completionStatus[section.sectionId];
                   
@@ -515,16 +550,16 @@ export default function DynamicInterviewSheet({
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
-                {React.createElement(getSectionIcon(sheetData.sections[activeSection].type), {
+                {React.createElement(getSectionIcon(normalizedSheetData.sections[activeSection].type), {
                   className: "mr-3 text-blue-600",
                   size: 24
                 })}
-                {sheetData.sections[activeSection].name}
+                {normalizedSheetData.sections[activeSection].name}
               </CardTitle>
             </CardHeader>
             <CardContent>
               {/* 動機タイプ判定セクションの特別処理 */}
-              {sheetData.sections[activeSection].type === 'motivation_assessment' && (
+              {normalizedSheetData.sections[activeSection].type === 'motivation_assessment' && (
                 <Alert className="mb-6">
                   <AlertCircle className="h-4 w-4" />
                   <AlertDescription>
@@ -535,8 +570,8 @@ export default function DynamicInterviewSheet({
 
               {/* 質問の表示 */}
               <div className="space-y-4">
-                {sheetData.sections[activeSection].questions.map(question => 
-                  renderQuestion(question, sheetData.sections[activeSection])
+                {normalizedSheetData.sections[activeSection].questions.map(question => 
+                  renderQuestion(question, normalizedSheetData.sections[activeSection])
                 )}
               </div>
 
@@ -551,8 +586,8 @@ export default function DynamicInterviewSheet({
                   前のセクション
                 </Button>
                 <Button
-                  onClick={() => setActiveSection(Math.min(sheetData.sections.length - 1, activeSection + 1))}
-                  disabled={activeSection === sheetData.sections.length - 1}
+                  onClick={() => setActiveSection(Math.min(normalizedSheetData.sections.length - 1, activeSection + 1))}
+                  disabled={activeSection === normalizedSheetData.sections.length - 1}
                 >
                   次のセクション
                   <ChevronRight className="ml-2" size={16} />
@@ -562,7 +597,7 @@ export default function DynamicInterviewSheet({
           </Card>
 
           {/* コンテキストヘルプ */}
-          {sheetData.sections[activeSection].type === 'skill_evaluation' && (
+          {normalizedSheetData.sections[activeSection].type === 'skill_evaluation' && (
             <Alert className="mt-4">
               <AlertDescription>
                 <strong>評価のポイント:</strong>
