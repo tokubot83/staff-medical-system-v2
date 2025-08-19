@@ -617,6 +617,254 @@ export default function DashboardPage() {
 
           {activeTab === 'guide' && (
             <div className="space-y-6 p-6">
+            
+            {/* ストーリーテリング要素 - 田中さんの評価ジャーニー */}
+            <Card className="border-2 border-indigo-300 bg-gradient-to-r from-indigo-50 via-purple-50 to-blue-50">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-xl">
+                  <span className="text-2xl">🌟</span>
+                  田中さんの1年間評価ストーリー
+                </CardTitle>
+                <CardDescription className="text-gray-700">
+                  新人職員でも評価の流れが直感的にわかるように、実際の事例で説明します
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  {/* タイムライン形式のストーリー */}
+                  <div className="relative">
+                    <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-indigo-300"></div>
+                    
+                    <div className="space-y-8">
+                      {/* 4月 - 入職 */}
+                      <div className="flex gap-6">
+                        <div className="relative z-10 flex items-center justify-center w-16 h-16 bg-green-500 text-white rounded-full shadow-lg">
+                          <div className="text-center">
+                            <div className="text-xs font-bold">4月</div>
+                            <div className="text-xs">入職</div>
+                          </div>
+                        </div>
+                        <div className="flex-1 p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
+                          <h4 className="font-semibold text-green-900 mb-2">👋 田中さん、看護師として入職</h4>
+                          <p className="text-sm text-gray-700 mb-3">
+                            新卒で循環器病棟に配属された田中さん。「評価って難しそう...」と不安でしたが、
+                            先輩から「年間を通じて段階的に評価されるから大丈夫よ」と教えてもらいました。
+                          </p>
+                          <div className="bg-white p-3 rounded border-l-4 border-green-400">
+                            <div className="text-xs text-gray-600 mb-1">💭 田中さんの気持ち</div>
+                            <p className="text-sm italic">"1年目は基本的な業務ができればOKなんですね。安心しました！"</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* 8月 - 夏季査定 */}
+                      <div className="flex gap-6">
+                        <div className="relative z-10 flex items-center justify-center w-16 h-16 bg-blue-500 text-white rounded-full shadow-lg">
+                          <div className="text-center">
+                            <div className="text-xs font-bold">8月</div>
+                            <div className="text-xs">夏季</div>
+                          </div>
+                        </div>
+                        <div className="flex-1 p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                          <h4 className="font-semibold text-blue-900 mb-2">⭐ 初めての組織貢献度評価</h4>
+                          <p className="text-sm text-gray-700 mb-3">
+                            4ヶ月経った田中さん。委員会活動や研修参加を評価されます。
+                            「同期と比較されるのかな？」と心配でしたが、経験年数を考慮した評価でした。
+                          </p>
+                          <div className="grid grid-cols-2 gap-2 mb-3">
+                            <div className="bg-white p-2 rounded text-xs">
+                              <div className="font-medium text-blue-700">施設貢献度</div>
+                              <div>新人指導補助: 8/12.5点</div>
+                            </div>
+                            <div className="bg-white p-2 rounded text-xs">
+                              <div className="font-medium text-purple-700">法人貢献度</div>
+                              <div>法人研修参加: 9/12.5点</div>
+                            </div>
+                          </div>
+                          <div className="bg-white p-3 rounded border-l-4 border-blue-400">
+                            <div className="text-xs text-gray-600 mb-1">💭 田中さんの気持ち</div>
+                            <p className="text-sm italic">"想像していたより評価してもらえました。頑張った甲斐があった！"</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* 12月 - 冬季査定 */}
+                      <div className="flex gap-6">
+                        <div className="relative z-10 flex items-center justify-center w-16 h-16 bg-purple-500 text-white rounded-full shadow-lg">
+                          <div className="text-center">
+                            <div className="text-xs font-bold">12月</div>
+                            <div className="text-xs">冬季</div>
+                          </div>
+                        </div>
+                        <div className="flex-1 p-4 bg-purple-50 rounded-lg border-l-4 border-purple-500">
+                          <h4 className="font-semibold text-purple-900 mb-2">📈 成長が見える中間評価</h4>
+                          <p className="text-sm text-gray-700 mb-3">
+                            8ヶ月目の田中さん。QC活動にも参加し、患者さんからの評価も向上。
+                            成長が数字に表れて、上司からも「この調子で頑張って」と励まされました。
+                          </p>
+                          <div className="grid grid-cols-2 gap-2 mb-3">
+                            <div className="bg-white p-2 rounded text-xs">
+                              <div className="font-medium text-blue-700">施設貢献度</div>
+                              <div>QC活動参加: 10/12.5点</div>
+                            </div>
+                            <div className="bg-white p-2 rounded text-xs">
+                              <div className="font-medium text-purple-700">法人貢献度</div>
+                              <div>他部署応援: 11/12.5点</div>
+                            </div>
+                          </div>
+                          <div className="bg-white p-3 rounded border-l-4 border-purple-400">
+                            <div className="text-xs text-gray-600 mb-1">💭 田中さんの気持ち</div>
+                            <p className="text-sm italic">"夏より点数が上がってる！努力が認められて嬉しいです。"</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* 3月 - 技術評価 */}
+                      <div className="flex gap-6">
+                        <div className="relative z-10 flex items-center justify-center w-16 h-16 bg-orange-500 text-white rounded-full shadow-lg">
+                          <div className="text-center">
+                            <div className="text-xs font-bold">3月</div>
+                            <div className="text-xs">技術</div>
+                          </div>
+                        </div>
+                        <div className="flex-1 p-4 bg-orange-50 rounded-lg border-l-4 border-orange-500">
+                          <h4 className="font-semibold text-orange-900 mb-2">🎯 1年目の技術評価</h4>
+                          <p className="text-sm text-gray-700 mb-3">
+                            ついに年度末の技術評価。1年前は何もできなかった田中さんも、
+                            今では患者ケアから医療安全まで、一人前の看護師として評価されました。
+                          </p>
+                          <div className="grid grid-cols-2 gap-2 mb-3">
+                            <div className="bg-white p-2 rounded text-xs">
+                              <div className="font-medium text-green-700">法人統一項目</div>
+                              <div>基本技術: 22/30点</div>
+                            </div>
+                            <div className="bg-white p-2 rounded text-xs">
+                              <div className="font-medium text-blue-700">施設特化項目</div>
+                              <div>循環器ケア: 15/20点</div>
+                            </div>
+                          </div>
+                          <div className="bg-white p-3 rounded border-l-4 border-orange-400">
+                            <div className="text-xs text-gray-600 mb-1">💭 田中さんの気持ち</div>
+                            <p className="text-sm italic">"1年前の自分と比べて、本当に成長したなあ。来年はもっと頑張ろう！"</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* 4月 - 総合評価発表 */}
+                      <div className="flex gap-6">
+                        <div className="relative z-10 flex items-center justify-center w-16 h-16 bg-yellow-500 text-white rounded-full shadow-lg">
+                          <div className="text-center">
+                            <div className="text-xs font-bold">4月</div>
+                            <div className="text-xs">結果</div>
+                          </div>
+                        </div>
+                        <div className="flex-1 p-4 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
+                          <h4 className="font-semibold text-yellow-900 mb-2">🏆 田中さんの1年間総合評価</h4>
+                          <div className="bg-white p-4 rounded mb-3">
+                            <div className="text-center mb-3">
+                              <div className="text-3xl font-bold text-green-600">B+評価</div>
+                              <div className="text-sm text-gray-600">1年目職員としては優秀</div>
+                            </div>
+                            <div className="grid grid-cols-3 gap-2 text-xs">
+                              <div className="text-center">
+                                <div className="font-medium">技術評価</div>
+                                <div className="text-lg font-bold text-orange-600">37/50</div>
+                              </div>
+                              <div className="text-center">
+                                <div className="font-medium">施設貢献</div>
+                                <div className="text-lg font-bold text-blue-600">18/25</div>
+                              </div>
+                              <div className="text-center">
+                                <div className="font-medium">法人貢献</div>
+                                <div className="text-lg font-bold text-purple-600">20/25</div>
+                              </div>
+                            </div>
+                            <div className="mt-3 text-center">
+                              <div className="text-2xl font-bold text-gray-800">合計 75/100点</div>
+                            </div>
+                          </div>
+                          <div className="bg-white p-3 rounded border-l-4 border-yellow-400">
+                            <div className="text-xs text-gray-600 mb-1">💭 田中さんの気持ち</div>
+                            <p className="text-sm italic">"評価の仕組みがわかって、来年の目標も明確になりました！"</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* まとめ */}
+                  <div className="bg-gradient-to-r from-green-100 to-blue-100 p-4 rounded-lg border-2 border-green-300">
+                    <h4 className="font-semibold text-green-800 mb-2">🎓 田中さんから後輩へのメッセージ</h4>
+                    <p className="text-sm text-gray-700 italic">
+                      "最初は難しそうに見えた評価制度も、実際は自分の成長を確認できる良い機会でした。
+                      年間を通じて段階的に評価されるので、焦らず一歩ずつ成長していけば大丈夫です！"
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            {/* 評価設計の意図解説 */}
+            <Card className="border-2 border-indigo-300 bg-gradient-to-r from-indigo-50 via-purple-50 to-blue-50">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-xl">
+                  <span className="text-2xl">🧠</span>
+                  なぜこの評価制度になったの？ - 設計の意図
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  <div className="p-4 bg-white rounded-lg border-l-4 border-blue-500">
+                    <h4 className="font-semibold text-blue-900 mb-2">💡 重要ポイント1: なぜ技術評価50点 + 貢献度評価50点なの？</h4>
+                    <p className="text-sm text-gray-700 mb-2">
+                      単純に技術だけで評価すると、「仕事はできるけど協調性がない」職員が高評価になってしまいます。
+                      逆に貢献度だけだと「人当たりは良いけど技術が未熟」な職員が過大評価される可能性があります。
+                    </p>
+                    <div className="bg-blue-50 p-3 rounded">
+                      <div className="text-xs font-medium text-blue-800 mb-1">設計思想</div>
+                      <p className="text-xs text-blue-700">「技術力」と「組織への貢献」の両方をバランスよく評価することで、患者にも組織にも価値を提供できる職員を正しく評価します。</p>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4 bg-white rounded-lg border-l-4 border-green-500">
+                    <h4 className="font-semibold text-green-900 mb-2">💡 重要ポイント2: なぜ年2回の貢献度評価 + 年1回の技術評価？</h4>
+                    <p className="text-sm text-gray-700 mb-2">
+                      技術力は短期間では大きく変わりませんが、組織貢献度は季節や時期によって変動します。
+                      また、賞与査定では最新の貢献度を反映させたいというニーズがあります。
+                    </p>
+                    <div className="bg-green-50 p-3 rounded">
+                      <div className="text-xs font-medium text-green-800 mb-1">設計思想</div>
+                      <p className="text-xs text-green-700">技術評価は「年間を通じた成長」を、貢献度評価は「半年ごとの活動実績」を測ることで、適切なタイミングでの評価を実現します。</p>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4 bg-white rounded-lg border-l-4 border-purple-500">
+                    <h4 className="font-semibold text-purple-900 mb-2">💡 重要ポイント3: なぜ「施設内順位」と「法人内順位」の2軸評価？</h4>
+                    <p className="text-sm text-gray-700 mb-2">
+                      小規模な施設で頑張っている職員と、大規模施設の職員を同じ土俵で比較するのは不公平です。
+                      でも法人全体での相対的なレベルも把握したい。この矛盾を解決するのが2軸評価です。
+                    </p>
+                    <div className="bg-purple-50 p-3 rounded">
+                      <div className="text-xs font-medium text-purple-800 mb-1">設計思想</div>
+                      <p className="text-xs text-purple-700">「自分の職場では優秀」+「法人全体でも高水準」= 最高評価。どちらか一方でも適切な評価を受けられる仕組みです。</p>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4 bg-white rounded-lg border-l-4 border-orange-500">
+                    <h4 className="font-semibold text-orange-900 mb-2">💡 重要ポイント4: なぜ7段階評価（S+〜D）なの？</h4>
+                    <p className="text-sm text-gray-700 mb-2">
+                      3段階だと差がつきすぎ、10段階だと細かすぎて評価者が迷います。
+                      7段階は「努力が報われる」と感じられる適切な刻み幅です。
+                    </p>
+                    <div className="bg-orange-50 p-3 rounded">
+                      <div className="text-xs font-medium text-orange-800 mb-1">設計思想</div>
+                      <p className="text-xs text-orange-700">S+（法人の宝）からD（要支援）まで、職員のモチベーション向上と適切なフィードバックを両立する段階設定です。</p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
             {/* 評価システム概要 - ビジュアル強化版 */}
             <Card className="border-2 border-purple-200 bg-gradient-to-br from-purple-50 to-blue-50">
               <CardHeader>
