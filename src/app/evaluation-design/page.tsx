@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import EvaluationBulkModal from '@/components/evaluation/EvaluationBulkModal';
+import EvaluationDesignSupport from '@/components/evaluation/EvaluationDesignSupport';
 import styles from './EvaluationDesign.module.css';
 import { 
   Calendar, 
@@ -62,6 +63,7 @@ export default function EvaluationDesignPage() {
   const [currentDate] = useState(new Date());
   const currentMonth = currentDate.getMonth() + 1; // 1-12
   const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
+  const [showDesignSupport, setShowDesignSupport] = useState(false);
 
   // 年間スケジュールデータ
   const yearSchedule: MonthData[] = [
@@ -304,12 +306,22 @@ export default function EvaluationDesignPage() {
                   <h4 className="font-semibold">クイックアクション</h4>
                   <div className="space-y-2">
                     {currentMonth === 1 && (
-                      <Link href="/evaluation-design/wizard">
-                        <Button size="lg" className="w-full justify-start bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 shadow-lg">
+                      <>
+                        <Button 
+                          size="lg" 
+                          className="w-full justify-start bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 shadow-lg"
+                          onClick={() => setShowDesignSupport(true)}
+                        >
                           <Settings className="h-5 w-5 mr-3" />
-                          評価設計ウィザードを開始
+                          評価設計支援ツール
                         </Button>
-                      </Link>
+                        <Link href="/evaluation-design/wizard">
+                          <Button size="lg" variant="outline" className="w-full justify-start hover:bg-blue-50">
+                            <Zap className="h-5 w-5 mr-3" />
+                            従来ウィザード
+                          </Button>
+                        </Link>
+                      </>
                     )}
                     {(currentMonth === 6 || currentMonth === 12) && (
                       <>
@@ -634,6 +646,30 @@ export default function EvaluationDesignPage() {
           </CardContent>
         </Card>
 
+        {/* 評価設計支援ツール */}
+        {showDesignSupport && (
+          <Card className="mb-6">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <Settings className="h-5 w-5" />
+                  評価設計支援システム
+                </CardTitle>
+                <Button variant="outline" onClick={() => setShowDesignSupport(false)}>
+                  閉じる
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <EvaluationDesignSupport 
+                onConfigChange={(config) => {
+                  console.log('評価設計設定更新:', config);
+                }}
+              />
+            </CardContent>
+          </Card>
+        )}
+
         {/* 評価体系サマリー */}
         <div className="grid grid-cols-3 gap-6 mb-6">
           <Card className="border-blue-200">
@@ -652,9 +688,18 @@ export default function EvaluationDesignPage() {
                   <span>施設特化項目</span>
                   <span className="font-semibold">20点</span>
                 </div>
-                <Link href="/evaluation-design/wizard">
-                  <Button size="sm" className="w-full mt-3">設計・確認</Button>
-                </Link>
+                <div className="space-y-2 mt-3">
+                  <Button 
+                    size="sm" 
+                    className="w-full bg-gradient-to-r from-blue-500 to-indigo-600"
+                    onClick={() => setShowDesignSupport(true)}
+                  >
+                    項目設計支援
+                  </Button>
+                  <Link href="/evaluation-design/wizard">
+                    <Button size="sm" variant="outline" className="w-full">従来ウィザード</Button>
+                  </Link>
+                </div>
               </div>
             </CardContent>
           </Card>
