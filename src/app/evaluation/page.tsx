@@ -1108,91 +1108,206 @@ export default function EvaluationManagement() {
           {/* ガイドタブ */}
           {activeTab === 'guide' && (
             <div className={styles.guideContent}>
-              {/* システム概要カード - より視覚的でわかりやすく */}
-              <div className={styles.systemOverviewCard}>
-                <div className={styles.overviewHeader}>
-                  <h2 className={styles.overviewTitle}>
-                    <span className={styles.titleIcon}>📊</span>
-                    人事評価システム概要
-                  </h2>
-                  <p className={styles.overviewSubtitle}>
-                    公平・透明・成長支援を重視した総合評価制度
+              {/* ヒーローセクション：1年目職員でも一目で分かる全体像 */}
+              <section className={styles.heroSection}>
+                <div className={styles.heroHeader}>
+                  <h1 className={styles.heroTitle}>
+                    <span className={styles.heroEmoji}>🌟</span>
+                    新人さん必見！あなたの評価はこう決まる
+                  </h1>
+                  <p className={styles.heroSubtitle}>
+                    1年目でもわかる！人事評価の全てをストーリーで解説
                   </p>
                 </div>
                 
-                <div className={styles.overviewBody}>
-                  {/* ビジュアル強化: 評価配分の円グラフ風表示 */}
-                  <div className={styles.scoreCircleWrapper}>
-                    <div className={styles.totalScoreCircle}>
-                      <div className={styles.circleContent}>
-                        <div className={styles.scoreNumber}>100点</div>
-                        <div className={styles.scoreText}>年間総合評価</div>
-                      </div>
-                    </div>
-                    <div className={styles.scoreBreakdownCards}>
-                      <div className={styles.scoreCard} style={{ borderLeftColor: '#1976d2' }}>
-                        <Target className={styles.cardIcon} size={40} color="#1976d2" />
-                        <div className={styles.cardContent}>
-                          <div className={styles.cardTitle}>技術評価</div>
-                          <div className={styles.cardScore}>50点</div>
-                          <div className={styles.cardDesc}>専門スキル・知識（年1回）</div>
+                {/* アニメーション付き年間タイムライン */}
+                <div className={styles.annualTimeline}>
+                  <h2 className={styles.timelineTitle}>📅 1年間の評価スケジュール</h2>
+                  <div className={styles.timelineContainer}>
+                    <div className={styles.timelineTrack}>
+                      <div className={styles.timelineItem} data-month="4月">
+                        <div className={styles.timelineMarker}></div>
+                        <div className={styles.timelineContent}>
+                          <h3>入職・目標設定</h3>
+                          <p>あなたの成長目標を決めます</p>
                         </div>
                       </div>
-                      <div className={styles.scoreCard} style={{ borderLeftColor: '#9c27b0' }}>
-                        <Users className={styles.cardIcon} size={40} color="#9c27b0" />
-                        <div className={styles.cardContent}>
-                          <div className={styles.cardTitle}>組織貢献度</div>
-                          <div className={styles.cardScore}>50点</div>
-                          <div className={styles.cardDesc}>施設・法人への貢献（年2回）</div>
+                      <div className={styles.timelineItem} data-month="9月">
+                        <div className={styles.timelineMarker}></div>
+                        <div className={styles.timelineContent}>
+                          <h3>中間評価</h3>
+                          <p>組織貢献度を確認</p>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                  
-                  <div className={styles.systemFeaturesList}>
-                    <div className={styles.featureBadge}>
-                      ⚖️ 絶対評価と相対評価の併用
-                    </div>
-                    <div className={styles.featureBadge}>
-                      📈 成長支援重視
-                    </div>
-                    <div className={styles.featureBadge}>
-                      🎯 職種別カスタマイズ
+                      <div className={styles.timelineItem} data-month="3月">
+                        <div className={styles.timelineMarker}></div>
+                        <div className={styles.timelineContent}>
+                          <h3>年度末評価</h3>
+                          <p>技術評価＋最終結果</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </section>
 
-              {/* 2大評価フローの詳細説明 */}
-              <div className={styles.evaluationFlowSection}>
-                <h3 className={styles.sectionTitle}>
-                  <span className={styles.titleIcon}>🎯</span>
-                  2つの評価軸について
-                </h3>
+              {/* インタラクティブシミュレーター */}
+              <section className={styles.simulatorSection}>
+                <h2 className={styles.sectionTitle}>
+                  <span className={styles.sectionEmoji}>🎯</span>
+                  あなたの評価点をシミュレーション
+                </h2>
+                <div className={styles.simulatorContainer}>
+                  <div className={styles.simulatorInputs}>
+                    <div className={styles.inputGroup}>
+                      <label>技術評価（50点満点）</label>
+                      <input 
+                        type="range" 
+                        min="0" 
+                        max="50" 
+                        defaultValue="35"
+                        className={styles.rangeSlider}
+                        id="technicalScore"
+                      />
+                      <span className={styles.scoreDisplay}>35点</span>
+                    </div>
+                    <div className={styles.inputGroup}>
+                      <label>組織貢献度（50点満点）</label>
+                      <input 
+                        type="range" 
+                        min="0" 
+                        max="50" 
+                        defaultValue="30"
+                        className={styles.rangeSlider}
+                        id="contributionScore"
+                      />
+                      <span className={styles.scoreDisplay}>30点</span>
+                    </div>
+                  </div>
+                  <div className={styles.simulatorResult}>
+                    <div className={styles.totalScore}>
+                      <span className={styles.scoreNumber}>65</span>
+                      <span className={styles.scoreLabel}>点 / 100点</span>
+                    </div>
+                    <div className={styles.scoreGrade}>B評価</div>
+                  </div>
+                </div>
+              </section>
+
+              {/* 配点ロジックの視覚的説明 */}
+              <section className={styles.scoringLogicSection}>
+                <h2 className={styles.sectionTitle}>
+                  <span className={styles.sectionEmoji}>📊</span>
+                  点数の決まり方を理解しよう
+                </h2>
                 
-                <div className={styles.evaluationFlowGrid}>
-                  {/* 技術評価 */}
-                  <div className={styles.evaluationCard}>
-                    <div className={styles.evaluationHeader} style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
-                      <div className={styles.evaluationIcon}>
-                        <Target size={24} color="white" />
-                      </div>
-                      <div className={styles.evaluationTitle}>
-                        <h4>①技術評価</h4>
-                        <div className={styles.evaluationBadge}>50点</div>
-                      </div>
+                <div className={styles.scoringCards}>
+                  <div className={styles.scoringCard}>
+                    <div className={styles.cardHeader}>
+                      <span className={styles.cardIcon}>🎯</span>
+                      <h3>技術評価（50点）</h3>
                     </div>
-                    
-                    <div className={styles.evaluationTiming}>
-                      <Calendar size={16} />
-                      <span className={styles.timingText}>3月実施（年度末評価）</span>
-                    </div>
-                    
-                    <div className={styles.evaluationContent}>
-                      <p className={styles.evaluationDesc}>職種別の専門技術・スキルを評価</p>
-                      
-                      <div className={styles.evaluationBreakdown}>
+                    <div className={styles.cardContent}>
+                      <div className={styles.scoreBreakdown}>
                         <div className={styles.breakdownItem}>
+                          <span className={styles.itemLabel}>法人統一項目</span>
+                          <span className={styles.itemScore}>30点</span>
+                        </div>
+                        <div className={styles.breakdownItem}>
+                          <span className={styles.itemLabel}>施設特有項目</span>
+                          <span className={styles.itemScore}>20点</span>
+                        </div>
+                      </div>
+                      <div className={styles.whyExplanation}>
+                        <h4>なぜ？</h4>
+                        <p>どの施設でも必要なスキル（30点）と、あなたの職場特有のスキル（20点）で評価します</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className={styles.scoringCard}>
+                    <div className={styles.cardHeader}>
+                      <span className={styles.cardIcon}>🤝</span>
+                      <h3>組織貢献度（50点）</h3>
+                    </div>
+                    <div className={styles.cardContent}>
+                      <div className={styles.scoreBreakdown}>
+                        <div className={styles.breakdownItem}>
+                          <span className={styles.itemLabel}>上司評価</span>
+                          <span className={styles.itemScore}>70%</span>
+                        </div>
+                        <div className={styles.breakdownItem}>
+                          <span className={styles.itemLabel}>自己評価</span>
+                          <span className={styles.itemScore">30%</span>
+                        </div>
+                      </div>
+                      <div className={styles.whyExplanation}>
+                        <h4>なぜ？</h4>
+                        <p>客観的な視点（上司）と主観的な振り返り（自分）のバランスを取ります</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              {/* FAQ セクション - 1年目職員の疑問に答える */}
+              <section className={styles.faqSection}>
+                <h2 className={styles.sectionTitle}>
+                  <span className={styles.sectionEmoji}>❓</span>
+                  新人さんからよくある質問
+                </h2>
+                
+                <div className={styles.faqContainer}>
+                  <details className={styles.faqItem}>
+                    <summary className={styles.faqQuestion}>
+                      Q1. 入職1年目でも他の職員と同じ評価基準ですか？
+                    </summary>
+                    <div className={styles.faqAnswer}>
+                      <p><strong>A.</strong> いえ、経験年数に応じて評価基準は調整されます。1年目は「基本的な業務ができる」レベルが求められ、ベテランと比較されることはありません。</p>
+                    </div>
+                  </details>
+
+                  <details className={styles.faqItem}>
+                    <summary className={styles.faqQuestion}>
+                      Q2. 自己評価が低すぎると総合評価に悪影響しますか？
+                    </summary>
+                    <div className={styles.faqAnswer}>
+                      <p><strong>A.</strong> 謙遜しすぎる必要はありません。自己評価は30%の重みですし、正直な自己分析が成長につながります。</p>
+                    </div>
+                  </details>
+
+                  <details className={styles.faqItem}>
+                    <summary className={styles.faqQuestion}>
+                      Q3. 評価結果はいつ、どのように知らされますか？
+                    </summary>
+                    <div className={styles.faqAnswer}>
+                      <p><strong>A.</strong> 年度末評価は4月中旬、中間評価は10月中旬に個人面談で結果をお伝えします。その後、希望者にはフィードバック面談も実施します。</p>
+                    </div>
+                  </details>
+
+                  <details className={styles.faqItem}>
+                    <summary className={styles.faqQuestion}>
+                      Q4. 評価に納得がいかない場合はどうすればいいですか？
+                    </summary>
+                    <div className={styles.faqAnswer}>
+                      <p><strong>A.</strong> 評価開示後2週間以内であれば異議申し立てが可能です。人事部に相談してください。透明性を重視していますので、遠慮なくお声かけください。</p>
+                    </div>
+                  </details>
+
+                  <details className={styles.faqItem}>
+                    <summary className={styles.faqQuestion}>
+                      Q5. 他の職員の評価結果と比較されますか？
+                    </summary>
+                    <div className={styles.faqAnswer}>
+                      <p><strong>A.</strong> 基本的には絶対評価（決められた基準との比較）ですが、賞与査定時には一部相対評価も行います。ただし、同期入職者同士での比較が中心で、ベテランとは比較されません。</p>
+                    </div>
+                  </details>
+                </div>
+              </section>
+            </div>
+          )}
+
+          {/* 設定・管理タブ */}
                           <div className={styles.breakdownHeader}>
                             <span className={styles.breakdownTitle}>法人統一項目</span>
                             <span className={styles.breakdownScore}>30点</span>
