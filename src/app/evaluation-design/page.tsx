@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import EvaluationBulkModal from '@/components/evaluation/EvaluationBulkModal';
 import styles from './EvaluationDesign.module.css';
 import { 
   Calendar, 
@@ -60,6 +61,7 @@ interface MonthData {
 export default function EvaluationDesignPage() {
   const [currentDate] = useState(new Date());
   const currentMonth = currentDate.getMonth() + 1; // 1-12
+  const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
 
   // 年間スケジュールデータ
   const yearSchedule: MonthData[] = [
@@ -311,7 +313,12 @@ export default function EvaluationDesignPage() {
                     )}
                     {(currentMonth === 6 || currentMonth === 12) && (
                       <>
-                        <Button size="lg" variant="outline" className="w-full justify-start">
+                        <Button 
+                          size="lg" 
+                          variant="outline" 
+                          className="w-full justify-start hover:bg-blue-50 hover:border-blue-300"
+                          onClick={() => setIsBulkModalOpen(true)}
+                        >
                           <Upload className="h-5 w-5 mr-3" />
                           Excelデータを取込
                         </Button>
@@ -322,7 +329,12 @@ export default function EvaluationDesignPage() {
                       </>
                     )}
                     {currentMonth === 3 && (
-                      <Button size="lg" variant="outline" className="w-full justify-start">
+                      <Button 
+                        size="lg" 
+                        variant="outline" 
+                        className="w-full justify-start hover:bg-purple-50 hover:border-purple-300"
+                        onClick={() => setIsBulkModalOpen(true)}
+                      >
                         <FileCheck className="h-5 w-5 mr-3" />
                         技術評価を開始
                       </Button>
@@ -534,7 +546,11 @@ export default function EvaluationDesignPage() {
                               )}
                               {(currentMonth === 6 || currentMonth === 12) && (
                                 <>
-                                  <Button variant="outline" className="w-full justify-start">
+                                  <Button 
+                                    variant="outline" 
+                                    className="w-full justify-start hover:bg-blue-50"
+                                    onClick={() => setIsBulkModalOpen(true)}
+                                  >
                                     <Upload className="h-4 w-4 mr-2" />
                                     データ取込
                                   </Button>
@@ -545,7 +561,11 @@ export default function EvaluationDesignPage() {
                                 </>
                               )}
                               {currentMonth === 3 && (
-                                <Button variant="outline" className="w-full justify-start">
+                                <Button 
+                                  variant="outline" 
+                                  className="w-full justify-start hover:bg-purple-50"
+                                  onClick={() => setIsBulkModalOpen(true)}
+                                >
                                   <FileCheck className="h-4 w-4 mr-2" />
                                   技術評価開始
                                 </Button>
@@ -655,7 +675,14 @@ export default function EvaluationDesignPage() {
                   <span>冬季評価（12月）</span>
                   <span className="font-semibold">25点</span>
                 </div>
-                <Button size="sm" variant="outline" className="w-full mt-3">データ取込</Button>
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  className="w-full mt-3 hover:bg-green-50"
+                  onClick={() => setIsBulkModalOpen(true)}
+                >
+                  データ取込
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -722,6 +749,14 @@ export default function EvaluationDesignPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* 一括処理モーダル */}
+      <EvaluationBulkModal
+        isOpen={isBulkModalOpen}
+        onClose={() => setIsBulkModalOpen(false)}
+        currentMonth={currentMonth}
+        evaluationPeriod="2025年度"
+      />
     </div>
   );
 }
