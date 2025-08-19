@@ -297,7 +297,7 @@ export default function EvaluationSheetSelector({
                         <Building className="h-5 w-5 text-blue-600" />
                         {item.name}
                         <Badge className="bg-blue-500">{item.points}点</Badge>
-                      </div>
+                      </CardTitle>
                       <p className="text-sm text-gray-600 mt-1">{item.description}</p>
                     </div>
                     <div className="text-right">
