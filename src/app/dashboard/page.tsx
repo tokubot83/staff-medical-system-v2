@@ -750,7 +750,7 @@ export default function DashboardPage() {
                         </div>
                       </div>
                       
-                      {/* 4月 - 総合評価発表 */}
+                      {/* 4月 - 総合評価発表（2軸評価プロセス） */}
                       <div className="flex gap-6">
                         <div className="relative z-10 flex items-center justify-center w-16 h-16 bg-yellow-500 text-white rounded-full shadow-lg">
                           <div className="text-center">
@@ -759,12 +759,14 @@ export default function DashboardPage() {
                           </div>
                         </div>
                         <div className="flex-1 p-4 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
-                          <h4 className="font-semibold text-yellow-900 mb-2">🏆 田中さんの1年間総合評価</h4>
-                          <div className="bg-white p-4 rounded mb-3">
-                            <div className="text-center mb-3">
-                              <div className="text-3xl font-bold text-green-600">B+評価</div>
-                              <div className="text-sm text-gray-600">1年目職員としては優秀</div>
-                            </div>
+                          <h4 className="font-semibold text-yellow-900 mb-2">🏆 田中さんの総合評価が決定！</h4>
+                          <p className="text-sm text-gray-700 mb-3">
+                            人事部から届いた評価結果。田中さんの75点がどう評価されるのか...ドキドキの瞬間です。
+                          </p>
+                          
+                          {/* ステップ1: 100点満点の集計 */}
+                          <div className="bg-white p-3 rounded mb-3 border-2 border-orange-200">
+                            <div className="text-xs font-semibold text-orange-700 mb-2">📊 STEP 1: 100点満点での集計</div>
                             <div className="grid grid-cols-3 gap-2 text-xs">
                               <div className="text-center">
                                 <div className="font-medium">技術評価</div>
@@ -779,13 +781,89 @@ export default function DashboardPage() {
                                 <div className="text-lg font-bold text-purple-600">20/25</div>
                               </div>
                             </div>
-                            <div className="mt-3 text-center">
-                              <div className="text-2xl font-bold text-gray-800">合計 75/100点</div>
+                            <div className="mt-2 text-center">
+                              <div className="text-xl font-bold text-gray-800">合計 75/100点</div>
                             </div>
                           </div>
+                          
+                          {/* ステップ2: 施設内評価 */}
+                          <div className="bg-white p-3 rounded mb-3 border-2 border-blue-200">
+                            <div className="text-xs font-semibold text-blue-700 mb-2">🏥 STEP 2: 施設内評価（同職種での順位）</div>
+                            <p className="text-xs text-gray-700 mb-2">
+                              田中さんの勤務する「厚生会中央病院」の看護師150名中...
+                              <span className="text-xs text-blue-600 block mt-1">
+                                ※病棟単位ではなく施設全体の同職種で順位化。経験年数調整済みの評価で公平に比較
+                              </span>
+                            </p>
+                            <div className="flex items-center justify-between p-2 bg-blue-50 rounded">
+                              <div className="text-sm">
+                                <span className="font-bold text-blue-800">75点 = 第42位</span>
+                                <span className="text-xs text-gray-600 ml-2">（上位28%）</span>
+                              </div>
+                              <div className="text-lg font-bold text-green-600 px-3 py-1 bg-white rounded">A評価</div>
+                            </div>
+                            <div className="mt-2 text-xs text-gray-600">
+                              💭 "施設全体の看護師150名の中で上位30%以内！ベテランの先輩たちと比べても頑張れてる！"
+                            </div>
+                          </div>
+                          
+                          {/* ステップ3: 法人内評価 */}
+                          <div className="bg-white p-3 rounded mb-3 border-2 border-purple-200">
+                            <div className="text-xs font-semibold text-purple-700 mb-2">🏢 STEP 3: 法人内評価（法人全体での順位）</div>
+                            <p className="text-xs text-gray-700 mb-2">
+                              厚生会グループ全体の看護師300名中...
+                              <span className="text-xs text-purple-600 block mt-1">
+                                ※経験年数ごとに調整された評価シートを使用しているので、1年目もベテランも同じ土俵で公平に評価されます
+                              </span>
+                            </p>
+                            <div className="flex items-center justify-between p-2 bg-purple-50 rounded">
+                              <div className="text-sm">
+                                <span className="font-bold text-purple-800">75点 = 第85位</span>
+                                <span className="text-xs text-gray-600 ml-2">（上位28%）</span>
+                              </div>
+                              <div className="text-lg font-bold text-green-600 px-3 py-1 bg-white rounded">A評価</div>
+                            </div>
+                            <div className="mt-2 text-xs text-gray-600">
+                              💭 "すごい！ベテランの先輩たちも含めた中で上位30%に入れた！評価シートが経験年数で調整されてるから1年目でも正当に評価してもらえるんだ！"
+                            </div>
+                          </div>
+                          
+                          {/* ステップ4: 2軸マトリックスによる最終評価 */}
+                          <div className="bg-gradient-to-r from-yellow-100 to-orange-100 p-3 rounded mb-3 border-2 border-yellow-400">
+                            <div className="text-xs font-semibold text-orange-800 mb-2">✨ STEP 4: 2軸評価マトリックスで最終決定</div>
+                            <div className="grid grid-cols-2 gap-4 mb-3">
+                              <div className="text-center">
+                                <div className="text-xs text-gray-600">施設内評価</div>
+                                <div className="text-2xl font-bold text-green-600">A</div>
+                              </div>
+                              <div className="text-center">
+                                <div className="text-xs text-gray-600">法人内評価</div>
+                                <div className="text-2xl font-bold text-green-600">A</div>
+                              </div>
+                            </div>
+                            <div className="text-center p-3 bg-white rounded">
+                              <div className="text-xs text-gray-600 mb-1">マトリックス判定</div>
+                              <div className="text-3xl font-bold text-yellow-600">A+評価</div>
+                              <div className="text-xs text-gray-700 mt-1">
+                                施設内A × 法人内A = 総合A+評価
+                              </div>
+                            </div>
+                            <div className="mt-2 p-2 bg-green-50 rounded text-xs">
+                              <span className="font-semibold text-green-800">評価の意味：</span>
+                              <span className="text-green-700">
+                                「配属施設でも法人全体でも優秀層。両方の環境で高い成果を発揮できている」
+                              </span>
+                            </div>
+                          </div>
+                          
                           <div className="bg-white p-3 rounded border-l-4 border-yellow-400">
-                            <div className="text-xs text-gray-600 mb-1">💭 田中さんの気持ち</div>
-                            <p className="text-sm italic">"評価の仕組みがわかって、来年の目標も明確になりました！"</p>
+                            <div className="text-xs text-gray-600 mb-1">💭 田中さんの最終的な気持ち</div>
+                            <p className="text-sm italic">
+                              "なるほど！私の75点は施設内では150名中42位でA評価、法人全体でも300名中85位でA評価。
+                              この2つを組み合わせて最終的にA+評価になったんだ！
+                              経験年数で調整された評価シートのおかげで、1年目でもベテランと同じ土俵で評価してもらえて、
+                              施設規模の違いも2軸評価で公平に考慮されてる。すごく納得できる制度だなあ。"
+                            </p>
                           </div>
                         </div>
                       </div>
