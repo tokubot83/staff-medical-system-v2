@@ -56,15 +56,6 @@ import AppealManagement from '@/components/evaluation/AppealManagement';
 import EvaluationSheetSelector from '@/components/evaluation/EvaluationSheetSelector';
 
 export default function EvaluationExecutionPage() {
-  const [activeTab, setActiveTab] = useState('input');
-  const [selectedDepartment, setSelectedDepartment] = useState('all');
-  const [selectedExperienceLevel, setSelectedExperienceLevel] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [refreshKey, setRefreshKey] = useState(0);
-  const [staffData, setStaffData] = useState(staffList);
-  const [showWorkflowGuide, setShowWorkflowGuide] = useState(true);
-  const [selectedStaffForEvaluation, setSelectedStaffForEvaluation] = useState<string | null>(null);
-
   // 評価実施のワークフローステップ
   const executionSteps = [
     { id: 1, title: '評価入力', status: 'current', icon: ClipboardList },
@@ -153,6 +144,16 @@ export default function EvaluationExecutionPage() {
       appealReason: '技術評価の一部項目について再考を希望'
     }
   ];
+
+  // State定義
+  const [activeTab, setActiveTab] = useState('input');
+  const [selectedDepartment, setSelectedDepartment] = useState('all');
+  const [selectedExperienceLevel, setSelectedExperienceLevel] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [staffData, setStaffData] = useState(staffList);
+  const [showWorkflowGuide, setShowWorkflowGuide] = useState(true);
+  const [selectedStaffForEvaluation, setSelectedStaffForEvaluation] = useState<string | null>(null);
 
   // フィルタリング
   const filteredStaff = staffData.filter(staff => {
