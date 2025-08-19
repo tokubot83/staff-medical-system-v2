@@ -1238,7 +1238,7 @@ export default function EvaluationManagement() {
                         </div>
                         <div className={styles.breakdownItem}>
                           <span className={styles.itemLabel}>自己評価</span>
-                          <span className={styles.itemScore">30%</span>
+                          <span className={styles.itemScore}>30%</span>
                         </div>
                       </div>
                       <div className={styles.whyExplanation}>
@@ -1308,21 +1308,19 @@ export default function EvaluationManagement() {
           )}
 
           {/* 設定・管理タブ */}
-                          <div className={styles.breakdownHeader}>
-                            <span className={styles.breakdownTitle}>法人統一項目</span>
-                            <span className={styles.breakdownScore}>30点</span>
-                          </div>
-                          <ul className={styles.breakdownList}>
-                            <li>C01: 専門技術・スキル <span>10点（上司70%/本人30%）</span></li>
-                            <li>C02: 対人関係・ケア <span>10点（上司50%/本人50%）</span></li>
-                            <li>C03: 安全・品質管理 <span>10点（上司80%/本人20%）</span></li>
-                          </ul>
-                        </div>
-                        <div className={styles.breakdownItem}>
-                          <div className={styles.breakdownHeader}>
-                            <span className={styles.breakdownTitle}>施設特化項目</span>
-                            <span className={styles.breakdownScore}>20点</span>
-                          </div>
+          {activeTab === 'settings' && (
+            <div className={styles.settingsContent}>
+              <div className={styles.settingsGrid}>
+                <Link href="/evaluation/config" className={styles.settingsCard}>
+                  <div className={styles.settingsIcon}>
+                    <Settings size={36} color="#1976d2" />
+                  </div>
+                  <div className={styles.settingsInfo}>
+                    <h3>評価項目管理</h3>
+                    <p>大項目・中項目・小項目の設定</p>
+                    <span className={styles.settingsAction}>設定する →</span>
+                  </div>
+                </Link>
                         </div>
                       </div>
                     </div>
