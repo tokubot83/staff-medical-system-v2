@@ -18,6 +18,7 @@ import {
   BarChart3,
   Info,
   CheckCircle,
+  CheckCircle2,
   Clock,
   AlertCircle,
   Sparkles,
@@ -37,7 +38,9 @@ import {
   Eye,
   Upload,
   Download,
-  FileSpreadsheet
+  FileSpreadsheet,
+  Star,
+  ArrowRight
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -203,15 +206,15 @@ export default function EvaluationDesignPage() {
 
   const getMonthCardClass = (month: MonthData) => {
     if (month.status === 'current') {
-      return 'border-2 border-blue-500 bg-blue-50 shadow-lg';
+      return 'border-2 border-blue-500 bg-gradient-to-br from-blue-50 to-indigo-50 shadow-xl';
     }
     if (month.highlight) {
-      return 'border-2 border-purple-300 bg-purple-50';
+      return 'border-2 border-purple-400 bg-gradient-to-br from-purple-50 to-pink-50 shadow-lg';
     }
     if (month.status === 'completed') {
-      return 'border border-green-200 bg-green-50';
+      return 'border border-green-300 bg-gradient-to-br from-green-50 to-emerald-50 shadow-md';
     }
-    return 'border border-gray-200';
+    return 'border border-gray-200 bg-gradient-to-br from-white to-gray-50';
   };
 
   return (
@@ -261,17 +264,29 @@ export default function EvaluationDesignPage() {
                 <div className="space-y-3">
                   <h4 className="font-semibold">今月のタスク一覧</h4>
                   {currentMonthData.tasks.map((task, idx) => (
-                    <div key={idx} className="flex items-center gap-3">
-                      <div className={`w-2 h-2 rounded-full ${
-                        task.completed ? 'bg-green-500' : 
-                        task.urgent ? 'bg-red-500' : 'bg-gray-300'
-                      }`} />
-                      <span className={task.completed ? 'line-through text-gray-500' : 
-                        task.urgent ? 'font-semibold text-red-700' : ''}>
+                    <div key={idx} className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/50 transition-colors">
+                      {task.completed ? (
+                        <div className="flex items-center justify-center w-6 h-6 bg-green-500 rounded-full">
+                          <CheckCircle2 className="w-4 h-4 text-white" />
+                        </div>
+                      ) : task.urgent ? (
+                        <div className="flex items-center justify-center w-6 h-6 bg-red-500 rounded-full animate-pulse">
+                          <Clock className="w-4 h-4 text-white" />
+                        </div>
+                      ) : (
+                        <div className="w-6 h-6 border-2 border-gray-300 rounded-full" />
+                      )}
+                      <span className={`flex-1 ${
+                        task.completed ? 'text-green-700 font-medium' : 
+                        task.urgent ? 'font-semibold text-red-700' : 'text-gray-700'
+                      }`}>
                         {task.title}
                       </span>
                       {task.urgent && !task.completed && (
-                        <Badge variant="destructive" className="text-xs">緊急</Badge>
+                        <Badge variant="destructive" className="text-xs animate-pulse">緊急</Badge>
+                      )}
+                      {task.completed && (
+                        <Badge className="bg-green-100 text-green-800 text-xs">完了</Badge>
                       )}
                     </div>
                   ))}
@@ -281,7 +296,7 @@ export default function EvaluationDesignPage() {
                   <div className="space-y-2">
                     {currentMonth === 1 && (
                       <Link href="/evaluation-design/wizard">
-                        <Button size="lg" className="w-full justify-start">
+                        <Button size="lg" className="w-full justify-start bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 shadow-lg">
                           <Settings className="h-5 w-5 mr-3" />
                           評価設計ウィザードを開始
                         </Button>
@@ -369,8 +384,11 @@ export default function EvaluationDesignPage() {
                               )}
                             </div>
                             {month.keyTasks && (
-                              <div className="text-sm text-purple-600 font-medium mt-1">
-                                {month.keyTasks[0]}
+                              <div className="flex items-center gap-1 mt-1">
+                                <Star className="w-3 h-3 text-purple-500" />
+                                <div className="text-sm text-purple-600 font-medium">
+                                  {month.keyTasks[0]}
+                                </div>
                               </div>
                             )}
                           </div>
@@ -405,34 +423,52 @@ export default function EvaluationDesignPage() {
                             <h4 className="font-semibold mb-3">タスク一覧</h4>
                             <div className="space-y-3">
                               {month.tasks.map((task, idx) => (
-                                <div key={idx} className="flex items-center justify-between p-3 rounded-lg border">
-                                  <div className="flex items-center gap-3">
-                                    <div className={`w-3 h-3 rounded-full ${
-                                      task.completed ? 'bg-green-500' : 
-                                      task.urgent ? 'bg-red-500' : 'bg-gray-300'
-                                    }`} />
+                                <div key={idx} className={`flex items-center justify-between p-4 rounded-xl border transition-all hover:shadow-md ${
+                                  task.completed ? 'bg-green-50 border-green-200' : 
+                                  task.urgent ? 'bg-red-50 border-red-200' : 'bg-white border-gray-200'
+                                }`}>
+                                  <div className="flex items-center gap-4">
+                                    {task.completed ? (
+                                      <div className="flex items-center justify-center w-8 h-8 bg-green-500 rounded-full">
+                                        <CheckCircle2 className="w-5 h-5 text-white" />
+                                      </div>
+                                    ) : task.urgent ? (
+                                      <div className="flex items-center justify-center w-8 h-8 bg-red-500 rounded-full animate-pulse">
+                                        <Clock className="w-5 h-5 text-white" />
+                                      </div>
+                                    ) : (
+                                      <div className="w-8 h-8 border-2 border-gray-300 rounded-full flex items-center justify-center">
+                                        <div className="w-4 h-4 border-2 border-gray-300 rounded-full" />
+                                      </div>
+                                    )}
                                     <div>
-                                      <span className={`${
-                                        task.completed ? 'line-through text-gray-500' : 
-                                        task.urgent ? 'font-semibold text-red-700' : ''
+                                      <span className={`font-medium ${
+                                        task.completed ? 'text-green-700' : 
+                                        task.urgent ? 'text-red-700' : 'text-gray-700'
                                       }`}>
                                         {task.title}
                                       </span>
-                                      {task.urgent && !task.completed && (
-                                        <Badge variant="destructive" className="ml-2 text-xs">緊急</Badge>
-                                      )}
+                                      <div className="flex gap-2 mt-1">
+                                        {task.urgent && !task.completed && (
+                                          <Badge variant="destructive" className="text-xs animate-pulse">緊急</Badge>
+                                        )}
+                                        {task.completed && (
+                                          <Badge className="bg-green-100 text-green-800 text-xs">完了済み</Badge>
+                                        )}
+                                      </div>
                                     </div>
                                   </div>
                                   
                                   {/* タスクアクション */}
                                   <div className="flex gap-2">
                                     {!task.completed && task.urgent && (
-                                      <Button size="sm" variant="outline">
+                                      <Button size="sm" className="bg-red-500 hover:bg-red-600">
+                                        <ArrowRight className="h-4 w-4 mr-1" />
                                         開始
                                       </Button>
                                     )}
                                     {task.completed && (
-                                      <Button size="sm" variant="ghost">
+                                      <Button size="sm" variant="ghost" className="text-green-600 hover:text-green-700">
                                         <Eye className="h-4 w-4" />
                                       </Button>
                                     )}
@@ -489,13 +525,22 @@ export default function EvaluationDesignPage() {
                       <CardContent className="pt-0">
                         <div className="text-sm text-gray-600">
                           {month.tasks.slice(0, 2).map((task, idx) => (
-                            <div key={idx} className="flex items-center gap-2 mb-1">
-                              <div className={`w-1.5 h-1.5 rounded-full ${
-                                task.completed ? 'bg-green-500' : 'bg-gray-300'
-                              }`} />
-                              <span className={task.completed ? 'line-through' : ''}>
-                                {task.title.length > 40 ? task.title.substring(0, 40) + '...' : task.title}
+                            <div key={idx} className="flex items-center gap-3 mb-2 p-2 rounded-lg hover:bg-gray-50 transition-colors">
+                              {task.completed ? (
+                                <div className="flex items-center justify-center w-5 h-5 bg-green-500 rounded-full">
+                                  <CheckCircle2 className="w-3 h-3 text-white" />
+                                </div>
+                              ) : (
+                                <div className="w-5 h-5 border-2 border-gray-300 rounded-full" />
+                              )}
+                              <span className={`${
+                                task.completed ? 'text-green-700 font-medium' : 'text-gray-700'
+                              }`}>
+                                {task.title.length > 35 ? task.title.substring(0, 35) + '...' : task.title}
                               </span>
+                              {task.completed && (
+                                <Badge className="bg-green-100 text-green-800 text-xs ml-auto">✓</Badge>
+                              )}
                             </div>
                           ))}
                           {month.tasks.length > 2 && (
