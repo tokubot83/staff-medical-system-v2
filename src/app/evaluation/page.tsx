@@ -1108,61 +1108,338 @@ export default function EvaluationManagement() {
           {/* ガイドタブ */}
           {activeTab === 'guide' && (
             <div className={styles.guideContent}>
-              <h2>評価管理システム 操作ガイド</h2>
-              
-              <div className={styles.guideSection}>
-                <h3>📚 基本的な使い方</h3>
-                <div className={styles.guideText}>
-                  <p>評価システムの詳細な仕組みについては「評価概要」タブをご覧ください。</p>
-                  <p>このガイドでは、システムの操作方法と評価業務フローを説明します。</p>
+              {/* システム概要カード - より視覚的でわかりやすく */}
+              <div className={styles.systemOverviewCard}>
+                <div className={styles.overviewHeader}>
+                  <h2 className={styles.overviewTitle}>
+                    <span className={styles.titleIcon}>📊</span>
+                    人事評価システム概要
+                  </h2>
+                  <p className={styles.overviewSubtitle}>
+                    公平・透明・成長支援を重視した総合評価制度
+                  </p>
+                </div>
+                
+                <div className={styles.overviewBody}>
+                  {/* ビジュアル強化: 評価配分の円グラフ風表示 */}
+                  <div className={styles.scoreCircleWrapper}>
+                    <div className={styles.totalScoreCircle}>
+                      <div className={styles.circleContent}>
+                        <div className={styles.scoreNumber}>100点</div>
+                        <div className={styles.scoreText}>年間総合評価</div>
+                      </div>
+                    </div>
+                    <div className={styles.scoreBreakdownCards}>
+                      <div className={styles.scoreCard} style={{ borderLeftColor: '#1976d2' }}>
+                        <Target className={styles.cardIcon} size={40} color="#1976d2" />
+                        <div className={styles.cardContent}>
+                          <div className={styles.cardTitle}>技術評価</div>
+                          <div className={styles.cardScore}>50点</div>
+                          <div className={styles.cardDesc}>専門スキル・知識（年1回）</div>
+                        </div>
+                      </div>
+                      <div className={styles.scoreCard} style={{ borderLeftColor: '#9c27b0' }}>
+                        <Users className={styles.cardIcon} size={40} color="#9c27b0" />
+                        <div className={styles.cardContent}>
+                          <div className={styles.cardTitle}>組織貢献度</div>
+                          <div className={styles.cardScore}>50点</div>
+                          <div className={styles.cardDesc}>施設・法人への貢献（年2回）</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className={styles.systemFeaturesList}>
+                    <div className={styles.featureBadge}>
+                      ⚖️ 絶対評価と相対評価の併用
+                    </div>
+                    <div className={styles.featureBadge}>
+                      📈 成長支援重視
+                    </div>
+                    <div className={styles.featureBadge}>
+                      🎯 職種別カスタマイズ
+                    </div>
+                  </div>
                 </div>
               </div>
 
+              {/* 2大評価フローの詳細説明 */}
+              <div className={styles.evaluationFlowSection}>
+                <h3 className={styles.sectionTitle}>
+                  <span className={styles.titleIcon}>🎯</span>
+                  2つの評価軸について
+                </h3>
+                
+                <div className={styles.evaluationFlowGrid}>
+                  {/* 技術評価 */}
+                  <div className={styles.evaluationCard}>
+                    <div className={styles.evaluationHeader} style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+                      <div className={styles.evaluationIcon}>
+                        <Target size={24} color="white" />
+                      </div>
+                      <div className={styles.evaluationTitle}>
+                        <h4>①技術評価</h4>
+                        <div className={styles.evaluationBadge}>50点</div>
+                      </div>
+                    </div>
+                    
+                    <div className={styles.evaluationTiming}>
+                      <Calendar size={16} />
+                      <span className={styles.timingText}>3月実施（年度末評価）</span>
+                    </div>
+                    
+                    <div className={styles.evaluationContent}>
+                      <p className={styles.evaluationDesc}>職種別の専門技術・スキルを評価</p>
+                      
+                      <div className={styles.evaluationBreakdown}>
+                        <div className={styles.breakdownItem}>
+                          <div className={styles.breakdownHeader}>
+                            <span className={styles.breakdownTitle}>法人統一項目</span>
+                            <span className={styles.breakdownScore}>30点</span>
+                          </div>
+                          <ul className={styles.breakdownList}>
+                            <li>C01: 専門技術・スキル <span>10点（上司70%/本人30%）</span></li>
+                            <li>C02: 対人関係・ケア <span>10点（上司50%/本人50%）</span></li>
+                            <li>C03: 安全・品質管理 <span>10点（上司80%/本人20%）</span></li>
+                          </ul>
+                        </div>
+                        <div className={styles.breakdownItem}>
+                          <div className={styles.breakdownHeader}>
+                            <span className={styles.breakdownTitle}>施設特化項目</span>
+                            <span className={styles.breakdownScore}>20点</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className={styles.evaluationActions}>
+                      <Link href="/evaluation/core-v2" className={styles.actionButton}>
+                        <Activity size={16} />
+                        新V2版で評価開始
+                      </Link>
+                      <Link href="/evaluation/facility-specific" className={styles.actionButtonSecondary}>
+                        施設特化項目を設定
+                      </Link>
+                    </div>
+                  </div>
+                  
+                  {/* 組織貢献度評価 */}
+                  <div className={styles.evaluationCard}>
+                    <div className={styles.evaluationHeader} style={{ background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' }}>
+                      <div className={styles.evaluationIcon}>
+                        <Users size={24} color="white" />
+                      </div>
+                      <div className={styles.evaluationTitle}>
+                        <h4>②組織貢献度評価</h4>
+                        <div className={styles.evaluationBadge}>50点</div>
+                      </div>
+                    </div>
+                    
+                    <div className={styles.evaluationContent}>
+                      <div className={styles.evaluationSchedule}>
+                        <div className={styles.scheduleItem}>
+                          <Calendar size={16} color="#2196f3" />
+                          <div className={styles.scheduleInfo}>
+                            <span className={styles.scheduleMonth}>8月: 夏季査定</span>
+                          </div>
+                        </div>
+                        <div className={styles.scheduleItem}>
+                          <Calendar size={16} color="#4caf50" />
+                          <div className={styles.scheduleInfo}>
+                            <span className={styles.scheduleMonth}>12月: 冬季査定</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <p className={styles.evaluationDesc}>組織への貢献度を相対評価</p>
+                      
+                      <div className={styles.contributionBreakdown}>
+                        <div className={styles.contributionItem}>
+                          <Building size={18} />
+                          <span>施設貢献度（年間）</span>
+                          <span className={styles.contributionScore}>25点</span>
+                        </div>
+                        <div className={styles.contributionItem}>
+                          <Users size={18} />
+                          <span>法人貢献度（年間）</span>
+                          <span className={styles.contributionScore}>25点</span>
+                        </div>
+                      </div>
+                      
+                      <div className={styles.noteBox}>
+                        <AlertCircle size={16} />
+                        <span>各回12.5点満点で年2回実施</span>
+                      </div>
+                    </div>
+                    
+                    <div className={styles.evaluationActions}>
+                      <Link href="/evaluation/contribution" className={styles.actionButton}>
+                        <Activity size={16} />
+                        貢献度評価を開始
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 実際の評価フロー */}
               <div className={styles.guideSection}>
-                <h3>🔄 評価業務フロー（6フェーズ）</h3>
-                <div className={styles.phaseList}>
-                  <div className={styles.phaseItem}>
-                    <h4>Phase 1: 評価実施期間（約4週間）</h4>
-                    <ul>
-                      <li>Week 1-2: 自己評価・上司評価</li>
-                      <li>Week 3: 同僚評価（任意）</li>
-                      <li>Week 4: 人事部集計</li>
-                    </ul>
+                <h3 className={styles.sectionTitle}>
+                  <span className={styles.titleIcon}>🔄</span>
+                  実際の評価フロー（6フェーズ）
+                </h3>
+                <div className={styles.flowTimeline}>
+                  <div className={styles.timelineItem}>
+                    <div className={styles.timelineMarker}>
+                      <span className={styles.markerNumber}>1</span>
+                      <div className={styles.timelineLine}></div>
+                    </div>
+                    <div className={styles.timelineContent}>
+                      <div className={styles.timelineHeader}>
+                        <h4>Phase 1: 評価実施期間</h4>
+                        <span className={styles.timelineDuration}>約4週間</span>
+                      </div>
+                      <div className={styles.timelineDetail}>
+                        <div className={styles.weekSchedule}>
+                          <div className={styles.weekItem}>
+                            <span className={styles.weekLabel}>Week 1-2</span>
+                            <span className={styles.weekTask}>自己評価・上司評価</span>
+                          </div>
+                          <div className={styles.weekItem}>
+                            <span className={styles.weekLabel}>Week 3</span>
+                            <span className={styles.weekTask}>同僚評価（任意）</span>
+                          </div>
+                          <div className={styles.weekItem}>
+                            <span className={styles.weekLabel}>Week 4</span>
+                            <span className={styles.weekTask}>人事部集計</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className={styles.phaseItem}>
-                    <h4>Phase 2: 評価算出・調整（1-2週間）</h4>
-                    <ul>
-                      <li>施設内相対評価（S〜D）</li>
-                      <li>法人内相対評価（S〜D）</li>
-                      <li>総合評価マトリクス（7段階）</li>
-                    </ul>
+                  
+                  <div className={styles.timelineItem}>
+                    <div className={styles.timelineMarker}>
+                      <span className={styles.markerNumber}>2</span>
+                      <div className={styles.timelineLine}></div>
+                    </div>
+                    <div className={styles.timelineContent}>
+                      <div className={styles.timelineHeader}>
+                        <h4>Phase 2: 評価算出・調整</h4>
+                        <span className={styles.timelineDuration}>1-2週間</span>
+                      </div>
+                      <div className={styles.timelineDetail}>
+                        <div className={styles.evaluationProcess}>
+                          <div className={styles.processStep}>
+                            <Building size={16} />
+                            <span>施設内相対評価（S〜D）</span>
+                          </div>
+                          <ChevronRight size={16} />
+                          <div className={styles.processStep}>
+                            <Users size={16} />
+                            <span>法人内相対評価（S〜D）</span>
+                          </div>
+                          <ChevronRight size={16} />
+                          <div className={styles.processStep}>
+                            <Award size={16} />
+                            <span>総合評価マトリクス（7段階）</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className={styles.phaseItem}>
-                    <h4>Phase 3: 開示準備（1週間）</h4>
-                    <ul>
-                      <li>個別開示内容の決定</li>
-                      <li>通知書作成</li>
-                    </ul>
+                  
+                  <div className={styles.timelineItem}>
+                    <div className={styles.timelineMarker}>
+                      <span className={styles.markerNumber}>3</span>
+                      <div className={styles.timelineLine}></div>
+                    </div>
+                    <div className={styles.timelineContent}>
+                      <div className={styles.timelineHeader}>
+                        <h4>Phase 3: 開示準備</h4>
+                        <span className={styles.timelineDuration}>1週間</span>
+                      </div>
+                      <div className={styles.timelineDetail}>
+                        <ul className={styles.taskList}>
+                          <li>
+                            <CheckCircle size={14} />
+                            個別開示内容の決定
+                          </li>
+                          <li>
+                            <CheckCircle size={14} />
+                            通知書作成
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
                   </div>
-                  <div className={styles.phaseItem}>
-                    <h4>Phase 4: 多チャネル開示（1-2週間）</h4>
-                    <ul>
-                      <li>紙面配布（メイン）: 人事評価結果通知書</li>
-                      <li>VoiceDrive SNS（補完）: 個人宛通知</li>
-                    </ul>
+                  
+                  <div className={styles.timelineItem}>
+                    <div className={styles.timelineMarker}>
+                      <span className={styles.markerNumber}>4</span>
+                      <div className={styles.timelineLine}></div>
+                    </div>
+                    <div className={styles.timelineContent}>
+                      <div className={styles.timelineHeader}>
+                        <h4>Phase 4: 多チャネル開示</h4>
+                        <span className={styles.timelineDuration}>1-2週間</span>
+                      </div>
+                      <div className={styles.timelineDetail}>
+                        <div className={styles.disclosureChannels}>
+                          <div className={styles.channelItem}>
+                            <FileText size={20} />
+                            <div>
+                              <div className={styles.channelName}>紙面配布（メイン）</div>
+                              <div className={styles.channelDesc}>人事評価結果通知書</div>
+                            </div>
+                          </div>
+                          <div className={styles.channelItem}>
+                            <Bell size={20} />
+                            <div>
+                              <div className={styles.channelName}>VoiceDrive SNS（補完）</div>
+                              <div className={styles.channelDesc}>個人宛通知</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className={styles.phaseItem}>
-                    <h4>Phase 5: フィードバック面談（任意・随時）</h4>
-                    <ul>
-                      <li>申込者のみ実施</li>
-                      <li>キャリア支援重点</li>
-                    </ul>
+                  
+                  <div className={styles.timelineItem}>
+                    <div className={styles.timelineMarker}>
+                      <span className={styles.markerNumber}>5</span>
+                      <div className={styles.timelineLine}></div>
+                    </div>
+                    <div className={styles.timelineContent}>
+                      <div className={styles.timelineHeader}>
+                        <h4>Phase 5: フィードバック面談</h4>
+                        <span className={styles.timelineDuration}>任意・随時</span>
+                      </div>
+                      <div className={styles.timelineDetail}>
+                        <div className={styles.feedbackInfo}>
+                          <UserCheck size={16} />
+                          <span>申込者のみ実施・キャリア支援重点</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className={styles.phaseItem}>
-                    <h4>Phase 6: 継続フォロー（通年）</h4>
-                    <ul>
-                      <li>希望者への定期的な成長支援</li>
-                    </ul>
+                  
+                  <div className={styles.timelineItem}>
+                    <div className={styles.timelineMarker}>
+                      <span className={styles.markerNumber}>6</span>
+                    </div>
+                    <div className={styles.timelineContent}>
+                      <div className={styles.timelineHeader}>
+                        <h4>Phase 6: 継続フォロー</h4>
+                        <span className={styles.timelineDuration}>通年</span>
+                      </div>
+                      <div className={styles.timelineDetail}>
+                        <div className={styles.followupInfo}>
+                          <TrendingUp size={16} />
+                          <span>希望者への定期的な成長支援</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

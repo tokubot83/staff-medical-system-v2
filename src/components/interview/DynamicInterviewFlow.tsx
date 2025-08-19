@@ -70,6 +70,8 @@ import { generateSupportInterviewFromVoiceDrive, generateSupportInterview, Suppo
 import { generateSpecialInterview, SpecialInterviewType as SpecialInterviewBankType, SpecialGenerationParams } from '@/lib/interview-bank/services/special-generator';
 import { ExtendedInterviewParams, StaffProfile, PositionDetail } from '@/lib/interview-bank/types-extended';
 import { UnifiedBankService, UnifiedInterviewParams } from '@/lib/interview-bank/services/unified-bank-service';
+import { UnifiedInterviewGeneratorService, UnifiedInterviewParams as UnifiedGeneratorParams } from '@/lib/interview-bank/services/unified-generator-service';
+import { InterviewManualGenerationService, ManualGenerationRequest } from '@/services/interviewManualGenerationServiceWrapper';
 import DynamicInterviewSheet from '@/components/interview-bank/DynamicInterviewSheet';
 import DynamicInterviewSheetPrint from '@/components/interview-bank/DynamicInterviewSheetPrint';
 
@@ -861,20 +863,121 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
         }
         
       } else {
-        // 通常の定期面談（従来テンプレート）
-        const staffLevel = determineStaffLevel(session.staffMember!.experienceMonths);
-        
-        const request: ManualGenerationRequest = {
-          staffLevel,
-          jobRole: session.staffMember!.jobRole,
-          facilityType: session.staffMember!.facilityType,
+        // 統合サービスを使用して面談シートを生成
+        const unifiedParams: UnifiedGeneratorParams = {
           interviewType: session.interviewType as any,
+          subType: session.specialType,
           duration: session.duration,
-          motivationType: session.staffMember!.motivationType,
-          includeEvaluation: true
+          
+          staffProfile: {
+            staffId: session.staffMember!.id,
+            staffName: session.staffMember!.name,
+            profession: session.staffMember!.jobRole,
+            experienceLevel: determineExperienceLevel(
+              Math.floor(session.staffMember!.experienceMonths / 12),
+              session.staffMember!.position
+            ),
+            facility: session.staffMember!.facilityType,
+            department: session.staffMember!.department,
+            position: session.staffMember!.position,
+            yearsOfService: Math.floor(session.staffMember!.experienceMonths / 12),
+            yearsOfExperience: session.staffMember!.experienceYears,
+            hasManagementExperience: session.staffMember!.position?.includes('主任') || 
+                                    session.staffMember!.position?.includes('師長')
+          },
+          
+          reservation: {
+            id: `res_${Date.now()}`,
+            type: session.interviewType,
+            category: session.supportRequest?.category,
+            subCategory: session.supportRequest?.subCategory,
+            duration: session.duration,
+            scheduledDate: new Date(),
+            
+            // サポート面談用
+            consultationDetails: session.supportRequest?.consultationDetails,
+            consultationTopic: session.supportRequest?.consultationTopic,
+            urgency: session.supportRequest?.urgency,
+            
+            // 特別面談用
+            specialType: session.specialType,
+            exitReason: session.specialContext?.exitReason,
+            returnReason: session.specialContext?.returnReason,
+            incidentLevel: session.specialContext?.incidentLevel,
+            hasHandoverPlan: session.specialContext?.hasHandoverPlan,
+            needsAccommodation: session.specialContext?.needsAccommodation,
+            medicalClearance: session.specialContext?.medicalClearance
+          }
         };
         
-        manual = await InterviewManualGenerationService.generateManual(request);
+        // 統合サービスで生成
+        const generatedSheet = await UnifiedInterviewGeneratorService.generate(unifiedParams);
+        
+        // 生成されたシートをマニュアル形式に変換
+        manual = {
+          id: generatedSheet.id,
+          title: generatedSheet.title,
+          generatedAt: generatedSheet.generatedAt,
+          estimatedDuration: generatedSheet.duration,
+          staffInfo: {
+            level: determineStaffLevel(session.staffMember!.experienceMonths),
+            jobRole: session.staffMember!.jobRole,
+            facility: session.staffMember!.facilityType,
+            levelDescription: ''
+          },
+          overview: {
+            purpose: '面談の目的',
+            objectives: ['目標1', '目標2', '目標3'],
+            keyPoints: ['ポイント1', 'ポイント2', 'ポイント3'],
+            preparationItems: ['準備1', '準備2', '準備3']
+          },
+          sections: generatedSheet.sections.map(section => ({
+            id: section.id,
+            title: section.title,
+            duration: section.duration,
+            purpose: section.description || '',
+            questions: section.questions.map(q => ({
+              id: q.id,
+              question: q.text || q.question || '',
+              type: q.type || 'open',
+              required: q.isRequired || false,
+              details: {
+                purpose: q.category || '',
+                askingTips: q.tags || [],
+                expectedAnswers: [],
+                followUpQuestions: [],
+                redFlags: []
+              },
+              scale: q.scaleLabel ? {
+                min: 1,
+                max: 5,
+                labels: [],
+                description: q.scaleLabel
+              } : undefined,
+              hybridInput: q.type === 'hybrid' ? {
+                scaleLabel: q.scaleLabel || '',
+                textLabel: q.textLabel || '',
+                textPlaceholder: q.textPlaceholder || '',
+                requireText: false
+              } : undefined
+            })),
+            guidance: {
+              introduction: '',
+              keyPoints: [],
+              transitionPhrase: ''
+            }
+          })),
+          timeAllocation: generatedSheet.sections.map(s => ({
+            section: s.title,
+            minutes: s.duration,
+            percentage: Math.round((s.duration / generatedSheet.duration) * 100)
+          })),
+          guidelines: {
+            dos: ['傾聴の姿勢', '共感的対応', '具体例を引き出す'],
+            donts: ['批判的態度', '時間超過', 'プライバシー侵害'],
+            tips: ['面談タイプに応じた対応', '職員の状況に配慮']
+          }
+        };
       }
       
       if (manual) {
