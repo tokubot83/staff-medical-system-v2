@@ -238,6 +238,74 @@ export default function DynamicInterviewSheet({
     );
   };
 
+  // ハイブリッド質問コンポーネント（5段階評価＋テキスト）
+  const HybridQuestion = ({ question, section }: { 
+    question: InterviewQuestionInstance, 
+    section: InterviewSectionInstance 
+  }) => {
+    const scaleValue = responses[section.sectionId]?.[question.questionId]?.scale || 3;
+    const textValue = responses[section.sectionId]?.[question.questionId]?.text || '';
+    
+    const updateHybridResponse = (type: 'scale' | 'text', value: any) => {
+      const currentResponse = responses[section.sectionId]?.[question.questionId] || {};
+      updateResponse(section.sectionId, question.questionId, {
+        ...currentResponse,
+        [type]: value
+      });
+    };
+    
+    return (
+      <div className="mb-6 p-4 border rounded-lg bg-white shadow-sm">
+        <Label className="font-medium text-gray-800 mb-3 block">
+          {question.content || question.text}
+          {question.required || question.isRequired && <span className="text-red-500 ml-1">*</span>}
+        </Label>
+        
+        {/* 5段階評価部分 */}
+        <div className="mb-4">
+          <p className="text-sm text-gray-600 mb-2">
+            {question.scaleLabel || '評価'}
+          </p>
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-gray-500">1</span>
+            <div className="flex space-x-2">
+              {[1, 2, 3, 4, 5].map(num => (
+                <button
+                  key={num}
+                  onClick={() => updateHybridResponse('scale', num)}
+                  disabled={readOnly}
+                  className={`w-10 h-10 rounded-full border-2 font-medium transition-all ${
+                    scaleValue === num
+                      ? 'bg-blue-500 text-white border-blue-500'
+                      : 'bg-white text-gray-600 border-gray-300 hover:border-blue-300'
+                  } ${readOnly ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'}`}
+                >
+                  {num}
+                </button>
+              ))}
+            </div>
+            <span className="text-sm text-gray-500">5</span>
+          </div>
+        </div>
+        
+        {/* テキスト入力部分 */}
+        <div>
+          <p className="text-sm text-gray-600 mb-2">
+            {question.textLabel || '詳細・理由'}
+          </p>
+          <Textarea
+            placeholder={question.textPlaceholder || question.placeholder || "具体的な内容を記入してください..."}
+            className="w-full resize-none"
+            rows={3}
+            disabled={readOnly}
+            value={textValue}
+            onChange={(e) => updateHybridResponse('text', e.target.value)}
+          />
+        </div>
+      </div>
+    );
+  };
+
   // 質問タイプに応じたコンポーネントを返す
   const renderQuestion = (question: InterviewQuestionInstance, section: InterviewSectionInstance) => {
     // questionIdがない場合はidを使用
@@ -259,12 +327,14 @@ export default function DynamicInterviewSheet({
         return <RadioQuestion key={questionId} question={normalizedQuestion} section={section} />;
       case 'checkbox':
         return <CheckboxQuestion key={questionId} question={normalizedQuestion} section={section} />;
+      case 'hybrid':
+        return <HybridQuestion key={questionId} question={normalizedQuestion} section={section} />;
       case 'text':
         return (
           <div key={questionId} className="mb-6 p-4 border rounded-lg bg-white shadow-sm">
             <Label className="font-medium text-gray-800 mb-3 block">
-              {question.content}
-              {question.required && <span className="text-red-500 ml-1">*</span>}
+              {question.content || question.text}
+              {question.required || question.isRequired && <span className="text-red-500 ml-1">*</span>}
             </Label>
             <Input
               type="text"
@@ -277,9 +347,12 @@ export default function DynamicInterviewSheet({
         );
       case 'open':  // 開放型質問をtextareaとして処理
         return <TextAreaQuestion key={questionId} question={normalizedQuestion} section={section} />;
+      case 'checklist':  // checklistをcheckboxとして処理
+        return <CheckboxQuestion key={questionId} question={{ ...normalizedQuestion, type: 'checkbox' }} section={section} />;
       default:
         console.warn('Unknown question type:', question.type);
-        return null;
+        // フォールバック：textareaとして表示
+        return <TextAreaQuestion key={questionId} question={{ ...normalizedQuestion, type: 'textarea' }} section={section} />;
     }
   };
 

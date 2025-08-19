@@ -164,26 +164,47 @@ export class UnifiedInterviewGeneratorService {
    * 面談タイプを判定
    */
   private static detectInterviewType(params: UnifiedInterviewParams): InterviewTypeDetection {
-    const { reservation } = params;
+    const { reservation, interviewType, subType } = params;
     
-    // 明示的なタイプ指定がある場合
+    // 明示的にinterviewTypeが指定されている場合（シミュレーターから）
+    if (interviewType) {
+      if (interviewType === 'support') {
+        // subTypeから適切なジェネレーターを決定
+        if (subType === 'feedback') {
+          return { mainType: 'support', subType: 'feedback', generator: 'feedback', confidence: 1.0 };
+        } else if (subType === 'career') {
+          return { mainType: 'support', subType: 'career', generator: 'career', confidence: 1.0 };
+        } else {
+          return { mainType: 'support', subType: 'consultation', generator: 'consultation', confidence: 1.0 };
+        }
+      } else if (interviewType === 'special') {
+        return { mainType: 'special', subType: subType || 'general', generator: 'special', confidence: 1.0 };
+      } else {
+        return { mainType: 'regular', subType: subType, generator: 'regular', confidence: 1.0 };
+      }
+    }
+    
+    // 予約情報のtypeから判定
     if (reservation.type) {
       const typeMap: Record<string, InterviewTypeDetection> = {
         // 定期面談
         'regular': { mainType: 'regular', generator: 'regular', confidence: 1.0 },
         'regular_annual': { mainType: 'regular', subType: 'annual', generator: 'regular', confidence: 1.0 },
-        'regular_monthly': { mainType: 'regular', subType: 'monthly', generator: 'regular', confidence: 1.0 },
-        'regular_quarterly': { mainType: 'regular', subType: 'quarterly', generator: 'regular', confidence: 1.0 },
+        'new_employee_monthly': { mainType: 'regular', subType: 'monthly', generator: 'regular', confidence: 1.0 },
+        'management_biannual': { mainType: 'regular', subType: 'biannual', generator: 'regular', confidence: 1.0 },
         
         // サポート面談
         'support': this.detectSupportSubType(reservation),
         'feedback': { mainType: 'support', subType: 'feedback', generator: 'feedback', confidence: 1.0 },
+        'career_support': { mainType: 'support', subType: 'career', generator: 'career', confidence: 1.0 },
+        'workplace_support': { mainType: 'support', subType: 'consultation', generator: 'consultation', confidence: 1.0 },
+        'individual_consultation': { mainType: 'support', subType: 'consultation', generator: 'consultation', confidence: 1.0 },
         
         // 特別面談
         'special': { mainType: 'special', generator: 'special', confidence: 1.0 },
-        'exit': { mainType: 'special', subType: 'exit', generator: 'special', confidence: 1.0 },
-        'return_to_work': { mainType: 'special', subType: 'return_to_work', generator: 'special', confidence: 1.0 },
-        'incident_followup': { mainType: 'special', subType: 'incident_followup', generator: 'special', confidence: 1.0 }
+        'exit_interview': { mainType: 'special', subType: 'exit', generator: 'special', confidence: 1.0 },
+        'return_to_work': { mainType: 'special', subType: 'return', generator: 'special', confidence: 1.0 },
+        'incident_followup': { mainType: 'special', subType: 'incident', generator: 'special', confidence: 1.0 }
       };
       
       if (typeMap[reservation.type]) {
@@ -296,16 +317,36 @@ export class UnifiedInterviewGeneratorService {
    * 定期面談の生成（既存のv4-generatorを使用）
    */
   private static async generateRegularInterview(params: UnifiedInterviewParams): Promise<GeneratedBankSheet> {
-    const generationParams = {
-      interviewType: 'regular' as InterviewType,
+    // v4-generator用のパラメータを構築（ExtendedInterviewParams形式）
+    const extendedParams = {
+      staff: {
+        id: params.staffProfile.staffId,
+        name: params.staffProfile.staffName,
+        department: params.staffProfile.department,
+        profession: params.staffProfile.profession,
+        facilityType: params.staffProfile.facility,
+        experienceLevel: params.staffProfile.experienceLevel,
+        positionLevel: params.staffProfile.hasManagementExperience ? 'manager' : 'staff',
+        experienceYears: params.staffProfile.yearsOfExperience || 0,
+        position: {
+          name: params.staffProfile.position,
+          level: params.staffProfile.experienceLevel,
+          responsibilities: []
+        },
+        hireDate: new Date(Date.now() - (params.staffProfile.yearsOfService || 0) * 365 * 24 * 60 * 60 * 1000).toISOString(),
+        motivationType: 'growth' as const
+      },
       duration: params.duration,
-      staffLevel: params.staffProfile.experienceLevel,
-      jobRole: params.staffProfile.profession,
-      facilityType: params.staffProfile.facility
+      interviewType: params.reservation.type || 'regular_annual',
+      interviewDate: params.reservation.scheduledDate || new Date(),
+      interviewerId: 'unified-service',
+      interviewerName: '人事担当者',
+      includePositionQuestions: true,
+      includeFacilityQuestions: true
     };
     
     // v4-generatorを呼び出し
-    const sheet = await generateV4InterviewSheet(generationParams);
+    const sheet = generateV4InterviewSheet(extendedParams);
     
     return sheet;
   }
