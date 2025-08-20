@@ -334,10 +334,12 @@ export default function EvaluationDesignPage() {
                           <Upload className="h-5 w-5 mr-3" />
                           Excelデータを取込
                         </Button>
-                        <Button size="lg" variant="outline" className="w-full justify-start">
-                          <FileSpreadsheet className="h-5 w-5 mr-3" />
-                          評価テンプレート
-                        </Button>
+                        <Link href="/evaluation-design/templates">
+                          <Button size="lg" variant="outline" className="w-full justify-start">
+                            <FileSpreadsheet className="h-5 w-5 mr-3" />
+                            評価テンプレート
+                          </Button>
+                        </Link>
                       </>
                     )}
                     {currentMonth === 3 && (
@@ -566,10 +568,12 @@ export default function EvaluationDesignPage() {
                                     <Upload className="h-4 w-4 mr-2" />
                                     データ取込
                                   </Button>
-                                  <Button variant="outline" className="w-full justify-start">
-                                    <FileSpreadsheet className="h-4 w-4 mr-2" />
-                                    テンプレート
-                                  </Button>
+                                  <Link href="/evaluation-design/templates">
+                                    <Button variant="outline" className="w-full justify-start">
+                                      <FileSpreadsheet className="h-4 w-4 mr-2" />
+                                      テンプレート
+                                    </Button>
+                                  </Link>
                                 </>
                               )}
                               {currentMonth === 3 && (
