@@ -6,7 +6,7 @@ import EvaluationTemplateManager from '@/components/EvaluationTemplateManager';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, FileTemplate, Settings, Star, TrendingUp, Users, Zap } from 'lucide-react';
+import { ArrowLeft, FileText, Settings, Star, TrendingUp, Users, Zap } from 'lucide-react';
 import Link from 'next/link';
 
 export default function EvaluationTemplatesPage() {
@@ -27,7 +27,7 @@ export default function EvaluationTemplatesPage() {
               </Link>
               <div>
                 <h1 className="text-3xl font-bold flex items-center gap-3">
-                  <FileTemplate className="h-8 w-8 text-blue-600" />
+                  <FileText className="h-8 w-8 text-blue-600" />
                   評価テンプレート管理
                 </h1>
                 <p className="text-gray-600 mt-1">
