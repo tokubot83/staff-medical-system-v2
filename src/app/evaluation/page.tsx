@@ -28,7 +28,9 @@ import {
   FileSpreadsheet,
   Calculator,
   ArrowRight,
-  Badge
+  Badge,
+  MessageSquare,
+  FileCheck
 } from 'lucide-react';
 
 // タスクの型定義
@@ -52,6 +54,7 @@ interface Notification {
 const tabs = [
   { id: 'overview', label: '評価概要', icon: '🏠' },
   { id: 'guide', label: 'ガイド', icon: '❓', isNew: true },
+  { id: 'review', label: '評価確認', icon: '👁️', isNew: true },
   { id: 'settings', label: '設定・管理', icon: '⚙️' },
 ];
 
@@ -345,6 +348,75 @@ export default function EvaluationManagement() {
                   </details>
                 </div>
               </section>
+            </div>
+          )}
+
+          {/* 評価確認タブ */}
+          {activeTab === 'review' && (
+            <div className={styles.reviewContent}>
+              <div className={styles.reviewHeader}>
+                <h2 className={styles.sectionTitle}>
+                  <span className={styles.sectionEmoji}>👁️</span>
+                  評価確認（Review）
+                </h2>
+                <p className={styles.sectionDescription}>
+                  上司評価と自己評価を比較し、評価の妥当性を確認します
+                </p>
+              </div>
+
+              <div className={styles.reviewActions}>
+                <Link href="/evaluation-review" className={styles.reviewCard}>
+                  <div className={styles.reviewIcon}>
+                    <UserCheck size={36} color="#1976d2" />
+                  </div>
+                  <div className={styles.reviewInfo}>
+                    <h3>評価確認画面へ</h3>
+                    <p>上司評価と自己評価の比較・確認</p>
+                    <span className={styles.reviewBadge}>NEW</span>
+                  </div>
+                  <ChevronRight className={styles.chevronIcon} />
+                </Link>
+
+                <div className={styles.reviewFeatures}>
+                  <h3>主な機能</h3>
+                  <ul className={styles.featureList}>
+                    <li>
+                      <CheckCircle size={20} className={styles.featureIcon} />
+                      <span>上司評価と自己評価の並列表示</span>
+                    </li>
+                    <li>
+                      <BarChart3 size={20} className={styles.featureIcon} />
+                      <span>評価差異の可視化とアラート</span>
+                    </li>
+                    <li>
+                      <MessageSquare size={20} className={styles.featureIcon} />
+                      <span>評価に関するコメント機能</span>
+                    </li>
+                    <li>
+                      <FileCheck size={20} className={styles.featureIcon} />
+                      <span>評価確認と承認フロー</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className={styles.reviewStats}>
+                  <h3>現在の状況</h3>
+                  <div className={styles.statsGrid}>
+                    <div className={styles.statCard}>
+                      <div className={styles.statNumber}>12</div>
+                      <div className={styles.statLabel}>確認待ち</div>
+                    </div>
+                    <div className={styles.statCard}>
+                      <div className={styles.statNumber}>5</div>
+                      <div className={styles.statLabel}>大幅差あり</div>
+                    </div>
+                    <div className={styles.statCard}>
+                      <div className={styles.statNumber}>8</div>
+                      <div className={styles.statLabel}>承認済み</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
