@@ -12,6 +12,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import { 
   ChevronRight,
   ChevronLeft,
@@ -41,6 +42,7 @@ import {
   experienceLevels,
   type EvaluationItem 
 } from '@/data/evaluationItemBank';
+import EvaluationDesignSupport from '@/components/evaluation/EvaluationDesignSupport';
 
 interface WizardStep {
   id: string;
@@ -49,18 +51,34 @@ interface WizardStep {
   icon: React.ElementType;
 }
 
+interface SavedConfig {
+  id: string;
+  name: string;
+  facilityType: string;
+  role: string;
+  level: string;
+  coreItems: any;
+  facilityItems: any;
+  contributionSettings: any;
+  createdAt: string;
+  lastModified: string;
+}
+
 export default function EvaluationWizardPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedFacilityType, setSelectedFacilityType] = useState('acute');
   const [selectedRole, setSelectedRole] = useState('nurse');
   const [selectedLevel, setSelectedLevel] = useState('midlevel');
+  const [savedConfigs, setSavedConfigs] = useState<SavedConfig[]>([]);
+  const [configName, setConfigName] = useState('');
+  const [showDesignSupport, setShowDesignSupport] = useState(false);
   
   const [designData, setDesignData] = useState({
     // 法人統一項目の配分（実データから初期化）
     coreItems: {
-      C01: { superior: 7, self: 3, name: '専門技術・スキル' },
-      C02: { superior: 5, self: 5, name: '対人関係・ケア' },
-      C03: { superior: 8, self: 2, name: '安全・品質管理' }
+      C01: { superior: 7, self: 3, name: '専門技術・スキル', itemId: 'CORP_TECH_001' },
+      C02: { superior: 5, self: 5, name: '対人関係・ケア', itemId: 'CORP_CARE_001' },
+      C03: { superior: 8, self: 2, name: '安全・品質管理', itemId: 'CORP_SAFETY_001' }
     },
     // 施設特化項目（動的に選択）
     facilityItems: {
@@ -79,6 +97,53 @@ export default function EvaluationWizardPage() {
       }
     }
   });
+
+  // ローカルストレージから保存済み設定を読み込み
+  useEffect(() => {
+    const saved = localStorage.getItem('evaluationConfigs');
+    if (saved) {
+      setSavedConfigs(JSON.parse(saved));
+    }
+  }, []);
+
+  // 設定の保存
+  const saveConfiguration = () => {
+    if (!configName) {
+      alert('設定名を入力してください');
+      return;
+    }
+
+    const newConfig: SavedConfig = {
+      id: `config_${Date.now()}`,
+      name: configName,
+      facilityType: selectedFacilityType,
+      role: selectedRole,
+      level: selectedLevel,
+      coreItems: designData.coreItems,
+      facilityItems: designData.facilityItems,
+      contributionSettings: designData.contributionSettings,
+      createdAt: new Date().toISOString(),
+      lastModified: new Date().toISOString()
+    };
+
+    const updatedConfigs = [...savedConfigs, newConfig];
+    setSavedConfigs(updatedConfigs);
+    localStorage.setItem('evaluationConfigs', JSON.stringify(updatedConfigs));
+    alert('設定を保存しました');
+  };
+
+  // 保存済み設定の読み込み
+  const loadConfiguration = (config: SavedConfig) => {
+    setSelectedFacilityType(config.facilityType);
+    setSelectedRole(config.role);
+    setSelectedLevel(config.level);
+    setDesignData(prev => ({
+      ...prev,
+      coreItems: config.coreItems,
+      facilityItems: config.facilityItems,
+      contributionSettings: config.contributionSettings
+    }));
+  };
 
   // 施設タイプに応じた推奨項目をフィルタリング
   const getRecommendedFacilityItems = () => {
@@ -650,6 +715,62 @@ export default function EvaluationWizardPage() {
                   </AlertDescription>
                 </Alert>
 
+                {/* シミュレーションパラメータ */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Settings className="h-5 w-5" />
+                      シミュレーションパラメータ
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-3 gap-4">
+                      <div>
+                        <Label>想定成績レベル</Label>
+                        <Select defaultValue="average">
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="excellent">優秀（上位10%）</SelectItem>
+                            <SelectItem value="good">良好（上位30%）</SelectItem>
+                            <SelectItem value="average">平均（中位50%）</SelectItem>
+                            <SelectItem value="below">課題あり（下位30%）</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label>職員数</Label>
+                        <Select defaultValue="100">
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="50">50名</SelectItem>
+                            <SelectItem value="100">100名</SelectItem>
+                            <SelectItem value="200">200名</SelectItem>
+                            <SelectItem value="500">500名</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label>分布パターン</Label>
+                        <Select defaultValue="normal">
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="normal">正規分布</SelectItem>
+                            <SelectItem value="skewed-high">高得点寄り</SelectItem>
+                            <SelectItem value="skewed-low">低得点寄り</SelectItem>
+                            <SelectItem value="bimodal">二山分布</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
                 <Card>
                   <CardHeader>
                     <CardTitle>評価シミュレーション</CardTitle>
@@ -789,14 +910,94 @@ export default function EvaluationWizardPage() {
                   </CardContent>
                 </Card>
 
+                {/* 詳細分析 */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <BarChart3 className="h-5 w-5" />
+                      影響度分析
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div>
+                        <h4 className="font-medium mb-2">評価項目の影響度</h4>
+                        <div className="space-y-2">
+                          {Object.entries(designData.coreItems).map(([key, item]) => (
+                            <div key={key} className="flex items-center justify-between">
+                              <span className="text-sm">{item.name}</span>
+                              <div className="flex items-center gap-2">
+                                <Progress value={(item.superior + item.self) * 10} className="w-32 h-2" />
+                                <span className="text-xs text-gray-500">
+                                  {((item.superior + item.self) / 50 * 100).toFixed(0)}%
+                                </span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div>
+                        <h4 className="font-medium mb-2">職員層別適合度</h4>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div className="p-3 bg-green-50 rounded">
+                            <div className="text-sm font-medium text-green-700">新人・若手</div>
+                            <div className="text-2xl font-bold text-green-600 mt-1">85%</div>
+                            <div className="text-xs text-gray-600">基礎項目重視の配点</div>
+                          </div>
+                          <div className="p-3 bg-blue-50 rounded">
+                            <div className="text-sm font-medium text-blue-700">中堅</div>
+                            <div className="text-2xl font-bold text-blue-600 mt-1">92%</div>
+                            <div className="text-xs text-gray-600">バランス型配点</div>
+                          </div>
+                          <div className="p-3 bg-purple-50 rounded">
+                            <div className="text-sm font-medium text-purple-700">ベテラン</div>
+                            <div className="text-2xl font-bold text-purple-600 mt-1">88%</div>
+                            <div className="text-xs text-gray-600">専門性重視の配点</div>
+                          </div>
+                          <div className="p-3 bg-orange-50 rounded">
+                            <div className="text-sm font-medium text-orange-700">管理職</div>
+                            <div className="text-2xl font-bold text-orange-600 mt-1">90%</div>
+                            <div className="text-xs text-gray-600">マネジメント重視</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <Alert className="border-blue-200 bg-blue-50">
+                        <Lightbulb className="h-4 w-4 text-blue-600" />
+                        <AlertDescription>
+                          <strong>最適化提案:</strong>
+                          <br />• 新人向けに基礎技術項目の配点を+2点増やすことを推奨
+                          <br />• 中堅層のリーダーシップ項目を強化すると組織力向上に寄与
+                          <br />• 貢献度評価とのバランスは適切です
+                        </AlertDescription>
+                      </Alert>
+                    </div>
+                  </CardContent>
+                </Card>
+
                 <div className="grid grid-cols-2 gap-4">
-                  <Button variant="outline" size="lg" className="w-full">
+                  <Button 
+                    variant="outline" 
+                    size="lg" 
+                    className="w-full"
+                    onClick={() => {
+                      alert('シミュレーションパラメータを変更して再計算します');
+                    }}
+                  >
                     <Eye className="h-4 w-4 mr-2" />
-                    他の条件でシミュレーション
+                    条件を変更して再シミュレーション
                   </Button>
-                  <Button variant="outline" size="lg" className="w-full">
+                  <Button 
+                    variant="outline" 
+                    size="lg" 
+                    className="w-full"
+                    onClick={() => {
+                      alert('分布グラフを表示します（グラフコンポーネント実装予定）');
+                    }}
+                  >
                     <BarChart3 className="h-4 w-4 mr-2" />
-                    分布グラフを表示
+                    詳細分布グラフを表示
                   </Button>
                 </div>
               </div>
@@ -811,6 +1012,63 @@ export default function EvaluationWizardPage() {
                     設定内容を確認し、保存してください。保存後は各施設への通知と承認プロセスに進みます。
                   </AlertDescription>
                 </Alert>
+
+                {/* 設定名入力 */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>設定名</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="例: 2025年度急性期病院看護職評価基準"
+                        value={configName}
+                        onChange={(e) => setConfigName(e.target.value)}
+                        className="flex-1 px-3 py-2 border rounded-md"
+                      />
+                      <Button onClick={saveConfiguration}>
+                        <Save className="h-4 w-4 mr-2" />
+                        保存
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* 保存済み設定 */}
+                {savedConfigs.length > 0 && (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>保存済み設定</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        {savedConfigs.map((config) => (
+                          <div key={config.id} className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50">
+                            <div>
+                              <div className="font-medium">{config.name}</div>
+                              <div className="text-sm text-gray-500">
+                                {facilityTypes[config.facilityType as keyof typeof facilityTypes]} - 
+                                {roles[config.role as keyof typeof roles]} - 
+                                {experienceLevels[config.level as keyof typeof experienceLevels]}
+                              </div>
+                              <div className="text-xs text-gray-400">
+                                作成: {new Date(config.createdAt).toLocaleDateString()}
+                              </div>
+                            </div>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => loadConfiguration(config)}
+                            >
+                              読み込み
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
 
                 <Card>
                   <CardHeader>
@@ -911,15 +1169,58 @@ export default function EvaluationWizardPage() {
                 </Card>
 
                 <div className="flex gap-4">
-                  <Button size="lg" className="flex-1">
+                  <Button 
+                    size="lg" 
+                    className="flex-1"
+                    onClick={() => {
+                      saveConfiguration();
+                      alert('設定を保存し、承認申請プロセスを開始しました');
+                    }}
+                  >
                     <Save className="h-4 w-4 mr-2" />
                     設定を保存して承認申請
                   </Button>
-                  <Button size="lg" variant="outline">
+                  <Button 
+                    size="lg" 
+                    variant="outline"
+                    onClick={() => setShowDesignSupport(!showDesignSupport)}
+                  >
                     <Eye className="h-4 w-4 mr-2" />
-                    評価シートプレビュー
+                    詳細設計支援ツール
                   </Button>
                 </div>
+
+                {/* EvaluationDesignSupport統合 */}
+                {showDesignSupport && (
+                  <Card className="mt-6">
+                    <CardHeader>
+                      <CardTitle>評価設計支援ツール</CardTitle>
+                      <CardDescription>
+                        評価シートの体系的設計知見を活用した詳細な設計支援
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <EvaluationDesignSupport 
+                        onConfigChange={(config) => {
+                          console.log('Design support config changed:', config);
+                          // 設計支援ツールからの変更を反映
+                          if (config.facilityItems && config.facilityItems.length > 0) {
+                            const newFacilityItems = config.facilityItems.reduce((acc: any, item) => {
+                              acc.selected.push(item.id);
+                              acc.allocation[item.id] = item.points;
+                              return acc;
+                            }, { selected: [], allocation: {} });
+                            
+                            setDesignData(prev => ({
+                              ...prev,
+                              facilityItems: newFacilityItems
+                            }));
+                          }
+                        }}
+                      />
+                    </CardContent>
+                  </Card>
+                )}
               </div>
             )}
           </CardContent>
