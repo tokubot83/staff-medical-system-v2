@@ -51,8 +51,8 @@ import Link from 'next/link';
 import { ExperienceLevelMapper, ExperienceLevelsV3 } from '@/services/evaluationV3Service';
 import DashboardHeader from '@/components/evaluation/DashboardHeader';
 import IntegratedJudgment from '@/components/evaluation/IntegratedJudgment';
-import DisclosureManagement from '@/components/evaluation/DisclosureManagement';
-import AppealManagement from '@/components/evaluation/AppealManagement';
+import DisclosureManagementV3 from '@/components/evaluation/DisclosureManagementV3';
+import AppealManagementV3 from '@/components/evaluation/AppealManagementV3';
 import EvaluationSheetSelector from '@/components/evaluation/EvaluationSheetSelector';
 
 export default function EvaluationExecutionPage() {
@@ -427,23 +427,38 @@ export default function EvaluationExecutionPage() {
           </CardContent>
         </Card>
 
-        <div className={styles.mainTabNavigation}>
-          {[
-            { id: 'input', label: '評価入力', icon: '✍️' },
-            { id: 'review', label: '評価確認', icon: '🔍' },
-            { id: 'judgment', label: '総合判定', icon: '⚖️' },
-            { id: 'disclosure', label: '評価開示', icon: '👁️' },
-            { id: 'appeal', label: '異議申立', icon: '📢' }
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`${styles.mainTabButton} ${activeTab === tab.id ? styles.active : ''}`}
-            >
-              <span className={styles.tabIcon}>{tab.icon}</span>
-              <span className={styles.tabLabel}>{tab.label}</span>
-            </button>
-          ))}
+        {/* V3評価システム専用ヘッダー */}
+        <div className="mb-4 flex items-center justify-between">
+          <div className={styles.mainTabNavigation}>
+            {[
+              { id: 'input', label: '評価入力', icon: '✍️' },
+              { id: 'review', label: '評価確認', icon: '🔍' },
+              { id: 'judgment', label: '総合判定', icon: '⚖️' },
+              { id: 'disclosure', label: '評価開示', icon: '👁️' },
+              { id: 'appeal', label: '異議申立', icon: '📢' }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`${styles.mainTabButton} ${activeTab === tab.id ? styles.active : ''}`}
+              >
+                <span className={styles.tabIcon}>{tab.icon}</span>
+                <span className={styles.tabLabel}>{tab.label}</span>
+              </button>
+            ))}
+          </div>
+          
+          {/* V3システム表示 */}
+          <div className="flex items-center gap-2 bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-lg px-4 py-2 shadow-sm">
+            <Sparkles className="w-5 h-5 text-purple-600" />
+            <div className="text-sm">
+              <div className="font-medium text-purple-900">V3評価システム</div>
+              <div className="text-purple-700">技術50点+組織貢献50点</div>
+            </div>
+            <Badge className="bg-purple-100 text-purple-800 font-medium">
+              100点満点
+            </Badge>
+          </div>
         </div>
 
         <div className={styles.tabContent}>
@@ -729,13 +744,13 @@ export default function EvaluationExecutionPage() {
 
           {activeTab === 'disclosure' && (
             <div className="p-6">
-              <DisclosureManagement />
+              <DisclosureManagementV3 />
             </div>
           )}
 
           {activeTab === 'appeal' && (
             <div className="p-6">
-              <AppealManagement />
+              <AppealManagementV3 />
             </div>
           )}
         </div>
