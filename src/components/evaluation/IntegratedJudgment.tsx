@@ -67,6 +67,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import styles from './IntegratedJudgment.module.css';
+import { RelativeEvaluationEngine, type EvaluationData, type RelativeEvaluationResult } from '@/services/RelativeEvaluationEngine';
 
 interface StaffEvaluation {
   id: string;
@@ -96,6 +97,8 @@ export default function IntegratedJudgment() {
   const [batchAction, setBatchAction] = useState('');
   const [showBatchDialog, setShowBatchDialog] = useState(false);
   const [batchComment, setBatchComment] = useState('');
+  const [evaluationEngine] = useState(new RelativeEvaluationEngine());
+  const [currentEvaluationPhase, setCurrentEvaluationPhase] = useState<'summer' | 'winter' | 'final'>('summer');
 
   // モックデータ
   const [evaluations, setEvaluations] = useState<StaffEvaluation[]>([
@@ -230,8 +233,141 @@ export default function IntegratedJudgment() {
     return 'D';
   };
 
+  // 6月夏季組織貢献度評価処理
+  const processSummerEvaluation = async () => {
+    try {
+      const mockAssessmentData = [
+        {
+          staffId: '1',
+          staffName: '山田 太郎',
+          facilityId: 'espoir',
+          facilityName: 'エスポワール立神',
+          jobCategory: 'nurse',
+          rawFacilityScore: 85,
+          rawCorporateScore: 78
+        },
+        {
+          staffId: '2',
+          staffName: '佐藤 花子',
+          facilityId: 'espoir',
+          facilityName: 'エスポワール立神',
+          jobCategory: 'nurse',
+          rawFacilityScore: 92,
+          rawCorporateScore: 65
+        }
+      ];
+
+      const summerResults = evaluationEngine.processSummerContribution(mockAssessmentData);
+      console.log('6月夏季組織貢献度評価結果:', summerResults);
+      
+      alert(`夏季組織貢献度評価が完了しました\n処理件数: ${summerResults.length}件`);
+    } catch (error) {
+      console.error('夏季評価処理エラー:', error);
+      alert('夏季評価の処理中にエラーが発生しました');
+    }
+  };
+
+  // 12月年間組織貢献度評価処理
+  const processWinterEvaluation = async () => {
+    try {
+      // 実装予定：冬季評価処理
+      alert('12月冬季組織貢献度評価（実装予定）');
+    } catch (error) {
+      console.error('冬季評価処理エラー:', error);
+    }
+  };
+
+  // 3月最終総合評価処理
+  const processFinalEvaluation = async () => {
+    try {
+      // 実装予定：最終総合評価処理
+      alert('3月最終総合評価（実装予定）');
+    } catch (error) {
+      console.error('最終評価処理エラー:', error);
+    }
+  };
+
   return (
     <div className={styles.container}>
+      {/* 評価フェーズ選択 */}
+      <Card className="mb-6 border-2 border-purple-200 bg-gradient-to-r from-purple-50 to-indigo-50">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Calendar className="h-5 w-5 text-purple-600" />
+            評価実行フェーズ
+          </CardTitle>
+          <CardDescription>
+            年間評価スケジュールに沿った評価処理を実行
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-3 gap-4">
+            <Card 
+              className={`cursor-pointer transition-all ${currentEvaluationPhase === 'summer' ? 'border-2 border-blue-500 bg-blue-50' : 'hover:shadow-lg'}`}
+              onClick={() => setCurrentEvaluationPhase('summer')}
+            >
+              <CardContent className="p-4 text-center">
+                <div className="text-2xl font-bold text-blue-600">6月</div>
+                <div className="text-sm font-medium">夏季組織貢献度評価</div>
+                <div className="text-xs text-gray-500 mt-1">25点（12.5+12.5）</div>
+                <Button 
+                  size="sm" 
+                  className="mt-3"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    processSummerEvaluation();
+                  }}
+                >
+                  実行
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card 
+              className={`cursor-pointer transition-all ${currentEvaluationPhase === 'winter' ? 'border-2 border-green-500 bg-green-50' : 'hover:shadow-lg'}`}
+              onClick={() => setCurrentEvaluationPhase('winter')}
+            >
+              <CardContent className="p-4 text-center">
+                <div className="text-2xl font-bold text-green-600">12月</div>
+                <div className="text-sm font-medium">年間組織貢献度確定</div>
+                <div className="text-xs text-gray-500 mt-1">50点（夏25+冬25）</div>
+                <Button 
+                  size="sm" 
+                  className="mt-3"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    processWinterEvaluation();
+                  }}
+                >
+                  実行
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card 
+              className={`cursor-pointer transition-all ${currentEvaluationPhase === 'final' ? 'border-2 border-orange-500 bg-orange-50' : 'hover:shadow-lg'}`}
+              onClick={() => setCurrentEvaluationPhase('final')}
+            >
+              <CardContent className="p-4 text-center">
+                <div className="text-2xl font-bold text-orange-600">3月</div>
+                <div className="text-sm font-medium">最終総合評価決定</div>
+                <div className="text-xs text-gray-500 mt-1">100点（技術50+貢献50）</div>
+                <Button 
+                  size="sm" 
+                  className="mt-3"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    processFinalEvaluation();
+                  }}
+                >
+                  実行
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </CardContent>
+      </Card>
+
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid grid-cols-5 w-full">
           <TabsTrigger value="overview">概要</TabsTrigger>
@@ -312,7 +448,62 @@ export default function IntegratedJudgment() {
         <TabsContent value="batch" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>バッチ処理</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <FileSpreadsheet className="h-5 w-5" />
+                Excel一括処理
+              </CardTitle>
+              <CardDescription>
+                施設別査定表データの一括取込・相対評価・結果出力
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Alert className="mb-4">
+                <Upload className="h-4 w-4" />
+                <AlertDescription>
+                  <strong>処理フロー:</strong> Excel取込 → 施設内全職員相対評価 → 12.5点ずつ配点 → 結果出力
+                </AlertDescription>
+              </Alert>
+              
+              <div className="grid grid-cols-3 gap-4 mb-6">
+                <Card className="border-blue-200 bg-blue-50">
+                  <CardContent className="p-4 text-center">
+                    <Upload className="h-8 w-8 mx-auto mb-2 text-blue-600" />
+                    <div className="font-medium">Step 1</div>
+                    <div className="text-sm text-gray-600">査定表取込</div>
+                    <Button size="sm" className="mt-2" variant="outline">
+                      Excelファイル選択
+                    </Button>
+                  </CardContent>
+                </Card>
+                
+                <Card className="border-green-200 bg-green-50">
+                  <CardContent className="p-4 text-center">
+                    <Calculator className="h-8 w-8 mx-auto mb-2 text-green-600" />
+                    <div className="font-medium">Step 2</div>
+                    <div className="text-sm text-gray-600">相対評価処理</div>
+                    <Button size="sm" className="mt-2" variant="outline">
+                      処理実行
+                    </Button>
+                  </CardContent>
+                </Card>
+                
+                <Card className="border-orange-200 bg-orange-50">
+                  <CardContent className="p-4 text-center">
+                    <Download className="h-8 w-8 mx-auto mb-2 text-orange-600" />
+                    <div className="font-medium">Step 3</div>
+                    <div className="text-sm text-gray-600">結果出力</div>
+                    <Button size="sm" className="mt-2" variant="outline">
+                      結果ダウンロード
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader>
+              <CardTitle>個別評価処理</CardTitle>
               <CardDescription>
                 複数の評価を一括で処理します
               </CardDescription>

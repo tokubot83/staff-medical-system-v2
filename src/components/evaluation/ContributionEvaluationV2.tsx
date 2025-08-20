@@ -401,7 +401,7 @@ export default function ContributionEvaluationV2({
         <AlertDescription>
           <strong>相対評価による配点システム：</strong>
           <div className="mt-2 space-y-1 text-sm">
-            <p>1. 管理者が入力した素点を基に、施設・職種内で順位付けを実施</p>
+            <p>1. 管理者が入力した素点を基に、施設内全職員で順位付けを実施</p>
             <p>2. パーセンタイルに基づいて自動的に配点（各期最大12.5点）</p>
             <p className="ml-4">・上位10%: 12.5点　・上位20%: 11.25点　・上位30%: 10点</p>
             <p className="ml-4">・上位50%: 7.5点　・上位70%: 5点　・上位90%: 2.5点</p>

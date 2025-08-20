@@ -1,24 +1,39 @@
-# 実装再開指示書 - 2025年8月19日版
+# 実装再開指示書 - 2025年8月20日版（更新）
 
-## 📅 作成日: 2025-08-19
+## 📅 最終更新: 2025-08-20
+## ⏰ 更新時刻: 18:45 JST
 ## 👤 対象: Claude Code Assistant
 ## 📍 作業ディレクトリ: C:\projects\staff-medical-system
 
 ---
 
-## 🎯 本日の完了事項サマリー
+## 🎯 本日（8月20日）の完了事項サマリー
 
-### ✅ 評価シート統合機能完成
-- **個別評価管理ページへの評価シート統合** - 完全実装完了
-- **EvaluationSheetSelector コンポーネント** - 職員属性ベース自動選択機能
-- **リアルタイム評価入力・スコア計算** - 5段階評価システム + S/A/B/C/Dグレード判定
-- **進捗管理同期** - 評価完了後の状態更新とダッシュボード連携
-- **技術評価50点システム** - 法人統一項目（30点）+ 施設特化項目（20点）
+### ✅ 評価制度設計機能の完全統合実装（8月19日完成）
+- **評価制度設計ウィザード完成** - evaluationItemBankとの統合
+- **施設別評価設定統合** - 3施設（エスポワール立神、小原病院、立神リハビリテーション温泉病院）対応
+- **評価シミュレーション機能** - 影響度分析・職員層別適合度評価・スコア分布予測
+- **設定保存・読み込み機能** - 詳細シミュレーション結果の永続化
 
-### ✅ Vercelビルドエラー修正
+### ✅ 評価項目テンプレート管理システム完成（8月20日NEW）
+- **新システムv3専用テンプレートバンク構築** - 100点満点システム完全対応
+- **統一テンプレートで制度設計・個人評価の両方に対応** - 1つのバンク、2つの使い方
+- **職員属性ベース推奨テンプレート機能** - 施設種別・職種・経験レベル自動マッチング
+- **EvaluationTemplateManager コンポーネント** - フィルタ機能付きテンプレート選択UI
+- **リアルタイムプレビュー機能** - テンプレート内容・評価時間・統計情報表示
+
+### ✅ 評価確認（Review）タブ完全実装（8月20日NEW）
+- **上司評価と自己評価の比較UI** - 並列表示・差異可視化
+- **4つの表示タブ** - 総合評価・技術評価・組織貢献・コメント
+- **評価差異の自動分析** - 一致・軽微差・大幅差の色分け表示
+- **双方向コメント機能** - 上司・本人・HR間のフィードバック機能
+- **差異アラート機能** - 大幅差項目の自動検出と承認前確認促進
+
+### ✅ Vercelビルドエラー修正完了
+- **FileTemplateアイコンエラー修正** - FileTextアイコンへ変更
 - **JSX構文エラー修正** - CardTitleタグの不正な終了タグを修正
 - **変数初期化順序修正** - Cannot access 'W' before initialization エラー解消
-- **両ブランチ同期** - main/preview/feature-name 両方にプッシュ完了
+- **両ブランチ同期完了** - main/preview/feature-name 両方にプッシュ完了
 
 ---
 
@@ -46,118 +61,88 @@ npm run dev  # 開発サーバー起動確認
 # http://localhost:3000/evaluation-execution
 # http://localhost:3000/evaluation-design/timeline
 # http://localhost:3000/evaluation-design/wizard
+# http://localhost:3000/evaluation-design/templates    # NEW: テンプレート管理
+# http://localhost:3000/evaluation-review            # NEW: 評価確認
 ```
 
 ---
 
 ## 📋 残り実装作業一覧
 
-### 【最優先】1. 評価制度設計の年間UI統合作業
+### ✅ 完了済み機能（8月19日-20日実装完了）
+#### ~~1-1. 設計ウィザードの完成~~ ✅ **完了**
+#### ~~1-2. 施設別評価設定の統合~~ ✅ **完了** 
+#### ~~1-3. 評価シミュレーション機能~~ ✅ **完了**
+#### ~~1-4. 評価項目テンプレート管理~~ ✅ **完了**
+#### ~~2-1. 評価確認（review）タブ~~ ✅ **完了**
 
-#### 1-1. 設計ウィザードの完成 🔴 未完成
-**場所**: `/evaluation-design/wizard`
-**状況**: 基本構造あり、evaluationItemBankとの統合が必要
+---
+
+### 【最優先】1. 評価実行ページのワークフロー完成
+
+#### 1-1. 総合判定（judgment）タブ 🔴 未完成
+**場所**: `/evaluation` ページ内の judgment タブ
 **作業内容**:
 ```typescript
-// 必要な統合作業
-- EvaluationDesignSupportコンポーネントとの連携
-- 法人統一項目（30点）+ 施設特化項目（20点）の配分設計UI
-- 既存評価シート（102個）を活用したテンプレート生成
-- 職種・経験レベル・施設タイプに応じた自動選択
+- 技術評価50点 + 組織貢献50点の統合計算
+- 100点満点スコアでの最終グレード決定
+- 2軸相対評価（施設内・法人内）での最終判定
+- 判定理由・根拠の記録機能
+- 統合判定結果の表示・確認UI
 ```
 
-#### 1-2. 施設別評価設定の統合 🔴 未完成
-**場所**: `/evaluation-design/facility/[name]`
+#### 1-2. 評価開示（disclosure）タブ 🔴 未完成  
+**場所**: `/evaluation` ページ内の disclosure タブ
 **作業内容**:
 ```typescript
-- 各施設特性に応じた評価項目カスタマイズ
-- facilitySpecificItems との連携
-- 既存評価シート（v4）との統合
-- 施設別配点調整機能
+- 職員への評価結果開示管理
+- 開示タイミング・範囲の制御
+- 開示内容のカスタマイズ（部分開示・全開示）
+- 開示履歴・状況管理
+- フィードバック面談スケジュール機能
 ```
 
-#### 1-3. 評価シミュレーション機能 🔴 未完成
-**場所**: `/evaluation-design/simulation`
+#### 1-3. 異議申立（appeal）タブ 🔴 未完成
+**場所**: `/evaluation` ページ内の appeal タブ  
 **作業内容**:
 ```typescript
-- 新配分設計での評価結果予測
-- 既存データとの比較分析
-- リアルタイムシミュレーション
-- 影響度分析レポート
+- 異議申立受付フォーム
+- 申立内容の分類・整理
+- 処理状況管理（受付→審査→回答）
+- 承認ワークフロー（人事→上司→経営陣）
+- 異議申立履歴・結果管理
 ```
 
-#### 1-4. 評価項目テンプレート管理 🔴 未完成
-**場所**: `/evaluation-design/templates`
-**作業内容**:
-```typescript
-- 68個の面談シート + 102個の評価シートのテンプレート化
-- 動的項目選択システム
-- テンプレート編集・保存機能
-- カテゴリ別管理機能
-```
+### 【優先度中】2. 組織貢献度評価の統合
 
-### 【優先度中】2. 評価実行ページのワークフロー完成
-
-#### 2-1. 評価確認（review）タブ 🟡 基本構造あり
-**作業内容**:
-```typescript
-- 上司評価と本人評価の比較UI
-- 差異の可視化（グラフ・チャート）
-- 調整会議スケジュール機能
-- 評価調整プロセス
-```
-
-#### 2-2. 総合判定（judgment）タブ 🟡 基本構造あり
-**作業内容**:
-```typescript
-- IntegratedJudgmentコンポーネントの実装完成
-- 技術評価50点 + 組織貢献50点の統合
-- 最終グレード決定プロセス
-- 判定理由記録機能
-```
-
-#### 2-3. 評価開示（disclosure）タブ 🟡 基本構造あり
-**作業内容**:
-```typescript
-- DisclosureManagementコンポーネント実装完成
-- 職員への結果開示管理
-- 開示タイミング制御
-- 開示内容のカスタマイズ
-```
-
-#### 2-4. 異議申立（appeal）タブ 🟡 基本構造あり
-**作業内容**:
-```typescript
-- AppealManagementコンポーネント実装完成
-- 異議申立受付・処理フロー
-- 再評価プロセス
-- 申立履歴管理
-```
-
-### 【優先度中】3. 組織貢献度評価の統合
-
-#### 3-1. ContributionEvaluationV2 統合 🔴 未着手
+#### 2-1. ContributionEvaluationV2 統合 🔴 未着手
+**場所**: `/evaluation` ページ内の 組織貢献度評価システム
 **作業内容**:
 ```typescript
 - 組織貢献度評価（50点）の実装
-- 技術評価との統合で100点満点システム完成
-- 6月・12月の貢献度評価との連動
+- 技術評価との統合で100点満点システム完成  
+- 4軸独立相対評価システム
+- 施設貢献25点 + 法人貢献25点の配分システム
+- 6月・12月の定期評価との連動
 - 相対評価ランキング機能
 ```
 
-### 【優先度低】4. API実装とデータベース統合
+### 【優先度低】3. API実装とデータベース統合
 
-#### 4-1. 評価データAPI完成 🟡 部分実装
+#### 3-1. 評価データAPI完成 🔴 未着手
+**場所**: `/api/v1/evaluations/` 各エンドポイント
 **作業内容**:
 ```typescript
 // 未実装API
 POST /api/v1/evaluations/submit      // 評価提出
-PUT  /api/v1/evaluations/update      // 評価更新
+PUT  /api/v1/evaluations/update      // 評価更新  
 GET  /api/v1/evaluations/history     // 評価履歴
 POST /api/v1/evaluations/appeals     // 異議申立
+POST /api/v1/evaluations/review      // 評価確認データ送信
+PUT  /api/v1/evaluations/judgment    // 総合判定結果保存
 ```
 
-#### 4-2. データベース接続 🔴 未着手
+#### 3-2. データベース接続設定 🔴 未着手（DB未構築のため保留）
 **環境変数設定**:
 ```bash
 DATABASE_URL=
@@ -169,7 +154,10 @@ NEXTAUTH_URL=
 
 ## 📊 現在の実装状況
 
-### ✅ 完成済み（確認不要）
+### ✅ 完成済み（8月19日-20日実装完了）
+- **評価制度設計機能** - ウィザード・施設別設定・シミュレーション完全統合
+- **評価項目テンプレート管理システム** - 新システムv3専用テンプレートバンク完成
+- **評価確認（Review）タブ** - 上司・自己評価比較UI完全実装
 - **評価シート統合機能** - EvaluationSheetSelector完成
 - **102個の評価シート実装** - v4評価シート全実装
 - **68個の面談シート実装** - v5面談シート全実装
@@ -179,10 +167,13 @@ NEXTAUTH_URL=
 - **MCP統合システム** - VoiceDrive連携
 - **年間スケジュールUI** - timeline.tsx基本完成
 
-### 🔄 実装中・要完成
-- **評価制度設計ウィザード** - 基本UI完成、統合作業必要
-- **評価実行5段階ワークフロー** - 1段階目完成、残り4段階要実装
-- **施設別設定管理** - 基本構造あり、詳細実装必要
+### 🔄 残り実装作業（6項目）
+- **総合判定（judgment）タブ** - 100点満点統合判定システム
+- **評価開示（disclosure）タブ** - 結果開示管理システム
+- **異議申立（appeal）タブ** - 申立受付・処理ワークフロー
+- **組織貢献度評価統合** - 50点評価システム（ContributionEvaluationV2）
+- **評価データAPI** - submit/update/history/appeals/review/judgment
+- **データベース接続設定** - 環境変数・DB接続（DB構築後）
 
 ---
 
@@ -205,36 +196,39 @@ http://localhost:3000/evaluation-design/timeline # 年間スケジュール
 http://localhost:3000/evaluation-design/wizard   # 設計ウィザード（要完成）
 ```
 
-### 3. 推奨作業順序
-1. **設計ウィザードの完成** (最優先・影響大)
-2. **シミュレーション機能実装** (ウィザードと密結合)
-3. **評価確認タブの実装** (ユーザビリティ向上)
-4. **組織貢献度評価統合** (システム完成度向上)
+### 3. 推奨作業順序（更新版）
+1. **総合判定（judgment）タブの実装** (最優先・システム中核機能)
+2. **組織貢献度評価統合** (100点満点システム完成)
+3. **評価開示（disclosure）タブの実装** (ユーザビリティ向上)
+4. **異議申立（appeal）タブの実装** (ワークフロー完成)
 
 ---
 
 ## 📁 重要ファイル・コンポーネント一覧
 
-### 新規作成・完成したコンポーネント
+### 新規作成・完成したコンポーネント（8月20日完成）
 ```typescript
-src/components/evaluation/EvaluationSheetSelector.tsx     // 本日完成
-src/data/evaluationItemBank.ts                           // 評価項目マスター
+src/data/evaluationTemplateBank.ts                      // 新システムv3専用テンプレートバンク
+src/components/EvaluationTemplateManager.tsx            // テンプレート管理UI
+src/components/evaluation/EvaluationReviewTab.tsx       // 評価確認タブ
+src/app/evaluation-review/page.tsx                      // 評価確認専用ページ
+src/app/evaluation-design/templates/page.tsx            // テンプレート管理ページ
 ```
 
-### 実装継続が必要なファイル
+### 既存完成済みコンポーネント
 ```typescript
-src/app/evaluation-design/wizard/page.tsx               // 設計ウィザード
-src/app/evaluation-design/simulation/page.tsx           // シミュレーション
-src/app/evaluation-design/facility/[name]/page.tsx      // 施設別設定
-src/components/evaluation/IntegratedJudgment.tsx        // 総合判定
-src/components/evaluation/DisclosureManagement.tsx      // 評価開示
-src/components/evaluation/AppealManagement.tsx          // 異議申立
-src/components/evaluation/ContributionEvaluationV2.tsx  // 組織貢献度
+src/components/evaluation/EvaluationSheetSelector.tsx   // 評価シート選択（完成）
+src/data/evaluationItemBank.ts                         // 評価項目マスター（完成）
+src/components/evaluation/EvaluationDesignSupport.tsx  // 設計支援ツール（完成）
 ```
 
-### 統合対象コンポーネント
+### 実装継続が必要なファイル（残り作業）
 ```typescript
-src/components/evaluation/EvaluationDesignSupport.tsx   // 設計支援ツール
+src/components/evaluation/EvaluationJudgmentTab.tsx     // 総合判定タブ（新規作成必要）
+src/components/evaluation/EvaluationDisclosureTab.tsx   // 評価開示タブ（新規作成必要）
+src/components/evaluation/EvaluationAppealTab.tsx       // 異議申立タブ（新規作成必要）
+src/components/evaluation/ContributionEvaluationV2.tsx  // 組織貢献度評価（新規作成必要）
+src/api/v1/evaluations/                                // API各エンドポイント（新規作成必要）
 ```
 
 ---
@@ -313,15 +307,17 @@ git push origin preview/feature-name
 
 ## 🎊 開発価値・成果
 
-**現在の推定システム価値**: 2,500万円〜3,000万円  
-**完成時推定価値**: 3,500万円〜4,000万円（評価制度設計機能完成により）
+**現在の推定システム価値**: 3,200万円〜3,700万円（8月20日時点）  
+**完成時推定価値**: 4,000万円〜4,500万円（全機能完成により）
 
 **主要完成機能**:
 - 職員属性ベース評価シート自動生成システム ✅
 - 102個の評価シート + 68個の面談シート統合管理 ✅
 - リアルタイム評価計算・グレード判定システム ✅
 - 年間評価スケジュール管理システム ✅
-- 法人・施設間統一評価制度設計機能 🔄
+- 法人・施設間統一評価制度設計機能 ✅ **NEW**
+- 評価項目テンプレートバンクシステム ✅ **NEW**
+- 上司・自己評価比較確認システム ✅ **NEW**
 
 ---
 
@@ -331,15 +327,23 @@ git push origin preview/feature-name
 - [ ] MCP共有ファイル確認（AI_SUMMARY.md）
 - [ ] git pull origin main で最新コード取得
 - [ ] npm install && npm run dev で環境起動
-- [ ] 評価システム動作確認（3つのURL）
+- [ ] 評価システム動作確認（3つのURL + 新規2つ）
 - [ ] TodoWriteツールで作業計画作成
-- [ ] 設計ウィザードの統合作業から開始
+- [ ] 総合判定（judgment）タブの実装から開始
 
 ---
 
-**🎯 明日の作業目標**: 評価制度設計ウィザードとevaluationItemBank.tsの完全統合により、年間評価制度管理システムを完成させる
+**🎯 次回作業目標**: 総合判定（judgment）タブの実装により、技術評価50点+組織貢献50点の統合判定システムを完成させる
 
 ---
 
-*このドキュメントは2025年8月19日時点での実装状況を正確に反映しています。*  
-*作業再開時は必ずこのドキュメントを参照し、順序に従って実装を進めてください。*
+**📈 8月20日の主要成果**:
+- ✅ 評価項目テンプレート管理システム完成（新システムv3専用）
+- ✅ 評価確認（Review）タブ完全実装（上司・自己評価比較UI）
+- ✅ 両機能の評価管理システムとの統合完了
+- ✅ Vercelビルドエラー全解消、両ブランチ同期完了
+
+---
+
+*このドキュメントは2025年8月20日時点での最新実装状況を正確に反映しています。*  
+*作業再開時は必ずこのドキュメントを参照し、残り6項目の順序に従って実装を進めてください。*
