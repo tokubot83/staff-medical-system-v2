@@ -258,7 +258,12 @@ export default function AppealReceptionV3() {
 
   const fetchV3Appeals = async () => {
     try {
-      const response = await fetch('/api/v3/appeals/list?employeeId=current');
+      const response = await fetch('/api/v3/appeals/list?employeeId=current', {
+        headers: {
+          'Authorization': 'Bearer vd_dev_key_12345',
+          'Content-Type': 'application/json'
+        }
+      });
       const data = await response.json();
       if (data.success && data.data) {
         setAppeals(data.data);
@@ -275,7 +280,10 @@ export default function AppealReceptionV3() {
     try {
       const response = await fetch('/api/v3/appeals/voicedrive-notify', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Authorization': 'Bearer vd_dev_key_12345',
+          'Content-Type': 'application/json' 
+        },
         body: JSON.stringify({
           appealIds: selectedCases,
           message: voiceDriveMessage,
@@ -325,7 +333,10 @@ export default function AppealReceptionV3() {
     try {
       const response = await fetch(`/api/v3/appeals/cases/${caseId}/status`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Authorization': 'Bearer vd_dev_key_12345',
+          'Content-Type': 'application/json' 
+        },
         body: JSON.stringify({ 
           status: newStatus, 
           reviewerNotes,
