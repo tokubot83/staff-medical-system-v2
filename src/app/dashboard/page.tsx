@@ -525,6 +525,13 @@ export default function DashboardPage() {
                         研修管理システム
                       </Button>
                     </Link>
+                    <Link href="/training-v3">
+                      <Button variant="outline" size="sm" className="w-full justify-start">
+                        <Zap className="mr-2 h-4 w-4" />
+                        V3評価連動研修
+                        <Badge className="ml-2 bg-purple-100 text-purple-800" variant="outline">New</Badge>
+                      </Button>
+                    </Link>
                     <Link href="/reports">
                       <Button variant="outline" size="sm" className="w-full justify-start">
                         <BarChart3 className="mr-2 h-4 w-4" />
@@ -557,6 +564,40 @@ export default function DashboardPage() {
                       <Button className="w-full" variant="outline" size="sm">
                         <Sparkles className="mr-2 h-4 w-4" />
                         設問を管理
+                      </Button>
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* V3評価連動研修システム */}
+              <Card className="bg-white hover:shadow-lg transition-shadow border-purple-200">
+                <CardHeader>
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Zap className="h-5 w-5 text-purple-600" />
+                    V3評価連動研修
+                    <Badge className="bg-purple-100 text-purple-800" variant="outline">New</Badge>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <p className="text-sm text-gray-600">
+                      100点満点評価に基づく戦略的研修計画・実行支援
+                    </p>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="p-2 bg-blue-50 rounded text-center">
+                        <p className="text-xs text-blue-700 mb-1">技術評価</p>
+                        <p className="text-sm font-bold text-blue-900">ギャップ分析</p>
+                      </div>
+                      <div className="p-2 bg-green-50 rounded text-center">
+                        <p className="text-xs text-green-700 mb-1">組織貢献</p>
+                        <p className="text-sm font-bold text-green-900">成長計画</p>
+                      </div>
+                    </div>
+                    <Link href="/training-v3">
+                      <Button className="w-full" variant="outline" size="sm">
+                        <Zap className="mr-2 h-4 w-4" />
+                        V3研修システム
                       </Button>
                     </Link>
                   </div>
