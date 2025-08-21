@@ -10,7 +10,7 @@ import { Doughnut, Bar, Line } from 'react-chartjs-2'
 import { useSearchParams } from 'next/navigation'
 import LegalTrainingGuide from '@/components/education/LegalTrainingGuide'
 import EvaluationItemBank from '@/components/training/EvaluationItemBank'
-import EvaluationItemBankV2 from '@/components/training/EvaluationItemBankV2'
+import EvaluationItemBankV3 from '@/components/training/EvaluationItemBankV3'
 import TrainingPlanGenerator from '@/components/training/TrainingPlanGenerator'
 import ProgressDashboard from '@/components/training/ProgressDashboard'
 import TrainingCalendarView from '@/components/training/TrainingCalendarView'
@@ -1019,7 +1019,7 @@ function TrainingPlanningTab(): React.ReactElement {
 function ItemBankTab(): React.ReactElement {
   return (
     <div className={styles.itemBankTabContainer}>
-      <EvaluationItemBankV2 />
+      <EvaluationItemBankV3 />
     </div>
   )
 }
