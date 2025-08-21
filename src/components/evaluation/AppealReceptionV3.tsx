@@ -190,45 +190,17 @@ const toast = {
   }
 };
 
-export default function AppealManagementV3() {
-  const [activeTab, setActiveTab] = useState('submit');
+export default function AppealReceptionV3() {
+  const [activeTab, setActiveTab] = useState('voicedrive-guide');
   const [appeals, setAppeals] = useState<V3AppealRecord[]>([]);
   const [selectedAppeal, setSelectedAppeal] = useState<V3AppealRecord | null>(null);
   const [showDetailDialog, setShowDetailDialog] = useState(false);
-  const [showSubmitDialog, setShowSubmitDialog] = useState(false);
   const [showVoiceDriveDialog, setShowVoiceDriveDialog] = useState(false);
   const [showCaseDetailDialog, setShowCaseDetailDialog] = useState(false);
   const [selectedCase, setSelectedCase] = useState<V3AppealCase | null>(null);
   const [selectedCases, setSelectedCases] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [voiceDriveMessage, setVoiceDriveMessage] = useState('V3評価システムでの異議申し立てを受け付けました。技術評価50点+組織貢献50点の評価構造を考慮して審査いたします。結果は3週間以内にお知らせします。');
-  
-  // V3専用フォーム状態
-  const [formData, setFormData] = useState<Partial<V3AppealRecord>>({
-    employeeId: '',
-    employeeName: '',
-    evaluationPeriod: '2025年度上期',
-    appealCategory: 'other',
-    appealReason: '',
-    originalScores: {
-      technical: { coreItems: 0, facilityItems: 0, total: 0 },
-      contribution: { summerFacility: 0, summerCorporate: 0, winterFacility: 0, winterCorporate: 0, total: 0 },
-      totalScore: 0
-    },
-    requestedScores: {
-      technical: { coreItems: 0, facilityItems: 0, total: 0 },
-      contribution: { summerFacility: 0, summerCorporate: 0, winterFacility: 0, winterCorporate: 0, total: 0 },
-      totalScore: 0
-    },
-    evidenceDocuments: [],
-    evaluationPhase: 'final',
-    relativeEvaluationDispute: {
-      facilityRankingDispute: false,
-      corporateRankingDispute: false,
-      jobCategoryRankingDispute: false
-    }
-  });
 
   // V3異議申し立てケースデータ（モック）
   const [appealCases, setAppealCases] = useState<V3AppealCase[]>([
@@ -296,50 +268,6 @@ export default function AppealManagementV3() {
     }
   };
 
-  const handleSubmitV3Appeal = async () => {
-    setIsLoading(true);
-    try {
-      // V3専用バリデーション
-      if (!formData.appealReason || formData.appealReason.length < 100) {
-        toast.error('申し立て理由は100文字以上入力してください');
-        return;
-      }
-
-      // スコア検証
-      if (formData.originalScores?.totalScore !== 
-          (formData.originalScores.technical.total + formData.originalScores.contribution.total)) {
-        toast.error('スコア合計が一致しません');
-        return;
-      }
-
-      const response = await fetch('/api/v3/appeals/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          submittedVia: 'system',
-          filedDate: new Date().toISOString(),
-          lastUpdated: new Date().toISOString(),
-          status: 'received'
-        })
-      });
-
-      const data = await response.json();
-      
-      if (data.success) {
-        toast.success('V3評価システムでの異議申し立てを受け付けました');
-        setShowSubmitDialog(false);
-        fetchV3Appeals();
-        resetForm();
-      } else {
-        toast.error(data.error?.message || '申し立ての送信に失敗しました');
-      }
-    } catch (error) {
-      toast.error('エラーが発生しました');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   // VoiceDrive SNS送信処理（V2から移植・V3対応）
   const handleVoiceDriveSend = async () => {
@@ -419,45 +347,6 @@ export default function AppealManagementV3() {
     }
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    const validFiles = files.filter(file => {
-      if (file.size > 10 * 1024 * 1024) {
-        toast.error(`${file.name}は10MBを超えています`);
-        return false;
-      }
-      return true;
-    });
-    setUploadedFiles(prev => [...prev, ...validFiles]);
-  };
-
-  const resetForm = () => {
-    setFormData({
-      employeeId: '',
-      employeeName: '',
-      evaluationPeriod: '2025年度上期',
-      appealCategory: 'other',
-      appealReason: '',
-      originalScores: {
-        technical: { coreItems: 0, facilityItems: 0, total: 0 },
-        contribution: { summerFacility: 0, summerCorporate: 0, winterFacility: 0, winterCorporate: 0, total: 0 },
-        totalScore: 0
-      },
-      requestedScores: {
-        technical: { coreItems: 0, facilityItems: 0, total: 0 },
-        contribution: { summerFacility: 0, summerCorporate: 0, winterFacility: 0, winterCorporate: 0, total: 0 },
-        totalScore: 0
-      },
-      evidenceDocuments: [],
-      evaluationPhase: 'final',
-      relativeEvaluationDispute: {
-        facilityRankingDispute: false,
-        corporateRankingDispute: false,
-        jobCategoryRankingDispute: false
-      }
-    });
-    setUploadedFiles([]);
-  };
 
   const getV3StatusBadge = (status: string) => {
     const statusConfig: Record<string, { color: string; label: string }> = {
@@ -506,10 +395,10 @@ export default function AppealManagementV3() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Sparkles className="w-6 h-6 text-blue-600" />
-            V3評価システム 異議申し立て管理
+            V3評価システム 異議申し立て受信・管理
           </CardTitle>
           <CardDescription>
-            技術評価50点+組織貢献50点の100点満点評価システム専用の異議申し立て管理
+            VoiceDriveからの異議申し立て受信と評価者による管理（職員は VoiceDrive で申し立て）
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -624,7 +513,7 @@ export default function AppealManagementV3() {
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid grid-cols-6 w-full max-w-4xl">
-          <TabsTrigger value="submit">新規申し立て</TabsTrigger>
+          <TabsTrigger value="voicedrive-guide">VoiceDrive申し立て</TabsTrigger>
           <TabsTrigger value="list">申し立て一覧</TabsTrigger>
           <TabsTrigger value="timeline">審査状況</TabsTrigger>
           <TabsTrigger value="cases">ケース管理</TabsTrigger>
@@ -632,397 +521,198 @@ export default function AppealManagementV3() {
           <TabsTrigger value="guide">V3ガイド</TabsTrigger>
         </TabsList>
 
-        {/* V3新規申し立てタブ */}
-        <TabsContent value="submit" className="space-y-6">
-          <Card>
+        {/* VoiceDrive申し立てガイドタブ */}
+        <TabsContent value="voicedrive-guide" className="space-y-6">
+          <Card className="border-2 border-indigo-200 bg-indigo-50/50">
             <CardHeader>
-              <CardTitle>V3評価システム 異議申し立てフォーム</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <Smartphone className="w-6 h-6 text-indigo-600" />
+                V3評価システム 異議申し立て - VoiceDriveで申請
+              </CardTitle>
               <CardDescription>
-                技術評価50点+組織貢献50点の100点満点評価に対する異議申し立てを行います
+                V3評価システムでは、異議申し立てはVoiceDriveアプリから行ってください
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <Alert>
                 <AlertCircle className="h-4 w-4" />
-                <AlertTitle>V3評価システム対応</AlertTitle>
+                <AlertTitle>重要なご案内</AlertTitle>
                 <AlertDescription>
-                  本フォームはV3評価システム専用です。技術評価・組織貢献・相対評価の詳細な構造を考慮した申し立てが可能です。
+                  V3評価システムでは、職員による異議申し立ては <strong>VoiceDriveアプリ</strong> からのみ受け付けております。
+                  このページは評価者・人事担当者による管理画面です。
                 </AlertDescription>
               </Alert>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="employeeId">職員ID</Label>
-                  <Input
-                    id="employeeId"
-                    value={formData.employeeId}
-                    onChange={(e) => setFormData({...formData, employeeId: e.target.value})}
-                    placeholder="E001"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="employeeName">職員名</Label>
-                  <Input
-                    id="employeeName"
-                    value={formData.employeeName}
-                    onChange={(e) => setFormData({...formData, employeeName: e.target.value})}
-                    placeholder="山田 太郎"
-                  />
-                </div>
+              <div className="grid grid-cols-2 gap-6">
+                <Card className="border-dashed border-green-200">
+                  <CardHeader>
+                    <CardTitle className="text-lg text-green-600 flex items-center gap-2">
+                      <CheckCircle2 className="w-5 h-5" />
+                      職員の方へ
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-3">
+                      <div className="flex items-start gap-3">
+                        <div className="bg-green-100 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold text-green-600">1</div>
+                        <div>
+                          <p className="font-medium">VoiceDriveアプリを開く</p>
+                          <p className="text-sm text-gray-600">スマートフォンまたはPCでVoiceDriveにアクセス</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <div className="bg-green-100 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold text-green-600">2</div>
+                        <div>
+                          <p className="font-medium">評価結果を確認</p>
+                          <p className="text-sm text-gray-600">技術評価50点＋組織貢献50点の詳細を確認</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <div className="bg-green-100 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold text-green-600">3</div>
+                        <div>
+                          <p className="font-medium">異議申し立てを送信</p>
+                          <p className="text-sm text-gray-600">VoiceDrive内の異議申し立てフォームから送信</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-4 p-3 bg-green-50 rounded-lg">
+                      <p className="text-sm text-green-700">
+                        <strong>VoiceDriveなら:</strong> チャット形式で分かりやすく申し立て可能
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-dashed border-blue-200">
+                  <CardHeader>
+                    <CardTitle className="text-lg text-blue-600 flex items-center gap-2">
+                      <Shield className="w-5 h-5" />
+                      評価者・人事の方へ
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-3">
+                      <div className="flex items-start gap-3">
+                        <div className="bg-blue-100 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold text-blue-600">1</div>
+                        <div>
+                          <p className="font-medium">VoiceDriveから受信</p>
+                          <p className="text-sm text-gray-600">職員からの異議申し立てを自動受信</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <div className="bg-blue-100 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold text-blue-600">2</div>
+                        <div>
+                          <p className="font-medium">ケース管理タブで審査</p>
+                          <p className="text-sm text-gray-600">V3詳細スコア構造での審査・対応</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <div className="bg-blue-100 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold text-blue-600">3</div>
+                        <div>
+                          <p className="font-medium">結果をVoiceDriveで通知</p>
+                          <p className="text-sm text-gray-600">審査結果を職員にVoiceDrive経由で送信</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                      <p className="text-sm text-blue-700">
+                        <strong>管理画面では:</strong> 受信した申し立ての審査・管理に専念
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="evaluationPeriod">評価期間</Label>
-                  <Select 
-                    value={formData.evaluationPeriod}
-                    onValueChange={(value) => setFormData({...formData, evaluationPeriod: value})}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="評価期間を選択" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="2025年度上期">2025年度上期</SelectItem>
-                      <SelectItem value="2025年度下期">2025年度下期</SelectItem>
-                      <SelectItem value="2024年度下期">2024年度下期</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="evaluationPhase">評価フェーズ</Label>
-                  <Select 
-                    value={formData.evaluationPhase}
-                    onValueChange={(value) => setFormData({...formData, evaluationPhase: value as 'summer' | 'winter' | 'final'})}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="フェーズを選択" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="summer">夏季評価（6月・組織貢献25点）</SelectItem>
-                      <SelectItem value="winter">冬季評価（12月・組織貢献50点）</SelectItem>
-                      <SelectItem value="final">最終評価（3月・技術+組織貢献100点）</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="category">申し立てカテゴリー（V3対応）</Label>
-                <Select 
-                  value={formData.appealCategory}
-                  onValueChange={(value) => setFormData({...formData, appealCategory: value as any})}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="カテゴリーを選択" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="criteria-misinterpretation">評価基準の誤解釈</SelectItem>
-                    <SelectItem value="achievement-oversight">成果の見落とし</SelectItem>
-                    <SelectItem value="calculation-error">点数計算の誤り</SelectItem>
-                    <SelectItem value="relative-evaluation-error">相対評価の誤り（V3専用）</SelectItem>
-                    <SelectItem value="period-error">評価期間の誤り</SelectItem>
-                    <SelectItem value="other">その他</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* V3スコア詳細入力 */}
-              <Card className="border-dashed">
+              <Card className="border-2 border-purple-200 bg-purple-50/50">
                 <CardHeader>
-                  <CardTitle className="text-lg">現在の評価スコア（V3詳細構造）</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <Label className="text-sm font-medium text-blue-600">技術評価 (50点満点)</Label>
-                    <div className="grid grid-cols-3 gap-2 mt-2">
-                      <div>
-                        <Label className="text-xs">法人統一項目</Label>
-                        <Input
-                          type="number"
-                          value={formData.originalScores?.technical.coreItems || ''}
-                          onChange={(e) => {
-                            const value = parseInt(e.target.value) || 0;
-                            setFormData({
-                              ...formData, 
-                              originalScores: {
-                                ...formData.originalScores!,
-                                technical: {
-                                  ...formData.originalScores!.technical,
-                                  coreItems: value,
-                                  total: value + formData.originalScores!.technical.facilityItems
-                                }
-                              }
-                            });
-                          }}
-                          placeholder="25"
-                        />
-                      </div>
-                      <div>
-                        <Label className="text-xs">施設固有項目</Label>
-                        <Input
-                          type="number"
-                          value={formData.originalScores?.technical.facilityItems || ''}
-                          onChange={(e) => {
-                            const value = parseInt(e.target.value) || 0;
-                            setFormData({
-                              ...formData, 
-                              originalScores: {
-                                ...formData.originalScores!,
-                                technical: {
-                                  ...formData.originalScores!.technical,
-                                  facilityItems: value,
-                                  total: formData.originalScores!.technical.coreItems + value
-                                }
-                              }
-                            });
-                          }}
-                          placeholder="25"
-                        />
-                      </div>
-                      <div>
-                        <Label className="text-xs">技術評価計</Label>
-                        <Input
-                          type="number"
-                          value={formData.originalScores?.technical.total || ''}
-                          readOnly
-                          className="bg-gray-50"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label className="text-sm font-medium text-green-600">組織貢献度 (50点満点)</Label>
-                    <div className="grid grid-cols-5 gap-2 mt-2">
-                      <div>
-                        <Label className="text-xs">夏施設貢献</Label>
-                        <Input
-                          type="number"
-                          value={formData.originalScores?.contribution.summerFacility || ''}
-                          onChange={(e) => {
-                            const value = parseInt(e.target.value) || 0;
-                            setFormData({
-                              ...formData, 
-                              originalScores: {
-                                ...formData.originalScores!,
-                                contribution: {
-                                  ...formData.originalScores!.contribution,
-                                  summerFacility: value,
-                                  total: value + formData.originalScores!.contribution.summerCorporate + 
-                                         formData.originalScores!.contribution.winterFacility + 
-                                         formData.originalScores!.contribution.winterCorporate
-                                }
-                              }
-                            });
-                          }}
-                          placeholder="12.5"
-                        />
-                      </div>
-                      <div>
-                        <Label className="text-xs">夏法人貢献</Label>
-                        <Input
-                          type="number"
-                          value={formData.originalScores?.contribution.summerCorporate || ''}
-                          onChange={(e) => {
-                            const value = parseInt(e.target.value) || 0;
-                            setFormData({
-                              ...formData, 
-                              originalScores: {
-                                ...formData.originalScores!,
-                                contribution: {
-                                  ...formData.originalScores!.contribution,
-                                  summerCorporate: value,
-                                  total: formData.originalScores!.contribution.summerFacility + value + 
-                                         formData.originalScores!.contribution.winterFacility + 
-                                         formData.originalScores!.contribution.winterCorporate
-                                }
-                              }
-                            });
-                          }}
-                          placeholder="12.5"
-                        />
-                      </div>
-                      <div>
-                        <Label className="text-xs">冬施設貢献</Label>
-                        <Input
-                          type="number"
-                          value={formData.originalScores?.contribution.winterFacility || ''}
-                          onChange={(e) => {
-                            const value = parseInt(e.target.value) || 0;
-                            setFormData({
-                              ...formData, 
-                              originalScores: {
-                                ...formData.originalScores!,
-                                contribution: {
-                                  ...formData.originalScores!.contribution,
-                                  winterFacility: value,
-                                  total: formData.originalScores!.contribution.summerFacility + 
-                                         formData.originalScores!.contribution.summerCorporate + value +
-                                         formData.originalScores!.contribution.winterCorporate
-                                }
-                              }
-                            });
-                          }}
-                          placeholder="12.5"
-                        />
-                      </div>
-                      <div>
-                        <Label className="text-xs">冬法人貢献</Label>
-                        <Input
-                          type="number"
-                          value={formData.originalScores?.contribution.winterCorporate || ''}
-                          onChange={(e) => {
-                            const value = parseInt(e.target.value) || 0;
-                            setFormData({
-                              ...formData, 
-                              originalScores: {
-                                ...formData.originalScores!,
-                                contribution: {
-                                  ...formData.originalScores!.contribution,
-                                  winterCorporate: value,
-                                  total: formData.originalScores!.contribution.summerFacility + 
-                                         formData.originalScores!.contribution.summerCorporate + 
-                                         formData.originalScores!.contribution.winterFacility + value
-                                }
-                              }
-                            });
-                          }}
-                          placeholder="12.5"
-                        />
-                      </div>
-                      <div>
-                        <Label className="text-xs">組織貢献計</Label>
-                        <Input
-                          type="number"
-                          value={formData.originalScores?.contribution.total || ''}
-                          readOnly
-                          className="bg-gray-50"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="pt-2 border-t">
-                    <div className="flex justify-between items-center">
-                      <Label className="text-lg font-medium">総合スコア (100点満点)</Label>
-                      <div className="text-2xl font-bold text-purple-600">
-                        {(formData.originalScores?.technical.total || 0) + (formData.originalScores?.contribution.total || 0)}点
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* 相対評価異議（V3専用） */}
-              <Card className="border-dashed border-purple-200">
-                <CardHeader>
-                  <CardTitle className="text-lg text-purple-600">相対評価異議（V3専用機能）</CardTitle>
+                  <CardTitle className="text-purple-600 flex items-center gap-2">
+                    <BarChart3 className="w-5 h-5" />
+                    V3評価システムの特徴
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="facility-ranking"
-                        checked={formData.relativeEvaluationDispute?.facilityRankingDispute}
-                        onCheckedChange={(checked) => setFormData({
-                          ...formData,
-                          relativeEvaluationDispute: {
-                            ...formData.relativeEvaluationDispute!,
-                            facilityRankingDispute: checked as boolean
-                          }
-                        })}
-                      />
-                      <Label htmlFor="facility-ranking">施設内順位付けに異議あり</Label>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="text-center">
+                      <div className="bg-purple-100 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-2">
+                        <Calculator className="w-6 h-6 text-purple-600" />
+                      </div>
+                      <p className="font-medium">技術評価 50点</p>
+                      <p className="text-sm text-gray-600">法人統一25点＋施設固有25点</p>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="corporate-ranking"
-                        checked={formData.relativeEvaluationDispute?.corporateRankingDispute}
-                        onCheckedChange={(checked) => setFormData({
-                          ...formData,
-                          relativeEvaluationDispute: {
-                            ...formData.relativeEvaluationDispute!,
-                            corporateRankingDispute: checked as boolean
-                          }
-                        })}
-                      />
-                      <Label htmlFor="corporate-ranking">法人内順位付けに異議あり</Label>
+                    <div className="text-center">
+                      <div className="bg-purple-100 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-2">
+                        <TrendingUp className="w-6 h-6 text-purple-600" />
+                      </div>
+                      <p className="font-medium">組織貢献 50点</p>
+                      <p className="text-sm text-gray-600">夏季25点＋冬季25点</p>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="job-category-ranking"
-                        checked={formData.relativeEvaluationDispute?.jobCategoryRankingDispute}
-                        onCheckedChange={(checked) => setFormData({
-                          ...formData,
-                          relativeEvaluationDispute: {
-                            ...formData.relativeEvaluationDispute!,
-                            jobCategoryRankingDispute: checked as boolean
-                          }
-                        })}
-                      />
-                      <Label htmlFor="job-category-ranking">同職種内順位付けに異議あり</Label>
+                    <div className="text-center">
+                      <div className="bg-purple-100 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-2">
+                        <BarChart3 className="w-6 h-6 text-purple-600" />
+                      </div>
+                      <p className="font-medium">相対評価</p>
+                      <p className="text-sm text-gray-600">2軸マトリックス7段階</p>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <div className="space-y-2">
-                <Label htmlFor="reason">申し立て理由（100文字以上・V3詳細構造を考慮）</Label>
-                <Textarea
-                  id="reason"
-                  value={formData.appealReason}
-                  onChange={(e) => setFormData({...formData, appealReason: e.target.value})}
-                  placeholder="V3評価システムの技術評価50点+組織貢献50点の構造、または相対評価ランキングに対する異議の詳細な理由を記載してください..."
-                  className="min-h-[150px]"
-                />
-                <p className="text-sm text-gray-600">
-                  文字数: {formData.appealReason?.length || 0} / 100文字以上
-                </p>
+              <div className="grid grid-cols-2 gap-4">
+                <Card className="border-dashed">
+                  <CardHeader>
+                    <CardTitle className="text-sm flex items-center gap-2">
+                      <MessageCircle className="w-4 h-4 text-green-600" />
+                      VoiceDriveで申し立て可能な内容
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-1 text-sm">
+                      <li>✓ 技術評価項目のスコア異議</li>
+                      <li>✓ 組織貢献度の評価異議</li>
+                      <li>✓ 施設内・法人内順位の異議</li>
+                      <li>✓ 相対評価マトリックスの異議</li>
+                      <li>✓ 評価期間・フェーズの誤り</li>
+                    </ul>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-dashed">
+                  <CardHeader>
+                    <CardTitle className="text-sm flex items-center gap-2">
+                      <Clock className="w-4 h-4 text-blue-600" />
+                      処理時間
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span>受理通知:</span>
+                        <span className="font-medium">即座</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>初回回答:</span>
+                        <span className="font-medium">3営業日以内</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>最終結果:</span>
+                        <span className="font-medium">3週間以内</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="evidence">証拠書類（任意）</Label>
-                <div className="border-2 border-dashed rounded-lg p-4">
-                  <Input
-                    id="evidence"
-                    type="file"
-                    multiple
-                    accept=".pdf,.jpg,.jpeg,.png,.xlsx,.docx"
-                    onChange={handleFileUpload}
-                    className="hidden"
-                  />
-                  <label htmlFor="evidence" className="cursor-pointer">
-                    <div className="flex flex-col items-center space-y-2">
-                      <Upload className="w-8 h-8 text-gray-400" />
-                      <span className="text-sm text-gray-600">クリックしてファイルを選択</span>
-                      <span className="text-xs text-gray-500">PDF、画像、Excel、Word（最大10MB）</span>
-                    </div>
-                  </label>
-                  {uploadedFiles.length > 0 && (
-                    <div className="mt-4 space-y-2">
-                      {uploadedFiles.map((file, index) => (
-                        <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                          <span className="text-sm">{file.name}</span>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setUploadedFiles(prev => prev.filter((_, i) => i !== index))}
-                          >
-                            削除
-                          </Button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex justify-end space-x-2">
-                <Button variant="outline" onClick={resetForm}>クリア</Button>
-                <Button onClick={handleSubmitV3Appeal} disabled={isLoading}>
-                  {isLoading ? '送信中...' : 'V3評価 異議申し立てを送信'}
-                </Button>
-              </div>
+              <Alert className="border-amber-200 bg-amber-50">
+                <AlertTriangle className="h-4 w-4 text-amber-600" />
+                <AlertTitle className="text-amber-800">システム移行のお知らせ</AlertTitle>
+                <AlertDescription className="text-amber-700">
+                  V3評価システムでは、職員と評価者の役割を明確に分離しました。
+                  <br />• <strong>職員</strong>: VoiceDriveで異議申し立て・進捗確認
+                  <br />• <strong>評価者</strong>: 医療システムで受信・審査・管理
+                </AlertDescription>
+              </Alert>
             </CardContent>
           </Card>
         </TabsContent>

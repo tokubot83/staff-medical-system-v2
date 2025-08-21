@@ -52,7 +52,7 @@ import { ExperienceLevelMapper, ExperienceLevelsV3 } from '@/services/evaluation
 import DashboardHeader from '@/components/evaluation/DashboardHeader';
 import IntegratedJudgment from '@/components/evaluation/IntegratedJudgment';
 import DisclosureManagementV3 from '@/components/evaluation/DisclosureManagementV3';
-import AppealManagementV3 from '@/components/evaluation/AppealManagementV3';
+import AppealReceptionV3 from '@/components/evaluation/AppealReceptionV3';
 import EvaluationSheetSelector from '@/components/evaluation/EvaluationSheetSelector';
 
 export default function EvaluationExecutionPage() {
@@ -750,7 +750,7 @@ export default function EvaluationExecutionPage() {
 
           {activeTab === 'appeal' && (
             <div className="p-6">
-              <AppealManagementV3 />
+              <AppealReceptionV3 />
             </div>
           )}
         </div>
