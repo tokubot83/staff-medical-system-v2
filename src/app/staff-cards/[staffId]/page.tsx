@@ -1396,10 +1396,10 @@ function ManagementLinksTab({ selectedStaff }: { selectedStaff: any }): React.Re
     <div className={styles.linksContainer}>
       <h2>統合管理リンク</h2>
       <div className={styles.linksGrid}>
-        <a href="/evaluation" className={styles.linkCard}>
+        <a href="/dashboard" className={styles.linkCard}>
           <div className={styles.linkIcon}>📊</div>
-          <h3>評価管理システム</h3>
-          <p>人事評価の詳細確認・管理</p>
+          <h3>V3評価管理システム</h3>
+          <p>統合評価システムでの詳細確認・管理</p>
           <div className={styles.linkInfo}>
             現在の評価: {selectedStaff.evaluation}
           </div>

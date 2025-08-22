@@ -27,10 +27,10 @@ export default function EvaluationReviewPage() {
         {/* ヘッダー部分 */}
         <div className="mb-6">
           <div className="flex items-center gap-4 mb-4">
-            <Link href="/evaluation">
+            <Link href="/dashboard">
               <Button variant="outline">
                 <ArrowLeft className="h-4 w-4 mr-2" />
-                評価管理に戻る
+                V3評価ダッシュボードに戻る
               </Button>
             </Link>
             <h1 className="text-3xl font-bold flex items-center gap-3">

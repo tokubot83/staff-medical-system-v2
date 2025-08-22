@@ -17,10 +17,10 @@ export default function ContributionDesignPage() {
       <CommonHeader title="法人貢献度評価設計" />
       <div className="container mx-auto px-4 py-6">
         <div className="mb-6">
-          <Link href="/evaluation">
+          <Link href="/dashboard">
             <Button variant="outline" size="sm">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              評価管理に戻る
+              V3評価ダッシュボードに戻る
             </Button>
           </Link>
         </div>

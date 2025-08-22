@@ -521,9 +521,6 @@ export default function Home() {
          <Link href="/attendance-management" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
           勤怠
          </Link>
-         <Link href="/evaluation" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
-          評価
-         </Link>
          <Link href="/dashboard" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-purple-400">
           評価（v3）
          </Link>

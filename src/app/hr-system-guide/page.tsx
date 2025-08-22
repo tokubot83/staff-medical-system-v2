@@ -2009,7 +2009,7 @@ export default function HRSystemGuidePage() {
                 <div>
                   <h4 className="font-semibold text-gray-800 mb-2">評価システムの使い方</h4>
                   <ul className="space-y-1">
-                    <li>• <a href="/evaluation" className="text-blue-600 hover:underline">新評価システム</a>から施設・職種・経験に応じた評価シートを選択</li>
+                    <li>• V3評価システム（ダッシュボード）から施設・職種・経験に応じた評価シートを選択</li>
                     <li>• 評価期間前に評価項目を確認</li>
                     <li>• 自己評価と上司評価の両方を記入</li>
                     <li>• 2軸評価（施設内・法人内）を理解</li>
