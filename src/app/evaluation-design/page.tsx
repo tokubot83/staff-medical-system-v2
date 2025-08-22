@@ -55,6 +55,12 @@ interface MonthData {
     completed: boolean;
     urgent?: boolean;
   }[];
+  trainingTasks?: {  // 研修連携タスク
+    title: string;
+    completed: boolean;
+    type: 'planning' | 'execution' | 'analysis';
+    expectedImpact?: string;
+  }[];
   highlight?: boolean;
   keyTasks?: string[];
 }
@@ -64,6 +70,8 @@ export default function EvaluationDesignPage() {
   const currentMonth = currentDate.getMonth() + 1; // 1-12
   const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
   const [showDesignSupport, setShowDesignSupport] = useState(false);
+  const [activeTab, setActiveTab] = useState<'evaluation' | 'training' | 'analysis'>('evaluation');
+  const [showTrainingSimulator, setShowTrainingSimulator] = useState(false);
 
   // 年間スケジュールデータ
   const yearSchedule: MonthData[] = [
@@ -74,6 +82,11 @@ export default function EvaluationDesignPage() {
       tasks: [
         { title: '前年度評価結果フィードバック', completed: true },
         { title: '昇給・賞与への反映', completed: true }
+      ],
+      trainingTasks: [
+        { title: '個別研修計画の確定・通知', completed: true, type: 'execution' },
+        { title: '第1四半期必須研修の予約開始', completed: true, type: 'execution' },
+        { title: '研修進捗トラッキング開始', completed: true, type: 'execution' }
       ]
     },
     {
@@ -95,6 +108,11 @@ export default function EvaluationDesignPage() {
         { title: 'Excelデータ取込・検証', completed: true },
         { title: '相対評価ランキング作成', completed: true },
         { title: '評価確定・承認', completed: true }
+      ],
+      trainingTasks: [
+        { title: '第1四半期研修効果測定', completed: true, type: 'analysis', expectedImpact: '貢献度+3点' },
+        { title: '貢献度スコアと研修受講の相関分析', completed: true, type: 'analysis' },
+        { title: '下半期研修計画の調整', completed: false, type: 'planning' }
       ]
     },
     {
@@ -123,6 +141,11 @@ export default function EvaluationDesignPage() {
       status: currentMonth === 10 ? 'current' : currentMonth > 10 ? 'completed' : 'upcoming',
       tasks: [
         { title: '下半期活動計画策定', completed: currentMonth > 10 }
+      ],
+      trainingTasks: [
+        { title: '上半期研修完了率レビュー', completed: currentMonth > 10, type: 'analysis', expectedImpact: '完了率85%' },
+        { title: '技術評価予測スコア算出', completed: false, type: 'analysis', expectedImpact: '平均78点予測' },
+        { title: '目標グレード到達のための追加研修提案', completed: false, type: 'planning' }
       ]
     },
     {
@@ -142,6 +165,11 @@ export default function EvaluationDesignPage() {
         { title: 'Excelデータ取込・検証', completed: currentMonth > 12 || currentMonth < 4 },
         { title: '相対評価ランキング作成', completed: currentMonth > 12 || currentMonth < 4 },
         { title: '年間貢献度スコア確定', completed: currentMonth > 12 || currentMonth < 4 }
+      ],
+      trainingTasks: [
+        { title: '年間研修ROI分析', completed: currentMonth > 12 || currentMonth < 4, type: 'analysis', expectedImpact: 'ROI 125%' },
+        { title: '次年度研修プログラム改善提案', completed: false, type: 'planning' },
+        { title: '高成果者の研修パターン分析', completed: false, type: 'analysis' }
       ]
     },
     {
@@ -155,6 +183,11 @@ export default function EvaluationDesignPage() {
         { title: '施設特化項目（20点）の選定', completed: false, urgent: currentMonth === 1 },
         { title: '評価シミュレーション実施', completed: false, urgent: currentMonth === 1 },
         { title: '各施設との調整', completed: false }
+      ],
+      trainingTasks: [
+        { title: '前年度評価データから研修効果分析', completed: currentMonth > 1, type: 'analysis', expectedImpact: '研修ROI 120%達成' },
+        { title: '評価項目と研修プログラムのマッピング', completed: false, type: 'planning', expectedImpact: '全項目カバー率100%' },
+        { title: '必須研修カリキュラム策定', completed: false, type: 'planning' }
       ]
     },
     {
@@ -178,6 +211,11 @@ export default function EvaluationDesignPage() {
         { title: '上司評価・本人評価の実施', completed: currentMonth > 3, urgent: currentMonth === 3 },
         { title: '100点満点スコア確定', completed: currentMonth > 3 },
         { title: '2軸相対評価で最終グレード決定', completed: currentMonth > 3 }
+      ],
+      trainingTasks: [
+        { title: '評価結果即時分析→個別研修計画生成', completed: currentMonth > 3, type: 'analysis', expectedImpact: '平均スコア+5点' },
+        { title: 'スコアギャップ基づく優先研修リスト', completed: currentMonth > 3, type: 'planning' },
+        { title: '新年度研修予算配分提案', completed: false, type: 'planning', expectedImpact: '投資効率15%改善' }
       ]
     }
   ];
@@ -271,9 +309,48 @@ export default function EvaluationDesignPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-3">
-                  <h4 className="font-semibold">今月のタスク一覧</h4>
+              {/* タブ切り替え */}
+              <div className="flex gap-2 mb-4 p-1 bg-gray-100 rounded-lg">
+                <button
+                  onClick={() => setActiveTab('evaluation')}
+                  className={`flex-1 px-4 py-2 rounded-md font-medium transition-all ${
+                    activeTab === 'evaluation' 
+                      ? 'bg-white text-blue-700 shadow-md' 
+                      : 'text-gray-600 hover:text-gray-800'
+                  }`}
+                >
+                  <Target className="inline h-4 w-4 mr-2" />
+                  評価タスク
+                </button>
+                <button
+                  onClick={() => setActiveTab('training')}
+                  className={`flex-1 px-4 py-2 rounded-md font-medium transition-all ${
+                    activeTab === 'training' 
+                      ? 'bg-white text-purple-700 shadow-md' 
+                      : 'text-gray-600 hover:text-gray-800'
+                  }`}
+                >
+                  <BookOpen className="inline h-4 w-4 mr-2" />
+                  研修連携
+                </button>
+                <button
+                  onClick={() => setActiveTab('analysis')}
+                  className={`flex-1 px-4 py-2 rounded-md font-medium transition-all ${
+                    activeTab === 'analysis' 
+                      ? 'bg-white text-green-700 shadow-md' 
+                      : 'text-gray-600 hover:text-gray-800'
+                  }`}
+                >
+                  <BarChart3 className="inline h-4 w-4 mr-2" />
+                  分析
+                </button>
+              </div>
+
+              {/* タブコンテンツ */}
+              {activeTab === 'evaluation' && (
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-3">
+                    <h4 className="font-semibold">今月のタスク一覧</h4>
                   {currentMonthData.tasks.map((task, idx) => (
                     <div key={idx} className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/50 transition-colors">
                       {task.completed ? (
@@ -362,6 +439,100 @@ export default function EvaluationDesignPage() {
                   </div>
                 </div>
               </div>
+              )}
+
+              {/* 研修連携タブ */}
+              {activeTab === 'training' && currentMonthData.trainingTasks && (
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-3">
+                    <h4 className="font-semibold flex items-center gap-2">
+                      <Zap className="h-4 w-4 text-purple-600" />
+                      研修連携タスク
+                    </h4>
+                    {currentMonthData.trainingTasks.map((task, idx) => (
+                      <div key={idx} className="flex items-center gap-3 p-3 rounded-lg bg-purple-50 hover:bg-purple-100 transition-colors">
+                        {task.completed ? (
+                          <div className="flex items-center justify-center w-6 h-6 bg-purple-500 rounded-full">
+                            <CheckCircle2 className="w-4 h-4 text-white" />
+                          </div>
+                        ) : (
+                          <div className="w-6 h-6 border-2 border-purple-300 rounded-full" />
+                        )}
+                        <div className="flex-1">
+                          <span className={task.completed ? 'text-purple-700 font-medium' : 'text-gray-700'}>
+                            {task.title}
+                          </span>
+                          {task.expectedImpact && (
+                            <div className="text-xs text-purple-600 mt-1">
+                              期待効果: {task.expectedImpact}
+                            </div>
+                          )}
+                        </div>
+                        <Badge className={`text-xs ${
+                          task.type === 'planning' ? 'bg-blue-100 text-blue-800' :
+                          task.type === 'execution' ? 'bg-green-100 text-green-800' :
+                          'bg-orange-100 text-orange-800'
+                        }`}>
+                          {task.type === 'planning' ? '計画' :
+                           task.type === 'execution' ? '実行' : '分析'}
+                        </Badge>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="space-y-3">
+                    <h4 className="font-semibold">研修アクション</h4>
+                    <div className="space-y-2">
+                      <Link href="/training-v3">
+                        <Button className="w-full justify-start bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
+                          <Zap className="h-5 w-5 mr-3" />
+                          V3研修システムへ
+                        </Button>
+                      </Link>
+                      <Button 
+                        variant="outline" 
+                        className="w-full justify-start"
+                        onClick={() => setShowTrainingSimulator(true)}
+                      >
+                        <TrendingUp className="h-5 w-5 mr-3" />
+                        成長予測シミュレーター
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* 分析タブ */}
+              {activeTab === 'analysis' && (
+                <div className="space-y-4">
+                  <Alert className="border-green-200 bg-green-50">
+                    <Sparkles className="h-4 w-4 text-green-600" />
+                    <AlertTitle className="text-green-800">研修効果分析</AlertTitle>
+                    <AlertDescription className="text-green-700">
+                      前期研修による評価向上: 平均+4.2点 | ROI: 118%
+                    </AlertDescription>
+                  </Alert>
+                  <div className="grid grid-cols-3 gap-4">
+                    <Card className="border-blue-200">
+                      <CardContent className="pt-6">
+                        <div className="text-2xl font-bold text-blue-600">78.5点</div>
+                        <p className="text-xs text-gray-600">現在の平均スコア</p>
+                      </CardContent>
+                    </Card>
+                    <Card className="border-purple-200">
+                      <CardContent className="pt-6">
+                        <div className="text-2xl font-bold text-purple-600">82.0点</div>
+                        <p className="text-xs text-gray-600">研修後予測スコア</p>
+                      </CardContent>
+                    </Card>
+                    <Card className="border-green-200">
+                      <CardContent className="pt-6">
+                        <div className="text-2xl font-bold text-green-600">+3.5点</div>
+                        <p className="text-xs text-gray-600">期待向上幅</p>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         )}
@@ -488,7 +659,10 @@ export default function EvaluationDesignPage() {
                         <div className="space-y-4">
                           {/* タスクリスト */}
                           <div>
-                            <h4 className="font-semibold mb-3">タスク一覧</h4>
+                            <h4 className="font-semibold mb-3 flex items-center gap-2">
+                              <Target className="h-4 w-4 text-blue-600" />
+                              評価タスク
+                            </h4>
                             <div className="space-y-3">
                               {month.tasks.map((task, idx) => (
                                 <div key={idx} className={`flex items-center justify-between p-4 rounded-xl border transition-all hover:shadow-md ${
@@ -545,6 +719,62 @@ export default function EvaluationDesignPage() {
                               ))}
                             </div>
                           </div>
+
+                          {/* 研修連携タスク */}
+                          {month.trainingTasks && month.trainingTasks.length > 0 && (
+                            <div>
+                              <h4 className="font-semibold mb-3 flex items-center gap-2">
+                                <BookOpen className="h-4 w-4 text-purple-600" />
+                                研修連携タスク
+                              </h4>
+                              <div className="space-y-3">
+                                {month.trainingTasks.map((task, idx) => (
+                                  <div key={idx} className="flex items-center justify-between p-4 rounded-xl border bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200 hover:shadow-md transition-all">
+                                    <div className="flex items-center gap-4">
+                                      {task.completed ? (
+                                        <div className="flex items-center justify-center w-8 h-8 bg-purple-500 rounded-full">
+                                          <CheckCircle2 className="w-5 h-5 text-white" />
+                                        </div>
+                                      ) : (
+                                        <div className="w-8 h-8 border-2 border-purple-300 rounded-full flex items-center justify-center">
+                                          <Zap className="w-4 h-4 text-purple-500" />
+                                        </div>
+                                      )}
+                                      <div>
+                                        <span className={`font-medium ${
+                                          task.completed ? 'text-purple-700' : 'text-gray-700'
+                                        }`}>
+                                          {task.title}
+                                        </span>
+                                        <div className="flex gap-2 mt-1">
+                                          <Badge className={`text-xs ${
+                                            task.type === 'planning' ? 'bg-blue-100 text-blue-800' :
+                                            task.type === 'execution' ? 'bg-green-100 text-green-800' :
+                                            'bg-orange-100 text-orange-800'
+                                          }`}>
+                                            {task.type === 'planning' ? '計画' :
+                                             task.type === 'execution' ? '実行' : '分析'}
+                                          </Badge>
+                                          {task.expectedImpact && (
+                                            <Badge className="bg-purple-100 text-purple-800 text-xs">
+                                              {task.expectedImpact}
+                                            </Badge>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </div>
+                                    {!task.completed && (
+                                      <Link href="/training-v3">
+                                        <Button size="sm" variant="ghost" className="text-purple-600 hover:text-purple-700">
+                                          <ArrowRight className="h-4 w-4" />
+                                        </Button>
+                                      </Link>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
 
                           {/* クイックアクション */}
                           <div>
@@ -646,6 +876,138 @@ export default function EvaluationDesignPage() {
                   </Card>
                 );
               })}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 研修連携ダッシュボード */}
+        <Card className="mb-6 border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center gap-2">
+                <Zap className="h-5 w-5 text-purple-600" />
+                V3研修連携ダッシュボード
+                <Badge className="bg-purple-100 text-purple-800" variant="outline">New</Badge>
+              </CardTitle>
+              <Link href="/training-v3">
+                <Button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
+                  <ArrowRight className="h-4 w-4 mr-2" />
+                  詳細を見る
+                </Button>
+              </Link>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-4 gap-4">
+              {/* 現在の評価状況 */}
+              <Card className="border-blue-200">
+                <CardContent className="pt-6">
+                  <div className="flex items-center justify-between mb-2">
+                    <BarChart3 className="h-4 w-4 text-blue-600" />
+                    <span className="text-xs text-gray-500">現在</span>
+                  </div>
+                  <div className="text-2xl font-bold text-blue-600">76.8点</div>
+                  <p className="text-xs text-gray-600 mt-1">平均評価スコア</p>
+                  <div className="text-xs text-orange-600 mt-2">
+                    Bグレード (70-79点)
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* 研修完了率 */}
+              <Card className="border-purple-200">
+                <CardContent className="pt-6">
+                  <div className="flex items-center justify-between mb-2">
+                    <BookOpen className="h-4 w-4 text-purple-600" />
+                    <span className="text-xs text-gray-500">進捗</span>
+                  </div>
+                  <div className="text-2xl font-bold text-purple-600">68%</div>
+                  <p className="text-xs text-gray-600 mt-1">年間研修完了率</p>
+                  <Progress value={68} className="mt-2 h-2" />
+                </CardContent>
+              </Card>
+
+              {/* 予測スコア */}
+              <Card className="border-green-200">
+                <CardContent className="pt-6">
+                  <div className="flex items-center justify-between mb-2">
+                    <TrendingUp className="h-4 w-4 text-green-600" />
+                    <span className="text-xs text-gray-500">予測</span>
+                  </div>
+                  <div className="text-2xl font-bold text-green-600">82.3点</div>
+                  <p className="text-xs text-gray-600 mt-1">研修後予測</p>
+                  <div className="text-xs text-green-600 mt-2">
+                    Aグレード到達見込み
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* ROI */}
+              <Card className="border-yellow-200">
+                <CardContent className="pt-6">
+                  <div className="flex items-center justify-between mb-2">
+                    <Sparkles className="h-4 w-4 text-yellow-600" />
+                    <span className="text-xs text-gray-500">ROI</span>
+                  </div>
+                  <div className="text-2xl font-bold text-yellow-600">124%</div>
+                  <p className="text-xs text-gray-600 mt-1">研修投資効果</p>
+                  <div className="text-xs text-green-600 mt-2">
+                    ↑ 前期比+8%
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* 優先研修リスト */}
+            <div className="mt-4">
+              <h4 className="font-semibold mb-3 flex items-center gap-2">
+                <Star className="h-4 w-4 text-yellow-500" />
+                優先度高の推奨研修
+              </h4>
+              <div className="grid grid-cols-3 gap-3">
+                <div className="p-3 rounded-lg bg-white border border-purple-200">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium">リーダーシップ研修</span>
+                    <Badge className="bg-red-100 text-red-800 text-xs">Urgent</Badge>
+                  </div>
+                  <div className="text-xs text-gray-600">期待スコア: +3.5点</div>
+                  <div className="text-xs text-purple-600 mt-1">組織貢献度向上</div>
+                </div>
+                <div className="p-3 rounded-lg bg-white border border-purple-200">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium">専門技術研修</span>
+                    <Badge className="bg-orange-100 text-orange-800 text-xs">High</Badge>
+                  </div>
+                  <div className="text-xs text-gray-600">期待スコア: +2.8点</div>
+                  <div className="text-xs text-purple-600 mt-1">技術評価向上</div>
+                </div>
+                <div className="p-3 rounded-lg bg-white border border-purple-200">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium">コミュニケーション</span>
+                    <Badge className="bg-blue-100 text-blue-800 text-xs">Medium</Badge>
+                  </div>
+                  <div className="text-xs text-gray-600">期待スコア: +1.5点</div>
+                  <div className="text-xs text-purple-600 mt-1">施設内貢献度向上</div>
+                </div>
+              </div>
+            </div>
+
+            {/* アクションボタン */}
+            <div className="flex gap-3 mt-4">
+              <Button 
+                className="flex-1" 
+                variant="outline"
+                onClick={() => setShowTrainingSimulator(true)}
+              >
+                <TrendingUp className="h-4 w-4 mr-2" />
+                成長予測シミュレーター
+              </Button>
+              <Link href="/training-v3" className="flex-1">
+                <Button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
+                  <Zap className="h-4 w-4 mr-2" />
+                  V3研修システムで詳細分析
+                </Button>
+              </Link>
             </div>
           </CardContent>
         </Card>
@@ -806,6 +1168,163 @@ export default function EvaluationDesignPage() {
         currentMonth={currentMonth}
         evaluationPeriod="2025年度"
       />
+
+      {/* 研修成長予測シミュレーターモーダル */}
+      {showTrainingSimulator && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold flex items-center gap-2">
+                  <TrendingUp className="h-6 w-6 text-purple-600" />
+                  成長予測シミュレーター
+                </h2>
+                <Button
+                  variant="ghost"
+                  onClick={() => setShowTrainingSimulator(false)}
+                  className="hover:bg-gray-100"
+                >
+                  ×
+                </Button>
+              </div>
+            </div>
+            
+            <div className="p-6">
+              {/* 現在のステータス */}
+              <div className="mb-6">
+                <h3 className="font-semibold mb-3">現在のステータス</h3>
+                <div className="grid grid-cols-4 gap-4">
+                  <Card className="border-blue-200">
+                    <CardContent className="pt-4">
+                      <div className="text-sm text-gray-600">現在スコア</div>
+                      <div className="text-2xl font-bold text-blue-600">76.8点</div>
+                      <Badge className="mt-2 bg-orange-100 text-orange-800">Bグレード</Badge>
+                    </CardContent>
+                  </Card>
+                  <Card className="border-green-200">
+                    <CardContent className="pt-4">
+                      <div className="text-sm text-gray-600">技術評価</div>
+                      <div className="text-2xl font-bold text-green-600">38/50点</div>
+                      <Progress value={76} className="mt-2 h-2" />
+                    </CardContent>
+                  </Card>
+                  <Card className="border-purple-200">
+                    <CardContent className="pt-4">
+                      <div className="text-sm text-gray-600">貢献度評価</div>
+                      <div className="text-2xl font-bold text-purple-600">38.8/50点</div>
+                      <Progress value={77.6} className="mt-2 h-2" />
+                    </CardContent>
+                  </Card>
+                  <Card className="border-yellow-200">
+                    <CardContent className="pt-4">
+                      <div className="text-sm text-gray-600">研修完了</div>
+                      <div className="text-2xl font-bold text-yellow-600">12/18</div>
+                      <Progress value={66.7} className="mt-2 h-2" />
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+
+              {/* シミュレーション結果 */}
+              <div className="mb-6">
+                <h3 className="font-semibold mb-3">予測シミュレーション結果</h3>
+                <Alert className="border-green-200 bg-green-50">
+                  <Sparkles className="h-4 w-4 text-green-600" />
+                  <AlertTitle className="text-green-800">成長予測</AlertTitle>
+                  <AlertDescription className="text-green-700">
+                    推奨研修をすべて完了した場合、<strong>82.3点</strong>に到達し、
+                    <strong>Aグレード</strong>への昇格が見込まれます。
+                  </AlertDescription>
+                </Alert>
+                
+                {/* 成長ロードマップ */}
+                <div className="mt-4 space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-20 text-sm font-medium text-gray-600">Phase 1</div>
+                    <div className="flex-1 bg-blue-100 rounded-lg p-3">
+                      <div className="font-medium text-blue-800">基礎強化 (1-3ヶ月)</div>
+                      <div className="text-xs text-blue-600 mt-1">
+                        リーダーシップ研修 → +3.5点 | コミュニケーション研修 → +1.5点
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-20 text-sm font-medium text-gray-600">Phase 2</div>
+                    <div className="flex-1 bg-purple-100 rounded-lg p-3">
+                      <div className="font-medium text-purple-800">専門性向上 (4-6ヶ月)</div>
+                      <div className="text-xs text-purple-600 mt-1">
+                        専門技術研修 → +2.8点 | マネジメント研修 → +2.0点
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-20 text-sm font-medium text-gray-600">Phase 3</div>
+                    <div className="flex-1 bg-green-100 rounded-lg p-3">
+                      <div className="font-medium text-green-800">総合力完成 (7-12ヶ月)</div>
+                      <div className="text-xs text-green-600 mt-1">
+                        指導者育成研修 → +1.2点 | 組織貢献実践 → +0.5点
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 研修選択オプション */}
+              <div className="mb-6">
+                <h3 className="font-semibold mb-3">研修選択オプション</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <Card className="border-blue-200 hover:shadow-lg transition-shadow cursor-pointer">
+                    <CardContent className="pt-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-medium">最速コース</span>
+                        <Badge className="bg-red-100 text-red-800">6ヶ月</Badge>
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        短期間でAグレードを目指す集中プログラム
+                      </div>
+                      <div className="mt-2 text-xs">
+                        <span className="text-green-600">予測: 81.5点</span> | 
+                        <span className="text-blue-600 ml-2">費用: 45万円</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  <Card className="border-purple-200 hover:shadow-lg transition-shadow cursor-pointer">
+                    <CardContent className="pt-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-medium">バランスコース</span>
+                        <Badge className="bg-blue-100 text-blue-800">12ヶ月</Badge>
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        着実に成長を積み重ねる標準プログラム
+                      </div>
+                      <div className="mt-2 text-xs">
+                        <span className="text-green-600">予測: 82.3点</span> | 
+                        <span className="text-blue-600 ml-2">費用: 30万円</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+
+              {/* アクションボタン */}
+              <div className="flex gap-3">
+                <Link href="/training-v3" className="flex-1">
+                  <Button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
+                    <Zap className="h-4 w-4 mr-2" />
+                    V3研修システムで詳細計画を作成
+                  </Button>
+                </Link>
+                <Button
+                  variant="outline"
+                  onClick={() => setShowTrainingSimulator(false)}
+                >
+                  閉じる
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
