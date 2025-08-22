@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
@@ -13,8 +13,13 @@ import {
   Calendar,
   BookOpen,
   Award,
-  AlertCircle
+  AlertCircle,
+  Clock,
+  CheckCircle2
 } from 'lucide-react';
+import { V3PersonalEvaluation } from '@/types/evaluation-v3';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { AppError, ErrorLevel } from '@/lib/error/AppError';
 import EvaluationHistory from './EvaluationHistory';
 import TrainingStatus from './TrainingStatus';
 import NextEvaluationTimeline from './NextEvaluationTimeline';
@@ -30,14 +35,103 @@ interface PersonalDashboardProps {
   selectedStaff?: any; // 職員カルテから渡されるデータ
 }
 
+// V3グレード定義
+const v3Grades = {
+  'S+': { color: '#8B0000', label: 'S+（超優秀）', min: 95 },
+  'S': { color: '#FF0000', label: 'S（卓越）', min: 90 },
+  'A+': { color: '#FF4500', label: 'A+（優秀+）', min: 85 },
+  'A': { color: '#FFA500', label: 'A（優秀）', min: 80 },
+  'B': { color: '#32CD32', label: 'B（良好）', min: 70 },
+  'C': { color: '#1E90FF', label: 'C（普通）', min: 60 },
+  'D': { color: '#808080', label: 'D（要改善）', min: 0 }
+}
+
+// V3評価年間スケジュール
+const getEvaluationScheduleInfo = () => {
+  const currentDate = new Date()
+  const currentMonth = currentDate.getMonth() + 1
+  
+  const scheduleMap = {
+    1: { phase: '年度末評価期間', task: '総合評価・年度総括', status: 'active', nextTask: '評価結果開示（2月）', daysUntil: 30 },
+    2: { phase: '評価結果開示', task: '評価結果フィードバック・面談', status: 'active', nextTask: '新年度準備（3月）', daysUntil: 28 },
+    3: { phase: '新年度移行期', task: '昇進・昇格発令・新年度準備', status: 'active', nextTask: '前年度フィードバック（4月）', daysUntil: 31 },
+    4: { phase: '前年度フィードバック', task: '前年度評価最終フィードバック', status: 'completed', nextTask: '上半期計画策定（5月）', daysUntil: 30 },
+    5: { phase: '上半期計画', task: '上半期活動計画策定', status: 'completed', nextTask: '夏季組織貢献評価（6-8月）', daysUntil: 31 },
+    6: { phase: '夏季組織貢献評価', task: '夏季組織貢献度評価実施', status: 'active', nextTask: '評価継続中', daysUntil: 30 },
+    7: { phase: '夏季組織貢献評価', task: '夏季組織貢献度評価実施', status: 'active', nextTask: '評価継続中', daysUntil: 31 },
+    8: { phase: '夏季組織貢献評価', task: '夏季組織貢献度評価実施', status: 'active', nextTask: '下半期準備（9月）', daysUntil: 31 },
+    9: { phase: '下半期準備', task: '下半期活動計画策定', status: 'upcoming', nextTask: '技術評価準備（10月）', daysUntil: 30 },
+    10: { phase: '技術評価準備', task: '技術評価項目確定・準備', status: 'upcoming', nextTask: '技術評価実施（11月）', daysUntil: 31 },
+    11: { phase: '技術評価実施', task: '技術評価（法人統一+施設固有）', status: 'upcoming', nextTask: '冬季組織貢献評価（12-2月）', daysUntil: 30 },
+    12: { phase: '冬季組織貢献評価', task: '冬季組織貢献度評価実施', status: 'upcoming', nextTask: '年度末評価（1月）', daysUntil: 31 }
+  }
+  
+  return scheduleMap[currentMonth as keyof typeof scheduleMap] || scheduleMap[1]
+}
+
 const PersonalDashboard: React.FC<PersonalDashboardProps> = ({ 
   employeeId = 'E001',
   employeeName = '山田 太郎',
   selectedStaff
 }) => {
   const [selectedTab, setSelectedTab] = useState('overview');
+  const [v3EvaluationData, setV3EvaluationData] = useState<V3PersonalEvaluation | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const { handleError } = useErrorHandler();
 
-  // 職員カルテデータがある場合はそれを使用、なければデフォルト値
+  // V3評価データの取得
+  useEffect(() => {
+    const loadV3EvaluationData = async () => {
+      try {
+        setIsLoading(true);
+        
+        // V3評価データ（モック）
+        const mockV3Data: V3PersonalEvaluation = {
+          id: `eval_${selectedStaff?.id || employeeId}_2024`,
+          staffId: selectedStaff?.id || employeeId,
+          staffName: selectedStaff?.name || employeeName,
+          evaluationPeriod: '2024年度',
+          experienceLevel: 'midlevel',
+          experienceLabel: '中堅',
+          technicalScore: {
+            coreItems: 28,    // 30点満点
+            facilityItems: 18, // 20点満点
+            total: 46         // 50点満点
+          },
+          contributionScore: {
+            facility: 24,     // 25点満点
+            corporate: 22,    // 25点満点
+            total: 46        // 50点満点
+          },
+          totalScore: 92,    // 100点満点
+          grade: 'S',
+          status: 'completed',
+          evaluatedAt: new Date('2024-12-15'),
+          disclosedAt: new Date('2025-01-10'),
+          feedback: 'V3評価システムにおいて優秀な成果を達成。Sグレードに到達し、次期リーダー候補として期待。'
+        };
+
+        setV3EvaluationData(mockV3Data);
+      } catch (error) {
+        const appError = new AppError(
+          'V3_EVALUATION_LOAD_FAILED',
+          'V3評価データの取得に失敗しました',
+          ErrorLevel.ERROR,
+          { staffId: selectedStaff?.id || employeeId, error }
+        );
+        handleError(appError);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadV3EvaluationData();
+  }, [selectedStaff?.id, employeeId, handleError]);
+
+  // 現在の評価スケジュール情報
+  const scheduleInfo = getEvaluationScheduleInfo();
+
+  // 職員カルテデータがある場合はそれを使用、なければV3デフォルト値
   const personalData = selectedStaff ? {
     employeeId: selectedStaff.id || 'OH-NS-2021-001',
     name: selectedStaff.name || employeeName,
@@ -46,21 +140,30 @@ const PersonalDashboard: React.FC<PersonalDashboardProps> = ({
     facility: selectedStaff.facility || '小原病院',
     joinDate: selectedStaff.joinDate || '2021-04-01',
     age: selectedStaff.age || 29,
-    currentGrade: 'B',
-    currentScore: 72.5,
-    previousGrade: 'B',
-    previousScore: 70.2,
+    // V3評価データ
+    currentGrade: v3EvaluationData?.grade || 'A',
+    currentScore: v3EvaluationData?.totalScore || 81.5,
+    previousGrade: 'A',
+    previousScore: 78.5,
     trend: 'up' as const,
-    trendValue: 2.3,
-    technicalScore: 38,
-    contributionScore: 34.5,
-    nextEvaluationDate: '2025-12-31',
-    daysUntilEvaluation: 141,
-    completedTrainings: 8,
+    trendValue: 3.0,
+    technicalScore: v3EvaluationData?.technicalScore?.total || 42,
+    contributionScore: v3EvaluationData?.contributionScore?.total || 39.5,
+    experienceLevel: v3EvaluationData?.experienceLabel || '中堅',
+    // V3スケジュール連動
+    currentPhase: scheduleInfo.phase,
+    currentTask: scheduleInfo.task,
+    nextTask: scheduleInfo.nextTask,
+    daysUntilNext: scheduleInfo.daysUntil,
+    nextEvaluationDate: '2025-11-30',
+    daysUntilEvaluation: scheduleInfo.daysUntil,
+    // 研修・成長関連
+    completedTrainings: 9,
     requiredTrainings: 10,
-    rank: 142,
+    rank: 85,
     totalEmployees: 450,
-    evaluation: selectedStaff.evaluation || 'B',
+    // 詳細データ
+    evaluation: selectedStaff.evaluation || 'A',
     healthScore: selectedStaff.healthScore || 75,
     stressIndex: selectedStaff.stressIndex || 48,
     engagement: selectedStaff.engagement || 82,
@@ -73,6 +176,7 @@ const PersonalDashboard: React.FC<PersonalDashboardProps> = ({
     qualifications: selectedStaff.qualifications || ['看護師免許', 'BLS資格'],
     certifications: selectedStaff.certifications || ['感染対策研修修了', '医療安全研修修了']
   } : {
+    // V3システム対応デフォルトデータ
     employeeId: employeeId,
     name: employeeName,
     department: '看護部',
@@ -80,43 +184,62 @@ const PersonalDashboard: React.FC<PersonalDashboardProps> = ({
     facility: '医療法人',
     joinDate: '2018-04-01',
     age: 32,
-    currentGrade: 'B',
-    currentScore: 72.5,
-    previousGrade: 'B',
-    previousScore: 70.2,
+    // V3評価データ（デフォルト）
+    currentGrade: v3EvaluationData?.grade || 'S',
+    currentScore: v3EvaluationData?.totalScore || 92,
+    previousGrade: 'A',
+    previousScore: 86.5,
     trend: 'up' as const,
-    trendValue: 2.3,
-    technicalScore: 38,
-    contributionScore: 34.5,
-    nextEvaluationDate: '2025-12-31',
-    daysUntilEvaluation: 141,
+    trendValue: 5.5,
+    technicalScore: v3EvaluationData?.technicalScore?.total || 46,
+    contributionScore: v3EvaluationData?.contributionScore?.total || 46,
+    experienceLevel: v3EvaluationData?.experienceLabel || '中堅',
+    // V3スケジュール連動
+    currentPhase: scheduleInfo.phase,
+    currentTask: scheduleInfo.task,
+    nextTask: scheduleInfo.nextTask,
+    daysUntilNext: scheduleInfo.daysUntil,
+    nextEvaluationDate: '2025-11-30',
+    daysUntilEvaluation: scheduleInfo.daysUntil,
+    // 研修・成長関連
     completedTrainings: 8,
     requiredTrainings: 10,
     rank: 142,
     totalEmployees: 450,
-    evaluation: 'B',
-    healthScore: 75,
-    stressIndex: 48,
-    engagement: 82,
+    // 詳細データ
+    evaluation: 'S',
+    healthScore: 85,
+    stressIndex: 35,
+    engagement: 92,
     skills: [
-      { name: '看護技術', level: 85 },
-      { name: '患者対応', level: 90 },
-      { name: 'チーム連携', level: 88 },
-      { name: '記録・報告', level: 82 }
+      { name: '看護技術', level: 92 },
+      { name: '患者対応', level: 95 },
+      { name: 'チーム連携', level: 90 },
+      { name: '記録・報告', level: 88 }
     ],
-    qualifications: ['看護師免許', 'BLS資格'],
-    certifications: ['感染対策研修修了', '医療安全研修修了']
+    qualifications: ['看護師免許', 'BLS資格', '認定看護師（感染管理）'],
+    certifications: ['感染対策研修修了', '医療安全研修修了', 'リーダーシップ研修修了']
   };
 
+  // V3グレードに対応した色設定
   const getGradeColor = (grade: string) => {
-    const colors: { [key: string]: string } = {
-      'S': 'bg-green-100 text-green-800 border-green-300',
-      'A': 'bg-blue-100 text-blue-800 border-blue-300',
-      'B': 'bg-yellow-100 text-yellow-800 border-yellow-300',
-      'C': 'bg-orange-100 text-orange-800 border-orange-300',
-      'D': 'bg-red-100 text-red-800 border-red-300'
-    };
-    return colors[grade] || 'bg-gray-100 text-gray-800 border-gray-300';
+    const gradeInfo = v3Grades[grade as keyof typeof v3Grades];
+    if (gradeInfo) {
+      // V3グレードの色を背景色として使用
+      const baseColor = gradeInfo.color;
+      if (grade.includes('S')) {
+        return 'bg-red-100 text-red-800 border-red-300'; // S+, S
+      } else if (grade.includes('A')) {
+        return 'bg-orange-100 text-orange-800 border-orange-300'; // A+, A
+      } else if (grade === 'B') {
+        return 'bg-green-100 text-green-800 border-green-300'; // B
+      } else if (grade === 'C') {
+        return 'bg-blue-100 text-blue-800 border-blue-300'; // C
+      } else if (grade === 'D') {
+        return 'bg-gray-100 text-gray-800 border-gray-300'; // D
+      }
+    }
+    return 'bg-gray-100 text-gray-800 border-gray-300';
   };
 
   const percentile = Math.round((1 - personalData.rank / personalData.totalEmployees) * 100);
@@ -218,24 +341,44 @@ const PersonalDashboard: React.FC<PersonalDashboardProps> = ({
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <CardTitle className="text-sm font-medium text-gray-600">
-                次回評価
+                評価スケジュール
               </CardTitle>
               <Calendar className="h-4 w-4 text-gray-400" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{personalData.daysUntilEvaluation}日後</div>
-            <p className="text-xs text-gray-500 mt-1">
-              {personalData.nextEvaluationDate}
-            </p>
-            <Button size="sm" variant="outline" className="mt-2 w-full">
-              準備開始
+            <div className="text-lg font-bold text-blue-600 mb-1">{personalData.currentPhase}</div>
+            <p className="text-sm text-gray-700 mb-2">{personalData.currentTask}</p>
+            <div className="flex items-center gap-1 text-xs text-gray-500 mb-3">
+              <Clock className="h-3 w-3" />
+              <span>次: {personalData.nextTask}</span>
+            </div>
+            <Button size="sm" variant="outline" className="w-full">
+              {scheduleInfo.status === 'active' ? '実行中' : scheduleInfo.status === 'completed' ? '完了済み' : '準備中'}
             </Button>
           </CardContent>
         </Card>
       </div>
 
-      {/* アラート */}
+      {/* V3スケジュール連動アラート */}
+      {scheduleInfo.status === 'active' && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="h-5 w-5 text-blue-600" />
+            <span className="font-medium text-blue-900">
+              {personalData.currentPhase}が実行中です
+            </span>
+            <Badge variant="secondary" className="ml-auto">
+              {personalData.daysUntilNext}日後に次フェーズ
+            </Badge>
+          </div>
+          <p className="text-sm text-blue-700 mt-2">
+            現在のタスク: {personalData.currentTask}
+          </p>
+        </div>
+      )}
+      
+      {/* 研修アラート */}
       {personalData.completedTrainings < personalData.requiredTrainings && (
         <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
           <div className="flex items-center gap-2">
@@ -361,17 +504,28 @@ const PersonalDashboard: React.FC<PersonalDashboardProps> = ({
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    <div className="border-l-4 border-blue-500 pl-4">
-                      <p className="text-sm text-gray-600 mb-1">2024年上期評価</p>
+                    {v3EvaluationData?.feedback ? (
+                      <div className="border-l-4 border-green-500 pl-4">
+                        <p className="text-sm text-gray-600 mb-1">V3評価システム - 最新評価</p>
+                        <p className="text-sm">
+                          {v3EvaluationData.feedback}
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="border-l-4 border-blue-500 pl-4">
+                        <p className="text-sm text-gray-600 mb-1">2024年度評価</p>
+                        <p className="text-sm">
+                          V3評価システムに移行し、技術評価と組織貢献度の両面で優秀な成果を達成。
+                        </p>
+                      </div>
+                    )}
+                    <div className="border-l-4 border-purple-500 pl-4">
+                      <p className="text-sm text-gray-600 mb-1">現在の評価フェーズ</p>
                       <p className="text-sm">
-                        患者様への対応が丁寧で、チーム内でのコミュニケーションも良好。
-                        新人指導にも積極的に取り組んでいる。
+                        {personalData.currentPhase}: {personalData.currentTask}
                       </p>
-                    </div>
-                    <div className="border-l-4 border-green-500 pl-4">
-                      <p className="text-sm text-gray-600 mb-1">今後の期待</p>
-                      <p className="text-sm">
-                        リーダーシップ研修の受講を推奨。次期主任候補として期待。
+                      <p className="text-xs text-gray-500 mt-1">
+                        次回: {personalData.nextTask}（{personalData.daysUntilNext}日後）
                       </p>
                     </div>
                   </div>
