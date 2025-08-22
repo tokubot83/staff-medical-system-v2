@@ -242,8 +242,8 @@ export default function EvaluationIntegratedDashboard() {
                     </Link>
                   )}
                   {alert.actionRequired === 'review_all' && (
-                    <Link href="/evaluation">
-                      <button className="actionButton">確認</button>
+                    <Link href="/evaluation-execution">
+                      <button className="actionButton">V3評価で確認</button>
                     </Link>
                   )}
                 </div>

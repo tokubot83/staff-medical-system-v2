@@ -75,9 +75,9 @@ export default function EvaluationPatternDesignsPage() {
     <div className="container mx-auto py-6 max-w-7xl">
       {/* ヘッダー */}
       <div className="mb-6">
-        <Link href="/evaluation" className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary mb-4">
+        <Link href="/dashboard" className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary mb-4">
           <ArrowLeft className="w-4 h-4" />
-          評価管理に戻る
+          V3評価ダッシュボードに戻る
         </Link>
         <Card>
           <CardHeader>
