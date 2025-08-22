@@ -2716,15 +2716,10 @@ export default function DashboardPage() {
                       </div>
                     </div>
                     <div className="pt-3 space-y-2">
-                      <Link href="/evaluation/core-v2">
+                      <Link href="/evaluation-execution">
                         <Button className="w-full" size="sm" variant="outline">
                           <PlayCircle className="mr-2 h-4 w-4" />
-                          新V2版で評価開始
-                        </Button>
-                      </Link>
-                      <Link href="/evaluation/facility-specific">
-                        <Button className="w-full" size="sm" variant="ghost">
-                          施設特化項目を設定
+                          V3評価システムで開始
                         </Button>
                       </Link>
                     </div>
@@ -2807,10 +2802,10 @@ export default function DashboardPage() {
                       <div className="text-xs text-gray-600">賞与査定</div>
                     </div>
                   </Link>
-                  <Link href="/evaluation/integrated-v2">
+                  <Link href="/evaluation-execution">
                     <div className="p-4 bg-white rounded-lg border hover:border-orange-400 hover:shadow-md transition-all cursor-pointer text-center">
                       <Award className="h-6 w-6 text-green-600 mx-auto mb-2" />
-                      <div className="text-sm font-medium">統合評価</div>
+                      <div className="text-sm font-medium">V3統合評価</div>
                       <div className="text-xs text-gray-600">総合確認</div>
                     </div>
                   </Link>
