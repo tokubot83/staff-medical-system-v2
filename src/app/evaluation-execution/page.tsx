@@ -308,6 +308,140 @@ export default function EvaluationExecutionPage() {
     <div>
       <CommonHeader title="個人評価管理" />
       <div className={styles.container}>
+        {/* 最上部：メインタブナビゲーション */}
+        <div className="mb-4 flex items-center justify-between">
+          <div className={`${styles.mainTabNavigation} flex space-x-2`}>
+            <button className={`${styles.mainTabButton} ${styles.active} flex items-center gap-2 px-4 py-2 rounded-lg font-medium bg-blue-600 text-white shadow-lg`}>
+              <span className={styles.tabIcon}>🏠</span>
+              <span className={styles.tabLabel}>作業ダッシュボード</span>
+            </button>
+            <button className={`${styles.mainTabButton} flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-gray-600 hover:bg-gray-100`}>
+              <span className={styles.tabIcon}>✍️</span>
+              <span className={styles.tabLabel}>評価入力</span>
+            </button>
+            <button className={`${styles.mainTabButton} flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-gray-600 hover:bg-gray-100`}>
+              <span className={styles.tabIcon}>🔍</span>
+              <span className={styles.tabLabel}>評価確認</span>
+            </button>
+            <button className={`${styles.mainTabButton} flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-gray-600 hover:bg-gray-100`}>
+              <span className={styles.tabIcon}>⚖️</span>
+              <span className={styles.tabLabel}>総合判定</span>
+            </button>
+            <button className={`${styles.mainTabButton} flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-gray-600 hover:bg-gray-100`}>
+              <span className={styles.tabIcon}>👁️</span>
+              <span className={styles.tabLabel}>評価開示</span>
+            </button>
+            <button className={`${styles.mainTabButton} flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-gray-600 hover:bg-gray-100`}>
+              <span className={styles.tabIcon}>📢</span>
+              <span className={styles.tabLabel}>異議申立</span>
+            </button>
+          </div>
+          <div className="flex items-center gap-2 bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-lg px-4 py-2 shadow-sm">
+            <Sparkles className="w-5 h-5 text-purple-600" />
+            <div className="text-sm">
+              <div className="font-medium text-purple-900">V3評価システム</div>
+              <div className="text-purple-700">技術50点+組織貢献50点</div>
+            </div>
+            <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent hover:bg-primary/80 bg-purple-100 text-purple-800 font-medium">100点満点</div>
+          </div>
+        </div>
+
+        {/* 評価フェーズ情報と今月のタスク */}
+        <div className={`${styles.tabContent} space-y-6 p-6`}>
+          <div className="rounded-xl text-card-foreground border-4 border-blue-600 bg-gradient-to-r from-blue-100 via-indigo-100 to-purple-100 shadow-2xl ring-4 ring-opacity-30">
+            <div className="flex flex-col space-y-1.5 p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="p-4 rounded-full shadow-lg animate-pulse bg-gradient-to-br from-green-600 to-emerald-700">
+                    <Users className="h-8 w-8 text-white drop-shadow-lg" />
+                  </div>
+                  <div>
+                    <h3 className="tracking-tight text-3xl font-bold bg-gradient-to-r from-blue-700 to-indigo-800 bg-clip-text text-transparent">8月: 夏季評価フォローアップ</h3>
+                    <p className="text-xl font-medium text-indigo-700">フォローアップ・夏季評価結果の確認と異議申立対応</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="inline-flex items-center rounded-full border transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent hover:bg-primary/80 px-6 py-3 text-lg font-semibold shadow-lg animate-pulse bg-gradient-to-r from-yellow-600 to-orange-700 text-white">🎯 実施中</div>
+                  <div className="mt-2 text-sm text-indigo-600 font-medium">締切: 8月15日</div>
+                </div>
+              </div>
+            </div>
+            <div className="p-6 pt-0">
+              <div className="space-y-4">
+                <h4 className="font-semibold text-lg mb-3 flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-blue-600" />
+                  今月の作業タスク
+                </h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-gray-200">
+                    <div className="w-8 h-8 border-2 border-gray-300 rounded-full flex items-center justify-center">
+                      <div className="w-4 h-4 border-2 border-gray-300 rounded-full"></div>
+                    </div>
+                    <div className="flex-1">
+                      <span className="font-medium text-gray-700">夏季評価結果通知完了確認</span>
+                      <div className="text-xs text-gray-600 mt-1">対象: 45名</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-gray-200">
+                    <div className="w-8 h-8 border-2 border-gray-300 rounded-full flex items-center justify-center">
+                      <div className="w-4 h-4 border-2 border-gray-300 rounded-full"></div>
+                    </div>
+                    <div className="flex-1">
+                      <span className="font-medium text-gray-700">異議申立の受付・対応</span>
+                      <div className="text-xs text-gray-600 mt-1">対象: 2名</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-gray-200">
+                    <div className="w-8 h-8 border-2 border-gray-300 rounded-full flex items-center justify-center">
+                      <div className="w-4 h-4 border-2 border-gray-300 rounded-full"></div>
+                    </div>
+                    <div className="flex-1">
+                      <span className="font-medium text-gray-700">評価結果の最終確定</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-6 flex gap-3">
+                  <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700">
+                    <Upload className="h-5 w-5 mr-2" />
+                    Excelデータ取込
+                  </button>
+                  <Link href="/evaluation-design">
+                    <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 py-2 px-6">
+                      <Calendar className="h-4 w-4 mr-2" />
+                      年間スケジュール
+                    </button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-xl bg-card text-card-foreground shadow border-2 border-purple-200">
+            <div className="flex flex-col space-y-1.5 p-6">
+              <h3 className="font-semibold leading-none tracking-tight flex items-center gap-2">
+                <Calendar className="h-5 w-5 text-purple-600" />
+                今後の評価予定
+              </h3>
+              <p className="text-sm text-muted-foreground">次の評価業務の準備と計画</p>
+            </div>
+            <div className="p-6 pt-0">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-4 bg-purple-50 rounded-lg border border-purple-200">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-purple-200 rounded-full">
+                      <Users className="h-5 w-5 text-purple-700" />
+                    </div>
+                    <div>
+                      <div className="font-semibold text-purple-900">12月: 冬季貢献度評価</div>
+                      <div className="text-sm text-purple-700">25点・締切: 12月28日</div>
+                    </div>
+                  </div>
+                  <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent hover:bg-primary/80 bg-purple-100 text-purple-800">予定</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* クイックアクション */}
         <div className="mb-6">
           <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
