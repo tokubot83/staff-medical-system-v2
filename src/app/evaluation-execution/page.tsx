@@ -719,6 +719,99 @@ export default function EvaluationExecutionPage() {
           
           {activeTab === 'input' && (
             <div className="space-y-6 p-6">
+              {/* 評価入力フローカード */}
+              <Card className="border-4 border-purple-600 bg-gradient-to-r from-purple-100 via-indigo-100 to-blue-100 shadow-2xl ring-4 ring-purple-200 ring-opacity-30">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="p-4 rounded-full shadow-lg bg-gradient-to-br from-purple-600 to-indigo-700">
+                        <Edit3 className="h-8 w-8 text-white drop-shadow-lg" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-3xl font-bold bg-gradient-to-r from-purple-700 to-indigo-800 bg-clip-text text-transparent">
+                          技術評価入力
+                        </CardTitle>
+                        <CardDescription className="text-xl font-medium text-indigo-700">
+                          V3評価システム • 技術50点満点の評価実施
+                        </CardDescription>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <Badge className="px-6 py-3 text-lg font-semibold shadow-lg bg-gradient-to-r from-purple-600 to-indigo-700 text-white">
+                        🎯 3月実施
+                      </Badge>
+                      <div className="mt-2 text-sm text-indigo-600 font-medium">
+                        締切: 3月31日
+                      </div>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-lg mb-3 flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-purple-600" />
+                      評価入力プロセス
+                    </h4>
+                    <div className="grid grid-cols-3 gap-4">
+                      <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-purple-200">
+                        <div className="flex items-center justify-center w-10 h-10 bg-purple-100 rounded-full">
+                          <span className="font-bold text-purple-700">1</span>
+                        </div>
+                        <div className="flex-1">
+                          <span className="font-medium text-gray-700">法人統一項目（30点）</span>
+                          <div className="text-xs text-gray-600 mt-1">全施設共通の技術評価</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-purple-200">
+                        <div className="flex items-center justify-center w-10 h-10 bg-purple-100 rounded-full">
+                          <span className="font-bold text-purple-700">2</span>
+                        </div>
+                        <div className="flex-1">
+                          <span className="font-medium text-gray-700">施設特化項目（20点）</span>
+                          <div className="text-xs text-gray-600 mt-1">施設独自の評価項目</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-purple-200">
+                        <div className="flex items-center justify-center w-10 h-10 bg-purple-100 rounded-full">
+                          <span className="font-bold text-purple-700">3</span>
+                        </div>
+                        <div className="flex-1">
+                          <span className="font-medium text-gray-700">相対評価で最終グレード</span>
+                          <div className="text-xs text-gray-600 mt-1">100点満点での総合評価</div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* 進捗状況 */}
+                    <div className="mt-6">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm font-medium">評価完了状況</span>
+                        <span className="text-2xl font-bold text-purple-600">{Math.round((statistics.completed / statistics.total) * 100)}%</span>
+                      </div>
+                      <Progress value={(statistics.completed / statistics.total) * 100} className="h-3" />
+                      <div className="grid grid-cols-4 gap-2 mt-3">
+                        <div className="text-center p-2 bg-gray-50 rounded">
+                          <div className="text-xl font-bold">{statistics.notStarted}</div>
+                          <div className="text-xs text-gray-600">未着手</div>
+                        </div>
+                        <div className="text-center p-2 bg-blue-50 rounded">
+                          <div className="text-xl font-bold text-blue-600">{statistics.inProgress}</div>
+                          <div className="text-xs text-gray-600">評価中</div>
+                        </div>
+                        <div className="text-center p-2 bg-green-50 rounded">
+                          <div className="text-xl font-bold text-green-600">{statistics.completed}</div>
+                          <div className="text-xs text-gray-600">完了</div>
+                        </div>
+                        <div className="text-center p-2 bg-orange-50 rounded">
+                          <div className="text-xl font-bold text-orange-600">{statistics.appealed}</div>
+                          <div className="text-xs text-gray-600">異議申立</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
               {/* 評価シート選択モード */}
               {selectedStaffForEvaluation ? (
                 <div>
@@ -951,11 +1044,74 @@ export default function EvaluationExecutionPage() {
 
           {activeTab === 'review' && (
             <div className="space-y-6 p-6">
+              {/* 評価確認フローカード */}
+              <Card className="border-4 border-blue-600 bg-gradient-to-r from-blue-100 via-cyan-100 to-teal-100 shadow-2xl ring-4 ring-blue-200 ring-opacity-30">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="p-4 rounded-full shadow-lg bg-gradient-to-br from-blue-600 to-cyan-700">
+                        <Eye className="h-8 w-8 text-white drop-shadow-lg" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-3xl font-bold bg-gradient-to-r from-blue-700 to-cyan-800 bg-clip-text text-transparent">
+                          評価確認・調整
+                        </CardTitle>
+                        <CardDescription className="text-xl font-medium text-cyan-700">
+                          上司評価と本人評価の確認・ギャップ分析
+                        </CardDescription>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <Badge className="px-6 py-3 text-lg font-semibold shadow-lg bg-gradient-to-r from-blue-600 to-cyan-700 text-white">
+                        📊 確認中
+                      </Badge>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-lg mb-3 flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-blue-600" />
+                      確認プロセス
+                    </h4>
+                    <div className="grid grid-cols-3 gap-4">
+                      <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-blue-200">
+                        <div className="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-full">
+                          <span className="font-bold text-blue-700">1</span>
+                        </div>
+                        <div className="flex-1">
+                          <span className="font-medium text-gray-700">評価差異の確認</span>
+                          <div className="text-xs text-gray-600 mt-1">上司・本人評価の比較</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-blue-200">
+                        <div className="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-full">
+                          <span className="font-bold text-blue-700">2</span>
+                        </div>
+                        <div className="flex-1">
+                          <span className="font-medium text-gray-700">調整会議実施</span>
+                          <div className="text-xs text-gray-600 mt-1">必要に応じて面談</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-blue-200">
+                        <div className="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-full">
+                          <span className="font-bold text-blue-700">3</span>
+                        </div>
+                        <div className="flex-1">
+                          <span className="font-medium text-gray-700">最終評価確定</span>
+                          <div className="text-xs text-gray-600 mt-1">評価の承認・確定</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
             <Card>
               <CardHeader>
-                <CardTitle>評価確認</CardTitle>
+                <CardTitle>評価確認対象者</CardTitle>
                 <CardDescription>
-                  上司評価と本人評価の確認・調整を行います
+                  評価が完了した職員の確認・調整を行います
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -992,19 +1148,228 @@ export default function EvaluationExecutionPage() {
           )}
 
           {activeTab === 'judgment' && (
-            <div className="p-6">
+            <div className="space-y-6 p-6">
+              {/* 総合判定フローカード */}
+              <Card className="border-4 border-green-600 bg-gradient-to-r from-green-100 via-emerald-100 to-teal-100 shadow-2xl ring-4 ring-green-200 ring-opacity-30">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="p-4 rounded-full shadow-lg bg-gradient-to-br from-green-600 to-emerald-700">
+                        <TrendingUp className="h-8 w-8 text-white drop-shadow-lg" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-3xl font-bold bg-gradient-to-r from-green-700 to-emerald-800 bg-clip-text text-transparent">
+                          総合判定
+                        </CardTitle>
+                        <CardDescription className="text-xl font-medium text-emerald-700">
+                          2軸相対評価による最終グレード決定
+                        </CardDescription>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <Badge className="px-6 py-3 text-lg font-semibold shadow-lg bg-gradient-to-r from-green-600 to-emerald-700 text-white">
+                        ⚖️ 4月実施
+                      </Badge>
+                      <div className="mt-2 text-sm text-emerald-600 font-medium">
+                        締切: 4月15日
+                      </div>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-lg mb-3 flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-600" />
+                      判定プロセス
+                    </h4>
+                    <div className="grid grid-cols-3 gap-4">
+                      <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-green-200">
+                        <div className="flex items-center justify-center w-10 h-10 bg-green-100 rounded-full">
+                          <span className="font-bold text-green-700">1</span>
+                        </div>
+                        <div className="flex-1">
+                          <span className="font-medium text-gray-700">技術評価集計</span>
+                          <div className="text-xs text-gray-600 mt-1">50点満点の技術スコア</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-green-200">
+                        <div className="flex items-center justify-center w-10 h-10 bg-green-100 rounded-full">
+                          <span className="font-bold text-green-700">2</span>
+                        </div>
+                        <div className="flex-1">
+                          <span className="font-medium text-gray-700">貢献度集計</span>
+                          <div className="text-xs text-gray-600 mt-1">50点満点の貢献スコア</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-green-200">
+                        <div className="flex items-center justify-center w-10 h-10 bg-green-100 rounded-full">
+                          <span className="font-bold text-green-700">3</span>
+                        </div>
+                        <div className="flex-1">
+                          <span className="font-medium text-gray-700">最終グレード</span>
+                          <div className="text-xs text-gray-600 mt-1">S/A/B/C/D判定</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
               <IntegratedJudgment />
             </div>
           )}
 
           {activeTab === 'disclosure' && (
-            <div className="p-6">
+            <div className="space-y-6 p-6">
+              {/* 評価開示フローカード */}
+              <Card className="border-4 border-indigo-600 bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100 shadow-2xl ring-4 ring-indigo-200 ring-opacity-30">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="p-4 rounded-full shadow-lg bg-gradient-to-br from-indigo-600 to-purple-700">
+                        <Eye className="h-8 w-8 text-white drop-shadow-lg" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-3xl font-bold bg-gradient-to-r from-indigo-700 to-purple-800 bg-clip-text text-transparent">
+                          評価開示
+                        </CardTitle>
+                        <CardDescription className="text-xl font-medium text-purple-700">
+                          職員への評価結果フィードバック
+                        </CardDescription>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <Badge className="px-6 py-3 text-lg font-semibold shadow-lg bg-gradient-to-r from-indigo-600 to-purple-700 text-white">
+                        👁️ 4月上旬
+                      </Badge>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-lg mb-3 flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-indigo-600" />
+                      開示プロセス
+                    </h4>
+                    <div className="grid grid-cols-3 gap-4">
+                      <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-indigo-200">
+                        <div className="flex items-center justify-center w-10 h-10 bg-indigo-100 rounded-full">
+                          <span className="font-bold text-indigo-700">1</span>
+                        </div>
+                        <div className="flex-1">
+                          <span className="font-medium text-gray-700">開示準備</span>
+                          <div className="text-xs text-gray-600 mt-1">評価結果の整理</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-indigo-200">
+                        <div className="flex items-center justify-center w-10 h-10 bg-indigo-100 rounded-full">
+                          <span className="font-bold text-indigo-700">2</span>
+                        </div>
+                        <div className="flex-1">
+                          <span className="font-medium text-gray-700">個別面談</span>
+                          <div className="text-xs text-gray-600 mt-1">フィードバック実施</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-indigo-200">
+                        <div className="flex items-center justify-center w-10 h-10 bg-indigo-100 rounded-full">
+                          <span className="font-bold text-indigo-700">3</span>
+                        </div>
+                        <div className="flex-1">
+                          <span className="font-medium text-gray-700">開示完了</span>
+                          <div className="text-xs text-gray-600 mt-1">記録・保管</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
               <DisclosureManagementV3 />
             </div>
           )}
 
           {activeTab === 'appeal' && (
-            <div className="p-6">
+            <div className="space-y-6 p-6">
+              {/* 異議申立フローカード */}
+              <Card className="border-4 border-orange-600 bg-gradient-to-r from-orange-100 via-red-100 to-yellow-100 shadow-2xl ring-4 ring-orange-200 ring-opacity-30">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="p-4 rounded-full shadow-lg bg-gradient-to-br from-orange-600 to-red-700">
+                        <MessageSquare className="h-8 w-8 text-white drop-shadow-lg" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-3xl font-bold bg-gradient-to-r from-orange-700 to-red-800 bg-clip-text text-transparent">
+                          異議申立対応
+                        </CardTitle>
+                        <CardDescription className="text-xl font-medium text-orange-700">
+                          評価結果への異議申立受付・対応
+                        </CardDescription>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <Badge className="px-6 py-3 text-lg font-semibold shadow-lg bg-gradient-to-r from-orange-600 to-red-700 text-white">
+                        📢 受付中
+                      </Badge>
+                      <div className="mt-2 text-sm text-orange-600 font-medium">
+                        受付期限: 4月30日
+                      </div>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-lg mb-3 flex items-center gap-2">
+                      <CheckCircle className="h-5 w-5 text-orange-600" />
+                      対応プロセス
+                    </h4>
+                    <div className="grid grid-cols-3 gap-4">
+                      <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-orange-200">
+                        <div className="flex items-center justify-center w-10 h-10 bg-orange-100 rounded-full">
+                          <span className="font-bold text-orange-700">1</span>
+                        </div>
+                        <div className="flex-1">
+                          <span className="font-medium text-gray-700">申立受付</span>
+                          <div className="text-xs text-gray-600 mt-1">内容確認・記録</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-orange-200">
+                        <div className="flex items-center justify-center w-10 h-10 bg-orange-100 rounded-full">
+                          <span className="font-bold text-orange-700">2</span>
+                        </div>
+                        <div className="flex-1">
+                          <span className="font-medium text-gray-700">審査・検討</span>
+                          <div className="text-xs text-gray-600 mt-1">評価委員会で審議</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-orange-200">
+                        <div className="flex items-center justify-center w-10 h-10 bg-orange-100 rounded-full">
+                          <span className="font-bold text-orange-700">3</span>
+                        </div>
+                        <div className="flex-1">
+                          <span className="font-medium text-gray-700">結果通知</span>
+                          <div className="text-xs text-gray-600 mt-1">最終決定・通知</div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* 異議申立状況 */}
+                    <div className="mt-4 p-4 bg-orange-50 rounded-lg border border-orange-200">
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <div className="text-sm text-gray-600">現在の異議申立件数</div>
+                          <div className="text-2xl font-bold text-orange-600">{statistics.appealed}件</div>
+                        </div>
+                        <Button className="bg-orange-600 hover:bg-orange-700">
+                          <MessageSquare className="w-4 h-4 mr-2" />
+                          申立一覧を確認
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
               <AppealReceptionV3 />
             </div>
           )}
