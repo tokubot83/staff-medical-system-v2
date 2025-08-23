@@ -23,6 +23,7 @@ import { AdvancedSearchService } from '@/utils/searchUtils';
 import InterviewTemplateManager from '@/components/templates/InterviewTemplateManager';
 import DynamicInterviewFlow from './DynamicInterviewFlow';
 import InterviewCalendar from './InterviewCalendar';
+import EnhancedOverdueAlert from './EnhancedOverdueAlert';
 
 // 面談予約の統合型定義
 export interface UnifiedInterviewReservation {
@@ -438,6 +439,24 @@ export default function UnifiedInterviewDashboard() {
     }
   };
 
+  // 緊急度計算関数
+  const calculateUrgency = (reservation: UnifiedInterviewReservation): 'critical' | 'warning' | 'normal' => {
+    const today = new Date();
+    const scheduledDate = new Date(reservation.scheduledDate);
+    const daysOverdue = Math.ceil((today.getTime() - scheduledDate.getTime()) / (1000 * 60 * 60 * 24));
+    
+    // 特別面談は優先度が高い
+    if (reservation.type === 'special') {
+      if (daysOverdue >= 1) return 'critical';
+      return 'warning';
+    }
+    
+    // 一般的なルール
+    if (daysOverdue >= 3) return 'critical';
+    if (daysOverdue >= 1) return 'warning';
+    return 'normal';
+  };
+
   const getCategoryLabel = (category: string) => {
     const labels: Record<string, string> = {
       career: 'キャリア相談',
@@ -720,22 +739,33 @@ export default function UnifiedInterviewDashboard() {
         </CardContent>
       </Card>
 
-      {/* 緊急・要対応 */}
-      {overdueReservations.length > 0 && (
-        <Alert className="border-red-200 bg-red-50">
-          <AlertTriangle className="h-4 w-4 text-red-600" />
-          <AlertDescription>
-            <strong className="text-red-800">未実施の面談が {overdueReservations.length} 件あります</strong>
-            <div className="mt-2 space-y-1">
-              {overdueReservations.slice(0, 3).map(r => (
-                <div key={r.id} className="text-sm">
-                  {r.staffName} - {getInterviewTypeLabel(r)} ({new Date(r.scheduledDate).toLocaleDateString('ja-JP')})
-                </div>
-              ))}
-            </div>
-          </AlertDescription>
-        </Alert>
-      )}
+      {/* 強化された未実施面談アラート */}
+      <EnhancedOverdueAlert
+        overdueInterviews={overdueReservations.map(r => ({
+          id: r.id,
+          staffName: r.staffName,
+          interviewType: getInterviewTypeLabel(r),
+          category: r.supportCategory,
+          scheduledDate: r.scheduledDate,
+          urgency: calculateUrgency(r),
+          daysOverdue: Math.ceil((new Date().getTime() - r.scheduledDate.getTime()) / (1000 * 60 * 60 * 24)),
+          department: r.department,
+          position: r.position || '職員',
+          notes: r.notes
+        }))}
+        onScheduleInterview={(interview) => {
+          // 面談予約処理
+          const reservation = reservations.find(r => r.id === interview.id);
+          if (reservation) {
+            handleStartInterview(reservation);
+          }
+        }}
+        onBulkAction={(interviews, action) => {
+          console.log('一括処理:', action, interviews);
+          // 一括処理のロジックを実装
+        }}
+        showInCalendarView={showCalendarView}
+      />
 
       {/* メインコンテンツエリア */}
       {isSearchMode ? (

@@ -7,6 +7,7 @@ import { PersonalEvaluationService } from '@/services/evaluationV3Service'
 import { V3PersonalEvaluation } from '@/types/evaluation-v3'
 import { useErrorHandler } from '@/hooks/useErrorHandler'
 import { AppError, ErrorLevel } from '@/lib/error/AppError'
+import { StaffCardInterviewService } from '@/services/staffCardInterviewService'
 import styles from './StaffCards.module.css'
 
 // V3グレード定義
@@ -775,8 +776,7 @@ export function RecruitmentTab({ selectedStaff }: { selectedStaff: any }) {
 export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
   const router = useRouter()
   const { handleError, clearError } = useErrorHandler()
-  const [interviewHistory, setInterviewHistory] = useState<any[]>([])
-  const [upcomingInterviews, setUpcomingInterviews] = useState<any[]>([])
+  const [interviewData, setInterviewData] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [activeSubTab, setActiveSubTab] = useState('overview')
 
@@ -793,47 +793,55 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
       try {
         setIsLoading(true)
         
-        // モック面談履歴データ
-        const mockHistory = [
-          {
-            id: 'INT_001',
-            date: '2024-12-15',
-            type: 'regular-annual',
-            typeLabel: '定期面談',
-            interviewer: '田中師長',
-            topics: ['業務評価', 'キャリア相談', '職場環境'],
-            status: 'completed',
-            summary: 'V3評価システムでAグレード評価。次期主任候補として期待。',
-            nextAction: '法人規模での貢献機会の提供'
+        // StaffCardInterviewServiceを使用してデータ取得
+        const interviewSummaryData = await StaffCardInterviewService.generateSummaryData(selectedStaff.id)
+        const regularData = await StaffCardInterviewService.generateCategorySummaryData(selectedStaff.id, 'regular')
+        const specialData = await StaffCardInterviewService.generateCategorySummaryData(selectedStaff.id, 'special')
+        const supportData = await StaffCardInterviewService.generateCategorySummaryData(selectedStaff.id, 'support')
+
+        const mockInterviewData = {
+          // 概要サマリー
+          overview: {
+            totalInterviews: interviewSummaryData.totalInterviews,
+            latestDate: interviewSummaryData.latestInterviewDate,
+            latestType: interviewSummaryData.latestInterviewType,
+            latestFeedback: interviewSummaryData.latestFeedback,
+            nextScheduled: interviewSummaryData.nextScheduledDate,
+            nextType: interviewSummaryData.nextScheduledType
           },
-          {
-            id: 'INT_002',
-            date: '2024-09-20',
-            type: 'performance-feedback',
-            typeLabel: '評価フィードバック',
-            interviewer: '山田主任',
-            topics: ['夏季評価結果', '改善点確認'],
-            status: 'completed',
-            summary: '技術評価80点で安定した成果。組織貢献度の向上が課題。',
-            nextAction: 'チームリーダー業務への参加'
+          // 定期面談データ
+          regular: {
+            summary: {
+              total: regularData.totalCount,
+              lastDate: regularData.latestDate,
+              avgScore: regularData.avgScore,
+              trend: regularData.trend
+            },
+            interviews: regularData.recentInterviews || []
+          },
+          // 特別面談データ
+          special: {
+            summary: {
+              total: specialData.totalCount,
+              lastDate: specialData.latestDate,
+              mainReason: specialData.mainReason,
+              outcome: specialData.outcome
+            },
+            interviews: specialData.recentInterviews || []
+          },
+          // サポート面談データ
+          support: {
+            summary: {
+              total: supportData.totalCount,
+              lastDate: supportData.latestDate,
+              mainCategory: supportData.mainCategory,
+              supportLevel: supportData.supportLevel
+            },
+            interviews: supportData.recentInterviews || []
           }
-        ]
+        }
 
-        // モック予定面談データ
-        const mockUpcoming = [
-          {
-            id: 'INT_003',
-            date: '2025-03-15',
-            type: 'year-end-review',
-            typeLabel: '年度末評価面談',
-            interviewer: '田中師長',
-            status: 'scheduled',
-            purpose: '2024年度総合評価の確認と2025年度目標設定'
-          }
-        ]
-
-        setInterviewHistory(mockHistory)
-        setUpcomingInterviews(mockUpcoming)
+        setInterviewData(mockInterviewData)
       } catch (error) {
         const appError = new AppError(
           'INTERVIEW_DATA_LOAD_FAILED',
@@ -862,7 +870,9 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
 
   const subTabs = [
     { id: 'overview', label: '概要', icon: '📋' },
-    { id: 'feedback', label: '指導記録', icon: '💬' }
+    { id: 'regular', label: '定期面談', icon: '📅' },
+    { id: 'special', label: '特別面談', icon: '⚡' },
+    { id: 'support', label: 'サポート面談', icon: '🤝' }
   ]
 
   return (
@@ -902,25 +912,35 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
             </div>
           ) : (
             <>
+              {/* 概要サマリーエリア */}
               <div className={styles.interviewSummaryEnhanced}>
                 <div className={styles.summaryMainCard}>
                   <div className={styles.summaryCardHeader}>
-                    <span className={styles.summaryIcon}>📊</span>
+                    <span className={styles.summaryIcon}>💬</span>
                     <h3>面談・指導状況サマリー</h3>
                   </div>
                   
                   <div className={styles.summaryStats}>
                     <div className={styles.statItem}>
-                      <span className={styles.statValue}>{interviewHistory.length}</span>
-                      <span className={styles.statLabel}>実施済み面談</span>
+                      <span className={styles.statValue}>{interviewData?.overview?.totalInterviews || 0}</span>
+                      <span className={styles.statLabel}>総面談回数</span>
                     </div>
                     <div className={styles.statItem}>
-                      <span className={styles.statValue}>{upcomingInterviews.length}</span>
-                      <span className={styles.statLabel}>予定面談</span>
+                      <span className={styles.statValue}>{interviewData?.overview?.latestDate || '未実施'}</span>
+                      <span className={styles.statLabel}>最新実施日</span>
                     </div>
                     <div className={styles.statItem}>
-                      <span className={styles.statValue}>A</span>
+                      <span className={styles.statValue}>{interviewData?.regular?.summary?.avgScore || '-'}</span>
                       <span className={styles.statLabel}>最新評価</span>
+                    </div>
+                  </div>
+
+                  <div className={styles.latestInterviewInfo}>
+                    <div className={styles.latestType}>
+                      最新面談: {interviewData?.overview?.latestType}
+                    </div>
+                    <div className={styles.latestFeedback}>
+                      {interviewData?.overview?.latestFeedback}
                     </div>
                   </div>
                 </div>
@@ -933,97 +953,351 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                     <div className={styles.cardContent}>
                       <div className={styles.cardTitle}>次回予定</div>
                       <div className={styles.cardMainInfo}>
-                        {upcomingInterviews.length > 0 
-                          ? upcomingInterviews[0].date 
-                          : '未定'}
+                        {interviewData?.overview?.nextScheduled || '未設定'}
                       </div>
                       <div className={styles.cardSubInfo}>
-                        {upcomingInterviews.length > 0 
-                          ? upcomingInterviews[0].typeLabel 
-                          : '面談スケジュール未設定'}
+                        {interviewData?.overview?.nextType || '面談スケジュール未設定'}
                       </div>
                       <button className={styles.cardAction} onClick={handleNewInterview}>
-                        面談実施
+                        面談開始
                       </button>
                     </div>
                   </div>
 
-                  <div className={styles.recentTopicsCard}>
+                  <div className={styles.categoryStatsCard}>
                     <div className={styles.cardIconWrapper}>
-                      <span className={styles.cardIcon}>💡</span>
+                      <span className={styles.cardIcon}>📊</span>
                     </div>
                     <div className={styles.cardContent}>
-                      <div className={styles.cardTitle}>最近の指導ポイント</div>
-                      <div className={styles.topicsList}>
-                        <span className={styles.topicTag}>法人規模貢献</span>
-                        <span className={styles.topicTag}>リーダーシップ</span>
-                        <span className={styles.topicTag}>後輩指導</span>
+                      <div className={styles.cardTitle}>カテゴリ別実績</div>
+                      <div className={styles.categoryStats}>
+                        <div className={styles.categoryStat}>
+                          <span className={styles.categoryLabel}>定期</span>
+                          <span className={styles.categoryValue}>{interviewData?.regular?.summary?.total || 0}回</span>
+                        </div>
+                        <div className={styles.categoryStat}>
+                          <span className={styles.categoryLabel}>特別</span>
+                          <span className={styles.categoryValue}>{interviewData?.special?.summary?.total || 0}回</span>
+                        </div>
+                        <div className={styles.categoryStat}>
+                          <span className={styles.categoryLabel}>サポート</span>
+                          <span className={styles.categoryValue}>{interviewData?.support?.summary?.total || 0}回</span>
+                        </div>
                       </div>
-                      <div className={styles.cardSubInfo}>V3評価連動の成長支援</div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* 最近の面談記録 */}
-              <div className={styles.recentInterviews}>
-                <h3>最近の面談記録</h3>
-                {interviewHistory.slice(0, 3).map((interview) => (
-                  <div key={interview.id} className={styles.interviewCard}>
-                    <div className={styles.interviewHeader}>
-                      <div className={styles.interviewInfo}>
-                        <span className={styles.interviewDate}>{interview.date}</span>
-                        <span className={styles.interviewType}>{interview.typeLabel}</span>
-                        <span className={styles.interviewer}>面談者: {interview.interviewer}</span>
-                      </div>
-                      <div className={styles.interviewStatus}>
-                        <span className={`${styles.statusBadge} ${styles[interview.status]}`}>
-                          完了
-                        </span>
-                      </div>
+              {/* 横断的な面談履歴概要 */}
+              <div className={styles.crossCategoryOverview}>
+                <h3>📋 全カテゴリ横断履歴</h3>
+                <div className={styles.overviewCards}>
+                  <div className={styles.overviewCard}>
+                    <div className={styles.overviewCardHeader}>
+                      <span className={styles.categoryIcon}>📅</span>
+                      <span className={styles.categoryTitle}>定期面談</span>
                     </div>
-                    <div className={styles.interviewContent}>
-                      <p>{interview.summary}</p>
-                      <div className={styles.interviewTopics}>
-                        {interview.topics.map((topic: string, index: number) => (
-                          <span key={index} className={styles.topicChip}>{topic}</span>
-                        ))}
-                      </div>
-                      {interview.nextAction && (
-                        <div className={styles.nextAction}>
-                          <strong>次回アクション:</strong> {interview.nextAction}
-                        </div>
-                      )}
+                    <div className={styles.overviewStats}>
+                      <span>実施回数: {interviewData?.regular?.summary?.total}回</span>
+                      <span>最新: {interviewData?.regular?.summary?.lastDate}</span>
+                      <span>評価傾向: {interviewData?.regular?.summary?.trend === 'improving' ? '向上中 📈' : '安定 ➡️'}</span>
                     </div>
                   </div>
-                ))}
+                  <div className={styles.overviewCard}>
+                    <div className={styles.overviewCardHeader}>
+                      <span className={styles.categoryIcon}>⚡</span>
+                      <span className={styles.categoryTitle}>特別面談</span>
+                    </div>
+                    <div className={styles.overviewStats}>
+                      <span>実施回数: {interviewData?.special?.summary?.total}回</span>
+                      <span>最新: {interviewData?.special?.summary?.lastDate || '未実施'}</span>
+                      <span>結果: {interviewData?.special?.summary?.outcome === 'resolved' ? '解決済 ✅' : '対応中 ⏳'}</span>
+                    </div>
+                  </div>
+                  <div className={styles.overviewCard}>
+                    <div className={styles.overviewCardHeader}>
+                      <span className={styles.categoryIcon}>🤝</span>
+                      <span className={styles.categoryTitle}>サポート面談</span>
+                    </div>
+                    <div className={styles.overviewStats}>
+                      <span>実施回数: {interviewData?.support?.summary?.total}回</span>
+                      <span>最新: {interviewData?.support?.summary?.lastDate || '未実施'}</span>
+                      <span>支援レベル: {interviewData?.support?.summary?.supportLevel || '未設定'}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </>
           )}
         </div>
       )}
 
-      {activeSubTab === 'feedback' && (
-        <div className={styles.feedbackSection}>
-          <div className={styles.feedbackCard}>
-            <h3>継続的指導記録</h3>
-            <div className={styles.feedbackTimeline}>
-              <div className={styles.feedbackItem}>
-                <div className={styles.feedbackDate}>2024-12-20</div>
-                <div className={styles.feedbackContent}>
-                  <strong>スキル向上指導:</strong> V3評価でのSグレード達成に向けて、法人規模でのプロジェクト参加を推奨。
-                </div>
-                <div className={styles.feedbackAuthor}>指導者: 田中師長</div>
-              </div>
-              <div className={styles.feedbackItem}>
-                <div className={styles.feedbackDate}>2024-11-15</div>
-                <div className={styles.feedbackContent}>
-                  <strong>チーム貢献:</strong> 新人指導において優れた成果。後輩からの評価も高い。
-                </div>
-                <div className={styles.feedbackAuthor}>指導者: 山田主任</div>
-              </div>
+      {activeSubTab === 'regular' && (
+        <div className={styles.regularInterviewTab}>
+          {isLoading ? (
+            <div className={styles.loadingContainer}>
+              <p>定期面談データを読み込み中...</p>
             </div>
-          </div>
+          ) : (
+            <>
+              {/* 定期面談サマリーエリア */}
+              <div className={styles.categoryTabSummary}>
+                <div className={styles.categorySummaryCard}>
+                  <div className={styles.summaryCardHeader}>
+                    <span className={styles.summaryIcon}>📅</span>
+                    <h3>定期面談サマリー</h3>
+                  </div>
+                  <div className={styles.summaryContent}>
+                    <div className={styles.summaryMetrics}>
+                      <div className={styles.metricItem}>
+                        <span className={styles.metricValue}>{interviewData?.regular?.summary?.total || 0}</span>
+                        <span className={styles.metricLabel}>実施回数</span>
+                      </div>
+                      <div className={styles.metricItem}>
+                        <span className={styles.metricValue}>{interviewData?.regular?.summary?.lastDate || '未実施'}</span>
+                        <span className={styles.metricLabel}>最新実施</span>
+                      </div>
+                      <div className={styles.metricItem}>
+                        <span className={styles.metricValue}>{interviewData?.regular?.summary?.avgScore || '-'}</span>
+                        <span className={styles.metricLabel}>平均評価</span>
+                      </div>
+                      <div className={styles.metricItem}>
+                        <span className={styles.metricValue}>
+                          {interviewData?.regular?.summary?.trend === 'improving' ? '📈 向上' : '➡️ 安定'}
+                        </span>
+                        <span className={styles.metricLabel}>傾向</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 定期面談履歴詳細 */}
+              <div className={styles.interviewHistoryDetail}>
+                <h3>📋 定期面談履歴</h3>
+                <div className={styles.interviewsList}>
+                  {interviewData?.regular?.interviews?.map((interview: any) => (
+                    <div key={interview.id} className={styles.detailedInterviewCard}>
+                      <div className={styles.interviewCardHeader}>
+                        <div className={styles.interviewBasicInfo}>
+                          <span className={styles.interviewDate}>{interview.date}</span>
+                          <span className={styles.interviewSubtype}>{interview.subtypeLabel}</span>
+                          <span className={styles.interviewer}>面談者: {interview.interviewer}</span>
+                        </div>
+                        <div className={styles.interviewScore}>
+                          <span className={`${styles.scoreBadge} ${styles[interview.overallScore?.toLowerCase()]}`}>
+                            {interview.overallScore}
+                          </span>
+                        </div>
+                      </div>
+                      <div className={styles.interviewCardContent}>
+                        <div className={styles.interviewSummary}>
+                          {interview.summary}
+                        </div>
+                        <div className={styles.keyTopics}>
+                          <strong>主要テーマ:</strong>
+                          {interview.keyTopics?.map((topic: string, index: number) => (
+                            <span key={index} className={styles.topicChip}>{topic}</span>
+                          ))}
+                        </div>
+                        <div className={styles.nextActionsDetail}>
+                          <strong>次回アクション:</strong>
+                          <ul>
+                            {interview.nextActions?.map((action: string, index: number) => (
+                              <li key={index}>{action}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
+      {activeSubTab === 'special' && (
+        <div className={styles.specialInterviewTab}>
+          {isLoading ? (
+            <div className={styles.loadingContainer}>
+              <p>特別面談データを読み込み中...</p>
+            </div>
+          ) : (
+            <>
+              {/* 特別面談サマリーエリア */}
+              <div className={styles.categoryTabSummary}>
+                <div className={styles.categorySummaryCard}>
+                  <div className={styles.summaryCardHeader}>
+                    <span className={styles.summaryIcon}>⚡</span>
+                    <h3>特別面談サマリー</h3>
+                  </div>
+                  <div className={styles.summaryContent}>
+                    <div className={styles.summaryMetrics}>
+                      <div className={styles.metricItem}>
+                        <span className={styles.metricValue}>{interviewData?.special?.summary?.total || 0}</span>
+                        <span className={styles.metricLabel}>実施回数</span>
+                      </div>
+                      <div className={styles.metricItem}>
+                        <span className={styles.metricValue}>{interviewData?.special?.summary?.lastDate || '未実施'}</span>
+                        <span className={styles.metricLabel}>最新実施</span>
+                      </div>
+                      <div className={styles.metricItem}>
+                        <span className={styles.metricValue}>
+                          {interviewData?.special?.summary?.mainReason === 'career-consultation' ? 'キャリア相談' : '其他'}
+                        </span>
+                        <span className={styles.metricLabel}>主な理由</span>
+                      </div>
+                      <div className={styles.metricItem}>
+                        <span className={styles.metricValue}>
+                          {interviewData?.special?.summary?.outcome === 'resolved' ? '✅ 解決' : '⏳ 継続'}
+                        </span>
+                        <span className={styles.metricLabel}>結果</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 特別面談履歴詳細 */}
+              <div className={styles.interviewHistoryDetail}>
+                <h3>📋 特別面談履歴</h3>
+                {interviewData?.special?.interviews?.length > 0 ? (
+                  <div className={styles.interviewsList}>
+                    {interviewData.special.interviews.map((interview: any) => (
+                      <div key={interview.id} className={styles.detailedInterviewCard}>
+                        <div className={styles.interviewCardHeader}>
+                          <div className={styles.interviewBasicInfo}>
+                            <span className={styles.interviewDate}>{interview.date}</span>
+                            <span className={styles.interviewSubtype}>{interview.subtypeLabel}</span>
+                            <span className={styles.interviewer}>面談者: {interview.interviewer}</span>
+                          </div>
+                          <div className={styles.interviewOutcome}>
+                            <span className={`${styles.outcomeBadge} ${styles[interview.outcome]}`}>
+                              {interview.outcome === 'action-plan-created' ? '対策完了' : '対応中'}
+                            </span>
+                          </div>
+                        </div>
+                        <div className={styles.interviewCardContent}>
+                          <div className={styles.interviewReason}>
+                            <strong>面談理由:</strong> {interview.reason}
+                          </div>
+                          <div className={styles.interviewSummary}>
+                            {interview.summary}
+                          </div>
+                          <div className={styles.nextActionsDetail}>
+                            <strong>対応策:</strong>
+                            <ul>
+                              {interview.nextActions?.map((action: string, index: number) => (
+                                <li key={index}>{action}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className={styles.noDataMessage}>
+                    <p>特別面談の実施記録はありません</p>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
+      {activeSubTab === 'support' && (
+        <div className={styles.supportInterviewTab}>
+          {isLoading ? (
+            <div className={styles.loadingContainer}>
+              <p>サポート面談データを読み込み中...</p>
+            </div>
+          ) : (
+            <>
+              {/* サポート面談サマリーエリア */}
+              <div className={styles.categoryTabSummary}>
+                <div className={styles.categorySummaryCard}>
+                  <div className={styles.summaryCardHeader}>
+                    <span className={styles.summaryIcon}>🤝</span>
+                    <h3>サポート面談サマリー</h3>
+                  </div>
+                  <div className={styles.summaryContent}>
+                    <div className={styles.summaryMetrics}>
+                      <div className={styles.metricItem}>
+                        <span className={styles.metricValue}>{interviewData?.support?.summary?.total || 0}</span>
+                        <span className={styles.metricLabel}>実施回数</span>
+                      </div>
+                      <div className={styles.metricItem}>
+                        <span className={styles.metricValue}>{interviewData?.support?.summary?.lastDate || '未実施'}</span>
+                        <span className={styles.metricLabel}>最新実施</span>
+                      </div>
+                      <div className={styles.metricItem}>
+                        <span className={styles.metricValue}>
+                          {interviewData?.support?.summary?.mainCategory === 'skill-development' ? 'スキル開発' : '其他'}
+                        </span>
+                        <span className={styles.metricLabel}>主要カテゴリ</span>
+                      </div>
+                      <div className={styles.metricItem}>
+                        <span className={styles.metricValue}>
+                          {interviewData?.support?.summary?.supportLevel || '未設定'}
+                        </span>
+                        <span className={styles.metricLabel}>支援レベル</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* サポート面談履歴詳細 */}
+              <div className={styles.interviewHistoryDetail}>
+                <h3>📋 サポート面談履歴</h3>
+                {interviewData?.support?.interviews?.length > 0 ? (
+                  <div className={styles.interviewsList}>
+                    {interviewData.support.interviews.map((interview: any) => (
+                      <div key={interview.id} className={styles.detailedInterviewCard}>
+                        <div className={styles.interviewCardHeader}>
+                          <div className={styles.interviewBasicInfo}>
+                            <span className={styles.interviewDate}>{interview.date}</span>
+                            <span className={styles.interviewSubtype}>{interview.subtypeLabel}</span>
+                            <span className={styles.interviewer}>担当者: {interview.interviewer}</span>
+                          </div>
+                          <div className={styles.supportType}>
+                            <span className={`${styles.supportBadge} ${styles[interview.supportType]}`}>
+                              {interview.supportType === 'training' ? '研修支援' : '個別指導'}
+                            </span>
+                          </div>
+                        </div>
+                        <div className={styles.interviewCardContent}>
+                          <div className={styles.supportCategory}>
+                            <strong>支援カテゴリ:</strong> {interview.category}
+                          </div>
+                          <div className={styles.interviewSummary}>
+                            {interview.summary}
+                          </div>
+                          <div className={styles.nextActionsDetail}>
+                            <strong>今後の支援策:</strong>
+                            <ul>
+                              {interview.nextActions?.map((action: string, index: number) => (
+                                <li key={index}>{action}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className={styles.noDataMessage}>
+                    <p>サポート面談の実施記録はありません</p>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>

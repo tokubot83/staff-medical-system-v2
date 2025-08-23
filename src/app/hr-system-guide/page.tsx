@@ -1478,6 +1478,49 @@ export default function HRSystemGuidePage() {
                   <li>📅 Phase 3: API連携と予約データ自動取り込み（計画中）</li>
                 </ul>
               </div>
+              
+              {/* 面談・指導タブ実装計画 - 2025年8月23日追加 */}
+              <div className="mt-6 p-4 bg-green-50 rounded-lg border-l-4 border-green-400">
+                <p className="text-sm font-semibold text-green-800 mb-2">🚀 面談・指導タブ実装計画（2025年8月23日策定）</p>
+                <div className="space-y-3">
+                  <div className="bg-white rounded p-3">
+                    <h4 className="text-sm font-semibold text-gray-800 mb-2">Phase 1: 基盤構築（1-2日）</h4>
+                    <ul className="text-xs text-gray-700 space-y-1">
+                      <li>• StaffCardInterviewService実装</li>
+                      <li>• 面談カテゴリ別データ取得機能</li>
+                      <li>• 既存データとの整合性確認</li>
+                    </ul>
+                  </div>
+                  <div className="bg-white rounded p-3">
+                    <h4 className="text-sm font-semibold text-gray-800 mb-2">Phase 2: サマリーエリア実装（2-3日）</h4>
+                    <ul className="text-xs text-gray-700 space-y-1">
+                      <li>• 概要タブ：横断的サマリー</li>
+                      <li>• 定期面談タブ：月次・年次面談サマリー</li>
+                      <li>• 特別面談タブ：インシデント・復職・退職面談</li>
+                      <li>• サポート面談タブ：キャリア・職場環境・個別相談</li>
+                    </ul>
+                  </div>
+                  <div className="bg-white rounded p-3">
+                    <h4 className="text-sm font-semibold text-gray-800 mb-2">Phase 3: 連動機能実装（1-2日）</h4>
+                    <ul className="text-xs text-gray-700 space-y-1">
+                      <li>• 面談管理→職員カルテのリアルタイム同期</li>
+                      <li>• 面談シート回答の推移分析機能</li>
+                      <li>• アラート・通知システム連携</li>
+                    </ul>
+                  </div>
+                  <div className="bg-white rounded p-3">
+                    <h4 className="text-sm font-semibold text-gray-800 mb-2">Phase 4: UI/UX最適化（1日）</h4>
+                    <ul className="text-xs text-gray-700 space-y-1">
+                      <li>• データ表示指示書テクニック適用（グラフ・色分け）</li>
+                      <li>• 縦棒・横棒・滝グラフの効果的活用</li>
+                      <li>• レスポンシブ対応</li>
+                    </ul>
+                  </div>
+                  <div className="mt-2 p-2 bg-blue-100 rounded text-xs text-blue-800">
+                    <strong>連動仕様:</strong> 面談管理ページで面談実施完了→職員カルテの面談・指導タブに自動反映、期限切れアラート、人事フィードバック表示
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
             )}
