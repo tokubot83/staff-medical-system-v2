@@ -40,7 +40,6 @@ import {
   Zap,
   HelpCircle,
   ChevronRight,
-  Rocket,
   ClipboardList,
   UserCheck,
   UserPlus,
@@ -60,19 +59,11 @@ export default function DashboardPage() {
     inProgress: 32,
     notStarted: 15
   });
-  const [showWorkflowGuide, setShowWorkflowGuide] = useState(true);
   const [activeTab, setActiveTab] = useState<'home' | 'guide' | 'progress' | 'settings' | 'reports'>('guide');
   const [storyActiveTab, setStoryActiveTab] = useState<'新人' | '一般' | '中堅' | 'ベテラン' | '管理職'>('新人');
 
   const completionRate = Math.round((evaluationProgress.completed / evaluationProgress.total) * 100);
 
-  // ワークフローステップの定義
-  const workflowSteps = [
-    { id: 1, title: '評価設計', status: 'completed', icon: Settings },
-    { id: 2, title: '評価実施', status: 'current', icon: ClipboardList },
-    { id: 3, title: '集計・分析', status: 'upcoming', icon: BarChart3 },
-    { id: 4, title: 'フィードバック', status: 'upcoming', icon: MessageSquare }
-  ];
 
   // 世代別ストーリータブの定義
   const storyTabs = [
@@ -87,72 +78,6 @@ export default function DashboardPage() {
     <div>
       <CommonHeader title="評価管理ダッシュボード" />
       <div className={styles.container}>
-        {/* ワークフローガイド */}
-        {showWorkflowGuide && (
-          <Card className="mb-6 border-2 border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Rocket className="h-5 w-5 text-blue-600" />
-                  <CardTitle className="text-lg">現在の評価フロー</CardTitle>
-                </div>
-                <Button 
-                  variant="ghost" 
-                  size="sm"
-                  onClick={() => setShowWorkflowGuide(false)}
-                  className="text-gray-500 hover:text-gray-700"
-                >
-                  ✕
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                {workflowSteps.map((step, index) => (
-                  <React.Fragment key={step.id}>
-                    <div className="flex flex-col items-center flex-1">
-                      <div className={`
-                        p-4 rounded-full mb-2 transition-all
-                        ${step.status === 'completed' ? 'bg-green-100' : ''}
-                        ${step.status === 'current' ? 'bg-blue-100 ring-4 ring-blue-200' : ''}
-                        ${step.status === 'upcoming' ? 'bg-gray-100' : ''}
-                      `}>
-                        <step.icon className={`
-                          h-6 w-6
-                          ${step.status === 'completed' ? 'text-green-600' : ''}
-                          ${step.status === 'current' ? 'text-blue-600' : ''}
-                          ${step.status === 'upcoming' ? 'text-gray-400' : ''}
-                        `} />
-                      </div>
-                      <span className={`
-                        text-sm font-medium
-                        ${step.status === 'current' ? 'text-blue-600' : 'text-gray-600'}
-                      `}>
-                        {step.title}
-                      </span>
-                      {step.status === 'completed' && (
-                        <Badge className="mt-1 bg-green-100 text-green-700" variant="secondary">完了</Badge>
-                      )}
-                      {step.status === 'current' && (
-                        <Badge className="mt-1 bg-blue-100 text-blue-700" variant="secondary">進行中</Badge>
-                      )}
-                    </div>
-                    {index < workflowSteps.length - 1 && (
-                      <ChevronRight className="h-5 w-5 text-gray-400 mb-8" />
-                    )}
-                  </React.Fragment>
-                ))}
-              </div>
-              <Alert className="mt-4 border-blue-200 bg-blue-50">
-                <Zap className="h-4 w-4 text-blue-600" />
-                <AlertDescription className="text-blue-800">
-                  <strong>次のアクション：</strong> 未完了の評価対象者47名に対して評価を実施してください。
-                  締切まであと<strong className="text-red-600">5日</strong>です。
-                </AlertDescription>
-              </Alert>
-            </CardContent>
-          </Card>
-        )}
         <div className={styles.tabNavigation}>
           {[
             { id: 'home', label: 'ホーム', icon: '🏠' },
