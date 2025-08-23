@@ -308,7 +308,6 @@ export default function EvaluationExecutionPage() {
     <div>
       <CommonHeader title="個人評価管理" />
       <div className={styles.container}>
-
         {/* クイックアクション */}
         <div className="mb-6">
           <h2 className="text-lg font-bold mb-4 flex items-center gap-2">

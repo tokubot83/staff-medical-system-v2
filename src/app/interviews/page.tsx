@@ -254,308 +254,626 @@ interface OverviewGuideTabProps {
 }
 
 function OverviewGuideTab({ onInterviewTypeClick }: OverviewGuideTabProps): React.ReactElement {
+  const [activeGuideTab, setActiveGuideTab] = useState('overview');
+
+  const guideTabs = [
+    { id: 'overview', label: '面談制度概要', icon: '📖' },
+    { id: 'regular', label: '定期面談ガイド', icon: '📅' },
+    { id: 'special', label: '特別面談ガイド', icon: '⚠️' },
+    { id: 'support', label: 'サポート面談ガイド', icon: '💬' },
+  ];
+
   return (
     <div className={styles.overviewContent}>
-      {/* 面談システム概要 */}
-      <div className={styles.systemOverview}>
-        <h2 className={styles.systemTitle}>面談管理システム概要</h2>
-        <div className={styles.purposeSection}>
-          <div className={styles.purposeCard}>
-            <div className={styles.purposeIcon}>
-              ❤️
-            </div>
-            <div className={styles.purposeContent}>
-              <h3>面談の目的</h3>
-              <p>職員一人ひとりの成長と組織の発展を支援する継続的な対話プロセス</p>
-            </div>
-          </div>
+      {/* ガイドタブナビゲーション */}
+      <div className="mb-6">
+        <div className="flex gap-2 bg-gray-100 p-1 rounded-lg">
+          {guideTabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveGuideTab(tab.id)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-md font-medium transition-all ${
+                activeGuideTab === tab.id
+                  ? 'bg-white shadow-sm text-blue-600 border-2 border-blue-200'
+                  : 'text-gray-600 hover:text-gray-800'
+              }`}
+            >
+              <span>{tab.icon}</span>
+              {tab.label}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* 面談種別と特徴 */}
-      <div className={styles.interviewTypes}>
-        <h2 className={styles.sectionTitle}>面談種別と実施時期</h2>
-        <div className={styles.typeGrid}>
-          {/* 定期面談カテゴリ */}
-          <div className={styles.categorySection}>
-            <h3 className={styles.categoryTitle}>
-              📅 定期面談（必須）
-            </h3>
-            <div className={styles.typeCards}>
-              <div className={styles.typeCard}>
-                <div className={styles.typeHeader} style={{ backgroundColor: '#e3f2fd' }}>
-                  <span className={styles.typeIcon}>👥</span>
-                  <h4>新入職員月次面談</h4>
-                  <span className={styles.frequency}>月1回</span>
-                </div>
-                <div className={styles.typeBody}>
-                  <p className={styles.typeDescription}>入職1年未満の職員を対象とした月次フォローアップ</p>
-                  <ul className={styles.typePoints}>
-                    <li>職場適応の確認</li>
-                    <li>初期不安の解消</li>
-                    <li>早期離職防止</li>
-                  </ul>
-                  <div className={styles.typeMeta}>
-                    <span>対象: 新入職員</span>
-                    <span>時間: 15-30分</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className={styles.typeCard}>
-                <div className={styles.typeHeader} style={{ backgroundColor: '#e8f5e9' }}>
-                  <span className={styles.typeIcon}>👨‍👩‍👧‍👦</span>
-                  <h4>一般職員年次面談</h4>
-                  <span className={styles.frequency}>年1回</span>
-                </div>
-                <div className={styles.typeBody}>
-                  <p className={styles.typeDescription}>全職員を対象とした年次評価・目標設定面談</p>
-                  <ul className={styles.typePoints}>
-                    <li>年度目標の振り返り</li>
-                    <li>次年度目標の設定</li>
-                    <li>キャリア希望の確認</li>
-                  </ul>
-                  <div className={styles.typeMeta}>
-                    <span>対象: 全職員</span>
-                    <span>時間: 30-45分</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className={styles.typeCard}>
-                <div className={styles.typeHeader} style={{ backgroundColor: '#fff3e0' }}>
-                  <span className={styles.typeIcon}>💼</span>
-                  <h4>管理職半年面談</h4>
-                  <span className={styles.frequency}>年2回</span>
-                </div>
-                <div className={styles.typeBody}>
-                  <p className={styles.typeDescription}>管理職を対象とした組織運営・人材育成面談</p>
-                  <ul className={styles.typePoints}>
-                    <li>部署運営の課題</li>
-                    <li>人材育成状況</li>
-                    <li>組織改善提案</li>
-                  </ul>
-                  <div className={styles.typeMeta}>
-                    <span>対象: 管理職</span>
-                    <span>時間: 45-60分</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* 特別面談カテゴリ */}
-          <div className={styles.categorySection}>
-            <h3 className={styles.categoryTitle}>
-              ⚠️ 特別面談（状況に応じて）
-            </h3>
-            <div className={styles.typeCards}>
-              <div className={styles.typeCard}>
-                <div className={styles.typeHeader} style={{ backgroundColor: '#fce4ec' }}>
-                  <span className={styles.typeIcon}>🏥</span>
-                  <h4>復職面談</h4>
-                  <span className={styles.statusBadge}>必要時</span>
-                </div>
-                <div className={styles.typeBody}>
-                  <p className={styles.typeDescription}>休職からの復職時の状況確認・支援面談</p>
-                  <ul className={styles.typePoints}>
-                    <li>健康状態の確認</li>
-                    <li>業務調整の相談</li>
-                    <li>段階的復帰計画</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div className={styles.typeCard}>
-                <div className={styles.typeHeader} style={{ backgroundColor: '#ffe0b2' }}>
-                  <span className={styles.typeIcon}>🛡️</span>
-                  <h4>インシデント後面談</h4>
-                  <span className={styles.statusBadge}>緊急</span>
-                </div>
-                <div className={styles.typeBody}>
-                  <p className={styles.typeDescription}>医療事故・インシデント発生後のフォロー面談</p>
-                  <ul className={styles.typePoints}>
-                    <li>心理的サポート</li>
-                    <li>原因分析と対策</li>
-                    <li>再発防止策の検討</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div className={styles.typeCard}>
-                <div className={styles.typeHeader} style={{ backgroundColor: '#e1f5fe' }}>
-                  <span className={styles.typeIcon}>👋</span>
-                  <h4>退職面談</h4>
-                  <span className={styles.statusBadge}>退職時</span>
-                </div>
-                <div className={styles.typeBody}>
-                  <p className={styles.typeDescription}>退職予定者への最終確認・引継ぎ面談</p>
-                  <ul className={styles.typePoints}>
-                    <li>退職理由の確認</li>
-                    <li>業務引継ぎ状況</li>
-                    <li>改善提案の聴取</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* サポート面談カテゴリ */}
-          <div className={styles.categorySection}>
-            <h3 className={styles.categoryTitle}>
-              💬 サポート面談（任意）
-            </h3>
-            <div className={styles.typeCards}>
-              <div className={styles.typeCard}>
-                <div className={styles.typeHeader} style={{ backgroundColor: '#f3e5f5' }}>
-                  <span className={styles.typeIcon}>🏆</span>
-                  <h4>フィードバック面談</h4>
-                  <span className={styles.statusBadge}>評価後</span>
-                </div>
-                <div className={styles.typeBody}>
-                  <p className={styles.typeDescription}>人事評価結果のフィードバック面談</p>
-                  <ul className={styles.typePoints}>
-                    <li>評価結果の説明</li>
-                    <li>改善点の明確化</li>
-                    <li>成長支援計画</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div className={styles.typeCard}>
-                <div className={styles.typeHeader} style={{ backgroundColor: '#e8eaf6' }}>
-                  <span className={styles.typeIcon}>🎯</span>
-                  <h4>キャリア面談</h4>
-                  <span className={styles.statusBadge}>随時</span>
-                </div>
-                <div className={styles.typeBody}>
-                  <p className={styles.typeDescription}>キャリア形成・異動希望の相談</p>
-                  <ul className={styles.typePoints}>
-                    <li>キャリアパス相談</li>
-                    <li>スキル開発支援</li>
-                    <li>異動・昇進相談</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div className={styles.typeCard}>
-                <div className={styles.typeHeader} style={{ backgroundColor: '#e0f2f1' }}>
-                  <span className={styles.typeIcon}>💙</span>
-                  <h4>個別相談面談</h4>
-                  <span className={styles.statusBadge}>随時</span>
-                </div>
-                <div className={styles.typeBody}>
-                  <p className={styles.typeDescription}>職場環境・人間関係・個人的な相談</p>
-                  <ul className={styles.typePoints}>
-                    <li>職場環境の改善</li>
-                    <li>人間関係の調整</li>
-                    <li>ワークライフバランス</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-
-      {/* 面談の進め方ガイド */}
-      <div className={styles.processGuide}>
-        <h2 className={styles.processTitle}>効果的な面談の進め方</h2>
-        <div className={styles.processFlow}>
-          <div className={styles.processStep}>
-            <div className={styles.stepNumber}>1</div>
-            <div className={styles.stepContent}>
-              <h4>事前準備</h4>
-              <ul>
-                <li>面談シートの準備</li>
-                <li>過去の記録確認</li>
-                <li>目標・課題の整理</li>
-              </ul>
-            </div>
-          </div>
-
-          <div className={styles.processStep}>
-            <div className={styles.stepNumber}>2</div>
-            <div className={styles.stepContent}>
-              <h4>面談実施</h4>
-              <ul>
-                <li>傾聴と共感</li>
-                <li>具体的なフィードバック</li>
-                <li>建設的な対話</li>
-              </ul>
-            </div>
-          </div>
-
-          <div className={styles.processStep}>
-            <div className={styles.stepNumber}>3</div>
-            <div className={styles.stepContent}>
-              <h4>アクション設定</h4>
-              <ul>
-                <li>具体的な目標設定</li>
-                <li>支援内容の明確化</li>
-                <li>次回までの課題</li>
-              </ul>
-            </div>
-          </div>
-
-          <div className={styles.processStep}>
-            <div className={styles.stepNumber}>4</div>
-            <div className={styles.stepContent}>
-              <h4>フォローアップ</h4>
-              <ul>
-                <li>面談記録の作成</li>
-                <li>進捗確認</li>
-                <li>継続的な支援</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* クイックアクセス */}
-      <div className={styles.quickAccess}>
-        <h2 className={styles.quickAccessTitle}>クイックアクセス</h2>
-        <div className={styles.quickAccessGrid}>
-          <Link href="/interview-bank" className={styles.quickAccessCard}>
-            <span className={styles.quickIcon}>🏦</span>
-            <span>面談バンクシステム</span>
-          </Link>
-          <Link href="/interview-sheets" className={styles.quickAccessCard}>
-            <span className={styles.quickIcon}>📄</span>
-            <span>面談シート</span>
-          </Link>
-          <Link href="/interviews/support/voicedrive" className={styles.quickAccessCard}>
-            <span className={styles.quickIcon}>💬</span>
-            <span>VoiceDrive連携</span>
-          </Link>
-          <Link href="/interview-bank/create" className={styles.quickAccessCard}>
-            <span className={styles.quickIcon}>✨</span>
-            <span>AI面談作成</span>
-          </Link>
-          <Link href="#" className={styles.quickAccessCard} onClick={(e) => { e.preventDefault(); }}>
-            <span className={styles.quickIcon}>📅</span>
-            <span>予約管理</span>
-          </Link>
-          <Link href="#" className={styles.quickAccessCard} onClick={(e) => { e.preventDefault(); }}>
-            <span className={styles.quickIcon}>📋</span>
-            <span>面談記録</span>
-          </Link>
-          <Link href="/interview-bank" className={styles.quickAccessCard}>
-            <span className={styles.quickIcon}>📊</span>
-            <span>統計ダッシュボード</span>
-          </Link>
-          <Link href="/admin/interview-bank" className={styles.quickAccessCard}>
-            <span className={styles.quickIcon}>⚙️</span>
-            <span>バンク管理</span>
-          </Link>
-        </div>
-      </div>
-      
-      {/* ガイドセクション */}
-      <GuideSection onInterviewTypeClick={onInterviewTypeClick} />
+      {/* タブコンテンツ */}
+      {activeGuideTab === 'overview' && <OverviewTabContent />}
+      {activeGuideTab === 'regular' && <RegularInterviewGuide />}
+      {activeGuideTab === 'special' && <SpecialInterviewGuide />}
+      {activeGuideTab === 'support' && <SupportInterviewGuide />}
     </div>
-  )
+  );
+}
+
+// 面談制度概要タブ
+function OverviewTabContent(): React.ReactElement {
+  return (
+    <div className="space-y-6">
+      {/* 面談システム概要 */}
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6">
+        <div className="flex items-center gap-4 mb-4">
+          <div className="p-3 bg-blue-500 rounded-full">
+            <span className="text-2xl">❤️</span>
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-blue-900">面談管理システム概要</h2>
+            <p className="text-blue-700">職員一人ひとりの成長と組織の発展を支援する継続的な対話プロセス</p>
+          </div>
+        </div>
+        
+        <div className="grid md:grid-cols-3 gap-4 mt-6">
+          <div className="bg-white/80 rounded-lg p-4">
+            <h3 className="font-semibold text-blue-900 mb-2">🎯 面談の目的</h3>
+            <ul className="text-sm text-gray-700 space-y-1">
+              <li>• 職員の成長支援</li>
+              <li>• 組織との連携強化</li>
+              <li>• 早期課題発見・解決</li>
+            </ul>
+          </div>
+          <div className="bg-white/80 rounded-lg p-4">
+            <h3 className="font-semibold text-blue-900 mb-2">📋 3つの分類</h3>
+            <ul className="text-sm text-gray-700 space-y-1">
+              <li>• 定期面談（必須）</li>
+              <li>• 特別面談（状況対応）</li>
+              <li>• サポート面談（任意）</li>
+            </ul>
+          </div>
+          <div className="bg-white/80 rounded-lg p-4">
+            <h3 className="font-semibold text-blue-900 mb-2">🔄 継続サイクル</h3>
+            <ul className="text-sm text-gray-700 space-y-1">
+              <li>• 事前準備</li>
+              <li>• 面談実施</li>
+              <li>• フォローアップ</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      {/* 面談体系一覧 */}
+      <div className="bg-white border border-gray-200 rounded-xl p-6">
+        <h3 className="text-xl font-bold text-gray-800 mb-4">面談体系一覧</h3>
+        <div className="grid md:grid-cols-3 gap-4">
+          <div className="border border-green-200 rounded-lg p-4 bg-green-50">
+            <h4 className="font-semibold text-green-900 mb-3 flex items-center gap-2">
+              <span>📅</span> 定期面談（必須）
+            </h4>
+            <div className="space-y-2 text-sm">
+              <div className="bg-white/80 rounded p-2">新入職員月次面談</div>
+              <div className="bg-white/80 rounded p-2">一般職員年次面談</div>
+              <div className="bg-white/80 rounded p-2">管理職半年面談</div>
+            </div>
+          </div>
+          <div className="border border-orange-200 rounded-lg p-4 bg-orange-50">
+            <h4 className="font-semibold text-orange-900 mb-3 flex items-center gap-2">
+              <span>⚠️</span> 特別面談（状況対応）
+            </h4>
+            <div className="space-y-2 text-sm">
+              <div className="bg-white/80 rounded p-2">復職面談</div>
+              <div className="bg-white/80 rounded p-2">インシデント後面談</div>
+              <div className="bg-white/80 rounded p-2">退職面談</div>
+            </div>
+          </div>
+          <div className="border border-purple-200 rounded-lg p-4 bg-purple-50">
+            <h4 className="font-semibold text-purple-900 mb-3 flex items-center gap-2">
+              <span>💬</span> サポート面談（任意）
+            </h4>
+            <div className="space-y-2 text-sm">
+              <div className="bg-white/80 rounded p-2">フィードバック面談</div>
+              <div className="bg-white/80 rounded p-2">キャリア相談面談</div>
+              <div className="bg-white/80 rounded p-2">個別サポート面談</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 効果的な面談の進め方 */}
+      <div className="bg-white border border-gray-200 rounded-xl p-6">
+        <h3 className="text-xl font-bold text-gray-800 mb-6">効果的な面談の進め方</h3>
+        <div className="grid md:grid-cols-4 gap-4">
+          <div className="text-center">
+            <div className="w-12 h-12 bg-blue-500 text-white rounded-full flex items-center justify-center mx-auto mb-3 text-xl font-bold">1</div>
+            <h4 className="font-semibold text-gray-800 mb-2">事前準備</h4>
+            <ul className="text-sm text-gray-600 space-y-1">
+              <li>面談シートの準備</li>
+              <li>過去の記録確認</li>
+              <li>目標・課題の整理</li>
+            </ul>
+          </div>
+          <div className="text-center">
+            <div className="w-12 h-12 bg-green-500 text-white rounded-full flex items-center justify-center mx-auto mb-3 text-xl font-bold">2</div>
+            <h4 className="font-semibold text-gray-800 mb-2">面談実施</h4>
+            <ul className="text-sm text-gray-600 space-y-1">
+              <li>傾聴と共感</li>
+              <li>具体的なフィードバック</li>
+              <li>建設的な対話</li>
+            </ul>
+          </div>
+          <div className="text-center">
+            <div className="w-12 h-12 bg-orange-500 text-white rounded-full flex items-center justify-center mx-auto mb-3 text-xl font-bold">3</div>
+            <h4 className="font-semibold text-gray-800 mb-2">アクション設定</h4>
+            <ul className="text-sm text-gray-600 space-y-1">
+              <li>具体的な目標設定</li>
+              <li>支援内容の明確化</li>
+              <li>次回までの課題</li>
+            </ul>
+          </div>
+          <div className="text-center">
+            <div className="w-12 h-12 bg-purple-500 text-white rounded-full flex items-center justify-center mx-auto mb-3 text-xl font-bold">4</div>
+            <h4 className="font-semibold text-gray-800 mb-2">フォローアップ</h4>
+            <ul className="text-sm text-gray-600 space-y-1">
+              <li>面談記録の作成</li>
+              <li>進捗確認</li>
+              <li>継続的な支援</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// 定期面談ガイドタブ - ストーリー仕立て
+function RegularInterviewGuide(): React.ReactElement {
+  return (
+    <div className="space-y-8">
+      {/* 定期面談の基本方針 */}
+      <div className="bg-green-50 border border-green-200 rounded-xl p-6">
+        <h2 className="text-2xl font-bold text-green-900 mb-4 flex items-center gap-3">
+          <span className="text-3xl">📅</span>
+          定期面談ガイド
+        </h2>
+        <p className="text-green-800 text-lg mb-4">
+          定期面談は、職員の成長段階に応じた継続的な支援を行う重要な機会です。
+          以下のストーリーを通じて、それぞれの立場における面談の特性を理解しましょう。
+        </p>
+        <div className="grid md:grid-cols-3 gap-4 mt-4">
+          <div className="bg-white/80 rounded-lg p-3">
+            <h4 className="font-semibold text-green-900 text-sm">新入職員月次面談</h4>
+            <p className="text-xs text-green-700 mt-1">入職1年未満・月1回</p>
+          </div>
+          <div className="bg-white/80 rounded-lg p-3">
+            <h4 className="font-semibold text-green-900 text-sm">一般職員年次面談</h4>
+            <p className="text-xs text-green-700 mt-1">全職員対象・年1回</p>
+          </div>
+          <div className="bg-white/80 rounded-lg p-3">
+            <h4 className="font-semibold text-green-900 text-sm">管理職半年面談</h4>
+            <p className="text-xs text-green-700 mt-1">管理職対象・年2回</p>
+          </div>
+        </div>
+      </div>
+
+      {/* 新人職員のストーリー */}
+      <div className="bg-white border border-blue-200 rounded-xl p-6">
+        <div className="flex items-center gap-4 mb-6">
+          <div className="p-3 bg-blue-500 rounded-full">
+            <span className="text-2xl">👨‍⚕️</span>
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-blue-900">新人職員の成長ストーリー</h3>
+            <p className="text-blue-700">入職から1年間の月次面談を通じた成長プロセス</p>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="space-y-4">
+            <div className="bg-blue-50 rounded-lg p-4">
+              <h4 className="font-semibold text-blue-900 mb-2">📖 田中さん（看護師・入職3ヶ月）のケース</h4>
+              <div className="text-sm text-blue-800 space-y-2">
+                <p><strong>入職時の不安：</strong>「医療現場は初めてで、ミスをしないか心配です」</p>
+                <p><strong>1ヶ月目面談：</strong>基本業務への適応状況を確認。先輩とのペア制での指導体制を調整。</p>
+                <p><strong>3ヶ月目面談：</strong>「最初は緊張していましたが、先輩方が優しく教えてくださり、少しずつ慣れてきました。患者さんとのコミュニケーションにもやりがいを感じています」</p>
+              </div>
+            </div>
+            
+            <div className="bg-green-50 rounded-lg p-4">
+              <h4 className="font-semibold text-green-900 mb-2">🎯 面談で重視するポイント</h4>
+              <ul className="text-sm text-green-800 space-y-1">
+                <li>• <strong>適応状況：</strong>職場環境に慣れているか</li>
+                <li>• <strong>技術習得：</strong>基本技術の理解度と実践力</li>
+                <li>• <strong>人間関係：</strong>同僚・先輩との関係構築</li>
+                <li>• <strong>不安解消：</strong>疑問や心配事の早期発見</li>
+                <li>• <strong>目標設定：</strong>次月までの具体的な成長目標</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div className="bg-yellow-50 rounded-lg p-4">
+              <h4 className="font-semibold text-yellow-900 mb-2">💡 面談の進め方</h4>
+              <div className="text-sm text-yellow-800 space-y-2">
+                <div><strong>開始時（5分）：</strong>リラックスした雰囲気作り、近況確認</div>
+                <div><strong>中盤（15-20分）：</strong>業務習得状況、困りごと、良かった点の振り返り</div>
+                <div><strong>終盤（5-10分）：</strong>次月の目標設定、必要な支援の確認</div>
+              </div>
+            </div>
+
+            <div className="bg-purple-50 rounded-lg p-4">
+              <h4 className="font-semibold text-purple-900 mb-2">📈 成長の軌跡</h4>
+              <div className="text-sm text-purple-800 space-y-1">
+                <div className="flex justify-between"><span>1-3ヶ月:</span><span>基本適応期</span></div>
+                <div className="flex justify-between"><span>4-6ヶ月:</span><span>技術習得期</span></div>
+                <div className="flex justify-between"><span>7-9ヶ月:</span><span>自立実践期</span></div>
+                <div className="flex justify-between"><span>10-12ヶ月:</span><span>安定成長期</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 一般職員のストーリー */}
+      <div className="bg-white border border-green-200 rounded-xl p-6">
+        <div className="flex items-center gap-4 mb-6">
+          <div className="p-3 bg-green-500 rounded-full">
+            <span className="text-2xl">👩‍⚕️</span>
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-green-900">一般職員の成長ストーリー</h3>
+            <p className="text-green-700">中堅職員としての年次面談における目標達成と課題解決</p>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="space-y-4">
+            <div className="bg-green-50 rounded-lg p-4">
+              <h4 className="font-semibold text-green-900 mb-2">📖 佐藤さん（看護師・勤続5年）のケース</h4>
+              <div className="text-sm text-green-800 space-y-2">
+                <p><strong>昨年の目標振り返り：</strong>「新人指導担当として3名の新人をサポートしました。最初は指導方法に戸惑いましたが、研修を受けて成長できました」</p>
+                <p><strong>今年の挑戦：</strong>「チームリーダーとしてのスキルを身につけ、病棟の業務改善プロジェクトにも参加したいです」</p>
+                <p><strong>キャリア展望：</strong>「将来的には主任看護師として、後輩の成長を支援する立場になりたいです」</p>
+              </div>
+            </div>
+
+            <div className="bg-orange-50 rounded-lg p-4">
+              <h4 className="font-semibold text-orange-900 mb-2">🎯 面談で重視するポイント</h4>
+              <ul className="text-sm text-orange-800 space-y-1">
+                <li>• <strong>目標達成度：</strong>前年度目標の振り返りと評価</li>
+                <li>• <strong>専門性向上：</strong>技術・知識のレベルアップ状況</li>
+                <li>• <strong>チームへの貢献：</strong>組織への積極的な関わり</li>
+                <li>• <strong>キャリア展望：</strong>中長期的なキャリアプラン</li>
+                <li>• <strong>ワークライフバランス：</strong>仕事と私生活の調和</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div className="bg-blue-50 rounded-lg p-4">
+              <h4 className="font-semibold text-blue-900 mb-2">💡 面談の進め方</h4>
+              <div className="text-sm text-blue-800 space-y-2">
+                <div><strong>開始時（5分）：</strong>一年間の総括、印象的な出来事の共有</div>
+                <div><strong>前半（15分）：</strong>目標達成状況の詳細確認、成功要因の分析</div>
+                <div><strong>中盤（15分）：</strong>課題や困難の振り返り、今後の改善策</div>
+                <div><strong>終盤（10分）：</strong>来年度の目標設定、キャリア相談</div>
+              </div>
+            </div>
+
+            <div className="bg-indigo-50 rounded-lg p-4">
+              <h4 className="font-semibold text-indigo-900 mb-2">🌟 成長の指標</h4>
+              <div className="text-sm text-indigo-800 space-y-1">
+                <div className="flex justify-between"><span>専門技術:</span><span>高度な技術習得</span></div>
+                <div className="flex justify-between"><span>指導力:</span><span>後輩指導の実践</span></div>
+                <div className="flex justify-between"><span>リーダーシップ:</span><span>チーム貢献度</span></div>
+                <div className="flex justify-between"><span>継続学習:</span><span>自己研鑽の姿勢</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 管理職のストーリー */}
+      <div className="bg-white border border-orange-200 rounded-xl p-6">
+        <div className="flex items-center gap-4 mb-6">
+          <div className="p-3 bg-orange-500 rounded-full">
+            <span className="text-2xl">👔</span>
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-orange-900">管理職の成長ストーリー</h3>
+            <p className="text-orange-700">組織運営と人材育成に焦点を当てた半年面談</p>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="space-y-4">
+            <div className="bg-orange-50 rounded-lg p-4">
+              <h4 className="font-semibold text-orange-900 mb-2">📖 山田師長（看護師長・勤続15年）のケース</h4>
+              <div className="text-sm text-orange-800 space-y-2">
+                <p><strong>組織運営の成果：</strong>「今期は病棟の看護師不足が課題でしたが、新人教育プログラムの見直しにより定着率が20%向上しました」</p>
+                <p><strong>人材育成の取り組み：</strong>「中堅職員のリーダーシップ研修を企画し、5名が主任候補として成長してくれています」</p>
+                <p><strong>今後の展望：</strong>「次期は多職種連携の強化と、働き方改革の推進に取り組みたいです」</p>
+              </div>
+            </div>
+
+            <div className="bg-red-50 rounded-lg p-4">
+              <h4 className="font-semibold text-red-900 mb-2">🎯 面談で重視するポイント</h4>
+              <ul className="text-sm text-red-800 space-y-1">
+                <li>• <strong>組織目標達成：</strong>部署の目標達成状況と課題</li>
+                <li>• <strong>人材育成成果：</strong>部下の成長促進と定着率</li>
+                <li>• <strong>業務改善提案：</strong>効率化や質の向上施策</li>
+                <li>• <strong>多職種連携：</strong>他部署との協働関係構築</li>
+                <li>• <strong>戦略的視点：</strong>中長期的な組織運営構想</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div className="bg-purple-50 rounded-lg p-4">
+              <h4 className="font-semibold text-purple-900 mb-2">💡 面談の進め方</h4>
+              <div className="text-sm text-purple-800 space-y-2">
+                <div><strong>開始時（10分）：</strong>半年間の部署運営概況、主要な成果報告</div>
+                <div><strong>前半（20分）：</strong>目標達成状況の詳細分析、成功要因の検証</div>
+                <div><strong>中盤（15分）：</strong>課題や困難の分析、解決策の検討</div>
+                <div><strong>終盤（15分）：</strong>次期目標設定、組織改善提案の具体化</div>
+              </div>
+            </div>
+
+            <div className="bg-teal-50 rounded-lg p-4">
+              <h4 className="font-semibold text-teal-900 mb-2">📊 管理職の評価軸</h4>
+              <div className="text-sm text-teal-800 space-y-1">
+                <div className="flex justify-between"><span>業績達成:</span><span>部署目標の達成度</span></div>
+                <div className="flex justify-between"><span>人材育成:</span><span>部下の成長と定着</span></div>
+                <div className="flex justify-between"><span>改善提案:</span><span>業務効率化の実現</span></div>
+                <div className="flex justify-between"><span>戦略立案:</span><span>将来構想の具体性</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* まとめ */}
+      <div className="bg-gray-50 border border-gray-200 rounded-xl p-6">
+        <h3 className="text-xl font-bold text-gray-800 mb-4">💫 定期面談の成功の秘訣</h3>
+        <div className="grid md:grid-cols-3 gap-4">
+          <div className="bg-white rounded-lg p-4">
+            <h4 className="font-semibold text-blue-900 mb-2">新人職員面談</h4>
+            <p className="text-sm text-gray-700">「安心感」と「成長実感」を重視し、小さな成功を積み重ねる支援</p>
+          </div>
+          <div className="bg-white rounded-lg p-4">
+            <h4 className="font-semibold text-green-900 mb-2">一般職員面談</h4>
+            <p className="text-sm text-gray-700">「達成感」と「将来性」を重視し、自律的な成長を促進する対話</p>
+          </div>
+          <div className="bg-white rounded-lg p-4">
+            <h4 className="font-semibold text-orange-900 mb-2">管理職面談</h4>
+            <p className="text-sm text-gray-700">「組織貢献」と「戦略思考」を重視し、リーダーシップの発揮を支援</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// 特別面談ガイドタブ - ストーリー仕立て  
+function SpecialInterviewGuide(): React.ReactElement {
+  return (
+    <div className="space-y-8">
+      {/* 特別面談の基本方針 */}
+      <div className="bg-orange-50 border border-orange-200 rounded-xl p-6">
+        <h2 className="text-2xl font-bold text-orange-900 mb-4 flex items-center gap-3">
+          <span className="text-3xl">⚠️</span>
+          特別面談ガイド
+        </h2>
+        <p className="text-orange-800 text-lg mb-4">
+          特別面談は、職員の特別な状況に応じて実施する重要な支援面談です。
+          センシティブな状況に配慮しながら、適切なサポートを提供することが求められます。
+        </p>
+        <div className="grid md:grid-cols-3 gap-4 mt-4">
+          <div className="bg-white/80 rounded-lg p-3">
+            <h4 className="font-semibold text-orange-900 text-sm">復職面談</h4>
+            <p className="text-xs text-orange-700 mt-1">休職からの復帰時</p>
+          </div>
+          <div className="bg-white/80 rounded-lg p-3">
+            <h4 className="font-semibold text-orange-900 text-sm">インシデント後面談</h4>
+            <p className="text-xs text-orange-700 mt-1">事故発生後の緊急対応</p>
+          </div>
+          <div className="bg-white/80 rounded-lg p-3">
+            <h4 className="font-semibold text-orange-900 text-sm">退職面談</h4>
+            <p className="text-xs text-orange-700 mt-1">退職前の最終確認</p>
+          </div>
+        </div>
+      </div>
+
+      {/* 復職面談のストーリー */}
+      <div className="bg-white border border-green-200 rounded-xl p-6">
+        <div className="flex items-center gap-4 mb-6">
+          <div className="p-3 bg-green-500 rounded-full">
+            <span className="text-2xl">🏥</span>
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-green-900">復職支援のストーリー</h3>
+            <p className="text-green-700">休職からの復帰を温かくサポートする面談プロセス</p>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="space-y-4">
+            <div className="bg-green-50 rounded-lg p-4">
+              <h4 className="font-semibold text-green-900 mb-2">📖 鈴木さん（看護師・メンタルヘルス休職からの復職）のケース</h4>
+              <div className="text-sm text-green-800 space-y-2">
+                <p><strong>復職前の不安：</strong>「3ヶ月間休職していたので、仕事についていけるか心配です。同僚に迷惑をかけたという罪悪感もあります」</p>
+                <p><strong>復職面談での対話：</strong>「まずは体調管理を最優先に、無理のないペースで復帰しましょう。チーム全体であなたの復帰を歓迎しています」</p>
+                <p><strong>段階的復帰計画：</strong>「最初の1ヶ月は日勤のみ、2ヶ月目から夜勤も段階的に。何か不安があればいつでも相談してください」</p>
+              </div>
+            </div>
+            
+            <div className="bg-blue-50 rounded-lg p-4">
+              <h4 className="font-semibold text-blue-900 mb-2">🎯 復職面談で重視するポイント</h4>
+              <ul className="text-sm text-blue-800 space-y-1">
+                <li>• <strong>健康状態確認：</strong>体調とメンタル面の回復状況</li>
+                <li>• <strong>復帰意欲：</strong>仕事への意欲と準備状況</li>
+                <li>• <strong>不安の把握：</strong>復職に対する心配事や懸念</li>
+                <li>• <strong>段階的計画：</strong>無理のない復帰スケジュール</li>
+                <li>• <strong>継続支援：</strong>復職後のフォロー体制</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div className="bg-yellow-50 rounded-lg p-4">
+              <h4 className="font-semibold text-yellow-900 mb-2">💡 復職面談の進め方</h4>
+              <div className="text-sm text-yellow-800 space-y-2">
+                <div><strong>導入（10分）：</strong>温かい雰囲気作り、休職期間の労い</div>
+                <div><strong>現状確認（15分）：</strong>体調回復状況、医師の診断書確認</div>
+                <div><strong>復帰計画（20分）：</strong>段階的復帰スケジュールの相談</div>
+                <div><strong>サポート体制（10分）：</strong>必要な配慮事項の確認</div>
+                <div><strong>まとめ（5分）：</strong>次回フォロー面談の約束</div>
+              </div>
+            </div>
+
+            <div className="bg-purple-50 rounded-lg p-4">
+              <h4 className="font-semibold text-purple-900 mb-2">🤝 サポート体制</h4>
+              <div className="text-sm text-purple-800 space-y-1">
+                <div className="flex justify-between"><span>初期サポート:</span><span>メンター制度</span></div>
+                <div className="flex justify-between"><span>業務調整:</span><span>段階的負荷増加</span></div>
+                <div className="flex justify-between"><span>定期面談:</span><span>週1回→月1回</span></div>
+                <div className="flex justify-between"><span>医療連携:</span><span>産業医との協働</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 退職面談のストーリー */}
+      <div className="bg-white border border-red-200 rounded-xl p-6">
+        <div className="flex items-center gap-4 mb-6">
+          <div className="p-3 bg-red-500 rounded-full">
+            <span className="text-2xl">👋</span>
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-red-900">退職面談のストーリー</h3>
+            <p className="text-red-700">感謝とともに新たな門出を支援する最終面談</p>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="space-y-4">
+            <div className="bg-red-50 rounded-lg p-4">
+              <h4 className="font-semibold text-red-900 mb-2">📖 田中さん（看護師・キャリアアップのための転職）のケース</h4>
+              <div className="text-sm text-red-800 space-y-2">
+                <p><strong>退職理由：</strong>「5年間お世話になりましたが、専門看護師を目指して大学病院に転職することにしました」</p>
+                <p><strong>組織への感謝：</strong>「この病院で基礎をしっかり学べました。特に新人時代の温かいサポートは忘れません」</p>
+                <p><strong>改善提案：</strong>「後輩のために、プリセプター制度をもう少し体系化できればと思います」</p>
+                <p><strong>引継ぎ状況：</strong>「担当患者の引継ぎは完了し、マニュアルも更新しています」</p>
+              </div>
+            </div>
+            
+            <div className="bg-orange-50 rounded-lg p-4">
+              <h4 className="font-semibold text-orange-900 mb-2">🎯 退職面談で重視するポイント</h4>
+              <ul className="text-sm text-orange-800 space-y-1">
+                <li>• <strong>退職理由確認：</strong>本当の退職理由と改善可能性</li>
+                <li>• <strong>業務引継ぎ：</strong>完全な引継ぎ状況の確認</li>
+                <li>• <strong>改善提案：</strong>組織改善への貴重な意見聴取</li>
+                <li>• <strong>感謝の表明：</strong>貢献への感謝と良好な関係維持</li>
+                <li>• <strong>将来の関係：</strong>OBとしての継続的な関係性</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div className="bg-indigo-50 rounded-lg p-4">
+              <h4 className="font-semibold text-indigo-900 mb-2">💡 退職面談の進め方</h4>
+              <div className="text-sm text-indigo-800 space-y-2">
+                <div><strong>開始（5分）：</strong>これまでの労いと感謝の表明</div>
+                <div><strong>退職理由（15分）：</strong>詳細な理由と改善可能性の確認</div>
+                <div><strong>振り返り（15分）：</strong>在職期間の成果と学びの共有</div>
+                <div><strong>改善提案（10分）：</strong>組織への建設的な意見聴取</div>
+                <div><strong>引継ぎ確認（10分）：</strong>業務引継ぎ完了状況の最終確認</div>
+                <div><strong>お別れ（5分）：</strong>今後の活躍祈願と関係継続の約束</div>
+              </div>
+            </div>
+
+            <div className="bg-teal-50 rounded-lg p-4">
+              <h4 className="font-semibold text-teal-900 mb-2">📋 退職タイプ別対応</h4>
+              <div className="text-sm text-teal-800 space-y-1">
+                <div className="flex justify-between"><span>キャリアアップ:</span><span>応援・推奨</span></div>
+                <div className="flex justify-between"><span>家庭の事情:</span><span>理解・配慮</span></div>
+                <div className="flex justify-between"><span>職場不満:</span><span>改善検討</span></div>
+                <div className="flex justify-between"><span>健康問題:</span><span>労い・支援</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* まとめ */}
+      <div className="bg-gray-50 border border-gray-200 rounded-xl p-6">
+        <h3 className="text-xl font-bold text-gray-800 mb-4">⭐ 特別面談の成功の秘訣</h3>
+        <div className="grid md:grid-cols-2 gap-4">
+          <div className="bg-white rounded-lg p-4">
+            <h4 className="font-semibold text-green-900 mb-2">復職面談</h4>
+            <p className="text-sm text-gray-700">「安心感」と「段階的サポート」で、無理のない職場復帰を実現</p>
+          </div>
+          <div className="bg-white rounded-lg p-4">
+            <h4 className="font-semibold text-red-900 mb-2">退職面談</h4>
+            <p className="text-sm text-gray-700">「感謝」と「建設的対話」で、良好な関係を保ちながら改善に活用</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// サポート面談ガイドタブ - ストーリー仕立て
+function SupportInterviewGuide(): React.ReactElement {
+  return (
+    <div className="space-y-8">
+      {/* サポート面談の基本方針 */}
+      <div className="bg-purple-50 border border-purple-200 rounded-xl p-6">
+        <h2 className="text-2xl font-bold text-purple-900 mb-4 flex items-center gap-3">
+          <span className="text-3xl">💬</span>
+          サポート面談ガイド
+        </h2>
+        <p className="text-purple-800 text-lg mb-4">
+          サポート面談は、職員からの相談申込に基づいて実施する任意の支援面談です。
+          職員の主体性を尊重し、具体的な問題解決や成長支援を行います。
+        </p>
+        <div className="grid md:grid-cols-3 gap-4 mt-4">
+          <div className="bg-white/80 rounded-lg p-3">
+            <h4 className="font-semibold text-purple-900 text-sm">キャリア相談面談</h4>
+            <p className="text-xs text-purple-700 mt-1">将来設計・スキル開発</p>
+          </div>
+          <div className="bg-white/80 rounded-lg p-3">
+            <h4 className="font-semibold text-purple-900 text-sm">職場環境相談面談</h4>
+            <p className="text-xs text-purple-700 mt-1">人間関係・業務負荷</p>
+          </div>
+          <div className="bg-white/80 rounded-lg p-3">
+            <h4 className="font-semibold text-purple-900 text-sm">個別支援面談</h4>
+            <p className="text-xs text-purple-700 mt-1">個人的な課題・悩み</p>
+          </div>
+        </div>
+      </div>
+
+      {/* まとめ */}
+      <div className="bg-gray-50 border border-gray-200 rounded-xl p-6">
+        <h3 className="text-xl font-bold text-gray-800 mb-4">🌟 サポート面談の特徴</h3>
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="bg-white rounded-lg p-4">
+            <h4 className="font-semibold text-purple-900 mb-2">職員主導の相談システム</h4>
+            <p className="text-sm text-gray-700">職員自身が必要を感じた時に申込む任意の面談制度</p>
+          </div>
+          <div className="bg-white rounded-lg p-4">
+            <h4 className="font-semibold text-blue-900 mb-2">VoiceDrive連携</h4>
+            <p className="text-sm text-gray-700">VoiceDriveシステムとの連携により、24時間いつでも相談申込が可能</p>
+          </div>
+        </div>
+        
+        <div className="mt-6 p-4 bg-indigo-50 rounded-lg border border-indigo-200">
+          <h4 className="font-semibold text-indigo-900 mb-2">📋 実装予定の詳細ストーリー</h4>
+          <p className="text-sm text-indigo-800">
+            サポート面談の具体的なストーリーコンテンツは、VoiceDriveシステムとの連携機能実装後に、
+            実際の相談事例を基に作成予定です。各カテゴリ別の対応パターンやベストプラクティスを
+            ストーリー形式で提供します。
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 // 第1段階実装: 新規追加 - ダッシュボードタブ
