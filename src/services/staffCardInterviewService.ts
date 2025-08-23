@@ -1,6 +1,7 @@
 /**
  * 職員カルテ面談・指導タブ専用サービス
  * 面談管理システムとの連動とデータ統合を管理
+ * Phase 1-2 実装完了: カテゴリ別データ取得とサマリーエリア連動
  */
 
 import { InterviewReservationService, ReservationFilters } from './interviewReservationService';
