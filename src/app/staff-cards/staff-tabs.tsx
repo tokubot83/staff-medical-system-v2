@@ -9,6 +9,11 @@ import { useErrorHandler } from '@/hooks/useErrorHandler'
 import { AppError, ErrorLevel } from '@/lib/error/AppError'
 import { StaffCardInterviewService } from '@/services/staffCardInterviewService'
 import InterviewDataVisualization from '@/components/charts/InterviewDataVisualization'
+import { CrossTabAnalysisService } from '@/services/crossTabAnalysisService'
+import ComprehensiveGrowthTrend from '@/components/charts/ComprehensiveGrowthTrend'
+import StaffPortfolioAnalysis from '@/components/charts/StaffPortfolioAnalysis'
+import StrengthsWeaknessesMap from '@/components/charts/StrengthsWeaknessesMap'
+import GrowthPredictionDashboard from '@/components/charts/GrowthPredictionDashboard'
 import styles from './StaffCards.module.css'
 
 // V3グレード定義
@@ -26,8 +31,9 @@ export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
   const router = useRouter()
   const { handleError, clearError } = useErrorHandler()
   const [analyticsData, setAnalyticsData] = useState<any>(null)
+  const [crossTabData, setCrossTabData] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [activeAnalysisTab, setActiveAnalysisTab] = useState('performance')
+  const [activeAnalysisTab, setActiveAnalysisTab] = useState('comprehensive')
 
   if (!selectedStaff) {
     return (
@@ -41,6 +47,10 @@ export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
     const loadAnalyticsData = async () => {
       try {
         setIsLoading(true)
+        
+        // 横断分析データを生成
+        const crossTabAnalysis = await CrossTabAnalysisService.generateCrossTabAnalysis(selectedStaff.id)
+        setCrossTabData(crossTabAnalysis)
         
         // V3評価データに基づく分析データ（モック）
         const mockAnalytics = {
@@ -96,15 +106,17 @@ export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
   }, [selectedStaff?.id])
 
   const analysisSubTabs = [
-    { id: 'performance', label: '成果分析', icon: '📈' },
-    { id: 'competency', label: 'スキル分析', icon: '🎯' },
-    { id: 'career', label: 'キャリア分析', icon: '🚀' }
+    { id: 'comprehensive', label: '横断的統合分析', icon: '🔮' },
+    { id: 'growth', label: '成長トレンド', icon: '📈' },
+    { id: 'portfolio', label: 'ポートフォリオ', icon: '🎯' },
+    { id: 'strengths', label: '強み・課題', icon: '💪' },
+    { id: 'prediction', label: '成長予測', icon: '🚀' }
   ]
 
   return (
     <div className={styles.tabContentSection}>
       <div className={styles.sectionHeader}>
-        <h2>📊 総合分析・成長トレンド</h2>
+        <h2>🔮 横断的統合分析・成長ストーリー</h2>
         <div className={styles.sectionActions}>
           <button className={styles.actionButton} onClick={() => router.push('/evaluation?tab=review')}>
             詳細レポート
@@ -133,6 +145,59 @@ export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
         </div>
       ) : (
         <>
+          {activeAnalysisTab === 'comprehensive' && crossTabData && (
+            <div className={styles.comprehensiveAnalysis}>
+              {/* 横断的統合分析の概要メッセージ */}
+              <div style={{ 
+                marginBottom: '24px', 
+                padding: '16px', 
+                backgroundColor: '#f8fafc', 
+                border: '1px solid #e2e8f0', 
+                borderRadius: '8px' 
+              }}>
+                <h3 style={{ 
+                  margin: '0 0 12px 0', 
+                  color: '#1e293b', 
+                  fontSize: '16px', 
+                  fontWeight: '600' 
+                }}>
+                  🔮 統合分析ダッシュボード
+                </h3>
+                <p style={{ 
+                  margin: 0, 
+                  color: '#475569', 
+                  fontSize: '14px', 
+                  lineHeight: '1.5' 
+                }}>
+                  評価・面談・研修・成長の全システムを横断分析し、統一された視点で職員の総合的な成長ストーリーをお伝えします。
+                  効果的プレゼン指示書の原則に従い、重要なポイントを色と配置で強調表示しています。
+                </p>
+              </div>
+              
+              {/* 各コンポーネントを統合表示 */}
+              <ComprehensiveGrowthTrend data={crossTabData} />
+              <StaffPortfolioAnalysis data={crossTabData} />
+              <StrengthsWeaknessesMap data={crossTabData} />
+              <GrowthPredictionDashboard data={crossTabData} />
+            </div>
+          )}
+
+          {activeAnalysisTab === 'growth' && crossTabData && (
+            <ComprehensiveGrowthTrend data={crossTabData} />
+          )}
+
+          {activeAnalysisTab === 'portfolio' && crossTabData && (
+            <StaffPortfolioAnalysis data={crossTabData} />
+          )}
+
+          {activeAnalysisTab === 'strengths' && crossTabData && (
+            <StrengthsWeaknessesMap data={crossTabData} />
+          )}
+
+          {activeAnalysisTab === 'prediction' && crossTabData && (
+            <GrowthPredictionDashboard data={crossTabData} />
+          )}
+
           {activeAnalysisTab === 'performance' && (
             <div className={styles.performanceAnalysis}>
               <div className={styles.trendCard}>
