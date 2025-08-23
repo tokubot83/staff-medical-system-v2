@@ -875,9 +875,6 @@ function SupportInterviewGuide(): React.ReactElement {
     </div>
   );
 }
-    </div>
-  )
-}
 
 // 第1段階実装: 新規追加 - ダッシュボードタブ
 function DashboardTab(): React.ReactElement {
