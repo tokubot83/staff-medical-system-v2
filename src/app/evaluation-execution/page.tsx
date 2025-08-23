@@ -33,7 +33,6 @@ import {
   Clock,
   TrendingUp,
   Sparkles,
-  Rocket,
   ChevronRight,
   PlayCircle,
   Edit3,
@@ -162,15 +161,6 @@ export default function EvaluationExecutionPage() {
   // 現在月の評価タスクを取得
   const currentMonthTask = monthlyEvaluationTasks.find(task => task.status === 'current');
   const upcomingTasks = monthlyEvaluationTasks.filter(task => task.status === 'upcoming').slice(0, 2);
-  
-  // 評価実施のワークフローステップ
-  const executionSteps = [
-    { id: 1, title: '評価入力', status: 'current', icon: ClipboardList },
-    { id: 2, title: '評価確認', status: 'upcoming', icon: CheckCircle },
-    { id: 3, title: '総合判定', status: 'upcoming', icon: Activity },
-    { id: 4, title: '評価開示', status: 'upcoming', icon: Eye },
-    { id: 5, title: '異議申立', status: 'upcoming', icon: MessageSquare }
-  ];
 
   // モックデータ：評価対象職員
   const staffList = [
@@ -259,7 +249,6 @@ export default function EvaluationExecutionPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [refreshKey, setRefreshKey] = useState(0);
   const [staffData, setStaffData] = useState(staffList);
-  const [showWorkflowGuide, setShowWorkflowGuide] = useState(true);
   const [selectedStaffForEvaluation, setSelectedStaffForEvaluation] = useState<string | null>(null);
 
   // フィルタリング
@@ -319,70 +308,6 @@ export default function EvaluationExecutionPage() {
     <div>
       <CommonHeader title="個人評価管理" />
       <div className={styles.container}>
-        {/* 評価実施ワークフローガイド */}
-        {showWorkflowGuide && (
-          <Card className="mb-6 border-2 border-green-200 bg-gradient-to-r from-green-50 to-emerald-50">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Rocket className="h-5 w-5 text-green-600" />
-                  <CardTitle className="text-lg">評価実施フロー</CardTitle>
-                </div>
-                <Button 
-                  variant="ghost" 
-                  size="sm"
-                  onClick={() => setShowWorkflowGuide(false)}
-                  className="text-gray-500 hover:text-gray-700"
-                >
-                  ✕
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between mb-4">
-                {executionSteps.map((step, index) => (
-                  <React.Fragment key={step.id}>
-                    <div className="flex flex-col items-center flex-1">
-                      <div className={`
-                        p-3 rounded-full mb-2 transition-all
-                        ${step.status === 'completed' ? 'bg-green-100' : ''}
-                        ${step.status === 'current' ? 'bg-green-100 ring-4 ring-green-200' : ''}
-                        ${step.status === 'upcoming' ? 'bg-gray-100' : ''}
-                      `}>
-                        <step.icon className={`
-                          h-5 w-5
-                          ${step.status === 'completed' ? 'text-green-600' : ''}
-                          ${step.status === 'current' ? 'text-green-600' : ''}
-                          ${step.status === 'upcoming' ? 'text-gray-400' : ''}
-                        `} />
-                      </div>
-                      <span className={`
-                        text-sm font-medium
-                        ${step.status === 'current' ? 'text-green-600' : 'text-gray-600'}
-                      `}>
-                        {step.title}
-                      </span>
-                      {step.status === 'current' && (
-                        <Badge className="mt-1 bg-green-100 text-green-700" variant="secondary">進行中</Badge>
-                      )}
-                    </div>
-                    {index < executionSteps.length - 1 && (
-                      <ChevronRight className="h-5 w-5 text-gray-400 mb-8" />
-                    )}
-                  </React.Fragment>
-                ))}
-              </div>
-              <Alert className="border-green-200 bg-green-50">
-                <Zap className="h-4 w-4 text-green-600" />
-                <AlertDescription className="text-green-800">
-                  <strong>現在のタスク：</strong> {statistics.notStarted}名の職員の評価が未着手です。
-                  締切まであと<strong className="text-red-600">7日</strong>です。
-                </AlertDescription>
-              </Alert>
-            </CardContent>
-          </Card>
-        )}
-
         {/* クイックアクション */}
         <div className="mb-6">
           <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
