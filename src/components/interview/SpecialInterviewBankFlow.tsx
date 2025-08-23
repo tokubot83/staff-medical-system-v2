@@ -47,6 +47,7 @@ import {
 } from '@/lib/interview-bank/services/special-generator';
 import { GeneratedBankSheet, StaffBankProfile } from '@/lib/interview-bank/types';
 import DynamicInterviewSheet from '@/components/interview-bank/DynamicInterviewSheet';
+import { StaffCardInterviewService } from '@/services/staffCardInterviewService';
 
 // 面談作成フォームの状態
 interface CreateInterviewForm {
@@ -229,6 +230,35 @@ export default function SpecialInterviewBankFlow() {
         analysis.keyInsights,
         analysis.recommendedActions.map(action => ({ description: action }))
       );
+
+      // 職員カルテへのリアルタイム同期
+      try {
+        const completedInterviewData = {
+          id: interviewId,
+          staffId: createForm.staffId,
+          staffName: selectedStaff?.name || '',
+          type: 'special' as const,
+          subtype: createForm.specialType,
+          date: new Date().toISOString().split('T')[0],
+          duration: getDefaultDuration(createForm.specialType),
+          responses: Object.entries(responses).map(([questionId, response]) => ({
+            questionId,
+            response: String(response)
+          })),
+          summary: analysis.keyInsights.join('; '),
+          feedback: `${createForm.specialType}面談実施: ${createForm.reason}`,
+          nextActions: analysis.recommendedActions,
+          status: 'completed' as const,
+          completedAt: new Date().toISOString(),
+          interviewer: '特別面談担当者',
+          reason: createForm.reason
+        };
+
+        await StaffCardInterviewService.handleInterviewCompletion(completedInterviewData);
+        console.log('特別面談の職員カルテ同期完了:', completedInterviewData);
+      } catch (error) {
+        console.error('特別面談の職員カルテ同期エラー:', error);
+      }
 
       setActiveTab('completed');
     } catch (error) {

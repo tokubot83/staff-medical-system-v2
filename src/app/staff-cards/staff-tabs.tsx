@@ -8,6 +8,7 @@ import { V3PersonalEvaluation } from '@/types/evaluation-v3'
 import { useErrorHandler } from '@/hooks/useErrorHandler'
 import { AppError, ErrorLevel } from '@/lib/error/AppError'
 import { StaffCardInterviewService } from '@/services/staffCardInterviewService'
+import InterviewDataVisualization from '@/components/charts/InterviewDataVisualization'
 import styles from './StaffCards.module.css'
 
 // V3グレード定義
@@ -1072,6 +1073,41 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                   </div>
                 </div>
               </div>
+
+              {/* データ可視化セクション */}
+              {interviewData?.regular?.interviews?.length > 0 && (
+                <div className={styles.dataVisualizationSection}>
+                  <InterviewDataVisualization
+                    staffId={selectedStaff.id}
+                    category="regular"
+                    data={{
+                      trends: {
+                        scores: interviewData.regular.interviews.map((i: any) => 
+                          i.overallScore === 'A' ? 85 : i.overallScore === 'B+' ? 80 : i.overallScore === 'B' ? 75 : 70
+                        ),
+                        dates: interviewData.regular.interviews.map((i: any) => i.date),
+                        avgScore: 81
+                      },
+                      responsePatterns: [
+                        {
+                          questionId: 'career_goal',
+                          question: 'キャリア目標について教えてください',
+                          responses: interviewData.regular.interviews.map((i: any) => ({
+                            date: i.date,
+                            response: i.summary,
+                            score: i.overallScore === 'A' ? 85 : 80
+                          }))
+                        }
+                      ],
+                      insights: {
+                        strengths: ['V3評価システムでの安定した成果', '技術評価80点台維持'],
+                        improvements: ['法人規模での貢献度向上', 'リーダーシップスキル強化'],
+                        keyTrends: ['継続的な成長傾向', '組織貢献度の向上余地あり']
+                      }
+                    }}
+                  />
+                </div>
+              )}
 
               {/* 定期面談履歴詳細 */}
               <div className={styles.interviewHistoryDetail}>

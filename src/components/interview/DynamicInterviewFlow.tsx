@@ -56,6 +56,7 @@ import {
   MotivationQuestion
 } from '@/services/motivationTypeDiagnosisService';
 import { InterviewFlowOrchestrationService } from '@/services/interviewFlowOrchestrationService';
+import { StaffCardInterviewService } from '@/services/staffCardInterviewService';
 import { 
   SpecialInterviewTemplateService,
   SpecialInterviewType,
@@ -1206,6 +1207,37 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
     
     // データ配信
     await InterviewFlowOrchestrationService.distributeInterviewData(sessionMaster);
+    
+    // 職員カルテへのリアルタイム同期
+    try {
+      const completedInterviewData = {
+        id: sessionMaster.id,
+        staffId: session.selectedStaff.id,
+        staffName: session.selectedStaff.name,
+        type: session.interviewType,
+        subtype: session.subType,
+        date: session.startTime?.toISOString().split('T')[0] || new Date().toISOString().split('T')[0],
+        duration: session.duration,
+        responses: Array.from(session.responses.entries()).map(([questionId, response]) => ({
+          questionId,
+          response
+        })),
+        summary: sessionMaster.summary,
+        feedback: sessionMaster.feedback,
+        nextActions: sessionMaster.nextActions || [],
+        status: 'completed' as const,
+        completedAt: new Date().toISOString(),
+        interviewer: session.selectedStaff.department // 面談者情報を追加
+      };
+
+      // 職員カルテの面談タブに自動反映
+      await StaffCardInterviewService.handleInterviewCompletion(completedInterviewData);
+      
+      console.log('職員カルテへの同期完了:', completedInterviewData);
+    } catch (error) {
+      console.error('職員カルテ同期エラー:', error);
+      // エラーが発生しても面談完了は継続
+    }
     
     setCurrentStep('completed');
     // 完了時のコールバックを呼び出し

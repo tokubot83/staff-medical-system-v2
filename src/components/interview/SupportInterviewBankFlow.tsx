@@ -52,6 +52,7 @@ import { InterviewBankService } from '@/lib/interview-bank/services/bank-service
 import { generateSupportInterviewFromVoiceDrive, analyzeSupportInterviewResult } from '@/lib/interview-bank/services/support-generator';
 import { GeneratedBankSheet, BankQuestion, StaffBankProfile } from '@/lib/interview-bank/types';
 import DynamicInterviewSheet from '@/components/interview-bank/DynamicInterviewSheet';
+import { StaffCardInterviewService } from '@/services/staffCardInterviewService';
 
 // VoiceDriveリクエスト一覧のアイテム
 interface RequestListItemProps {
@@ -362,6 +363,36 @@ export default function SupportInterviewBankFlow() {
         analysis.riskFactors,
         analysis.recommendedActions.map(action => ({ description: action }))
       );
+      
+      // 職員カルテへのリアルタイム同期
+      try {
+        const completedInterviewData = {
+          id: interviewId,
+          staffId: selectedRequest.staffId,
+          staffName: selectedRequest.staffName,
+          type: 'support' as const,
+          subtype: 'skill-development',
+          date: new Date().toISOString().split('T')[0],
+          duration: 60,
+          responses: Object.entries(responses).map(([questionId, response]) => ({
+            questionId,
+            response: String(response)
+          })),
+          summary: `${selectedRequest.consultationTopic}に関するサポート面談実施`,
+          feedback: analysis.riskFactors.join('; '),
+          nextActions: analysis.recommendedActions,
+          status: 'completed' as const,
+          completedAt: new Date().toISOString(),
+          interviewer: 'サポート面談担当者',
+          category: selectedRequest.category,
+          supportType: 'consultation'
+        };
+
+        await StaffCardInterviewService.handleInterviewCompletion(completedInterviewData);
+        console.log('サポート面談の職員カルテ同期完了:', completedInterviewData);
+      } catch (error) {
+        console.error('サポート面談の職員カルテ同期エラー:', error);
+      }
       
       // VoiceDriveへの通知（実装時）
       // await VoiceDriveIntegrationService.sendInterviewResult(...);

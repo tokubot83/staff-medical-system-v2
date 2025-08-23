@@ -18,6 +18,30 @@ export const INTERVIEW_CATEGORY_MAPPING = {
 
 export type InterviewTabCategory = keyof typeof INTERVIEW_CATEGORY_MAPPING;
 
+// 完了した面談データ
+export interface CompletedInterviewData {
+  id: string;
+  staffId: string;
+  staffName: string;
+  type: 'regular' | 'special' | 'support';
+  subtype?: string;
+  date: string;
+  duration?: number;
+  responses: Array<{
+    questionId: string;
+    response: string;
+  }>;
+  summary: string;
+  feedback: string;
+  nextActions: string[];
+  status: 'completed';
+  completedAt: string;
+  interviewer: string;
+  reason?: string;
+  category?: string;
+  supportType?: string;
+}
+
 // 面談サマリーデータ型定義
 export interface InterviewSummaryData {
   criticalStatus: {
@@ -187,7 +211,7 @@ export class StaffCardInterviewService {
     const responsesWithData = allInterviews
       .filter(interview => 
         interview.status === 'completed' && 
-        interview.responses?.[questionId]
+        interview.responses && interview.responses[questionId]
       )
       .map(interview => ({
         date: new Date(interview.conductedAt || interview.scheduledDate),
@@ -215,8 +239,8 @@ export class StaffCardInterviewService {
   /**
    * 面談完了時の職員カルテ自動更新
    */
-  static async handleInterviewCompletion(completedInterview: any) {
-    const staffId = completedInterview.employeeId;
+  static async handleInterviewCompletion(completedInterview: CompletedInterviewData): Promise<void> {
+    const staffId = completedInterview.staffId;
     
     try {
       // 面談履歴の更新
