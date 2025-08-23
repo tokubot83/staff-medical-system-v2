@@ -63,20 +63,20 @@ export default function DashboardPage() {
   // 現在の月を取得
   const currentMonth = new Date().getMonth() + 1;
   const [activeTab, setActiveTab] = useState<'home' | 'guide' | 'progress' | 'settings' | 'reports'>('home');
-  const [storyActiveTab, setStoryActiveTab] = useState<'新人' | '一般' | '中堅' | 'ベテラン' | '管理職' | '評価制度' | 'シミュレーション'>('新人');
+  const [storyActiveTab, setStoryActiveTab] = useState<'新人' | '一般' | '中堅' | 'ベテラン' | '管理職' | '評価制度' | 'シミュレーション'>('評価制度');
 
   const completionRate = Math.round((evaluationProgress.completed / evaluationProgress.total) * 100);
 
 
   // 世代別ストーリータブの定義
   const storyTabs = [
+    { id: '評価制度', label: '評価制度', icon: '📋', character: '制度解説' },
+    { id: 'シミュレーション', label: '年間UI体験', icon: '🖥️', character: 'システム体験' },
     { id: '新人', label: '新人（1年目）', icon: '🌱', character: '田中さん' },
     { id: '一般', label: '一般（2-3年）', icon: '🌿', character: '佐藤さん' },
     { id: '中堅', label: '中堅（4-10年）', icon: '🌳', character: '山田さん' },
     { id: 'ベテラン', label: 'ベテラン（11年以上）', icon: '🎋', character: '高橋さん' },
-    { id: '管理職', label: '管理職（主任・師長）', icon: '👑', character: '伊藤主任' },
-    { id: '評価制度', label: 'V3評価制度', icon: '📋', character: '制度解説' },
-    { id: 'シミュレーション', label: '年間UI体験', icon: '🖥️', character: 'システム体験' }
+    { id: '管理職', label: '管理職（主任・師長）', icon: '👑', character: '伊藤主任' }
   ];
 
   return (
@@ -2218,7 +2218,7 @@ export default function DashboardPage() {
                   {storyActiveTab === '評価制度' && (
                     <div>
                       <div className="mb-4 p-3 bg-blue-50 rounded-lg border-l-4 border-blue-500">
-                        <h3 className="font-semibold text-blue-900">📋 V3評価制度 完全ガイド</h3>
+                        <h3 className="font-semibold text-blue-900">📋 評価制度 完全ガイド</h3>
                         <p className="text-sm text-blue-700 mt-1">2025年3月開始の新評価制度の詳細解説</p>
                       </div>
 
