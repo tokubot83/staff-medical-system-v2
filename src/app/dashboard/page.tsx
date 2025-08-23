@@ -350,6 +350,86 @@ export default function DashboardPage() {
           </Card>
             </div>
 
+            {/* 最終判定カード - 3月～5月限定表示 */}
+            {(currentMonth >= 3 && currentMonth <= 5) && (
+              <Card className="rounded-xl border-2 border-red-500 shadow-xl hover:shadow-2xl transition-all bg-gradient-to-br from-red-600 to-orange-600 text-white relative overflow-hidden">
+                <div className="absolute top-2 right-2">
+                  <Badge className="bg-yellow-400 text-yellow-900">3-5月限定</Badge>
+                </div>
+                <CardHeader className="pb-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="p-3 bg-white/20 rounded-lg backdrop-blur">
+                        <BarChart3 className="h-8 w-8 text-white" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-2xl font-bold text-white">最終判定</CardTitle>
+                        <CardDescription className="text-red-100 mt-1">
+                          100点満点から7段階成績を決定
+                        </CardDescription>
+                      </div>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="p-3 bg-white/10 rounded-lg backdrop-blur">
+                    <h4 className="text-sm font-bold text-red-100 mb-3">処理状況：</h4>
+                    <div className="grid grid-cols-3 gap-3">
+                      <div>
+                        <p className="text-xs text-red-200">技術評価収集</p>
+                        <p className="text-xl font-bold">250/500名</p>
+                        <Progress value={50} className="h-2 mt-1 bg-white/20" />
+                      </div>
+                      <div>
+                        <p className="text-xs text-red-200">暫定判定済</p>
+                        <p className="text-xl font-bold">180名</p>
+                        <Progress value={36} className="h-2 mt-1 bg-white/20" />
+                      </div>
+                      <div>
+                        <p className="text-xs text-red-200">最終確定</p>
+                        <p className="text-xl font-bold">0名</p>
+                        <Progress value={0} className="h-2 mt-1 bg-white/20" />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="p-3 bg-white/10 rounded-lg backdrop-blur">
+                    <h4 className="text-sm font-bold text-red-100 mb-2">判定プロセス：</h4>
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                      <div className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-green-300" />
+                        <span>施設内相対評価（5段階）</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-green-300" />
+                        <span>法人内相対評価（5段階）</span>
+                      </div>
+                      <div className="flex items-center gap-2 col-span-2">
+                        <CheckCircle className="h-4 w-4 text-green-300" />
+                        <span>2軸マトリックス最終判定（S+/S/A+/A/B/C/D）</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <Link href="/evaluation-relative-grading" className="flex-1">
+                      <Button className="w-full bg-white text-red-600 hover:bg-red-50">
+                        <BarChart3 className="mr-2 h-5 w-5" />
+                        判定実行画面へ
+                      </Button>
+                    </Link>
+                    <Button 
+                      variant="ghost" 
+                      className="text-white hover:bg-white/20"
+                      title="最終判定について"
+                    >
+                      <HelpCircle className="h-5 w-5" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
             {/* 全体進捗バー */}
             <Card className="bg-white">
               <CardContent className="p-6">
