@@ -1288,4 +1288,4 @@ export default function Home() {
      <OfflineIndicator showDetails />
     </div>
   );
-}
+}// Vercel rebuild trigger: 1755915185

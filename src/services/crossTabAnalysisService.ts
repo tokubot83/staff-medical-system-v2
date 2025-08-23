@@ -6,6 +6,8 @@
 
 import { StaffCardInterviewService } from './staffCardInterviewService';
 import { PersonalEvaluationService } from './evaluationV3Service';
+import { RecruitmentAnalysisService } from './recruitmentAnalysisService';
+import { TrainingAnalysisService } from './trainingAnalysisService';
 
 // 横断分析データ型定義
 export interface CrossTabAnalysisData {
@@ -117,22 +119,23 @@ export class CrossTabAnalysisService {
    */
   static async generateCrossTabAnalysis(staffId: string): Promise<CrossTabAnalysisData> {
     try {
-      // 各タブからデータ収集
-      const [evaluationData, interviewData, trainingData] = await Promise.all([
+      // 各システムからの統合データ収集
+      const [evaluationData, interviewData, recruitmentData, trainingData] = await Promise.all([
         this.getEvaluationData(staffId),
         this.getInterviewData(staffId),
-        this.getTrainingData(staffId)
+        RecruitmentAnalysisService.generateRecruitmentAnalysis(staffId),
+        TrainingAnalysisService.generateTrainingAnalysis(staffId)
       ]);
 
-      // 統合分析データを構築
+      // 統合分析データを構築（4システム統合）
       const analysisData: CrossTabAnalysisData = {
         staffId,
         staffName: evaluationData.staffName,
-        growthStory: await this.buildGrowthStory(staffId, evaluationData, interviewData, trainingData),
+        growthStory: await this.buildIntegratedGrowthStory(staffId, evaluationData, interviewData, recruitmentData, trainingData),
         evaluationWaterfall: this.buildEvaluationWaterfall(evaluationData),
-        staffPortfolio: this.buildStaffPortfolio(staffId, evaluationData, trainingData),
-        strengthsWeaknesses: this.buildStrengthsWeaknesses(evaluationData, interviewData, trainingData),
-        growthPrediction: this.buildGrowthPrediction(evaluationData, interviewData, trainingData)
+        staffPortfolio: this.buildEnhancedStaffPortfolio(staffId, evaluationData, recruitmentData, trainingData),
+        strengthsWeaknesses: this.buildIntegratedStrengthsWeaknesses(evaluationData, interviewData, recruitmentData, trainingData),
+        growthPrediction: this.buildAdvancedGrowthPrediction(evaluationData, interviewData, recruitmentData, trainingData)
       };
 
       return analysisData;
@@ -194,39 +197,75 @@ export class CrossTabAnalysisService {
   }
 
   /**
-   * 成長ストーリー構築
+   * 統合成長ストーリー構築（4システム統合版）
    */
-  private static async buildGrowthStory(staffId: string, evaluation: any, interview: any, training: any) {
+  private static async buildIntegratedGrowthStory(staffId: string, evaluation: any, interview: any, recruitment: any, training: any) {
+    // 4システム統合タイムライン構築
     const timeline = [
+      {
+        date: '2021-04',
+        event: '新卒採用・入職',
+        category: 'development' as const,
+        impact: 'positive' as const,
+        description: `${recruitment.recruitmentInfo.recruitmentSource}として入職。適性評価${recruitment.aptitudeAssessment.overallFit}点で高いポテンシャルを示す`
+      },
+      {
+        date: '2021-06',
+        event: 'オンボーディング完了',
+        category: 'development' as const,
+        impact: 'positive' as const,
+        description: `試用期間${recruitment.recruitmentInfo.probationResult}。基礎研修修了し現場配属`
+      },
+      {
+        date: '2022-03',
+        event: '初回面談・成長計画策定',
+        category: 'interview' as const,
+        impact: 'positive' as const,
+        description: 'キャリア目標設定と個人成長プラン策定。専門性向上にフォーカス'
+      },
+      {
+        date: '2022-09',
+        event: '専門研修受講開始',
+        category: 'training' as const,
+        impact: 'positive' as const,
+        description: `年間${training.trainingSummary.totalHours}時間の計画的学習プログラム開始`
+      },
       {
         date: '2024-01',
         event: 'V3評価B+達成',
         category: 'evaluation' as const,
         impact: 'positive' as const,
         score: 78.5,
-        description: '技術評価で安定した成果を達成'
+        description: '技術評価で安定した成果を達成。研修効果が評価に反映'
       },
       {
         date: '2024-03',
-        event: '年次面談実施',
+        event: '年次面談・昇進候補認定',
         category: 'interview' as const,
         impact: 'positive' as const,
-        description: 'キャリア目標設定とリーダーシップ開発計画策定'
+        description: 'リーダーシップ開発計画策定。次期主任候補として認定'
       },
       {
         date: '2024-06',
         event: 'リーダーシップ研修完了',
         category: 'training' as const,
         impact: 'positive' as const,
-        description: 'チーム運営スキル向上、実践準備完了'
+        description: `${training.learningEffectiveness.overallEffectiveness}%の高い学習効果でチーム運営スキル習得`
       },
       {
         date: '2024-10',
-        event: 'V3評価A達成',
+        event: 'V3評価A達成・配属変更',
         category: 'evaluation' as const,
         impact: 'positive' as const,
         score: 81.25,
-        description: '組織貢献度向上により総合評価がAランクに'
+        description: '組織貢献度向上により総合評価Aランク。新配属で責任範囲拡大'
+      },
+      {
+        date: '2024-11',
+        event: '専門認定資格取得',
+        category: 'training' as const,
+        impact: 'positive' as const,
+        description: '感染管理認定看護師資格取得。専門性と組織価値向上を実現'
       }
     ];
 
@@ -234,8 +273,10 @@ export class CrossTabAnalysisService {
       timeline,
       overallTrend: 'improving' as const,
       keyMilestones: [
+        '新卒採用・入職（高適性評価）',
+        '体系的研修プログラム完了',
         'V3評価Aグレード達成',
-        'リーダーシップ研修修了',
+        '専門認定資格取得',
         '次期主任候補認定'
       ]
     };
@@ -280,11 +321,16 @@ export class CrossTabAnalysisService {
   }
 
   /**
-   * 職員ポートフォリオ分析
+   * 強化版職員ポートフォリオ分析（採用・研修データ統合）
    * 指示書原則：散布図で四象限分割、平均線によるセグメント
    */
-  private static buildStaffPortfolio(staffId: string, evaluation: any, training: any) {
-    const skillLevel = (evaluation.technicalScore + training.skillGrowth.reduce((acc: number, skill: any) => acc + skill.current, 0) / training.skillGrowth.length) / 2;
+  private static buildEnhancedStaffPortfolio(staffId: string, evaluation: any, recruitment: any, training: any) {
+    // 統合スキルレベル算出（評価・研修・適性データ統合）
+    const evaluationSkill = evaluation.technicalScore;
+    const trainingSkill = training.skillGrowth.technical.reduce((acc: number, skill: any) => acc + skill.currentLevel, 0) / training.skillGrowth.technical.length;
+    const aptitudeScore = recruitment.aptitudeAssessment.overallFit;
+    
+    const skillLevel = (evaluationSkill + trainingSkill + aptitudeScore) / 3;
     const performance = evaluation.currentScore;
     
     // 四象限判定（平均値を基準）
@@ -305,22 +351,35 @@ export class CrossTabAnalysisService {
     return {
       skillLevel,
       performance,
-      experienceYears: 4, // バブルサイズ用
+      experienceYears: recruitment.placementHistory.length, // 配属経験数をサイズに反映
       quadrant,
       quadrantLabel: PORTFOLIO_QUADRANTS[quadrant].label
     };
   }
 
   /**
-   * 統合強み・課題分析
+   * 統合強み・課題分析（4システム統合版）
    * 指示書原則：重要度順配置、色で強調
    */
-  private static buildStrengthsWeaknesses(evaluation: any, interview: any, training: any) {
+  private static buildIntegratedStrengthsWeaknesses(evaluation: any, interview: any, recruitment: any, training: any) {
+    // 4システム統合強み分析
     const strengths = [
       {
         item: 'V3評価での安定した成果',
         source: 'evaluation' as const,
         score: evaluation.currentScore,
+        trend: 'improving' as const
+      },
+      {
+        item: '高い職務適性・組織適合度',
+        source: 'development' as const,
+        score: recruitment.aptitudeAssessment.overallFit,
+        trend: 'stable' as const
+      },
+      {
+        item: '継続的な学習・研修姿勢',
+        source: 'training' as const,
+        score: training.learningEffectiveness.overallEffectiveness,
         trend: 'improving' as const
       },
       {
@@ -330,20 +389,21 @@ export class CrossTabAnalysisService {
         trend: 'stable' as const
       },
       {
-        item: '専門技術スキル',
+        item: '専門技術スキルの体系的向上',
         source: 'training' as const,
-        score: 85,
+        score: training.skillGrowth.technical[0]?.currentLevel || 85,
         trend: 'improving' as const
       }
     ].sort((a, b) => b.score - a.score); // 重要度順（スコア順）
 
+    // 4システム統合改善点分析
     const improvements = [
       {
         item: 'リーダーシップスキル',
         source: 'training' as const,
         priority: 'high' as const,
-        score: 72,
-        actionRequired: '管理職研修受講'
+        score: training.skillGrowth.leadership?.[0]?.currentLevel || 72,
+        actionRequired: '管理職研修受講・実践経験積累'
       },
       {
         item: '法人規模での貢献',
@@ -353,11 +413,25 @@ export class CrossTabAnalysisService {
         actionRequired: 'クロスファンクショナルプロジェクト参加'
       },
       {
-        item: '後輩指導スキル',
+        item: '昇進に向けた戦略的キャリア構築',
+        source: 'development' as const,
+        priority: 'high' as const,
+        score: recruitment.careerPath.promotionReadiness,
+        actionRequired: '主任候補研修・後輩指導経験'
+      },
+      {
+        item: '研修効果の実務適用率向上',
+        source: 'training' as const,
+        priority: 'medium' as const,
+        score: training.learningEffectiveness.skillApplication,
+        actionRequired: '学習内容の現場実践強化'
+      },
+      {
+        item: '面談フォローアップ・目標達成度',
         source: 'interview' as const,
         priority: 'medium' as const,
         score: 75,
-        actionRequired: 'メンター制度参加'
+        actionRequired: '定期面談での進捗確認・調整'
       }
     ].sort((a, b) => {
       const priorityOrder = { high: 3, medium: 2, low: 1 };
@@ -368,36 +442,98 @@ export class CrossTabAnalysisService {
   }
 
   /**
-   * 成長予測データ構築
+   * 高度成長予測データ構築（4システム統合版）
    * 指示書原則：複合グラフで異なる性質の指標を同時表示
    */
-  private static buildGrowthPrediction(evaluation: any, interview: any, training: any) {
-    const historicalGrowth = evaluation.history.map((h: any, index: number) => ({
-      date: h.date,
-      actualScore: h.score,
-      projectedScore: index === evaluation.history.length - 1 ? undefined : h.score + 2.5 // 予測トレンド
-    }));
+  private static buildAdvancedGrowthPrediction(evaluation: any, interview: any, recruitment: any, training: any) {
+    // 統合データから成長トレンドを算出
+    const baseGrowthRate = 0.75; // 基礎成長率
+    const trainingBoost = training.learningEffectiveness.overallEffectiveness / 100 * 0.5; // 研修効果による加速
+    const aptitudeMultiplier = recruitment.aptitudeAssessment.overallFit / 100; // 適性による成長ポテンシャル
+    
+    const historicalGrowth = evaluation.history.map((h: any, index: number) => {
+      // 実績データ
+      const actualScore = h.score;
+      
+      // 予測算出（研修効果と適性を考慮）
+      let projectedScore = undefined;
+      if (index < evaluation.history.length - 1) {
+        const nextActualScore = evaluation.history[index + 1].score;
+        const predictedGrowth = (baseGrowthRate + trainingBoost) * aptitudeMultiplier;
+        projectedScore = actualScore + predictedGrowth;
+      }
+      
+      return {
+        date: h.date,
+        actualScore,
+        projectedScore
+      };
+    });
 
-    // 未来予測を追加
+    // 高度予測：4システム統合による将来予測
+    const currentScore = evaluation.currentScore;
+    const futureGrowthRate = (baseGrowthRate + trainingBoost) * aptitudeMultiplier * 1.1; // 将来加速率
+    
+    // 短期予測（3ヶ月後）
     historicalGrowth.push({
       date: '2025-01',
       actualScore: undefined,
-      projectedScore: 84
+      projectedScore: Math.min(currentScore + futureGrowthRate * 3, 90) // Sグレード上限
     });
+    
+    // 中期予測（6ヶ月後）
+    historicalGrowth.push({
+      date: '2025-04',
+      actualScore: undefined,
+      projectedScore: Math.min(currentScore + futureGrowthRate * 6, 92)
+    });
+    
+    // 長期予測（1年後）
+    historicalGrowth.push({
+      date: '2025-10',
+      actualScore: undefined,
+      projectedScore: Math.min(currentScore + futureGrowthRate * 12, 95)
+    });
+
+    // マイルストーン予測（統合分析による達成確率算出）
+    const sGradeRequiredScore = 90;
+    const currentSkillGap = sGradeRequiredScore - currentScore;
+    const monthsToTarget = Math.ceil(currentSkillGap / futureGrowthRate);
+    
+    // 達成確率算出（4要素統合）
+    const evaluationReadiness = Math.min(currentScore / sGradeRequiredScore * 100, 100);
+    const trainingReadiness = training.learningEffectiveness.overallEffectiveness;
+    const aptitudeReadiness = recruitment.aptitudeAssessment.overallFit;
+    const interviewMotivation = 85; // 面談での意欲度スコア（仮）
+    
+    const overallProbability = Math.round(
+      (evaluationReadiness + trainingReadiness + aptitudeReadiness + interviewMotivation) / 4
+    );
+
+    // キャリアパス予測（採用・研修データ統合）
+    const promotionReadiness = recruitment.careerPath.promotionReadiness;
+    const skillDevelopmentRate = training.skillGrowth.leadership?.[0]?.progressRate || 75;
+    const combinedReadiness = Math.round((promotionReadiness + skillDevelopmentRate) / 2);
 
     return {
       historicalGrowth,
       nextMilestone: {
         target: 'V3評価Sグレード達成',
-        timeframe: '2025年度内',
-        probability: 75,
-        requirements: ['法人規模プロジェクト参加', 'リーダーシップ研修修了', '後輩指導実績']
+        timeframe: monthsToTarget <= 6 ? '6ヶ月以内' : monthsToTarget <= 12 ? '1年以内' : '1年超',
+        probability: Math.min(overallProbability, 85), // 現実的な上限設定
+        requirements: overallProbability >= 80 ? 
+          ['現行研修継続', '実践経験積累'] : 
+          overallProbability >= 65 ? 
+          ['法人規模プロジェクト参加', 'リーダーシップ研修修了', '後輩指導実績'] :
+          ['集中的スキル強化', '個別指導計画', 'メンター制度活用']
       },
       careerPath: {
-        currentLevel: '中堅看護師',
-        nextLevel: '主任候補',
-        progressPercentage: 65,
-        estimatedTimeToPromotion: '1.5年'
+        currentLevel: recruitment.placementHistory[0]?.position || '看護師',
+        nextLevel: combinedReadiness >= 75 ? '主任候補' : combinedReadiness >= 60 ? '先輩職員' : '現職継続',
+        progressPercentage: combinedReadiness,
+        estimatedTimeToPromotion: combinedReadiness >= 75 ? 
+          '1年以内' : combinedReadiness >= 60 ? 
+          '1.5-2年' : '2年以上'
       }
     };
   }

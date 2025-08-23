@@ -5,6 +5,9 @@
 
 import { AppError as IAppError, ErrorLevel, ErrorCategory } from './ErrorTypes';
 
+// 他のファイルから使用できるようにエクスポート
+export { ErrorLevel, ErrorCategory } from './ErrorTypes';
+
 export class AppError extends Error implements IAppError {
   id?: string;
   code: string;
