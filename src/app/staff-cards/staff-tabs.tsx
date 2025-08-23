@@ -14,6 +14,8 @@ import ComprehensiveGrowthTrend from '@/components/charts/ComprehensiveGrowthTre
 import StaffPortfolioAnalysis from '@/components/charts/StaffPortfolioAnalysis'
 import StrengthsWeaknessesMap from '@/components/charts/StrengthsWeaknessesMap'
 import GrowthPredictionDashboard from '@/components/charts/GrowthPredictionDashboard'
+import { RecruitmentAnalysisService } from '@/services/recruitmentAnalysisService'
+import RecruitmentDashboard from '@/components/recruitment/RecruitmentDashboard'
 import styles from './StaffCards.module.css'
 
 // V3グレード定義
@@ -547,8 +549,9 @@ export function RecruitmentTab({ selectedStaff }: { selectedStaff: any }) {
   const router = useRouter()
   const { handleError, clearError } = useErrorHandler()
   const [recruitmentData, setRecruitmentData] = useState<any>(null)
+  const [recruitmentAnalysisData, setRecruitmentAnalysisData] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [activeRecruitmentTab, setActiveRecruitmentTab] = useState('overview')
+  const [activeRecruitmentTab, setActiveRecruitmentTab] = useState('dashboard')
 
   if (!selectedStaff) {
     return (
@@ -562,6 +565,10 @@ export function RecruitmentTab({ selectedStaff }: { selectedStaff: any }) {
     const loadRecruitmentData = async () => {
       try {
         setIsLoading(true)
+        
+        // 採用分析データを生成
+        const analysisData = await RecruitmentAnalysisService.generateRecruitmentAnalysis(selectedStaff.id)
+        setRecruitmentAnalysisData(analysisData)
         
         // 採用・配属履歴データ（モック）
         const mockRecruitmentData = {
@@ -622,6 +629,13 @@ export function RecruitmentTab({ selectedStaff }: { selectedStaff: any }) {
             careerGoals: ['主任昇進', '専門分野のスペシャリスト'],
             mentorshipNeeds: ['リーダーシップ開発', '法人規模プロジェクト経験'],
             nextPlacementRecommendation: '内科系リーダー候補ポジション'
+          },
+          onboardingProgress: {
+            orientation: true,
+            mentorAssigned: true,
+            skillAssessment: true,
+            probationReview: true,
+            completionRate: 100
           }
         }
 
@@ -645,18 +659,20 @@ export function RecruitmentTab({ selectedStaff }: { selectedStaff: any }) {
   }, [selectedStaff?.id])
 
   const recruitmentSubTabs = [
-    { id: 'overview', label: '概要', icon: '📋' },
+    { id: 'dashboard', label: '統合ダッシュボード', icon: '🔮' },
+    { id: 'overview', label: '採用概要', icon: '📋' },
     { id: 'placement', label: '配属履歴', icon: '🏢' },
-    { id: 'aptitude', label: '適性評価', icon: '🎯' }
+    { id: 'aptitude', label: '適性評価', icon: '🎯' },
+    { id: 'career', label: 'キャリア計画', icon: '🚀' }
   ]
 
   return (
     <div className={styles.tabContentSection}>
       <div className={styles.sectionHeader}>
-        <h2>🏢 採用・配属管理</h2>
+        <h2>👋 採用・配属統合分析</h2>
         <div className={styles.sectionActions}>
-          <button className={styles.actionButtonSecondary}>
-            配属履歴詳細
+          <button className={styles.actionButton} onClick={() => router.push('/recruitment-management')}>
+            採用管理詳細
           </button>
         </div>
       </div>
@@ -682,6 +698,10 @@ export function RecruitmentTab({ selectedStaff }: { selectedStaff: any }) {
         </div>
       ) : (
         <>
+          {activeRecruitmentTab === 'dashboard' && recruitmentAnalysisData && (
+            <RecruitmentDashboard data={recruitmentAnalysisData} />
+          )}
+
           {activeRecruitmentTab === 'overview' && (
             <div className={styles.recruitmentOverview}>
               <div className={styles.recruitmentSummaryCard}>
@@ -829,6 +849,112 @@ export function RecruitmentTab({ selectedStaff }: { selectedStaff: any }) {
                 <div className={styles.fitAssessment}>
                   現在の配属における適性度が高く、継続的な成長が期待できます。
                   V3評価システムとの相関性も良好です。
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeRecruitmentTab === 'career' && recruitmentAnalysisData && (
+            <div className={styles.careerPlanSection}>
+              {/* キャリア開発計画の概要 */}
+              <div 
+                className="mb-4 p-3 rounded-lg border-l-4"
+                style={{ 
+                  borderLeftColor: '#2563eb',
+                  backgroundColor: 'rgba(37, 99, 235, 0.1)' 
+                }}
+              >
+                <h3 className="text-lg font-semibold mb-2">
+                  🚀 キャリア開発計画
+                </h3>
+                <p className="text-gray-700">
+                  {recruitmentAnalysisData.staffName}さんの希望専門分野
+                  <span style={{ color: '#16a34a', fontWeight: 'bold' }}>
+                    「{recruitmentAnalysisData.careerPath.preferredSpecialty}」
+                  </span>
+                  での成長を支援。昇進準備度
+                  <span style={{ color: '#2563eb', fontWeight: 'bold' }}>
+                    {recruitmentAnalysisData.careerPath.promotionReadiness}%
+                  </span>
+                  で順調に進捗中です。
+                </p>
+              </div>
+
+              {/* キャリア目標 */}
+              <div className={styles.careerGoalsCard}>
+                <h4>🎯 キャリア目標</h4>
+                <div className={styles.goalsList}>
+                  {recruitmentAnalysisData.careerPath.careerGoals.map((goal: string, index: number) => (
+                    <div key={index} className={styles.goalItem}>
+                      <span className={styles.goalIcon}>•</span>
+                      <span className={styles.goalText}>{goal}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* 能力開発計画 */}
+              <div className={styles.developmentPlanCard}>
+                <h4>📈 能力開発計画</h4>
+                <div className={styles.developmentGrid}>
+                  {recruitmentAnalysisData.careerPath.developmentPlan.map((plan: any, index: number) => (
+                    <div key={index} className={styles.developmentItem}>
+                      <div className={styles.developmentHeader}>
+                        <span className={styles.skillName}>{plan.skill}</span>
+                        <span className={styles.timeline}>{plan.timeline}</span>
+                      </div>
+                      <div className={styles.skillProgress}>
+                        <div className={styles.progressBar}>
+                          <div 
+                            className={styles.progressFill}
+                            style={{ width: `${(plan.currentLevel / plan.targetLevel) * 100}%` }}
+                          />
+                        </div>
+                        <span className={styles.progressText}>
+                          {plan.currentLevel} → {plan.targetLevel}
+                        </span>
+                      </div>
+                      <div className={styles.method}>{plan.method}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* メンターシップニーズ */}
+              <div className={styles.mentorshipCard}>
+                <h4>🤝 メンターシップニーズ</h4>
+                <div className={styles.mentorshipList}>
+                  {recruitmentAnalysisData.careerPath.mentorshipNeeds.map((need: string, index: number) => (
+                    <div key={index} className={styles.mentorshipItem}>
+                      <span className={styles.needIcon}>🎓</span>
+                      <span className={styles.needText}>{need}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* 昇進予測 */}
+              <div 
+                className="p-4 rounded-lg border-l-4"
+                style={{ 
+                  borderLeftColor: '#16a34a',
+                  backgroundColor: 'rgba(22, 163, 74, 0.1)' 
+                }}
+              >
+                <h4 className="font-medium mb-2">📊 昇進予測分析</h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <span className="text-sm text-gray-600">次期配属推奨:</span>
+                    <div className="font-medium text-blue-700">
+                      {recruitmentAnalysisData.careerPath.nextPlacementRecommendation}
+                    </div>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-600">予想昇進時期:</span>
+                    <div className="font-medium text-green-700">
+                      {recruitmentAnalysisData.careerPath.estimatedPromotionTimeframe}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
