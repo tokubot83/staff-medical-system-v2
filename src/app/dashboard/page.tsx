@@ -35,7 +35,6 @@ import {
   Bell,
   Building,
   Download,
-  PlayCircle,
   ListChecks,
   Zap,
   HelpCircle,
@@ -43,11 +42,10 @@ import {
   ClipboardList,
   UserCheck,
   UserPlus,
-  FilePlus,
   Database,
   RefreshCw,
   Eye,
-  Send,
+  Rocket,
   MessageSquare,
   Archive
 } from 'lucide-react';
@@ -101,62 +99,6 @@ export default function DashboardPage() {
 
           {activeTab === 'home' && (
             <div className="space-y-6 p-6">
-            {/* クイックアクションセクション */}
-            <div className="mb-8">
-              <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-                <Zap className="h-5 w-5 text-yellow-500" />
-                今すぐ実行できるアクション
-              </h2>
-              <div className="grid grid-cols-4 gap-4">
-                <Link href="/evaluation-execution/new">
-                  <Card className="hover:shadow-xl transition-all cursor-pointer border-2 border-transparent hover:border-blue-400 bg-gradient-to-br from-blue-50 to-blue-100">
-                    <CardContent className="p-6 text-center">
-                      <div className="mx-auto mb-3 p-3 bg-blue-500 rounded-full w-fit">
-                        <PlayCircle className="h-8 w-8 text-white" />
-                      </div>
-                      <h3 className="font-bold text-blue-900 mb-1">新規評価開始</h3>
-                      <p className="text-xs text-blue-700">評価を今すぐ開始</p>
-                    </CardContent>
-                  </Card>
-                </Link>
-                
-                <Link href="/evaluation-design/templates">
-                  <Card className="hover:shadow-xl transition-all cursor-pointer border-2 border-transparent hover:border-purple-400 bg-gradient-to-br from-purple-50 to-purple-100">
-                    <CardContent className="p-6 text-center">
-                      <div className="mx-auto mb-3 p-3 bg-purple-500 rounded-full w-fit">
-                        <FilePlus className="h-8 w-8 text-white" />
-                      </div>
-                      <h3 className="font-bold text-purple-900 mb-1">テンプレート作成</h3>
-                      <p className="text-xs text-purple-700">評価項目を設定</p>
-                    </CardContent>
-                  </Card>
-                </Link>
-                
-                <Link href="/reminders/send">
-                  <Card className="hover:shadow-xl transition-all cursor-pointer border-2 border-transparent hover:border-orange-400 bg-gradient-to-br from-orange-50 to-orange-100">
-                    <CardContent className="p-6 text-center">
-                      <div className="mx-auto mb-3 p-3 bg-orange-500 rounded-full w-fit">
-                        <Send className="h-8 w-8 text-white" />
-                      </div>
-                      <h3 className="font-bold text-orange-900 mb-1">リマインド送信</h3>
-                      <p className="text-xs text-orange-700">未完了者に通知</p>
-                    </CardContent>
-                  </Card>
-                </Link>
-                
-                <Link href="/reports/export">
-                  <Card className="hover:shadow-xl transition-all cursor-pointer border-2 border-transparent hover:border-green-400 bg-gradient-to-br from-green-50 to-green-100">
-                    <CardContent className="p-6 text-center">
-                      <div className="mx-auto mb-3 p-3 bg-green-500 rounded-full w-fit">
-                        <Download className="h-8 w-8 text-white" />
-                      </div>
-                      <h3 className="font-bold text-green-900 mb-1">レポート出力</h3>
-                      <p className="text-xs text-green-700">評価結果を出力</p>
-                    </CardContent>
-                  </Card>
-                </Link>
-              </div>
-            </div>
 
             {/* メイン機能 - 最重要 */}
             <div className="grid grid-cols-2 gap-6 mb-8">
