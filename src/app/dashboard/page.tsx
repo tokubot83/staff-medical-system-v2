@@ -35,6 +35,7 @@ import {
   Bell,
   Building,
   Download,
+  PlayCircle,
   ListChecks,
   Zap,
   HelpCircle,
