@@ -2402,7 +2402,159 @@ export default function DashboardPage() {
                         <p className="text-sm text-green-700 mt-1">実際のシステム画面を時系列で体験</p>
                       </div>
 
+                      {/* 年間評価サイクル概要 */}
+                      <div className="p-4 bg-gradient-to-r from-blue-50 to-green-50 rounded-lg border-2 border-blue-300 mb-6">
+                        <h4 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
+                          <span className="text-blue-600">📆</span>
+                          年間評価サイクル全体像
+                        </h4>
+                        <div className="flex items-center justify-between text-sm">
+                          <div className="flex items-center gap-2">
+                            <div className="px-3 py-1 bg-green-500 text-white rounded-full font-bold">8月</div>
+                            <span className="text-green-700">夏季組織貢献</span>
+                          </div>
+                          <ChevronRight className="h-4 w-4 text-gray-400" />
+                          <div className="flex items-center gap-2">
+                            <div className="px-3 py-1 bg-purple-500 text-white rounded-full font-bold">12月</div>
+                            <span className="text-purple-700">冬季組織貢献</span>
+                          </div>
+                          <ChevronRight className="h-4 w-4 text-gray-400" />
+                          <div className="flex items-center gap-2">
+                            <div className="px-3 py-1 bg-blue-500 text-white rounded-full font-bold">3月</div>
+                            <span className="text-blue-700">技術+組織評価</span>
+                          </div>
+                          <ChevronRight className="h-4 w-4 text-gray-400" />
+                          <div className="flex items-center gap-2">
+                            <div className="px-3 py-1 bg-red-500 text-white rounded-full font-bold">3-5月</div>
+                            <span className="text-red-700">最終判定</span>
+                          </div>
+                        </div>
+                        <div className="mt-3 p-2 bg-white rounded text-xs text-gray-600">
+                          年2回の組織貢献評価と年1回の技術評価により、職員の成長と貢献を継続的に評価
+                        </div>
+                      </div>
+
                       <div className="space-y-6">
+                        {/* 8月: 夏季組織貢献評価 */}
+                        <div className="p-4 bg-white rounded-lg border-2 border-green-500">
+                          <div className="flex items-center gap-2 mb-3">
+                            <span className="px-3 py-1 bg-green-500 text-white rounded-full text-sm font-bold">8月</span>
+                            <h4 className="font-semibold text-green-900">夏季組織貢献評価期間</h4>
+                          </div>
+                          
+                          <div className="mb-3">
+                            <div className="text-sm text-green-700 mb-2">ダッシュボードに表示される組織貢献評価カード：</div>
+                            <Card className="border-2 border-green-500 bg-gradient-to-br from-green-600 to-teal-600 text-white">
+                              <CardHeader className="pb-4">
+                                <div className="flex items-center gap-3">
+                                  <div className="p-3 bg-white/20 rounded-lg backdrop-blur">
+                                    <Users className="h-8 w-8 text-white" />
+                                  </div>
+                                  <div>
+                                    <CardTitle className="text-xl font-bold text-white">組織貢献評価（夏季）</CardTitle>
+                                    <CardDescription className="text-green-100">
+                                      上期の施設・法人貢献度を評価
+                                    </CardDescription>
+                                  </div>
+                                </div>
+                              </CardHeader>
+                              <CardContent>
+                                <div className="mb-3">
+                                  <Progress value={45} className="h-3 bg-white/20" />
+                                  <div className="flex justify-between text-sm mt-1">
+                                    <span>進捗状況</span>
+                                    <span>45% (56/125名完了)</span>
+                                  </div>
+                                </div>
+                                <div className="grid grid-cols-2 gap-3 text-sm">
+                                  <div>
+                                    <div className="text-green-100">施設貢献</div>
+                                    <div className="font-bold">25点満点</div>
+                                  </div>
+                                  <div>
+                                    <div className="text-green-100">法人貢献</div>
+                                    <div className="font-bold">25点満点</div>
+                                  </div>
+                                </div>
+                                <Button className="w-full mt-3 bg-white text-green-600 hover:bg-green-50" disabled>
+                                  <TrendingUp className="mr-2 h-4 w-4" />
+                                  貢献度評価開始（デモ用・非アクティブ）
+                                </Button>
+                              </CardContent>
+                            </Card>
+                          </div>
+                          
+                          <div className="p-3 bg-green-50 rounded-lg border-l-4 border-green-500">
+                            <div className="text-sm font-semibold text-green-900 mb-2">8月評価の特徴：</div>
+                            <div className="space-y-1 text-sm text-green-700">
+                              <div>• 上期（4-7月）の組織貢献度を評価</div>
+                              <div>• 秋季賞与査定の基礎データとして活用</div>
+                              <div>• 技術評価は実施せず、貢献度のみ</div>
+                              <div>• 合計50点満点で評価</div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* 12月: 冬季組織貢献評価 */}
+                        <div className="p-4 bg-white rounded-lg border-2 border-purple-500">
+                          <div className="flex items-center gap-2 mb-3">
+                            <span className="px-3 py-1 bg-purple-500 text-white rounded-full text-sm font-bold">12月</span>
+                            <h4 className="font-semibold text-purple-900">冬季組織貢献評価期間</h4>
+                          </div>
+                          
+                          <div className="mb-3">
+                            <div className="text-sm text-purple-700 mb-2">ダッシュボードに表示される組織貢献評価カード：</div>
+                            <Card className="border-2 border-purple-500 bg-gradient-to-br from-purple-600 to-indigo-600 text-white">
+                              <CardHeader className="pb-4">
+                                <div className="flex items-center gap-3">
+                                  <div className="p-3 bg-white/20 rounded-lg backdrop-blur">
+                                    <Award className="h-8 w-8 text-white" />
+                                  </div>
+                                  <div>
+                                    <CardTitle className="text-xl font-bold text-white">組織貢献評価（冬季）</CardTitle>
+                                    <CardDescription className="text-purple-100">
+                                      下期の施設・法人貢献度を評価
+                                    </CardDescription>
+                                  </div>
+                                </div>
+                              </CardHeader>
+                              <CardContent>
+                                <div className="mb-3">
+                                  <Progress value={72} className="h-3 bg-white/20" />
+                                  <div className="flex justify-between text-sm mt-1">
+                                    <span>進捗状況</span>
+                                    <span>72% (90/125名完了)</span>
+                                  </div>
+                                </div>
+                                <div className="grid grid-cols-2 gap-3 text-sm">
+                                  <div>
+                                    <div className="text-purple-100">施設貢献</div>
+                                    <div className="font-bold">25点満点</div>
+                                  </div>
+                                  <div>
+                                    <div className="text-purple-100">法人貢献</div>
+                                    <div className="font-bold">25点満点</div>
+                                  </div>
+                                </div>
+                                <Button className="w-full mt-3 bg-white text-purple-600 hover:bg-purple-50" disabled>
+                                  <Award className="mr-2 h-4 w-4" />
+                                  貢献度評価開始（デモ用・非アクティブ）
+                                </Button>
+                              </CardContent>
+                            </Card>
+                          </div>
+                          
+                          <div className="p-3 bg-purple-50 rounded-lg border-l-4 border-purple-500">
+                            <div className="text-sm font-semibold text-purple-900 mb-2">12月評価の特徴：</div>
+                            <div className="space-y-1 text-sm text-purple-700">
+                              <div>• 下期（8-11月）の組織貢献度を評価</div>
+                              <div>• 春季賞与査定の基礎データとして活用</div>
+                              <div>• 3月の総合評価に向けた中間評価</div>
+                              <div>• 合計50点満点で評価</div>
+                            </div>
+                          </div>
+                        </div>
+
                         {/* 3月: 技術評価期間 */}
                         <div className="p-4 bg-white rounded-lg border-2 border-blue-500">
                           <div className="flex items-center gap-2 mb-3">
@@ -2450,6 +2602,16 @@ export default function DashboardPage() {
                                 </Button>
                               </CardContent>
                             </Card>
+                          </div>
+                          
+                          <div className="p-3 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                            <div className="text-sm font-semibold text-blue-900 mb-2">3月評価の特徴：</div>
+                            <div className="space-y-1 text-sm text-blue-700">
+                              <div>• 年1回の技術評価（50点満点）</div>
+                              <div>• 同時に組織貢献評価も実施（50点満点）</div>
+                              <div>• 合計100点満点で個人評価が確定</div>
+                              <div>• この100点が相対評価の基礎データとなる</div>
+                            </div>
                           </div>
                         </div>
 
@@ -2531,19 +2693,21 @@ export default function DashboardPage() {
                           </div>
                         </div>
 
-                        {/* 6月-2月: 通常期間 */}
+                        {/* 6月-7月: 通常期間 */}
                         <div className="p-4 bg-white rounded-lg border-2 border-gray-400">
                           <div className="flex items-center gap-2 mb-3">
-                            <span className="px-3 py-1 bg-gray-400 text-white rounded-full text-sm font-bold">6-2月</span>
-                            <h4 className="font-semibold text-gray-700">通常期間（評価カード非表示）</h4>
+                            <span className="px-3 py-1 bg-gray-400 text-white rounded-full text-sm font-bold">6-7月</span>
+                            <h4 className="font-semibold text-gray-700">通常業務期間</h4>
                           </div>
                           
                           <div className="p-3 bg-gray-50 rounded-lg">
                             <div className="text-sm text-gray-700 mb-2">
-                              評価期間外のため、技術評価・最終判定カードは表示されません。
+                              評価期間外のため、評価関連カードは表示されません。
                             </div>
                             <div className="text-xs text-gray-600">
-                              ※ 9月には組織貢献評価のみ実施（賞与査定用）
+                              • 最終評価結果に基づく昇進・昇格の実施
+                              • 個別フィードバックと成長計画策定
+                              • 次回評価に向けた目標設定
                             </div>
                           </div>
                         </div>
