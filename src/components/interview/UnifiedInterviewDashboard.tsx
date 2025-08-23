@@ -594,10 +594,6 @@ export default function UnifiedInterviewDashboard() {
               <Plus className="h-5 w-5 mr-2" />
               手動予約追加
             </Button>
-            <Button onClick={() => setShowCalendarView(!showCalendarView)} variant="outline" className="bg-white/10 text-white border-white/30 hover:bg-white/20">
-              <CalendarDays className="h-4 w-4 mr-2" />
-              {showCalendarView ? 'リスト表示' : 'カレンダー表示'}
-            </Button>
             <Button onClick={() => setShowTemplateManager(true)} variant="outline" className="bg-white/10 text-white border-white/30 hover:bg-white/20">
               <FileText className="h-4 w-4 mr-2" />
               テンプレート管理
@@ -766,6 +762,42 @@ export default function UnifiedInterviewDashboard() {
         }}
         showInCalendarView={showCalendarView}
       />
+
+      {/* 表示切り替えタブ - メインコンテンツ直上 */}
+      {!isSearchMode && (
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
+          <div className="flex border-b border-gray-200">
+            <button
+              onClick={() => setShowCalendarView(false)}
+              className={`flex-1 px-6 py-3 text-sm font-medium transition-colors flex items-center justify-center gap-2 ${
+                !showCalendarView
+                  ? 'bg-blue-50 text-blue-700 border-b-2 border-blue-500'
+                  : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              <Users className="h-4 w-4" />
+              リスト表示
+              <Badge variant="outline" className="ml-2">
+                {getTodayReservations().length}件
+              </Badge>
+            </button>
+            <button
+              onClick={() => setShowCalendarView(true)}
+              className={`flex-1 px-6 py-3 text-sm font-medium transition-colors flex items-center justify-center gap-2 ${
+                showCalendarView
+                  ? 'bg-blue-50 text-blue-700 border-b-2 border-blue-500'
+                  : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              <CalendarDays className="h-4 w-4" />
+              カレンダー表示
+              <Badge variant="outline" className="ml-2">
+                月次/週次
+              </Badge>
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* メインコンテンツエリア */}
       {isSearchMode ? (
