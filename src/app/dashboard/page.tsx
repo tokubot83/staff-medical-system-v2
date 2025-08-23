@@ -63,7 +63,7 @@ export default function DashboardPage() {
   // 現在の月を取得
   const currentMonth = new Date().getMonth() + 1;
   const [activeTab, setActiveTab] = useState<'home' | 'guide' | 'progress' | 'settings' | 'reports'>('guide');
-  const [storyActiveTab, setStoryActiveTab] = useState<'新人' | '一般' | '中堅' | 'ベテラン' | '管理職'>('新人');
+  const [storyActiveTab, setStoryActiveTab] = useState<'新人' | '一般' | '中堅' | 'ベテラン' | '管理職' | '評価制度' | 'シミュレーション'>('新人');
 
   const completionRate = Math.round((evaluationProgress.completed / evaluationProgress.total) * 100);
 
@@ -74,7 +74,9 @@ export default function DashboardPage() {
     { id: '一般', label: '一般（2-3年）', icon: '🌿', character: '佐藤さん' },
     { id: '中堅', label: '中堅（4-10年）', icon: '🌳', character: '山田さん' },
     { id: 'ベテラン', label: 'ベテラン（11年以上）', icon: '🎋', character: '高橋さん' },
-    { id: '管理職', label: '管理職（主任・師長）', icon: '👑', character: '伊藤主任' }
+    { id: '管理職', label: '管理職（主任・師長）', icon: '👑', character: '伊藤主任' },
+    { id: '評価制度', label: 'V3評価制度', icon: '📋', character: '制度解説' },
+    { id: 'シミュレーション', label: '年間UI体験', icon: '🖥️', character: 'システム体験' }
   ];
 
   return (
@@ -2204,6 +2206,371 @@ export default function DashboardPage() {
                                   まだまだ学ぶことが多いですが、本当にやりがいのある仕事です。
                                   来年は師長を目指して、さらに大きな責任を担えるよう成長したいと思います！"
                                 </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* V3評価制度解説タブ */}
+                  {storyActiveTab === '評価制度' && (
+                    <div>
+                      <div className="mb-4 p-3 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                        <h3 className="font-semibold text-blue-900">📋 V3評価制度 完全ガイド</h3>
+                        <p className="text-sm text-blue-700 mt-1">2025年3月開始の新評価制度の詳細解説</p>
+                      </div>
+
+                      {/* 制度概要 */}
+                      <div className="space-y-4">
+                        <div className="p-4 bg-white rounded-lg border border-gray-200">
+                          <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                            <span className="text-blue-600">🎯</span>
+                            V3評価制度の基本構造
+                          </h4>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="p-3 bg-blue-50 rounded border-l-4 border-blue-500">
+                              <div className="font-semibold text-blue-900">技術評価（50点）</div>
+                              <div className="text-sm text-blue-700 mt-1">
+                                • 法人統一項目（30点）<br/>
+                                • 施設特化項目（20点）<br/>
+                                • 年1回実施（3月）
+                              </div>
+                            </div>
+                            <div className="p-3 bg-green-50 rounded border-l-4 border-green-500">
+                              <div className="font-semibold text-green-900">組織貢献評価（50点）</div>
+                              <div className="text-sm text-green-700 mt-1">
+                                • 施設貢献（25点）<br/>
+                                • 法人貢献（25点）<br/>
+                                • 年2回実施（9月・3月）
+                              </div>
+                            </div>
+                          </div>
+                          <div className="mt-4 p-3 bg-yellow-50 rounded border-l-4 border-yellow-500">
+                            <div className="font-semibold text-yellow-900">合計100点満点制</div>
+                            <div className="text-sm text-yellow-700 mt-1">
+                              技術力と組織貢献のバランス評価により、患者と組織双方に価値提供する職員を適正評価
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* 相対評価システム */}
+                        <div className="p-4 bg-white rounded-lg border border-gray-200">
+                          <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                            <span className="text-purple-600">📊</span>
+                            2軸マトリックス相対評価システム
+                          </h4>
+                          <div className="space-y-3">
+                            <div className="bg-purple-50 p-3 rounded">
+                              <div className="font-semibold text-purple-900 mb-2">STEP 1: 施設内相対評価</div>
+                              <div className="text-sm text-purple-700">
+                                同職種職員を施設内で順位化し、5段階評価（S/A/B/C/D）を決定
+                              </div>
+                            </div>
+                            <div className="bg-purple-50 p-3 rounded">
+                              <div className="font-semibold text-purple-900 mb-2">STEP 2: 法人内相対評価</div>
+                              <div className="text-sm text-purple-700">
+                                同職種職員を法人全体で順位化し、5段階評価（S/A/B/C/D）を決定
+                              </div>
+                            </div>
+                            <div className="bg-gradient-to-r from-yellow-100 to-orange-100 p-3 rounded border-2 border-yellow-400">
+                              <div className="font-semibold text-orange-800 mb-2">STEP 3: 2軸マトリックス最終判定</div>
+                              <div className="text-sm text-orange-700 mb-2">
+                                施設内評価×法人内評価の組み合わせで7段階最終評価を決定
+                              </div>
+                              <div className="grid grid-cols-3 gap-2 text-xs text-center">
+                                <div className="bg-red-100 p-2 rounded font-bold text-red-800">S+ 最優秀</div>
+                                <div className="bg-orange-100 p-2 rounded font-bold text-orange-800">S 優秀</div>
+                                <div className="bg-yellow-100 p-2 rounded font-bold text-yellow-800">A+ 良好上位</div>
+                                <div className="bg-green-100 p-2 rounded font-bold text-green-800">A 良好</div>
+                                <div className="bg-blue-100 p-2 rounded font-bold text-blue-800">B 標準</div>
+                                <div className="bg-gray-100 p-2 rounded font-bold text-gray-700">C 要改善</div>
+                                <div className="bg-red-200 p-2 rounded font-bold text-red-900">D 要指導</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* 年間スケジュール */}
+                        <div className="p-4 bg-white rounded-lg border border-gray-200">
+                          <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                            <span className="text-green-600">📅</span>
+                            年間評価スケジュール
+                          </h4>
+                          <div className="space-y-3">
+                            <div className="flex items-center gap-3 p-3 bg-blue-50 rounded">
+                              <div className="font-bold text-blue-900 min-w-[60px]">3月</div>
+                              <div className="text-sm text-blue-700">
+                                <div className="font-semibold">技術評価 + 組織貢献評価実施</div>
+                                <div>→ 100点満点での個人評価確定 → 最終判定実行</div>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-3 p-3 bg-green-50 rounded">
+                              <div className="font-bold text-green-900 min-w-[60px]">4-5月</div>
+                              <div className="text-sm text-green-700">
+                                <div className="font-semibold">相対評価処理期間</div>
+                                <div>→ 最終評価確定・結果開示・異議申立対応</div>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-3 p-3 bg-yellow-50 rounded">
+                              <div className="font-bold text-yellow-900 min-w-[60px]">9月</div>
+                              <div className="text-sm text-yellow-700">
+                                <div className="font-semibold">組織貢献評価のみ実施</div>
+                                <div>→ 賞与査定・中間フィードバック</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* 職種別評価項目 */}
+                        <div className="p-4 bg-white rounded-lg border border-gray-200">
+                          <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                            <span className="text-red-600">👥</span>
+                            職種別評価項目
+                          </h4>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <div className="p-2 bg-pink-50 rounded border-l-4 border-pink-500">
+                                <div className="font-semibold text-pink-900">看護師</div>
+                                <div className="text-xs text-pink-700">
+                                  基本看護技術、専門性、患者対応、チーム医療
+                                </div>
+                              </div>
+                              <div className="p-2 bg-blue-50 rounded border-l-4 border-blue-500">
+                                <div className="font-semibold text-blue-900">准看護師</div>
+                                <div className="text-xs text-blue-700">
+                                  基本業務、指示実行、連携・報告、安全管理
+                                </div>
+                              </div>
+                            </div>
+                            <div className="space-y-2">
+                              <div className="p-2 bg-green-50 rounded border-l-4 border-green-500">
+                                <div className="font-semibold text-green-900">看護補助者</div>
+                                <div className="text-xs text-green-700">
+                                  日常業務、患者支援、環境整備、チームワーク
+                                </div>
+                              </div>
+                              <div className="p-2 bg-purple-50 rounded border-l-4 border-purple-500">
+                                <div className="font-semibold text-purple-900">介護職</div>
+                                <div className="text-xs text-purple-700">
+                                  介護技術、利用者対応、記録・報告、安全配慮
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* 評価の活用 */}
+                        <div className="p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg border-2 border-indigo-300">
+                          <h4 className="font-semibold text-indigo-900 mb-3 flex items-center gap-2">
+                            <span className="text-indigo-600">🎖️</span>
+                            評価結果の活用方法
+                          </h4>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <div className="p-2 bg-white rounded border-l-4 border-blue-500">
+                                <div className="font-semibold text-blue-900 text-sm">昇進・昇格</div>
+                                <div className="text-xs text-blue-700">継続的高評価者の優先選考</div>
+                              </div>
+                              <div className="p-2 bg-white rounded border-l-4 border-green-500">
+                                <div className="font-semibold text-green-900 text-sm">研修・教育</div>
+                                <div className="text-xs text-green-700">個別成長プラン策定</div>
+                              </div>
+                            </div>
+                            <div className="space-y-2">
+                              <div className="p-2 bg-white rounded border-l-4 border-yellow-500">
+                                <div className="font-semibold text-yellow-900 text-sm">賞与査定</div>
+                                <div className="text-xs text-yellow-700">成果に応じた適正処遇</div>
+                              </div>
+                              <div className="p-2 bg-white rounded border-l-4 border-purple-500">
+                                <div className="font-semibold text-purple-900 text-sm">キャリア支援</div>
+                                <div className="text-xs text-purple-700">専門性向上支援</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 年間UI体験シミュレーションタブ */}
+                  {storyActiveTab === 'シミュレーション' && (
+                    <div>
+                      <div className="mb-4 p-3 bg-green-50 rounded-lg border-l-4 border-green-500">
+                        <h3 className="font-semibold text-green-900">🖥️ 年間UI体験シミュレーション</h3>
+                        <p className="text-sm text-green-700 mt-1">実際のシステム画面を時系列で体験</p>
+                      </div>
+
+                      <div className="space-y-6">
+                        {/* 3月: 技術評価期間 */}
+                        <div className="p-4 bg-white rounded-lg border-2 border-blue-500">
+                          <div className="flex items-center gap-2 mb-3">
+                            <span className="px-3 py-1 bg-blue-500 text-white rounded-full text-sm font-bold">3月</span>
+                            <h4 className="font-semibold text-blue-900">技術評価実施期間</h4>
+                          </div>
+                          
+                          <div className="mb-3">
+                            <div className="text-sm text-blue-700 mb-2">ダッシュボードに表示される技術評価カード：</div>
+                            <Card className="border-2 border-blue-500 bg-gradient-to-br from-blue-600 to-indigo-600 text-white">
+                              <CardHeader className="pb-4">
+                                <div className="flex items-center gap-3">
+                                  <div className="p-3 bg-white/20 rounded-lg backdrop-blur">
+                                    <ClipboardList className="h-8 w-8 text-white" />
+                                  </div>
+                                  <div>
+                                    <CardTitle className="text-xl font-bold text-white">技術評価</CardTitle>
+                                    <CardDescription className="text-blue-100">
+                                      年1回の専門技術評価を実施
+                                    </CardDescription>
+                                  </div>
+                                </div>
+                              </CardHeader>
+                              <CardContent>
+                                <div className="mb-3">
+                                  <Progress value={65} className="h-3 bg-white/20" />
+                                  <div className="flex justify-between text-sm mt-1">
+                                    <span>進捗状況</span>
+                                    <span>65% (81/125名完了)</span>
+                                  </div>
+                                </div>
+                                <div className="grid grid-cols-2 gap-3 text-sm">
+                                  <div>
+                                    <div className="text-blue-100">法人統一項目</div>
+                                    <div className="font-bold">30点満点</div>
+                                  </div>
+                                  <div>
+                                    <div className="text-blue-100">施設特化項目</div>
+                                    <div className="font-bold">20点満点</div>
+                                  </div>
+                                </div>
+                                <Button className="w-full mt-3 bg-white text-blue-600 hover:bg-blue-50" disabled>
+                                  <PlayCircle className="mr-2 h-4 w-4" />
+                                  評価開始（デモ用・非アクティブ）
+                                </Button>
+                              </CardContent>
+                            </Card>
+                          </div>
+                        </div>
+
+                        {/* 3-5月: 最終判定期間 */}
+                        <div className="p-4 bg-white rounded-lg border-2 border-red-500">
+                          <div className="flex items-center gap-2 mb-3">
+                            <span className="px-3 py-1 bg-red-500 text-white rounded-full text-sm font-bold">3-5月</span>
+                            <h4 className="font-semibold text-red-900">最終判定実行期間</h4>
+                          </div>
+                          
+                          <div className="mb-3">
+                            <div className="text-sm text-red-700 mb-2">ダッシュボードに表示される最終判定カード：</div>
+                            <Card className="border-2 border-red-500 bg-gradient-to-br from-red-600 to-orange-600 text-white">
+                              <div className="absolute top-2 right-2">
+                                <Badge className="bg-yellow-400 text-yellow-900">3-5月限定</Badge>
+                              </div>
+                              <CardHeader className="pb-4">
+                                <div className="flex items-center gap-3">
+                                  <div className="p-3 bg-white/20 rounded-lg backdrop-blur">
+                                    <BarChart3 className="h-8 w-8 text-white" />
+                                  </div>
+                                  <div>
+                                    <CardTitle className="text-xl font-bold text-white">最終判定</CardTitle>
+                                    <CardDescription className="text-red-100">
+                                      100点満点から7段階成績を決定
+                                    </CardDescription>
+                                  </div>
+                                </div>
+                              </CardHeader>
+                              <CardContent>
+                                <div className="p-3 bg-white/10 rounded-lg backdrop-blur mb-3">
+                                  <h4 className="text-sm font-bold text-red-100 mb-2">処理状況：</h4>
+                                  <div className="grid grid-cols-3 gap-2 text-xs">
+                                    <div>
+                                      <div className="text-red-200">技術評価収集</div>
+                                      <div className="font-bold">250/500名</div>
+                                      <Progress value={50} className="h-2 mt-1 bg-white/20" />
+                                    </div>
+                                    <div>
+                                      <div className="text-red-200">暫定判定済</div>
+                                      <div className="font-bold">180名</div>
+                                      <Progress value={36} className="h-2 mt-1 bg-white/20" />
+                                    </div>
+                                    <div>
+                                      <div className="text-red-200">最終確定</div>
+                                      <div className="font-bold">0名</div>
+                                      <Progress value={0} className="h-2 mt-1 bg-white/20" />
+                                    </div>
+                                  </div>
+                                </div>
+                                <Button className="w-full bg-white text-red-600 hover:bg-red-50" disabled>
+                                  <BarChart3 className="mr-2 h-5 w-5" />
+                                  判定実行画面へ（デモ用・非アクティブ）
+                                </Button>
+                              </CardContent>
+                            </Card>
+                          </div>
+
+                          <div className="mt-4 p-3 bg-red-50 rounded-lg border-l-4 border-red-500">
+                            <div className="text-sm font-semibold text-red-900 mb-2">相対評価プロセス：</div>
+                            <div className="space-y-2 text-sm text-red-700">
+                              <div className="flex items-center gap-2">
+                                <CheckCircle className="h-4 w-4 text-green-500" />
+                                <span>1. 技術評価完了者データ収集</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <CheckCircle className="h-4 w-4 text-green-500" />
+                                <span>2. 施設内同職種順位化（5段階評価）</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <CheckCircle className="h-4 w-4 text-green-500" />
+                                <span>3. 法人内同職種順位化（5段階評価）</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Clock className="h-4 w-4 text-orange-500" />
+                                <span>4. 2軸マトリックス最終判定（7段階評価）</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* 6月-2月: 通常期間 */}
+                        <div className="p-4 bg-white rounded-lg border-2 border-gray-400">
+                          <div className="flex items-center gap-2 mb-3">
+                            <span className="px-3 py-1 bg-gray-400 text-white rounded-full text-sm font-bold">6-2月</span>
+                            <h4 className="font-semibold text-gray-700">通常期間（評価カード非表示）</h4>
+                          </div>
+                          
+                          <div className="p-3 bg-gray-50 rounded-lg">
+                            <div className="text-sm text-gray-700 mb-2">
+                              評価期間外のため、技術評価・最終判定カードは表示されません。
+                            </div>
+                            <div className="text-xs text-gray-600">
+                              ※ 9月には組織貢献評価のみ実施（賞与査定用）
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* システム設計の考慮点 */}
+                        <div className="p-4 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg border-2 border-purple-300">
+                          <h4 className="font-semibold text-purple-900 mb-3 flex items-center gap-2">
+                            <span className="text-purple-600">🔧</span>
+                            システム設計の考慮点
+                          </h4>
+                          <div className="space-y-3">
+                            <div className="p-3 bg-white rounded border-l-4 border-blue-500">
+                              <div className="font-semibold text-blue-900 text-sm">時期限定表示</div>
+                              <div className="text-xs text-blue-700">
+                                評価に関するUIは適切な時期のみ表示し、職員の混乱を防止
+                              </div>
+                            </div>
+                            <div className="p-3 bg-white rounded border-l-4 border-green-500">
+                              <div className="font-semibold text-green-900 text-sm">安全性確保</div>
+                              <div className="text-xs text-green-700">
+                                技術評価未完了時の最終判定実行を阻止し、誤判定を防止
+                              </div>
+                            </div>
+                            <div className="p-3 bg-white rounded border-l-4 border-purple-500">
+                              <div className="font-semibold text-purple-900 text-sm">データ整合性</div>
+                              <div className="text-xs text-purple-700">
+                                スコア合計チェック、範囲検証により、データの信頼性を保証
                               </div>
                             </div>
                           </div>
