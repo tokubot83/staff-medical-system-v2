@@ -48,11 +48,9 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { ExperienceLevelMapper, ExperienceLevelsV3 } from '@/services/evaluationV3Service';
-import DashboardHeader from '@/components/evaluation/DashboardHeader';
-import IntegratedJudgment from '@/components/evaluation/IntegratedJudgment';
-import DisclosureManagementV3 from '@/components/evaluation/DisclosureManagementV3';
-import AppealReceptionV3 from '@/components/evaluation/AppealReceptionV3';
 import EvaluationSheetSelector from '@/components/evaluation/EvaluationSheetSelector';
+import AppealReceptionV3 from '@/components/evaluation/AppealReceptionV3';
+import DisclosureManagementV3 from '@/components/evaluation/DisclosureManagementV3';
 
 interface MonthlyEvaluationTask {
   month: number;
@@ -71,9 +69,147 @@ interface MonthlyEvaluationTask {
   }[];
 }
 
+interface FacilityProgress {
+  facilityId: string;
+  facilityName: string;
+  totalStaff: number;
+  status: 'active' | 'planned' | 'inactive';
+  // 8月: 夏季評価フォローアップ
+  summerFollowup: {
+    appealsReceived: number;
+    appealsProcessed: number;
+    appealsResolved: number;
+    voiceDriveNotified: number;
+  };
+  // 12月: 冬季評価開示
+  winterDisclosure: {
+    evaluationsCompleted: number;
+    disclosuresScheduled: number;
+    disclosuresCompleted: number;
+    feedbackMeetingsScheduled: number;
+    feedbackMeetingsCompleted: number;
+  };
+  // 3月: 最終評価
+  finalEvaluation: {
+    technicalEvaluationsCompleted: number;
+    disclosuresCompleted: number;
+    finalAppealsReceived: number;
+    finalAppealsResolved: number;
+    yearEndProcessCompleted: boolean;
+  };
+}
+
 export default function EvaluationExecutionPage() {
   const [currentDate] = useState(new Date());
   const currentMonth = currentDate.getMonth() + 1; // 1-12
+
+  // 施設別進捗データ
+  const facilityProgressData: FacilityProgress[] = [
+    {
+      facilityId: 'kohara',
+      facilityName: '小原病院',
+      totalStaff: 120,
+      status: 'active',
+      summerFollowup: {
+        appealsReceived: 3,
+        appealsProcessed: 2,
+        appealsResolved: 1,
+        voiceDriveNotified: 3
+      },
+      winterDisclosure: {
+        evaluationsCompleted: 115,
+        disclosuresScheduled: 120,
+        disclosuresCompleted: 108,
+        feedbackMeetingsScheduled: 25,
+        feedbackMeetingsCompleted: 18
+      },
+      finalEvaluation: {
+        technicalEvaluationsCompleted: 120,
+        disclosuresCompleted: 120,
+        finalAppealsReceived: 2,
+        finalAppealsResolved: 1,
+        yearEndProcessCompleted: currentMonth > 3
+      }
+    },
+    {
+      facilityId: 'tategami',
+      facilityName: '立神リハビリテーション温泉病院',
+      totalStaff: 85,
+      status: 'active',
+      summerFollowup: {
+        appealsReceived: 1,
+        appealsProcessed: 1,
+        appealsResolved: 1,
+        voiceDriveNotified: 1
+      },
+      winterDisclosure: {
+        evaluationsCompleted: 82,
+        disclosuresScheduled: 85,
+        disclosuresCompleted: 80,
+        feedbackMeetingsScheduled: 15,
+        feedbackMeetingsCompleted: 12
+      },
+      finalEvaluation: {
+        technicalEvaluationsCompleted: 85,
+        disclosuresCompleted: 85,
+        finalAppealsReceived: 0,
+        finalAppealsResolved: 0,
+        yearEndProcessCompleted: currentMonth > 3
+      }
+    },
+    {
+      facilityId: 'espoir',
+      facilityName: 'エスポワール立神',
+      totalStaff: 65,
+      status: 'active',
+      summerFollowup: {
+        appealsReceived: 0,
+        appealsProcessed: 0,
+        appealsResolved: 0,
+        voiceDriveNotified: 0
+      },
+      winterDisclosure: {
+        evaluationsCompleted: 63,
+        disclosuresScheduled: 65,
+        disclosuresCompleted: 58,
+        feedbackMeetingsScheduled: 12,
+        feedbackMeetingsCompleted: 8
+      },
+      finalEvaluation: {
+        technicalEvaluationsCompleted: 65,
+        disclosuresCompleted: 62,
+        finalAppealsReceived: 1,
+        finalAppealsResolved: 0,
+        yearEndProcessCompleted: currentMonth > 3
+      }
+    },
+    {
+      facilityId: 'hojuan',
+      facilityName: '宝寿庵',
+      totalStaff: 45,
+      status: 'planned',
+      summerFollowup: {
+        appealsReceived: 0,
+        appealsProcessed: 0,
+        appealsResolved: 0,
+        voiceDriveNotified: 0
+      },
+      winterDisclosure: {
+        evaluationsCompleted: 0,
+        disclosuresScheduled: 0,
+        disclosuresCompleted: 0,
+        feedbackMeetingsScheduled: 0,
+        feedbackMeetingsCompleted: 0
+      },
+      finalEvaluation: {
+        technicalEvaluationsCompleted: 0,
+        disclosuresCompleted: 0,
+        finalAppealsReceived: 0,
+        finalAppealsResolved: 0,
+        yearEndProcessCompleted: false
+      }
+    }
+  ];
 
   // 月別評価業務データ
   const monthlyEvaluationTasks: MonthlyEvaluationTask[] = [
@@ -243,7 +379,6 @@ export default function EvaluationExecutionPage() {
   ];
 
   // State定義
-  const [activeTab, setActiveTab] = useState('dashboard');
   const [selectedDepartment, setSelectedDepartment] = useState('all');
   const [selectedExperienceLevel, setSelectedExperienceLevel] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -297,6 +432,16 @@ export default function EvaluationExecutionPage() {
     appealed: staffData.filter(s => s.evaluationStatus === 'appealed').length
   };
 
+  // 法人全体の施設別統計
+  const corporateStatistics = {
+    totalFacilities: facilityProgressData.filter(f => f.status === 'active').length,
+    totalStaff: facilityProgressData.reduce((sum, f) => sum + f.totalStaff, 0),
+    plannedFacilities: facilityProgressData.filter(f => f.status === 'planned').length,
+    summerAppeals: facilityProgressData.reduce((sum, f) => sum + f.summerFollowup.appealsReceived, 0),
+    winterDisclosures: facilityProgressData.reduce((sum, f) => sum + f.winterDisclosure.disclosuresCompleted, 0),
+    finalCompletion: facilityProgressData.filter(f => f.status === 'active' && f.finalEvaluation.yearEndProcessCompleted).length
+  };
+
   const completionRate = Math.round((statistics.completed / statistics.total) * 100);
 
   const handleRefresh = () => {
@@ -304,32 +449,126 @@ export default function EvaluationExecutionPage() {
     setRefreshKey(prev => prev + 1);
   };
 
+  // 施設別進捗表示コンポーネント
+  const FacilityProgressCard = ({ type }: { type: 'summer' | 'winter' | 'final' }) => {
+    const getProgressData = (facility: FacilityProgress) => {
+      switch (type) {
+        case 'summer':
+          return {
+            title: '異議申立状況',
+            items: [
+              { label: '受付件数', value: facility.summerFollowup.appealsReceived, total: facility.totalStaff, color: 'text-orange-600' },
+              { label: '処理済み', value: facility.summerFollowup.appealsProcessed, total: facility.summerFollowup.appealsReceived, color: 'text-blue-600' },
+              { label: '解決済み', value: facility.summerFollowup.appealsResolved, total: facility.summerFollowup.appealsReceived, color: 'text-green-600' },
+              { label: 'VD通知', value: facility.summerFollowup.voiceDriveNotified, total: facility.summerFollowup.appealsReceived, color: 'text-purple-600' }
+            ]
+          };
+        case 'winter':
+          return {
+            title: '冬季評価開示状況',
+            items: [
+              { label: '評価完了', value: facility.winterDisclosure.evaluationsCompleted, total: facility.totalStaff, color: 'text-blue-600' },
+              { label: '開示済み', value: facility.winterDisclosure.disclosuresCompleted, total: facility.totalStaff, color: 'text-green-600' },
+              { label: '面談予定', value: facility.winterDisclosure.feedbackMeetingsScheduled, total: facility.totalStaff, color: 'text-orange-600' },
+              { label: '面談完了', value: facility.winterDisclosure.feedbackMeetingsCompleted, total: facility.winterDisclosure.feedbackMeetingsScheduled, color: 'text-purple-600' }
+            ]
+          };
+        case 'final':
+          return {
+            title: '最終評価状況',
+            items: [
+              { label: '技術評価', value: facility.finalEvaluation.technicalEvaluationsCompleted, total: facility.totalStaff, color: 'text-purple-600' },
+              { label: '開示完了', value: facility.finalEvaluation.disclosuresCompleted, total: facility.totalStaff, color: 'text-green-600' },
+              { label: '最終異議', value: facility.finalEvaluation.finalAppealsReceived, total: facility.totalStaff, color: 'text-red-600' },
+              { label: '年度完了', value: facility.finalEvaluation.yearEndProcessCompleted ? 1 : 0, total: 1, color: 'text-indigo-600' }
+            ]
+          };
+      }
+    };
+
+    const activeFacilities = facilityProgressData.filter(f => f.status === 'active');
+    const plannedFacilities = facilityProgressData.filter(f => f.status === 'planned');
+
+    return (
+      <Card className="border-dashed border-gray-300">
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Users className="h-5 w-5" />
+            施設別{getProgressData(facilityProgressData[0]).title}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {activeFacilities.map((facility) => {
+              const progressData = getProgressData(facility);
+              return (
+                <div key={facility.facilityId} className="border rounded-lg p-4 bg-white">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="font-semibold text-gray-900">{facility.facilityName}</h4>
+                    <Badge variant="outline" className="text-xs">
+                      {facility.totalStaff}名
+                    </Badge>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    {progressData.items.map((item, idx) => {
+                      const percentage = item.total > 0 ? Math.round((item.value / item.total) * 100) : 0;
+                      return (
+                        <div key={idx} className="flex items-center justify-between">
+                          <span className="text-sm text-gray-600">{item.label}</span>
+                          <div className="flex items-center gap-2">
+                            <span className={`font-medium ${item.color}`}>
+                              {item.value}
+                              {item.total > 1 && `/${item.total}`}
+                            </span>
+                            {item.total > 1 && (
+                              <div className="w-12 bg-gray-200 rounded-full h-2">
+                                <div 
+                                  className={`h-2 rounded-full ${
+                                    percentage >= 80 ? 'bg-green-500' :
+                                    percentage >= 60 ? 'bg-yellow-500' :
+                                    percentage >= 40 ? 'bg-orange-500' : 'bg-red-500'
+                                  }`}
+                                  style={{ width: `${Math.min(percentage, 100)}%` }}
+                                />
+                              </div>
+                            )}
+                            <span className="text-xs text-gray-500 w-10 text-right">
+                              {item.total > 1 ? `${percentage}%` : item.value ? '✓' : '-'}
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+            
+            {plannedFacilities.length > 0 && (
+              <div className="border-t pt-4">
+                <h5 className="text-sm font-medium text-gray-600 mb-2">導入予定施設</h5>
+                {plannedFacilities.map((facility) => (
+                  <div key={facility.facilityId} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                    <span className="text-sm text-gray-700">{facility.facilityName}</span>
+                    <Badge variant="secondary" className="text-xs">
+                      {facility.totalStaff}名・準備中
+                    </Badge>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
+
   return (
     <div>
       <CommonHeader title="個人評価管理" />
       <div className={styles.container}>
-        {/* タブナビゲーション */}
-        <div className="mb-4 flex items-center justify-between">
-          <div className={styles.mainTabNavigation}>
-            {[
-              { id: 'dashboard', label: '作業ダッシュボード', icon: '🏠' },
-              { id: 'input', label: '評価入力', icon: '✍️' },
-              { id: 'review', label: '評価確認', icon: '🔍' },
-              { id: 'judgment', label: '総合判定', icon: '⚖️' },
-              { id: 'disclosure', label: '評価開示', icon: '👁️' },
-              { id: 'appeal', label: '異議申立', icon: '📢' }
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`${styles.mainTabButton} ${activeTab === tab.id ? styles.active : ''}`}
-              >
-                <span className={styles.tabIcon}>{tab.icon}</span>
-                <span className={styles.tabLabel}>{tab.label}</span>
-              </button>
-            ))}
-          </div>
-          
+        {/* V3評価システム表示 */}
+        <div className="mb-4 flex justify-end">
           <div className="flex items-center gap-2 bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-lg px-4 py-2 shadow-sm">
             <Sparkles className="w-5 h-5 text-purple-600" />
             <div className="text-sm">
@@ -341,8 +580,7 @@ export default function EvaluationExecutionPage() {
         </div>
 
         <div className={styles.tabContent}>
-          {activeTab === 'dashboard' && (
-            <div className="space-y-6 p-6">
+          <div className="space-y-6 p-6">
               {/* 現在の評価業務カード */}
               {currentMonthTask && (
                 <Card className="border-4 border-blue-600 bg-gradient-to-r from-blue-100 via-indigo-100 to-purple-100 shadow-2xl ring-4 ring-blue-200 ring-opacity-30">
@@ -459,783 +697,324 @@ export default function EvaluationExecutionPage() {
                   </CardContent>
                 </Card>
               )}
-
-              {/* 統合ダッシュボードヘッダー */}
-              <DashboardHeader
-                title="評価統合ダッシュボード"
-                description="評価進捗と研修受講状況を一元管理"
-                onRefresh={handleRefresh}
-              />
-              {/* 進捗オーバービューカード */}
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                <Card className="border-2 border-blue-200">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-base flex items-center gap-2">
-                      <Users className="h-5 w-5 text-blue-600" />
-                      評価対象者サマリー
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="text-center p-3 bg-gray-50 rounded-lg">
-                        <div className="text-3xl font-bold text-gray-700">{statistics.total}</div>
-                        <div className="text-sm text-gray-600">全対象者</div>
-                      </div>
-                      <div className="space-y-2">
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600">完了</span>
-                          <span className="font-bold text-green-600">{statistics.completed}</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600">進行中</span>
-                          <span className="font-bold text-blue-600">{statistics.inProgress}</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600">未着手</span>
-                          <span className="font-bold text-gray-600">{statistics.notStarted}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <Card className="border-2 border-green-200">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-base flex items-center gap-2">
-                      <Activity className="h-5 w-5 text-green-600" />
-                      進捗状況
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div>
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="text-sm font-medium">全体進捗</span>
-                          <span className="text-2xl font-bold text-green-600">{completionRate}%</span>
-                        </div>
-                        <Progress value={completionRate} className="h-3" />
-                      </div>
-                      <Alert className="border-yellow-200 bg-yellow-50">
-                        <Clock className="h-4 w-4 text-yellow-600" />
-                        <AlertDescription className="text-sm">
-                          締切まであと<strong>7日</strong>
-                        </AlertDescription>
-                      </Alert>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* 進捗バー */}
-              <Card className="mb-6">
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium">全体進捗</span>
-                    <span className="text-sm text-gray-600">{completionRate}%</span>
-                  </div>
-                  <Progress value={completionRate} className="h-2" />
-                </CardContent>
-              </Card>
               
-              {/* 今後の予定 */}
-              {upcomingTasks.length > 0 && (
-                <Card className="border-2 border-purple-200">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Calendar className="h-5 w-5 text-purple-600" />
-                      今後の評価予定
-                    </CardTitle>
-                    <CardDescription>
-                      次の評価業務の準備と計画
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {upcomingTasks.map((task, idx) => (
-                        <div key={task.month} className="flex items-center justify-between p-4 bg-purple-50 rounded-lg border border-purple-200">
-                          <div className="flex items-center gap-3">
-                            <div className="p-2 bg-purple-200 rounded-full">
-                              {task.evaluationType === 'contribution' && <Users className="h-5 w-5 text-purple-700" />}
-                              {task.evaluationType === 'technical' && <ClipboardList className="h-5 w-5 text-purple-700" />}
-                              {task.evaluationType === 'comprehensive' && <Activity className="h-5 w-5 text-purple-700" />}
-                            </div>
-                            <div>
-                              <div className="font-semibold text-purple-900">
-                                {task.month}月: {task.name}
-                              </div>
-                              <div className="text-sm text-purple-700">
-                                {task.points > 0 ? `${task.points}点` : 'フォルローアップ'} ・ 締切: {task.deadline}
-                              </div>
-                            </div>
-                          </div>
-                          <Badge className="bg-purple-100 text-purple-800">
-                            予定
-                          </Badge>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
-          )}
-          
-          {activeTab === 'input' && (
-            <div className="space-y-6 p-6">
-              {/* 評価入力フローカード */}
-              <Card className="border-4 border-purple-600 bg-gradient-to-r from-purple-100 via-indigo-100 to-blue-100 shadow-2xl ring-4 ring-purple-200 ring-opacity-30">
+              {/* 法人全体サマリー */}
+              <Card className="border-2 border-indigo-200 bg-gradient-to-r from-indigo-50 to-purple-50">
                 <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="p-4 rounded-full shadow-lg bg-gradient-to-br from-purple-600 to-indigo-700">
-                        <Edit3 className="h-8 w-8 text-white drop-shadow-lg" />
-                      </div>
-                      <div>
-                        <CardTitle className="text-3xl font-bold bg-gradient-to-r from-purple-700 to-indigo-800 bg-clip-text text-transparent">
-                          技術評価入力
-                        </CardTitle>
-                        <CardDescription className="text-xl font-medium text-indigo-700">
-                          V3評価システム • 技術50点満点の評価実施
-                        </CardDescription>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <Badge className="px-6 py-3 text-lg font-semibold shadow-lg bg-gradient-to-r from-purple-600 to-indigo-700 text-white">
-                        🎯 3月実施
-                      </Badge>
-                      <div className="mt-2 text-sm text-indigo-600 font-medium">
-                        締切: 3月31日
-                      </div>
-                    </div>
-                  </div>
+                  <CardTitle className="flex items-center gap-2">
+                    <Users className="h-5 w-5 text-indigo-600" />
+                    法人全体 施設別進捗サマリー
+                  </CardTitle>
+                  <CardDescription>
+                    全{corporateStatistics.totalFacilities}施設・総{corporateStatistics.totalStaff}名の評価進捗状況
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
-                    <h4 className="font-semibold text-lg mb-3 flex items-center gap-2">
-                      <CheckCircle className="h-5 w-5 text-purple-600" />
-                      評価入力プロセス
-                    </h4>
-                    <div className="grid grid-cols-3 gap-4">
-                      <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-purple-200">
-                        <div className="flex items-center justify-center w-10 h-10 bg-purple-100 rounded-full">
-                          <span className="font-bold text-purple-700">1</span>
-                        </div>
-                        <div className="flex-1">
-                          <span className="font-medium text-gray-700">法人統一項目（30点）</span>
-                          <div className="text-xs text-gray-600 mt-1">全施設共通の技術評価</div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-purple-200">
-                        <div className="flex items-center justify-center w-10 h-10 bg-purple-100 rounded-full">
-                          <span className="font-bold text-purple-700">2</span>
-                        </div>
-                        <div className="flex-1">
-                          <span className="font-medium text-gray-700">施設特化項目（20点）</span>
-                          <div className="text-xs text-gray-600 mt-1">施設独自の評価項目</div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-purple-200">
-                        <div className="flex items-center justify-center w-10 h-10 bg-purple-100 rounded-full">
-                          <span className="font-bold text-purple-700">3</span>
-                        </div>
-                        <div className="flex-1">
-                          <span className="font-medium text-gray-700">相対評価で最終グレード</span>
-                          <div className="text-xs text-gray-600 mt-1">100点満点での総合評価</div>
-                        </div>
+                  <div className="grid grid-cols-4 gap-4">
+                    <div className="text-center p-4 bg-white rounded-lg border">
+                      <div className="text-2xl font-bold text-indigo-600">{corporateStatistics.totalFacilities}</div>
+                      <div className="text-sm text-gray-600">運営施設</div>
+                      {corporateStatistics.plannedFacilities > 0 && (
+                        <div className="text-xs text-purple-600 mt-1">+{corporateStatistics.plannedFacilities}施設準備中</div>
+                      )}
+                    </div>
+                    <div className="text-center p-4 bg-white rounded-lg border">
+                      <div className="text-2xl font-bold text-green-600">{corporateStatistics.totalStaff}</div>
+                      <div className="text-sm text-gray-600">総職員数</div>
+                      <div className="text-xs text-gray-500 mt-1">評価対象者</div>
+                    </div>
+                    <div className="text-center p-4 bg-white rounded-lg border">
+                      <div className="text-2xl font-bold text-orange-600">{corporateStatistics.summerAppeals}</div>
+                      <div className="text-sm text-gray-600">夏季異議申立</div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        {corporateStatistics.totalStaff > 0 ? 
+                          `${((corporateStatistics.summerAppeals / corporateStatistics.totalStaff) * 100).toFixed(1)}%` 
+                          : '0%'}
                       </div>
                     </div>
-                    
-                    {/* 進捗状況 */}
-                    <div className="mt-6">
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-sm font-medium">評価完了状況</span>
-                        <span className="text-2xl font-bold text-purple-600">{Math.round((statistics.completed / statistics.total) * 100)}%</span>
+                    <div className="text-center p-4 bg-white rounded-lg border">
+                      <div className="text-2xl font-bold text-blue-600">{corporateStatistics.winterDisclosures}</div>
+                      <div className="text-sm text-gray-600">冬季開示完了</div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        {corporateStatistics.totalStaff > 0 ? 
+                          `${((corporateStatistics.winterDisclosures / corporateStatistics.totalStaff) * 100).toFixed(1)}%` 
+                          : '0%'}
                       </div>
-                      <Progress value={(statistics.completed / statistics.total) * 100} className="h-3" />
-                      <div className="grid grid-cols-4 gap-2 mt-3">
-                        <div className="text-center p-2 bg-gray-50 rounded">
-                          <div className="text-xl font-bold">{statistics.notStarted}</div>
-                          <div className="text-xs text-gray-600">未着手</div>
-                        </div>
-                        <div className="text-center p-2 bg-blue-50 rounded">
-                          <div className="text-xl font-bold text-blue-600">{statistics.inProgress}</div>
-                          <div className="text-xs text-gray-600">評価中</div>
-                        </div>
-                        <div className="text-center p-2 bg-green-50 rounded">
-                          <div className="text-xl font-bold text-green-600">{statistics.completed}</div>
-                          <div className="text-xs text-gray-600">完了</div>
-                        </div>
-                        <div className="text-center p-2 bg-orange-50 rounded">
-                          <div className="text-xl font-bold text-orange-600">{statistics.appealed}</div>
-                          <div className="text-xs text-gray-600">異議申立</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* 評価シート選択モード */}
-              {selectedStaffForEvaluation ? (
-                <div>
-                  <div className="mb-4 flex items-center gap-4">
-                    <Button
-                      variant="outline"
-                      onClick={() => setSelectedStaffForEvaluation(null)}
-                      className="flex items-center gap-2"
-                    >
-                      <ArrowLeft className="h-4 w-4" />
-                      職員一覧に戻る
-                    </Button>
-                    <div className="text-lg font-semibold">
-                      {staffData.find(s => s.id === selectedStaffForEvaluation)?.name} の評価
                     </div>
                   </div>
                   
-                  <EvaluationSheetSelector
-                    staff={staffData.find(s => s.id === selectedStaffForEvaluation)!}
-                    onEvaluationSubmit={async (evaluationData) => {
-                      console.log('評価データ受信:', evaluationData);
-                      
-                      // 実際の評価データ保存処理
-                      try {
-                        // 職員の評価状況を更新
-                        const contributionScore = Math.round(Math.random() * 50); // 仮の値
-                        const totalScore = Math.round(evaluationData.technicalTotal + contributionScore);
-                        
-                        const updatedStaff = staffData.map(staff => {
-                          if (staff.id === selectedStaffForEvaluation) {
-                            return {
-                              ...staff,
-                              evaluationStatus: 'completed' as const,
-                              technicalScore: evaluationData.technicalTotal,
-                              contributionScore,
-                              totalScore,
-                              grade: totalScore >= 90 ? 'S' : 
-                                     totalScore >= 80 ? 'A' :
-                                     totalScore >= 70 ? 'B' :
-                                     totalScore >= 60 ? 'C' : 'D'
-                            };
-                          }
-                          return staff;
-                        });
-                        
-                        // 状態を更新
-                        setStaffData(updatedStaff);
-                        
-                        // リアルタイムでのデータ更新処理（将来的にはAPIに送信）
-                        console.log('評価完了:', updatedStaff.find(s => s.id === selectedStaffForEvaluation));
-                        
-                        alert(`評価が正常に提出されました！\n技術評価: ${evaluationData.technicalTotal}点\n評価項目数: ${evaluationData.corporateEvaluation.items.length + evaluationData.facilityEvaluation.items.length}項目`);
-                        
-                        setSelectedStaffForEvaluation(null);
-                        handleRefresh();
-                        
-                      } catch (error) {
-                        console.error('評価提出エラー:', error);
-                        alert('評価の提出中にエラーが発生しました。もう一度お試しください。');
-                      }
-                    }}
-                    mode="input"
-                  />
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {facilityProgressData.map((facility) => (
+                      <Badge 
+                        key={facility.facilityId} 
+                        variant={facility.status === 'active' ? 'default' : 'secondary'}
+                        className="text-xs"
+                      >
+                        {facility.facilityName} ({facility.totalStaff}名)
+                        {facility.status === 'planned' && ' 🚧'}
+                      </Badge>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+              
+              {/* 時期別の統合機能表示 */}
+              {currentMonth === 8 && (
+                <div className="space-y-6">
+                  <div className="grid grid-cols-3 gap-6">
+                    <div className="col-span-2">
+                      <Card className="border-2 border-orange-200 bg-orange-50/50">
+                        <CardHeader>
+                          <CardTitle className="flex items-center gap-2">
+                            <MessageSquare className="h-5 w-5 text-orange-600" />
+                            8月: 夏季評価フォローアップ - 異議申立受付
+                          </CardTitle>
+                          <CardDescription>
+                            夏季組織貢献度評価（25点）の結果に対する異議申立を受け付けています
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <AppealReceptionV3 />
+                        </CardContent>
+                      </Card>
+                    </div>
+                    <div>
+                      <FacilityProgressCard type="summer" />
+                    </div>
+                  </div>
                 </div>
-              ) : (
-                /* 職員一覧表示 */
-                <Card className="border-2 border-blue-200">
-                  <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <CardTitle className="flex items-center gap-2">
-                          <ClipboardList className="h-5 w-5 text-blue-600" />
-                          評価対象者一覧
-                        </CardTitle>
-                        <CardDescription>
-                          評価シートへの入力を行います
-                        </CardDescription>
-                      </div>
-                      <Button variant="outline" size="sm" onClick={handleRefresh}>
-                        <RefreshCw className="h-4 w-4 mr-2" />
-                        更新
-                      </Button>
+              )}
+              
+              {currentMonth === 12 && (
+                <div className="space-y-6">
+                  <div className="grid grid-cols-3 gap-6">
+                    <div className="col-span-2">
+                      <Card className="border-2 border-blue-200 bg-blue-50/50">
+                        <CardHeader>
+                          <CardTitle className="flex items-center gap-2">
+                            <Eye className="h-5 w-5 text-blue-600" />
+                            12月: 冬季貢献度評価 - 評価開示管理
+                          </CardTitle>
+                          <CardDescription>
+                            冬季組織貢献度評価（25点）の結果開示と面談管理
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <DisclosureManagementV3 />
+                        </CardContent>
+                      </Card>
                     </div>
-                  </CardHeader>
-                  <CardContent>
-                    {/* フィルター */}
-                    <div className="flex gap-4 mb-6">
-                      <div className="flex-1">
-                        <div className="relative">
-                          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                          <Input
-                            placeholder="職員名で検索"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="pl-10"
-                          />
-                        </div>
-                      </div>
-                      <Select value={selectedDepartment} onValueChange={setSelectedDepartment}>
-                        <SelectTrigger className="w-[200px]">
-                          <SelectValue placeholder="部署で絞り込み" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="all">全部署</SelectItem>
-                          <SelectItem value="内科病棟">内科病棟</SelectItem>
-                          <SelectItem value="外科病棟">外科病棟</SelectItem>
-                          <SelectItem value="ICU">ICU</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <Select value={selectedExperienceLevel} onValueChange={setSelectedExperienceLevel}>
-                        <SelectTrigger className="w-[200px]">
-                          <SelectValue placeholder="経験レベル" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="all">全レベル</SelectItem>
-                          <SelectItem value="new">新人（～1年）</SelectItem>
-                          <SelectItem value="junior">若手（2～3年）</SelectItem>
-                          <SelectItem value="midlevel">中堅（4～10年）</SelectItem>
-                          <SelectItem value="veteran">ベテラン（11年～）</SelectItem>
-                        </SelectContent>
-                      </Select>
+                    <div>
+                      <FacilityProgressCard type="winter" />
                     </div>
+                  </div>
+                </div>
+              )}
+              
+              {currentMonth === 3 && (
+                <div className="space-y-6">
+                  <div className="grid grid-cols-3 gap-6">
+                    <div className="col-span-2 space-y-6">
+                      <Card className="border-2 border-purple-200 bg-purple-50/50">
+                        <CardHeader>
+                          <CardTitle className="flex items-center gap-2">
+                            <Eye className="h-5 w-5 text-purple-600" />
+                            3月: 最終技術評価 - 評価開示管理
+                          </CardTitle>
+                          <CardDescription>
+                            年間技術評価（50点）の結果開示と面談管理
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <DisclosureManagementV3 />
+                        </CardContent>
+                      </Card>
+                      
+                      <Card className="border-2 border-red-200 bg-red-50/50">
+                        <CardHeader>
+                          <CardTitle className="flex items-center gap-2">
+                            <MessageSquare className="h-5 w-5 text-red-600" />
+                            3月: 最終評価 - 異議申立受付
+                          </CardTitle>
+                          <CardDescription>
+                            年間総合評価（100点）に対する最終異議申立を受け付けています
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <AppealReceptionV3 />
+                        </CardContent>
+                      </Card>
+                    </div>
+                    <div>
+                      <FacilityProgressCard type="final" />
+                    </div>
+                  </div>
+                </div>
+              )}
 
-                    {/* 職員リスト */}
-                    <div className="space-y-3">
-                      {filteredStaff.map((staff) => {
-                        const isNotStarted = staff.evaluationStatus === 'not-started';
-                        const isInProgress = staff.evaluationStatus === 'in-progress';
-                        const isCompleted = staff.evaluationStatus === 'completed' || staff.evaluationStatus === 'disclosed';
-                        const isAppealed = staff.evaluationStatus === 'appealed';
-                        
-                        return (
-                          <div key={staff.id} className={`border-2 rounded-lg p-4 hover:shadow-lg transition-all
-                            ${isNotStarted ? 'border-red-200 bg-red-50' : ''}
-                            ${isInProgress ? 'border-blue-200 bg-blue-50' : ''}
-                            ${isCompleted ? 'border-green-200 bg-green-50' : ''}
-                            ${isAppealed ? 'border-orange-200 bg-orange-50' : ''}
-                          `}>
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-4">
-                                <div className={`w-12 h-12 rounded-full flex items-center justify-center
-                                  ${isNotStarted ? 'bg-red-200' : ''}
-                                  ${isInProgress ? 'bg-blue-200' : ''}
-                                  ${isCompleted ? 'bg-green-200' : ''}
-                                  ${isAppealed ? 'bg-orange-200' : ''}
-                                `}>
-                                  <User className={`w-6 h-6
-                                    ${isNotStarted ? 'text-red-600' : ''}
-                                    ${isInProgress ? 'text-blue-600' : ''}
-                                    ${isCompleted ? 'text-green-600' : ''}
-                                    ${isAppealed ? 'text-orange-600' : ''}
-                                  `} />
-                                </div>
-                                <div>
-                                  <h4 className="font-bold text-lg">{staff.name}</h4>
-                                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                                    <Badge variant="outline" className="text-xs">{staff.department}</Badge>
-                                    <Badge variant="outline" className="text-xs">{staff.jobCategory}</Badge>
-                                    <Badge className="bg-purple-100 text-purple-800 text-xs">{staff.experienceLabel}</Badge>
-                                  </div>
-                                </div>
+              {/* 職員一覧 */}
+              <Card className="border-2 border-blue-200">
+                <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle className="flex items-center gap-2">
+                        <ClipboardList className="h-5 w-5 text-blue-600" />
+                        評価対象者一覧
+                      </CardTitle>
+                      <CardDescription>
+                        時期に応じた評価・フォローアップを実施します
+                      </CardDescription>
+                    </div>
+                    <Button variant="outline" size="sm" onClick={handleRefresh}>
+                      <RefreshCw className="h-4 w-4 mr-2" />
+                      更新
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {/* フィルター */}
+                  <div className="flex gap-4 mb-6">
+                    <div className="flex-1">
+                      <div className="relative">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                        <Input
+                          placeholder="職員名で検索"
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className="pl-10"
+                        />
+                      </div>
+                    </div>
+                    <Select value={selectedDepartment} onValueChange={setSelectedDepartment}>
+                      <SelectTrigger className="w-[200px]">
+                        <SelectValue placeholder="部署で絞り込み" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">全部署</SelectItem>
+                        <SelectItem value="内科病棟">内科病棟</SelectItem>
+                        <SelectItem value="外科病棟">外科病棟</SelectItem>
+                        <SelectItem value="ICU">ICU</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Select value={selectedExperienceLevel} onValueChange={setSelectedExperienceLevel}>
+                      <SelectTrigger className="w-[200px]">
+                        <SelectValue placeholder="経験レベル" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">全レベル</SelectItem>
+                        <SelectItem value="new">新人（～1年）</SelectItem>
+                        <SelectItem value="junior">若手（2～3年）</SelectItem>
+                        <SelectItem value="midlevel">中堅（4～10年）</SelectItem>
+                        <SelectItem value="veteran">ベテラン（11年～）</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* 職員リスト */}
+                  <div className="space-y-3">
+                    {filteredStaff.map((staff) => {
+                      const isNotStarted = staff.evaluationStatus === 'not-started';
+                      const isInProgress = staff.evaluationStatus === 'in-progress';
+                      const isCompleted = staff.evaluationStatus === 'completed' || staff.evaluationStatus === 'disclosed';
+                      const isAppealed = staff.evaluationStatus === 'appealed';
+                      
+                      return (
+                        <div key={staff.id} className={`border-2 rounded-lg p-4 hover:shadow-lg transition-all
+                          ${isNotStarted ? 'border-red-200 bg-red-50' : ''}
+                          ${isInProgress ? 'border-blue-200 bg-blue-50' : ''}
+                          ${isCompleted ? 'border-green-200 bg-green-50' : ''}
+                          ${isAppealed ? 'border-orange-200 bg-orange-50' : ''}
+                        `}>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                              <div className={`w-12 h-12 rounded-full flex items-center justify-center
+                                ${isNotStarted ? 'bg-red-200' : ''}
+                                ${isInProgress ? 'bg-blue-200' : ''}
+                                ${isCompleted ? 'bg-green-200' : ''}
+                                ${isAppealed ? 'bg-orange-200' : ''}
+                              `}>
+                                <User className={`w-6 h-6
+                                  ${isNotStarted ? 'text-red-600' : ''}
+                                  ${isInProgress ? 'text-blue-600' : ''}
+                                  ${isCompleted ? 'text-green-600' : ''}
+                                  ${isAppealed ? 'text-orange-600' : ''}
+                                `} />
                               </div>
-                              <div className="flex items-center gap-4">
-                                <div className="text-right">
-                                  {staff.totalScore !== null ? (
-                                    <div className="flex flex-col items-end">
-                                      <div className="flex items-baseline gap-1">
-                                        <span className="text-3xl font-bold">{staff.totalScore}</span>
-                                        <span className="text-sm text-gray-600">/ 100点</span>
-                                      </div>
-                                      <div className="mt-1">
-                                        {getGradeBadge(staff.grade)}
-                                      </div>
-                                    </div>
-                                  ) : (
-                                    <div className="text-gray-400 text-sm">未評価</div>
-                                  )}
-                                </div>
-                                <div className="flex flex-col gap-2">
-                                  {getStatusBadge(staff.evaluationStatus)}
-                                  <div className="flex gap-2">
-                                    {isNotStarted && (
-                                      <Link href={`/evaluation-execution/dynamic/${staff.id}`}>
-                                        <Button 
-                                          className="bg-purple-600 hover:bg-purple-700"
-                                          size="sm"
-                                          title="AIが経験レベルに応じた評価シートを生成"
-                                        >
-                                          <Sparkles className="w-4 h-4 mr-2" />
-                                          AI生成
-                                        </Button>
-                                      </Link>
-                                    )}
-                                    <Button 
-                                      variant={isNotStarted ? 'default' : 'outline'}
-                                      size="sm"
-                                      className={isNotStarted ? 'bg-red-600 hover:bg-red-700' : ''}
-                                      onClick={() => setSelectedStaffForEvaluation(staff.id)}
-                                    >
-                                      {isNotStarted && <PlayCircle className="w-4 h-4 mr-2" />}
-                                      {isInProgress && <Edit3 className="w-4 h-4 mr-2" />}
-                                      {isCompleted && <Eye className="w-4 h-4 mr-2" />}
-                                      {isAppealed && <MessageSquare className="w-4 h-4 mr-2" />}
-                                      {isNotStarted ? '評価開始' : 
-                                       isInProgress ? '続きから' :
-                                       isCompleted ? '結果確認' :
-                                       '対応確認'}
-                                    </Button>
-                                  </div>
+                              <div>
+                                <h4 className="font-bold text-lg">{staff.name}</h4>
+                                <div className="flex items-center gap-2 text-sm text-gray-600">
+                                  <Badge variant="outline" className="text-xs">{staff.department}</Badge>
+                                  <Badge variant="outline" className="text-xs">{staff.jobCategory}</Badge>
+                                  <Badge className="bg-purple-100 text-purple-800 text-xs">{staff.experienceLabel}</Badge>
                                 </div>
                               </div>
                             </div>
-                            {isAppealed && staff.appealReason && (
-                              <Alert className="mt-3 border-orange-300 bg-orange-100">
-                                <AlertTriangle className="h-4 w-4 text-orange-600" />
-                                <AlertDescription className="text-sm">
-                                  <strong>異議申立理由：</strong> {staff.appealReason}
-                                </AlertDescription>
-                              </Alert>
-                            )}
+                            <div className="flex items-center gap-4">
+                              <div className="text-right">
+                                {staff.totalScore !== null ? (
+                                  <div className="flex flex-col items-end">
+                                    <div className="flex items-baseline gap-1">
+                                      <span className="text-3xl font-bold">{staff.totalScore}</span>
+                                      <span className="text-sm text-gray-600">/ 100点</span>
+                                    </div>
+                                    <div className="mt-1">
+                                      {getGradeBadge(staff.grade)}
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <div className="text-gray-400 text-sm">未評価</div>
+                                )}
+                              </div>
+                              <div className="flex flex-col gap-2">
+                                {getStatusBadge(staff.evaluationStatus)}
+                                <div className="flex gap-2">
+                                  {isNotStarted && (
+                                    <Link href={`/evaluation-execution/dynamic/${staff.id}`}>
+                                      <Button 
+                                        className="bg-purple-600 hover:bg-purple-700"
+                                        size="sm"
+                                        title="AIが経験レベルに応じた評価シートを生成"
+                                      >
+                                        <Sparkles className="w-4 h-4 mr-2" />
+                                        AI生成
+                                      </Button>
+                                    </Link>
+                                  )}
+                                  <Button 
+                                    variant={isNotStarted ? 'default' : 'outline'}
+                                    size="sm"
+                                    className={isNotStarted ? 'bg-red-600 hover:bg-red-700' : ''}
+                                    onClick={() => setSelectedStaffForEvaluation(staff.id)}
+                                  >
+                                    {isNotStarted && <PlayCircle className="w-4 h-4 mr-2" />}
+                                    {isInProgress && <Edit3 className="w-4 h-4 mr-2" />}
+                                    {isCompleted && <Eye className="w-4 h-4 mr-2" />}
+                                    {isAppealed && <MessageSquare className="w-4 h-4 mr-2" />}
+                                    {isNotStarted ? '評価開始' : 
+                                     isInProgress ? '続きから' :
+                                     isCompleted ? '結果確認' :
+                                     '対応確認'}
+                                  </Button>
+                                </div>
+                              </div>
+                            </div>
                           </div>
-                        );
-                      })}
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
-          )}
-
-          {activeTab === 'review' && (
-            <div className="space-y-6 p-6">
-              {/* 評価確認フローカード */}
-              <Card className="border-4 border-blue-600 bg-gradient-to-r from-blue-100 via-cyan-100 to-teal-100 shadow-2xl ring-4 ring-blue-200 ring-opacity-30">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="p-4 rounded-full shadow-lg bg-gradient-to-br from-blue-600 to-cyan-700">
-                        <Eye className="h-8 w-8 text-white drop-shadow-lg" />
-                      </div>
-                      <div>
-                        <CardTitle className="text-3xl font-bold bg-gradient-to-r from-blue-700 to-cyan-800 bg-clip-text text-transparent">
-                          評価確認・調整
-                        </CardTitle>
-                        <CardDescription className="text-xl font-medium text-cyan-700">
-                          上司評価と本人評価の確認・ギャップ分析
-                        </CardDescription>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <Badge className="px-6 py-3 text-lg font-semibold shadow-lg bg-gradient-to-r from-blue-600 to-cyan-700 text-white">
-                        📊 確認中
-                      </Badge>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <h4 className="font-semibold text-lg mb-3 flex items-center gap-2">
-                      <CheckCircle className="h-5 w-5 text-blue-600" />
-                      確認プロセス
-                    </h4>
-                    <div className="grid grid-cols-3 gap-4">
-                      <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-blue-200">
-                        <div className="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-full">
-                          <span className="font-bold text-blue-700">1</span>
+                          {isAppealed && staff.appealReason && (
+                            <Alert className="mt-3 border-orange-300 bg-orange-100">
+                              <AlertTriangle className="h-4 w-4 text-orange-600" />
+                              <AlertDescription className="text-sm">
+                                <strong>異議申立理由：</strong> {staff.appealReason}
+                              </AlertDescription>
+                            </Alert>
+                          )}
                         </div>
-                        <div className="flex-1">
-                          <span className="font-medium text-gray-700">評価差異の確認</span>
-                          <div className="text-xs text-gray-600 mt-1">上司・本人評価の比較</div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-blue-200">
-                        <div className="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-full">
-                          <span className="font-bold text-blue-700">2</span>
-                        </div>
-                        <div className="flex-1">
-                          <span className="font-medium text-gray-700">調整会議実施</span>
-                          <div className="text-xs text-gray-600 mt-1">必要に応じて面談</div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-blue-200">
-                        <div className="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-full">
-                          <span className="font-bold text-blue-700">3</span>
-                        </div>
-                        <div className="flex-1">
-                          <span className="font-medium text-gray-700">最終評価確定</span>
-                          <div className="text-xs text-gray-600 mt-1">評価の承認・確定</div>
-                        </div>
-                      </div>
-                    </div>
+                      );
+                    })}
                   </div>
                 </CardContent>
               </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>評価確認対象者</CardTitle>
-                <CardDescription>
-                  評価が完了した職員の確認・調整を行います
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Alert>
-                  <CheckCircle className="h-4 w-4" />
-                  <AlertTitle>評価の確認プロセス</AlertTitle>
-                  <AlertDescription>
-                    1次評価（上司）と本人評価を比較し、必要に応じて調整会議を実施します
-                  </AlertDescription>
-                </Alert>
-                <div className="mt-6 space-y-4">
-                  {filteredStaff
-                    .filter(s => s.evaluationStatus === 'completed')
-                    .map((staff) => (
-                      <div key={staff.id} className="border rounded-lg p-4">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <h4 className="font-medium">{staff.name}</h4>
-                            <p className="text-sm text-gray-600">
-                              {staff.department} • {staff.experienceLabel}
-                            </p>
-                          </div>
-                          <Button variant="outline" size="sm">
-                            <Eye className="w-4 h-4 mr-2" />
-                            詳細確認
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                </div>
-              </CardContent>
-            </Card>
             </div>
-          )}
-
-          {activeTab === 'judgment' && (
-            <div className="space-y-6 p-6">
-              {/* 総合判定フローカード */}
-              <Card className="border-4 border-green-600 bg-gradient-to-r from-green-100 via-emerald-100 to-teal-100 shadow-2xl ring-4 ring-green-200 ring-opacity-30">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="p-4 rounded-full shadow-lg bg-gradient-to-br from-green-600 to-emerald-700">
-                        <TrendingUp className="h-8 w-8 text-white drop-shadow-lg" />
-                      </div>
-                      <div>
-                        <CardTitle className="text-3xl font-bold bg-gradient-to-r from-green-700 to-emerald-800 bg-clip-text text-transparent">
-                          総合判定
-                        </CardTitle>
-                        <CardDescription className="text-xl font-medium text-emerald-700">
-                          2軸相対評価による最終グレード決定
-                        </CardDescription>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <Badge className="px-6 py-3 text-lg font-semibold shadow-lg bg-gradient-to-r from-green-600 to-emerald-700 text-white">
-                        ⚖️ 4月実施
-                      </Badge>
-                      <div className="mt-2 text-sm text-emerald-600 font-medium">
-                        締切: 4月15日
-                      </div>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <h4 className="font-semibold text-lg mb-3 flex items-center gap-2">
-                      <CheckCircle className="h-5 w-5 text-green-600" />
-                      判定プロセス
-                    </h4>
-                    <div className="grid grid-cols-3 gap-4">
-                      <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-green-200">
-                        <div className="flex items-center justify-center w-10 h-10 bg-green-100 rounded-full">
-                          <span className="font-bold text-green-700">1</span>
-                        </div>
-                        <div className="flex-1">
-                          <span className="font-medium text-gray-700">技術評価集計</span>
-                          <div className="text-xs text-gray-600 mt-1">50点満点の技術スコア</div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-green-200">
-                        <div className="flex items-center justify-center w-10 h-10 bg-green-100 rounded-full">
-                          <span className="font-bold text-green-700">2</span>
-                        </div>
-                        <div className="flex-1">
-                          <span className="font-medium text-gray-700">貢献度集計</span>
-                          <div className="text-xs text-gray-600 mt-1">50点満点の貢献スコア</div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-green-200">
-                        <div className="flex items-center justify-center w-10 h-10 bg-green-100 rounded-full">
-                          <span className="font-bold text-green-700">3</span>
-                        </div>
-                        <div className="flex-1">
-                          <span className="font-medium text-gray-700">最終グレード</span>
-                          <div className="text-xs text-gray-600 mt-1">S/A/B/C/D判定</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-              
-              <IntegratedJudgment />
-            </div>
-          )}
-
-          {activeTab === 'disclosure' && (
-            <div className="space-y-6 p-6">
-              {/* 評価開示フローカード */}
-              <Card className="border-4 border-indigo-600 bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100 shadow-2xl ring-4 ring-indigo-200 ring-opacity-30">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="p-4 rounded-full shadow-lg bg-gradient-to-br from-indigo-600 to-purple-700">
-                        <Eye className="h-8 w-8 text-white drop-shadow-lg" />
-                      </div>
-                      <div>
-                        <CardTitle className="text-3xl font-bold bg-gradient-to-r from-indigo-700 to-purple-800 bg-clip-text text-transparent">
-                          評価開示
-                        </CardTitle>
-                        <CardDescription className="text-xl font-medium text-purple-700">
-                          職員への評価結果フィードバック
-                        </CardDescription>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <Badge className="px-6 py-3 text-lg font-semibold shadow-lg bg-gradient-to-r from-indigo-600 to-purple-700 text-white">
-                        👁️ 4月上旬
-                      </Badge>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <h4 className="font-semibold text-lg mb-3 flex items-center gap-2">
-                      <CheckCircle className="h-5 w-5 text-indigo-600" />
-                      開示プロセス
-                    </h4>
-                    <div className="grid grid-cols-3 gap-4">
-                      <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-indigo-200">
-                        <div className="flex items-center justify-center w-10 h-10 bg-indigo-100 rounded-full">
-                          <span className="font-bold text-indigo-700">1</span>
-                        </div>
-                        <div className="flex-1">
-                          <span className="font-medium text-gray-700">開示準備</span>
-                          <div className="text-xs text-gray-600 mt-1">評価結果の整理</div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-indigo-200">
-                        <div className="flex items-center justify-center w-10 h-10 bg-indigo-100 rounded-full">
-                          <span className="font-bold text-indigo-700">2</span>
-                        </div>
-                        <div className="flex-1">
-                          <span className="font-medium text-gray-700">個別面談</span>
-                          <div className="text-xs text-gray-600 mt-1">フィードバック実施</div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-indigo-200">
-                        <div className="flex items-center justify-center w-10 h-10 bg-indigo-100 rounded-full">
-                          <span className="font-bold text-indigo-700">3</span>
-                        </div>
-                        <div className="flex-1">
-                          <span className="font-medium text-gray-700">開示完了</span>
-                          <div className="text-xs text-gray-600 mt-1">記録・保管</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-              
-              <DisclosureManagementV3 />
-            </div>
-          )}
-
-          {activeTab === 'appeal' && (
-            <div className="space-y-6 p-6">
-              {/* 異議申立フローカード */}
-              <Card className="border-4 border-orange-600 bg-gradient-to-r from-orange-100 via-red-100 to-yellow-100 shadow-2xl ring-4 ring-orange-200 ring-opacity-30">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="p-4 rounded-full shadow-lg bg-gradient-to-br from-orange-600 to-red-700">
-                        <MessageSquare className="h-8 w-8 text-white drop-shadow-lg" />
-                      </div>
-                      <div>
-                        <CardTitle className="text-3xl font-bold bg-gradient-to-r from-orange-700 to-red-800 bg-clip-text text-transparent">
-                          異議申立対応
-                        </CardTitle>
-                        <CardDescription className="text-xl font-medium text-orange-700">
-                          評価結果への異議申立受付・対応
-                        </CardDescription>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <Badge className="px-6 py-3 text-lg font-semibold shadow-lg bg-gradient-to-r from-orange-600 to-red-700 text-white">
-                        📢 受付中
-                      </Badge>
-                      <div className="mt-2 text-sm text-orange-600 font-medium">
-                        受付期限: 4月30日
-                      </div>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <h4 className="font-semibold text-lg mb-3 flex items-center gap-2">
-                      <CheckCircle className="h-5 w-5 text-orange-600" />
-                      対応プロセス
-                    </h4>
-                    <div className="grid grid-cols-3 gap-4">
-                      <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-orange-200">
-                        <div className="flex items-center justify-center w-10 h-10 bg-orange-100 rounded-full">
-                          <span className="font-bold text-orange-700">1</span>
-                        </div>
-                        <div className="flex-1">
-                          <span className="font-medium text-gray-700">申立受付</span>
-                          <div className="text-xs text-gray-600 mt-1">内容確認・記録</div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-orange-200">
-                        <div className="flex items-center justify-center w-10 h-10 bg-orange-100 rounded-full">
-                          <span className="font-bold text-orange-700">2</span>
-                        </div>
-                        <div className="flex-1">
-                          <span className="font-medium text-gray-700">審査・検討</span>
-                          <div className="text-xs text-gray-600 mt-1">評価委員会で審議</div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md bg-white border-orange-200">
-                        <div className="flex items-center justify-center w-10 h-10 bg-orange-100 rounded-full">
-                          <span className="font-bold text-orange-700">3</span>
-                        </div>
-                        <div className="flex-1">
-                          <span className="font-medium text-gray-700">結果通知</span>
-                          <div className="text-xs text-gray-600 mt-1">最終決定・通知</div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    {/* 異議申立状況 */}
-                    <div className="mt-4 p-4 bg-orange-50 rounded-lg border border-orange-200">
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <div className="text-sm text-gray-600">現在の異議申立件数</div>
-                          <div className="text-2xl font-bold text-orange-600">{statistics.appealed}件</div>
-                        </div>
-                        <Button className="bg-orange-600 hover:bg-orange-700">
-                          <MessageSquare className="w-4 h-4 mr-2" />
-                          申立一覧を確認
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-              
-              <AppealReceptionV3 />
-            </div>
-          )}
+          </div>
         </div>
       </div>
     </div>
