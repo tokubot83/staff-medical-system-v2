@@ -899,6 +899,5 @@ export default function EvaluationExecutionPage() {
           </div>
         </div>
       </div>
-    </div>
   );
 }
