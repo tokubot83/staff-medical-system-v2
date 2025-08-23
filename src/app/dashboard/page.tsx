@@ -59,6 +59,9 @@ export default function DashboardPage() {
     inProgress: 32,
     notStarted: 15
   });
+  
+  // 現在の月を取得
+  const currentMonth = new Date().getMonth() + 1;
   const [activeTab, setActiveTab] = useState<'home' | 'guide' | 'progress' | 'settings' | 'reports'>('guide');
   const [storyActiveTab, setStoryActiveTab] = useState<'新人' | '一般' | '中堅' | 'ベテラン' | '管理職'>('新人');
 
