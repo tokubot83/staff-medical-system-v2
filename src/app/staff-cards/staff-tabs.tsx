@@ -1667,6 +1667,7 @@ export function DevelopmentTab({ selectedStaff }: { selectedStaff: any }) {
   }
 
   const developmentSubTabs = [
+    { id: 'dashboard', label: '教育研修統合', icon: '🎓' },
     { id: 'growth', label: '成長概要', icon: '📈' },
     { id: 'skills', label: 'スキル成長', icon: '🎯' },
     { id: 'goals', label: '成長目標', icon: '🚀' },
@@ -1676,7 +1677,7 @@ export function DevelopmentTab({ selectedStaff }: { selectedStaff: any }) {
   return (
     <div className={styles.tabContentSection}>
       <div className={styles.sectionHeader}>
-        <h2>🌱 成長・発達管理</h2>
+        <h2>🎓 教育・研修統合分析</h2>
         <div className={styles.sectionActions}>
           <button className={styles.actionButton} onClick={handleGoalSetting}>
             目標設定
@@ -1708,6 +1709,10 @@ export function DevelopmentTab({ selectedStaff }: { selectedStaff: any }) {
         </div>
       ) : (
         <>
+          {activeDevelopmentTab === 'dashboard' && trainingAnalysisData && (
+            <TrainingDashboard data={trainingAnalysisData} />
+          )}
+
           {activeDevelopmentTab === 'growth' && (
             <div className={styles.growthOverview}>
               <div className={styles.growthSummaryCard}>
