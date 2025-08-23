@@ -62,7 +62,7 @@ export default function DashboardPage() {
   
   // 現在の月を取得
   const currentMonth = new Date().getMonth() + 1;
-  const [activeTab, setActiveTab] = useState<'home' | 'guide' | 'progress' | 'settings' | 'reports'>('guide');
+  const [activeTab, setActiveTab] = useState<'home' | 'guide' | 'progress' | 'settings' | 'reports'>('home');
   const [storyActiveTab, setStoryActiveTab] = useState<'新人' | '一般' | '中堅' | 'ベテラン' | '管理職' | '評価制度' | 'シミュレーション'>('新人');
 
   const completionRate = Math.round((evaluationProgress.completed / evaluationProgress.total) * 100);
