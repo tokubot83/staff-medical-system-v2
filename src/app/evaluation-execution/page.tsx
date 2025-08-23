@@ -308,47 +308,44 @@ export default function EvaluationExecutionPage() {
     <div>
       <CommonHeader title="個人評価管理" />
       <div className={styles.container}>
-        {/* 最上部：メインタブナビゲーション */}
+        {/* タブナビゲーション */}
         <div className="mb-4 flex items-center justify-between">
-          <div className={`${styles.mainTabNavigation} flex space-x-2`}>
-            <button className={`${styles.mainTabButton} ${styles.active} flex items-center gap-2 px-4 py-2 rounded-lg font-medium bg-blue-600 text-white shadow-lg`}>
-              <span className={styles.tabIcon}>🏠</span>
-              <span className={styles.tabLabel}>作業ダッシュボード</span>
-            </button>
-            <button className={`${styles.mainTabButton} flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-gray-600 hover:bg-gray-100`}>
-              <span className={styles.tabIcon}>✍️</span>
-              <span className={styles.tabLabel}>評価入力</span>
-            </button>
-            <button className={`${styles.mainTabButton} flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-gray-600 hover:bg-gray-100`}>
-              <span className={styles.tabIcon}>🔍</span>
-              <span className={styles.tabLabel}>評価確認</span>
-            </button>
-            <button className={`${styles.mainTabButton} flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-gray-600 hover:bg-gray-100`}>
-              <span className={styles.tabIcon}>⚖️</span>
-              <span className={styles.tabLabel}>総合判定</span>
-            </button>
-            <button className={`${styles.mainTabButton} flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-gray-600 hover:bg-gray-100`}>
-              <span className={styles.tabIcon}>👁️</span>
-              <span className={styles.tabLabel}>評価開示</span>
-            </button>
-            <button className={`${styles.mainTabButton} flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-gray-600 hover:bg-gray-100`}>
-              <span className={styles.tabIcon}>📢</span>
-              <span className={styles.tabLabel}>異議申立</span>
-            </button>
+          <div className={styles.mainTabNavigation}>
+            {[
+              { id: 'dashboard', label: '作業ダッシュボード', icon: '🏠' },
+              { id: 'input', label: '評価入力', icon: '✍️' },
+              { id: 'review', label: '評価確認', icon: '🔍' },
+              { id: 'judgment', label: '総合判定', icon: '⚖️' },
+              { id: 'disclosure', label: '評価開示', icon: '👁️' },
+              { id: 'appeal', label: '異議申立', icon: '📢' }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`${styles.mainTabButton} ${activeTab === tab.id ? styles.active : ''}`}
+              >
+                <span className={styles.tabIcon}>{tab.icon}</span>
+                <span className={styles.tabLabel}>{tab.label}</span>
+              </button>
+            ))}
           </div>
+          
           <div className="flex items-center gap-2 bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-lg px-4 py-2 shadow-sm">
             <Sparkles className="w-5 h-5 text-purple-600" />
             <div className="text-sm">
               <div className="font-medium text-purple-900">V3評価システム</div>
               <div className="text-purple-700">技術50点+組織貢献50点</div>
             </div>
-            <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent hover:bg-primary/80 bg-purple-100 text-purple-800 font-medium">100点満点</div>
+            <Badge className="bg-purple-100 text-purple-800 font-medium">100点満点</Badge>
           </div>
         </div>
 
-        {/* 評価フェーズ情報と今月のタスク */}
-        <div className={`${styles.tabContent} space-y-6 p-6`}>
-          <div className="rounded-xl text-card-foreground border-4 border-blue-600 bg-gradient-to-r from-blue-100 via-indigo-100 to-purple-100 shadow-2xl ring-4 ring-opacity-30">
+        <div className={styles.tabContent}>
+          {activeTab === 'dashboard' && (
+            <div className="space-y-6 p-6">
+              {/* 現在の評価業務カード */}
+              {currentMonthTask && (
+                <Card className="border-4 border-blue-600 bg-gradient-to-r from-blue-100 via-indigo-100 to-purple-100 shadow-2xl ring-4 ring-blue-200 ring-opacity-30">
             <div className="flex flex-col space-y-1.5 p-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
@@ -442,119 +439,6 @@ export default function EvaluationExecutionPage() {
           </div>
         </div>
 
-        {/* 統合ダッシュボードヘッダー */}
-        <DashboardHeader
-          title="評価統合ダッシュボード"
-          description="評価進捗と研修受講状況を一元管理"
-          onRefresh={handleRefresh}
-        />
-        {/* 進捗オーバービューカード */}
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          <Card className="border-2 border-blue-200">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2">
-                <Users className="h-5 w-5 text-blue-600" />
-                評価対象者サマリー
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="text-center p-3 bg-gray-50 rounded-lg">
-                  <div className="text-3xl font-bold text-gray-700">{statistics.total}</div>
-                  <div className="text-sm text-gray-600">全対象者</div>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">完了</span>
-                    <span className="font-bold text-green-600">{statistics.completed}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">進行中</span>
-                    <span className="font-bold text-blue-600">{statistics.inProgress}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">未着手</span>
-                    <span className="font-bold text-gray-600">{statistics.notStarted}</span>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="border-2 border-green-200">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2">
-                <Activity className="h-5 w-5 text-green-600" />
-                進捗状況
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-medium">全体進捗</span>
-                    <span className="text-2xl font-bold text-green-600">{completionRate}%</span>
-                  </div>
-                  <Progress value={completionRate} className="h-3" />
-                </div>
-                <Alert className="border-yellow-200 bg-yellow-50">
-                  <Clock className="h-4 w-4 text-yellow-600" />
-                  <AlertDescription className="text-sm">
-                    締切まであと<strong>7日</strong>
-                  </AlertDescription>
-                </Alert>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* 進捗バー */}
-        <Card className="mb-6">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium">全体進捗</span>
-              <span className="text-sm text-gray-600">{completionRate}%</span>
-            </div>
-            <Progress value={completionRate} className="h-2" />
-          </CardContent>
-        </Card>
-
-        {/* V3評価システム専用ヘッダー */}
-        <div className="mb-4 flex items-center justify-between">
-          <div className={styles.mainTabNavigation}>
-            {[
-              { id: 'dashboard', label: '作業ダッシュボード', icon: '🏠' },
-              { id: 'input', label: '評価入力', icon: '✍️' },
-              { id: 'review', label: '評価確認', icon: '🔍' },
-              { id: 'judgment', label: '総合判定', icon: '⚖️' },
-              { id: 'disclosure', label: '評価開示', icon: '👁️' },
-              { id: 'appeal', label: '異議申立', icon: '📢' }
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`${styles.mainTabButton} ${activeTab === tab.id ? styles.active : ''}`}
-              >
-                <span className={styles.tabIcon}>{tab.icon}</span>
-                <span className={styles.tabLabel}>{tab.label}</span>
-              </button>
-            ))}
-          </div>
-          
-          {/* V3システム表示 */}
-          <div className="flex items-center gap-2 bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-lg px-4 py-2 shadow-sm">
-            <Sparkles className="w-5 h-5 text-purple-600" />
-            <div className="text-sm">
-              <div className="font-medium text-purple-900">V3評価システム</div>
-              <div className="text-purple-700">技術50点+組織貢献50点</div>
-            </div>
-            <Badge className="bg-purple-100 text-purple-800 font-medium">
-              100点満点
-            </Badge>
-          </div>
-        </div>
-
-        <div className={styles.tabContent}>
           {activeTab === 'dashboard' && (
             <div className="space-y-6 p-6">
               {/* 現在の評価業務カード */}
@@ -673,6 +557,83 @@ export default function EvaluationExecutionPage() {
                   </CardContent>
                 </Card>
               )}
+
+              {/* 統合ダッシュボードヘッダー */}
+              <DashboardHeader
+                title="評価統合ダッシュボード"
+                description="評価進捗と研修受講状況を一元管理"
+                onRefresh={handleRefresh}
+              />
+              {/* 進捗オーバービューカード */}
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <Card className="border-2 border-blue-200">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base flex items-center gap-2">
+                      <Users className="h-5 w-5 text-blue-600" />
+                      評価対象者サマリー
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="text-center p-3 bg-gray-50 rounded-lg">
+                        <div className="text-3xl font-bold text-gray-700">{statistics.total}</div>
+                        <div className="text-sm text-gray-600">全対象者</div>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600">完了</span>
+                          <span className="font-bold text-green-600">{statistics.completed}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600">進行中</span>
+                          <span className="font-bold text-blue-600">{statistics.inProgress}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600">未着手</span>
+                          <span className="font-bold text-gray-600">{statistics.notStarted}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card className="border-2 border-green-200">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base flex items-center gap-2">
+                      <Activity className="h-5 w-5 text-green-600" />
+                      進捗状況
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div>
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-sm font-medium">全体進捗</span>
+                          <span className="text-2xl font-bold text-green-600">{completionRate}%</span>
+                        </div>
+                        <Progress value={completionRate} className="h-3" />
+                      </div>
+                      <Alert className="border-yellow-200 bg-yellow-50">
+                        <Clock className="h-4 w-4 text-yellow-600" />
+                        <AlertDescription className="text-sm">
+                          締切まであと<strong>7日</strong>
+                        </AlertDescription>
+                      </Alert>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* 進捗バー */}
+              <Card className="mb-6">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium">全体進捗</span>
+                    <span className="text-sm text-gray-600">{completionRate}%</span>
+                  </div>
+                  <Progress value={completionRate} className="h-2" />
+                </CardContent>
+              </Card>
               
               {/* 今後の予定 */}
               {upcomingTasks.length > 0 && (
