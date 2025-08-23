@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Calendar, Clock, User, AlertTriangle, CheckCircle, 
   ChevronRight, Play, FileText, Users, TrendingUp,
-  Filter, Search, RefreshCw, Bell, Activity, Plus, FilterX, ArrowLeft
+  Filter, Search, RefreshCw, Bell, Activity, Plus, FilterX, ArrowLeft, CalendarDays
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -22,6 +22,7 @@ import SearchResults from '@/components/search/SearchResults';
 import { AdvancedSearchService } from '@/utils/searchUtils';
 import InterviewTemplateManager from '@/components/templates/InterviewTemplateManager';
 import DynamicInterviewFlow from './DynamicInterviewFlow';
+import InterviewCalendar from './InterviewCalendar';
 
 // 面談予約の統合型定義
 export interface UnifiedInterviewReservation {
@@ -79,6 +80,7 @@ export default function UnifiedInterviewDashboard() {
   const [currentSearchFilters, setCurrentSearchFilters] = useState<AdvancedSearchFilters | null>(null);
   const [isSearching, setIsSearching] = useState(false);
   const [showTemplateManager, setShowTemplateManager] = useState(false);
+  const [showCalendarView, setShowCalendarView] = useState(false);
   
   // サブビュー表示制御
   const [showInterviewFlow, setShowInterviewFlow] = useState(false);
@@ -573,6 +575,10 @@ export default function UnifiedInterviewDashboard() {
               <Plus className="h-5 w-5 mr-2" />
               手動予約追加
             </Button>
+            <Button onClick={() => setShowCalendarView(!showCalendarView)} variant="outline" className="bg-white/10 text-white border-white/30 hover:bg-white/20">
+              <CalendarDays className="h-4 w-4 mr-2" />
+              {showCalendarView ? 'リスト表示' : 'カレンダー表示'}
+            </Button>
             <Button onClick={() => setShowTemplateManager(true)} variant="outline" className="bg-white/10 text-white border-white/30 hover:bg-white/20">
               <FileText className="h-4 w-4 mr-2" />
               テンプレート管理
@@ -742,6 +748,35 @@ export default function UnifiedInterviewDashboard() {
             console.log('検索結果クリック:', reservation);
           }}
           onStartInterview={handleStartInterviewFromSearch}
+        />
+      ) : showCalendarView ? (
+        // カレンダービュー
+        <InterviewCalendar 
+          interviews={reservations.map(r => ({
+            id: r.id,
+            date: r.scheduledDate.toISOString().split('T')[0],
+            time: r.scheduledTime,
+            staffName: r.staffName,
+            staffId: r.staffId,
+            department: r.department,
+            interviewer: r.createdBy || '人事部',
+            type: r.type === 'regular' ? 'regular' : 
+                  r.type === 'special' ? 'emergency' : 'followup',
+            status: r.status === 'pending' ? 'scheduled' :
+                   r.status === 'confirmed' ? 'scheduled' :
+                   r.status === 'completed' ? 'completed' :
+                   r.status === 'cancelled' ? 'cancelled' : 'scheduled',
+            duration: r.duration || 30,
+            location: '人事部面談室',
+            notes: r.notes
+          }))}
+          onDateSelect={(date) => setSelectedDate(date)}
+          onEventClick={(event) => {
+            const reservation = reservations.find(r => r.id === event.id);
+            if (reservation) {
+              handleStartInterview(reservation);
+            }
+          }}
         />
       ) : (
         <div className="grid grid-cols-3 gap-6">
