@@ -55,7 +55,114 @@ import DisclosureManagementV3 from '@/components/evaluation/DisclosureManagement
 import AppealReceptionV3 from '@/components/evaluation/AppealReceptionV3';
 import EvaluationSheetSelector from '@/components/evaluation/EvaluationSheetSelector';
 
+interface MonthlyEvaluationTask {
+  month: number;
+  name: string;
+  evaluationType: 'contribution' | 'technical' | 'comprehensive';
+  points: number;
+  status: 'current' | 'upcoming' | 'completed' | 'inactive';
+  deadline: string;
+  description: string;
+  priority: 'high' | 'medium' | 'low';
+  tasks: {
+    title: string;
+    completed: boolean;
+    urgent?: boolean;
+    staffCount?: number;
+  }[];
+}
+
 export default function EvaluationExecutionPage() {
+  const [currentDate] = useState(new Date());
+  const currentMonth = currentDate.getMonth() + 1; // 1-12
+
+  // 月別評価業務データ
+  const monthlyEvaluationTasks: MonthlyEvaluationTask[] = [
+    {
+      month: 6,
+      name: '夏季貢献度評価',
+      evaluationType: 'contribution',
+      points: 25,
+      status: currentMonth === 6 ? 'current' : currentMonth > 6 ? 'completed' : 'upcoming',
+      deadline: '6月30日',
+      description: '組織貢献度の中間評価（年間50点の前半分）',
+      priority: 'high',
+      tasks: [
+        { title: '各施設から評価データ収集', completed: currentMonth > 6, staffCount: 45 },
+        { title: 'Excelデータ取込・検証', completed: currentMonth > 6, staffCount: 45 },
+        { title: '相対評価ランキング作成', completed: currentMonth > 6 },
+        { title: '評価確定・承認', completed: currentMonth > 6 }
+      ]
+    },
+    {
+      month: 8,
+      name: '夏季評価フォローアップ',
+      evaluationType: 'contribution',
+      points: 0,
+      status: currentMonth === 8 ? 'current' : currentMonth > 8 ? 'completed' : 'upcoming',
+      deadline: '8月15日',
+      description: '夏季評価結果の確認と異議申立対応',
+      priority: 'medium',
+      tasks: [
+        { title: '夏季評価結果通知完了確認', completed: currentMonth > 8, staffCount: 45 },
+        { title: '異議申立の受付・対応', completed: currentMonth > 8, staffCount: 2 },
+        { title: '評価結果の最終確定', completed: currentMonth > 8 }
+      ]
+    },
+    {
+      month: 12,
+      name: '冬季貢献度評価',
+      evaluationType: 'contribution',
+      points: 25,
+      status: currentMonth === 12 ? 'current' : currentMonth > 12 || currentMonth < 4 ? 'completed' : 'upcoming',
+      deadline: '12月28日',
+      description: '組織貢献度の最終評価（年間50点の後半分）',
+      priority: 'high',
+      tasks: [
+        { title: '各施設から評価データ収集', completed: currentMonth > 12 || currentMonth < 4, staffCount: 45 },
+        { title: 'Excelデータ取込・検証', completed: currentMonth > 12 || currentMonth < 4, staffCount: 45 },
+        { title: '年間貢献度スコア算出', completed: currentMonth > 12 || currentMonth < 4 },
+        { title: '相対評価ランキング作成', completed: currentMonth > 12 || currentMonth < 4 }
+      ]
+    },
+    {
+      month: 3,
+      name: '技術評価実施',
+      evaluationType: 'technical',
+      points: 50,
+      status: currentMonth === 3 ? 'current' : currentMonth > 3 ? 'completed' : 'upcoming',
+      deadline: '3月31日',
+      description: '年間技術評価の実施（法人統一30点＋施設特化20点）',
+      priority: 'high',
+      tasks: [
+        { title: '評価シート配布', completed: currentMonth > 3, urgent: currentMonth === 3, staffCount: 45 },
+        { title: '上司評価・本人評価の実施', completed: currentMonth > 3, urgent: currentMonth === 3, staffCount: 45 },
+        { title: '100点満点スコア確定', completed: currentMonth > 3, staffCount: 45 },
+        { title: '2軸相対評価で最終グレード決定', completed: currentMonth > 3 }
+      ]
+    },
+    {
+      month: 4,
+      name: '年度末評価完了・新年度準備',
+      evaluationType: 'comprehensive',
+      points: 100,
+      status: currentMonth === 4 ? 'current' : currentMonth > 4 ? 'completed' : 'upcoming',
+      deadline: '4月15日',
+      description: '最終評価結果の確定と新年度準備',
+      priority: 'high',
+      tasks: [
+        { title: '最終評価結果フィードバック', completed: currentMonth > 4, staffCount: 45 },
+        { title: '昇給・賞与への反映', completed: currentMonth > 4 },
+        { title: '新年度評価計画策定', completed: currentMonth > 4 },
+        { title: '評価者研修の実施', completed: currentMonth > 4 }
+      ]
+    }
+  ];
+
+  // 現在月の評価タスクを取得
+  const currentMonthTask = monthlyEvaluationTasks.find(task => task.status === 'current');
+  const upcomingTasks = monthlyEvaluationTasks.filter(task => task.status === 'upcoming').slice(0, 2);
+  
   // 評価実施のワークフローステップ
   const executionSteps = [
     { id: 1, title: '評価入力', status: 'current', icon: ClipboardList },
@@ -146,7 +253,7 @@ export default function EvaluationExecutionPage() {
   ];
 
   // State定義
-  const [activeTab, setActiveTab] = useState('input');
+  const [activeTab, setActiveTab] = useState('dashboard');
   const [selectedDepartment, setSelectedDepartment] = useState('all');
   const [selectedExperienceLevel, setSelectedExperienceLevel] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -431,6 +538,7 @@ export default function EvaluationExecutionPage() {
         <div className="mb-4 flex items-center justify-between">
           <div className={styles.mainTabNavigation}>
             {[
+              { id: 'dashboard', label: '作業ダッシュボード', icon: '🏠' },
               { id: 'input', label: '評価入力', icon: '✍️' },
               { id: 'review', label: '評価確認', icon: '🔍' },
               { id: 'judgment', label: '総合判定', icon: '⚖️' },
@@ -462,6 +570,168 @@ export default function EvaluationExecutionPage() {
         </div>
 
         <div className={styles.tabContent}>
+          {activeTab === 'dashboard' && (
+            <div className="space-y-6 p-6">
+              {/* 現在の評価業務カード */}
+              {currentMonthTask && (
+                <Card className="border-4 border-blue-600 bg-gradient-to-r from-blue-100 via-indigo-100 to-purple-100 shadow-2xl ring-4 ring-blue-200 ring-opacity-30">
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className={`p-4 rounded-full shadow-lg animate-pulse ${
+                          currentMonthTask.evaluationType === 'contribution' ? 'bg-gradient-to-br from-green-600 to-emerald-700' :
+                          currentMonthTask.evaluationType === 'technical' ? 'bg-gradient-to-br from-purple-600 to-indigo-700' :
+                          'bg-gradient-to-br from-orange-600 to-red-700'
+                        }`}>
+                          {currentMonthTask.evaluationType === 'contribution' && <Users className="h-8 w-8 text-white drop-shadow-lg" />}
+                          {currentMonthTask.evaluationType === 'technical' && <ClipboardList className="h-8 w-8 text-white drop-shadow-lg" />}
+                          {currentMonthTask.evaluationType === 'comprehensive' && <Activity className="h-8 w-8 text-white drop-shadow-lg" />}
+                        </div>
+                        <div>
+                          <CardTitle className="text-3xl font-bold bg-gradient-to-r from-blue-700 to-indigo-800 bg-clip-text text-transparent">
+                            {currentMonth}月: {currentMonthTask.name}
+                          </CardTitle>
+                          <CardDescription className="text-xl font-medium text-indigo-700">
+                            {currentMonthTask.points > 0 ? `${currentMonthTask.points}点` : 'フォローアップ'} ・ {currentMonthTask.description}
+                          </CardDescription>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <Badge className={`px-6 py-3 text-lg font-semibold shadow-lg animate-pulse ${
+                          currentMonthTask.priority === 'high' ? 'bg-gradient-to-r from-red-600 to-pink-700 text-white' :
+                          currentMonthTask.priority === 'medium' ? 'bg-gradient-to-r from-yellow-600 to-orange-700 text-white' :
+                          'bg-gradient-to-r from-blue-600 to-indigo-700 text-white'
+                        }`}>
+                          🎯 実施中
+                        </Badge>
+                        <div className="mt-2 text-sm text-indigo-600 font-medium">
+                          締切: {currentMonthTask.deadline}
+                        </div>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <h4 className="font-semibold text-lg mb-3 flex items-center gap-2">
+                        <CheckCircle className="h-5 w-5 text-blue-600" />
+                        今月の作業タスク
+                      </h4>
+                      <div className="grid grid-cols-2 gap-4">
+                        {currentMonthTask.tasks.map((task, idx) => (
+                          <div key={idx} className={`flex items-center gap-3 p-4 rounded-xl border transition-all hover:shadow-md ${
+                            task.completed ? 'bg-green-50 border-green-200' : 
+                            task.urgent ? 'bg-red-50 border-red-200' : 'bg-white border-gray-200'
+                          }`}>
+                            {task.completed ? (
+                              <div className="flex items-center justify-center w-8 h-8 bg-green-500 rounded-full">
+                                <CheckCircle className="w-5 h-5 text-white" />
+                              </div>
+                            ) : task.urgent ? (
+                              <div className="flex items-center justify-center w-8 h-8 bg-red-500 rounded-full animate-pulse">
+                                <Clock className="w-5 h-5 text-white" />
+                              </div>
+                            ) : (
+                              <div className="w-8 h-8 border-2 border-gray-300 rounded-full flex items-center justify-center">
+                                <div className="w-4 h-4 border-2 border-gray-300 rounded-full" />
+                              </div>
+                            )}
+                            <div className="flex-1">
+                              <span className={`font-medium ${
+                                task.completed ? 'text-green-700' : 
+                                task.urgent ? 'text-red-700' : 'text-gray-700'
+                              }`}>
+                                {task.title}
+                              </span>
+                              {task.staffCount && (
+                                <div className="text-xs text-gray-600 mt-1">
+                                  対象: {task.staffCount}名
+                                </div>
+                              )}
+                              <div className="flex gap-2 mt-1">
+                                {task.urgent && !task.completed && (
+                                  <Badge variant="destructive" className="text-xs animate-pulse">緊急</Badge>
+                                )}
+                                {task.completed && (
+                                  <Badge className="bg-green-100 text-green-800 text-xs">完了済み</Badge>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      
+                      {/* クイックアクション */}
+                      <div className="mt-6 flex gap-3">
+                        {currentMonthTask.evaluationType === 'contribution' && (
+                          <Button className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700">
+                            <Upload className="h-5 w-5 mr-2" />
+                            Excelデータ取込
+                          </Button>
+                        )}
+                        {currentMonthTask.evaluationType === 'technical' && (
+                          <Button 
+                            className="flex-1 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700"
+                            onClick={() => setActiveTab('input')}
+                          >
+                            <ClipboardList className="h-5 w-5 mr-2" />
+                            技術評価開始
+                          </Button>
+                        )}
+                        <Link href="/evaluation-design">
+                          <Button variant="outline" className="px-6">
+                            <Calendar className="h-4 w-4 mr-2" />
+                            年間スケジュール
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+              
+              {/* 今後の予定 */}
+              {upcomingTasks.length > 0 && (
+                <Card className="border-2 border-purple-200">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Calendar className="h-5 w-5 text-purple-600" />
+                      今後の評価予定
+                    </CardTitle>
+                    <CardDescription>
+                      次の評価業務の準備と計画
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {upcomingTasks.map((task, idx) => (
+                        <div key={task.month} className="flex items-center justify-between p-4 bg-purple-50 rounded-lg border border-purple-200">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-purple-200 rounded-full">
+                              {task.evaluationType === 'contribution' && <Users className="h-5 w-5 text-purple-700" />}
+                              {task.evaluationType === 'technical' && <ClipboardList className="h-5 w-5 text-purple-700" />}
+                              {task.evaluationType === 'comprehensive' && <Activity className="h-5 w-5 text-purple-700" />}
+                            </div>
+                            <div>
+                              <div className="font-semibold text-purple-900">
+                                {task.month}月: {task.name}
+                              </div>
+                              <div className="text-sm text-purple-700">
+                                {task.points > 0 ? `${task.points}点` : 'フォルローアップ'} ・ 締切: {task.deadline}
+                              </div>
+                            </div>
+                          </div>
+                          <Badge className="bg-purple-100 text-purple-800">
+                            予定
+                          </Badge>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          )}
+          
           {activeTab === 'input' && (
             <div className="space-y-6 p-6">
               {/* 評価シート選択モード */}

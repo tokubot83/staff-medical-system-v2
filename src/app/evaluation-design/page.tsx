@@ -411,6 +411,12 @@ export default function EvaluationDesignPage() {
                           <Upload className="h-5 w-5 mr-3" />
                           Excelデータを取込
                         </Button>
+                        <Link href="/evaluation-execution">
+                          <Button size="lg" className="w-full justify-start bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700">
+                            <Users className="h-5 w-5 mr-3" />
+                            個人評価管理へ
+                          </Button>
+                        </Link>
                         <Link href="/evaluation-design/templates">
                           <Button size="lg" variant="outline" className="w-full justify-start">
                             <FileSpreadsheet className="h-5 w-5 mr-3" />
