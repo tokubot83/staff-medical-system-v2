@@ -1536,36 +1536,38 @@ function EvaluationHistoryTab({ selectedStaff }: { selectedStaff: any }): React.
                   </defs>
                   
                   {/* 基準線（90点） */}
-                  <line x1="80" y1="60" x2="520" y2="60" stroke="#10b981" strokeWidth="2" strokeDasharray="5,5" opacity="0.7"/>
-                  <text x="530" y="65" fill="#10b981" fontSize="14" fontWeight="bold">S級（90点）</text>
+                  <line x1="90" y1="80" x2="550" y2="80" stroke="#10b981" strokeWidth="3" strokeDasharray="8,5" opacity="0.8"/>
+                  <text x="560" y="85" fill="#10b981" fontSize="16" fontWeight="bold">S級（90点）</text>
                   
                   {/* Y軸 */}
-                  <line x1="60" y1="20" x2="60" y2="160" stroke="#9ca3af" strokeWidth="1"/>
-                  <text x="45" y="25" fill="#6b7280" fontSize="11">100</text>
-                  <text x="50" y="60" fill="#6b7280" fontSize="11">80</text>
-                  <text x="50" y="100" fill="#6b7280" fontSize="11">60</text>
-                  <text x="50" y="140" fill="#6b7280" fontSize="11">40</text>
-                  <text x="50" y="165" fill="#6b7280" fontSize="11">20</text>
+                  <line x1="70" y1="30" x2="70" y2="250" stroke="#9ca3af" strokeWidth="2"/>
+                  <text x="50" y="35" fill="#6b7280" fontSize="14" fontWeight="medium">100</text>
+                  <text x="55" y="80" fill="#6b7280" fontSize="14" fontWeight="medium">80</text>
+                  <text x="55" y="125" fill="#6b7280" fontSize="14" fontWeight="medium">60</text>
+                  <text x="55" y="170" fill="#6b7280" fontSize="14" fontWeight="medium">40</text>
+                  <text x="55" y="215" fill="#6b7280" fontSize="14" fontWeight="medium">20</text>
+                  <text x="60" y="260" fill="#6b7280" fontSize="14" fontWeight="medium">0</text>
                   
                   {/* X軸 */}
-                  <line x1="60" y1="160" x2="440" y2="160" stroke="#9ca3af" strokeWidth="1"/>
+                  <line x1="70" y1="250" x2="550" y2="250" stroke="#9ca3af" strokeWidth="2"/>
                   
                   {/* データライン（面グラフ） */}
                   <polygon
-                    points="60,140 150,100 240,95 330,60 420,50 420,160 60,160"
+                    points="90,200 210,150 330,140 450,95 570,80 570,250 90,250"
                     fill="url(#gradient)"
                   />
                   
                   {/* データライン */}
                   <polyline
-                    points="60,140 150,100 240,95 330,60 420,50"
+                    points="90,200 210,150 330,140 450,95 570,80"
                     fill="none"
                     stroke={CHART_COLORS.primary}
-                    strokeWidth="4"
+                    strokeWidth="6"
+                    style={{ filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.15))' }}
                   />
                   
                   {/* データポイント（インタラクティブ） */}
-                  {[140, 100, 95, 60, 50].map((y, i) => {
+                  {[200, 150, 140, 95, 80].map((y, i) => {
                     const scores = [52.3, 65.8, 68.2, 78.4, 81.25];
                     const score = scores[i];
                     const year = 2020 + i;
@@ -1573,56 +1575,57 @@ function EvaluationHistoryTab({ selectedStaff }: { selectedStaff: any }): React.
                     return (
                       <g key={i} className="group">
                         <circle
-                          cx={60 + i * 90}
+                          cx={90 + i * 120}
                           cy={y}
-                          r={i === 4 ? "8" : "6"}
+                          r={i === 4 ? "12" : "9"}
                           fill={color}
                           stroke="#fff"
-                          strokeWidth={i === 4 ? "3" : "2"}
-                          className="transition-all duration-300 group-hover:r-10 cursor-pointer"
-                          style={{ filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.15))' }}
+                          strokeWidth="4"
+                          className="transition-all duration-300 group-hover:r-15 cursor-pointer"
+                          style={{ filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))' }}
                         />
                         <circle
-                          cx={60 + i * 90}
+                          cx={90 + i * 120}
                           cy={y}
-                          r="12"
+                          r="18"
                           fill={color}
                           fillOpacity="0"
                           className="transition-all duration-300 group-hover:fill-opacity-25"
                         />
                         <text
-                          x={60 + i * 90}
-                          y={y - 12}
+                          x={90 + i * 120}
+                          y={y - 18}
                           fill="#fff"
-                          fontSize={i === 4 ? "13" : "11"}
+                          fontSize={i === 4 ? "16" : "14"}
                           fontWeight="bold"
                           textAnchor="middle"
-                          className="transition-all duration-300 group-hover:text-sm"
+                          className="transition-all duration-300 group-hover:text-lg"
+                          style={{ filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.5))' }}
                         >
                           {score}
                         </text>
                         {/* ホバー時のツールチップ */}
                         <g className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                           <rect
-                            x={60 + i * 90 - 50}
-                            y={y - 60}
-                            width="100"
-                            height="35"
-                            rx="6"
-                            fill="rgba(15, 23, 42, 0.9)"
-                            style={{ filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.3))' }}
+                            x={90 + i * 120 - 60}
+                            y={y - 75}
+                            width="120"
+                            height="40"
+                            rx="8"
+                            fill="rgba(15, 23, 42, 0.95)"
+                            style={{ filter: 'drop-shadow(0 6px 12px rgba(0,0,0,0.4))' }}
                           />
                           <text
-                            x={60 + i * 90}
-                            y={y - 45}
+                            x={90 + i * 120}
+                            y={y - 60}
                             textAnchor="middle"
-                            className="text-sm fill-white font-semibold"
+                            className="text-base fill-white font-semibold"
                           >
                             {year}年
                           </text>
                           <text
-                            x={60 + i * 90}
-                            y={y - 28}
+                            x={90 + i * 120}
+                            y={y - 40}
                             textAnchor="middle"
                             className="text-sm fill-white font-medium"
                           >
@@ -1634,11 +1637,19 @@ function EvaluationHistoryTab({ selectedStaff }: { selectedStaff: any }): React.
                   })}
                   
                   {/* X軸ラベル */}
-                  <text x="60" y="180" fill="#6b7280" fontSize="12" textAnchor="middle">2020</text>
-                  <text x="150" y="180" fill="#6b7280" fontSize="12" textAnchor="middle">2021</text>
-                  <text x="240" y="180" fill="#6b7280" fontSize="12" textAnchor="middle">2022</text>
-                  <text x="330" y="180" fill="#6b7280" fontSize="12" textAnchor="middle">2023</text>
-                  <text x="420" y="180" fill="#6b7280" fontSize="12" fontWeight="bold" textAnchor="middle">2024</text>
+                  {[2020, 2021, 2022, 2023, 2024].map((year, i) => (
+                    <text
+                      key={year}
+                      x={90 + i * 120}
+                      y={275}
+                      fill="#6b7280"
+                      fontSize="16"
+                      fontWeight={i === 4 ? "bold" : "medium"}
+                      textAnchor="middle"
+                    >
+                      {year}
+                    </text>
+                  ))}
                 </svg>
               </div>
             </div>
@@ -1691,28 +1702,28 @@ function EvaluationHistoryTab({ selectedStaff }: { selectedStaff: any }): React.
               <div className="h-96 bg-gradient-to-br from-green-50 to-white rounded-lg p-6 relative border shadow-inner hover:shadow-lg transition-shadow duration-300">
                 <svg width="100%" height="100%" viewBox="0 0 600 320" className="overflow-visible" style={{ cursor: 'crosshair' }}>
                   {/* 上位10%ライン */}
-                  <line x1="70" y1="80" x2="530" y2="80" stroke="#10b981" strokeWidth="3" strokeDasharray="8,4" opacity="0.8"/>
-                  <text x="540" y="75" fill="#10b981" fontSize="14" fontWeight="bold">上位10%</text>
+                  <line x1="80" y1="100" x2="550" y2="100" stroke="#10b981" strokeWidth="4" strokeDasharray="10,5" opacity="0.8"/>
+                  <text x="560" y="95" fill="#10b981" fontSize="16" fontWeight="bold">上位10%</text>
                   
                   {/* Y軸（順位は逆転） */}
-                  <line x1="70" y1="40" x2="70" y2="260" stroke="#9ca3af" strokeWidth="2"/>
-                  <text x="55" y="45" fill="#6b7280" fontSize="13" fontWeight="medium">1位</text>
-                  <text x="45" y="105" fill="#6b7280" fontSize="13" fontWeight="medium">25位</text>
-                  <text x="45" y="165" fill="#6b7280" fontSize="13" fontWeight="medium">50位</text>
-                  <text x="45" y="225" fill="#6b7280" fontSize="13" fontWeight="medium">75位</text>
-                  <text x="40" y="265" fill="#6b7280" fontSize="13" fontWeight="medium">100位</text>
+                  <line x1="80" y1="50" x2="80" y2="280" stroke="#9ca3af" strokeWidth="2"/>
+                  <text x="60" y="55" fill="#6b7280" fontSize="15" fontWeight="medium">1位</text>
+                  <text x="50" y="110" fill="#6b7280" fontSize="15" fontWeight="medium">25位</text>
+                  <text x="50" y="165" fill="#6b7280" fontSize="15" fontWeight="medium">50位</text>
+                  <text x="50" y="220" fill="#6b7280" fontSize="15" fontWeight="medium">75位</text>
+                  <text x="40" y="275" fill="#6b7280" fontSize="15" fontWeight="medium">100位</text>
                   
                   {/* データライン */}
                   <polyline
-                    points="70,240 180,195 290,160 400,115 510,90"
+                    points="100,260 220,210 340,175 460,125 580,105"
                     fill="none"
                     stroke={CHART_COLORS.success}
-                    strokeWidth="5"
-                    style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
+                    strokeWidth="6"
+                    style={{ filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.15))' }}
                   />
                   
                   {/* データポイント（インタラクティブ） */}
-                  {[240, 195, 160, 115, 90].map((y, i) => {
+                  {[260, 210, 175, 125, 105].map((y, i) => {
                     const ranks = [89, 65, 42, 22, 12];
                     const rank = ranks[i];
                     const year = 2020 + i;
@@ -1720,56 +1731,57 @@ function EvaluationHistoryTab({ selectedStaff }: { selectedStaff: any }): React.
                     return (
                       <g key={i} className="group">
                         <circle
-                          cx={70 + i * 110}
+                          cx={100 + i * 120}
                           cy={y}
-                          r={i === 4 ? "10" : "8"}
+                          r={i === 4 ? "14" : "11"}
                           fill={color}
                           stroke="#fff"
-                          strokeWidth="3"
-                          className="transition-all duration-300 group-hover:r-12 cursor-pointer"
-                          style={{ filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.15))' }}
+                          strokeWidth="4"
+                          className="transition-all duration-300 group-hover:r-17 cursor-pointer"
+                          style={{ filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))' }}
                         />
                         <circle
-                          cx={70 + i * 110}
+                          cx={100 + i * 120}
                           cy={y}
-                          r="15"
+                          r="20"
                           fill={color}
                           fillOpacity="0"
                           className="transition-all duration-300 group-hover:fill-opacity-25"
                         />
                         <text
-                          x={70 + i * 110}
-                          y={y + 6}
+                          x={100 + i * 120}
+                          y={y + 7}
                           fill="#fff"
-                          fontSize={i === 4 ? "14" : "12"}
+                          fontSize={i === 4 ? "17" : "15"}
                           fontWeight="bold"
                           textAnchor="middle"
-                          className="transition-all duration-300 group-hover:text-base"
+                          className="transition-all duration-300 group-hover:text-lg"
+                          style={{ filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.5))' }}
                         >
                           {rank}位
                         </text>
                         {/* ホバー時のツールチップ */}
                         <g className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                           <rect
-                            x={70 + i * 110 - 65}
-                            y={y - 70}
-                            width="130"
-                            height="40"
-                            rx="6"
-                            fill="rgba(15, 23, 42, 0.9)"
-                            style={{ filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.3))' }}
+                            x={100 + i * 120 - 75}
+                            y={y - 80}
+                            width="150"
+                            height="45"
+                            rx="8"
+                            fill="rgba(15, 23, 42, 0.95)"
+                            style={{ filter: 'drop-shadow(0 6px 12px rgba(0,0,0,0.4))' }}
                           />
                           <text
-                            x={70 + i * 110}
-                            y={y - 55}
+                            x={100 + i * 120}
+                            y={y - 65}
                             textAnchor="middle"
-                            className="text-sm fill-white font-semibold"
+                            className="text-base fill-white font-semibold"
                           >
                             {year}年 法人内順位
                           </text>
                           <text
-                            x={70 + i * 110}
-                            y={y - 38}
+                            x={100 + i * 120}
+                            y={y - 45}
                             textAnchor="middle"
                             className="text-sm fill-white font-medium"
                           >
@@ -1784,10 +1796,10 @@ function EvaluationHistoryTab({ selectedStaff }: { selectedStaff: any }): React.
                   {[2020, 2021, 2022, 2023, 2024].map((year, i) => (
                     <text
                       key={year}
-                      x={70 + i * 110}
-                      y={290}
+                      x={100 + i * 120}
+                      y={305}
                       fill="#6b7280"
-                      fontSize="14"
+                      fontSize="16"
                       fontWeight={i === 4 ? "bold" : "medium"}
                       textAnchor="middle"
                     >
@@ -1846,20 +1858,20 @@ function EvaluationHistoryTab({ selectedStaff }: { selectedStaff: any }): React.
               <div className="h-96 bg-gradient-to-br from-orange-50 to-white rounded-lg p-6 relative border shadow-inner hover:shadow-lg transition-shadow duration-300">
                 <svg width="100%" height="100%" viewBox="0 0 600 320" className="overflow-visible" style={{ cursor: 'crosshair' }}>
                   {/* 上位10%ライン */}
-                  <line x1="70" y1="65" x2="530" y2="65" stroke="#f59e0b" strokeWidth="3" strokeDasharray="8,4" opacity="0.8"/>
-                  <text x="540" y="60" fill="#f59e0b" fontSize="14" fontWeight="bold">上位10%</text>
+                  <line x1="80" y1="85" x2="550" y2="85" stroke="#f59e0b" strokeWidth="4" strokeDasharray="10,5" opacity="0.8"/>
+                  <text x="560" y="80" fill="#f59e0b" fontSize="16" fontWeight="bold">上位10%</text>
                   
                   {/* データライン */}
                   <polyline
-                    points="70,190 180,155 290,135 400,105 510,75"
+                    points="100,240 220,195 340,175 460,145 580,115"
                     fill="none"
                     stroke={CHART_COLORS.warning}
-                    strokeWidth="5"
-                    style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
+                    strokeWidth="6"
+                    style={{ filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.15))' }}
                   />
                   
                   {/* データポイント（インタラクティブ） */}
-                  {[190, 155, 135, 105, 75].map((y, i) => {
+                  {[240, 195, 175, 145, 115].map((y, i) => {
                     const ranks = [35, 22, 18, 15, 8];
                     const rank = ranks[i];
                     const year = 2020 + i;
@@ -1867,56 +1879,57 @@ function EvaluationHistoryTab({ selectedStaff }: { selectedStaff: any }): React.
                     return (
                       <g key={i} className="group">
                         <circle
-                          cx={70 + i * 110}
+                          cx={100 + i * 120}
                           cy={y}
-                          r={i === 4 ? "10" : "8"}
+                          r={i === 4 ? "14" : "11"}
                           fill={color}
                           stroke="#fff"
-                          strokeWidth="3"
-                          className="transition-all duration-300 group-hover:r-12 cursor-pointer"
-                          style={{ filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.15))' }}
+                          strokeWidth="4"
+                          className="transition-all duration-300 group-hover:r-17 cursor-pointer"
+                          style={{ filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))' }}
                         />
                         <circle
-                          cx={70 + i * 110}
+                          cx={100 + i * 120}
                           cy={y}
-                          r="15"
+                          r="20"
                           fill={color}
                           fillOpacity="0"
                           className="transition-all duration-300 group-hover:fill-opacity-25"
                         />
                         <text
-                          x={70 + i * 110}
-                          y={y + 6}
+                          x={100 + i * 120}
+                          y={y + 7}
                           fill="#fff"
-                          fontSize={i === 4 ? "14" : "12"}
+                          fontSize={i === 4 ? "17" : "15"}
                           fontWeight="bold"
                           textAnchor="middle"
-                          className="transition-all duration-300 group-hover:text-base"
+                          className="transition-all duration-300 group-hover:text-lg"
+                          style={{ filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.5))' }}
                         >
                           {rank}位
                         </text>
                         {/* ホバー時のツールチップ */}
                         <g className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                           <rect
-                            x={70 + i * 110 - 65}
-                            y={y - 70}
-                            width="130"
-                            height="40"
-                            rx="6"
-                            fill="rgba(15, 23, 42, 0.9)"
-                            style={{ filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.3))' }}
+                            x={100 + i * 120 - 75}
+                            y={y - 80}
+                            width="150"
+                            height="45"
+                            rx="8"
+                            fill="rgba(15, 23, 42, 0.95)"
+                            style={{ filter: 'drop-shadow(0 6px 12px rgba(0,0,0,0.4))' }}
                           />
                           <text
-                            x={70 + i * 110}
-                            y={y - 55}
+                            x={100 + i * 120}
+                            y={y - 65}
                             textAnchor="middle"
-                            className="text-sm fill-white font-semibold"
+                            className="text-base fill-white font-semibold"
                           >
                             {year}年 施設内順位
                           </text>
                           <text
-                            x={70 + i * 110}
-                            y={y - 38}
+                            x={100 + i * 120}
+                            y={y - 45}
                             textAnchor="middle"
                             className="text-sm fill-white font-medium"
                           >
@@ -1931,10 +1944,10 @@ function EvaluationHistoryTab({ selectedStaff }: { selectedStaff: any }): React.
                   {[2020, 2021, 2022, 2023, 2024].map((year, i) => (
                     <text
                       key={year}
-                      x={70 + i * 110}
-                      y={290}
+                      x={100 + i * 120}
+                      y={305}
                       fill="#6b7280"
-                      fontSize="14"
+                      fontSize="16"
                       fontWeight={i === 4 ? "bold" : "medium"}
                       textAnchor="middle"
                     >
