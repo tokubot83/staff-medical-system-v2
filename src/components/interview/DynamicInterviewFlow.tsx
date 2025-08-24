@@ -1264,8 +1264,13 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
   return (
     <div style={{ margin: '-20px' }} className={`space-y-6 ${isPrintMode ? 'print-preview-mode' : ''}`}>
       {/* プログレスバー */}
-      <div className="mb-8">
-        <Progress value={calculateProgress()} className="h-2" />
+      <div className="mb-8 px-6">
+        <div className="relative">
+          <Progress value={calculateProgress()} className="h-3" />
+          <div className="absolute top-0 right-0 text-xs text-gray-500">
+            {Math.round(calculateProgress())}%
+          </div>
+        </div>
         <div className="flex justify-between mt-2 text-sm text-gray-600">
           <span className={currentStep === 'staff-select' ? 'font-bold text-blue-600' : ''}>職員選択</span>
           <span className={currentStep === 'interview-type' ? 'font-bold text-blue-600' : ''}>面談種類</span>
