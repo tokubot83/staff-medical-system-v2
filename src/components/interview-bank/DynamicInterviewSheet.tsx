@@ -7,7 +7,8 @@ import {
   TrendingUp, MessageSquare, FileText, Settings,
   Award, Lightbulb, ArrowRight, Plus, Minus,
   Save, Printer, RefreshCw, Edit3, Building,
-  Users, Briefcase, GraduationCap, Activity, AlertCircle
+  Users, Briefcase, GraduationCap, Activity, AlertCircle,
+  ArrowRightLeft
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -34,6 +35,9 @@ interface DynamicInterviewSheetProps {
   onSave?: (data: any) => void;
   onPrint?: () => void;
   readOnly?: boolean;
+  // 前回面談比較用
+  showComparison?: boolean;
+  currentInterviewType?: string;
 }
 
 export default function DynamicInterviewSheet({ 
@@ -41,13 +45,18 @@ export default function DynamicInterviewSheet({
   staffProfile,
   onSave,
   onPrint,
-  readOnly = false 
+  readOnly = false,
+  showComparison = false,
+  currentInterviewType
 }: DynamicInterviewSheetProps) {
   const [activeSection, setActiveSection] = useState(0);
   const [responses, setResponses] = useState<Record<string, any>>({});
   const [completionStatus, setCompletionStatus] = useState<Record<string, boolean>>({});
   const [motivationType, setMotivationType] = useState<MotivationType | null>(null);
   const [autoSaveTimer, setAutoSaveTimer] = useState<NodeJS.Timeout | null>(null);
+  const [previousInterviewData, setPreviousInterviewData] = useState<any>(null);
+  const [comparisonActiveSection, setComparisonActiveSection] = useState(0);
+  const [isComparisonEnabled, setIsComparisonEnabled] = useState(false);
   
   // GeneratedBankSheetからGeneratedInterviewSheetに変換
   const normalizedSheetData = React.useMemo(() => {
@@ -83,6 +92,51 @@ export default function DynamicInterviewSheet({
     }
     return sheetData;
   }, [sheetData]);
+
+  // 前回面談データ取得
+  useEffect(() => {
+    if ((showComparison || isComparisonEnabled) && staffProfile.id && currentInterviewType) {
+      fetchPreviousInterviewData();
+    }
+  }, [showComparison, isComparisonEnabled, staffProfile.id, currentInterviewType]);
+
+  // セクション同期機能 - 現在のセクションが変わったら前回面談側も同じセクションに移動
+  useEffect(() => {
+    if ((showComparison || isComparisonEnabled) && previousInterviewData) {
+      setComparisonActiveSection(activeSection);
+      // 前回データに同じセクションがあるか確認
+      if (previousInterviewData.sheetStructure?.sections?.[activeSection]) {
+        console.log(`セクション同期: ${activeSection} -> ${normalizedSheetData.sections[activeSection]?.name}`);
+      }
+    }
+  }, [activeSection, showComparison, isComparisonEnabled, previousInterviewData, normalizedSheetData.sections]);
+
+  const fetchPreviousInterviewData = async () => {
+    try {
+      // LocalStorageから前回の同種面談データを取得
+      const storageKey = 'staff_medical_interview_data';
+      const storedData = localStorage.getItem(storageKey);
+      if (!storedData) return;
+
+      const allInterviews = JSON.parse(storedData);
+      const staffInterviews = allInterviews.filter((interview: any) => 
+        interview.staffId === staffProfile.id &&
+        interview.interviewType === currentInterviewType &&
+        interview.status === 'completed'
+      );
+
+      if (staffInterviews.length > 0) {
+        // 最新の完了した面談を取得
+        const latest = staffInterviews.sort((a: any, b: any) => 
+          new Date(b.completedAt || b.createdAt).getTime() - new Date(a.completedAt || a.createdAt).getTime()
+        )[0];
+        
+        setPreviousInterviewData(latest);
+      }
+    } catch (error) {
+      console.error('Failed to fetch previous interview data:', error);
+    }
+  };
 
   // 回答を更新
   const updateResponse = (sectionId: string, questionId: string, value: any) => {
@@ -446,6 +500,19 @@ export default function DynamicInterviewSheet({
               </div>
             </div>
             <div className="flex space-x-2">
+              <Button 
+                onClick={() => {
+                  setIsComparisonEnabled(!isComparisonEnabled);
+                  if (!isComparisonEnabled) {
+                    fetchPreviousInterviewData();
+                  }
+                }}
+                variant={(showComparison || isComparisonEnabled) ? 'default' : 'outline'}
+                title="前回面談シートと比較表示"
+              >
+                <ArrowRightLeft className="mr-2" size={16} />
+                {(showComparison || isComparisonEnabled) ? '比較終了' : '前回比較'}
+              </Button>
               <Button onClick={onSave} disabled={readOnly}>
                 <Save className="mr-2" size={16} />
                 保存
@@ -547,7 +614,7 @@ export default function DynamicInterviewSheet({
         </div>
 
         {/* メインコンテンツ */}
-        <div className="flex-1">
+        <div className={`flex-1 ${(showComparison || isComparisonEnabled) && previousInterviewData ? 'max-w-1/2' : ''}`}>
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
@@ -625,6 +692,107 @@ export default function DynamicInterviewSheet({
             </Alert>
           )}
         </div>
+        
+        {/* 前回面談データ比較表示 */}
+        {(showComparison || isComparisonEnabled) && previousInterviewData && (
+          <div className="flex-1 ml-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center text-green-600">
+                  <FileText className="mr-3" size={24} />
+                  前回面談シート - {new Date(previousInterviewData.completedAt || previousInterviewData.createdAt).toLocaleDateString('ja-JP')}
+                </CardTitle>
+                <div className="text-sm text-gray-600">
+                  面談種別: {previousInterviewData.interviewType} | 
+                  所要時間: {previousInterviewData.duration || 30}分
+                </div>
+              </CardHeader>
+              <CardContent>
+                {/* 同期されたセクションの表示 */}
+                {previousInterviewData.responses && (
+                  <div className="space-y-4">
+                    {/* 現在のセクションに対応する前回データを表示 */}
+                    <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                      <h4 className="font-medium text-green-800 mb-3 flex items-center">
+                        <ArrowRightLeft className="mr-2" size={16} />
+                        同期中: {normalizedSheetData.sections[activeSection]?.name}
+                      </h4>
+                      
+                      {/* 現在のセクションに対応する前回の回答 */}
+                      {(() => {
+                        const currentSectionName = normalizedSheetData.sections[activeSection]?.name;
+                        const matchingSectionResponses = Object.entries(previousInterviewData.responses || {})
+                          .find(([sectionId]) => sectionId.includes(currentSectionName) || currentSectionName.includes(sectionId));
+                        
+                        if (matchingSectionResponses) {
+                          const [sectionId, sectionResponses] = matchingSectionResponses;
+                          return (
+                            <div className="space-y-3">
+                              {Object.entries(sectionResponses || {}).map(([questionId, response]: [string, any]) => (
+                                <div key={questionId} className="bg-white p-3 rounded border border-green-100">
+                                  <p className="text-xs text-green-600 mb-1">前回の回答</p>
+                                  <p className="text-sm text-green-800 font-medium">
+                                    {typeof response === 'object' ? JSON.stringify(response, null, 2) : String(response)}
+                                  </p>
+                                </div>
+                              ))}
+                            </div>
+                          );
+                        } else {
+                          return (
+                            <p className="text-sm text-green-600 italic">
+                              このセクションに対応する前回データが見つかりません
+                            </p>
+                          );
+                        }
+                      })()} 
+                    </div>
+                    
+                    {/* 全セクションの概要表示（折りたたみ可能） */}
+                    <details className="mt-4">
+                      <summary className="cursor-pointer text-sm font-medium text-green-700 hover:text-green-800">
+                        全セクションの前回データを表示
+                      </summary>
+                      <div className="mt-3 space-y-3">
+                        {Object.entries(previousInterviewData.responses).map(([sectionId, sectionResponses]: [string, any]) => (
+                          <div key={sectionId} className="border-l-4 border-green-300 pl-4">
+                            <h5 className="font-medium text-green-600 mb-2">{sectionId}</h5>
+                            {Object.entries(sectionResponses || {}).map(([questionId, response]: [string, any]) => (
+                              <div key={questionId} className="mb-2 p-2 bg-green-25 rounded">
+                                <p className="text-xs text-gray-500 mb-1">{questionId}</p>
+                                <p className="text-sm text-green-700">
+                                  {typeof response === 'object' ? JSON.stringify(response) : String(response)}
+                                </p>
+                              </div>
+                            ))}
+                          </div>
+                        ))}
+                      </div>
+                    </details>
+                  </div>
+                )}
+                
+                {!previousInterviewData.responses && (
+                  <div className="text-center py-8 text-gray-500">
+                    <p>前回面談の詳細データが見つかりません</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        )}
+        
+        {(showComparison || isComparisonEnabled) && !previousInterviewData && (
+          <div className="flex-1 ml-6">
+            <Card>
+              <CardContent className="p-8 text-center text-gray-500">
+                <FileText className="mx-auto mb-4 text-gray-300" size={48} />
+                <p>前回の同種面談データが見つかりません</p>
+                <p className="text-sm mt-2">初回面談またはデータが未保存の可能性があります。</p>
+              </CardContent>
+            </Card>
+          </div>
+        )}
       </div>
 
       {/* フッター */}

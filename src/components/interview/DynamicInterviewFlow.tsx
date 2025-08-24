@@ -75,7 +75,6 @@ import { UnifiedInterviewGeneratorService, UnifiedInterviewParams as UnifiedGene
 import { InterviewManualGenerationService, ManualGenerationRequest } from '@/services/interviewManualGenerationServiceWrapper';
 import DynamicInterviewSheet from '@/components/interview-bank/DynamicInterviewSheet';
 import DynamicInterviewSheetPrint from '@/components/interview-bank/DynamicInterviewSheetPrint';
-import InterviewSheetModal from '@/components/InterviewSheetModal';
 
 // 職員データの型定義
 interface StaffMember {
@@ -183,7 +182,7 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
   const [showPrintPreview, setShowPrintPreview] = useState(false); // 印刷プレビューフラグ
   const [useImprovedUI, setUseImprovedUI] = useState(false); // 改善版UI使用フラグ
   const [showPrintView, setShowPrintView] = useState(false); // バンクシステム印刷ビューフラグ
-  const [showComparisonModal, setShowComparisonModal] = useState(false); // 前回面談シート比較モーダル
+  const [showComparison, setShowComparison] = useState(false); // 前回面談シート比較表示
   const { print, printElement, isPrinting } = usePrintPreview({
     title: '面談記録',
     paperSize: 'A4',
@@ -2012,13 +2011,13 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
               デジタル入力
             </Button>
             <Button
-              variant="outline"
+              variant={showComparison ? 'default' : 'outline'}
               size="sm"
-              onClick={() => setShowComparisonModal(true)}
+              onClick={() => setShowComparison(!showComparison)}
               title="前回面談シート比較"
             >
               <ArrowRightLeft className="h-4 w-4 mr-1" />
-              前回比較
+              {showComparison ? '比較終了' : '前回比較'}
             </Button>
             <Button
               variant={showPrintView ? 'default' : 'outline'}
@@ -2055,6 +2054,8 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
                 profession: session.staffMember!.jobRole,
                 licenses: extractLicenses(session.staffMember!.jobRole)
               }}
+              showComparison={showComparison}
+              currentInterviewType={session.interviewType}
               onSave={(data) => {
                 setSession(prev => ({
                   ...prev,
@@ -2819,20 +2820,6 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
           showSettings={true}
         />
       )}
-      
-      {/* 前回面談シート比較モーダル */}
-      <InterviewSheetModal
-        isOpen={showComparisonModal}
-        onClose={() => setShowComparisonModal(false)}
-        sheetName="前回面談シート比較"
-        sheetPath="v4_interview/general-nurse-unified-30min.tsx"
-        staffId={session.staffMember?.id}
-        staffName={session.staffMember?.name}
-        interviewType={session.interviewType}
-        experienceCategory={session.staffMember ? determineExperienceCategory(session.staffMember.experienceYears) : undefined}
-        duration={session.duration || 30}
-        yearsOfExperience={session.staffMember?.experienceYears}
-      />
     </div>
   );
 }
