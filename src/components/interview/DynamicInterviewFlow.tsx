@@ -1262,7 +1262,7 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
   };
 
   return (
-    <div className={`max-w-6xl mx-auto p-6 space-y-6 ${isPrintMode ? 'print-preview-mode' : ''}`}>
+    <div style={{ margin: '-20px' }} className={`space-y-6 ${isPrintMode ? 'print-preview-mode' : ''}`}>
       {/* プログレスバー */}
       <div className="mb-8">
         <Progress value={calculateProgress()} className="h-2" />
