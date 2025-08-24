@@ -96,7 +96,10 @@ export default function DynamicInterviewSheet({
     const initializeDemoData = () => {
       const storageKey = 'staff_medical_interview_data';
       const existingData = localStorage.getItem(storageKey);
-      if (!existingData) {
+      // 新しいデモデータを強制的に読み込み（開発用）
+      const forceRefresh = !existingData || existingData.includes('STAFF_001');
+      if (forceRefresh) {
+        console.log('🔄 LocalStorageをリフレッシュして新しいデモデータを読み込みます');
         // デモデータをインポートして保存
         import('@/data/demoInterviewData').then(({ demoInterviewData }) => {
           // デモデータをLocalStorage用の形式に変換
@@ -564,6 +567,19 @@ export default function DynamicInterviewSheet({
               >
                 <ArrowRightLeft className="mr-2" size={16} />
                 {isComparisonEnabled ? '比較終了' : '前回比較'}
+              </Button>
+              {/* 開発用：デモデータリセットボタン */}
+              <Button 
+                onClick={() => {
+                  localStorage.removeItem('staff_medical_interview_data');
+                  window.location.reload();
+                }}
+                variant="outline"
+                size="sm"
+                className="text-xs"
+                title="デモデータをリセット"
+              >
+                デモリセット
               </Button>
               <Button onClick={onSave} disabled={readOnly}>
                 <Save className="mr-2" size={16} />
