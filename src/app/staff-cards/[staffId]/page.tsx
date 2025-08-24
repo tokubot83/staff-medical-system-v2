@@ -1525,8 +1525,8 @@ function EvaluationHistoryTab({ selectedStaff }: { selectedStaff: any }): React.
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* グラフエリア（左側 2/3） */}
             <div className="lg:col-span-2">
-              <div className="h-96 bg-gradient-to-br from-blue-50 to-white rounded-lg p-6 relative border shadow-inner hover:shadow-lg transition-shadow duration-300">
-                <svg width="100%" height="100%" viewBox="0 0 600 320" className="overflow-visible" style={{ cursor: 'crosshair' }}>
+              <div className="h-80 bg-gradient-to-br from-blue-50 to-white rounded-lg p-4 relative border shadow-sm hover:shadow-md transition-shadow duration-200">
+                <svg width="100%" height="100%" viewBox="0 0 580 280" className="overflow-visible" style={{ cursor: 'default' }}>
                   {/* グリッドライン */}
                   <defs>
                     <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -1536,38 +1536,38 @@ function EvaluationHistoryTab({ selectedStaff }: { selectedStaff: any }): React.
                   </defs>
                   
                   {/* 基準線（90点） */}
-                  <line x1="90" y1="80" x2="550" y2="80" stroke="#10b981" strokeWidth="3" strokeDasharray="8,5" opacity="0.8"/>
-                  <text x="560" y="85" fill="#10b981" fontSize="16" fontWeight="bold">S級（90点）</text>
+                  <line x1="80" y1="70" x2="520" y2="70" stroke="#10b981" strokeWidth="2" strokeDasharray="5,3" opacity="0.7"/>
+                  <text x="530" y="75" fill="#10b981" fontSize="11" fontWeight="600">S級（90点）</text>
                   
                   {/* Y軸 */}
-                  <line x1="70" y1="30" x2="70" y2="250" stroke="#9ca3af" strokeWidth="2"/>
-                  <text x="50" y="35" fill="#6b7280" fontSize="14" fontWeight="medium">100</text>
-                  <text x="55" y="80" fill="#6b7280" fontSize="14" fontWeight="medium">80</text>
-                  <text x="55" y="125" fill="#6b7280" fontSize="14" fontWeight="medium">60</text>
-                  <text x="55" y="170" fill="#6b7280" fontSize="14" fontWeight="medium">40</text>
-                  <text x="55" y="215" fill="#6b7280" fontSize="14" fontWeight="medium">20</text>
-                  <text x="60" y="260" fill="#6b7280" fontSize="14" fontWeight="medium">0</text>
+                  <line x1="60" y1="30" x2="60" y2="220" stroke="#9ca3af" strokeWidth="1"/>
+                  <text x="45" y="35" fill="#6b7280" fontSize="11">100</text>
+                  <text x="45" y="70" fill="#6b7280" fontSize="11">80</text>
+                  <text x="45" y="105" fill="#6b7280" fontSize="11">60</text>
+                  <text x="45" y="140" fill="#6b7280" fontSize="11">40</text>
+                  <text x="45" y="175" fill="#6b7280" fontSize="11">20</text>
+                  <text x="50" y="225" fill="#6b7280" fontSize="11">0</text>
                   
                   {/* X軸 */}
-                  <line x1="70" y1="250" x2="550" y2="250" stroke="#9ca3af" strokeWidth="2"/>
+                  <line x1="60" y1="220" x2="520" y2="220" stroke="#9ca3af" strokeWidth="1"/>
                   
                   {/* データライン（面グラフ） */}
                   <polygon
-                    points="90,200 210,150 330,140 450,95 570,80 570,250 90,250"
+                    points="80,170 195,125 310,120 425,85 540,72 540,220 80,220"
                     fill="url(#gradient)"
                   />
                   
                   {/* データライン */}
                   <polyline
-                    points="90,200 210,150 330,140 450,95 570,80"
+                    points="80,170 195,125 310,120 425,85 540,72"
                     fill="none"
                     stroke={CHART_COLORS.primary}
-                    strokeWidth="6"
-                    style={{ filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.15))' }}
+                    strokeWidth="3"
+                    style={{ filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.1))' }}
                   />
                   
                   {/* データポイント（インタラクティブ） */}
-                  {[200, 150, 140, 95, 80].map((y, i) => {
+                  {[170, 125, 120, 85, 72].map((y, i) => {
                     const scores = [52.3, 65.8, 68.2, 78.4, 81.25];
                     const score = scores[i];
                     const year = 2020 + i;
@@ -1575,59 +1575,59 @@ function EvaluationHistoryTab({ selectedStaff }: { selectedStaff: any }): React.
                     return (
                       <g key={i} className="group">
                         <circle
-                          cx={90 + i * 120}
+                          cx={80 + i * 115}
                           cy={y}
-                          r={i === 4 ? "12" : "9"}
+                          r={i === 4 ? "4" : "3"}
                           fill={color}
                           stroke="#fff"
-                          strokeWidth="4"
-                          className="transition-all duration-300 group-hover:r-15 cursor-pointer"
-                          style={{ filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))' }}
+                          strokeWidth="2"
+                          className="transition-all duration-300 group-hover:r-5 cursor-pointer"
+                          style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
                         />
                         <circle
-                          cx={90 + i * 120}
+                          cx={80 + i * 115}
                           cy={y}
-                          r="18"
+                          r="6"
                           fill={color}
                           fillOpacity="0"
-                          className="transition-all duration-300 group-hover:fill-opacity-25"
+                          className="transition-all duration-300 group-hover:fill-opacity-20"
                         />
                         <text
-                          x={90 + i * 120}
-                          y={y - 18}
+                          x={80 + i * 115}
+                          y={y - 10}
                           fill="#fff"
-                          fontSize={i === 4 ? "16" : "14"}
-                          fontWeight="bold"
+                          fontSize={i === 4 ? "12" : "10"}
+                          fontWeight="600"
                           textAnchor="middle"
-                          className="transition-all duration-300 group-hover:text-lg"
-                          style={{ filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.5))' }}
+                          className="transition-all duration-300 group-hover:text-xs"
+                          style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.4))' }}
                         >
                           {score}
                         </text>
                         {/* ホバー時のツールチップ */}
                         <g className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                           <rect
-                            x={90 + i * 120 - 60}
-                            y={y - 75}
-                            width="120"
-                            height="40"
-                            rx="8"
-                            fill="rgba(15, 23, 42, 0.95)"
-                            style={{ filter: 'drop-shadow(0 6px 12px rgba(0,0,0,0.4))' }}
+                            x={80 + i * 115 - 45}
+                            y={y - 55}
+                            width="90"
+                            height="30"
+                            rx="4"
+                            fill="rgba(15, 23, 42, 0.9)"
+                            style={{ filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.3))' }}
                           />
                           <text
-                            x={90 + i * 120}
-                            y={y - 60}
+                            x={80 + i * 115}
+                            y={y - 43}
                             textAnchor="middle"
-                            className="text-base fill-white font-semibold"
+                            className="text-xs fill-white font-semibold"
                           >
                             {year}年
                           </text>
                           <text
-                            x={90 + i * 120}
-                            y={y - 40}
+                            x={80 + i * 115}
+                            y={y - 28}
                             textAnchor="middle"
-                            className="text-sm fill-white font-medium"
+                            className="text-xs fill-white font-medium"
                           >
                             総合: {score}点
                           </text>
@@ -1640,11 +1640,11 @@ function EvaluationHistoryTab({ selectedStaff }: { selectedStaff: any }): React.
                   {[2020, 2021, 2022, 2023, 2024].map((year, i) => (
                     <text
                       key={year}
-                      x={90 + i * 120}
-                      y={275}
+                      x={80 + i * 115}
+                      y={240}
                       fill="#6b7280"
-                      fontSize="16"
-                      fontWeight={i === 4 ? "bold" : "medium"}
+                      fontSize="11"
+                      fontWeight={i === 4 ? "600" : "400"}
                       textAnchor="middle"
                     >
                       {year}
@@ -1699,8 +1699,8 @@ function EvaluationHistoryTab({ selectedStaff }: { selectedStaff: any }): React.
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* グラフエリア */}
             <div className="lg:col-span-2">
-              <div className="h-96 bg-gradient-to-br from-green-50 to-white rounded-lg p-6 relative border shadow-inner hover:shadow-lg transition-shadow duration-300">
-                <svg width="100%" height="100%" viewBox="0 0 600 320" className="overflow-visible" style={{ cursor: 'crosshair' }}>
+              <div className="h-80 bg-gradient-to-br from-green-50 to-white rounded-lg p-4 relative border shadow-sm hover:shadow-md transition-shadow duration-200">
+                <svg width="100%" height="100%" viewBox="0 0 580 280" className="overflow-visible" style={{ cursor: 'default' }}>
                   {/* 上位10%ライン */}
                   <line x1="80" y1="100" x2="550" y2="100" stroke="#10b981" strokeWidth="4" strokeDasharray="10,5" opacity="0.8"/>
                   <text x="560" y="95" fill="#10b981" fontSize="16" fontWeight="bold">上位10%</text>
@@ -1855,8 +1855,8 @@ function EvaluationHistoryTab({ selectedStaff }: { selectedStaff: any }): React.
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* グラフエリア */}
             <div className="lg:col-span-2">
-              <div className="h-96 bg-gradient-to-br from-orange-50 to-white rounded-lg p-6 relative border shadow-inner hover:shadow-lg transition-shadow duration-300">
-                <svg width="100%" height="100%" viewBox="0 0 600 320" className="overflow-visible" style={{ cursor: 'crosshair' }}>
+              <div className="h-80 bg-gradient-to-br from-orange-50 to-white rounded-lg p-4 relative border shadow-sm hover:shadow-md transition-shadow duration-200">
+                <svg width="100%" height="100%" viewBox="0 0 580 280" className="overflow-visible" style={{ cursor: 'default' }}>
                   {/* 上位10%ライン */}
                   <line x1="80" y1="85" x2="550" y2="85" stroke="#f59e0b" strokeWidth="4" strokeDasharray="10,5" opacity="0.8"/>
                   <text x="560" y="80" fill="#f59e0b" fontSize="16" fontWeight="bold">上位10%</text>
