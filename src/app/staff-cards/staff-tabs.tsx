@@ -1421,12 +1421,34 @@ export function RecruitmentTab({ selectedStaff }: { selectedStaff: any }) {
   )
 }
 
+// NotebookLM連携用の型定義
+interface NotebookLMLink {
+  url: string
+  noteId: string
+  title: string
+  createdAt: string
+  features: {
+    hasAudioSummary: boolean
+    hasMindMap: boolean
+    hasTranscript: boolean
+  }
+}
+
 export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
   const router = useRouter()
   const { handleError, clearError } = useErrorHandler()
   const [interviewData, setInterviewData] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [activeSubTab, setActiveSubTab] = useState('overview')
+  const [showNotebookLinkModal, setShowNotebookLinkModal] = useState(false)
+  const [editingInterviewId, setEditingInterviewId] = useState<string | null>(null)
+  const [notebookLinkForm, setNotebookLinkForm] = useState({
+    url: '',
+    title: '',
+    hasAudioSummary: false,
+    hasMindMap: false,
+    hasTranscript: false
+  })
 
   if (!selectedStaff) {
     return (
@@ -1450,42 +1472,111 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
         const mockInterviewData = {
           // 概要サマリー
           overview: {
-            totalInterviews: interviewSummaryData.totalInterviews,
-            latestDate: interviewSummaryData.latestInterviewDate,
-            latestType: interviewSummaryData.latestInterviewType,
-            latestFeedback: interviewSummaryData.latestFeedback,
-            nextScheduled: interviewSummaryData.nextScheduledDate,
-            nextType: interviewSummaryData.nextScheduledType
+            totalInterviews: 12,
+            latestDate: '2024年3月15日',
+            latestType: '定期面談（月次）',
+            latestFeedback: 'キャリア目標達成に向けて順調に進展。法人内での貢献度をより高める機会を模索中。',
+            nextScheduled: '2024年4月15日',
+            nextType: '定期面談（月次）'
           },
-          // 定期面談データ
+          // 定期面談データ（詳細デモデータ付き）
           regular: {
             summary: {
-              total: regularData.totalCount,
-              lastDate: regularData.latestDate,
-              avgScore: regularData.avgScore,
-              trend: regularData.trend
+              total: 8,
+              lastDate: '2024年3月15日',
+              avgScore: 'A',
+              trend: 'improving'
             },
-            interviews: regularData.recentInterviews || []
+            interviews: [
+              {
+                id: 'reg_001',
+                date: '2024年3月15日',
+                subtypeLabel: '月次定期面談',
+                interviewer: '看護部長',
+                overallScore: 'A',
+                summary: 'キャリア目標の進捗が順調。特に法人内プロジェクトへの参加意欲が高く、チームリーダーとしての素質を発揮している。技術面での成長も著しく、後輩指導にも積極的に取り組んでいる。',
+                keyTopics: ['キャリア開発', 'リーダーシップ', '技術向上', '後輩指導'],
+                nextActions: [
+                  '法人横断プロジェクトへの参加検討',
+                  '主任昇進に向けた研修受講計画の策定',
+                  '専門分野のスペシャリスト認定取得準備'
+                ],
+                notebookLmLink: {
+                  url: 'https://notebooklm.google.com/notebook/demo-001',
+                  noteId: 'note_reg_001',
+                  title: '2024年3月月次面談_田中看護師',
+                  createdAt: '2024-03-15T14:30:00Z',
+                  features: {
+                    hasAudioSummary: true,
+                    hasMindMap: true,
+                    hasTranscript: true
+                  }
+                }
+              },
+              {
+                id: 'reg_002',
+                date: '2024年2月15日',
+                subtypeLabel: '月次定期面談',
+                interviewer: '主任看護師',
+                overallScore: 'B+',
+                summary: '業務習熟度が向上し、患者対応においても安定した成果を示している。チームワークも良好で、同僚からの信頼も厚い。',
+                keyTopics: ['業務習熟', '患者対応', 'チームワーク'],
+                nextActions: [
+                  '専門スキルのさらなる向上',
+                  'リーダーシップ研修への参加検討'
+                ]
+              }
+            ]
           },
           // 特別面談データ
           special: {
             summary: {
-              total: specialData.totalCount,
-              lastDate: specialData.latestDate,
-              mainReason: specialData.mainReason,
-              outcome: specialData.outcome
+              total: 2,
+              lastDate: '2024年1月20日',
+              mainReason: 'キャリア相談',
+              outcome: 'resolved'
             },
-            interviews: specialData.recentInterviews || []
+            interviews: [
+              {
+                id: 'spc_001',
+                date: '2024年1月20日',
+                subtypeLabel: 'キャリア相談面談',
+                interviewer: 'キャリア支援担当',
+                outcome: 'action-plan-created',
+                reason: '昇進に向けたキャリアパス相談',
+                summary: '主任昇進に向けた具体的なロードマップを作成。必要なスキル習得と実務経験について詳細に検討。',
+                nextActions: [
+                  '管理職研修への参加申込',
+                  'メンタリングスキル向上プログラムの受講',
+                  '部署間連携プロジェクトでのリーダー経験積み重ね'
+                ]
+              }
+            ]
           },
           // サポート面談データ
           support: {
             summary: {
-              total: supportData.totalCount,
-              lastDate: supportData.latestDate,
-              mainCategory: supportData.mainCategory,
-              supportLevel: supportData.supportLevel
+              total: 2,
+              lastDate: '2024年2月10日',
+              mainCategory: 'skill-development',
+              supportLevel: 'active'
             },
-            interviews: supportData.recentInterviews || []
+            interviews: [
+              {
+                id: 'sup_001',
+                date: '2024年2月10日',
+                subtypeLabel: 'スキル開発支援面談',
+                interviewer: '教育担当者',
+                supportType: 'training',
+                category: '専門技術向上',
+                summary: '新しい医療技術の習得支援。実践的なトレーニングプログラムの進捗確認と今後の学習計画の調整。',
+                nextActions: [
+                  '専門認定資格の受験準備',
+                  '実技研修への継続参加',
+                  '学習成果の定期的な評価実施'
+                ]
+              }
+            ]
           }
         }
 
@@ -1507,6 +1598,88 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
       loadInterviewData()
     }
   }, [selectedStaff?.id])
+
+  // NotebookLMリンク関連のハンドラー
+  const handleAddNotebookLink = (interviewId: string) => {
+    setEditingInterviewId(interviewId)
+    setNotebookLinkForm({
+      url: '',
+      title: '',
+      hasAudioSummary: false,
+      hasMindMap: false,
+      hasTranscript: false
+    })
+    setShowNotebookLinkModal(true)
+  }
+
+  const handleEditNotebookLink = (interviewId: string, existingLink: NotebookLMLink) => {
+    setEditingInterviewId(interviewId)
+    setNotebookLinkForm({
+      url: existingLink.url,
+      title: existingLink.title,
+      hasAudioSummary: existingLink.features.hasAudioSummary,
+      hasMindMap: existingLink.features.hasMindMap,
+      hasTranscript: existingLink.features.hasTranscript
+    })
+    setShowNotebookLinkModal(true)
+  }
+
+  const handleSaveNotebookLink = async () => {
+    try {
+      if (!editingInterviewId) return
+      
+      // 実際の実装では、APIを呼び出してデータベースに保存
+      // await InterviewService.updateNotebookLink(editingInterviewId, notebookLinkForm)
+      
+      // デモ用：ローカル状態を更新
+      setInterviewData((prev: any) => {
+        const updated = { ...prev }
+        const updateInterview = (interviews: any[]) => {
+          return interviews.map((interview: any) => 
+            interview.id === editingInterviewId 
+              ? {
+                  ...interview,
+                  notebookLmLink: {
+                    url: notebookLinkForm.url,
+                    noteId: `note_${editingInterviewId}`,
+                    title: notebookLinkForm.title || `面談記録_${interview.date}`,
+                    createdAt: new Date().toISOString(),
+                    features: {
+                      hasAudioSummary: notebookLinkForm.hasAudioSummary,
+                      hasMindMap: notebookLinkForm.hasMindMap,
+                      hasTranscript: notebookLinkForm.hasTranscript
+                    }
+                  }
+                }
+              : interview
+          )
+        }
+        
+        if (updated.regular?.interviews) {
+          updated.regular.interviews = updateInterview(updated.regular.interviews)
+        }
+        if (updated.special?.interviews) {
+          updated.special.interviews = updateInterview(updated.special.interviews)
+        }
+        if (updated.support?.interviews) {
+          updated.support.interviews = updateInterview(updated.support.interviews)
+        }
+        
+        return updated
+      })
+      
+      setShowNotebookLinkModal(false)
+      setEditingInterviewId(null)
+      
+    } catch (error) {
+      handleError(new AppError(
+        'NOTEBOOK_LINK_SAVE_FAILED',
+        'NotebookLMリンクの保存に失敗しました',
+        ErrorLevel.ERROR,
+        { interviewId: editingInterviewId, error }
+      ))
+    }
+  }
 
   const handleNewInterview = () => {
     router.push(`/interviews?tab=station&staffId=${selectedStaff.id}`)
@@ -1592,6 +1765,136 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                 </CardContent>
               </Card>
 
+              {/* 面談回答状況分析ダッシュボード */}
+              <Card className="mb-6">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    📝 面談回答状況分析
+                    <Badge variant="outline" style={{ backgroundColor: CHART_COLORS.primary, color: 'white' }}>
+                      総合的分析
+                    </Badge>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                    {/* 回答完了率 */}
+                    <div className="text-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border border-green-200">
+                      <div className="text-2xl font-bold mb-1" style={{ color: CHART_COLORS.success }}>
+                        92%
+                      </div>
+                      <div className="text-sm text-gray-600">全面談回答率</div>
+                      <Badge style={{ backgroundColor: CHART_COLORS.success, color: 'white', marginTop: '4px' }}>
+                        優秀
+                      </Badge>
+                    </div>
+                    
+                    {/* 積極性スコア */}
+                    <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
+                      <div className="text-2xl font-bold mb-1" style={{ color: CHART_COLORS.primary }}>
+                        4.2
+                      </div>
+                      <div className="text-sm text-gray-600">回答積極性</div>
+                      <div className="flex items-center justify-center mt-1 text-xs text-gray-500">
+                        <span>🔥 高い関心度</span>
+                      </div>
+                    </div>
+                    
+                    {/* 回答品質 */}
+                    <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-violet-50 rounded-lg border border-purple-200">
+                      <div className="text-2xl font-bold mb-1" style={{ color: '#8b5cf6' }}>
+                        A-
+                      </div>
+                      <div className="text-sm text-gray-600">回答品質</div>
+                      <div className="flex items-center justify-center mt-1 text-xs text-gray-500">
+                        <span>📝 詳細かつ具体的</span>
+                      </div>
+                    </div>
+                    
+                    {/* 最新更新 */}
+                    <div className="text-center p-4 bg-gradient-to-br from-orange-50 to-amber-50 rounded-lg border border-orange-200">
+                      <div className="text-lg font-bold mb-1" style={{ color: CHART_COLORS.warning }}>
+                        3日前
+                      </div>
+                      <div className="text-sm text-gray-600">最新回答日</div>
+                      <div className="flex items-center justify-center mt-1 text-xs text-gray-500">
+                        <span>🔄 定期的な更新</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* 回答カテゴリ別分析 */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="p-3 bg-gray-50 rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-medium">🎯 目標設定回答</span>
+                        <span className="text-lg font-bold" style={{ color: CHART_COLORS.success }}>95%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="h-2 rounded-full" 
+                          style={{ width: '95%', backgroundColor: CHART_COLORS.success }}
+                        ></div>
+                      </div>
+                    </div>
+                    
+                    <div className="p-3 bg-gray-50 rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-medium">📈 成長領域回答</span>
+                        <span className="text-lg font-bold" style={{ color: CHART_COLORS.warning }}>88%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="h-2 rounded-full" 
+                          style={{ width: '88%', backgroundColor: CHART_COLORS.warning }}
+                        ></div>
+                      </div>
+                    </div>
+                    
+                    <div className="p-3 bg-gray-50 rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-medium">🤝 サポート要望</span>
+                        <span className="text-lg font-bold" style={{ color: CHART_COLORS.primary }}>92%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="h-2 rounded-full" 
+                          style={{ width: '92%', backgroundColor: CHART_COLORS.primary }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* 回答トレンドインサイト */}
+                  <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <h4 className="font-medium text-gray-800 mb-2 flex items-center gap-2">
+                      💡 回答トレンド分析
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <div className="flex items-start gap-2 mb-2">
+                          <span className="text-green-600">✓</span>
+                          <span>目標設定の具体性が3ヶ月連続で向上</span>
+                        </div>
+                        <div className="flex items-start gap-2 mb-2">
+                          <span className="text-green-600">✓</span>
+                          <span>キャリア計画への関心が高まっている</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div className="flex items-start gap-2 mb-2">
+                          <span className="text-orange-600">△</span>
+                          <span>ストレス管理に関する回答が簡略化傾向</span>
+                        </div>
+                        <div className="flex items-start gap-2 mb-2">
+                          <span className="text-orange-600">△</span>
+                          <span>チームワーク項目でより詳細な回答が欲しい</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
               {/* 3分類面談サマリー - 評価タブと統一したスタイル */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 {/* 定期面談 */}
@@ -1621,6 +1924,12 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                           color: 'white' 
                         }}>
                           {interviewData?.regular?.summary?.trend === 'improving' ? '📈 向上中' : '➡️ 安定'}
+                        </Badge>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium">回答完了率</span>
+                        <Badge style={{ backgroundColor: CHART_COLORS.success, color: 'white' }}>
+                          95%
                         </Badge>
                       </div>
                       <div className="flex justify-between items-center">
@@ -1665,6 +1974,12 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                         </Badge>
                       </div>
                       <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium">回答完了率</span>
+                        <Badge style={{ backgroundColor: CHART_COLORS.warning, color: 'white' }}>
+                          85%
+                        </Badge>
+                      </div>
+                      <div className="flex justify-between items-center">
                         <span className="text-sm font-medium">継続フォロー</span>
                         <span className="text-sm font-bold" style={{ 
                           color: interviewData?.special?.summary?.outcome === 'resolved' ? CHART_COLORS.success : CHART_COLORS.warning 
@@ -1705,6 +2020,12 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                         <span className="text-sm font-bold" style={{ color: CHART_COLORS.primary }}>
                           {interviewData?.support?.summary?.supportLevel || '未設定'}
                         </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium">回答完了率</span>
+                        <Badge style={{ backgroundColor: CHART_COLORS.primary, color: 'white' }}>
+                          92%
+                        </Badge>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-sm font-medium">利用状況</span>
@@ -1878,6 +2199,194 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                 </div>
               </div>
 
+              {/* 定期面談詳細分析ダッシュボード */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                {/* NotebookLM活用状況 */}
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base flex items-center gap-2">
+                      📖 NotebookLM活用状況
+                      <Badge style={{ backgroundColor: CHART_COLORS.primary, color: 'white' }}>
+                        高活用
+                      </Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm">音声記録登録率</span>
+                        <div className="flex items-center gap-2">
+                          <div className="w-16 bg-gray-200 rounded-full h-1.5">
+                            <div 
+                              className="h-1.5 rounded-full" 
+                              style={{ width: '75%', backgroundColor: CHART_COLORS.success }}
+                            ></div>
+                          </div>
+                          <span className="text-sm font-medium">6/8回</span>
+                        </div>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm">AI要約利用率</span>
+                        <div className="flex items-center gap-2">
+                          <div className="w-16 bg-gray-200 rounded-full h-1.5">
+                            <div 
+                              className="h-1.5 rounded-full" 
+                              style={{ width: '100%', backgroundColor: CHART_COLORS.primary }}
+                            ></div>
+                          </div>
+                          <span className="text-sm font-medium">6/6回</span>
+                        </div>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm">マインドマップ作成</span>
+                        <div className="flex items-center gap-2">
+                          <div className="w-16 bg-gray-200 rounded-full h-1.5">
+                            <div 
+                              className="h-1.5 rounded-full" 
+                              style={{ width: '67%', backgroundColor: CHART_COLORS.warning }}
+                            ></div>
+                          </div>
+                          <span className="text-sm font-medium">4/6回</span>
+                        </div>
+                      </div>
+                      <div className="mt-3 p-2 bg-blue-50 rounded text-xs text-blue-800">
+                        ℹ️ 面談後のAI分析を積極的に活用しており、成長計画の精度が向上しています。
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* 成長軸跡分析 */}
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base flex items-center gap-2">
+                      📈 成長軸跡分析
+                      <Badge style={{ backgroundColor: CHART_COLORS.success, color: 'white' }}>
+                        継続成長
+                      </Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {/* スキル進歩グラフ */}
+                      <div>
+                        <div className="flex justify-between text-sm mb-2">
+                          <span>技術スキル</span>
+                          <span className="font-medium text-green-600">↑ +15%</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div 
+                            className="h-2 rounded-full bg-gradient-to-r from-blue-400 to-green-500" 
+                            style={{ width: '85%' }}
+                          ></div>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <div className="flex justify-between text-sm mb-2">
+                          <span>リーダーシップ</span>
+                          <span className="font-medium text-green-600">↑ +22%</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div 
+                            className="h-2 rounded-full bg-gradient-to-r from-purple-400 to-blue-500" 
+                            style={{ width: '78%' }}
+                          ></div>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <div className="flex justify-between text-sm mb-2">
+                          <span>コミュニケーション</span>
+                          <span className="font-medium text-green-600">↑ +8%</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div 
+                            className="h-2 rounded-full bg-gradient-to-r from-orange-400 to-yellow-500" 
+                            style={{ width: '92%' }}
+                          ></div>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-3 p-2 bg-green-50 rounded text-xs text-green-800">
+                        🎆 直近3回の面談で全領域で進歩を確認。特にリーダーシップ領域での成長が顕著です。
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* 面談効果測定ダッシュボード */}
+              <Card className="mb-6">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    📊 面談効果測定ダッシュボード
+                    <Badge variant="outline" style={{ backgroundColor: CHART_COLORS.highlight, color: 'white' }}>
+                      データ駆動型分析
+                    </Badge>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    {/* モチベーション向上 */}
+                    <div className="text-center p-3 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg">
+                      <div className="text-xl font-bold mb-1" style={{ color: CHART_COLORS.success }}>+18%</div>
+                      <div className="text-xs text-gray-600">モチベーション向上</div>
+                      <div className="text-xs text-green-600 mt-1">面談前後比較</div>
+                    </div>
+                    
+                    {/* 目標達成率 */}
+                    <div className="text-center p-3 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg">
+                      <div className="text-xl font-bold mb-1" style={{ color: CHART_COLORS.primary }}>87%</div>
+                      <div className="text-xs text-gray-600">目標達成率</div>
+                      <div className="text-xs text-blue-600 mt-1">面談設定目標</div>
+                    </div>
+                    
+                    {/* スキル向上速度 */}
+                    <div className="text-center p-3 bg-gradient-to-br from-purple-50 to-violet-50 rounded-lg">
+                      <div className="text-xl font-bold mb-1" style={{ color: '#8b5cf6' }}>+24%</div>
+                      <div className="text-xs text-gray-600">スキル向上速度</div>
+                      <div className="text-xs text-purple-600 mt-1">前回比較</div>
+                    </div>
+                    
+                    {/* 継続意欲 */}
+                    <div className="text-center p-3 bg-gradient-to-br from-yellow-50 to-amber-50 rounded-lg">
+                      <div className="text-xl font-bold mb-1" style={{ color: CHART_COLORS.highlight }}>4.6</div>
+                      <div className="text-xs text-gray-600">継続意欲スコア</div>
+                      <div className="text-xs text-amber-600 mt-1">5点満点</div>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-4 p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-sm font-medium">🔍 面談効果分析サマリー</span>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                      <div>
+                        <div className="flex items-start gap-2 mb-1">
+                          <span className="text-green-600">✓</span>
+                          <span>面談後の目標設定が明確化し、アクションプランの実行率が向上</span>
+                        </div>
+                        <div className="flex items-start gap-2 mb-1">
+                          <span className="text-green-600">✓</span>
+                          <span>キャリア開発に対する能動的な取り組みが增加</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div className="flex items-start gap-2 mb-1">
+                          <span className="text-blue-600">▶</span>
+                          <span>チームリーダーとしての成長をNotebookLMで継続トラッキング</span>
+                        </div>
+                        <div className="flex items-start gap-2 mb-1">
+                          <span className="text-blue-600">▶</span>
+                          <span>次回面談では法人プロジェクト参加の進捗確認予定</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
               {/* データ可視化セクション */}
               {interviewData?.regular?.interviews?.length > 0 && (
                 <div className={styles.dataVisualizationSection}>
@@ -1949,6 +2458,63 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                             ))}
                           </ul>
                         </div>
+                        
+                        {/* NotebookLM連携セクション */}
+                        <div className="mt-4 pt-4 border-t border-gray-200">
+                          {interview.notebookLmLink ? (
+                            <div className="bg-blue-50 p-3 rounded-lg">
+                              <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center gap-2">
+                                  <Badge style={{ backgroundColor: '#3b82f6', color: 'white' }}>
+                                    🎧 音声記録
+                                  </Badge>
+                                  <span className="text-sm font-medium">{interview.notebookLmLink.title}</span>
+                                </div>
+                                <button
+                                  className="text-blue-600 hover:text-blue-800 text-sm"
+                                  onClick={() => handleEditNotebookLink(interview.id, interview.notebookLmLink)}
+                                >
+                                  編集
+                                </button>
+                              </div>
+                              <div className="flex flex-wrap gap-2 mb-3">
+                                {interview.notebookLmLink.features.hasAudioSummary && (
+                                  <Badge variant="outline">📝 AI要約</Badge>
+                                )}
+                                {interview.notebookLmLink.features.hasMindMap && (
+                                  <Badge variant="outline">🗺️ マインドマップ</Badge>
+                                )}
+                                {interview.notebookLmLink.features.hasTranscript && (
+                                  <Badge variant="outline">📜 音声転写</Badge>
+                                )}
+                              </div>
+                              <div className="flex items-center gap-3">
+                                <a
+                                  href={interview.notebookLmLink.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+                                >
+                                  <span>📖</span>
+                                  NotebookLMで開く
+                                </a>
+                                <span className="text-xs text-gray-500">
+                                  登録日: {new Date(interview.notebookLmLink.createdAt).toLocaleDateString('ja-JP')}
+                                </span>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="text-center py-3">
+                              <button
+                                className="inline-flex items-center gap-2 px-4 py-2 border border-blue-300 text-blue-700 rounded-lg hover:bg-blue-50"
+                                onClick={() => handleAddNotebookLink(interview.id)}
+                              >
+                                <span>🔗</span>
+                                NotebookLMリンクを追加
+                              </button>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -1999,6 +2565,241 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                     </div>
                   </div>
                 </div>
+              </div>
+
+              {/* リスク分析ダッシュボード */}
+              <Card className="mb-6">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    🚨 リスク分析ダッシュボード
+                    <Badge style={{ backgroundColor: CHART_COLORS.danger, color: 'white' }}>
+                      重点管理
+                    </Badge>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* 現在のリスクレベル */}
+                    <div className="p-4 bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg border border-orange-200">
+                      <div className="flex items-center justify-between mb-3">
+                        <h4 className="font-medium text-gray-800">リスクレベル</h4>
+                        <Badge style={{ backgroundColor: CHART_COLORS.warning, color: 'white' }}>
+                          中程度
+                        </Badge>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-3xl mb-2">🟡</div>
+                        <div className="text-sm text-gray-600">継続的なフォローが必要</div>
+                        <div className="mt-2 text-xs text-orange-700 bg-orange-100 px-2 py-1 rounded">
+                          最終更新: 2024/01/20
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* インシデント対応状況 */}
+                    <div className="p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
+                      <div className="flex items-center justify-between mb-3">
+                        <h4 className="font-medium text-gray-800">インシデント対応</h4>
+                        <Badge style={{ backgroundColor: CHART_COLORS.success, color: 'white' }}>
+                          対策完了
+                        </Badge>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span>再発防止率</span>
+                          <span className="font-medium text-green-600">100%</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span>フォローアップ</span>
+                          <span className="font-medium">3回実施</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span>改善状況</span>
+                          <span className="font-medium text-green-600">良好</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* 予防的介入推奨 */}
+                    <div className="p-4 bg-gradient-to-br from-purple-50 to-violet-50 rounded-lg border border-purple-200">
+                      <div className="flex items-center justify-between mb-3">
+                        <h4 className="font-medium text-gray-800">予防的介入</h4>
+                        <Badge variant="outline">推奨中</Badge>
+                      </div>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex items-start gap-2">
+                          <span className="text-purple-600">●</span>
+                          <span>ストレスマネジメント研修</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="text-purple-600">●</span>
+                          <span>メンターサポート体制強化</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="text-purple-600">●</span>
+                          <span>定期面談頻度の調整</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* リスク要因分析 */}
+                  <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+                    <h4 className="font-medium text-gray-800 mb-3 flex items-center gap-2">
+                      🔍 リスク要因分析
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <h5 className="text-sm font-medium text-gray-700 mb-2">⚙️ 内部要因</h5>
+                        <div className="space-y-1 text-sm">
+                          <div className="flex justify-between">
+                            <span>業務負荷</span>
+                            <div className="flex items-center gap-2">
+                              <div className="w-16 bg-gray-200 rounded-full h-1">
+                                <div className="h-1 rounded-full bg-orange-400" style={{ width: '60%' }}></div>
+                              </div>
+                              <span className="text-xs text-orange-600">中</span>
+                            </div>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>スキル不足</span>
+                            <div className="flex items-center gap-2">
+                              <div className="w-16 bg-gray-200 rounded-full h-1">
+                                <div className="h-1 rounded-full bg-yellow-400" style={{ width: '30%' }}></div>
+                              </div>
+                              <span className="text-xs text-yellow-600">低</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <h5 className="text-sm font-medium text-gray-700 mb-2">🌍 外部要因</h5>
+                        <div className="space-y-1 text-sm">
+                          <div className="flex justify-between">
+                            <span>チーム環境</span>
+                            <div className="flex items-center gap-2">
+                              <div className="w-16 bg-gray-200 rounded-full h-1">
+                                <div className="h-1 rounded-full bg-green-400" style={{ width: '80%' }}></div>
+                              </div>
+                              <span className="text-xs text-green-600">良好</span>
+                            </div>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>サポート体制</span>
+                            <div className="flex items-center gap-2">
+                              <div className="w-16 bg-gray-200 rounded-full h-1">
+                                <div className="h-1 rounded-full bg-blue-400" style={{ width: '70%' }}></div>
+                              </div>
+                              <span className="text-xs text-blue-600">充実</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* 特別面談効果測定ダッシュボード */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                {/* 対応効果測定 */}
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base flex items-center gap-2">
+                      🎯 対応効果測定
+                      <Badge style={{ backgroundColor: CHART_COLORS.success, color: 'white' }}>
+                        効果的
+                      </Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="text-center p-3 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg">
+                        <div className="text-2xl font-bold mb-1" style={{ color: CHART_COLORS.success }}>92%</div>
+                        <div className="text-sm text-gray-600">問題解決率</div>
+                        <div className="text-xs text-green-600 mt-1">目標: 85%以上</div>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <div>
+                          <div className="flex justify-between text-sm mb-1">
+                            <span>メンタルケア改善</span>
+                            <span className="font-medium text-green-600">+25%</span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-1.5">
+                            <div className="h-1.5 rounded-full bg-green-400" style={{ width: '85%' }}></div>
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <div className="flex justify-between text-sm mb-1">
+                            <span>業務パフォーマンス</span>
+                            <span className="font-medium text-blue-600">+18%</span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-1.5">
+                            <div className="h-1.5 rounded-full bg-blue-400" style={{ width: '78%' }}></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                {/* フォローアップ状況 */}
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base flex items-center gap-2">
+                      🔄 フォローアップ状況
+                      <Badge style={{ backgroundColor: CHART_COLORS.primary, color: 'white' }}>
+                        継続中
+                      </Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {/* フォローアップタイムライン */}
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                          <div className="flex-1">
+                            <div className="text-sm font-medium">1週間後フォロー</div>
+                            <div className="text-xs text-gray-500">2024/01/27 - 完了</div>
+                          </div>
+                          <Badge style={{ backgroundColor: CHART_COLORS.success, color: 'white', fontSize: '10px' }}>
+                            完了
+                          </Badge>
+                        </div>
+                        
+                        <div className="flex items-center gap-3">
+                          <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                          <div className="flex-1">
+                            <div className="text-sm font-medium">1ヶ月後フォロー</div>
+                            <div className="text-xs text-gray-500">2024/02/20 - 完了</div>
+                          </div>
+                          <Badge style={{ backgroundColor: CHART_COLORS.success, color: 'white', fontSize: '10px' }}>
+                            完了
+                          </Badge>
+                        </div>
+                        
+                        <div className="flex items-center gap-3">
+                          <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+                          <div className="flex-1">
+                            <div className="text-sm font-medium">3ヶ月後フォロー</div>
+                            <div className="text-xs text-gray-500">2024/04/20 - 予定</div>
+                          </div>
+                          <Badge style={{ backgroundColor: CHART_COLORS.primary, color: 'white', fontSize: '10px' }}>
+                            予定
+                          </Badge>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-3 p-2 bg-blue-50 rounded text-xs text-blue-800">
+                        📝 キャリア相談でのアクションプランが順調に進行。次回は進捗確認と新たな目標設定を行います。
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
 
               {/* 特別面談履歴詳細 */}
@@ -2092,6 +2893,273 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                 </div>
               </div>
 
+              {/* キャリア開発進捗ダッシュボード */}
+              <Card className="mb-6">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    🚀 キャリア開発進捗ダッシュボード
+                    <Badge style={{ backgroundColor: CHART_COLORS.primary, color: 'white' }}>
+                      成長支援中
+                    </Badge>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* キャリア目標達成率 */}
+                    <div className="p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
+                      <div className="flex items-center justify-between mb-3">
+                        <h4 className="font-medium text-gray-800">目標達成率</h4>
+                        <Badge style={{ backgroundColor: CHART_COLORS.success, color: 'white' }}>
+                          順調
+                        </Badge>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-3xl font-bold mb-2" style={{ color: CHART_COLORS.primary }}>73%</div>
+                        <div className="text-sm text-gray-600 mb-2">キャリアプラン進捗</div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div className="h-2 rounded-full bg-gradient-to-r from-blue-400 to-purple-500" style={{ width: '73%' }}></div>
+                        </div>
+                        <div className="text-xs text-gray-500 mt-2">目標日: 2024年12月</div>
+                      </div>
+                    </div>
+                    
+                    {/* スキル習得状況 */}
+                    <div className="p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border border-green-200">
+                      <div className="flex items-center justify-between mb-3">
+                        <h4 className="font-medium text-gray-800">スキル習得</h4>
+                        <Badge style={{ backgroundColor: CHART_COLORS.warning, color: 'white' }}>
+                          進行中
+                        </Badge>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span>専門資格</span>
+                          <span className="font-medium text-green-600">2/3完了</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span>研修受講</span>
+                          <span className="font-medium text-blue-600">5/6完了</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span>実務経験</span>
+                          <span className="font-medium text-purple-600">継続中</span>
+                        </div>
+                        <div className="text-xs text-gray-500 mt-2 p-2 bg-green-100 rounded">
+                          次回目標: リーダーシップ研修受講
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* メンタリング効果 */}
+                    <div className="p-4 bg-gradient-to-br from-purple-50 to-violet-50 rounded-lg border border-purple-200">
+                      <div className="flex items-center justify-between mb-3">
+                        <h4 className="font-medium text-gray-800">メンタリング効果</h4>
+                        <Badge style={{ backgroundColor: CHART_COLORS.highlight, color: 'white' }}>
+                          高効果
+                        </Badge>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span>自信度向上</span>
+                          <span className="font-medium text-green-600">+22%</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span>スキル向上速度</span>
+                          <span className="font-medium text-blue-600">+15%</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span>目標明確化</span>
+                          <span className="font-medium text-purple-600">+35%</span>
+                        </div>
+                        <div className="text-xs text-gray-500 mt-2 p-2 bg-purple-100 rounded">
+                          満足度: 4.8/5.0点
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* スキルマップ可視化 */}
+                  <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+                    <h4 className="font-medium text-gray-800 mb-4 flex items-center gap-2">
+                      🧩 スキルマップ & 成長計画
+                    </h4>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* 現在のスキルレベル */}
+                      <div>
+                        <h5 className="text-sm font-medium text-gray-700 mb-3">📊 現在のスキルレベル</h5>
+                        <div className="space-y-3">
+                          <div>
+                            <div className="flex justify-between text-sm mb-1">
+                              <span>リーダーシップ</span>
+                              <span className="text-blue-600 font-medium">Level 3</span>
+                            </div>
+                            <div className="w-full bg-gray-200 rounded-full h-1.5">
+                              <div className="h-1.5 rounded-full bg-blue-400" style={{ width: '60%' }}></div>
+                            </div>
+                          </div>
+                          
+                          <div>
+                            <div className="flex justify-between text-sm mb-1">
+                              <span>コミュニケーション</span>
+                              <span className="text-green-600 font-medium">Level 4</span>
+                            </div>
+                            <div className="w-full bg-gray-200 rounded-full h-1.5">
+                              <div className="h-1.5 rounded-full bg-green-400" style={{ width: '80%' }}></div>
+                            </div>
+                          </div>
+                          
+                          <div>
+                            <div className="flex justify-between text-sm mb-1">
+                              <span>問題解決</span>
+                              <span className="text-purple-600 font-medium">Level 3</span>
+                            </div>
+                            <div className="w-full bg-gray-200 rounded-full h-1.5">
+                              <div className="h-1.5 rounded-full bg-purple-400" style={{ width: '60%' }}></div>
+                            </div>
+                          </div>
+                          
+                          <div>
+                            <div className="flex justify-between text-sm mb-1">
+                              <span>技術スキル</span>
+                              <span className="text-orange-600 font-medium">Level 4</span>
+                            </div>
+                            <div className="w-full bg-gray-200 rounded-full h-1.5">
+                              <div className="h-1.5 rounded-full bg-orange-400" style={{ width: '85%' }}></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* 次のステップ */}
+                      <div>
+                        <h5 className="text-sm font-medium text-gray-700 mb-3">🎯 次の成長ステップ</h5>
+                        <div className="space-y-3">
+                          <div className="p-3 bg-blue-50 rounded-lg border-l-2 border-blue-400">
+                            <div className="text-sm font-medium text-blue-800">リーダーシップ向上</div>
+                            <div className="text-xs text-blue-600 mt-1">管理職研修受講予定 (4月)</div>
+                          </div>
+                          
+                          <div className="p-3 bg-green-50 rounded-lg border-l-2 border-green-400">
+                            <div className="text-sm font-medium text-green-800">専門資格取得</div>
+                            <div className="text-xs text-green-600 mt-1">スペシャリスト認定試験 (6月)</div>
+                          </div>
+                          
+                          <div className="p-3 bg-purple-50 rounded-lg border-l-2 border-purple-400">
+                            <div className="text-sm font-medium text-purple-800">メンタリングスキル</div>
+                            <div className="text-xs text-purple-600 mt-1">新人指導担当開始 (7月)</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* サポート効果測定 & 個別最適化提案 */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                {/* サポート効果測定 */}
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base flex items-center gap-2">
+                      📊 サポート効果測定
+                      <Badge style={{ backgroundColor: CHART_COLORS.success, color: 'white' }}>
+                        高効果
+                      </Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {/* ROI測定 */}
+                      <div className="text-center p-3 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg">
+                        <div className="text-2xl font-bold mb-1" style={{ color: CHART_COLORS.success }}>285%</div>
+                        <div className="text-sm text-gray-600">ROI (投資収益率)</div>
+                        <div className="text-xs text-green-600 mt-1">サポート投資対効果</div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span>モチベーション向上</span>
+                          <div className="flex items-center gap-2">
+                            <div className="w-16 bg-gray-200 rounded-full h-1">
+                              <div className="h-1 rounded-full bg-green-400" style={{ width: '90%' }}></div>
+                            </div>
+                            <span className="font-medium text-green-600">+45%</span>
+                          </div>
+                        </div>
+                        
+                        <div className="flex justify-between text-sm">
+                          <span>業務パフォーマンス</span>
+                          <div className="flex items-center gap-2">
+                            <div className="w-16 bg-gray-200 rounded-full h-1">
+                              <div className="h-1 rounded-full bg-blue-400" style={{ width: '75%' }}></div>
+                            </div>
+                            <span className="font-medium text-blue-600">+32%</span>
+                          </div>
+                        </div>
+                        
+                        <div className="flex justify-between text-sm">
+                          <span>キャリア継続意欲</span>
+                          <div className="flex items-center gap-2">
+                            <div className="w-16 bg-gray-200 rounded-full h-1">
+                              <div className="h-1 rounded-full bg-purple-400" style={{ width: '85%' }}></div>
+                            </div>
+                            <span className="font-medium text-purple-600">+38%</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                {/* 個別最適化提案 */}
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base flex items-center gap-2">
+                      🧠 AI個別最適化提案
+                      <Badge style={{ backgroundColor: CHART_COLORS.highlight, color: 'white' }}>
+                        新提案
+                      </Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {/* 推奨アクション */}
+                      <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                          <span className="font-medium text-sm text-blue-800">高優先度</span>
+                        </div>
+                        <div className="text-sm text-blue-700 mb-1">リーダーシップスタイルの個別カスタマイズ</div>
+                        <div className="text-xs text-blue-600">既存のコミュニケーション能力を活かし、ファシリテーター型リーダーシップを開発</div>
+                      </div>
+                      
+                      <div className="p-3 bg-green-50 rounded-lg border border-green-200">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                          <span className="font-medium text-sm text-green-800">中優先度</span>
+                        </div>
+                        <div className="text-sm text-green-700 mb-1">デジタルスキル強化プログラム</div>
+                        <div className="text-xs text-green-600">データ分析スキルを習得し、エビデンスベースの意思決定能力を向上</div>
+                      </div>
+                      
+                      <div className="p-3 bg-purple-50 rounded-lg border border-purple-200">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="w-2 h-2 rounded-full bg-purple-500"></div>
+                          <span className="font-medium text-sm text-purple-800">長期計画</span>
+                        </div>
+                        <div className="text-sm text-purple-700 mb-1">専門領域横断プロジェクト参加</div>
+                        <div className="text-xs text-purple-600">複数部署を統括するプロジェクトリーダーとしての経験積む</div>
+                      </div>
+                      
+                      <div className="mt-3 p-2 bg-yellow-50 rounded text-xs text-yellow-800">
+                        ℹ️ これらの提案は面談データとNotebookLM分析に基づいてAIが生成した個別最適化プランです。
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
               {/* サポート面談履歴詳細 */}
               <div className={styles.interviewHistoryDetail}>
                 <h3>📋 サポート面談履歴</h3>
@@ -2137,6 +3205,102 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                 )}
               </div>
             </>
+          )}
+
+          {/* NotebookLMリンク登録モーダル */}
+          {showNotebookLinkModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold">NotebookLMリンク登録</h3>
+                  <button
+                    onClick={() => setShowNotebookLinkModal(false)}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    ✕
+                  </button>
+                </div>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      NotebookLM URL *
+                    </label>
+                    <input
+                      type="url"
+                      value={notebookLinkForm.url}
+                      onChange={(e) => setNotebookLinkForm(prev => ({ ...prev, url: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="https://notebooklm.google.com/notebook/..."
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      タイトル
+                    </label>
+                    <input
+                      type="text"
+                      value={notebookLinkForm.title}
+                      onChange={(e) => setNotebookLinkForm(prev => ({ ...prev, title: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="面談記録_2024-08-24"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      NotebookLM機能
+                    </label>
+                    <div className="space-y-2">
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={notebookLinkForm.hasAudioSummary}
+                          onChange={(e) => setNotebookLinkForm(prev => ({ ...prev, hasAudioSummary: e.target.checked }))}
+                          className="mr-2"
+                        />
+                        <span className="text-sm">📝 AI要約あり</span>
+                      </label>
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={notebookLinkForm.hasMindMap}
+                          onChange={(e) => setNotebookLinkForm(prev => ({ ...prev, hasMindMap: e.target.checked }))}
+                          className="mr-2"
+                        />
+                        <span className="text-sm">🗺️ マインドマップあり</span>
+                      </label>
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={notebookLinkForm.hasTranscript}
+                          onChange={(e) => setNotebookLinkForm(prev => ({ ...prev, hasTranscript: e.target.checked }))}
+                          className="mr-2"
+                        />
+                        <span className="text-sm">📜 音声転写あり</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex justify-end gap-3 mt-6">
+                  <button
+                    onClick={() => setShowNotebookLinkModal(false)}
+                    className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
+                  >
+                    キャンセル
+                  </button>
+                  <button
+                    onClick={handleSaveNotebookLink}
+                    disabled={!notebookLinkForm.url.trim()}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    保存
+                  </button>
+                </div>
+              </div>
+            </div>
           )}
         </div>
       )}
