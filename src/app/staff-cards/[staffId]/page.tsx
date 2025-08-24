@@ -1526,71 +1526,144 @@ function EvaluationHistoryTab({ selectedStaff }: { selectedStaff: any }): React.
             {/* グラフエリア（左側 2/3） */}
             <div className="lg:col-span-2">
               <div className="h-96 bg-white rounded-lg p-6 relative border shadow">
-                <svg width="100%" height="100%" viewBox="0 0 581 400" className="overflow-visible">
+                <svg width="100%" height="100%" viewBox="0 0 480 360" className="overflow-visible">
                   {/* グリッドライン */}
                   <defs>
-                    <clipPath id="recharts-clip"><rect x="65" y="5" height="336" width="511"></rect></clipPath>
+                    <linearGradient id="gradeGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#ef4444" stopOpacity="0.1" />
+                      <stop offset="20%" stopColor="#f59e0b" stopOpacity="0.1" />
+                      <stop offset="40%" stopColor="#10b981" stopOpacity="0.1" />
+                      <stop offset="60%" stopColor="#3b82f6" stopOpacity="0.1" />
+                      <stop offset="80%" stopColor="#8b5cf6" stopOpacity="0.1" />
+                    </linearGradient>
                   </defs>
                   <g className="recharts-cartesian-grid">
                     <g className="recharts-cartesian-grid-horizontal">
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="65" y1="341" x2="576" y2="341"></line>
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="65" y1="257" x2="576" y2="257"></line>
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="65" y1="173" x2="576" y2="173"></line>
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="65" y1="89" x2="576" y2="89"></line>
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="65" y1="5" x2="576" y2="5"></line>
+                      <line strokeDasharray="3 3" stroke="#e5e7eb" fill="none" x1="60" y1="280" x2="420" y2="280"></line>
+                      <line strokeDasharray="3 3" stroke="#e5e7eb" fill="none" x1="60" y1="224" x2="420" y2="224"></line>
+                      <line strokeDasharray="3 3" stroke="#e5e7eb" fill="none" x1="60" y1="168" x2="420" y2="168"></line>
+                      <line strokeDasharray="3 3" stroke="#e5e7eb" fill="none" x1="60" y1="112" x2="420" y2="112"></line>
+                      <line strokeDasharray="3 3" stroke="#e5e7eb" fill="none" x1="60" y1="56" x2="420" y2="56"></line>
                     </g>
                     <g className="recharts-cartesian-grid-vertical">
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="65" y1="5" x2="65" y2="341"></line>
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="192.75" y1="5" x2="192.75" y2="341"></line>
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="320.5" y1="5" x2="320.5" y2="341"></line>
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="448.25" y1="5" x2="448.25" y2="341"></line>
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="576" y1="5" x2="576" y2="341"></line>
+                      <line strokeDasharray="3 3" stroke="#e5e7eb" fill="none" x1="60" y1="56" x2="60" y2="280"></line>
+                      <line strokeDasharray="3 3" stroke="#e5e7eb" fill="none" x1="150" y1="56" x2="150" y2="280"></line>
+                      <line strokeDasharray="3 3" stroke="#e5e7eb" fill="none" x1="240" y1="56" x2="240" y2="280"></line>
+                      <line strokeDasharray="3 3" stroke="#e5e7eb" fill="none" x1="330" y1="56" x2="330" y2="280"></line>
+                      <line strokeDasharray="3 3" stroke="#e5e7eb" fill="none" x1="420" y1="56" x2="420" y2="280"></line>
                     </g>
                   </g>
                   
+                  {/* S級基準線（90点ライン） */}
+                  <line x1="60" y1="84" x2="420" y2="84" stroke="#ef4444" strokeWidth="2" strokeDasharray="6,4" opacity="0.8"/>
+                  <text x="425" y="88" fill="#ef4444" fontSize="12" fontWeight="600">S級（90点）</text>
+                  
+                  {/* Y軸グレードゾーン */}
+                  <rect x="60" y="56" width="360" height="28" fill="#ef4444" fillOpacity="0.08"/>
+                  <rect x="60" y="84" width="360" height="28" fill="#f59e0b" fillOpacity="0.08"/>
+                  <rect x="60" y="112" width="360" height="56" fill="#10b981" fillOpacity="0.08"/>
+                  <rect x="60" y="168" width="360" height="56" fill="#3b82f6" fillOpacity="0.08"/>
+                  <rect x="60" y="224" width="360" height="56" fill="#8b5cf6" fillOpacity="0.08"/>
+                  
+                  {/* Y軸（左側：グレード） */}
+                  <line x1="60" y1="56" x2="60" y2="280" stroke="#374151" strokeWidth="1"/>
+                  <text x="45" y="70" fill="#ef4444" fontSize="16" fontWeight="bold" textAnchor="middle">S</text>
+                  <text x="45" y="98" fill="#f59e0b" fontSize="16" fontWeight="bold" textAnchor="middle">A</text>
+                  <text x="45" y="140" fill="#10b981" fontSize="16" fontWeight="bold" textAnchor="middle">B</text>
+                  <text x="45" y="196" fill="#3b82f6" fontSize="16" fontWeight="bold" textAnchor="middle">C</text>
+                  <text x="45" y="252" fill="#8b5cf6" fontSize="16" fontWeight="bold" textAnchor="middle">D</text>
+                  
+                  {/* Y軸（右側：点数） */}
+                  <line x1="420" y1="56" x2="420" y2="280" stroke="#9ca3af" strokeWidth="1"/>
+                  <text x="432" y="60" fill="#6b7280" fontSize="10" textAnchor="start">100</text>
+                  <text x="432" y="88" fill="#6b7280" fontSize="10" textAnchor="start">90</text>
+                  <text x="432" y="116" fill="#6b7280" fontSize="10" textAnchor="start">80</text>
+                  <text x="432" y="172" fill="#6b7280" fontSize="10" textAnchor="start">70</text>
+                  <text x="432" y="228" fill="#6b7280" fontSize="10" textAnchor="start">60</text>
+                  <text x="432" y="284" fill="#6b7280" fontSize="10" textAnchor="start">50</text>
+                  
                   {/* X軸 */}
-                  <line x1="65" y1="341" x2="576" y2="341" stroke="#666" strokeWidth="1"/>
-                  
-                  {/* Y軸 */}
-                  <line x1="65" y1="5" x2="65" y2="341" stroke="#666" strokeWidth="1"/>
-                  
-                  {/* Y軸ラベル */}
-                  <text x="57" y="12" fill="#666" fontSize="12" textAnchor="end">100</text>
-                  <text x="57" y="96" fill="#666" fontSize="12" textAnchor="end">80</text>
-                  <text x="57" y="180" fill="#666" fontSize="12" textAnchor="end">60</text>
-                  <text x="57" y="264" fill="#666" fontSize="12" textAnchor="end">40</text>
-                  <text x="57" y="348" fill="#666" fontSize="12" textAnchor="end">20</text>
+                  <line x1="60" y1="280" x2="420" y2="280" stroke="#374151" strokeWidth="1"/>
                   
                   {/* データライン */}
-                  <path stroke={CHART_COLORS.primary} strokeWidth="2" fill="none" 
-                        d="M65,273 C107.583,232.4,150.167,191.8,192.75,158 C235.333,124.2,277.917,97.4,320.5,89 C363.083,80.6,405.667,61.8,448.25,50 C490.833,38.2,533.417,32,576,26.8" 
+                  <path stroke="#374151" strokeWidth="3" fill="none" 
+                        d="M90,252 L150,196 L240,182 L330,112 L390,98"
+                        style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
                         className="recharts-line-curve"/>
                   
                   {/* データポイント */}
-                  {[273, 158, 89, 50, 26.8].map((y, i) => {
-                    const scores = [52.3, 65.8, 68.2, 78.4, 81.25];
-                    const score = scores[i];
-                    const color = score >= 80 ? CHART_COLORS.primary : score >= 70 ? CHART_COLORS.success : score >= 60 ? CHART_COLORS.warning : CHART_COLORS.danger;
+                  {[
+                    { year: 2020, score: 52.3, grade: 'D', x: 90, y: 252, isCurrentYear: false },
+                    { year: 2021, score: 65.8, grade: 'C', x: 150, y: 196, isCurrentYear: false },
+                    { year: 2022, score: 68.2, grade: 'C', x: 240, y: 182, isCurrentYear: false },
+                    { year: 2023, score: 78.4, grade: 'B', x: 330, y: 112, isCurrentYear: false },
+                    { year: 2024, score: 81.25, grade: 'A', x: 390, y: 98, isCurrentYear: true }
+                  ].map((data, i) => {
+                    const gradeColors = {
+                      'S': '#ef4444',
+                      'A': '#f59e0b', 
+                      'B': '#10b981',
+                      'C': '#3b82f6',
+                      'D': '#8b5cf6'
+                    };
+                    const color = gradeColors[data.grade];
+                    const isLatest = data.isCurrentYear;
+                    
                     return (
-                      <circle
-                        key={i}
-                        cx={[65, 192.75, 320.5, 448.25, 576][i]}
-                        cy={y}
-                        r="3"
-                        stroke={color}
-                        strokeWidth="2"
-                        fill="#fff"
-                        className="recharts-dot recharts-line-dot"
-                      />
+                      <g key={i}>
+                        {/* ポイント */}
+                        <circle
+                          cx={data.x}
+                          cy={data.y}
+                          r={isLatest ? "6" : "4"}
+                          fill={color}
+                          stroke="#fff"
+                          strokeWidth={isLatest ? "3" : "2"}
+                          style={{ 
+                            filter: isLatest ? 'drop-shadow(0 3px 6px rgba(0,0,0,0.15))' : 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))',
+                            cursor: 'pointer'
+                          }}
+                          className="transition-all duration-200 hover:r-7"
+                        />
+                        
+                        {/* グレード表示 */}
+                        <text
+                          x={data.x}
+                          y={data.y - (isLatest ? 15 : 12)}
+                          fill={color}
+                          fontSize={isLatest ? "14" : "12"}
+                          fontWeight="bold"
+                          textAnchor="middle"
+                          style={{ filter: 'drop-shadow(0 1px 2px rgba(255,255,255,0.8))' }}
+                        >
+                          {data.grade}
+                        </text>
+                        
+                        {/* 点数表示（小さく補足） */}
+                        <text
+                          x={data.x}
+                          y={data.y + (isLatest ? 20 : 18)}
+                          fill="#6b7280"
+                          fontSize="10"
+                          textAnchor="middle"
+                        >
+                          {data.score}
+                        </text>
+                      </g>
                     );
                   })}
                   
+                  {/* 成長メッセージ */}
+                  <text x="240" y="40" fill="#374151" fontSize="14" fontWeight="600" textAnchor="middle">
+                    C→B→A 段階的成長（+29点向上）
+                  </text>
+                  
                   {/* X軸ラベル */}
-                  <text x="65" y="359" fill="#666" fontSize="12" textAnchor="middle">2020</text>
-                  <text x="192.75" y="359" fill="#666" fontSize="12" textAnchor="middle">2021</text>
-                  <text x="320.5" y="359" fill="#666" fontSize="12" textAnchor="middle">2022</text>
-                  <text x="448.25" y="359" fill="#666" fontSize="12" textAnchor="middle">2023</text>
-                  <text x="576" y="359" fill="#666" fontSize="12" textAnchor="middle">2024</text>
+                  <text x="90" y="300" fill="#6b7280" fontSize="12" textAnchor="middle">2020</text>
+                  <text x="150" y="300" fill="#6b7280" fontSize="12" textAnchor="middle">2021</text>
+                  <text x="240" y="300" fill="#6b7280" fontSize="12" textAnchor="middle">2022</text>
+                  <text x="330" y="300" fill="#6b7280" fontSize="12" textAnchor="middle">2023</text>
+                  <text x="390" y="300" fill="#374151" fontSize="12" fontWeight="600" textAnchor="middle">2024</text>
                 </svg>
               </div>
             </div>
@@ -1641,70 +1714,128 @@ function EvaluationHistoryTab({ selectedStaff }: { selectedStaff: any }): React.
             {/* グラフエリア */}
             <div className="lg:col-span-2">
               <div className="h-96 bg-white rounded-lg p-6 relative border shadow">
-                <svg width="100%" height="100%" viewBox="0 0 581 400" className="overflow-visible">
+                <svg width="100%" height="100%" viewBox="0 0 480 360" className="overflow-visible">
                   {/* グリッドライン */}
                   <g className="recharts-cartesian-grid">
                     <g className="recharts-cartesian-grid-horizontal">
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="65" y1="341" x2="576" y2="341"></line>
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="65" y1="274" x2="576" y2="274"></line>
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="65" y1="207" x2="576" y2="207"></line>
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="65" y1="140" x2="576" y2="140"></line>
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="65" y1="73" x2="576" y2="73"></line>
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="65" y1="6" x2="576" y2="6"></line>
+                      <line strokeDasharray="3 3" stroke="#e5e7eb" fill="none" x1="60" y1="280" x2="420" y2="280"></line>
+                      <line strokeDasharray="3 3" stroke="#e5e7eb" fill="none" x1="60" y1="224" x2="420" y2="224"></line>
+                      <line strokeDasharray="3 3" stroke="#e5e7eb" fill="none" x1="60" y1="168" x2="420" y2="168"></line>
+                      <line strokeDasharray="3 3" stroke="#e5e7eb" fill="none" x1="60" y1="112" x2="420" y2="112"></line>
+                      <line strokeDasharray="3 3" stroke="#e5e7eb" fill="none" x1="60" y1="56" x2="420" y2="56"></line>
                     </g>
                     <g className="recharts-cartesian-grid-vertical">
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="65" y1="6" x2="65" y2="341"></line>
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="192.75" y1="6" x2="192.75" y2="341"></line>
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="320.5" y1="6" x2="320.5" y2="341"></line>
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="448.25" y1="6" x2="448.25" y2="341"></line>
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="576" y1="6" x2="576" y2="341"></line>
+                      <line strokeDasharray="3 3" stroke="#e5e7eb" fill="none" x1="60" y1="56" x2="60" y2="280"></line>
+                      <line strokeDasharray="3 3" stroke="#e5e7eb" fill="none" x1="150" y1="56" x2="150" y2="280"></line>
+                      <line strokeDasharray="3 3" stroke="#e5e7eb" fill="none" x1="240" y1="56" x2="240" y2="280"></line>
+                      <line strokeDasharray="3 3" stroke="#e5e7eb" fill="none" x1="330" y1="56" x2="330" y2="280"></line>
+                      <line strokeDasharray="3 3" stroke="#e5e7eb" fill="none" x1="420" y1="56" x2="420" y2="280"></line>
                     </g>
                   </g>
                   
+                  {/* パフォーマンスゾーン */}
+                  <rect x="60" y="56" width="360" height="45" fill="#ef4444" fillOpacity="0.08"/>
+                  <rect x="60" y="101" width="360" height="33" fill="#f59e0b" fillOpacity="0.08"/>
+                  <rect x="60" y="134" width="360" height="67" fill="#10b981" fillOpacity="0.08"/>
+                  <rect x="60" y="201" width="360" height="79" fill="#3b82f6" fillOpacity="0.08"/>
+                  
+                  {/* 上位10%基準線 */}
+                  <line x1="60" y1="84" x2="420" y2="84" stroke="#ef4444" strokeWidth="2" strokeDasharray="6,4" opacity="0.8"/>
+                  <text x="425" y="88" fill="#ef4444" fontSize="12" fontWeight="600">上位10%</text>
+                  
+                  {/* Y軸（順位は上から下へ） */}
+                  <line x1="60" y1="56" x2="60" y2="280" stroke="#374151" strokeWidth="1"/>
+                  <text x="45" y="60" fill="#6b7280" fontSize="12" textAnchor="end">1位</text>
+                  <text x="45" y="88" fill="#6b7280" fontSize="12" textAnchor="end">10位</text>
+                  <text x="45" y="120" fill="#6b7280" fontSize="12" textAnchor="end">20位</text>
+                  <text x="45" y="152" fill="#6b7280" fontSize="12" textAnchor="end">30位</text>
+                  <text x="45" y="184" fill="#6b7280" fontSize="12" textAnchor="end">40位</text>
+                  <text x="45" y="216" fill="#6b7280" fontSize="12" textAnchor="end">50位</text>
+                  <text x="45" y="248" fill="#6b7280" fontSize="12" textAnchor="end">75位</text>
+                  <text x="45" y="284" fill="#6b7280" fontSize="12" textAnchor="end">100位</text>
+                  
                   {/* X軸 */}
-                  <line x1="65" y1="341" x2="576" y2="341" stroke="#666" strokeWidth="1"/>
-                  
-                  {/* Y軸（順位は逆転） */}
-                  <line x1="65" y1="6" x2="65" y2="341" stroke="#666" strokeWidth="1"/>
-                  
-                  {/* Y軸ラベル（順位は逆順表示） */}
-                  <text x="57" y="12" fill="#666" fontSize="12" textAnchor="end">1位</text>
-                  <text x="57" y="79" fill="#666" fontSize="12" textAnchor="end">20位</text>
-                  <text x="57" y="146" fill="#666" fontSize="12" textAnchor="end">40位</text>
-                  <text x="57" y="213" fill="#666" fontSize="12" textAnchor="end">60位</text>
-                  <text x="57" y="280" fill="#666" fontSize="12" textAnchor="end">80位</text>
-                  <text x="57" y="347" fill="#666" fontSize="12" textAnchor="end">100位</text>
+                  <line x1="60" y1="280" x2="420" y2="280" stroke="#374151" strokeWidth="1"/>
                   
                   {/* データライン */}
-                  <path stroke={CHART_COLORS.success} strokeWidth="2" fill="none" 
-                        d="M65,300 C107.583,255.2,150.167,210.4,192.75,177 C235.333,143.6,277.917,122.4,320.5,108 C363.083,93.6,405.667,86.4,448.25,79 C490.833,71.6,533.417,64,576,53"
+                  <path stroke="#10b981" strokeWidth="3" fill="none" 
+                        d="M90,260 L150,185 L240,154 L330,118 L390,92"
+                        style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
                         className="recharts-line-curve"/>
                   
                   {/* データポイント */}
-                  {[300, 177, 108, 79, 53].map((y, i) => {
-                    const ranks = [89, 65, 42, 22, 12];
-                    const rank = ranks[i];
-                    const color = rank <= 10 ? CHART_COLORS.primary : rank <= 25 ? CHART_COLORS.success : rank <= 50 ? CHART_COLORS.warning : CHART_COLORS.danger;
+                  {[
+                    { year: 2020, rank: 89, percent: '下位32%', x: 90, y: 260, isCurrentYear: false },
+                    { year: 2021, rank: 65, percent: '中位77%', x: 150, y: 185, isCurrentYear: false },
+                    { year: 2022, rank: 42, percent: '上位85%', x: 240, y: 154, isCurrentYear: false },
+                    { year: 2023, rank: 22, percent: '上位92%', x: 330, y: 118, isCurrentYear: false },
+                    { year: 2024, rank: 12, percent: '上位96%', x: 390, y: 92, isCurrentYear: true }
+                  ].map((data, i) => {
+                    const getRankColor = (rank) => {
+                      if (rank <= 10) return '#ef4444'; // トップ10
+                      if (rank <= 25) return '#f59e0b'; // 上位25
+                      if (rank <= 50) return '#10b981'; // 上位50
+                      return '#6b7280'; // その他
+                    };
+                    
+                    const color = getRankColor(data.rank);
+                    const isLatest = data.isCurrentYear;
+                    
                     return (
-                      <circle
-                        key={i}
-                        cx={[65, 192.75, 320.5, 448.25, 576][i]}
-                        cy={y}
-                        r="3"
-                        stroke={color}
-                        strokeWidth="2"
-                        fill="#fff"
-                        className="recharts-dot recharts-line-dot"
-                      />
+                      <g key={i}>
+                        {/* ポイント */}
+                        <circle
+                          cx={data.x}
+                          cy={data.y}
+                          r={isLatest ? "6" : "4"}
+                          fill={color}
+                          stroke="#fff"
+                          strokeWidth={isLatest ? "3" : "2"}
+                          style={{ 
+                            filter: isLatest ? 'drop-shadow(0 3px 6px rgba(0,0,0,0.15))' : 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))',
+                            cursor: 'pointer'
+                          }}
+                          className="transition-all duration-200 hover:r-7"
+                        />
+                        
+                        {/* 順位表示 */}
+                        <text
+                          x={data.x}
+                          y={data.y - (isLatest ? 15 : 12)}
+                          fill={color}
+                          fontSize={isLatest ? "14" : "12"}
+                          fontWeight="bold"
+                          textAnchor="middle"
+                          style={{ filter: 'drop-shadow(0 1px 2px rgba(255,255,255,0.8))' }}
+                        >
+                          {data.rank}位
+                        </text>
+                        
+                        {/* パーセンタイル表示 */}
+                        <text
+                          x={data.x}
+                          y={data.y + (isLatest ? 20 : 18)}
+                          fill="#6b7280"
+                          fontSize="10"
+                          textAnchor="middle"
+                        >
+                          {data.percent}
+                        </text>
+                      </g>
                     );
                   })}
                   
+                  {/* 成長メッセージ */}
+                  <text x="240" y="40" fill="#374151" fontSize="14" fontWeight="600" textAnchor="middle">
+                    89位→12位：上位層への大躍進（77位向上）
+                  </text>
+                  
                   {/* X軸ラベル */}
-                  <text x="65" y="359" fill="#666" fontSize="12" textAnchor="middle">2020</text>
-                  <text x="192.75" y="359" fill="#666" fontSize="12" textAnchor="middle">2021</text>
-                  <text x="320.5" y="359" fill="#666" fontSize="12" textAnchor="middle">2022</text>
-                  <text x="448.25" y="359" fill="#666" fontSize="12" textAnchor="middle">2023</text>
-                  <text x="576" y="359" fill="#666" fontSize="12" textAnchor="middle">2024</text>
+                  <text x="90" y="300" fill="#6b7280" fontSize="12" textAnchor="middle">2020</text>
+                  <text x="150" y="300" fill="#6b7280" fontSize="12" textAnchor="middle">2021</text>
+                  <text x="240" y="300" fill="#6b7280" fontSize="12" textAnchor="middle">2022</text>
+                  <text x="330" y="300" fill="#6b7280" fontSize="12" textAnchor="middle">2023</text>
+                  <text x="390" y="300" fill="#374151" fontSize="12" fontWeight="600" textAnchor="middle">2024</text>
                 </svg>
               </div>
             </div>
@@ -1755,70 +1886,128 @@ function EvaluationHistoryTab({ selectedStaff }: { selectedStaff: any }): React.
             {/* グラフエリア */}
             <div className="lg:col-span-2">
               <div className="h-96 bg-white rounded-lg p-6 relative border shadow">
-                <svg width="100%" height="100%" viewBox="0 0 581 400" className="overflow-visible">
+                <svg width="100%" height="100%" viewBox="0 0 480 360" className="overflow-visible">
                   {/* グリッドライン */}
                   <g className="recharts-cartesian-grid">
                     <g className="recharts-cartesian-grid-horizontal">
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="65" y1="341" x2="576" y2="341"></line>
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="65" y1="275" x2="576" y2="275"></line>
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="65" y1="209" x2="576" y2="209"></line>
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="65" y1="143" x2="576" y2="143"></line>
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="65" y1="77" x2="576" y2="77"></line>
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="65" y1="11" x2="576" y2="11"></line>
+                      <line strokeDasharray="3 3" stroke="#e5e7eb" fill="none" x1="60" y1="280" x2="420" y2="280"></line>
+                      <line strokeDasharray="3 3" stroke="#e5e7eb" fill="none" x1="60" y1="224" x2="420" y2="224"></line>
+                      <line strokeDasharray="3 3" stroke="#e5e7eb" fill="none" x1="60" y1="168" x2="420" y2="168"></line>
+                      <line strokeDasharray="3 3" stroke="#e5e7eb" fill="none" x1="60" y1="112" x2="420" y2="112"></line>
+                      <line strokeDasharray="3 3" stroke="#e5e7eb" fill="none" x1="60" y1="56" x2="420" y2="56"></line>
                     </g>
                     <g className="recharts-cartesian-grid-vertical">
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="65" y1="11" x2="65" y2="341"></line>
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="192.75" y1="11" x2="192.75" y2="341"></line>
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="320.5" y1="11" x2="320.5" y2="341"></line>
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="448.25" y1="11" x2="448.25" y2="341"></line>
-                      <line strokeDasharray="3 3" stroke="#ccc" fill="none" x1="576" y1="11" x2="576" y2="341"></line>
+                      <line strokeDasharray="3 3" stroke="#e5e7eb" fill="none" x1="60" y1="56" x2="60" y2="280"></line>
+                      <line strokeDasharray="3 3" stroke="#e5e7eb" fill="none" x1="150" y1="56" x2="150" y2="280"></line>
+                      <line strokeDasharray="3 3" stroke="#e5e7eb" fill="none" x1="240" y1="56" x2="240" y2="280"></line>
+                      <line strokeDasharray="3 3" stroke="#e5e7eb" fill="none" x1="330" y1="56" x2="330" y2="280"></line>
+                      <line strokeDasharray="3 3" stroke="#e5e7eb" fill="none" x1="420" y1="56" x2="420" y2="280"></line>
                     </g>
                   </g>
                   
+                  {/* パフォーマンスゾーン */}
+                  <rect x="60" y="56" width="360" height="33" fill="#ef4444" fillOpacity="0.08"/>
+                  <rect x="60" y="89" width="360" height="45" fill="#f59e0b" fillOpacity="0.08"/>
+                  <rect x="60" y="134" width="360" height="78" fill="#10b981" fillOpacity="0.08"/>
+                  <rect x="60" y="212" width="360" height="68" fill="#6b7280" fillOpacity="0.06"/>
+                  
+                  {/* 上位10%基準線（8位） */}
+                  <line x1="60" y1="78" x2="420" y2="78" stroke="#f59e0b" strokeWidth="2" strokeDasharray="6,4" opacity="0.8"/>
+                  <text x="425" y="82" fill="#f59e0b" fontSize="12" fontWeight="600">上位10%</text>
+                  
+                  {/* Y軸（順位は上から下へ） */}
+                  <line x1="60" y1="56" x2="60" y2="280" stroke="#374151" strokeWidth="1"/>
+                  <text x="45" y="60" fill="#6b7280" fontSize="12" textAnchor="end">1位</text>
+                  <text x="45" y="82" fill="#6b7280" fontSize="12" textAnchor="end">5位</text>
+                  <text x="45" y="104" fill="#6b7280" fontSize="12" textAnchor="end">10位</text>
+                  <text x="45" y="134" fill="#6b7280" fontSize="12" textAnchor="end">15位</text>
+                  <text x="45" y="168" fill="#6b7280" fontSize="12" textAnchor="end">20位</text>
+                  <text x="45" y="202" fill="#6b7280" fontSize="12" textAnchor="end">25位</text>
+                  <text x="45" y="236" fill="#6b7280" fontSize="12" textAnchor="end">30位</text>
+                  <text x="45" y="270" fill="#6b7280" fontSize="12" textAnchor="end">35位</text>
+                  
                   {/* X軸 */}
-                  <line x1="65" y1="341" x2="576" y2="341" stroke="#666" strokeWidth="1"/>
-                  
-                  {/* Y軸（順位は逆転） */}
-                  <line x1="65" y1="11" x2="65" y2="341" stroke="#666" strokeWidth="1"/>
-                  
-                  {/* Y軸ラベル（順位は逆順表示） */}
-                  <text x="57" y="17" fill="#666" fontSize="12" textAnchor="end">1位</text>
-                  <text x="57" y="84" fill="#666" fontSize="12" textAnchor="end">10位</text>
-                  <text x="57" y="150" fill="#666" fontSize="12" textAnchor="end">20位</text>
-                  <text x="57" y="216" fill="#666" fontSize="12" textAnchor="end">30位</text>
-                  <text x="57" y="282" fill="#666" fontSize="12" textAnchor="end">40位</text>
-                  <text x="57" y="348" fill="#666" fontSize="12" textAnchor="end">50位</text>
+                  <line x1="60" y1="280" x2="420" y2="280" stroke="#374151" strokeWidth="1"/>
                   
                   {/* データライン */}
-                  <path stroke={CHART_COLORS.warning} strokeWidth="2" fill="none" 
-                        d="M65,264 C107.583,222.4,150.167,180.8,192.75,153 C235.333,125.2,277.917,112.4,320.5,106 C363.083,99.6,405.667,93.2,448.25,88 C490.833,82.8,533.417,77.6,576,64"
+                  <path stroke="#f59e0b" strokeWidth="3" fill="none" 
+                        d="M90,242 L150,156 L240,140 L330,116 L390,78"
+                        style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
                         className="recharts-line-curve"/>
                   
                   {/* データポイント */}
-                  {[264, 153, 106, 88, 64].map((y, i) => {
-                    const ranks = [35, 22, 18, 15, 8];
-                    const rank = ranks[i];
-                    const color = rank <= 5 ? CHART_COLORS.primary : rank <= 15 ? CHART_COLORS.success : rank <= 25 ? CHART_COLORS.warning : CHART_COLORS.danger;
+                  {[
+                    { year: 2020, rank: 35, percent: '下位56%', x: 90, y: 242, isCurrentYear: false },
+                    { year: 2021, rank: 22, percent: '中位73%', x: 150, y: 156, isCurrentYear: false },
+                    { year: 2022, rank: 18, percent: '上位78%', x: 240, y: 140, isCurrentYear: false },
+                    { year: 2023, rank: 15, percent: '上位81%', x: 330, y: 116, isCurrentYear: false },
+                    { year: 2024, rank: 8, percent: '上位90%', x: 390, y: 78, isCurrentYear: true }
+                  ].map((data, i) => {
+                    const getRankColor = (rank) => {
+                      if (rank <= 5) return '#ef4444';   // トップ5
+                      if (rank <= 15) return '#f59e0b';  // 上位15
+                      if (rank <= 25) return '#10b981';  // 上位25
+                      return '#6b7280'; // その他
+                    };
+                    
+                    const color = getRankColor(data.rank);
+                    const isLatest = data.isCurrentYear;
+                    
                     return (
-                      <circle
-                        key={i}
-                        cx={[65, 192.75, 320.5, 448.25, 576][i]}
-                        cy={y}
-                        r="3"
-                        stroke={color}
-                        strokeWidth="2"
-                        fill="#fff"
-                        className="recharts-dot recharts-line-dot"
-                      />
+                      <g key={i}>
+                        {/* ポイント */}
+                        <circle
+                          cx={data.x}
+                          cy={data.y}
+                          r={isLatest ? "6" : "4"}
+                          fill={color}
+                          stroke="#fff"
+                          strokeWidth={isLatest ? "3" : "2"}
+                          style={{ 
+                            filter: isLatest ? 'drop-shadow(0 3px 6px rgba(0,0,0,0.15))' : 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))',
+                            cursor: 'pointer'
+                          }}
+                          className="transition-all duration-200 hover:r-7"
+                        />
+                        
+                        {/* 順位表示 */}
+                        <text
+                          x={data.x}
+                          y={data.y - (isLatest ? 15 : 12)}
+                          fill={color}
+                          fontSize={isLatest ? "14" : "12"}
+                          fontWeight="bold"
+                          textAnchor="middle"
+                          style={{ filter: 'drop-shadow(0 1px 2px rgba(255,255,255,0.8))' }}
+                        >
+                          {data.rank}位
+                        </text>
+                        
+                        {/* パーセンタイル表示 */}
+                        <text
+                          x={data.x}
+                          y={data.y + (isLatest ? 20 : 18)}
+                          fill="#6b7280"
+                          fontSize="10"
+                          textAnchor="middle"
+                        >
+                          {data.percent}
+                        </text>
+                      </g>
                     );
                   })}
                   
+                  {/* 成長メッセージ */}
+                  <text x="240" y="40" fill="#374151" fontSize="14" fontWeight="600" textAnchor="middle">
+                    35位→8位：現場で上位10%の評価（27位向上）
+                  </text>
+                  
                   {/* X軸ラベル */}
-                  <text x="65" y="359" fill="#666" fontSize="12" textAnchor="middle">2020</text>
-                  <text x="192.75" y="359" fill="#666" fontSize="12" textAnchor="middle">2021</text>
-                  <text x="320.5" y="359" fill="#666" fontSize="12" textAnchor="middle">2022</text>
-                  <text x="448.25" y="359" fill="#666" fontSize="12" textAnchor="middle">2023</text>
-                  <text x="576" y="359" fill="#666" fontSize="12" textAnchor="middle">2024</text>
+                  <text x="90" y="300" fill="#6b7280" fontSize="12" textAnchor="middle">2020</text>
+                  <text x="150" y="300" fill="#6b7280" fontSize="12" textAnchor="middle">2021</text>
+                  <text x="240" y="300" fill="#6b7280" fontSize="12" textAnchor="middle">2022</text>
+                  <text x="330" y="300" fill="#6b7280" fontSize="12" textAnchor="middle">2023</text>
+                  <text x="390" y="300" fill="#374151" fontSize="12" fontWeight="600" textAnchor="middle">2024</text>
                 </svg>
               </div>
             </div>
