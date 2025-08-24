@@ -43,10 +43,26 @@ const VISUALIZATION_COLORS = {
 
 export default function InterviewDataVisualization({ staffId, category, data }: InterviewVisualizationProps) {
   
+  // データのバリデーション
+  if (!data?.trends?.scores || !Array.isArray(data.trends.scores) || data.trends.scores.length === 0) {
+    return (
+      <div className="p-4 text-center text-gray-500">
+        面談データが利用できません
+      </div>
+    )
+  }
+
   // トレンド分析の可視化
   const TrendVisualization = () => {
-    const maxScore = Math.max(...data.trends.scores, 100)
-    const avgLine = (data.trends.avgScore / maxScore) * 100
+    // スコアのバリデーションと安全な計算
+    const validScores = data.trends.scores.filter(score => typeof score === 'number' && !isNaN(score))
+    if (validScores.length === 0) {
+      return <div className="p-4 text-center text-gray-500">有効なスコアデータがありません</div>
+    }
+    
+    const maxScore = Math.max(...validScores, 100)
+    const avgScore = data.trends.avgScore || 0
+    const avgLine = (avgScore / maxScore) * 100
 
     return (
       <Card className="mb-6">
@@ -88,18 +104,18 @@ export default function InterviewDataVisualization({ staffId, category, data }: 
                   fill="none"
                   stroke={VISUALIZATION_COLORS.primary}
                   strokeWidth="3"
-                  points={data.trends.scores.map((score, index) => {
-                    const x = (index / (data.trends.scores.length - 1)) * 90 + 5
+                  points={validScores.map((score, index) => {
+                    const x = (index / Math.max(validScores.length - 1, 1)) * 90 + 5
                     const y = 95 - (score / maxScore) * 80
                     return `${x},${y}`
                   }).join(' ')}
                 />
 
                 {/* データポイント */}
-                {data.trends.scores.map((score, index) => {
-                  const x = (index / (data.trends.scores.length - 1)) * 90 + 5
+                {validScores.map((score, index) => {
+                  const x = (index / Math.max(validScores.length - 1, 1)) * 90 + 5
                   const y = 95 - (score / maxScore) * 80
-                  const isImproving = index > 0 && score > data.trends.scores[index - 1]
+                  const isImproving = index > 0 && score > validScores[index - 1]
                   
                   return (
                     <g key={index}>
@@ -128,7 +144,7 @@ export default function InterviewDataVisualization({ staffId, category, data }: 
 
             {/* X軸ラベル */}
             <div className="flex justify-between mt-2 text-sm text-gray-600">
-              {data.trends.dates.map((date, index) => (
+              {(data.trends.dates || []).slice(0, validScores.length).map((date, index) => (
                 <span key={index}>{date}</span>
               ))}
             </div>

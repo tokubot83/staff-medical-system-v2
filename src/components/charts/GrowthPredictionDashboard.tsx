@@ -32,7 +32,25 @@ interface GrowthPredictionDashboardProps {
 
 export default function GrowthPredictionDashboard({ data }: GrowthPredictionDashboardProps) {
   
-  const { historicalGrowth, nextMilestone, careerPath } = data.growthPrediction
+  // データのバリデーション
+  if (!data?.growthPrediction) {
+    return (
+      <div className="p-4 text-center text-gray-500">
+        成長予測データが利用できません
+      </div>
+    )
+  }
+
+  const { historicalGrowth = [], nextMilestone, careerPath } = data.growthPrediction
+  
+  // historicalGrowthのバリデーション
+  if (!Array.isArray(historicalGrowth) || historicalGrowth.length === 0) {
+    return (
+      <div className="p-4 text-center text-gray-500">
+        履歴データが不足しています
+      </div>
+    )
+  }
   
   // 確率による色分け
   const getProbabilityColor = (probability: number) => {
@@ -50,9 +68,13 @@ export default function GrowthPredictionDashboard({ data }: GrowthPredictionDash
 
   // 複合グラフ（実績 + 予測）
   const PredictionChart = () => {
+    // 数値バリデーションと安全な計算
+    const actualScores = historicalGrowth.map(h => h.actualScore).filter(s => typeof s === 'number' && !isNaN(s))
+    const projectedScores = historicalGrowth.map(h => h.projectedScore).filter(s => typeof s === 'number' && !isNaN(s))
+    
     const maxScore = Math.max(
-      ...historicalGrowth.map(h => h.actualScore || 0),
-      ...historicalGrowth.map(h => h.projectedScore || 0),
+      ...actualScores,
+      ...projectedScores,
       90 // Sグレード目標
     )
     
@@ -63,11 +85,11 @@ export default function GrowthPredictionDashboard({ data }: GrowthPredictionDash
             🔮 成長予測ダッシュボード
             <Badge 
               style={{ 
-                backgroundColor: getProbabilityColor(nextMilestone.probability),
+                backgroundColor: getProbabilityColor(nextMilestone?.probability || 0),
                 color: 'white'
               }}
             >
-              {getProbabilityLabel(nextMilestone.probability)} {nextMilestone.probability}%
+              {getProbabilityLabel(nextMilestone?.probability || 0)} {nextMilestone?.probability || 0}%
             </Badge>
           </CardTitle>
         </CardHeader>
@@ -84,11 +106,11 @@ export default function GrowthPredictionDashboard({ data }: GrowthPredictionDash
               <strong>成長予測:</strong> 
               現在のトレンドが継続すれば、
               <span style={{ color: CHART_COLORS.target, fontWeight: 'bold' }}>
-                {nextMilestone.timeframe}に{nextMilestone.target}
+                {nextMilestone?.timeframe || '未定'}に{nextMilestone?.target || '目標'}
               </span>
               を達成する確率は
-              <span style={{ color: getProbabilityColor(nextMilestone.probability), fontWeight: 'bold' }}>
-                {nextMilestone.probability}%
+              <span style={{ color: getProbabilityColor(nextMilestone?.probability || 0), fontWeight: 'bold' }}>
+                {nextMilestone?.probability || 0}%
               </span>
               です。
             </p>
