@@ -2018,10 +2018,12 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
               印刷プレビュー
             </Button>
           </div>
+        </div>
+      )}
 
-          {/* バンクシステムの面談シート */}
-          {!showPrintView ? (
-            <DynamicInterviewSheet
+      {/* バンクシステムの面談シート - フル幅表示 */}
+      {currentStep === 'conducting' && session.useBankSystem && session.bankGeneratedSheet && !showPrintView && (
+        <DynamicInterviewSheet
               sheetData={session.bankGeneratedSheet}
               staffProfile={{
                 id: session.staffMember!.id,
@@ -2059,34 +2061,37 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
               }}
               readOnly={false}
             />
-          ) : (
-            <DynamicInterviewSheetPrint
-              sheetData={session.bankGeneratedSheet}
-              staffProfile={{
-                id: session.staffMember!.id,
-                name: session.staffMember!.name,
-                employeeNumber: session.staffMember!.id,
-                hireDate: new Date(Date.now() - (session.staffMember!.experienceYears * 365 + session.staffMember!.experienceMonths * 30) * 24 * 60 * 60 * 1000),
-                experienceLevel: determineExperienceLevel(session.staffMember!.experienceYears),
-                experienceYears: session.staffMember!.experienceYears,
-                experienceMonths: session.staffMember!.experienceMonths,
-                position: {
-                  id: mapToPositionId(session.staffMember!.position),
-                  name: session.staffMember!.position,
-                  category: mapToProfessionCategory(session.staffMember!.jobRole),
-                  level: mapToPositionLevel(session.staffMember!.position),
-                  hierarchyLevel: mapToHierarchyLevel(session.staffMember!.position)
-                },
-                positionLevel: mapToPositionLevel(session.staffMember!.position),
-                facility: session.staffMember!.facilityType,
-                department: mapToDepartmentType(session.staffMember!.department),
-                profession: session.staffMember!.jobRole,
-                licenses: extractLicenses(session.staffMember!.jobRole)
-              }}
-              responses={session.bankResponses || {}}
-              motivationType={session.staffMember?.motivationType}
-            />
-          )}
+      )}
+
+      {/* 印刷プレビュー表示 */}
+      {currentStep === 'conducting' && session.useBankSystem && session.bankGeneratedSheet && showPrintView && (
+        <div className="max-w-6xl mx-auto p-6">
+          <DynamicInterviewSheetPrint
+            sheetData={session.bankGeneratedSheet}
+            staffProfile={{
+              id: session.staffMember!.id,
+              name: session.staffMember!.name,
+              employeeNumber: session.staffMember!.id,
+              hireDate: new Date(Date.now() - (session.staffMember!.experienceYears * 365 + session.staffMember!.experienceMonths * 30) * 24 * 60 * 60 * 1000),
+              experienceLevel: determineExperienceLevel(session.staffMember!.experienceYears),
+              experienceYears: session.staffMember!.experienceYears,
+              experienceMonths: session.staffMember!.experienceMonths,
+              position: {
+                id: mapToPositionId(session.staffMember!.position),
+                name: session.staffMember!.position,
+                category: mapToProfessionCategory(session.staffMember!.jobRole),
+                level: mapToPositionLevel(session.staffMember!.position),
+                hierarchyLevel: mapToHierarchyLevel(session.staffMember!.position)
+              },
+              positionLevel: mapToPositionLevel(session.staffMember!.position),
+              facility: session.staffMember!.facilityType,
+              department: mapToDepartmentType(session.staffMember!.department),
+              profession: session.staffMember!.jobRole,
+              licenses: extractLicenses(session.staffMember!.jobRole)
+            }}
+            responses={session.bankResponses || {}}
+            motivationType={session.staffMember?.motivationType}
+          />
         </div>
       )}
 
