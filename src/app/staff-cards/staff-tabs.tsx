@@ -908,57 +908,61 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
                   </div>
                 </div>
 
-              {/* 総合判定の詳細 */}
-              <div className={styles.breakdownSection}>
-                <div className={styles.breakdownHeader}>
-                  <h4>⭐ 総合判定（7段階評価）</h4>
-                  <div className={styles.breakdownScore}>
-                    <span className={styles.currentScore}>{v3Evaluation?.totalScore || 81}点</span>
-                    <span className={styles.maxScore}>/ 100点</span>
-                  </div>
-                </div>
-                
-                <div className={styles.gradeStandards}>
-                  <h5>グレード基準</h5>
-                  <div className={styles.gradeTable}>
-                    <div className={styles.gradeRow}>
-                      <span className={styles.gradeCell} style={{ backgroundColor: '#fff0f0', color: '#8B0000' }}>S+</span>
-                      <span className={styles.gradeCell}>95-100点</span>
-                      <span className={styles.gradeCell}>超優秀</span>
-                    </div>
-                    <div className={styles.gradeRow}>
-                      <span className={styles.gradeCell} style={{ backgroundColor: '#fff0f0', color: '#FF0000' }}>S</span>
-                      <span className={styles.gradeCell}>90-94点</span>
-                      <span className={styles.gradeCell}>卓越</span>
-                    </div>
-                    <div className={styles.gradeRow}>
-                      <span className={styles.gradeCell} style={{ backgroundColor: '#fff5f0', color: '#FF4500' }}>A+</span>
-                      <span className={styles.gradeCell}>85-89点</span>
-                      <span className={styles.gradeCell}>優秀+</span>
-                    </div>
-                    <div className={`${styles.gradeRow} ${styles.currentGrade}`}>
-                      <span className={styles.gradeCell} style={{ backgroundColor: '#fff8f0', color: '#FFA500', fontWeight: 'bold' }}>A</span>
-                      <span className={styles.gradeCell} style={{ fontWeight: 'bold' }}>80-84点</span>
-                      <span className={styles.gradeCell} style={{ fontWeight: 'bold' }}>優秀 ← 現在</span>
-                    </div>
-                    <div className={styles.gradeRow}>
-                      <span className={styles.gradeCell} style={{ backgroundColor: '#f0fff0', color: '#32CD32' }}>B</span>
-                      <span className={styles.gradeCell}>70-79点</span>
-                      <span className={styles.gradeCell}>良好</span>
-                    </div>
-                    <div className={styles.gradeRow}>
-                      <span className={styles.gradeCell} style={{ backgroundColor: '#f0f8ff', color: '#1E90FF' }}>C</span>
-                      <span className={styles.gradeCell}>60-69点</span>
-                      <span className={styles.gradeCell}>普通</span>
-                    </div>
-                    <div className={styles.gradeRow}>
-                      <span className={styles.gradeCell} style={{ backgroundColor: '#f8f8f8', color: '#808080' }}>D</span>
-                      <span className={styles.gradeCell}>0-59点</span>
-                      <span className={styles.gradeCell}>要改善</span>
+                {/* 総合判定の詳細 */}
+                <div className="border rounded-lg p-4" style={{ borderLeftColor: CHART_COLORS.highlight, borderLeftWidth: '4px' }}>
+                  <div className="flex justify-between items-center mb-4">
+                    <h4 className="text-lg font-semibold flex items-center gap-2">
+                      ⭐ 総合判定（7段階評価）
+                    </h4>
+                    <div className="flex items-center gap-1">
+                      <span className="text-2xl font-bold" style={{ color: CHART_COLORS.highlight }}>
+                        {v3Evaluation?.totalScore || 81}点
+                      </span>
+                      <span className="text-gray-500">/ 100点</span>
                     </div>
                   </div>
+                  
+                  <div className="mb-4">
+                    <h5 className="font-medium mb-3">📊 グレード基準</h5>
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
+                        <Badge style={{ backgroundColor: '#fff0f0', color: '#8B0000' }}>S+</Badge>
+                        <span className="text-sm">95-100点</span>
+                        <span className="text-sm font-medium">超優秀</span>
+                      </div>
+                      <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
+                        <Badge style={{ backgroundColor: '#fff0f0', color: '#FF0000' }}>S</Badge>
+                        <span className="text-sm">90-94点</span>
+                        <span className="text-sm font-medium">卓越</span>
+                      </div>
+                      <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
+                        <Badge style={{ backgroundColor: '#fff5f0', color: '#FF4500' }}>A+</Badge>
+                        <span className="text-sm">85-89点</span>
+                        <span className="text-sm font-medium">優秀+</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-yellow-50 rounded border-2 border-yellow-200">
+                        <Badge style={{ backgroundColor: '#fff8f0', color: '#FFA500' }} className="font-bold">A</Badge>
+                        <span className="text-sm font-bold">80-84点</span>
+                        <span className="text-sm font-bold text-yellow-700">優秀 ← 現在</span>
+                      </div>
+                      <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
+                        <Badge style={{ backgroundColor: '#f0fff0', color: '#32CD32' }}>B</Badge>
+                        <span className="text-sm">70-79点</span>
+                        <span className="text-sm font-medium">良好</span>
+                      </div>
+                      <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
+                        <Badge style={{ backgroundColor: '#f0f8ff', color: '#1E90FF' }}>C</Badge>
+                        <span className="text-sm">60-69点</span>
+                        <span className="text-sm font-medium">普通</span>
+                      </div>
+                      <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
+                        <Badge style={{ backgroundColor: '#f8f8f8', color: '#808080' }}>D</Badge>
+                        <span className="text-sm">0-59点</span>
+                        <span className="text-sm font-medium">要改善</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
             </div>
             </CardContent>
           </Card>
