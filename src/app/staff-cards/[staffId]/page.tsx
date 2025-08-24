@@ -94,6 +94,7 @@ export default function StaffDetailPage() {
   const params = useParams()
   const staffId = params.staffId as string
   const [activeTab, setActiveTab] = useState('basic')
+  const [showNotebookLinkModal, setShowNotebookLinkModal] = useState(false)
   
   const selectedStaff = staffDatabase[staffId]
 
@@ -153,7 +154,7 @@ export default function StaffDetailPage() {
           {activeTab === 'evaluation-history' && <EvaluationHistoryTab selectedStaff={selectedStaff} />}
           {activeTab === 'evaluation-report' && <EvaluationReportTab selectedStaff={selectedStaff} />}
           {activeTab === 'recruitment' && <RecruitmentTab selectedStaff={selectedStaff} />}
-          {activeTab === 'interview' && <InterviewTab selectedStaff={selectedStaff} />}
+          {activeTab === 'interview' && <InterviewTab selectedStaff={selectedStaff} onShowNotebookModal={() => setShowNotebookLinkModal(true)} />}
           {activeTab === 'development' && <DevelopmentTab selectedStaff={selectedStaff} />}
           {activeTab === 'education' && <EducationTab selectedStaff={selectedStaff} />}
         </div>
@@ -161,6 +162,24 @@ export default function StaffDetailPage() {
       <ScrollToTopButton />
       <BackToStaffCardsButton />
       <DashboardButton />
+      
+      {/* NotebookLMモーダル（全タブ共通） */}
+      {showNotebookLinkModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center" style={{ zIndex: 999999 }}>
+          <div className="bg-white rounded-lg p-6 w-96" style={{ border: '5px solid red' }}>
+            <h3 className="text-lg font-semibold mb-4">NotebookLMリンク登録</h3>
+            <input
+              type="url"
+              placeholder="https://notebooklm.google.com/notebook/..."
+              className="w-full px-3 py-2 border border-gray-300 rounded-md mb-4"
+            />
+            <div className="flex justify-end gap-3">
+              <button onClick={() => setShowNotebookLinkModal(false)} className="px-4 py-2 bg-gray-100 text-gray-600 rounded">キャンセル</button>
+              <button className="px-4 py-2 bg-blue-600 text-white rounded">保存</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

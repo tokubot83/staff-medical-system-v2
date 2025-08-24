@@ -1445,7 +1445,7 @@ interface NotebookLMLink {
   }
 }
 
-export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
+export function InterviewTab({ selectedStaff, onShowNotebookModal }: { selectedStaff: any; onShowNotebookModal?: () => void }) {
   const router = useRouter()
   const { handleError, clearError } = useErrorHandler()
   const [interviewData, setInterviewData] = useState<any>(null)
@@ -2408,7 +2408,7 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                   type="button"
                   onClick={() => {
                     console.log('外部テストボタンクリック');
-                    setShowNotebookLinkModal(true);
+                    onShowNotebookModal?.();
                   }}
                   className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                 >
@@ -2481,18 +2481,9 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                               type="button"
                               onMouseOver={() => console.log('ボタンにマウスオーバー:', interview.id)}
                               onMouseDown={() => console.log('ボタンマウスダウン:', interview.id)}
-                              onClick={(e) => {
-                                console.log('=== ボタンクリック開始 ===', interview.id);
-                                e.preventDefault();
-                                e.stopPropagation();
-                                console.log('NotebookLM登録ボタンクリック:', interview.id);
-                                setEditingInterviewId(interview.id);
-                                setCurrentInterviewType('regular');
-                                setCurrentInterviewDate(interview.date);
-                                setCurrentInterviewCategory(interview.subtypeLabel);
-                                setShowNotebookLinkModal(true);
-                                console.log('モーダル表示設定完了');
-                                alert('ボタンがクリックされました!');
+                              onClick={() => {
+                                console.log('定期面談NotebookLM登録ボタンクリック:', interview.id);
+                                onShowNotebookModal?.();
                               }}
                               className="inline-flex items-center gap-2 px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700"
                               style={{
@@ -2853,16 +2844,9 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                             ) : (
                               <button
                                 type="button"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
+                                onClick={() => {
                                   console.log('特別面談NotebookLM登録ボタンクリック:', interview.id);
-                                  setEditingInterviewId(interview.id);
-                                  setCurrentInterviewType('special');
-                                  setCurrentInterviewDate(interview.date);
-                                  setCurrentInterviewCategory(interview.subtypeLabel);
-                                  setShowNotebookLinkModal(true);
-                                  console.log('特別面談モーダル表示設定完了');
+                                  onShowNotebookModal?.();
                                 }}
                                 className="inline-flex items-center gap-2 px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700"
                               >
@@ -3255,16 +3239,9 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                             ) : (
                               <button
                                 type="button"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
+                                onClick={() => {
                                   console.log('サポート面談NotebookLM登録ボタンクリック:', interview.id);
-                                  setEditingInterviewId(interview.id);
-                                  setCurrentInterviewType('support');
-                                  setCurrentInterviewDate(interview.date);
-                                  setCurrentInterviewCategory(interview.category);
-                                  setShowNotebookLinkModal(true);
-                                  console.log('サポート面談モーダル表示設定完了');
+                                  onShowNotebookModal?.();
                                 }}
                                 className="inline-flex items-center gap-2 px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700"
                               >
