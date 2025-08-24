@@ -129,7 +129,7 @@ export default function GrowthPredictionDashboard({ data }: GrowthPredictionDash
                     .map((point, index) => {
                       const x = (index / (historicalGrowth.length - 1)) * 90 + 5
                       const y = 95 - ((point.actualScore! / maxScore) * 80)
-                      return `${x}%,${y}%`
+                      return `${x},${y}`
                     }).join(' ')}
                 />
 
@@ -145,7 +145,7 @@ export default function GrowthPredictionDashboard({ data }: GrowthPredictionDash
                       const startIndex = historicalGrowth.filter(h => h.actualScore).length - 1
                       const x = ((startIndex + index) / (historicalGrowth.length - 1)) * 90 + 5
                       const y = 95 - ((point.projectedScore! / maxScore) * 80)
-                      return `${x}%,${y}%`
+                      return `${x},${y}`
                     }).join(' ')}
                 />
 
@@ -160,7 +160,7 @@ export default function GrowthPredictionDashboard({ data }: GrowthPredictionDash
                       <g key={`actual-${index}`}>
                         <circle
                           cx={`${x}%`}
-                          cy={`${y}%`}
+                          cy={`${Math.max(0, y)}%`}
                           r="6"
                           fill={CHART_COLORS.actual}
                           stroke="white"
@@ -168,7 +168,7 @@ export default function GrowthPredictionDashboard({ data }: GrowthPredictionDash
                         />
                         <text
                           x={`${x}%`}
-                          y={`${y - 15}%`}
+                          y={`${Math.max(10, y - 15)}%`}
                           textAnchor="middle"
                           className="text-xs font-medium"
                           fill={CHART_COLORS.actual}
@@ -191,7 +191,7 @@ export default function GrowthPredictionDashboard({ data }: GrowthPredictionDash
                       <g key={`projected-${index}`}>
                         <circle
                           cx={`${x}%`}
-                          cy={`${y}%`}
+                          cy={`${Math.max(0, y)}%`}
                           r="5"
                           fill="none"
                           stroke={CHART_COLORS.projected}
@@ -200,7 +200,7 @@ export default function GrowthPredictionDashboard({ data }: GrowthPredictionDash
                         />
                         <text
                           x={`${x}%`}
-                          y={`${y - 15}%`}
+                          y={`${Math.max(10, y - 15)}%`}
                           textAnchor="middle"
                           className="text-xs font-medium"
                           fill={CHART_COLORS.projected}

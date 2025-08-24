@@ -2433,6 +2433,24 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                           </ul>
                         </div>
                         
+                        {/* NotebookLMボタン - 定期面談 */}
+                        <div className={styles.notebookLmSection}>
+                          <a 
+                            href={interview.notebookLmLink?.url || 'https://notebooklm.google.com/notebook/demo-001'} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="inline-flex items-center gap-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+                          >
+                            <span>📖</span>
+                            NotebookLMで開く
+                          </a>
+                          {interview.notebookLmLink && (
+                            <span className="text-xs text-gray-500 ml-2">
+                              登録済み ({new Date(interview.notebookLmLink.createdAt || Date.now()).toLocaleDateString('ja-JP')})
+                            </span>
+                          )}
+                        </div>
+                        
                         {/* NotebookLM連携セクション */}
                         <div className="mt-4 pt-4 border-t border-gray-200">
                           {interview.notebookLmLink ? (
@@ -2810,6 +2828,24 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                               ))}
                             </ul>
                           </div>
+                          
+                          {/* NotebookLMボタン - 特別面談 */}
+                          <div className={styles.notebookLmSection}>
+                            <a 
+                              href={interview.notebookLmLink?.url || 'https://notebooklm.google.com/notebook/demo-002'} 
+                              target="_blank" 
+                              rel="noopener noreferrer" 
+                              className="inline-flex items-center gap-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+                            >
+                              <span>📖</span>
+                              NotebookLMで開く
+                            </a>
+                            {interview.notebookLmLink && (
+                              <span className="text-xs text-gray-500 ml-2">
+                                登録済み ({new Date(interview.notebookLmLink.createdAt || Date.now()).toLocaleDateString('ja-JP')})
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -3167,6 +3203,24 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                                 <li key={index}>{action}</li>
                               ))}
                             </ul>
+                          </div>
+                          
+                          {/* NotebookLMボタン - サポート面談 */}
+                          <div className={styles.notebookLmSection}>
+                            <a 
+                              href={interview.notebookLmLink?.url || 'https://notebooklm.google.com/notebook/demo-003'} 
+                              target="_blank" 
+                              rel="noopener noreferrer" 
+                              className="inline-flex items-center gap-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+                            >
+                              <span>📖</span>
+                              NotebookLMで開く
+                            </a>
+                            {interview.notebookLmLink && (
+                              <span className="text-xs text-gray-500 ml-2">
+                                登録済み ({new Date(interview.notebookLmLink.createdAt || Date.now()).toLocaleDateString('ja-JP')})
+                              </span>
+                            )}
                           </div>
                         </div>
                       </div>
