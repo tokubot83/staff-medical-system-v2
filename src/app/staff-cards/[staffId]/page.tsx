@@ -12,6 +12,19 @@ import ScrollToTopButton from '@/components/ScrollToTopButton'
 import BackToStaffCardsButton from '@/components/BackToStaffCardsButton'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { 
+  User, 
+  Building2,
+  Calendar,
+  Phone,
+  Mail,
+  IdCard,
+  BookOpen,
+  Award,
+  Target,
+  TrendingUp,
+  Trophy
+} from 'lucide-react'
 import { motivationTypes } from '@/components/interview/MotivationTypeSection'
 import {
   Chart as ChartJS,
@@ -153,83 +166,435 @@ export default function StaffDetailPage() {
 }
 
 function CareerTab({ selectedStaff }: { selectedStaff: any }): React.ReactElement {
+  // 基本情報タブと同じデータ構造を使用
+  const careerData = {
+    education: selectedStaff?.education || '看護専門学校卒業',
+    educationDetails: [
+      { date: '2009年3月', content: '看護専門学校 入学' },
+      { date: '2012年3月', content: '看護専門学校 卒業' }
+    ],
+    workHistory: [
+      { date: selectedStaff?.joinDate || '2018-04-01', content: `${selectedStaff?.facility || '小原病院'} 入職`, type: 'join' },
+      { date: '2020年4月', content: '病棟勤務開始', type: 'assignment' },
+      { date: '2023年4月', content: `${selectedStaff?.department || '3階病棟'} 配属`, type: 'transfer' }
+    ],
+    careerGoals: {
+      shortTerm: '認定看護師資格取得を目指している',
+      longTerm: 'チームリーダーとしての役割拡大',
+      specialization: '感染管理分野での専門性向上'
+    },
+    achievements: [
+      { year: '2023', content: '新人指導担当', category: 'leadership' },
+      { year: '2024', content: '病棟改善プロジェクト参加', category: 'project' }
+    ]
+  };
+
   return (
-    <div className={styles.careerContainer}>
-      <h2>経歴・キャリア</h2>
-      <div className={styles.sectionCard}>
-        <h3>学歴</h3>
-        <div className={styles.timelineList}>
-          <div className={styles.timelineItem}>
-            <span className={styles.timelineDate}>2012年3月</span>
-            <span className={styles.timelineContent}>〇〇大学 医学部 看護学科 卒業</span>
+    <div className="p-6 space-y-6">
+      {/* ヘッダー */}
+      <div className="bg-gradient-to-r from-green-600 to-green-800 rounded-lg p-6 text-white">
+        <div className="flex items-center gap-4">
+          <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center">
+            <Calendar className="h-10 w-10 text-green-600" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold">経歴・キャリア</h1>
+            <p className="text-lg text-green-100 mt-1">{selectedStaff?.name || '山田 太郎'}のキャリア情報</p>
+            <p className="text-green-200">
+              学歴・職歴・異動歴・キャリア目標
+            </p>
           </div>
         </div>
       </div>
-      <div className={styles.sectionCard}>
-        <h3>職歴</h3>
-        <div className={styles.timelineList}>
-          <div className={styles.timelineItem}>
-            <span className={styles.timelineDate}>{selectedStaff.joinDate}</span>
-            <span className={styles.timelineContent}>{selectedStaff.facility} 入職</span>
+
+      {/* キャリア情報カード */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* 学歴情報 */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <BookOpen className="h-5 w-5" />
+              学歴
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div>
+              <span className="text-sm text-gray-600 block mb-1">最終学歴</span>
+              <Badge variant="secondary" className="text-sm">{careerData.education}</Badge>
+            </div>
+            <div className="space-y-2">
+              <h4 className="text-sm font-semibold text-gray-700">学歴詳細</h4>
+              {careerData.educationDetails.map((edu, index) => (
+                <div key={index} className="flex justify-between items-center py-1 border-b border-gray-100 last:border-0">
+                  <span className="text-sm text-gray-600">{edu.date}</span>
+                  <span className="text-sm font-medium">{edu.content}</span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 職歴・異動歴 */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Building2 className="h-5 w-5" />
+              職歴・異動歴
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {careerData.workHistory.map((work, index) => (
+              <div key={index} className="flex items-start gap-3 p-2 rounded-lg bg-gray-50">
+                <div className="flex-shrink-0">
+                  <Badge variant={work.type === 'join' ? 'default' : work.type === 'transfer' ? 'secondary' : 'outline'} className="text-xs">
+                    {work.type === 'join' ? '入職' : work.type === 'transfer' ? '異動' : '配属'}
+                  </Badge>
+                </div>
+                <div className="flex-1">
+                  <div className="text-sm font-medium">{work.content}</div>
+                  <div className="text-xs text-gray-500">{work.date}</div>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        {/* キャリア目標・志向 */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Target className="h-5 w-5" />
+              キャリア目標・志向
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <h4 className="text-sm font-semibold text-gray-700 mb-2">短期目標</h4>
+              <p className="text-sm text-gray-600">{careerData.careerGoals.shortTerm}</p>
+            </div>
+            <div>
+              <h4 className="text-sm font-semibold text-gray-700 mb-2">長期目標</h4>
+              <p className="text-sm text-gray-600">{careerData.careerGoals.longTerm}</p>
+            </div>
+            <div>
+              <h4 className="text-sm font-semibold text-gray-700 mb-2">専門性</h4>
+              <p className="text-sm text-gray-600">{careerData.careerGoals.specialization}</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* 実績・成果 */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Award className="h-5 w-5" />
+            実績・成果
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {careerData.achievements.map((achievement, index) => (
+              <div key={index} className="flex items-center gap-3 p-3 border rounded-lg hover:bg-gray-50">
+                <Badge variant={achievement.category === 'leadership' ? 'default' : 'secondary'}>
+                  {achievement.year}年
+                </Badge>
+                <span className="text-sm font-medium">{achievement.content}</span>
+              </div>
+            ))}
           </div>
-        </div>
-      </div>
-      <div className={styles.sectionCard}>
-        <h3>異動歴</h3>
-        <div className={styles.timelineList}>
-          <div className={styles.timelineItem}>
-            <span className={styles.timelineDate}>2023年4月</span>
-            <span className={styles.timelineContent}>{selectedStaff.department} 配属</span>
+        </CardContent>
+      </Card>
+
+      {/* 他タブへのクイックリンク */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <IdCard className="h-5 w-5" />
+            関連情報・詳細タブ
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="text-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
+              <div className="text-2xl mb-2">📜</div>
+              <div className="text-sm font-medium">資格・専門性</div>
+              <div className="text-xs text-gray-500 mt-1">保有資格・専門分野</div>
+            </div>
+            <div className="text-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
+              <div className="text-2xl mb-2">🎓</div>
+              <div className="text-sm font-medium">教育・研修</div>
+              <div className="text-xs text-gray-500 mt-1">研修履歴・計画</div>
+            </div>
+            <div className="text-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
+              <div className="text-2xl mb-2">🏆</div>
+              <div className="text-sm font-medium">実績・表彰</div>
+              <div className="text-xs text-gray-500 mt-1">表彰・実績詳細</div>
+            </div>
+            <div className="text-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
+              <div className="text-2xl mb-2">📈</div>
+              <div className="text-sm font-medium">最新評価</div>
+              <div className="text-xs text-gray-500 mt-1">評価結果・分析</div>
+            </div>
           </div>
-        </div>
-      </div>
-      <div className={styles.sectionCard}>
-        <h3>キャリア志向・目標</h3>
-        <p>認定看護師資格取得を目指している</p>
-      </div>
+        </CardContent>
+      </Card>
     </div>
-  )
+  );
 }
 
 function QualificationTab({ selectedStaff }: { selectedStaff: any }): React.ReactElement {
+  // 基本情報タブと同じデータ構造を使用
+  const qualificationData = {
+    licenses: selectedStaff?.licenses || [
+      { name: '看護師免許', type: 'national', date: '2012-03-31', authority: '厚生労働省' },
+      { name: '保健師免許', type: 'national', date: '2012-03-31', authority: '厚生労働省' }
+    ],
+    certifications: selectedStaff?.certifications || [
+      { name: 'BLS（一次救命処置）', type: 'medical', date: '2023-06-15', validity: '2年間', organization: 'AHA' },
+      { name: '感染対策研修', type: 'training', date: '2024-03-20', validity: '1年間', organization: '院内研修' }
+    ],
+    specializations: [
+      { area: '感染管理', level: 'intermediate', experience: '3年', goals: '認定看護師取得予定' },
+      { area: '新人指導', level: 'advanced', experience: '2年', goals: 'プリセプター認定' }
+    ],
+    academicMemberships: [
+      { name: '日本看護協会', joinDate: '2012-04', status: 'active' },
+      { name: '日本感染管理学会', joinDate: '2021-07', status: 'active' }
+    ],
+    achievements: [
+      { title: '2023年度 看護研究発表会 優秀賞', date: '2023-11', category: 'research' },
+      { title: '院内感染対策委員会 委員', date: '2024-04', category: 'committee' }
+    ],
+    skillAssessments: [
+      { skill: '看護技術', level: 85, certification: 'クリニカルラダーⅢ' },
+      { skill: '感染管理', level: 90, certification: '院内認定' },
+      { skill: '教育指導', level: 78, certification: 'プリセプター' }
+    ]
+  };
+
+  const getLevelColor = (level: string) => {
+    switch(level) {
+      case 'advanced': return 'bg-green-100 text-green-800 border-green-300';
+      case 'intermediate': return 'bg-blue-100 text-blue-800 border-blue-300';
+      case 'basic': return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+      default: return 'bg-gray-100 text-gray-800 border-gray-300';
+    }
+  };
+
   return (
-    <div className={styles.qualificationContainer}>
-      <h2>資格・専門性</h2>
-      <div className={styles.sectionCard}>
-        <h3>専門資格・上位資格</h3>
-        <ul className={styles.qualificationList}>
-          {selectedStaff.qualifications?.map((qual: string, index: number) => (
-            <li key={index}>{qual}</li>
-          )) || <li>看護師免許</li>}
-        </ul>
-      </div>
-      <div className={styles.sectionCard}>
-        <h3>その他の資格</h3>
-        <ul className={styles.qualificationList}>
-          {selectedStaff.certifications?.map((cert: string, index: number) => (
-            <li key={index}>{cert}</li>
-          )) || <li>BLS（一次救命処置）</li>}
-        </ul>
-      </div>
-      <div className={styles.sectionCard}>
-        <h3>所属学会</h3>
-        <p>日本看護協会</p>
-      </div>
-      <div className={styles.sectionCard}>
-        <h3>学会発表実績</h3>
-        <p>2023年度 看護研究発表会 優秀賞</p>
-      </div>
-      <div className={styles.sectionCard}>
-        <h3>研修受講歴</h3>
-        <div className={styles.timelineList}>
-          <div className={styles.timelineItem}>
-            <span className={styles.timelineDate}>2024年3月</span>
-            <span className={styles.timelineContent}>感染対策研修 修了</span>
+    <div className="p-6 space-y-6">
+      {/* ヘッダー */}
+      <div className="bg-gradient-to-r from-purple-600 to-purple-800 rounded-lg p-6 text-white">
+        <div className="flex items-center gap-4">
+          <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center">
+            <Award className="h-10 w-10 text-purple-600" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold">資格・専門性</h1>
+            <p className="text-lg text-purple-100 mt-1">{selectedStaff?.name || '山田 太郎'}の専門スキル情報</p>
+            <p className="text-purple-200">
+              免許・資格・専門分野・学会活動
+            </p>
           </div>
         </div>
       </div>
+
+      {/* 資格情報カード */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* 免許・国家資格 */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <BookOpen className="h-5 w-5" />
+              免許・国家資格
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {qualificationData.licenses.map((license, index) => (
+              <div key={index} className="border rounded-lg p-3">
+                <div className="flex justify-between items-start mb-2">
+                  <span className="font-medium text-sm">{license.name}</span>
+                  <Badge variant="default" className="text-xs">国家資格</Badge>
+                </div>
+                <div className="space-y-1 text-xs text-gray-600">
+                  <div>取得日: {license.date}</div>
+                  <div>発行: {license.authority}</div>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        {/* 認定・研修資格 */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Award className="h-5 w-5" />
+              認定・研修資格
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {qualificationData.certifications.map((cert, index) => (
+              <div key={index} className="border rounded-lg p-3">
+                <div className="flex justify-between items-start mb-2">
+                  <span className="font-medium text-sm">{cert.name}</span>
+                  <Badge variant={cert.type === 'medical' ? 'secondary' : 'outline'} className="text-xs">
+                    {cert.type === 'medical' ? '医療資格' : '研修'}
+                  </Badge>
+                </div>
+                <div className="space-y-1 text-xs text-gray-600">
+                  <div>取得日: {cert.date}</div>
+                  <div>有効期間: {cert.validity}</div>
+                  <div>発行機関: {cert.organization}</div>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        {/* 専門分野・スキル */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Target className="h-5 w-5" />
+              専門分野・スキル
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {qualificationData.specializations.map((spec, index) => (
+              <div key={index} className="border rounded-lg p-3">
+                <div className="flex justify-between items-start mb-2">
+                  <span className="font-medium text-sm">{spec.area}</span>
+                  <Badge className={getLevelColor(spec.level)}>
+                    {spec.level === 'advanced' ? '上級' : spec.level === 'intermediate' ? '中級' : '初級'}
+                  </Badge>
+                </div>
+                <div className="space-y-1 text-xs text-gray-600">
+                  <div>経験年数: {spec.experience}</div>
+                  <div>目標: {spec.goals}</div>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* スキル評価 */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <TrendingUp className="h-5 w-5" />
+            スキル評価・クリニカルラダー
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {qualificationData.skillAssessments.map((skill, index) => (
+              <div key={index}>
+                <div className="flex justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium">{skill.skill}</span>
+                    <Badge variant="outline">{skill.certification}</Badge>
+                  </div>
+                  <span className="text-sm text-gray-600">{skill.level}%</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div 
+                    className="bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full"
+                    style={{ width: `${skill.level}%` }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* 学会・実績情報 */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* 学会・職能団体 */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Building2 className="h-5 w-5" />
+              学会・職能団体
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {qualificationData.academicMemberships.map((membership, index) => (
+              <div key={index} className="flex items-center justify-between p-2 border rounded">
+                <div>
+                  <div className="text-sm font-medium">{membership.name}</div>
+                  <div className="text-xs text-gray-600">加入日: {membership.joinDate}</div>
+                </div>
+                <Badge variant={membership.status === 'active' ? 'default' : 'secondary'}>
+                  {membership.status === 'active' ? '在籍中' : '退会済'}
+                </Badge>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        {/* 実績・表彰 */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Trophy className="h-5 w-5" />
+              実績・表彰
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {qualificationData.achievements.map((achievement, index) => (
+              <div key={index} className="flex items-start gap-3 p-2 border rounded">
+                <Badge variant={achievement.category === 'research' ? 'default' : 'secondary'} className="text-xs">
+                  {achievement.category === 'research' ? '研究' : '委員会'}
+                </Badge>
+                <div className="flex-1">
+                  <div className="text-sm font-medium">{achievement.title}</div>
+                  <div className="text-xs text-gray-600">{achievement.date}</div>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* 他タブへのクイックリンク */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <IdCard className="h-5 w-5" />
+            関連情報・詳細タブ
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="text-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
+              <div className="text-2xl mb-2">💼</div>
+              <div className="text-sm font-medium">経歴・キャリア</div>
+              <div className="text-xs text-gray-500 mt-1">職歴・キャリア目標</div>
+            </div>
+            <div className="text-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
+              <div className="text-2xl mb-2">🎓</div>
+              <div className="text-sm font-medium">教育・研修</div>
+              <div className="text-xs text-gray-500 mt-1">研修履歴・計画</div>
+            </div>
+            <div className="text-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
+              <div className="text-2xl mb-2">🚀</div>
+              <div className="text-sm font-medium">能力開発</div>
+              <div className="text-xs text-gray-500 mt-1">スキル開発計画</div>
+            </div>
+            <div className="text-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
+              <div className="text-2xl mb-2">📈</div>
+              <div className="text-sm font-medium">最新評価</div>
+              <div className="text-xs text-gray-500 mt-1">評価結果・分析</div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
-  )
+  );
 }
 
 function AchievementTab({ selectedStaff }: { selectedStaff: any }): React.ReactElement {
