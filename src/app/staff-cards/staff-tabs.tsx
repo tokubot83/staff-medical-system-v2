@@ -19,6 +19,7 @@ import { RecruitmentAnalysisService } from '@/services/recruitmentAnalysisServic
 import RecruitmentDashboard from '@/components/recruitment/RecruitmentDashboard'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { TrendingUp, Target, Award, Calendar, BarChart3, Users } from 'lucide-react'
 import styles from './StaffCards.module.css'
 
 // V3グレード定義
@@ -1558,124 +1559,281 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
               <p>面談データを読み込み中...</p>
             </div>
           ) : (
-            <>
-              {/* 概要サマリーエリア */}
-              <div className={styles.interviewSummaryEnhanced}>
-                <div className={styles.summaryMainCard}>
-                  <div className={styles.summaryCardHeader}>
-                    <span className={styles.summaryIcon}>💬</span>
-                    <h3>面談・指導状況サマリー</h3>
-                  </div>
-                  
-                  <div className={styles.summaryStats}>
-                    <div className={styles.statItem}>
-                      <span className={styles.statValue}>{interviewData?.overview?.totalInterviews || 0}</span>
-                      <span className={styles.statLabel}>総面談回数</span>
+            <div className="space-y-6">
+              {/* データストーリーのメインメッセージ - 評価タブと統一 */}
+              <Card className="border-l-4" style={{ borderLeftColor: CHART_COLORS.primary }}>
+                <CardContent className="pt-6">
+                  <h3 className="text-lg font-semibold mb-2">
+                    💬 面談データサマリー
+                  </h3>
+                  <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600 bg-gray-50 px-4 py-3 rounded-lg mb-4">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">📅 最終更新:</span>
+                      <span>{interviewData?.overview?.latestDate || '未実施'}</span>
                     </div>
-                    <div className={styles.statItem}>
-                      <span className={styles.statValue}>{interviewData?.overview?.latestDate || '未実施'}</span>
-                      <span className={styles.statLabel}>最新実施日</span>
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">📊 総実施回数:</span>
+                      <span>{interviewData?.overview?.totalInterviews || 0}回</span>
                     </div>
-                    <div className={styles.statItem}>
-                      <span className={styles.statValue}>{interviewData?.regular?.summary?.avgScore || '-'}</span>
-                      <span className={styles.statLabel}>最新評価</span>
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">📝 最新評価:</span>
+                      <span>{interviewData?.regular?.summary?.avgScore || '未設定'}</span>
                     </div>
                   </div>
+                  <p className="text-gray-700">
+                    {(interviewData?.overview?.totalInterviews || 0) >= 10 
+                      ? `面談への積極的な参加で実施回数${interviewData?.overview?.totalInterviews || 0}回。継続的な成長支援を実施中。`
+                      : (interviewData?.overview?.totalInterviews || 0) >= 5
+                      ? `面談実施は良好で${interviewData?.overview?.totalInterviews || 0}回実施。さらなる面談機会の活用をお勧めします。`
+                      : `面談機会の拡充が必要。実施回数${interviewData?.overview?.totalInterviews || 0}回、重点的な面談支援をお勧めします。`
+                    }
+                    最新面談種別: {interviewData?.overview?.latestType || '未実施'}
+                  </p>
+                </CardContent>
+              </Card>
 
-                  <div className={styles.latestInterviewInfo}>
-                    <div className={styles.latestType}>
-                      最新面談: {interviewData?.overview?.latestType}
-                    </div>
-                    <div className={styles.latestFeedback}>
-                      {interviewData?.overview?.latestFeedback}
-                    </div>
-                  </div>
-                </div>
-
-                <div className={styles.summarySubCards}>
-                  <div className={styles.nextSessionCard}>
-                    <div className={styles.cardIconWrapper}>
-                      <span className={styles.cardIcon}>📅</span>
-                    </div>
-                    <div className={styles.cardContent}>
-                      <div className={styles.cardTitle}>次回予定</div>
-                      <div className={styles.cardMainInfo}>
-                        {interviewData?.overview?.nextScheduled || '未設定'}
+              {/* 3分類面談サマリー - 評価タブと統一したスタイル */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                {/* 定期面談 */}
+                <Card className="border-l-4" style={{ borderLeftColor: CHART_COLORS.success }}>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base flex items-center gap-2">
+                      📅 定期面談
+                      <Badge style={{ backgroundColor: CHART_COLORS.success, color: 'white' }}>
+                        {interviewData?.regular?.summary?.total || 0}回
+                      </Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium">最新実施日</span>
+                        <span className="text-sm">{interviewData?.regular?.summary?.lastDate || '未実施'}</span>
                       </div>
-                      <div className={styles.cardSubInfo}>
-                        {interviewData?.overview?.nextType || '面談スケジュール未設定'}
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium">平均評価</span>
+                        <span className="text-sm">{interviewData?.regular?.summary?.avgScore || '未設定'}</span>
                       </div>
-                      <button className={styles.cardAction} onClick={handleNewInterview}>
-                        面談開始
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className={styles.categoryStatsCard}>
-                    <div className={styles.cardIconWrapper}>
-                      <span className={styles.cardIcon}>📊</span>
-                    </div>
-                    <div className={styles.cardContent}>
-                      <div className={styles.cardTitle}>カテゴリ別実績</div>
-                      <div className={styles.categoryStats}>
-                        <div className={styles.categoryStat}>
-                          <span className={styles.categoryLabel}>定期</span>
-                          <span className={styles.categoryValue}>{interviewData?.regular?.summary?.total || 0}回</span>
-                        </div>
-                        <div className={styles.categoryStat}>
-                          <span className={styles.categoryLabel}>特別</span>
-                          <span className={styles.categoryValue}>{interviewData?.special?.summary?.total || 0}回</span>
-                        </div>
-                        <div className={styles.categoryStat}>
-                          <span className={styles.categoryLabel}>サポート</span>
-                          <span className={styles.categoryValue}>{interviewData?.support?.summary?.total || 0}回</span>
-                        </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium">傾向</span>
+                        <Badge style={{ 
+                          backgroundColor: interviewData?.regular?.summary?.trend === 'improving' ? CHART_COLORS.success : CHART_COLORS.neutral, 
+                          color: 'white' 
+                        }}>
+                          {interviewData?.regular?.summary?.trend === 'improving' ? '📈 向上中' : '➡️ 安定'}
+                        </Badge>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium">次回予定</span>
+                        <span className="text-sm text-blue-600">{interviewData?.overview?.nextScheduled || '未設定'}</span>
                       </div>
                     </div>
-                  </div>
-                </div>
+                  </CardContent>
+                </Card>
+
+                {/* 特別面談 */}
+                <Card className="border-l-4" style={{ borderLeftColor: CHART_COLORS.warning }}>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base flex items-center gap-2">
+                      ⚡ 特別面談
+                      <Badge style={{ backgroundColor: CHART_COLORS.warning, color: 'white' }}>
+                        {interviewData?.special?.summary?.total || 0}回
+                      </Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium">最新実施日</span>
+                        <span className="text-sm">{interviewData?.special?.summary?.lastDate || '未実施'}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium">主な理由</span>
+                        <span className="text-sm">
+                          {interviewData?.special?.summary?.mainReason === 'career-consultation' ? 'キャリア相談' : 
+                           interviewData?.special?.summary?.mainReason === 'incident-follow' ? 'インシデント後' :
+                           interviewData?.special?.summary?.mainReason || '未設定'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium">結果状況</span>
+                        <Badge style={{ 
+                          backgroundColor: interviewData?.special?.summary?.outcome === 'resolved' ? CHART_COLORS.success : CHART_COLORS.danger, 
+                          color: 'white' 
+                        }}>
+                          {interviewData?.special?.summary?.outcome === 'resolved' ? '✅ 解決済' : '⏳ 対応中'}
+                        </Badge>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium">継続フォロー</span>
+                        <span className="text-sm font-bold" style={{ 
+                          color: interviewData?.special?.summary?.outcome === 'resolved' ? CHART_COLORS.success : CHART_COLORS.warning 
+                        }}>
+                          {interviewData?.special?.summary?.outcome === 'resolved' ? '完了' : '要継続'}
+                        </span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* サポート面談 */}
+                <Card className="border-l-4" style={{ borderLeftColor: CHART_COLORS.primary }}>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base flex items-center gap-2">
+                      🤝 サポート面談
+                      <Badge style={{ backgroundColor: CHART_COLORS.primary, color: 'white' }}>
+                        {interviewData?.support?.summary?.total || 0}回
+                      </Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium">最新実施日</span>
+                        <span className="text-sm">{interviewData?.support?.summary?.lastDate || '未実施'}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium">主要分野</span>
+                        <Badge variant="outline">
+                          {interviewData?.support?.summary?.mainCategory === 'skill-development' ? 'スキル開発' : 
+                           interviewData?.support?.summary?.mainCategory === 'career-path' ? 'キャリアパス' :
+                           interviewData?.support?.summary?.mainCategory || '未設定'}
+                        </Badge>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium">支援レベル</span>
+                        <span className="text-sm font-bold" style={{ color: CHART_COLORS.primary }}>
+                          {interviewData?.support?.summary?.supportLevel || '未設定'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium">利用状況</span>
+                        <Badge style={{ 
+                          backgroundColor: (interviewData?.support?.summary?.total || 0) > 0 ? CHART_COLORS.success : CHART_COLORS.neutral, 
+                          color: 'white' 
+                        }}>
+                          {(interviewData?.support?.summary?.total || 0) > 0 ? '積極活用' : '未活用'}
+                        </Badge>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
 
-              {/* 横断的な面談履歴概要 */}
-              <div className={styles.crossCategoryOverview}>
-                <h3>📋 全カテゴリ横断履歴</h3>
-                <div className={styles.overviewCards}>
-                  <div className={styles.overviewCard}>
-                    <div className={styles.overviewCardHeader}>
-                      <span className={styles.categoryIcon}>📅</span>
-                      <span className={styles.categoryTitle}>定期面談</span>
-                    </div>
-                    <div className={styles.overviewStats}>
-                      <span>実施回数: {interviewData?.regular?.summary?.total}回</span>
-                      <span>最新: {interviewData?.regular?.summary?.lastDate}</span>
-                      <span>評価傾向: {interviewData?.regular?.summary?.trend === 'improving' ? '向上中 📈' : '安定 ➡️'}</span>
-                    </div>
-                  </div>
-                  <div className={styles.overviewCard}>
-                    <div className={styles.overviewCardHeader}>
-                      <span className={styles.categoryIcon}>⚡</span>
-                      <span className={styles.categoryTitle}>特別面談</span>
-                    </div>
-                    <div className={styles.overviewStats}>
-                      <span>実施回数: {interviewData?.special?.summary?.total}回</span>
-                      <span>最新: {interviewData?.special?.summary?.lastDate || '未実施'}</span>
-                      <span>結果: {interviewData?.special?.summary?.outcome === 'resolved' ? '解決済 ✅' : '対応中 ⏳'}</span>
-                    </div>
-                  </div>
-                  <div className={styles.overviewCard}>
-                    <div className={styles.overviewCardHeader}>
-                      <span className={styles.categoryIcon}>🤝</span>
-                      <span className={styles.categoryTitle}>サポート面談</span>
-                    </div>
-                    <div className={styles.overviewStats}>
-                      <span>実施回数: {interviewData?.support?.summary?.total}回</span>
-                      <span>最新: {interviewData?.support?.summary?.lastDate || '未実施'}</span>
-                      <span>支援レベル: {interviewData?.support?.summary?.supportLevel || '未設定'}</span>
-                    </div>
-                  </div>
-                </div>
+              {/* インサイト分析ダッシュボード - 評価タブと統一 */}
+              <div className="grid md:grid-cols-3 gap-4 mb-6">
+                {/* 面談での強み */}
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base flex items-center gap-2">
+                      💪 面談での強み
+                      <Badge style={{ backgroundColor: CHART_COLORS.success, color: 'white' }}>
+                        3項目
+                      </Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2">
+                      <li className="flex items-start gap-2 text-sm">
+                        <div 
+                          className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0"
+                          style={{ backgroundColor: CHART_COLORS.success }}
+                        />
+                        定期面談への積極的参加
+                      </li>
+                      <li className="flex items-start gap-2 text-sm">
+                        <div 
+                          className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0"
+                          style={{ backgroundColor: CHART_COLORS.success }}
+                        />
+                        面談後のフォローアップ実行力
+                      </li>
+                      <li className="flex items-start gap-2 text-sm">
+                        <div 
+                          className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0"
+                          style={{ backgroundColor: CHART_COLORS.success }}
+                        />
+                        キャリア開発への高い関心
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+
+                {/* 改善・成長点 */}
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base flex items-center gap-2">
+                      🎯 改善・成長点
+                      <Badge style={{ backgroundColor: CHART_COLORS.warning, color: 'white' }}>
+                        3項目
+                      </Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2">
+                      <li className="flex items-start gap-2 text-sm">
+                        <div 
+                          className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0"
+                          style={{ backgroundColor: CHART_COLORS.warning }}
+                        />
+                        特別面談後のメンタルケア継続
+                      </li>
+                      <li className="flex items-start gap-2 text-sm">
+                        <div 
+                          className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0"
+                          style={{ backgroundColor: CHART_COLORS.warning }}
+                        />
+                        職場環境改善への具体的アクション
+                      </li>
+                      <li className="flex items-start gap-2 text-sm">
+                        <div 
+                          className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0"
+                          style={{ backgroundColor: CHART_COLORS.warning }}
+                        />
+                        同僚との協力関係強化
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+
+                {/* 面談トレンド */}
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base flex items-center gap-2">
+                      📊 面談トレンド
+                      <Badge style={{ backgroundColor: CHART_COLORS.primary, color: 'white' }}>
+                        分析結果
+                      </Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2">
+                      <li className="flex items-start gap-2 text-sm">
+                        <div 
+                          className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0"
+                          style={{ backgroundColor: CHART_COLORS.primary }}
+                        />
+                        面談満足度が継続的に向上
+                      </li>
+                      <li className="flex items-start gap-2 text-sm">
+                        <div 
+                          className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0"
+                          style={{ backgroundColor: CHART_COLORS.primary }}
+                        />
+                        キャリア系面談の利用頻度増加
+                      </li>
+                      <li className="flex items-start gap-2 text-sm">
+                        <div 
+                          className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0"
+                          style={{ backgroundColor: CHART_COLORS.primary }}
+                        />
+                        業務改善提案の積極性向上
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
               </div>
-            </>
+            </div>
           )}
         </div>
       )}
@@ -1986,12 +2144,10 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
   )
 }
 
-export function DevelopmentTab({ selectedStaff }: { selectedStaff: any }) {
+export function GrowthDevelopmentTab({ selectedStaff }: { selectedStaff: any }) {
   const router = useRouter()
-  const { handleError, clearError } = useErrorHandler()
-  const [developmentData, setDevelopmentData] = useState<any>(null)
+  const [growthData, setGrowthData] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [activeDevelopmentTab, setActiveDevelopmentTab] = useState('growth')
 
   if (!selectedStaff) {
     return (
