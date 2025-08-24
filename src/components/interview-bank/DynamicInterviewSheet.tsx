@@ -528,7 +528,8 @@ export default function DynamicInterviewSheet({
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-6 bg-gray-50 min-h-screen">
+    <div style={{ margin: '-20px' }} className="bg-gray-50 min-h-screen">
+      <div className="p-6 space-y-6">
       {/* ヘッダー */}
       <Card className="mb-6">
         <CardHeader>
@@ -564,6 +565,29 @@ export default function DynamicInterviewSheet({
               >
                 <ArrowRightLeft className="mr-2" size={16} />
                 {isComparisonEnabled ? '比較終了' : '前回比較'}
+              </Button>
+              <Button 
+                onClick={() => {
+                  const demoData = [{
+                    id: 'PREV_001', staffId: 'OH-NS-2021-001', staffName: '田中美咲', 
+                    interviewType: 'regular_annual', status: 'completed', createdAt: '2024-12-15T10:00:00Z',
+                    sheetStructure: { sections: [
+                      { name: '導入・現状確認', questions: [{ id: 'p1', question: '前回以降の状況は？', answer: '夜勤にも慣れました' }] },
+                      { name: 'スキル評価・能力確認', questions: [{ id: 'p2', question: 'バイタル測定は？', answer: '正確に測定できます' }] }
+                    ]},
+                    responses: { sections: { 
+                      '導入・現状確認': { 'p1': '夜勤にも慣れました' },
+                      'スキル評価・能力確認': { 'p2': '正確に測定できます' }
+                    }}
+                  }];
+                  localStorage.setItem('staff_medical_interview_data', JSON.stringify(demoData));
+                  alert('テストデータを追加しました！');
+                }}
+                variant="outline" 
+                size="sm"
+                title="テスト用の前回面談データを追加"
+              >
+                📝 デモ追加
               </Button>
               <Button onClick={onSave} disabled={readOnly}>
                 <Save className="mr-2" size={16} />
@@ -865,6 +889,7 @@ export default function DynamicInterviewSheet({
           </div>
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 }
