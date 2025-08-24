@@ -10,6 +10,8 @@ import styles from '../StaffCards.module.css'
 import DashboardButton from '@/components/DashboardButton'
 import ScrollToTopButton from '@/components/ScrollToTopButton'
 import BackToStaffCardsButton from '@/components/BackToStaffCardsButton'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 import { motivationTypes } from '@/components/interview/MotivationTypeSection'
 import {
   Chart as ChartJS,
