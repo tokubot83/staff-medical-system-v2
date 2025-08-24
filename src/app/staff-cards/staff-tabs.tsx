@@ -2397,44 +2397,55 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
               )}
 
               {/* 定期面談履歴詳細 */}
-              <div className={styles.interviewHistoryDetail}>
-                <h3>📋 定期面談履歴</h3>
-                <div className={styles.interviewsList}>
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-gray-800">📋 定期面談履歴</h3>
+                <div className="grid grid-cols-1 gap-4">
                   {interviewData?.regular?.interviews?.map((interview: any) => (
-                    <div key={interview.id} className={styles.detailedInterviewCard}>
-                      <div className={styles.interviewCardHeader}>
-                        <div className={styles.interviewBasicInfo}>
-                          <span className={styles.interviewDate}>{interview.date}</span>
-                          <span className={styles.interviewSubtype}>{interview.subtypeLabel}</span>
-                          <span className={styles.interviewer}>面談者: {interview.interviewer}</span>
-                        </div>
-                        <div className={styles.interviewScore}>
-                          <span className={`${styles.scoreBadge} ${styles[interview.overallScore?.toLowerCase()]}`}>
+                    <Card key={interview.id} className="border border-gray-200 hover:shadow-md transition-shadow">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-4">
+                            <div className="text-sm font-medium text-blue-600">{interview.date}</div>
+                            <Badge variant="outline">{interview.subtypeLabel}</Badge>
+                            <div className="text-sm text-gray-600">面談者: {interview.interviewer}</div>
+                          </div>
+                          <Badge 
+                            style={{
+                              backgroundColor: interview.overallScore === 'A' ? '#10b981' : '#f59e0b',
+                              color: 'white'
+                            }}
+                          >
                             {interview.overallScore}
-                          </span>
+                          </Badge>
                         </div>
-                      </div>
-                      <div className={styles.interviewCardContent}>
-                        <div className={styles.interviewSummary}>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="text-sm text-gray-700">
                           {interview.summary}
                         </div>
-                        <div className={styles.keyTopics}>
-                          <strong>主要テーマ:</strong>
-                          {interview.keyTopics?.map((topic: string, index: number) => (
-                            <span key={index} className={styles.topicChip}>{topic}</span>
-                          ))}
+                        
+                        <div>
+                          <div className="text-sm font-medium text-gray-800 mb-2">主要テーマ:</div>
+                          <div className="flex flex-wrap gap-2">
+                            {interview.keyTopics?.map((topic: string, index: number) => (
+                              <Badge key={index} variant="secondary" className="text-xs">
+                                {topic}
+                              </Badge>
+                            ))}
+                          </div>
                         </div>
-                        <div className={styles.nextActionsDetail}>
-                          <strong>次回アクション:</strong>
-                          <ul>
+                        
+                        <div>
+                          <div className="text-sm font-medium text-gray-800 mb-2">次回アクション:</div>
+                          <ul className="text-sm text-gray-700 space-y-1 ml-4">
                             {interview.nextActions?.map((action: string, index: number) => (
-                              <li key={index}>{action}</li>
+                              <li key={index} className="list-disc">{action}</li>
                             ))}
                           </ul>
                         </div>
                         
                         {/* NotebookLMボタン - 定期面談 */}
-                        <div className={styles.notebookLmSection}>
+                        <div className="pt-3 border-t border-gray-100">
                           {interview.notebookLmLink ? (
                             <div className="flex items-center gap-2">
                               <a 
@@ -2466,65 +2477,8 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                             </button>
                           )}
                         </div>
-                        
-                        {/* NotebookLM連携セクション */}
-                        <div className="mt-4 pt-4 border-t border-gray-200">
-                          {interview.notebookLmLink ? (
-                            <div className="bg-blue-50 p-3 rounded-lg">
-                              <div className="flex items-center justify-between mb-2">
-                                <div className="flex items-center gap-2">
-                                  <Badge style={{ backgroundColor: '#3b82f6', color: 'white' }}>
-                                    🎧 音声記録
-                                  </Badge>
-                                  <span className="text-sm font-medium">{interview.notebookLmLink.title}</span>
-                                </div>
-                                <button
-                                  className="text-blue-600 hover:text-blue-800 text-sm"
-                                  onClick={() => handleEditNotebookLink(interview.id, interview.notebookLmLink)}
-                                >
-                                  編集
-                                </button>
-                              </div>
-                              <div className="flex flex-wrap gap-2 mb-3">
-                                {interview.notebookLmLink.features.hasAudioSummary && (
-                                  <Badge variant="outline">📝 AI要約</Badge>
-                                )}
-                                {interview.notebookLmLink.features.hasMindMap && (
-                                  <Badge variant="outline">🗺️ マインドマップ</Badge>
-                                )}
-                                {interview.notebookLmLink.features.hasTranscript && (
-                                  <Badge variant="outline">📜 音声転写</Badge>
-                                )}
-                              </div>
-                              <div className="flex items-center gap-3">
-                                <a
-                                  href={interview.notebookLmLink.url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="inline-flex items-center gap-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
-                                >
-                                  <span>📖</span>
-                                  NotebookLMで開く
-                                </a>
-                                <span className="text-xs text-gray-500">
-                                  登録日: {new Date(interview.notebookLmLink.createdAt).toLocaleDateString('ja-JP')}
-                                </span>
-                              </div>
-                            </div>
-                          ) : (
-                            <div className="text-center py-3">
-                              <button
-                                className="inline-flex items-center gap-2 px-4 py-2 border border-blue-300 text-blue-700 rounded-lg hover:bg-blue-50"
-                                onClick={() => handleAddNotebookLink(interview.id, 'regular', interview.date)}
-                              >
-                                <span>🔗</span>
-                                NotebookLMリンクを追加
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
+                      </CardContent>
+                    </Card>
                   ))}
                 </div>
               </div>
