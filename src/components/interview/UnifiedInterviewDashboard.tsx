@@ -543,16 +543,14 @@ export default function UnifiedInterviewDashboard() {
           </Badge>
         </div>
 
-        {/* DynamicInterviewFlowコンポーネント */}
-        <div className="px-6">
-          <DynamicInterviewFlow 
-            initialReservation={currentReservation}
-            onComplete={() => {
-              handleBackToDashboard();
-              loadReservations(); // 完了後にリストを更新
-            }}
-          />
-        </div>
+        {/* DynamicInterviewFlowコンポーネント - フル幅対応 */}
+        <DynamicInterviewFlow 
+          initialReservation={currentReservation}
+          onComplete={() => {
+            handleBackToDashboard();
+            loadReservations(); // 完了後にリストを更新
+          }}
+        />
       </div>
     );
   }
