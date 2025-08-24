@@ -1376,6 +1376,16 @@ function EvaluationHistoryTab({ selectedStaff }: { selectedStaff: any }): React.
   const [showAllHistory, setShowAllHistory] = useState(false);
   const [displayYears, setDisplayYears] = useState(10);
   
+  // 効果的プレゼン指示書準拠のカラーパレット
+  const CHART_COLORS = {
+    primary: '#2563eb',    // 青 - 主要データ
+    success: '#16a34a',    // 緑 - 成功・向上
+    warning: '#f59e0b',    // オレンジ - 注意・改善必要
+    danger: '#dc2626',     // 赤 - 減少・問題
+    neutral: '#6b7280',    // グレー - 基準線・その他
+    highlight: '#fbbf24',  // 黄 - ハイライト
+  };
+  
   // 勤続年数に基づく表示年数の決定（実際は selectedStaff から取得）
   const yearsOfService = selectedStaff?.yearsOfService || 7; // 仮で7年とする
   const defaultDisplayYears = yearsOfService >= 10 ? 10 : yearsOfService;
