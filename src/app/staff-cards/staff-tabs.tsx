@@ -1426,6 +1426,12 @@ interface NotebookLMLink {
   url: string
   noteId: string
   title: string
+  linkedInterview: {
+    id: string
+    date: string
+    type: 'regular' | 'special' | 'support'
+    category?: string
+  }
   createdAt: string
   features: {
     hasAudioSummary: boolean
@@ -1442,12 +1448,12 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
   const [activeSubTab, setActiveSubTab] = useState('overview')
   const [showNotebookLinkModal, setShowNotebookLinkModal] = useState(false)
   const [editingInterviewId, setEditingInterviewId] = useState<string | null>(null)
+  const [currentInterviewType, setCurrentInterviewType] = useState<'regular' | 'special' | 'support'>('regular')
+  const [currentInterviewDate, setCurrentInterviewDate] = useState<string>('')
+  const [currentInterviewCategory, setCurrentInterviewCategory] = useState<string | undefined>(undefined)
+  const [notebookLinks, setNotebookLinks] = useState<Record<string, NotebookLMLink>>({})
   const [notebookLinkForm, setNotebookLinkForm] = useState({
-    url: '',
-    title: '',
-    hasAudioSummary: false,
-    hasMindMap: false,
-    hasTranscript: false
+    url: ''
   })
 
   if (!selectedStaff) {
@@ -1599,87 +1605,6 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
     }
   }, [selectedStaff?.id])
 
-  // NotebookLMリンク関連のハンドラー
-  const handleAddNotebookLink = (interviewId: string) => {
-    setEditingInterviewId(interviewId)
-    setNotebookLinkForm({
-      url: '',
-      title: '',
-      hasAudioSummary: false,
-      hasMindMap: false,
-      hasTranscript: false
-    })
-    setShowNotebookLinkModal(true)
-  }
-
-  const handleEditNotebookLink = (interviewId: string, existingLink: NotebookLMLink) => {
-    setEditingInterviewId(interviewId)
-    setNotebookLinkForm({
-      url: existingLink.url,
-      title: existingLink.title,
-      hasAudioSummary: existingLink.features.hasAudioSummary,
-      hasMindMap: existingLink.features.hasMindMap,
-      hasTranscript: existingLink.features.hasTranscript
-    })
-    setShowNotebookLinkModal(true)
-  }
-
-  const handleSaveNotebookLink = async () => {
-    try {
-      if (!editingInterviewId) return
-      
-      // 実際の実装では、APIを呼び出してデータベースに保存
-      // await InterviewService.updateNotebookLink(editingInterviewId, notebookLinkForm)
-      
-      // デモ用：ローカル状態を更新
-      setInterviewData((prev: any) => {
-        const updated = { ...prev }
-        const updateInterview = (interviews: any[]) => {
-          return interviews.map((interview: any) => 
-            interview.id === editingInterviewId 
-              ? {
-                  ...interview,
-                  notebookLmLink: {
-                    url: notebookLinkForm.url,
-                    noteId: `note_${editingInterviewId}`,
-                    title: notebookLinkForm.title || `面談記録_${interview.date}`,
-                    createdAt: new Date().toISOString(),
-                    features: {
-                      hasAudioSummary: notebookLinkForm.hasAudioSummary,
-                      hasMindMap: notebookLinkForm.hasMindMap,
-                      hasTranscript: notebookLinkForm.hasTranscript
-                    }
-                  }
-                }
-              : interview
-          )
-        }
-        
-        if (updated.regular?.interviews) {
-          updated.regular.interviews = updateInterview(updated.regular.interviews)
-        }
-        if (updated.special?.interviews) {
-          updated.special.interviews = updateInterview(updated.special.interviews)
-        }
-        if (updated.support?.interviews) {
-          updated.support.interviews = updateInterview(updated.support.interviews)
-        }
-        
-        return updated
-      })
-      
-      setShowNotebookLinkModal(false)
-      setEditingInterviewId(null)
-      
-    } catch (error) {
-      handleError(new AppError(
-        'NOTEBOOK_LINK_SAVE_FAILED',
-        'NotebookLMリンクの保存に失敗しました',
-        ErrorLevel.ERROR,
-        { interviewId: editingInterviewId, error }
-      ))
-    }
-  }
 
   const handleNewInterview = () => {
     router.push(`/interviews?tab=station&staffId=${selectedStaff.id}`)
@@ -1687,6 +1612,55 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
 
   const handleInterviewHistory = () => {
     router.push(`/interviews?tab=analytics&staffId=${selectedStaff.id}`)
+  }
+
+  // NotebookLMリンク管理ハンドラー
+  const handleAddNotebookLink = (interviewId: string, type: 'regular' | 'special' | 'support', date: string, category?: string) => {
+    setEditingInterviewId(interviewId)
+    setCurrentInterviewType(type)
+    setCurrentInterviewDate(date)
+    setCurrentInterviewCategory(category)
+    setNotebookLinkForm({ url: '' })
+    setShowNotebookLinkModal(true)
+  }
+
+  const handleRemoveNotebookLink = (interviewId: string) => {
+    const newLinks = { ...notebookLinks }
+    delete newLinks[interviewId]
+    setNotebookLinks(newLinks)
+  }
+
+  const handleSaveNotebookLink = () => {
+    if (!editingInterviewId || !notebookLinkForm.url) return
+
+    // URLからnoteIdを抽出（例: notebook/xxxxx の部分）
+    const noteIdMatch = notebookLinkForm.url.match(/notebook\/([^/?]+)/)
+    const noteId = noteIdMatch ? noteIdMatch[1] : `note_${Date.now()}`
+
+    const newLink: NotebookLMLink = {
+      url: notebookLinkForm.url,
+      noteId,
+      title: `${currentInterviewDate}_${currentInterviewType}面談`,
+      linkedInterview: {
+        id: editingInterviewId,
+        date: currentInterviewDate,
+        type: currentInterviewType,
+        category: currentInterviewCategory
+      },
+      createdAt: new Date().toISOString(),
+      features: {
+        hasAudioSummary: true,
+        hasMindMap: false,
+        hasTranscript: false
+      }
+    }
+
+    setNotebookLinks({
+      ...notebookLinks,
+      [editingInterviewId]: newLink
+    })
+    setShowNotebookLinkModal(false)
+    setEditingInterviewId(null)
   }
 
   const subTabs = [
@@ -2507,7 +2481,7 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                             <div className="text-center py-3">
                               <button
                                 className="inline-flex items-center gap-2 px-4 py-2 border border-blue-300 text-blue-700 rounded-lg hover:bg-blue-50"
-                                onClick={() => handleAddNotebookLink(interview.id)}
+                                onClick={() => handleAddNotebookLink(interview.id, 'regular', interview.date)}
                               >
                                 <span>🔗</span>
                                 NotebookLMリンクを追加
@@ -3313,439 +3287,443 @@ export function GrowthDevelopmentTab({ selectedStaff }: { selectedStaff: any }) 
   const [growthData, setGrowthData] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  if (!selectedStaff) {
-    return (
-      <div className={styles.noDataContainer}>
-        <p>職員を選択してください</p>
-      </div>
-    )
-  }
-
   useEffect(() => {
-    const loadDevelopmentData = async () => {
+    const loadGrowthData = async () => {
       try {
         setIsLoading(true)
         
-        // V3評価システム連動の成長データ（モック）
-        const mockDevelopmentData = {
-          growthOverview: {
-            currentLevel: 'midlevel',
-            currentLevelLabel: '中堅',
-            nextLevel: 'senior',
-            nextLevelLabel: 'シニア/主任候補',
-            progressToNext: 65,
-            totalExperience: '3年10ヶ月',
-            keyAchievements: 3,
-            v3GradeProgression: ['C', 'B', 'B+', 'A', 'A']
+        // 統合データ（実績 + 能力開発）
+        const mockGrowthData = {
+          // 過去の実績データ（ブルー系：信頼性・安定性を表現）
+          pastAchievements: {
+            majorProjects: [
+              { year: 2023, project: '看護部インシデント削減プロジェクト', impact: 'インシデント30%減', role: 'プロジェクトリーダー', v3Score: 85, category: '業務改善' },
+              { year: 2022, project: '新人研修プログラム改善', impact: '新人定着率15%向上', role: 'メンター責任者', v3Score: 82, category: '教育指導' },
+              { year: 2021, project: '患者満足度向上取組み', impact: '満足度4.2→4.6', role: '改善チーム', v3Score: 78, category: 'サービス向上' }
+            ],
+            awards: [
+              { year: 2023, award: '法人優秀職員賞', category: '業務改善', points: 10, impact: '病院全体への貢献' },
+              { year: 2022, award: '病棟功労賞', category: 'チーム貢献', points: 8, impact: '病棟運営の安定化' },
+              { year: 2021, award: '新人指導優秀賞', category: '教育指導', points: 6, impact: '新人育成への貢献' }
+            ],
+            v3GradeHistory: [
+              { year: 2020, grade: 'C', score: 68 },
+              { year: 2021, grade: 'B', score: 74 },
+              { year: 2022, grade: 'B+', score: 78 },
+              { year: 2023, grade: 'A', score: 82 },
+              { year: 2024, grade: 'A', score: 85 }
+            ],
+            totalAchievementPoints: 24,
+            yearlyGrowthRate: '+4.25%'
           },
-          skillGrowthData: {
-            technical: {
-              current: 80,
-              target: 90,
-              yearlyProgress: [65, 70, 75, 78, 80],
-              areas: [
-                { skill: '専門看護技術', current: 85, target: 90, growth: '+8' },
-                { skill: '医療機器操作', current: 80, target: 85, growth: '+5' },
-                { skill: '急変対応', current: 75, target: 85, growth: '+12' }
-              ]
-            },
-            leadership: {
-              current: 72,
-              target: 80,
-              yearlyProgress: [50, 58, 65, 68, 72],
-              areas: [
-                { skill: 'チーム指導', current: 75, target: 85, growth: '+10' },
-                { skill: '新人メンター', current: 80, target: 85, growth: '+8' },
-                { skill: 'プロジェクト管理', current: 60, target: 75, growth: '+15' }
-              ]
+          // 現在の能力状況（中間色：現在の位置づけ）
+          currentCapabilities: {
+            experienceLevel: 'midlevel',
+            experienceLevelLabel: '中堅',
+            yearsExperience: 3.8,
+            currentV3Grade: 'A',
+            currentV3Score: 85,
+            skillAssessment: {
+              technical: { score: 80, level: '熟練', trend: '+5' },
+              leadership: { score: 72, level: '発展中', trend: '+8' },
+              contribution: { score: 78, level: '良好', trend: '+3' }
             }
           },
-          developmentGoals: [
-            {
-              id: 'DG001',
-              category: 'V3評価向上',
-              goal: 'Sグレード達成（90点以上）',
-              targetDate: '2025-12-31',
-              progress: 65,
-              status: 'in_progress',
-              keyActions: ['法人規模プロジェクト参加', 'イノベーション創出', '業界リーダーシップ発揮']
-            },
-            {
-              id: 'DG002',
-              category: 'キャリア発展',
-              goal: '主任昇進準備',
-              targetDate: '2026-04-01',
-              progress: 45,
-              status: 'in_progress',
-              keyActions: ['管理職研修受講', 'チーム運営経験', '人事評価スキル習得']
-            },
-            {
-              id: 'DG003',
-              category: '専門性向上',
-              goal: '認定看護師資格取得',
-              targetDate: '2025-09-30',
-              progress: 30,
-              status: 'planning',
-              keyActions: ['受験資格確認', '研修プログラム選択', '学習計画策定']
+          // 未来の成長計画（グリーン系：成長・発展を表現）
+          futureGrowthPlan: {
+            targetLevel: 'senior',
+            targetLevelLabel: 'シニア/主任候補',
+            targetTimeframe: '18ヶ月',
+            v3GradeTarget: 'S',
+            v3ScoreTarget: 90,
+            developmentGoals: [
+              {
+                area: 'V3評価向上',
+                current: 85,
+                target: 90,
+                actions: ['法人規模プロジェクト参加', 'イノベーション創出', '業界リーダーシップ発揮'],
+                deadline: '2025-12-31',
+                priority: 'high',
+                progressPercent: 65
+              },
+              {
+                area: 'キャリア昇進',
+                current: 45,
+                target: 80,
+                actions: ['管理職研修受講', 'チーム運営経験', '人事評価スキル習得'],
+                deadline: '2026-04-01',
+                priority: 'high',
+                progressPercent: 45
+              },
+              {
+                area: '専門資格取得',
+                current: 30,
+                target: 100,
+                actions: ['受験資格確認', '研修プログラム選択', '学習計画策定'],
+                deadline: '2025-09-30',
+                priority: 'medium',
+                progressPercent: 30
+              }
+            ],
+            mentorshipPlan: {
+              as_mentor: { target: 3, current: 2, expansion: '+1名' },
+              as_mentee: { completionTarget: '2025-06', currentProgress: 75 }
             }
-          ],
-          mentorshipData: {
-            as_mentor: {
-              mentees: 2,
-              sessions: 12,
-              satisfaction: 4.8,
-              areas: ['新人指導', '技術スキル向上']
-            },
-            as_mentee: {
-              mentor: '田中師長',
-              sessions: 8,
-              focus: ['リーダーシップ開発', '法人貢献度向上'],
-              progress: 75
-            }
-          },
-          v3AlignedDevelopment: {
-            technicalAlignment: 85,
-            contributionAlignment: 78,
-            overallAlignment: 81.5,
-            improvementAreas: [
-              { area: '法人規模での影響力', currentScore: 78, targetScore: 85, developmentPlan: 'クロスファンクショナルプロジェクト参加' },
-              { area: '業界トレンド対応', currentScore: 70, targetScore: 80, developmentPlan: '外部研修・学会参加' }
-            ]
           }
         }
-
-        setDevelopmentData(mockDevelopmentData)
+        
+        setGrowthData(mockGrowthData)
       } catch (error) {
-        const appError = new AppError(
-          'DEVELOPMENT_DATA_LOAD_FAILED',
-          '成長データの取得に失敗しました',
-          ErrorLevel.ERROR,
-          { staffId: selectedStaff?.id, error }
-        )
-        handleError(appError)
+        console.error('Growth data loading failed:', error)
       } finally {
         setIsLoading(false)
       }
     }
 
     if (selectedStaff?.id) {
-      loadDevelopmentData()
+      loadGrowthData()
     }
   }, [selectedStaff?.id])
 
-  const handleDevelopmentPlan = () => {
-    router.push(`/training?tab=planning&staffId=${selectedStaff.id}`)
+  if (!selectedStaff) {
+    return (
+      <div className="p-6 text-center">
+        <p className="text-gray-500">職員を選択してください</p>
+      </div>
+    )
   }
 
-  const handleGoalSetting = () => {
-    router.push(`/evaluation?tab=guide&staffId=${selectedStaff.id}`)
+  if (isLoading) {
+    return (
+      <div className="p-6 text-center">
+        <p className="text-gray-500">成長データを読み込み中...</p>
+      </div>
+    )
   }
 
-  const developmentSubTabs = [
-    { id: 'dashboard', label: '教育研修統合', icon: '🎓' },
-    { id: 'growth', label: '成長概要', icon: '📈' },
-    { id: 'skills', label: 'スキル成長', icon: '🎯' },
-    { id: 'goals', label: '成長目標', icon: '🚀' },
-    { id: 'mentorship', label: 'メンタリング', icon: '🤝' }
-  ]
+  const calculateGrowthTrend = (history: any[]) => {
+    if (history.length < 2) return '0%'
+    const recent = history.slice(-2)
+    const growth = ((recent[1].score - recent[0].score) / recent[0].score * 100).toFixed(1)
+    return growth > 0 ? `+${growth}%` : `${growth}%`
+  }
+
+  const getPriorityColor = (priority: string) => {
+    switch(priority) {
+      case 'high': return 'bg-red-100 text-red-800 border-red-200'
+      case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200'
+      default: return 'bg-gray-100 text-gray-800 border-gray-200'
+    }
+  }
 
   return (
-    <div className={styles.tabContentSection}>
-      <div className={styles.sectionHeader}>
-        <h2>🎓 教育・研修統合分析</h2>
-        <div className={styles.sectionActions}>
-          <button className={styles.actionButton} onClick={handleGoalSetting}>
-            目標設定
-          </button>
-          <button className={styles.actionButtonSecondary} onClick={handleDevelopmentPlan}>
-            成長プラン
-          </button>
-        </div>
-      </div>
-
-      {/* サブタブ */}
-      <div className={styles.tabNavigation} style={{ marginBottom: '20px' }}>
-        {developmentSubTabs.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveDevelopmentTab(tab.id)}
-            className={`${styles.tabButton} ${activeDevelopmentTab === tab.id ? styles.active : ''}`}
-            style={{ fontSize: '14px', padding: '8px 16px' }}
-          >
-            <span style={{ marginRight: '4px' }}>{tab.icon}</span>
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {isLoading ? (
-        <div className={styles.loadingContainer}>
-          <p>成長データを読み込み中...</p>
-        </div>
-      ) : (
-        <>
-          {activeDevelopmentTab === 'dashboard' && trainingAnalysisData && (
-            <TrainingDashboard data={trainingAnalysisData} />
-          )}
-
-          {activeDevelopmentTab === 'growth' && (
-            <div className={styles.growthOverview}>
-              <div className={styles.growthSummaryCard}>
-                <h3>📊 成長概要</h3>
-                <div className={styles.growthStats}>
-                  <div className={styles.growthStatItem}>
-                    <span className={styles.statLabel}>現在レベル</span>
-                    <span className={styles.statValue}>{developmentData?.growthOverview?.currentLevelLabel}</span>
-                  </div>
-                  <div className={styles.growthStatItem}>
-                    <span className={styles.statLabel}>次段階進捗</span>
-                    <span className={styles.statValue}>{developmentData?.growthOverview?.progressToNext}%</span>
-                  </div>
-                  <div className={styles.growthStatItem}>
-                    <span className={styles.statLabel}>経験年数</span>
-                    <span className={styles.statValue}>{developmentData?.growthOverview?.totalExperience}</span>
-                  </div>
-                  <div className={styles.growthStatItem}>
-                    <span className={styles.statLabel}>主要成果</span>
-                    <span className={styles.statValue}>{developmentData?.growthOverview?.keyAchievements}件</span>
-                  </div>
+    <div className="p-6 space-y-6">
+      {/* 統合ヘッダー - 過去実績と未来成長の二分割デザイン */}
+      <div className="relative">
+        {/* 左側: 過去実績（ブルー系グラデーション） */}
+        <div className="grid grid-cols-2 gap-0 rounded-lg overflow-hidden shadow-lg">
+          <div className="bg-gradient-to-r from-blue-600 to-blue-800 p-6 text-white">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                <TrendingUp className="h-8 w-8 text-white" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold">過去の実績</h2>
+                <p className="text-blue-100 mt-1">Achievement History</p>
+                <div className="flex items-center gap-4 mt-2">
+                  <Badge variant="secondary" className="bg-white bg-opacity-20 text-white border-0">
+                    総獲得ポイント: {growthData?.pastAchievements?.totalAchievementPoints}pt
+                  </Badge>
+                  <Badge variant="secondary" className="bg-white bg-opacity-20 text-white border-0">
+                    成長率: {calculateGrowthTrend(growthData?.pastAchievements?.v3GradeHistory || [])}
+                  </Badge>
                 </div>
               </div>
+            </div>
+          </div>
+          
+          {/* 右側: 未来開発計画（グリーン系グラデーション） */}
+          <div className="bg-gradient-to-r from-green-600 to-green-800 p-6 text-white">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                <Target className="h-8 w-8 text-white" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold">未来の成長計画</h2>
+                <p className="text-green-100 mt-1">Future Development Plan</p>
+                <div className="flex items-center gap-4 mt-2">
+                  <Badge variant="secondary" className="bg-white bg-opacity-20 text-white border-0">
+                    目標レベル: {growthData?.futureGrowthPlan?.targetLevelLabel}
+                  </Badge>
+                  <Badge variant="secondary" className="bg-white bg-opacity-20 text-white border-0">
+                    達成期限: {growthData?.futureGrowthPlan?.targetTimeframe}
+                  </Badge>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-              <div className={styles.v3GradeProgressionCard}>
-                <h3>📈 V3評価グレード推移</h3>
-                <div className={styles.gradeProgression}>
-                  {developmentData?.growthOverview?.v3GradeProgression?.map((grade: string, index: number) => (
-                    <div key={index} className={styles.gradeItem}>
-                      <div className={styles.gradeYear}>{2020 + index}年度</div>
+      {/* メインコンテンツ：3列レイアウト */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        {/* 左列: 過去の実績詳細 */}
+        <div className="space-y-6">
+          {/* 主要プロジェクト実績 */}
+          <Card className="border-l-4 border-l-blue-500">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-blue-800">
+                <BarChart3 className="h-5 w-5" />
+                主要プロジェクト実績
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {growthData?.pastAchievements?.majorProjects?.map((project: any, index: number) => (
+                <div key={index} className="p-3 bg-blue-50 rounded-lg">
+                  <div className="flex justify-between items-start mb-2">
+                    <span className="font-semibold text-sm text-blue-900">{project.year}年</span>
+                    <Badge variant="outline" className="text-xs">
+                      V3スコア: {project.v3Score}
+                    </Badge>
+                  </div>
+                  <h4 className="font-medium text-blue-800 mb-1">{project.project}</h4>
+                  <p className="text-sm text-blue-600 mb-1">役割: {project.role}</p>
+                  <p className="text-sm font-semibold text-green-700">成果: {project.impact}</p>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+
+          {/* 受賞歴 */}
+          <Card className="border-l-4 border-l-yellow-500">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-yellow-800">
+                <Award className="h-5 w-5" />
+                表彰・受賞歴
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {growthData?.pastAchievements?.awards?.map((award: any, index: number) => (
+                <div key={index} className="p-3 bg-yellow-50 rounded-lg">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="font-semibold text-sm text-yellow-900">{award.year}年</span>
+                    <Badge className="bg-yellow-600 text-white text-xs">
+                      {award.points}pt
+                    </Badge>
+                  </div>
+                  <h4 className="font-medium text-yellow-800">{award.award}</h4>
+                  <p className="text-sm text-yellow-600">{award.impact}</p>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* 中央列: 現在の能力状況 */}
+        <div className="space-y-6">
+          {/* 現在の評価状況 */}
+          <Card className="border-2 border-orange-300 bg-orange-50">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-orange-800">
+                <Calendar className="h-5 w-5" />
+                現在の能力状況
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-orange-800 mb-2">
+                  {growthData?.currentCapabilities?.currentV3Grade}グレード
+                </div>
+                <div className="text-xl text-orange-600 mb-1">
+                  {growthData?.currentCapabilities?.currentV3Score}点 / 100点
+                </div>
+                <Badge className="bg-orange-600 text-white">
+                  {growthData?.currentCapabilities?.experienceLevelLabel} • {growthData?.currentCapabilities?.yearsExperience}年
+                </Badge>
+              </div>
+
+              <div className="grid grid-cols-1 gap-3 mt-4">
+                {Object.entries(growthData?.currentCapabilities?.skillAssessment || {}).map(([key, skill]: [string, any]) => (
+                  <div key={key} className="p-3 bg-white rounded-lg border">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-sm font-medium text-gray-700">
+                        {key === 'technical' ? '技術力' : key === 'leadership' ? 'リーダーシップ' : '組織貢献'}
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-semibold">{skill.score}点</span>
+                        <Badge variant="outline" className="text-xs">
+                          {skill.trend}
+                        </Badge>
+                      </div>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
                       <div 
-                        className={styles.gradeBadge} 
-                        style={{ 
-                          backgroundColor: v3Grades[grade as keyof typeof v3Grades]?.color || '#808080',
-                          color: 'white'
-                        }}
-                      >
-                        {grade}
-                      </div>
+                        className="bg-orange-500 h-2 rounded-full transition-all duration-300" 
+                        style={{ width: `${Math.min(skill.score, 100)}%` }}
+                      />
                     </div>
-                  ))}
-                </div>
-                <div className={styles.progressionInsight}>
-                  <span className={styles.trendIcon}>📈</span>
-                  <span>継続的な成長を維持。現在Aグレードから次段階Sグレードへの準備段階</span>
-                </div>
-              </div>
-
-              <div className={styles.v3AlignmentCard}>
-                <h3>🔗 V3評価システム成長連動度</h3>
-                <div className={styles.alignmentMetrics}>
-                  <div className={styles.alignmentItem}>
-                    <span className={styles.alignmentLabel}>技術評価連動</span>
-                    <span className={styles.alignmentScore}>{developmentData?.v3AlignedDevelopment?.technicalAlignment}%</span>
-                  </div>
-                  <div className={styles.alignmentItem}>
-                    <span className={styles.alignmentLabel}>組織貢献連動</span>
-                    <span className={styles.alignmentScore}>{developmentData?.v3AlignedDevelopment?.contributionAlignment}%</span>
-                  </div>
-                  <div className={styles.alignmentItem}>
-                    <span className={styles.alignmentLabel}>総合連動度</span>
-                    <span className={styles.alignmentScore}>{developmentData?.v3AlignedDevelopment?.overallAlignment}%</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeDevelopmentTab === 'skills' && (
-            <div className={styles.skillsGrowth}>
-              <div className={styles.technicalGrowthCard}>
-                <h3>🛠️ 技術スキル成長</h3>
-                <div className={styles.skillGrowthChart}>
-                  <div className={styles.chartHeader}>
-                    <span>現在: {developmentData?.skillGrowthData?.technical?.current}点</span>
-                    <span>目標: {developmentData?.skillGrowthData?.technical?.target}点</span>
-                  </div>
-                  <div className={styles.yearlyProgressBar}>
-                    {developmentData?.skillGrowthData?.technical?.yearlyProgress?.map((score: number, index: number) => (
-                      <div key={index} className={styles.yearBar}>
-                        <div className={styles.barLabel}>{2020 + index}</div>
-                        <div className={styles.barContainer}>
-                          <div 
-                            className={styles.barFill} 
-                            style={{ height: `${score}%` }}
-                          />
-                          <span className={styles.barValue}>{score}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className={styles.skillAreas}>
-                  {developmentData?.skillGrowthData?.technical?.areas?.map((area: any, index: number) => (
-                    <div key={index} className={styles.skillAreaItem}>
-                      <div className={styles.skillAreaHeader}>
-                        <span className={styles.skillName}>{area.skill}</span>
-                        <span className={styles.skillGrowth}>+{area.growth}</span>
-                      </div>
-                      <div className={styles.skillProgress}>
-                        <div 
-                          className={styles.skillBar} 
-                          style={{ width: `${area.current}%` }}
-                        />
-                        <span className={styles.skillScore}>{area.current}/{area.target}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className={styles.leadershipGrowthCard}>
-                <h3>👥 リーダーシップ成長</h3>
-                <div className={styles.skillGrowthChart}>
-                  <div className={styles.chartHeader}>
-                    <span>現在: {developmentData?.skillGrowthData?.leadership?.current}点</span>
-                    <span>目標: {developmentData?.skillGrowthData?.leadership?.target}点</span>
-                  </div>
-                  <div className={styles.yearlyProgressBar}>
-                    {developmentData?.skillGrowthData?.leadership?.yearlyProgress?.map((score: number, index: number) => (
-                      <div key={index} className={styles.yearBar}>
-                        <div className={styles.barLabel}>{2020 + index}</div>
-                        <div className={styles.barContainer}>
-                          <div 
-                            className={styles.barFill} 
-                            style={{ height: `${score}%` }}
-                          />
-                          <span className={styles.barValue}>{score}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className={styles.skillAreas}>
-                  {developmentData?.skillGrowthData?.leadership?.areas?.map((area: any, index: number) => (
-                    <div key={index} className={styles.skillAreaItem}>
-                      <div className={styles.skillAreaHeader}>
-                        <span className={styles.skillName}>{area.skill}</span>
-                        <span className={styles.skillGrowth}>+{area.growth}</span>
-                      </div>
-                      <div className={styles.skillProgress}>
-                        <div 
-                          className={styles.skillBar} 
-                          style={{ width: `${area.current}%` }}
-                        />
-                        <span className={styles.skillScore}>{area.current}/{area.target}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeDevelopmentTab === 'goals' && (
-            <div className={styles.developmentGoals}>
-              <h3>🎯 成長目標</h3>
-              <div className={styles.goalsList}>
-                {developmentData?.developmentGoals?.map((goal: any) => (
-                  <div key={goal.id} className={styles.goalCard}>
-                    <div className={styles.goalHeader}>
-                      <div className={styles.goalInfo}>
-                        <span className={styles.goalCategory}>{goal.category}</span>
-                        <span className={styles.goalTitle}>{goal.goal}</span>
-                      </div>
-                      <div className={styles.goalStatus}>
-                        <span className={`${styles.statusBadge} ${goal.status}`}>
-                          {goal.status === 'in_progress' ? '進行中' : '計画中'}
-                        </span>
-                      </div>
-                    </div>
-                    <div className={styles.goalProgress}>
-                      <div className={styles.progressBar}>
-                        <div 
-                          className={styles.progressFill} 
-                          style={{ width: `${goal.progress}%` }}
-                        />
-                      </div>
-                      <span className={styles.progressText}>{goal.progress}%</span>
-                    </div>
-                    <div className={styles.goalDetails}>
-                      <div className={styles.targetDate}>目標期限: {goal.targetDate}</div>
-                      <div className={styles.keyActions}>
-                        <strong>主要アクション:</strong>
-                        <ul>
-                          {goal.keyActions.map((action: string, index: number) => (
-                            <li key={index}>{action}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
+                    <p className="text-xs text-gray-600 mt-1">{skill.level}</p>
                   </div>
                 ))}
               </div>
-            </div>
-          )}
+            </CardContent>
+          </Card>
 
-          {activeDevelopmentTab === 'mentorship' && (
-            <div className={styles.mentorshipSection}>
-              <div className={styles.mentorCard}>
-                <h3>🤝 メンタリング状況</h3>
-                <div className={styles.mentorshipGrid}>
-                  <div className={styles.mentorshipItem}>
-                    <h4>メンター活動</h4>
-                    <div className={styles.mentorStats}>
-                      <div className={styles.mentorStat}>
-                        <span className={styles.statValue}>{developmentData?.mentorshipData?.as_mentor?.mentees}</span>
-                        <span className={styles.statLabel}>指導中の後輩</span>
-                      </div>
-                      <div className={styles.mentorStat}>
-                        <span className={styles.statValue}>{developmentData?.mentorshipData?.as_mentor?.sessions}</span>
-                        <span className={styles.statLabel}>指導セッション</span>
-                      </div>
-                      <div className={styles.mentorStat}>
-                        <span className={styles.statValue}>{developmentData?.mentorshipData?.as_mentor?.satisfaction}</span>
-                        <span className={styles.statLabel}>満足度</span>
-                      </div>
+          {/* V3グレード推移チャート */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <TrendingUp className="h-5 w-5" />
+                V3評価推移
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex justify-between items-end h-32 px-2">
+                {growthData?.pastAchievements?.v3GradeHistory?.map((item: any, index: number) => (
+                  <div key={index} className="flex flex-col items-center">
+                    <div 
+                      className="w-8 mb-2 rounded-t"
+                      style={{ 
+                        height: `${Math.min(item.score * 1.2, 100)}px`,
+                        backgroundColor: v3Grades[item.grade as keyof typeof v3Grades]?.color || '#808080'
+                      }}
+                    />
+                    <div className="text-xs font-bold text-white px-1 py-0.5 rounded" 
+                         style={{ backgroundColor: v3Grades[item.grade as keyof typeof v3Grades]?.color || '#808080' }}>
+                      {item.grade}
                     </div>
-                    <div className={styles.mentorAreas}>
-                      <strong>指導分野:</strong>
-                      {developmentData?.mentorshipData?.as_mentor?.areas?.map((area: string, index: number) => (
-                        <span key={index} className={styles.areaTag}>{area}</span>
-                      ))}
+                    <div className="text-xs text-gray-600 mt-1">{item.year}</div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* 右列: 未来の成長計画 */}
+        <div className="space-y-6">
+          {/* 成長目標 */}
+          <Card className="border-l-4 border-l-green-500">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-green-800">
+                <Target className="h-5 w-5" />
+                成長目標
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {growthData?.futureGrowthPlan?.developmentGoals?.map((goal: any, index: number) => (
+                <div key={index} className="p-4 bg-green-50 rounded-lg">
+                  <div className="flex justify-between items-start mb-3">
+                    <h4 className="font-semibold text-green-800">{goal.area}</h4>
+                    <Badge className={`text-xs ${getPriorityColor(goal.priority)}`}>
+                      {goal.priority === 'high' ? '高優先度' : goal.priority === 'medium' ? '中優先度' : '低優先度'}
+                    </Badge>
+                  </div>
+                  
+                  {/* プログレスバー */}
+                  <div className="mb-3">
+                    <div className="flex justify-between text-sm mb-1">
+                      <span>進捗</span>
+                      <span>{goal.progressPercent}%</span>
+                    </div>
+                    <div className="w-full bg-green-200 rounded-full h-2">
+                      <div 
+                        className="bg-green-500 h-2 rounded-full transition-all duration-300" 
+                        style={{ width: `${goal.progressPercent}%` }}
+                      />
                     </div>
                   </div>
+                  
+                  {/* 目標値 */}
+                  <div className="flex justify-between text-sm mb-2">
+                    <span className="text-gray-600">現在: {goal.current}点</span>
+                    <span className="font-semibold text-green-700">目標: {goal.target}点</span>
+                  </div>
+                  
+                  <p className="text-xs text-green-600 mb-2">期限: {goal.deadline}</p>
+                  
+                  {/* アクション項目 */}
+                  <div className="space-y-1">
+                    <p className="text-xs font-semibold text-green-800">主要アクション:</p>
+                    {goal.actions.slice(0, 2).map((action: string, actionIndex: number) => (
+                      <div key={actionIndex} className="flex items-center text-xs text-green-700">
+                        <div className="w-1 h-1 bg-green-500 rounded-full mr-2" />
+                        {action}
+                      </div>
+                    ))}
+                    {goal.actions.length > 2 && (
+                      <div className="text-xs text-green-600">他 {goal.actions.length - 2}項目</div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
 
-                  <div className={styles.mentorshipItem}>
-                    <h4>メンティー活動</h4>
-                    <div className={styles.menteeInfo}>
-                      <div className={styles.mentorName}>
-                        指導者: {developmentData?.mentorshipData?.as_mentee?.mentor}
-                      </div>
-                      <div className={styles.sessionCount}>
-                        セッション数: {developmentData?.mentorshipData?.as_mentee?.sessions}回
-                      </div>
-                      <div className={styles.progressIndicator}>
-                        <span>進捗: {developmentData?.mentorshipData?.as_mentee?.progress}%</span>
-                        <div className={styles.progressBar}>
-                          <div 
-                            className={styles.progressFill} 
-                            style={{ width: `${developmentData?.mentorshipData?.as_mentee?.progress}%` }}
-                          />
-                        </div>
-                      </div>
-                      <div className={styles.focusAreas}>
-                        <strong>重点分野:</strong>
-                        {developmentData?.mentorshipData?.as_mentee?.focus?.map((focus: string, index: number) => (
-                          <span key={index} className={styles.focusTag}>{focus}</span>
-                        ))}
-                      </div>
+          {/* メンタリング計画 */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Users className="h-5 w-5" />
+                メンタリング計画
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 gap-4">
+                <div className="p-3 bg-purple-50 rounded-lg">
+                  <h4 className="font-semibold text-purple-800 mb-2">メンター活動</h4>
+                  <div className="flex justify-between text-sm">
+                    <span>指導予定:</span>
+                    <span className="font-semibold">
+                      {growthData?.futureGrowthPlan?.mentorshipPlan?.as_mentor?.current} → 
+                      {growthData?.futureGrowthPlan?.mentorshipPlan?.as_mentor?.target}名
+                      <Badge variant="outline" className="ml-2 text-xs">
+                        {growthData?.futureGrowthPlan?.mentorshipPlan?.as_mentor?.expansion}
+                      </Badge>
+                    </span>
+                  </div>
+                </div>
+                
+                <div className="p-3 bg-indigo-50 rounded-lg">
+                  <h4 className="font-semibold text-indigo-800 mb-2">メンティー活動</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span>完了目標:</span>
+                      <span className="font-semibold">{growthData?.futureGrowthPlan?.mentorshipPlan?.as_mentee?.completionTarget}</span>
+                    </div>
+                    <div className="w-full bg-indigo-200 rounded-full h-2">
+                      <div 
+                        className="bg-indigo-500 h-2 rounded-full" 
+                        style={{ width: `${growthData?.futureGrowthPlan?.mentorshipPlan?.as_mentee?.currentProgress}%` }}
+                      />
+                    </div>
+                    <div className="text-xs text-indigo-600">
+                      現在の進捗: {growthData?.futureGrowthPlan?.mentorshipPlan?.as_mentee?.currentProgress}%
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          )}
-        </>
-      )}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      {/* アクションボタン */}
+      <div className="flex justify-center gap-4 pt-4">
+        <button 
+          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          onClick={() => router.push(`/evaluation?tab=guide&staffId=${selectedStaff.id}`)}
+        >
+          評価目標設定
+        </button>
+        <button 
+          className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+          onClick={() => router.push(`/training?tab=planning&staffId=${selectedStaff.id}`)}
+        >
+          成長プラン作成
+        </button>
+      </div>
     </div>
   )
 }
