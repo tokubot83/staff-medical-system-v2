@@ -2765,42 +2765,47 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
               </div>
 
               {/* 特別面談履歴詳細 */}
-              <div className={styles.interviewHistoryDetail}>
-                <h3>📋 特別面談履歴</h3>
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-gray-800">📋 特別面談履歴</h3>
                 {interviewData?.special?.interviews?.length > 0 ? (
-                  <div className={styles.interviewsList}>
+                  <div className="grid grid-cols-1 gap-4">
                     {interviewData.special.interviews.map((interview: any) => (
-                      <div key={interview.id} className={styles.detailedInterviewCard}>
-                        <div className={styles.interviewCardHeader}>
-                          <div className={styles.interviewBasicInfo}>
-                            <span className={styles.interviewDate}>{interview.date}</span>
-                            <span className={styles.interviewSubtype}>{interview.subtypeLabel}</span>
-                            <span className={styles.interviewer}>面談者: {interview.interviewer}</span>
-                          </div>
-                          <div className={styles.interviewOutcome}>
-                            <span className={`${styles.outcomeBadge} ${styles[interview.outcome]}`}>
+                      <Card key={interview.id} className="border border-gray-200 hover:shadow-md transition-shadow">
+                        <CardHeader className="pb-3">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                              <div className="text-sm font-medium text-blue-600">{interview.date}</div>
+                              <Badge variant="outline">{interview.subtypeLabel}</Badge>
+                              <div className="text-sm text-gray-600">面談者: {interview.interviewer}</div>
+                            </div>
+                            <Badge 
+                              style={{
+                                backgroundColor: interview.outcome === 'action-plan-created' ? '#10b981' : '#f59e0b',
+                                color: 'white'
+                              }}
+                            >
                               {interview.outcome === 'action-plan-created' ? '対策完了' : '対応中'}
-                            </span>
+                            </Badge>
                           </div>
-                        </div>
-                        <div className={styles.interviewCardContent}>
-                          <div className={styles.interviewReason}>
-                            <strong>面談理由:</strong> {interview.reason}
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                          <div className="text-sm">
+                            <span className="font-medium text-gray-800">面談理由:</span> <span className="text-gray-700">{interview.reason}</span>
                           </div>
-                          <div className={styles.interviewSummary}>
+                          <div className="text-sm text-gray-700">
                             {interview.summary}
                           </div>
-                          <div className={styles.nextActionsDetail}>
-                            <strong>対応策:</strong>
-                            <ul>
+                          <div>
+                            <div className="text-sm font-medium text-gray-800 mb-2">対応策:</div>
+                            <ul className="text-sm text-gray-700 space-y-1 ml-4">
                               {interview.nextActions?.map((action: string, index: number) => (
-                                <li key={index}>{action}</li>
+                                <li key={index} className="list-disc">{action}</li>
                               ))}
                             </ul>
                           </div>
                           
                           {/* NotebookLMボタン - 特別面談 */}
-                          <div className={styles.notebookLmSection}>
+                          <div className="pt-3 border-t border-gray-100">
                             {interview.notebookLmLink ? (
                               <div className="flex items-center gap-2">
                                 <a 
@@ -2832,8 +2837,8 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                               </button>
                             )}
                           </div>
-                        </div>
-                      </div>
+                        </CardContent>
+                      </Card>
                     ))}
                   </div>
                 ) : (
