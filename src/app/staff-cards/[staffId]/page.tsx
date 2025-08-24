@@ -67,7 +67,7 @@ const tabs = [
   { id: 'development', label: '能力開発', icon: '🚀' },
   { id: 'interview', label: '面談・指導', icon: '💬' },
   { id: 'evaluation', label: '最新評価', icon: '📈' },
-  { id: 'evaluation-history', label: '評価履歴（全期間）', icon: '📋', isNew: true },
+  { id: 'evaluation-history', label: '評価履歴', icon: '📋', isNew: true },
   { id: 'evaluation-report', label: '評価分析レポート', icon: '📊', isNew: true },
   { id: 'analytics', label: '総合分析', icon: '📊' },
   { id: 'recruitment', label: '採用・配属', icon: '👥' },
@@ -1514,143 +1514,281 @@ function EvaluationHistoryTab({ selectedStaff }: { selectedStaff: any }): React.
         </div>
       </div>
 
-      {/* 推移サマリー - 線グラフ形式 */}
+      {/* 総合評価推移 - レポートセンタースタイル */}
       <Card className="border-l-4" style={{ borderLeftColor: CHART_COLORS.primary }}>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg">
-            📈 {showAllHistory ? fullEvaluationHistory.length : defaultDisplayYears}年間の成長推移
+          <CardTitle className="flex items-center gap-2 text-xl">
+            📈 総合評価点数の推移
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {/* 評価点数の線グラフ（SVG） */}
-          <div className="mb-6">
-            <h4 className="text-md font-semibold mb-3 flex items-center gap-2">
-              📊 総合評価点数の推移
-            </h4>
-            <div className="h-48 bg-gray-50 rounded-lg p-4 relative">
-              <svg width="100%" height="100%" viewBox="0 0 400 150" className="overflow-visible">
-                {/* グリッドライン */}
-                <defs>
-                  <pattern id="grid" width="40" height="30" patternUnits="userSpaceOnUse">
-                    <path d="M 40 0 L 0 0 0 30" fill="none" stroke="#e5e7eb" strokeWidth="0.5"/>
-                  </pattern>
-                </defs>
-                <rect width="100%" height="100%" fill="url(#grid)" />
-                
-                {/* Y軸ラベル */}
-                <text x="10" y="20" fill="#6b7280" fontSize="10">90</text>
-                <text x="10" y="50" fill="#6b7280" fontSize="10">70</text>
-                <text x="10" y="80" fill="#6b7280" fontSize="10">50</text>
-                <text x="10" y="110" fill="#6b7280" fontSize="10">30</text>
-                
-                {/* データポイントとライン */}
-                <polyline
-                  points="50,110 130,80 210,75 290,35"
-                  fill="none"
-                  stroke={CHART_COLORS.primary}
-                  strokeWidth="3"
-                />
-                
-                {/* データポイント */}
-                <circle cx="50" cy="110" r="4" fill={CHART_COLORS.danger} />
-                <circle cx="130" cy="80" r="4" fill={CHART_COLORS.success} />
-                <circle cx="210" cy="75" r="4" fill={CHART_COLORS.success} />
-                <circle cx="290" cy="35" r="5" fill={CHART_COLORS.primary} strokeWidth="2" stroke="#fff" />
-                
-                {/* X軸ラベル */}
-                <text x="45" y="140" fill="#6b7280" fontSize="10" textAnchor="middle">2021</text>
-                <text x="125" y="140" fill="#6b7280" fontSize="10" textAnchor="middle">2022</text>
-                <text x="205" y="140" fill="#6b7280" fontSize="10" textAnchor="middle">2023</text>
-                <text x="285" y="140" fill="#6b7280" fontSize="10" textAnchor="middle">2024</text>
-                
-                {/* グレード表示 */}
-                <text x="50" y="125" fill={getGradeColor('C')} fontSize="12" fontWeight="bold" textAnchor="middle">C</text>
-                <text x="130" y="95" fill={getGradeColor('B')} fontSize="12" fontWeight="bold" textAnchor="middle">B</text>
-                <text x="210" y="90" fill={getGradeColor('B')} fontSize="12" fontWeight="bold" textAnchor="middle">B</text>
-                <text x="290" y="25" fill={getGradeColor('A')} fontSize="14" fontWeight="bold" textAnchor="middle">A</text>
-              </svg>
-              
-              {/* 成長指標 */}
-              <div className="absolute top-2 right-2">
-                <Badge style={{ backgroundColor: CHART_COLORS.success, color: 'white' }}>
-                  +{(evaluationHistory[0].totalScore - evaluationHistory[evaluationHistory.length - 1].totalScore).toFixed(1)}点向上
-                </Badge>
-              </div>
-            </div>
-          </div>
-          
-          {/* 順位推移の棒グラフ */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h4 className="text-md font-semibold mb-3 flex items-center gap-2">
-                🏢 施設内順位推移
-              </h4>
-              <div className="h-32 bg-gray-50 rounded-lg p-3 relative">
-                <div className="flex items-end justify-between h-full">
-                  {[
-                    { year: '2021', rank: 35, total: 120, color: CHART_COLORS.danger },
-                    { year: '2022', rank: 22, total: 120, color: CHART_COLORS.warning },
-                    { year: '2023', rank: 18, total: 120, color: CHART_COLORS.success },
-                    { year: '2024', rank: 12, total: 120, color: CHART_COLORS.primary }
-                  ].map((item, index) => {
-                    const height = (1 - item.rank / item.total) * 80;
-                    return (
-                      <div key={item.year} className="flex flex-col items-center">
-                        <div className="text-xs font-medium mb-1">{item.rank}位</div>
-                        <div 
-                          className="w-8 rounded-t"
-                          style={{ 
-                            height: `${height}px`,
-                            backgroundColor: item.color,
-                            minHeight: '20px'
-                          }}
-                        />
-                        <div className="text-xs mt-1">{item.year}</div>
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className="absolute top-1 right-1">
-                  <Badge style={{ backgroundColor: CHART_COLORS.success, color: 'white' }} className="text-xs">
-                    上位10%
-                  </Badge>
-                </div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* グラフエリア（左側 2/3） */}
+            <div className="lg:col-span-2">
+              <div className="h-64 bg-gradient-to-br from-blue-50 to-white rounded-lg p-4 relative border">
+                <svg width="100%" height="100%" viewBox="0 0 500 200" className="overflow-visible">
+                  {/* グリッドライン */}
+                  <defs>
+                    <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor={CHART_COLORS.primary} stopOpacity="0.3"/>
+                      <stop offset="100%" stopColor={CHART_COLORS.primary} stopOpacity="0.1"/>
+                    </linearGradient>
+                  </defs>
+                  
+                  {/* 基準線（90点） */}
+                  <line x1="60" y1="40" x2="440" y2="40" stroke="#10b981" strokeWidth="2" strokeDasharray="5,5"/>
+                  <text x="450" y="45" fill="#10b981" fontSize="12" fontWeight="bold">S級（90点）</text>
+                  
+                  {/* Y軸 */}
+                  <line x1="60" y1="20" x2="60" y2="160" stroke="#9ca3af" strokeWidth="1"/>
+                  <text x="45" y="25" fill="#6b7280" fontSize="11">100</text>
+                  <text x="50" y="60" fill="#6b7280" fontSize="11">80</text>
+                  <text x="50" y="100" fill="#6b7280" fontSize="11">60</text>
+                  <text x="50" y="140" fill="#6b7280" fontSize="11">40</text>
+                  <text x="50" y="165" fill="#6b7280" fontSize="11">20</text>
+                  
+                  {/* X軸 */}
+                  <line x1="60" y1="160" x2="440" y2="160" stroke="#9ca3af" strokeWidth="1"/>
+                  
+                  {/* データライン（面グラフ） */}
+                  <polygon
+                    points="60,140 150,100 240,95 330,60 420,50 420,160 60,160"
+                    fill="url(#gradient)"
+                  />
+                  
+                  {/* データライン */}
+                  <polyline
+                    points="60,140 150,100 240,95 330,60 420,50"
+                    fill="none"
+                    stroke={CHART_COLORS.primary}
+                    strokeWidth="4"
+                  />
+                  
+                  {/* データポイント */}
+                  <circle cx="60" cy="140" r="6" fill={CHART_COLORS.danger} stroke="#fff" strokeWidth="2"/>
+                  <circle cx="150" cy="100" r="6" fill={CHART_COLORS.warning} stroke="#fff" strokeWidth="2"/>
+                  <circle cx="240" cy="95" r="6" fill={CHART_COLORS.success} stroke="#fff" strokeWidth="2"/>
+                  <circle cx="330" cy="60" r="6" fill={CHART_COLORS.success} stroke="#fff" strokeWidth="2"/>
+                  <circle cx="420" cy="50" r="8" fill={CHART_COLORS.primary} stroke="#fff" strokeWidth="3"/>
+                  
+                  {/* X軸ラベル */}
+                  <text x="60" y="180" fill="#6b7280" fontSize="12" textAnchor="middle">2020</text>
+                  <text x="150" y="180" fill="#6b7280" fontSize="12" textAnchor="middle">2021</text>
+                  <text x="240" y="180" fill="#6b7280" fontSize="12" textAnchor="middle">2022</text>
+                  <text x="330" y="180" fill="#6b7280" fontSize="12" textAnchor="middle">2023</text>
+                  <text x="420" y="180" fill="#6b7280" fontSize="12" fontWeight="bold" textAnchor="middle">2024</text>
+                  
+                  {/* スコア表示 */}
+                  <text x="60" y="130" fill="#fff" fontSize="11" fontWeight="bold" textAnchor="middle">52.3</text>
+                  <text x="150" y="90" fill="#fff" fontSize="11" fontWeight="bold" textAnchor="middle">65.8</text>
+                  <text x="240" y="85" fill="#fff" fontSize="11" fontWeight="bold" textAnchor="middle">68.2</text>
+                  <text x="330" y="50" fill="#fff" fontSize="11" fontWeight="bold" textAnchor="middle">78.4</text>
+                  <text x="420" y="35" fill="#fff" fontSize="13" fontWeight="bold" textAnchor="middle">81.25</text>
+                </svg>
               </div>
             </div>
             
-            <div>
-              <h4 className="text-md font-semibold mb-3 flex items-center gap-2">
-                🌐 法人内位置推移
-              </h4>
-              <div className="h-32 bg-gray-50 rounded-lg p-3 relative">
-                <div className="flex items-end justify-between h-full">
-                  {[
-                    { year: '2021', percentile: 38, position: '下位', color: CHART_COLORS.danger },
-                    { year: '2022', percentile: 24, position: '下位', color: CHART_COLORS.warning },
-                    { year: '2023', percentile: 85, position: '上位', color: CHART_COLORS.success },
-                    { year: '2024', percentile: 89, position: '上位', color: CHART_COLORS.primary }
-                  ].map((item, index) => {
-                    const height = item.percentile * 0.8;
-                    return (
-                      <div key={item.year} className="flex flex-col items-center">
-                        <div className="text-xs font-medium mb-1">{item.position}{item.percentile}%</div>
-                        <div 
-                          className="w-8 rounded-t"
-                          style={{ 
-                            height: `${height}px`,
-                            backgroundColor: item.color,
-                            minHeight: '20px'
-                          }}
-                        />
-                        <div className="text-xs mt-1">{item.year}</div>
-                      </div>
-                    );
-                  })}
+            {/* 解釈・補足エリア（右側 1/3） */}
+            <div className="space-y-4">
+              <div className="bg-green-50 border-l-4 border-green-400 p-4 rounded-r">
+                <h4 className="font-bold text-green-800 mb-2">📊 トレンド分析</h4>
+                <div className="space-y-2 text-sm text-green-700">
+                  <p className="font-medium">継続的な成長軌道</p>
+                  <p>• 年平均 +7.2点の安定向上</p>
+                  <p>• 2022年以降は成長加速</p>
+                  <p>• 目標90点まで残り8.75点</p>
                 </div>
-                <div className="absolute top-1 right-1">
-                  <Badge style={{ backgroundColor: CHART_COLORS.success, color: 'white' }} className="text-xs">
-                    継続改善
-                  </Badge>
+              </div>
+              
+              <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r">
+                <h4 className="font-bold text-blue-800 mb-2">🎯 キーポイント</h4>
+                <div className="space-y-1 text-sm text-blue-700">
+                  <p>• C→B→A の段階的向上</p>
+                  <p>• 技術・組織両面で成長</p>
+                  <p>• 2024年にAグレード到達</p>
+                </div>
+              </div>
+              
+              <div className="bg-orange-50 border-l-4 border-orange-400 p-4 rounded-r">
+                <h4 className="font-bold text-orange-800 mb-2">🚀 次のステップ</h4>
+                <div className="space-y-1 text-sm text-orange-700">
+                  <p>• Sグレード挑戦フェーズ</p>
+                  <p>• リーダーシップ強化</p>
+                  <p>• 指導力向上研修</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* 法人内評価推移 */}
+      <Card className="border-l-4" style={{ borderLeftColor: CHART_COLORS.success }}>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-xl">
+            🌐 法人内順位推移
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* グラフエリア */}
+            <div className="lg:col-span-2">
+              <div className="h-64 bg-gradient-to-br from-green-50 to-white rounded-lg p-4 relative border">
+                <svg width="100%" height="100%" viewBox="0 0 500 200" className="overflow-visible">
+                  {/* 上位10%ライン */}
+                  <line x1="60" y1="50" x2="440" y2="50" stroke="#10b981" strokeWidth="2" strokeDasharray="5,5"/>
+                  <text x="450" y="45" fill="#10b981" fontSize="11" fontWeight="bold">上位10%</text>
+                  
+                  {/* Y軸（順位は逆転） */}
+                  <line x1="60" y1="20" x2="60" y2="160" stroke="#9ca3af" strokeWidth="1"/>
+                  <text x="45" y="25" fill="#6b7280" fontSize="11">1位</text>
+                  <text x="35" y="65" fill="#6b7280" fontSize="11">25位</text>
+                  <text x="35" y="105" fill="#6b7280" fontSize="11">50位</text>
+                  <text x="35" y="145" fill="#6b7280" fontSize="11">75位</text>
+                  <text x="30" y="165" fill="#6b7280" fontSize="11">100位</text>
+                  
+                  {/* データライン */}
+                  <polyline
+                    points="60,150 150,120 240,100 330,70 420,55"
+                    fill="none"
+                    stroke={CHART_COLORS.success}
+                    strokeWidth="4"
+                  />
+                  
+                  {/* データポイント */}
+                  <circle cx="60" cy="150" r="6" fill={CHART_COLORS.danger} stroke="#fff" strokeWidth="2"/>
+                  <circle cx="150" cy="120" r="6" fill={CHART_COLORS.warning} stroke="#fff" strokeWidth="2"/>
+                  <circle cx="240" cy="100" r="6" fill={CHART_COLORS.success} stroke="#fff" strokeWidth="2"/>
+                  <circle cx="330" cy="70" r="6" fill={CHART_COLORS.success} stroke="#fff" strokeWidth="2"/>
+                  <circle cx="420" cy="55" r="8" fill={CHART_COLORS.primary} stroke="#fff" strokeWidth="3"/>
+                  
+                  {/* 順位表示 */}
+                  <text x="60" y="140" fill="#fff" fontSize="11" fontWeight="bold" textAnchor="middle">89位</text>
+                  <text x="150" y="110" fill="#fff" fontSize="11" fontWeight="bold" textAnchor="middle">65位</text>
+                  <text x="240" y="90" fill="#fff" fontSize="11" fontWeight="bold" textAnchor="middle">42位</text>
+                  <text x="330" y="60" fill="#fff" fontSize="11" fontWeight="bold" textAnchor="middle">22位</text>
+                  <text x="420" y="45" fill="#fff" fontSize="13" fontWeight="bold" textAnchor="middle">12位</text>
+                  
+                  {/* X軸ラベル */}
+                  <text x="60" y="180" fill="#6b7280" fontSize="12" textAnchor="middle">2020</text>
+                  <text x="150" y="180" fill="#6b7280" fontSize="12" textAnchor="middle">2021</text>
+                  <text x="240" y="180" fill="#6b7280" fontSize="12" textAnchor="middle">2022</text>
+                  <text x="330" y="180" fill="#6b7280" fontSize="12" textAnchor="middle">2023</text>
+                  <text x="420" y="180" fill="#6b7280" fontSize="12" fontWeight="bold" textAnchor="middle">2024</text>
+                </svg>
+              </div>
+            </div>
+            
+            {/* 解釈エリア */}
+            <div className="space-y-4">
+              <div className="bg-green-50 border-l-4 border-green-400 p-4 rounded-r">
+                <h4 className="font-bold text-green-800 mb-2">🏆 順位向上</h4>
+                <div className="space-y-2 text-sm text-green-700">
+                  <p className="font-medium">劇的な改善を実現</p>
+                  <p>• 89位→12位（77位向上）</p>
+                  <p>• 全法人850名中上位1.4%</p>
+                  <p>• 継続的な右肩上がり</p>
+                </div>
+              </div>
+              
+              <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r">
+                <h4 className="font-bold text-blue-800 mb-2">📈 成長要因</h4>
+                <div className="space-y-1 text-sm text-blue-700">
+                  <p>• 法人研修積極参加</p>
+                  <p>• 横断プロジェクト参画</p>
+                  <p>• メンター制度活用</p>
+                </div>
+              </div>
+              
+              <div className="bg-purple-50 border-l-4 border-purple-400 p-4 rounded-r">
+                <h4 className="font-bold text-purple-800 mb-2">⭐ 評価</h4>
+                <div className="space-y-1 text-sm text-purple-700">
+                  <p>• エクセレント達成</p>
+                  <p>• 昇進候補筆頭</p>
+                  <p>• ロールモデル認定</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* 施設内評価推移 */}
+      <Card className="border-l-4" style={{ borderLeftColor: CHART_COLORS.warning }}>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-xl">
+            🏢 施設内順位推移
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* グラフエリア */}
+            <div className="lg:col-span-2">
+              <div className="h-64 bg-gradient-to-br from-orange-50 to-white rounded-lg p-4 relative border">
+                <svg width="100%" height="100%" viewBox="0 0 500 200" className="overflow-visible">
+                  {/* 上位10%ライン */}
+                  <line x1="60" y1="40" x2="440" y2="40" stroke="#f59e0b" strokeWidth="2" strokeDasharray="5,5"/>
+                  <text x="450" y="35" fill="#f59e0b" fontSize="11" fontWeight="bold">上位10%</text>
+                  
+                  {/* データライン */}
+                  <polyline
+                    points="60,120 150,100 240,85 330,65 420,45"
+                    fill="none"
+                    stroke={CHART_COLORS.warning}
+                    strokeWidth="4"
+                  />
+                  
+                  {/* データポイント */}
+                  <circle cx="60" cy="120" r="6" fill={CHART_COLORS.danger} stroke="#fff" strokeWidth="2"/>
+                  <circle cx="150" cy="100" r="6" fill={CHART_COLORS.warning} stroke="#fff" strokeWidth="2"/>
+                  <circle cx="240" cy="85" r="6" fill={CHART_COLORS.success} stroke="#fff" strokeWidth="2"/>
+                  <circle cx="330" cy="65" r="6" fill={CHART_COLORS.success} stroke="#fff" strokeWidth="2"/>
+                  <circle cx="420" cy="45" r="8" fill={CHART_COLORS.primary} stroke="#fff" strokeWidth="3"/>
+                  
+                  {/* 順位表示 */}
+                  <text x="60" y="110" fill="#fff" fontSize="11" fontWeight="bold" textAnchor="middle">35位</text>
+                  <text x="150" y="90" fill="#fff" fontSize="11" fontWeight="bold" textAnchor="middle">22位</text>
+                  <text x="240" y="75" fill="#fff" fontSize="11" fontWeight="bold" textAnchor="middle">18位</text>
+                  <text x="330" y="55" fill="#fff" fontSize="11" fontWeight="bold" textAnchor="middle">15位</text>
+                  <text x="420" y="35" fill="#fff" fontSize="13" fontWeight="bold" textAnchor="middle">8位</text>
+                  
+                  {/* X軸ラベル */}
+                  <text x="60" y="180" fill="#6b7280" fontSize="12" textAnchor="middle">2020</text>
+                  <text x="150" y="180" fill="#6b7280" fontSize="12" textAnchor="middle">2021</text>
+                  <text x="240" y="180" fill="#6b7280" fontSize="12" textAnchor="middle">2022</text>
+                  <text x="330" y="180" fill="#6b7280" fontSize="12" textAnchor="middle">2023</text>
+                  <text x="420" y="180" fill="#6b7280" fontSize="12" fontWeight="bold" textAnchor="middle">2024</text>
+                </svg>
+              </div>
+            </div>
+            
+            {/* 解釈エリア */}
+            <div className="space-y-4">
+              <div className="bg-orange-50 border-l-4 border-orange-400 p-4 rounded-r">
+                <h4 className="font-bold text-orange-800 mb-2">🎯 現場評価</h4>
+                <div className="space-y-2 text-sm text-orange-700">
+                  <p className="font-medium">現場での高い評価</p>
+                  <p>• 35位→8位（27位向上）</p>
+                  <p>• 施設120名中上位6.7%</p>
+                  <p>• 同期では最高位</p>
+                </div>
+              </div>
+              
+              <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r">
+                <h4 className="font-bold text-blue-800 mb-2">💪 強み</h4>
+                <div className="space-y-1 text-sm text-blue-700">
+                  <p>• 患者・家族からの信頼</p>
+                  <p>• チームワーク力</p>
+                  <p>• 現場改善提案</p>
+                </div>
+              </div>
+              
+              <div className="bg-green-50 border-l-4 border-green-400 p-4 rounded-r">
+                <h4 className="font-bold text-green-800 mb-2">🏆 今後の展開</h4>
+                <div className="space-y-1 text-sm text-green-700">
+                  <p>• 主任候補として期待</p>
+                  <p>• 新人指導担当</p>
+                  <p>• 委員会リーダー</p>
                 </div>
               </div>
             </div>
