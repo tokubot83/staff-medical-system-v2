@@ -66,7 +66,7 @@ const tabs = [
   { id: 'wellbeing', label: '健康・ウェルビーイング', icon: '💚' },
   { id: 'development', label: '能力開発', icon: '🚀' },
   { id: 'interview', label: '面談・指導', icon: '💬' },
-  { id: 'evaluation', label: '最新評価（2024年度）', icon: '📈' },
+  { id: 'evaluation', label: '最新評価', icon: '📈' },
   { id: 'evaluation-history', label: '評価履歴（全期間）', icon: '📋', isNew: true },
   { id: 'evaluation-report', label: '評価分析レポート', icon: '📊', isNew: true },
   { id: 'analytics', label: '総合分析', icon: '📊' },

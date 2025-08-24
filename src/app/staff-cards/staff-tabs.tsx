@@ -420,7 +420,7 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
           // 夏季組織貢献度評価期間
           provisionalEvaluation = {
             type: 'summer',
-            title: '夏季組織貢献度評価（暫定）',
+            title: '今年度評価状況（暫定）',
             facilityScore: 82,
             corporateScore: 76,
             status: 'provisional'
@@ -429,7 +429,7 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
           // 冬季組織貢献度評価期間
           provisionalEvaluation = {
             type: 'winter',
-            title: '冬季組織貢献度評価（暫定）',
+            title: '今年度評価状況（暫定）',
             facilityScore: 78,
             corporateScore: 80,
             status: 'provisional'
