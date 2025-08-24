@@ -482,7 +482,7 @@ export default function DashboardPage() {
                     <Link href="/training-v3">
                       <Button variant="outline" size="sm" className="w-full justify-start">
                         <Zap className="mr-2 h-4 w-4" />
-                        V3評価連動研修
+                        評価連動研修
                         <Badge className="ml-2 bg-purple-100 text-purple-800" variant="outline">New</Badge>
                       </Button>
                     </Link>
@@ -524,12 +524,12 @@ export default function DashboardPage() {
                 </CardContent>
               </Card>
 
-              {/* V3評価連動研修システム */}
+              {/* 評価連動研修システム */}
               <Card className="bg-white hover:shadow-lg transition-shadow border-purple-200">
                 <CardHeader>
                   <CardTitle className="text-base flex items-center gap-2">
                     <Zap className="h-5 w-5 text-purple-600" />
-                    V3評価連動研修
+                    評価連動研修
                     <Badge className="bg-purple-100 text-purple-800" variant="outline">New</Badge>
                   </CardTitle>
                 </CardHeader>
@@ -551,7 +551,7 @@ export default function DashboardPage() {
                     <Link href="/training-v3">
                       <Button className="w-full" variant="outline" size="sm">
                         <Zap className="mr-2 h-4 w-4" />
-                        V3研修システム
+                        研修システム
                       </Button>
                     </Link>
                   </div>
@@ -2214,12 +2214,12 @@ export default function DashboardPage() {
                     </div>
                   )}
 
-                  {/* V3評価制度解説タブ */}
+                  {/* 評価制度解説タブ */}
                   {storyActiveTab === '評価制度' && (
                     <div>
                       <div className="mb-4 p-3 bg-blue-50 rounded-lg border-l-4 border-blue-500">
                         <h3 className="font-semibold text-blue-900">📋 評価制度 完全ガイド</h3>
-                        <p className="text-sm text-blue-700 mt-1">2025年3月開始の新評価制度の詳細解説</p>
+                        <p className="text-sm text-blue-700 mt-1">2025年3月開始の評価制度の詳細解説</p>
                       </div>
 
                       {/* 制度概要 */}
@@ -2227,7 +2227,7 @@ export default function DashboardPage() {
                         <div className="p-4 bg-white rounded-lg border border-gray-200">
                           <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
                             <span className="text-blue-600">🎯</span>
-                            V3評価制度の基本構造
+                            評価制度の基本構造
                           </h4>
                           <div className="grid grid-cols-2 gap-4">
                             <div className="p-3 bg-blue-50 rounded border-l-4 border-blue-500">
@@ -3209,7 +3209,7 @@ export default function DashboardPage() {
                       <Link href="/evaluation-execution">
                         <Button className="w-full" size="sm" variant="outline">
                           <PlayCircle className="mr-2 h-4 w-4" />
-                          V3評価システムで開始
+                          評価システムで開始
                         </Button>
                       </Link>
                     </div>
@@ -3295,7 +3295,7 @@ export default function DashboardPage() {
                   <Link href="/evaluation-execution">
                     <div className="p-4 bg-white rounded-lg border hover:border-orange-400 hover:shadow-md transition-all cursor-pointer text-center">
                       <Award className="h-6 w-6 text-green-600 mx-auto mb-2" />
-                      <div className="text-sm font-medium">V3統合評価</div>
+                      <div className="text-sm font-medium">統合評価</div>
                       <div className="text-xs text-gray-600">総合確認</div>
                     </div>
                   </Link>
