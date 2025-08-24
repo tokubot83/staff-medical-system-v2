@@ -1540,127 +1540,259 @@ function EvaluationHistoryTab({ selectedStaff }: { selectedStaff: any }): React.
         </div>
       </div>
 
-      {/* 年度別詳細履歴 */}
-      <div className={styles.historyDetailTable}>
-        <h3>年度別評価詳細</h3>
-        <div className={styles.tableContainer}>
-          <table className={styles.historyTable}>
-            <thead>
-              <tr>
-                <th>年度</th>
-                <th>評価期間</th>
-                <th>施設内評価</th>
-                <th>法人内評価</th>
-                <th>総合判定</th>
-                <th>総合得点</th>
-                <th>技術評価</th>
-                <th>組織貢献</th>
-                <th>施設内順位</th>
-                <th>法人内順位</th>
-                <th>ステータス</th>
-              </tr>
-            </thead>
-            <tbody>
+      {/* 年度別詳細履歴 - Card style */}
+      <Card className="overflow-hidden">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            📋 年度別評価詳細履歴
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-x-auto">
+            <div className="space-y-3">
               {evaluationHistory.map((history, index) => (
-                <tr key={history.year} className={index === 0 ? styles.latestRow : ''}>
-                  <td>
-                    <strong>{history.year}</strong>
-                    {index === 0 && <span className={styles.latestBadge}>最新</span>}
-                  </td>
-                  <td>{history.period}</td>
-                  <td>
-                    <div 
-                      className={styles.gradeCell} 
-                      style={{ 
-                        backgroundColor: `${getGradeColor(history.facilityGrade)}20`,
-                        color: getGradeColor(history.facilityGrade),
-                        fontWeight: 'bold'
-                      }}
-                    >
-                      {history.facilityGrade}
-                    </div>
-                  </td>
-                  <td>
-                    <div 
-                      className={styles.gradeCell} 
-                      style={{ 
-                        backgroundColor: `${getGradeColor(history.corporateGrade)}20`,
-                        color: getGradeColor(history.corporateGrade),
-                        fontWeight: 'bold'
-                      }}
-                    >
-                      {history.corporateGrade}
-                    </div>
-                  </td>
-                  <td>
-                    <div 
-                      className={styles.gradeCell} 
-                      style={{ 
-                        backgroundColor: `${getGradeColor(history.finalGrade)}20`,
-                        color: getGradeColor(history.finalGrade),
-                        fontWeight: 'bold',
-                        fontSize: '1.1em'
-                      }}
-                    >
-                      {history.finalGrade}
-                    </div>
-                  </td>
-                  <td>
-                    <strong>{history.totalScore}点</strong>
-                  </td>
-                  <td>{history.technicalScore}点</td>
-                  <td>{history.contributionScore}点</td>
-                  <td>
-                    <div className={styles.rankCell}>
-                      <span className={styles.rankNumber}>{history.facilityRank.rank}位</span>
-                      <span className={styles.rankTotal}>/ {history.facilityRank.total}人</span>
-                      <span className={styles.percentile}>上位{100-history.facilityRank.percentile}%</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div className={styles.rankCell}>
-                      <span className={styles.rankNumber}>{history.corporateRank.rank}位</span>
-                      <span className={styles.rankTotal}>/ {history.corporateRank.total}人</span>
-                      <span className={styles.percentile}>上位{100-history.corporateRank.percentile}%</span>
-                    </div>
-                  </td>
-                  <td>
-                    <span className={styles.statusBadge}>確定</span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+                <Card 
+                  key={history.year} 
+                  className={`${index === 0 ? 'border-2 border-blue-200 shadow-lg' : ''} overflow-hidden`}
+                >
+                  <CardContent className="p-4">
+                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                      {/* 年度・期間 */}
+                      <div className="flex flex-col">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-lg font-bold text-gray-800">{history.year}</span>
+                          {index === 0 && (
+                            <Badge style={{ backgroundColor: CHART_COLORS.primary, color: 'white', fontSize: '10px' }}>
+                              最新
+                            </Badge>
+                          )}
+                        </div>
+                        <div className="text-sm text-gray-500">{history.period}</div>
+                      </div>
 
-      {/* 成長分析 */}
-      <div className={styles.growthAnalysis}>
-        <h3>🎯 成長分析・特徴</h3>
-        <div className={styles.analysisGrid}>
-          <div className={styles.analysisCard}>
-            <div className={styles.analysisIcon}>📈</div>
-            <div className={styles.analysisContent}>
-              <h4>継続的成長</h4>
-              <p>{evaluationHistory[evaluationHistory.length - 1].year}の{evaluationHistory[evaluationHistory.length - 1].finalGrade}評価から{evaluationHistory.length}年間で着実にランクアップ。特に直近の成長が顕著で、施設内での評価向上が目立つ。</p>
+                      {/* 総合判定 - メイン表示 */}
+                      <div className="flex flex-col items-center justify-center">
+                        <div className="text-xs text-gray-500 mb-1">総合判定</div>
+                        <div 
+                          className="w-12 h-12 rounded-full flex items-center justify-center text-white text-lg font-bold mb-1"
+                          style={{ backgroundColor: getGradeColor(history.finalGrade) }}
+                        >
+                          {history.finalGrade}
+                        </div>
+                        <div className="text-sm font-medium text-gray-700">
+                          {history.totalScore}点
+                        </div>
+                      </div>
+
+                      {/* 施設内・法人内評価 */}
+                      <div className="flex flex-col">
+                        <div className="text-xs text-gray-500 mb-2">詳細評価</div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-xs text-gray-600">施設内</span>
+                          <Badge 
+                            style={{ 
+                              backgroundColor: `${getGradeColor(history.facilityGrade)}20`,
+                              color: getGradeColor(history.facilityGrade),
+                              border: `1px solid ${getGradeColor(history.facilityGrade)}40`
+                            }}
+                          >
+                            {history.facilityGrade}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-gray-600">法人内</span>
+                          <Badge 
+                            style={{ 
+                              backgroundColor: `${getGradeColor(history.corporateGrade)}20`,
+                              color: getGradeColor(history.corporateGrade),
+                              border: `1px solid ${getGradeColor(history.corporateGrade)}40`
+                            }}
+                          >
+                            {history.corporateGrade}
+                          </Badge>
+                        </div>
+                      </div>
+
+                      {/* スコア詳細 */}
+                      <div className="flex flex-col">
+                        <div className="text-xs text-gray-500 mb-2">得点内訳</div>
+                        <div className="space-y-1">
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs text-gray-600">技術</span>
+                            <span className="text-sm font-medium">{history.technicalScore}点</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs text-gray-600">組織</span>
+                            <span className="text-sm font-medium">{history.contributionScore}点</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 施設内順位 */}
+                      <div className="flex flex-col">
+                        <div className="text-xs text-gray-500 mb-2">施設内順位</div>
+                        <div className="text-center">
+                          <div className="text-lg font-bold" style={{ color: CHART_COLORS.primary }}>
+                            {history.facilityRank.rank}位
+                          </div>
+                          <div className="text-xs text-gray-600">
+                            / {history.facilityRank.total}人中
+                          </div>
+                          <Badge 
+                            style={{ 
+                              backgroundColor: history.facilityRank.percentile >= 90 ? CHART_COLORS.success : 
+                                              history.facilityRank.percentile >= 70 ? CHART_COLORS.warning : CHART_COLORS.neutral,
+                              color: 'white',
+                              fontSize: '10px'
+                            }}
+                          >
+                            上位{100-history.facilityRank.percentile}%
+                          </Badge>
+                        </div>
+                      </div>
+
+                      {/* 法人内順位 */}
+                      <div className="flex flex-col">
+                        <div className="text-xs text-gray-500 mb-2">法人内順位</div>
+                        <div className="text-center">
+                          <div className="text-lg font-bold" style={{ color: CHART_COLORS.primary }}>
+                            {history.corporateRank.rank}位
+                          </div>
+                          <div className="text-xs text-gray-600">
+                            / {history.corporateRank.total}人中
+                          </div>
+                          <Badge 
+                            style={{ 
+                              backgroundColor: history.corporateRank.percentile >= 90 ? CHART_COLORS.success : 
+                                              history.corporateRank.percentile >= 70 ? CHART_COLORS.warning : CHART_COLORS.neutral,
+                              color: 'white',
+                              fontSize: '10px'
+                            }}
+                          >
+                            上位{100-history.corporateRank.percentile}%
+                          </Badge>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </div>
-          <div className={styles.analysisCard}>
-            <div className={styles.analysisIcon}>🏢</div>
-            <div className={styles.analysisContent}>
-              <h4>現場力の強さ</h4>
-              <p>施設内評価が法人内評価を常に上回る傾向。現場での実践力と同僚・患者からの信頼が高い証拠と考えられる。</p>
+        </CardContent>
+      </Card>
+
+      {/* 成長分析 - Card style */}
+      <Card className="overflow-hidden">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            🎯 成長分析・特徴
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card className="border-l-4" style={{ borderLeftColor: CHART_COLORS.success }}>
+              <CardContent className="p-4">
+                <div className="flex items-start gap-3">
+                  <div className="text-2xl">📈</div>
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-gray-800 mb-2">継続的成長</h4>
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      {evaluationHistory[evaluationHistory.length - 1].year}の{evaluationHistory[evaluationHistory.length - 1].finalGrade}評価から{evaluationHistory.length}年間で着実にランクアップ。
+                      特に直近の成長が顕著で、施設内での評価向上が目立つ。
+                    </p>
+                    <Badge 
+                      className="mt-2"
+                      style={{ backgroundColor: CHART_COLORS.success, color: 'white' }}
+                    >
+                      着実な向上傾向
+                    </Badge>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-l-4" style={{ borderLeftColor: CHART_COLORS.primary }}>
+              <CardContent className="p-4">
+                <div className="flex items-start gap-3">
+                  <div className="text-2xl">🏢</div>
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-gray-800 mb-2">現場力の強さ</h4>
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      施設内評価が法人内評価を常に上回る傾向。
+                      現場での実践力と同僚・患者からの信頼が高い証拠と考えられる。
+                    </p>
+                    <Badge 
+                      className="mt-2"
+                      style={{ backgroundColor: CHART_COLORS.primary, color: 'white' }}
+                    >
+                      現場評価○
+                    </Badge>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-l-4" style={{ borderLeftColor: CHART_COLORS.warning }}>
+              <CardContent className="p-4">
+                <div className="flex items-start gap-3">
+                  <div className="text-2xl">🚀</div>
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-gray-800 mb-2">今後の展望</h4>
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      法人規模での活動により一層注力することで、
+                      S評価到達も十分に期待できるレベルに成長している。
+                    </p>
+                    <Badge 
+                      className="mt-2"
+                      style={{ backgroundColor: CHART_COLORS.warning, color: 'white' }}
+                    >
+                      S評価期待
+                    </Badge>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* 総合評価トレンド */}
+          <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
+            <h4 className="font-semibold text-gray-800 mb-3">📊 評価トレンド分析</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <div className="text-sm text-gray-600 mb-2">技術評価の推移</div>
+                <div className="flex items-center gap-2">
+                  <div className="flex-1 bg-gray-200 rounded-full h-2">
+                    <div 
+                      className="h-2 rounded-full transition-all duration-300"
+                      style={{ 
+                        width: `${(evaluationHistory[0].technicalScore / 50) * 100}%`,
+                        backgroundColor: CHART_COLORS.success
+                      }}
+                    />
+                  </div>
+                  <span className="text-sm font-medium">{evaluationHistory[0].technicalScore}/50点</span>
+                </div>
+              </div>
+              <div>
+                <div className="text-sm text-gray-600 mb-2">組織貢献の推移</div>
+                <div className="flex items-center gap-2">
+                  <div className="flex-1 bg-gray-200 rounded-full h-2">
+                    <div 
+                      className="h-2 rounded-full transition-all duration-300"
+                      style={{ 
+                        width: `${(evaluationHistory[0].contributionScore / 50) * 100}%`,
+                        backgroundColor: CHART_COLORS.primary
+                      }}
+                    />
+                  </div>
+                  <span className="text-sm font-medium">{evaluationHistory[0].contributionScore}/50点</span>
+                </div>
+              </div>
             </div>
           </div>
-          <div className={styles.analysisCard}>
-            <div className={styles.analysisIcon}>🚀</div>
-            <div className={styles.analysisContent}>
-              <h4>今後の展望</h4>
-              <p>法人規模での活動により一層注力することで、S評価到達も十分に期待できるレベルに成長している。</p>
-            </div>
-          </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }
