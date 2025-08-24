@@ -550,10 +550,11 @@ export default function DynamicInterviewSheet({
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
-                {React.createElement(getSectionIcon(normalizedSheetData.sections[activeSection].type), {
-                  className: "mr-3 text-blue-600",
-                  size: 24
-                })}
+                {normalizedSheetData.sections?.[activeSection]?.type && 
+                  React.createElement(getSectionIcon(normalizedSheetData.sections[activeSection].type), {
+                    className: "mr-3 text-blue-600",
+                    size: 24
+                  })}
                 {normalizedSheetData.sections[activeSection].name}
               </CardTitle>
             </CardHeader>

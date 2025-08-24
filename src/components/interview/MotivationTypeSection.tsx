@@ -283,8 +283,8 @@ export function MotivationTypeSection({
                         </h3>
                       </div>
                     </div>
-                    {React.createElement(selectedMotivation.icon, {
-                      className: `h-12 w-12 ${selectedMotivation.color.split(' ')[0]}`
+                    {selectedMotivation?.icon && React.createElement(selectedMotivation.icon, {
+                      className: `h-12 w-12 ${selectedMotivation.color?.split(' ')[0] || ''}`
                     })}
                   </div>
                 </CardHeader>
