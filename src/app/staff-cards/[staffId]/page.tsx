@@ -1556,8 +1556,8 @@ function EvaluationHistoryTab({ selectedStaff }: { selectedStaff: any }): React.
                   
                   {/* S級基準線（90点ライン） */}
                   <line x1="80" y1="135" x2="640" y2="135" stroke="#ef4444" strokeWidth="3" strokeDasharray="8,6" opacity="0.8"/>
-                  <text x="650" y="130" fill="#ef4444" fontSize="14" fontWeight="600">S級</text>
-                  <text x="650" y="145" fill="#ef4444" fontSize="12" fontWeight="500">(90点)</text>
+                  <text x="675" y="130" fill="#ef4444" fontSize="14" fontWeight="600">S級</text>
+                  <text x="675" y="145" fill="#ef4444" fontSize="12" fontWeight="500">(90点)</text>
                   
                   {/* Y軸グレードゾーン */}
                   <rect x="80" y="100" width="560" height="35" fill="#ef4444" fillOpacity="0.08"/>
@@ -1660,11 +1660,11 @@ function EvaluationHistoryTab({ selectedStaff }: { selectedStaff: any }): React.
                   </text>
                   
                   {/* X軸ラベル */}
-                  <text x="90" y="300" fill="#6b7280" fontSize="12" textAnchor="middle">2020</text>
-                  <text x="150" y="300" fill="#6b7280" fontSize="12" textAnchor="middle">2021</text>
-                  <text x="240" y="300" fill="#6b7280" fontSize="12" textAnchor="middle">2022</text>
-                  <text x="330" y="300" fill="#6b7280" fontSize="12" textAnchor="middle">2023</text>
-                  <text x="390" y="300" fill="#374151" fontSize="12" fontWeight="600" textAnchor="middle">2024</text>
+                  <text x="120" y="400" fill="#6b7280" fontSize="12" textAnchor="middle">2020</text>
+                  <text x="220" y="400" fill="#6b7280" fontSize="12" textAnchor="middle">2021</text>
+                  <text x="360" y="400" fill="#6b7280" fontSize="12" textAnchor="middle">2022</text>
+                  <text x="500" y="400" fill="#6b7280" fontSize="12" textAnchor="middle">2023</text>
+                  <text x="580" y="400" fill="#374151" fontSize="12" fontWeight="600" textAnchor="middle">2024</text>
                 </svg>
               </div>
             </div>
