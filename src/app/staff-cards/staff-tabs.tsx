@@ -457,9 +457,6 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
     }
   }, [selectedStaff?.id])
 
-  const handleEvaluationInput = () => {
-    router.push(`/evaluation?tab=execution&staffId=${selectedStaff.id}`)
-  }
 
   // グレード表示用の関数
   const getGradeDisplay = (grade: string, type: '5stage' | '7stage') => {
@@ -504,17 +501,11 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
               📊 人事評価・成長分析（V3システム）
             </CardTitle>
             <div className="flex gap-2">
-              <button 
-                onClick={handleEvaluationInput}
+              <Link 
+                href="/dashboard" 
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
-                評価入力
-              </button>
-              <Link 
-                href="/evaluation-relative-grading" 
-                className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
-              >
-                相対評価管理
+                評価管理へ
               </Link>
             </div>
           </div>

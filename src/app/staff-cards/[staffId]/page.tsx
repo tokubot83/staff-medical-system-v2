@@ -1518,7 +1518,7 @@ function EvaluationHistoryTab({ selectedStaff }: { selectedStaff: any }): React.
       <Card className="border-l-4" style={{ borderLeftColor: CHART_COLORS.primary }}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-xl">
-            📈 総合評価点数の推移
+            📈 総合評価の推移
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -1707,7 +1707,7 @@ function EvaluationHistoryTab({ selectedStaff }: { selectedStaff: any }): React.
       <Card className="border-l-4" style={{ borderLeftColor: CHART_COLORS.success }}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-xl">
-            🌐 法人内順位推移
+            🌐 法人内評価の推移
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -1879,7 +1879,7 @@ function EvaluationHistoryTab({ selectedStaff }: { selectedStaff: any }): React.
       <Card className="border-l-4" style={{ borderLeftColor: CHART_COLORS.warning }}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-xl">
-            🏢 施設内順位推移
+            🏢 施設内評価の推移
           </CardTitle>
         </CardHeader>
         <CardContent>
