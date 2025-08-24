@@ -218,7 +218,7 @@ export default function DashboardPage() {
                       </div>
                       <div className="flex items-center gap-2">
                         <MessageSquare className="h-4 w-4 text-green-300" />
-                        <span className="text-sm">異議申立対応</span>
+                        <span className="text-sm">評価異議対応</span>
                       </div>
                     </div>
                   </div>
@@ -2324,7 +2324,7 @@ export default function DashboardPage() {
                               <div className="font-bold text-red-900 min-w-[60px]">4-5月</div>
                               <div className="text-sm text-red-700">
                                 <div className="font-semibold">相対評価処理期間</div>
-                                <div>→ 最終評価確定・結果開示・異議申立対応</div>
+                                <div>→ 最終評価確定・結果開示・評価異議対応</div>
                               </div>
                             </div>
                           </div>
@@ -3325,7 +3325,7 @@ export default function DashboardPage() {
                     { phase: '評価実施', icon: ClipboardList, color: 'purple', desc: '自己評価・上司評価の入力' },
                     { phase: '総合判定', icon: CheckCircle, color: 'green', desc: '100点満点での最終評価' },
                     { phase: '評価開示', icon: Eye, color: 'orange', desc: '本人への評価結果通知' },
-                    { phase: '異議申立', icon: MessageSquare, color: 'red', desc: '評価への異議申立対応' },
+                    { phase: '評価異議対応', icon: MessageSquare, color: 'red', desc: '評価への異議対応' },
                   ].map((item, index) => (
                     <div key={index} className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
                       <div className={`p-2 bg-${item.color}-100 rounded-lg`}>
@@ -3359,8 +3359,8 @@ export default function DashboardPage() {
                     },
                     {
                       q: '評価結果に不服がある場合は？',
-                      a: '評価開示後、異議申立制度を利用して再評価を申請できます。',
-                      category: '異議申立'
+                      a: '評価開示後、評価異議制度を利用して再評価を申請できます。',
+                      category: '評価異議対応'
                     },
                     {
                       q: '評価は誰が行いますか？',

@@ -455,7 +455,7 @@ export default function EvaluationExecutionPage() {
           <div className="flex items-center gap-2 bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-lg px-4 py-2 shadow-sm">
             <Sparkles className="w-5 h-5 text-purple-600" />
             <div className="text-sm">
-              <div className="font-medium text-purple-900">V3評価システム</div>
+              <div className="font-medium text-purple-900">評価システム</div>
               <div className="text-purple-700">技術50点+組織貢献50点</div>
             </div>
             <Badge className="bg-purple-100 text-purple-800 font-medium">100点満点</Badge>

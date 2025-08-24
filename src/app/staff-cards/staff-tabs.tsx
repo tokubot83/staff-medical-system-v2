@@ -17,6 +17,8 @@ import StrengthsWeaknessesMap from '@/components/charts/StrengthsWeaknessesMap'
 import GrowthPredictionDashboard from '@/components/charts/GrowthPredictionDashboard'
 import { RecruitmentAnalysisService } from '@/services/recruitmentAnalysisService'
 import RecruitmentDashboard from '@/components/recruitment/RecruitmentDashboard'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 import styles from './StaffCards.module.css'
 
 // V3グレード定義
@@ -350,6 +352,22 @@ export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
   )
 }
 
+// 効果的プレゼン指示書準拠のカラーパレット
+const CHART_COLORS = {
+  // 基本色（1-2色限定）
+  primary: '#2563eb',    // 青 - 主要データ
+  success: '#16a34a',    // 緑 - 成功・向上
+  warning: '#f59e0b',    // オレンジ - 注意・改善必要
+  danger: '#dc2626',     // 赤 - 減少・問題
+  neutral: '#6b7280',    // グレー - 基準線・その他
+  highlight: '#fbbf24',  // 黄 - ハイライト
+  
+  // 背景色（エリア塗りつぶし用）
+  successBg: 'rgba(22, 163, 74, 0.1)',
+  warningBg: 'rgba(245, 158, 11, 0.1)',
+  neutralBg: 'rgba(107, 114, 128, 0.05)'
+}
+
 export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
   const router = useRouter()
   const { handleError, clearError } = useErrorHandler()
@@ -478,204 +496,244 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
   }
 
   return (
-    <div className={styles.tabContentSection}>
-      <div className={styles.sectionHeader}>
-        <h2>📊 人事評価・成長分析（V3システム）</h2>
-        <div className={styles.sectionActions}>
-          <button className={styles.actionButton} onClick={handleEvaluationInput}>評価入力</button>
-          <Link href="/evaluation-relative-grading" className={styles.actionButtonSecondary}>相対評価管理</Link>
-        </div>
-      </div>
+    <div className="space-y-6">
+      <Card className="border-l-4" style={{ borderLeftColor: CHART_COLORS.primary }}>
+        <CardHeader className="pb-4">
+          <div className="flex justify-between items-center">
+            <CardTitle className="text-xl font-bold text-gray-800 flex items-center gap-2">
+              📊 人事評価・成長分析（V3システム）
+            </CardTitle>
+            <div className="flex gap-2">
+              <button 
+                onClick={handleEvaluationInput}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                評価入力
+              </button>
+              <Link 
+                href="/evaluation-relative-grading" 
+                className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+              >
+                相対評価管理
+              </Link>
+            </div>
+          </div>
+        </CardHeader>
+      </Card>
 
       {isLoading ? (
-        <div className={styles.loadingContainer}>
-          <p>評価データを読み込み中...</p>
-        </div>
+        <Card>
+          <CardContent className="flex items-center justify-center py-8">
+            <p className="text-gray-600">評価データを読み込み中...</p>
+          </CardContent>
+        </Card>
       ) : (
         <>
-          <div className={styles.interviewSummaryEnhanced}>
-            <div className={styles.summaryMainCard}>
-              <div className={styles.summaryCardHeader}>
-                <span className={styles.summaryIcon}>🏆</span>
-                <h3>2024年3月確定評価（最新）</h3>
-              </div>
+          <Card className="border-l-4" style={{ borderLeftColor: CHART_COLORS.success }}>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <span>🏆</span>
+                2024年3月確定評価（最新）
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
               
               {/* メイン評価表示 - 5段階・7段階を強調 */}
-              <div className={styles.evaluationMainGrades}>
-                <div className={styles.gradeSection}>
-                  <div className={styles.gradeSectionTitle}>
-                    <span className={styles.gradeIcon}>🏢</span>
-                    <span>施設内評価</span>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div className="text-center">
+                  <div className="flex items-center justify-center gap-2 mb-3">
+                    <span>🏢</span>
+                    <span className="font-medium text-gray-700">施設内評価</span>
                   </div>
-                  <div className={styles.gradeDisplay}>
+                  <div className="space-y-3">
                     <div 
-                      className={styles.gradeBadgeLarge} 
+                      className="w-16 h-16 mx-auto rounded-full flex items-center justify-center text-2xl font-bold"
                       style={{
                         backgroundColor: getGradeDisplay('A', '5stage').bg,
                         color: getGradeDisplay('A', '5stage').color,
-                        border: `2px solid ${getGradeDisplay('A', '5stage').color}`
+                        border: `3px solid ${getGradeDisplay('A', '5stage').color}`
                       }}
                     >
                       A
                     </div>
-                    <div className={styles.gradeRanking}>
-                      <span className={styles.rankText}>
+                    <div className="space-y-1">
+                      <div className="text-sm font-medium text-gray-800">
                         {getRelativeRanking('facility').rank}位 / {getRelativeRanking('facility').total}人中
-                      </span>
-                      <span className={styles.percentileText}>
+                      </div>
+                      <Badge style={{ backgroundColor: CHART_COLORS.success, color: 'white' }}>
                         上位{100 - getRelativeRanking('facility').percentile}%
-                      </span>
+                      </Badge>
                     </div>
                   </div>
                 </div>
                 
-                <div className={styles.gradeSection}>
-                  <div className={styles.gradeSectionTitle}>
-                    <span className={styles.gradeIcon}>🌐</span>
-                    <span>法人内評価</span>
+                <div className="text-center">
+                  <div className="flex items-center justify-center gap-2 mb-3">
+                    <span>🌐</span>
+                    <span className="font-medium text-gray-700">法人内評価</span>
                   </div>
-                  <div className={styles.gradeDisplay}>
+                  <div className="space-y-3">
                     <div 
-                      className={styles.gradeBadgeLarge} 
+                      className="w-16 h-16 mx-auto rounded-full flex items-center justify-center text-2xl font-bold"
                       style={{
                         backgroundColor: getGradeDisplay('B', '5stage').bg,
                         color: getGradeDisplay('B', '5stage').color,
-                        border: `2px solid ${getGradeDisplay('B', '5stage').color}`
+                        border: `3px solid ${getGradeDisplay('B', '5stage').color}`
                       }}
                     >
                       B
                     </div>
-                    <div className={styles.gradeRanking}>
-                      <span className={styles.rankText}>
+                    <div className="space-y-1">
+                      <div className="text-sm font-medium text-gray-800">
                         {getRelativeRanking('corporate').rank}位 / {getRelativeRanking('corporate').total}人中
-                      </span>
-                      <span className={styles.percentileText}>
+                      </div>
+                      <Badge style={{ backgroundColor: CHART_COLORS.warning, color: 'white' }}>
                         上位{100 - getRelativeRanking('corporate').percentile}%
-                      </span>
+                      </Badge>
                     </div>
                   </div>
                 </div>
                 
-                <div className={styles.gradeSection}>
-                  <div className={styles.gradeSectionTitle}>
-                    <span className={styles.gradeIcon}>⭐</span>
-                    <span>総合判定</span>
+                <div className="text-center">
+                  <div className="flex items-center justify-center gap-2 mb-3">
+                    <span>⭐</span>
+                    <span className="font-medium text-gray-700">総合判定</span>
                   </div>
-                  <div className={styles.gradeDisplay}>
+                  <div className="space-y-3">
                     <div 
-                      className={styles.gradeBadgeLarge} 
+                      className="w-20 h-20 mx-auto rounded-full flex items-center justify-center text-3xl font-bold"
                       style={{
                         backgroundColor: getGradeDisplay('A', '7stage').bg,
                         color: getGradeDisplay('A', '7stage').color,
-                        border: `3px solid ${getGradeDisplay('A', '7stage').color}`,
-                        fontSize: '1.5em',
-                        fontWeight: 'bold'
+                        border: `4px solid ${getGradeDisplay('A', '7stage').color}`
                       }}
                     >
                       A
                     </div>
-                    <div className={styles.gradeRanking}>
-                      <span className={styles.scoreText}>
+                    <div className="space-y-1">
+                      <div className="text-lg font-bold" style={{ color: CHART_COLORS.primary }}>
                         {v3Evaluation?.totalScore || 81.25}点 / 100点
-                      </span>
-                      <span className={styles.gradeLabel}>
-                        優秀レベル
-                      </span>
+                      </div>
+                      <Badge variant="outline" className="text-xs">
+                        {v3Evaluation?.experienceLabel || '中堅'} 7段階判定
+                      </Badge>
                     </div>
                   </div>
                 </div>
               </div>
+            </CardContent>
+          </Card>
 
-              {/* 暫定評価表示 */}
-              {currentProvisionalEvaluation && (
-                <div className={styles.provisionalEvaluation}>
-                  <div className={styles.provisionalHeader}>
-                    <span className={styles.provisionalIcon}>⚡</span>
-                    <h4>{currentProvisionalEvaluation.title}</h4>
-                    <span className={styles.provisionalBadge}>暫定</span>
-                  </div>
-                  <div className={styles.provisionalScores}>
-                    <div className={styles.provisionalItem}>
-                      <span className={styles.provisionalLabel}>施設貢献</span>
-                      <div className={styles.provisionalGrade}>
-                        <span className={styles.provisionalValue}>12.3点 / 12.5点</span>
-                        <div 
-                          className={styles.provisionalBadge}
+          {/* 暫定評価表示 */}
+          {currentProvisionalEvaluation && (
+            <Card className="border-l-4" style={{ borderLeftColor: CHART_COLORS.warning }}>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <span>⚡</span>
+                  {currentProvisionalEvaluation.title}
+                  <Badge style={{ backgroundColor: CHART_COLORS.warning, color: 'white' }}>暫定</Badge>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div className="p-4 border rounded-lg">
+                    <div className="flex justify-between items-center">
+                      <span className="font-medium text-gray-700">施設貢献</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm">12.3点 / 12.5点</span>
+                        <Badge 
                           style={{
                             backgroundColor: getGradeDisplay('A', '5stage').bg,
                             color: getGradeDisplay('A', '5stage').color
                           }}
                         >
                           A
-                        </div>
+                        </Badge>
                       </div>
                     </div>
-                    <div className={styles.provisionalItem}>
-                      <span className={styles.provisionalLabel}>法人貢献</span>
-                      <div className={styles.provisionalGrade}>
-                        <span className={styles.provisionalValue}>11.8点 / 12.5点</span>
-                        <div 
-                          className={styles.provisionalBadge}
+                  </div>
+                  <div className="p-4 border rounded-lg">
+                    <div className="flex justify-between items-center">
+                      <span className="font-medium text-gray-700">法人貢献</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm">11.8点 / 12.5点</span>
+                        <Badge 
                           style={{
                             backgroundColor: getGradeDisplay('B', '5stage').bg,
                             color: getGradeDisplay('B', '5stage').color
                           }}
                         >
                           B
-                        </div>
+                        </Badge>
                       </div>
-                    </div>
-                    <div className={styles.provisionalTotal}>
-                      <span className={styles.provisionalTotalLabel}>暫定総合</span>
-                      <div 
-                        className={styles.provisionalTotalGrade}
-                        style={{
-                          backgroundColor: getGradeDisplay('A', '7stage').bg,
-                          color: getGradeDisplay('A', '7stage').color
-                        }}
-                      >
-                        A
-                      </div>
-                      <span className={styles.provisionalTotalScore}>24.1点 / 25点</span>
                     </div>
                   </div>
                 </div>
-              )}
+                <div className="text-center p-4 bg-gray-50 rounded-lg border">
+                  <div className="flex items-center justify-center gap-3">
+                    <span className="font-medium text-gray-700">暫定総合</span>
+                    <Badge 
+                      className="text-lg px-3 py-1"
+                      style={{
+                        backgroundColor: getGradeDisplay('A', '7stage').bg,
+                        color: getGradeDisplay('A', '7stage').color
+                      }}
+                    >
+                      A
+                    </Badge>
+                    <span className="font-bold text-gray-800">24.1点 / 25点</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
-              {/* 補足情報 */}
-              <div className={styles.evaluationSupplement}>
-                <div className={styles.supplementItem}>
-                  <span className={styles.supplementLabel}>評価確定日:</span>
-                  <span className={styles.supplementValue}>2024年3月31日</span>
+          {/* 補足情報 */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">📋 評価補足情報</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="text-center">
+                  <div className="text-sm text-gray-500 mb-1">評価確定日</div>
+                  <div className="font-medium">2024年3月31日</div>
                 </div>
-                <div className={styles.supplementItem}>
-                  <span className={styles.supplementLabel}>経験レベル:</span>
-                  <span className={styles.supplementValue}>{v3Evaluation?.experienceLabel || '中堅'}</span>
+                <div className="text-center">
+                  <div className="text-sm text-gray-500 mb-1">経験レベル</div>
+                  <div className="font-medium">{v3Evaluation?.experienceLabel || '中堅'}</div>
                 </div>
-                <div className={styles.supplementItem}>
-                  <span className={styles.supplementLabel}>評価期間:</span>
-                  <span className={styles.supplementValue}>2023年4月〜2024年3月</span>
+                <div className="text-center">
+                  <div className="text-sm text-gray-500 mb-1">評価期間</div>
+                  <div className="font-medium">2023年4月〜2024年3月</div>
                 </div>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
           {/* 詳細評価内訳エリア */}
-          <div className={styles.evaluationDetailSection}>
-            <h3 className={styles.detailSectionTitle}>📋 評価項目詳細（V3システム構成）</h3>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">📋 評価項目詳細（V3システム構成）</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
             
-            <div className={styles.evaluationBreakdown}>
-              {/* 技術評価の詳細 */}
-              <div className={styles.breakdownSection}>
-                <div className={styles.breakdownHeader}>
-                  <h4>🔧 技術評価（50点満点）</h4>
-                  <div className={styles.breakdownScore}>
-                    <span className={styles.currentScore}>{v3Evaluation?.technicalScore?.total || 40}点</span>
-                    <span className={styles.maxScore}>/ 50点</span>
+                {/* 技術評価の詳細 */}
+                <div className="border rounded-lg p-4" style={{ borderLeftColor: CHART_COLORS.primary, borderLeftWidth: '4px' }}>
+                  <div className="flex justify-between items-center mb-4">
+                    <h4 className="text-lg font-semibold flex items-center gap-2">
+                      🔧 技術評価（50点満点）
+                    </h4>
+                    <div className="flex items-center gap-1">
+                      <span className="text-2xl font-bold" style={{ color: CHART_COLORS.primary }}>
+                        {v3Evaluation?.technicalScore?.total || 40}点
+                      </span>
+                      <span className="text-gray-500">/ 50点</span>
+                    </div>
                   </div>
-                </div>
-                
-                <div className={styles.breakdownItems}>
+                  
+                  <div className={styles.breakdownItems}>
                   <div className={styles.breakdownCategory}>
                     <div className={styles.categoryHeader}>
                       <span className={styles.categoryIcon}>🏢</span>
@@ -858,7 +916,8 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
                 </div>
               </div>
             </div>
-          </div>
+            </CardContent>
+          </Card>
 
           {/* 改善提案・次段階目標 */}
           <div className={styles.evaluationRecommendations}>

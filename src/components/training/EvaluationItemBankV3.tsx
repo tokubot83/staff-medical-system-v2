@@ -204,10 +204,10 @@ export default function EvaluationItemBankV3() {
           <div>
             <h1 className="text-3xl font-bold flex items-center gap-3">
               <Award className="w-10 h-10" />
-              V3評価項目バンク（研修連携）
+              評価項目バンク（研修連携）
             </h1>
             <p className="mt-2 text-green-100">
-              V3評価システム（100点満点制）対応の評価項目管理
+              評価システム（100点満点制）対応の評価項目管理
             </p>
           </div>
           <div className="flex gap-3">
@@ -222,7 +222,7 @@ export default function EvaluationItemBankV3() {
       {/* V3システム概要 */}
       <Alert>
         <Info className="h-4 w-4" />
-        <AlertTitle>V3評価システム（100点満点制）</AlertTitle>
+        <AlertTitle>評価システム（100点満点制）</AlertTitle>
         <AlertDescription>
           技術評価50点（法人統一30点+施設固有20点）+ 施設内貢献25点 + 法人内貢献25点 = 総合100点
         </AlertDescription>
