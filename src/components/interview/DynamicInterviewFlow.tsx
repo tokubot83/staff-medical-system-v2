@@ -182,7 +182,6 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
   const [showPrintPreview, setShowPrintPreview] = useState(false); // 印刷プレビューフラグ
   const [useImprovedUI, setUseImprovedUI] = useState(false); // 改善版UI使用フラグ
   const [showPrintView, setShowPrintView] = useState(false); // バンクシステム印刷ビューフラグ
-  const [showComparison, setShowComparison] = useState(false); // 前回面談シート比較表示
   const { print, printElement, isPrinting } = usePrintPreview({
     title: '面談記録',
     paperSize: 'A4',
@@ -2011,15 +2010,6 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
               デジタル入力
             </Button>
             <Button
-              variant={showComparison ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setShowComparison(!showComparison)}
-              title="前回面談シート比較"
-            >
-              <ArrowRightLeft className="h-4 w-4 mr-1" />
-              {showComparison ? '比較終了' : '前回比較'}
-            </Button>
-            <Button
               variant={showPrintView ? 'default' : 'outline'}
               size="sm"
               onClick={() => setShowPrintView(true)}
@@ -2054,7 +2044,6 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
                 profession: session.staffMember!.jobRole,
                 licenses: extractLicenses(session.staffMember!.jobRole)
               }}
-              showComparison={showComparison}
               currentInterviewType={session.interviewType}
               onSave={(data) => {
                 setSession(prev => ({

@@ -36,7 +36,6 @@ interface DynamicInterviewSheetProps {
   onPrint?: () => void;
   readOnly?: boolean;
   // 前回面談比較用
-  showComparison?: boolean;
   currentInterviewType?: string;
 }
 
@@ -46,7 +45,6 @@ export default function DynamicInterviewSheet({
   onSave,
   onPrint,
   readOnly = false,
-  showComparison = false,
   currentInterviewType
 }: DynamicInterviewSheetProps) {
   const [activeSection, setActiveSection] = useState(0);
@@ -93,37 +91,88 @@ export default function DynamicInterviewSheet({
     return sheetData;
   }, [sheetData]);
 
+  // デモデータのLocalStorage保存
+  useEffect(() => {
+    const initializeDemoData = () => {
+      const storageKey = 'staff_medical_interview_data';
+      const existingData = localStorage.getItem(storageKey);
+      if (!existingData) {
+        // デモデータをインポートして保存
+        import('@/data/demoInterviewData').then(({ demoInterviewData }) => {
+          // デモデータをLocalStorage用の形式に変換
+          const convertedData = demoInterviewData.map(interview => ({
+            id: interview.id,
+            staffId: interview.staffId,
+            staffName: interview.staffName,
+            interviewType: interview.interviewType,
+            status: interview.status,
+            completedAt: interview.actualDate || interview.metadata?.updatedAt?.toISOString(),
+            createdAt: interview.scheduledDate || interview.metadata?.createdAt?.toISOString(),
+            duration: interview.duration,
+            responses: interview.sheetData,
+            summary: interview.summary,
+            keyPoints: interview.keyPoints
+          }));
+          console.log('🎆 デモデータをLocalStorageに保存:', convertedData.length, '件');
+          console.log('📄 変換後データ:', convertedData);
+          localStorage.setItem(storageKey, JSON.stringify(convertedData));
+        });
+      }
+    };
+    initializeDemoData();
+  }, []);
+
   // 前回面談データ取得
   useEffect(() => {
-    if ((showComparison || isComparisonEnabled) && staffProfile.id && currentInterviewType) {
+    if (isComparisonEnabled && staffProfile.id && currentInterviewType) {
       fetchPreviousInterviewData();
     }
-  }, [showComparison, isComparisonEnabled, staffProfile.id, currentInterviewType]);
+  }, [isComparisonEnabled, staffProfile.id, currentInterviewType]);
 
   // セクション同期機能 - 現在のセクションが変わったら前回面談側も同じセクションに移動
   useEffect(() => {
-    if ((showComparison || isComparisonEnabled) && previousInterviewData) {
+    if (isComparisonEnabled && previousInterviewData) {
       setComparisonActiveSection(activeSection);
       // 前回データに同じセクションがあるか確認
       if (previousInterviewData.sheetStructure?.sections?.[activeSection]) {
         console.log(`セクション同期: ${activeSection} -> ${normalizedSheetData.sections[activeSection]?.name}`);
       }
     }
-  }, [activeSection, showComparison, isComparisonEnabled, previousInterviewData, normalizedSheetData.sections]);
+  }, [activeSection, isComparisonEnabled, previousInterviewData, normalizedSheetData.sections]);
 
   const fetchPreviousInterviewData = async () => {
     try {
       // LocalStorageから前回の同種面談データを取得
       const storageKey = 'staff_medical_interview_data';
+      console.log('🔍 前回面談データ検索開始');
+      console.log('Storage Key:', storageKey);
+      console.log('Staff ID:', staffProfile.id);
+      console.log('Interview Type:', currentInterviewType);
+      
       const storedData = localStorage.getItem(storageKey);
-      if (!storedData) return;
+      if (!storedData) {
+        console.log('⚠️ LocalStorageにデータがありません');
+        return;
+      }
 
       const allInterviews = JSON.parse(storedData);
-      const staffInterviews = allInterviews.filter((interview: any) => 
-        interview.staffId === staffProfile.id &&
-        interview.interviewType === currentInterviewType &&
-        interview.status === 'completed'
-      );
+      console.log('📁 LocalStorageから取得した全面談データ:', allInterviews.length, '件');
+      console.log('📄 全データ:', allInterviews);
+      
+      const staffInterviews = allInterviews.filter((interview: any) => {
+        const matches = {
+          staffId: interview.staffId === staffProfile.id,
+          interviewType: interview.interviewType === currentInterviewType ||
+                       interview.interviewType?.includes('regular') && currentInterviewType?.includes('regular') ||
+                       interview.interviewType?.includes('annual') && currentInterviewType?.includes('annual'),
+          status: interview.status === 'completed'
+        };
+        console.log(`🔍 チェック中: staffId=${interview.staffId}(${matches.staffId}), type=${interview.interviewType}(${matches.interviewType}), status=${interview.status}(${matches.status})`);
+        return matches.staffId && matches.interviewType && matches.status;
+      });
+      
+      console.log('🎯 フィルター結果:', staffInterviews.length, '件');
+      console.log('📅 マッチしたデータ:', staffInterviews);
 
       if (staffInterviews.length > 0) {
         // 最新の完了した面談を取得
@@ -131,10 +180,13 @@ export default function DynamicInterviewSheet({
           new Date(b.completedAt || b.createdAt).getTime() - new Date(a.completedAt || a.createdAt).getTime()
         )[0];
         
+        console.log('✅ 前回面談データを設定:', latest);
         setPreviousInterviewData(latest);
+      } else {
+        console.log('❌ 前回面談データが見つかりません');
       }
     } catch (error) {
-      console.error('Failed to fetch previous interview data:', error);
+      console.error('🚨 Failed to fetch previous interview data:', error);
     }
   };
 
@@ -507,11 +559,11 @@ export default function DynamicInterviewSheet({
                     fetchPreviousInterviewData();
                   }
                 }}
-                variant={(showComparison || isComparisonEnabled) ? 'default' : 'outline'}
+                variant={isComparisonEnabled ? 'default' : 'outline'}
                 title="前回面談シートと比較表示"
               >
                 <ArrowRightLeft className="mr-2" size={16} />
-                {(showComparison || isComparisonEnabled) ? '比較終了' : '前回比較'}
+                {isComparisonEnabled ? '比較終了' : '前回比較'}
               </Button>
               <Button onClick={onSave} disabled={readOnly}>
                 <Save className="mr-2" size={16} />
@@ -614,7 +666,7 @@ export default function DynamicInterviewSheet({
         </div>
 
         {/* メインコンテンツ */}
-        <div className={`flex-1 ${(showComparison || isComparisonEnabled) && previousInterviewData ? 'max-w-1/2' : ''}`}>
+        <div className={`flex-1 ${isComparisonEnabled && previousInterviewData ? 'max-w-1/2' : ''}`}>
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
@@ -694,7 +746,7 @@ export default function DynamicInterviewSheet({
         </div>
         
         {/* 前回面談データ比較表示 */}
-        {(showComparison || isComparisonEnabled) && previousInterviewData && (
+        {isComparisonEnabled && previousInterviewData && (
           <div className="flex-1 ml-6">
             <Card>
               <CardHeader>
@@ -782,7 +834,7 @@ export default function DynamicInterviewSheet({
           </div>
         )}
         
-        {(showComparison || isComparisonEnabled) && !previousInterviewData && (
+        {isComparisonEnabled && !previousInterviewData && (
           <div className="flex-1 ml-6">
             <Card>
               <CardContent className="p-8 text-center text-gray-500">
