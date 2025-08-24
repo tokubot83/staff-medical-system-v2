@@ -89,23 +89,23 @@ export default function InterviewDataVisualization({ staffId, category, data }: 
                   stroke={VISUALIZATION_COLORS.primary}
                   strokeWidth="3"
                   points={data.trends.scores.map((score, index) => {
-                    const x = (index / (data.trends.scores.length - 1)) * 100
-                    const y = 100 - (score / maxScore) * 80
-                    return `${x}%,${y}%`
+                    const x = (index / (data.trends.scores.length - 1)) * 90 + 5
+                    const y = 95 - (score / maxScore) * 80
+                    return `${x},${y}`
                   }).join(' ')}
                 />
 
                 {/* データポイント */}
                 {data.trends.scores.map((score, index) => {
-                  const x = (index / (data.trends.scores.length - 1)) * 100
-                  const y = 100 - (score / maxScore) * 80
+                  const x = (index / (data.trends.scores.length - 1)) * 90 + 5
+                  const y = 95 - (score / maxScore) * 80
                   const isImproving = index > 0 && score > data.trends.scores[index - 1]
                   
                   return (
                     <g key={index}>
                       <circle
                         cx={`${x}%`}
-                        cy={`${y}%`}
+                        cy={`${Math.max(0, y)}%`}
                         r="6"
                         fill={isImproving ? VISUALIZATION_COLORS.success : VISUALIZATION_COLORS.primary}
                         stroke="white"
@@ -113,7 +113,7 @@ export default function InterviewDataVisualization({ staffId, category, data }: 
                       />
                       <text
                         x={`${x}%`}
-                        y={`${y - 15}%`}
+                        y={`${Math.max(10, y - 15)}%`}
                         textAnchor="middle"
                         className="text-xs font-medium"
                         fill={VISUALIZATION_COLORS.primary}

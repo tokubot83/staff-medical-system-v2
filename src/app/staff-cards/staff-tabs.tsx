@@ -2435,19 +2435,35 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                         
                         {/* NotebookLMボタン - 定期面談 */}
                         <div className={styles.notebookLmSection}>
-                          <a 
-                            href={interview.notebookLmLink?.url || 'https://notebooklm.google.com/notebook/demo-001'} 
-                            target="_blank" 
-                            rel="noopener noreferrer" 
-                            className="inline-flex items-center gap-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
-                          >
-                            <span>📖</span>
-                            NotebookLMで開く
-                          </a>
-                          {interview.notebookLmLink && (
-                            <span className="text-xs text-gray-500 ml-2">
-                              登録済み ({new Date(interview.notebookLmLink.createdAt || Date.now()).toLocaleDateString('ja-JP')})
-                            </span>
+                          {interview.notebookLmLink ? (
+                            <div className="flex items-center gap-2">
+                              <a 
+                                href={interview.notebookLmLink.url} 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className="inline-flex items-center gap-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+                              >
+                                <span>📖</span>
+                                NotebookLMで開く
+                              </a>
+                              <span className="text-xs text-gray-500">
+                                登録済み ({new Date(interview.notebookLmLink.createdAt || Date.now()).toLocaleDateString('ja-JP')})
+                              </span>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => {
+                                setEditingInterviewId(interview.id);
+                                setCurrentInterviewType('regular');
+                                setCurrentInterviewDate(interview.date);
+                                setCurrentInterviewCategory(interview.subtypeLabel);
+                                setShowNotebookLinkModal(true);
+                              }}
+                              className="inline-flex items-center gap-2 px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700"
+                            >
+                              <span>📝</span>
+                              NotebookLMリンク登録
+                            </button>
                           )}
                         </div>
                         
@@ -2831,19 +2847,35 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                           
                           {/* NotebookLMボタン - 特別面談 */}
                           <div className={styles.notebookLmSection}>
-                            <a 
-                              href={interview.notebookLmLink?.url || 'https://notebooklm.google.com/notebook/demo-002'} 
-                              target="_blank" 
-                              rel="noopener noreferrer" 
-                              className="inline-flex items-center gap-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
-                            >
-                              <span>📖</span>
-                              NotebookLMで開く
-                            </a>
-                            {interview.notebookLmLink && (
-                              <span className="text-xs text-gray-500 ml-2">
-                                登録済み ({new Date(interview.notebookLmLink.createdAt || Date.now()).toLocaleDateString('ja-JP')})
-                              </span>
+                            {interview.notebookLmLink ? (
+                              <div className="flex items-center gap-2">
+                                <a 
+                                  href={interview.notebookLmLink.url} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer" 
+                                  className="inline-flex items-center gap-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+                                >
+                                  <span>📖</span>
+                                  NotebookLMで開く
+                                </a>
+                                <span className="text-xs text-gray-500">
+                                  登録済み ({new Date(interview.notebookLmLink.createdAt || Date.now()).toLocaleDateString('ja-JP')})
+                                </span>
+                              </div>
+                            ) : (
+                              <button
+                                onClick={() => {
+                                  setEditingInterviewId(interview.id);
+                                  setCurrentInterviewType('special');
+                                  setCurrentInterviewDate(interview.date);
+                                  setCurrentInterviewCategory(interview.subtypeLabel);
+                                  setShowNotebookLinkModal(true);
+                                }}
+                                className="inline-flex items-center gap-2 px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700"
+                              >
+                                <span>📝</span>
+                                NotebookLMリンク登録
+                              </button>
                             )}
                           </div>
                         </div>
@@ -3207,19 +3239,35 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                           
                           {/* NotebookLMボタン - サポート面談 */}
                           <div className={styles.notebookLmSection}>
-                            <a 
-                              href={interview.notebookLmLink?.url || 'https://notebooklm.google.com/notebook/demo-003'} 
-                              target="_blank" 
-                              rel="noopener noreferrer" 
-                              className="inline-flex items-center gap-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
-                            >
-                              <span>📖</span>
-                              NotebookLMで開く
-                            </a>
-                            {interview.notebookLmLink && (
-                              <span className="text-xs text-gray-500 ml-2">
-                                登録済み ({new Date(interview.notebookLmLink.createdAt || Date.now()).toLocaleDateString('ja-JP')})
-                              </span>
+                            {interview.notebookLmLink ? (
+                              <div className="flex items-center gap-2">
+                                <a 
+                                  href={interview.notebookLmLink.url} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer" 
+                                  className="inline-flex items-center gap-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+                                >
+                                  <span>📖</span>
+                                  NotebookLMで開く
+                                </a>
+                                <span className="text-xs text-gray-500">
+                                  登録済み ({new Date(interview.notebookLmLink.createdAt || Date.now()).toLocaleDateString('ja-JP')})
+                                </span>
+                              </div>
+                            ) : (
+                              <button
+                                onClick={() => {
+                                  setEditingInterviewId(interview.id);
+                                  setCurrentInterviewType('support');
+                                  setCurrentInterviewDate(interview.date);
+                                  setCurrentInterviewCategory(interview.category);
+                                  setShowNotebookLinkModal(true);
+                                }}
+                                className="inline-flex items-center gap-2 px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700"
+                              >
+                                <span>📝</span>
+                                NotebookLMリンク登録
+                              </button>
                             )}
                           </div>
                         </div>
