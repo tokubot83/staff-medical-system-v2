@@ -19,8 +19,9 @@ import { RecruitmentAnalysisService } from '@/services/recruitmentAnalysisServic
 import RecruitmentDashboard from '@/components/recruitment/RecruitmentDashboard'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { TrendingUp, Target, Award, Calendar, BarChart3, Users } from 'lucide-react'
+import { TrendingUp, Target, Award, Calendar, BarChart3, Users, FileText, GitCompare } from 'lucide-react'
 import styles from './StaffCards.module.css'
+import InterviewSheetModal from '@/components/InterviewSheetModal'
 
 // V3グレード定義
 const v3Grades = {
@@ -2403,21 +2404,6 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
               {/* 定期面談履歴詳細 */}
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-gray-800">📋 定期面談履歴</h3>
-                <button
-                  type="button"
-                  onClick={() => {
-                    console.log('外部テストボタンクリック');
-                    onShowNotebookModal?.({
-                      id: 'test_001',
-                      date: '2024-08-24',
-                      type: 'テスト面談',
-                      subtype: 'デモ用'
-                    });
-                  }}
-                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                >
-                  外部テストボタン
-                </button>
                 <div className="grid grid-cols-1 gap-4">
                   {interviewData?.regular?.interviews?.map((interview: any) => (
                     <Card key={interview.id} className="border border-gray-200 hover:shadow-md transition-shadow">
