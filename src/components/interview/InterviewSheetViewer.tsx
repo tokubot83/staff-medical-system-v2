@@ -13,28 +13,27 @@ interface InterviewSheetViewerProps {
   yearsOfExperience?: number;
 }
 
+// テスト用面談シート
+const TestInterviewSheet = lazy(() => import('@/components/interview/TestInterviewSheet'));
+
 // v4面談シートコンポーネントの遅延読み込み
 const interviewSheetComponents = {
-  // 新人看護師
-  NewNurseUnified15Min: lazy(() => import('@/components/interview-sheets/v4/new-nurse-unified-15min')),
-  NewNurseUnified30Min: lazy(() => import('@/components/interview-sheets/v4/new-nurse-unified-30min')),
-  NewNurseUnified45Min: lazy(() => import('@/components/interview-sheets/v4/new-nurse-unified-45min')),
-  // 一般看護師
-  GeneralNurseUnified15Min: lazy(() => import('@/components/interview-sheets/v4/general-nurse-unified-15min')),
-  GeneralNurseUnified30Min: lazy(() => import('@/components/interview-sheets/v4/general-nurse-unified-30min')),
-  GeneralNurseUnified45Min: lazy(() => import('@/components/interview-sheets/v4/general-nurse-unified-45min')),
-  // ベテラン看護師
-  VeteranNurseUnified15Min: lazy(() => import('@/components/interview-sheets/v4/veteran-nurse-unified-15min')),
-  VeteranNurseUnified30Min: lazy(() => import('@/components/interview-sheets/v4/veteran-nurse-unified-30min')),
-  VeteranNurseUnified45Min: lazy(() => import('@/components/interview-sheets/v4/veteran-nurse-unified-45min')),
-  // 主任看護師
-  ChiefNurseUnified15Min: lazy(() => import('@/components/interview-sheets/v4/chief-nurse-unified-15min')),
-  ChiefNurseUnified30Min: lazy(() => import('@/components/interview-sheets/v4/chief-nurse-unified-30min')),
-  ChiefNurseUnified45Min: lazy(() => import('@/components/interview-sheets/v4/chief-nurse-unified-45min')),
-  // リーダー看護師
-  LeaderNurseUnified15Min: lazy(() => import('@/components/interview-sheets/v4/leader-nurse-unified-15min')),
-  LeaderNurseUnified30Min: lazy(() => import('@/components/interview-sheets/v4/leader-nurse-unified-30min')),
-  LeaderNurseUnified45Min: lazy(() => import('@/components/interview-sheets/v4/leader-nurse-unified-45min'))
+  // テスト用（すべてのカテゴリで使用）
+  NewNurseUnified15Min: TestInterviewSheet,
+  NewNurseUnified30Min: TestInterviewSheet,
+  NewNurseUnified45Min: TestInterviewSheet,
+  GeneralNurseUnified15Min: TestInterviewSheet,
+  GeneralNurseUnified30Min: TestInterviewSheet,
+  GeneralNurseUnified45Min: TestInterviewSheet,
+  VeteranNurseUnified15Min: TestInterviewSheet,
+  VeteranNurseUnified30Min: TestInterviewSheet,
+  VeteranNurseUnified45Min: TestInterviewSheet,
+  ChiefNurseUnified15Min: TestInterviewSheet,
+  ChiefNurseUnified30Min: TestInterviewSheet,
+  ChiefNurseUnified45Min: TestInterviewSheet,
+  LeaderNurseUnified15Min: TestInterviewSheet,
+  LeaderNurseUnified30Min: TestInterviewSheet,
+  LeaderNurseUnified45Min: TestInterviewSheet
 };
 
 export default function InterviewSheetViewer({
@@ -43,20 +42,27 @@ export default function InterviewSheetViewer({
   staffName,
   yearsOfExperience
 }: InterviewSheetViewerProps) {
-  const selectedSheet = useMemo(() => 
-    selectInterviewSheet(experienceCategory, duration),
-    [experienceCategory, duration]
-  );
+  const selectedSheet = useMemo(() => {
+    const sheet = selectInterviewSheet(experienceCategory, duration);
+    console.log('[InterviewSheetViewer] Selected sheet:', sheet);
+    return sheet;
+  }, [experienceCategory, duration]);
 
   const SheetComponent = interviewSheetComponents[selectedSheet.component as keyof typeof interviewSheetComponents];
+  
+  console.log('[InterviewSheetViewer] Component found:', !!SheetComponent);
+  console.log('[InterviewSheetViewer] Available components:', Object.keys(interviewSheetComponents));
 
   if (!SheetComponent || typeof SheetComponent !== 'function') {
     return (
       <Card>
         <CardContent className="p-6">
-          <p className="text-center text-gray-500">
-            面談シートが見つかりません。
-          </p>
+          <div className="bg-red-100 p-4 rounded">
+            <p className="text-red-800 font-bold">🚨 DEBUG: 面談シートが見つかりません</p>
+            <p className="text-red-600 text-sm">Selected component: {selectedSheet.component}</p>
+            <p className="text-red-600 text-sm">Component exists: {!!SheetComponent}</p>
+            <p className="text-red-600 text-sm">Component type: {typeof SheetComponent}</p>
+          </div>
         </CardContent>
       </Card>
     );

@@ -49,10 +49,6 @@ export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
     )
   }
 
-  // NotebookLMモーダル状態監視（デバッグ用）
-  useEffect(() => {
-    console.log('showNotebookLinkModal状態変更:', showNotebookLinkModal);
-  }, [showNotebookLinkModal]);
 
   useEffect(() => {
     const loadAnalyticsData = async () => {

@@ -11,7 +11,7 @@ import { AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Checkbox } from '@/components/ui/checkbox';
 
-export default function ChiefNurseUnified30MinInterviewSheet() {
+export default function ChiefNurseUnified30Min() {
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
       <Card>

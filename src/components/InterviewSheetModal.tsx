@@ -2,13 +2,21 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import { X, Printer, Download } from 'lucide-react';
+import { X, Printer, Download, GitCompare } from 'lucide-react';
 
 interface InterviewSheetModalProps {
   isOpen: boolean;
   onClose: () => void;
   sheetName: string;
   sheetPath: string;
+  // 面談比較機能用のプロパティ（オプション）
+  staffId?: string;
+  staffName?: string;
+  interviewType?: string;
+  interviewId?: string;
+  experienceCategory?: any;
+  duration?: number;
+  yearsOfExperience?: number;
 }
 
 // 面談シートコンポーネントをマッピング
@@ -23,13 +31,24 @@ const sheetComponents: { [key: string]: any } = {
   'v4_interview/senior-nurse-unified-45min.tsx': dynamic(() => import('@/../../docs/v4_interview/senior-nurse-unified-45min'), { ssr: false }),
 };
 
+// 面談比較モーダルの遅延読み込み
+const InterviewSheetComparison = dynamic(() => import('@/components/interview/InterviewSheetComparison'), { ssr: false });
+
 export default function InterviewSheetModal({ 
   isOpen, 
   onClose, 
   sheetName,
-  sheetPath 
+  sheetPath,
+  staffId,
+  staffName,
+  interviewType,
+  interviewId,
+  experienceCategory,
+  duration = 30,
+  yearsOfExperience
 }: InterviewSheetModalProps) {
   const [isPrinting, setIsPrinting] = useState(false);
+  const [showComparison, setShowComparison] = useState(false);
 
   useEffect(() => {
     // Escキーでモーダルを閉じる
@@ -61,7 +80,20 @@ export default function InterviewSheetModal({
     }, 100);
   };
 
+  const handleShowComparison = () => {
+    console.log('[InterviewSheetModal] Comparison button clicked!');
+    console.log('[InterviewSheetModal] Staff:', staffId, staffName, interviewType);
+    setShowComparison(true);
+  };
+
+  const handleCloseComparison = () => {
+    setShowComparison(false);
+  };
+
   const SheetComponent = sheetComponents[sheetPath];
+
+  // 面談比較機能に必要なデータがある場合のみボタンを表示
+  const canShowComparison = staffId && interviewType && experienceCategory;
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
@@ -83,6 +115,15 @@ export default function InterviewSheetModal({
               {sheetName}
             </h3>
             <div className="flex items-center gap-2">
+              {canShowComparison && (
+                <button
+                  onClick={handleShowComparison}
+                  className="p-2 bg-white/20 hover:bg-white/30 rounded-lg text-white transition-colors"
+                  title="前回面談シート表示"
+                >
+                  <GitCompare className="h-5 w-5" />
+                </button>
+              )}
               <button
                 onClick={handlePrint}
                 disabled={isPrinting}
@@ -168,6 +209,21 @@ export default function InterviewSheetModal({
           }
         }
       `}</style>
+      
+      {/* 面談比較モーダル */}
+      {canShowComparison && (
+        <InterviewSheetComparison
+          isOpen={showComparison}
+          onClose={handleCloseComparison}
+          currentStaffId={staffId!}
+          currentInterviewType={interviewType!}
+          currentInterviewId={interviewId}
+          currentExperienceCategory={experienceCategory}
+          currentDuration={duration}
+          currentStaffName={staffName}
+          currentYearsOfExperience={yearsOfExperience}
+        />
+      )}
     </div>
   );
 }
