@@ -678,12 +678,12 @@ export default function DashboardPage() {
                         <div className="flex-1 p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
                           <h4 className="font-semibold text-green-900 mb-2">👋 田中さん、看護師として入職</h4>
                           <p className="text-sm text-gray-700 mb-3">
-                            新卒で循環器病棟に配属された田中さん。「評価って難しそう...」と不安でしたが、
-                            先輩から「年間を通じて段階的に評価されるから大丈夫よ」と教えてもらいました。
+                            新卒で循環器病棟に配属された田中さん。&ldquo;評価って難しそう...&rdquo;と不安でしたが、
+                            先輩から&ldquo;年間を通じて段階的に評価されるから大丈夫よ&rdquo;と教えてもらいました。
                           </p>
                           <div className="bg-white p-3 rounded border-l-4 border-green-400">
                             <div className="text-xs text-gray-600 mb-1">💭 田中さんの気持ち</div>
-                            <p className="text-sm italic">"1年目は基本的な業務ができればOKなんですね。安心しました！"</p>
+                            <p className="text-sm italic">&ldquo;1年目は基本的な業務ができればOKなんですね。安心しました！&rdquo;</p>
                           </div>
                         </div>
                       </div>
@@ -714,7 +714,7 @@ export default function DashboardPage() {
                           </div>
                           <div className="bg-white p-3 rounded border-l-4 border-blue-400">
                             <div className="text-xs text-gray-600 mb-1">💭 田中さんの気持ち</div>
-                            <p className="text-sm italic">"想像していたより評価してもらえました。頑張った甲斐があった！"</p>
+                            <p className="text-sm italic">&ldquo;想像していたより評価してもらえました。頑張った甲斐があった！&rdquo;</p>
                           </div>
                         </div>
                       </div>

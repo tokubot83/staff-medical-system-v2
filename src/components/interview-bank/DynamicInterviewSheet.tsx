@@ -7,7 +7,7 @@ import {
   TrendingUp, MessageSquare, FileText, Settings,
   Award, Lightbulb, ArrowRight, Plus, Minus,
   Save, Printer, RefreshCw, Edit3, Building,
-  Users, Briefcase, GraduationCap, Activity
+  Users, Briefcase, GraduationCap, Activity, AlertCircle
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
