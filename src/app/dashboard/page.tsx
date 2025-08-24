@@ -2299,6 +2299,20 @@ export default function DashboardPage() {
                             年間評価スケジュール
                           </h4>
                           <div className="space-y-3">
+                            <div className="flex items-center gap-3 p-3 bg-green-50 rounded">
+                              <div className="font-bold text-green-900 min-w-[60px]">7月</div>
+                              <div className="text-sm text-green-700">
+                                <div className="font-semibold">夏季組織貢献評価実施</div>
+                                <div>→ 12月-5月期評価・夏季賞与査定</div>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-3 p-3 bg-purple-50 rounded">
+                              <div className="font-bold text-purple-900 min-w-[60px]">1月</div>
+                              <div className="text-sm text-purple-700">
+                                <div className="font-semibold">冬季組織貢献評価実施</div>
+                                <div>→ 6月-11月期評価・冬季賞与査定</div>
+                              </div>
+                            </div>
                             <div className="flex items-center gap-3 p-3 bg-blue-50 rounded">
                               <div className="font-bold text-blue-900 min-w-[60px]">3月</div>
                               <div className="text-sm text-blue-700">
@@ -2306,18 +2320,11 @@ export default function DashboardPage() {
                                 <div>→ 100点満点での個人評価確定 → 最終判定実行</div>
                               </div>
                             </div>
-                            <div className="flex items-center gap-3 p-3 bg-green-50 rounded">
-                              <div className="font-bold text-green-900 min-w-[60px]">4-5月</div>
-                              <div className="text-sm text-green-700">
+                            <div className="flex items-center gap-3 p-3 bg-red-50 rounded">
+                              <div className="font-bold text-red-900 min-w-[60px]">4-5月</div>
+                              <div className="text-sm text-red-700">
                                 <div className="font-semibold">相対評価処理期間</div>
                                 <div>→ 最終評価確定・結果開示・異議申立対応</div>
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-3 p-3 bg-yellow-50 rounded">
-                              <div className="font-bold text-yellow-900 min-w-[60px]">9月</div>
-                              <div className="text-sm text-yellow-700">
-                                <div className="font-semibold">組織貢献評価のみ実施</div>
-                                <div>→ 賞与査定・中間フィードバック</div>
                               </div>
                             </div>
                           </div>
@@ -2410,12 +2417,12 @@ export default function DashboardPage() {
                         </h4>
                         <div className="flex items-center justify-between text-sm">
                           <div className="flex items-center gap-2">
-                            <div className="px-3 py-1 bg-green-500 text-white rounded-full font-bold">8月</div>
+                            <div className="px-3 py-1 bg-green-500 text-white rounded-full font-bold">7月</div>
                             <span className="text-green-700">夏季組織貢献</span>
                           </div>
                           <ChevronRight className="h-4 w-4 text-gray-400" />
                           <div className="flex items-center gap-2">
-                            <div className="px-3 py-1 bg-purple-500 text-white rounded-full font-bold">12月</div>
+                            <div className="px-3 py-1 bg-purple-500 text-white rounded-full font-bold">1月</div>
                             <span className="text-purple-700">冬季組織貢献</span>
                           </div>
                           <ChevronRight className="h-4 w-4 text-gray-400" />
@@ -2435,10 +2442,10 @@ export default function DashboardPage() {
                       </div>
 
                       <div className="space-y-6">
-                        {/* 8月: 夏季組織貢献評価 */}
+                        {/* 7月: 夏季組織貢献評価 */}
                         <div className="p-4 bg-white rounded-lg border-2 border-green-500">
                           <div className="flex items-center gap-2 mb-3">
-                            <span className="px-3 py-1 bg-green-500 text-white rounded-full text-sm font-bold">8月</span>
+                            <span className="px-3 py-1 bg-green-500 text-white rounded-full text-sm font-bold">7月</span>
                             <h4 className="font-semibold text-green-900">夏季組織貢献評価期間</h4>
                           </div>
                           
@@ -2485,7 +2492,7 @@ export default function DashboardPage() {
                           </div>
                           
                           <div className="p-3 bg-green-50 rounded-lg border-l-4 border-green-500">
-                            <div className="text-sm font-semibold text-green-900 mb-2">8月評価の特徴：</div>
+                            <div className="text-sm font-semibold text-green-900 mb-2">7月評価の特徴：</div>
                             <div className="space-y-1 text-sm text-green-700">
                               <div>• 12月-5月期の組織貢献度を評価</div>
                               <div>• 夏季賞与査定の基礎データとして活用</div>
@@ -2495,10 +2502,10 @@ export default function DashboardPage() {
                           </div>
                         </div>
 
-                        {/* 12月: 冬季組織貢献評価 */}
+                        {/* 1月: 冬季組織貢献評価 */}
                         <div className="p-4 bg-white rounded-lg border-2 border-purple-500">
                           <div className="flex items-center gap-2 mb-3">
-                            <span className="px-3 py-1 bg-purple-500 text-white rounded-full text-sm font-bold">12月</span>
+                            <span className="px-3 py-1 bg-purple-500 text-white rounded-full text-sm font-bold">1月</span>
                             <h4 className="font-semibold text-purple-900">冬季組織貢献評価期間</h4>
                           </div>
                           
@@ -2545,7 +2552,7 @@ export default function DashboardPage() {
                           </div>
                           
                           <div className="p-3 bg-purple-50 rounded-lg border-l-4 border-purple-500">
-                            <div className="text-sm font-semibold text-purple-900 mb-2">12月評価の特徴：</div>
+                            <div className="text-sm font-semibold text-purple-900 mb-2">1月評価の特徴：</div>
                             <div className="space-y-1 text-sm text-purple-700">
                               <div>• 6月-11月期の組織貢献度を評価</div>
                               <div>• 冬季賞与査定の基礎データとして活用</div>
