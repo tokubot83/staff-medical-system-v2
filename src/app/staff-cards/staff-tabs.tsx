@@ -958,29 +958,36 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
             </CardContent>
           </Card>
 
-          {/* 改善提案・次段階目標 */}
+          {/* 総合成長分析 - SWOT分析アプローチ */}
           <div className={styles.evaluationRecommendations}>
-            <h3 className={styles.recommendationTitle}>🎯 成長に向けた提案</h3>
+            <h3 className={styles.recommendationTitle}>🎯 総合成長分析</h3>
             <div className={styles.recommendationGrid}>
               <div className={styles.recommendationCard}>
                 <div className={styles.recommendationIcon}>💪</div>
                 <div className={styles.recommendationContent}>
-                  <h4>強み活用</h4>
-                  <p>施設内貢献度が法人内より高く、現場での活躍が顕著です。専門技術とケア提供力を活かし、後輩指導や現場改善をさらに推進してください。</p>
+                  <h4>強み・優位性</h4>
+                  <p>施設内貢献度が法人内より高く、現場での活躍が顕著です。専門技術とケア提供力、チームワーク力に優れ、患者・家族からの信頼も厚い状況です。</p>
+                </div>
+              </div>
+              <div className={styles.recommendationCard}>
+                <div className={styles.recommendationIcon}>⚠️</div>
+                <div className={styles.recommendationContent}>
+                  <h4>課題・改善点</h4>
+                  <p>法人規模での認知度が不足しており、横断的なネットワーク構築が課題です。また、リーダーシップスキルと法人全体への貢献度向上が必要な領域です。</p>
                 </div>
               </div>
               <div className={styles.recommendationCard}>
                 <div className={styles.recommendationIcon}>🚀</div>
                 <div className={styles.recommendationContent}>
-                  <h4>次段階目標</h4>
-                  <p>Sグレード（90点以上）到達に向け、法人規模での貢献強化が必要です。施設横断プロジェクトへの参加や法人内勉強会での発表を検討してください。</p>
+                  <h4>成長目標</h4>
+                  <p>Sグレード（90点以上）到達に向け、強みを活かしつつ課題を克服する。施設横断プロジェクトへの参加や法人内での存在感向上を目指してください。</p>
                 </div>
               </div>
               <div className={styles.recommendationCard}>
-                <div className={styles.recommendationIcon}>📈</div>
+                <div className={styles.recommendationIcon}>📋</div>
                 <div className={styles.recommendationContent}>
-                  <h4>具体的行動計画</h4>
-                  <p>1) 安全・品質管理分野のスキルアップ研修受講　2) 法人内事例発表への挑戦　3) 新人指導制度への積極参加</p>
+                  <h4>行動計画</h4>
+                  <p>1) 法人内勉強会での発表・事例共有　2) 施設横断プロジェクトへの積極参加　3) 新人指導制度でのメンター役　4) 安全・品質管理スキル向上研修受講</p>
                 </div>
               </div>
             </div>
