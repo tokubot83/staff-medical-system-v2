@@ -805,64 +805,108 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
                 </div>
               </div>
 
-              {/* 組織貢献度評価の詳細 */}
-              <div className={styles.breakdownSection}>
-                <div className={styles.breakdownHeader}>
-                  <h4>🌟 組織貢献度評価（50点満点）</h4>
-                  <div className={styles.breakdownScore}>
-                    <span className={styles.currentScore}>{v3Evaluation?.contributionScore?.total || 41}点</span>
-                    <span className={styles.maxScore}>/ 50点</span>
-                  </div>
-                </div>
-                
-                <div className={styles.breakdownItems}>
-                  <div className={styles.breakdownCategory}>
-                    <div className={styles.categoryHeader}>
-                      <span className={styles.categoryIcon}>🏢</span>
-                      <span className={styles.categoryTitle}>施設内貢献度（25点）</span>
-                      <span className={styles.categoryScore}>{v3Evaluation?.contributionScore?.facility || 22}点</span>
-                    </div>
-                    <div className={styles.categoryDescription}>
-                      <p>夏季・冬季の相対評価を統合した年間評価</p>
-                      <div className={styles.seasonalBreakdown}>
-                        <div className={styles.seasonItem}>
-                          <span className={styles.seasonLabel}>夏季評価</span>
-                          <span className={styles.seasonScore}>12.3点 / 12.5点</span>
-                          <span className={styles.seasonGrade} style={{ backgroundColor: getGradeDisplay('A', '5stage').bg, color: getGradeDisplay('A', '5stage').color }}>A</span>
-                        </div>
-                        <div className={styles.seasonItem}>
-                          <span className={styles.seasonLabel}>冬季評価</span>
-                          <span className={styles.seasonScore}>12.0点 / 12.5点</span>
-                          <span className={styles.seasonGrade} style={{ backgroundColor: getGradeDisplay('A', '5stage').bg, color: getGradeDisplay('A', '5stage').color }}>A</span>
-                        </div>
-                      </div>
+                {/* 組織貢献度評価の詳細 */}
+                <div className="border rounded-lg p-4" style={{ borderLeftColor: CHART_COLORS.success, borderLeftWidth: '4px' }}>
+                  <div className="flex justify-between items-center mb-4">
+                    <h4 className="text-lg font-semibold flex items-center gap-2">
+                      🌟 組織貢献度評価（50点満点）
+                    </h4>
+                    <div className="flex items-center gap-1">
+                      <span className="text-2xl font-bold" style={{ color: CHART_COLORS.success }}>
+                        {v3Evaluation?.contributionScore?.total || 41}点
+                      </span>
+                      <span className="text-gray-500">/ 50点</span>
                     </div>
                   </div>
                   
-                  <div className={styles.breakdownCategory}>
-                    <div className={styles.categoryHeader}>
-                      <span className={styles.categoryIcon}>🌐</span>
-                      <span className={styles.categoryTitle}>法人内貢献度（25点）</span>
-                      <span className={styles.categoryScore}>{v3Evaluation?.contributionScore?.corporate || 19}点</span>
-                    </div>
-                    <div className={styles.categoryDescription}>
-                      <p>法人全体での相対評価（全850名中89位）</p>
-                      <div className={styles.seasonalBreakdown}>
-                        <div className={styles.seasonItem}>
-                          <span className={styles.seasonLabel}>夏季評価</span>
-                          <span className={styles.seasonScore}>11.8点 / 12.5点</span>
-                          <span className={styles.seasonGrade} style={{ backgroundColor: getGradeDisplay('B', '5stage').bg, color: getGradeDisplay('B', '5stage').color }}>B</span>
+                  <div className="space-y-4">
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <div className="flex justify-between items-center mb-3">
+                        <div className="flex items-center gap-2">
+                          <span>🏢</span>
+                          <span className="font-medium">施設内貢献度（25点）</span>
                         </div>
-                        <div className={styles.seasonItem}>
-                          <span className={styles.seasonLabel}>冬季評価</span>
-                          <span className={styles.seasonScore}>11.5点 / 12.5点</span>
-                          <span className={styles.seasonGrade} style={{ backgroundColor: getGradeDisplay('B', '5stage').bg, color: getGradeDisplay('B', '5stage').color }}>B</span>
+                        <Badge style={{ backgroundColor: CHART_COLORS.success, color: 'white' }}>
+                          {v3Evaluation?.contributionScore?.facility || 22}点
+                        </Badge>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-3">夏季・冬季の相対評価を統合した年間評価</p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div className="flex justify-between items-center p-2 bg-white rounded border">
+                          <span className="text-sm font-medium">夏季評価</span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm">12.3点 / 12.5点</span>
+                            <Badge 
+                              style={{
+                                backgroundColor: getGradeDisplay('A', '5stage').bg,
+                                color: getGradeDisplay('A', '5stage').color
+                              }}
+                            >
+                              A
+                            </Badge>
+                          </div>
+                        </div>
+                        <div className="flex justify-between items-center p-2 bg-white rounded border">
+                          <span className="text-sm font-medium">冬季評価</span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm">12.0点 / 12.5点</span>
+                            <Badge 
+                              style={{
+                                backgroundColor: getGradeDisplay('A', '5stage').bg,
+                                color: getGradeDisplay('A', '5stage').color
+                              }}
+                            >
+                              A
+                            </Badge>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <div className="flex justify-between items-center mb-3">
+                        <div className="flex items-center gap-2">
+                          <span>🌐</span>
+                          <span className="font-medium">法人内貢献度（25点）</span>
+                        </div>
+                        <Badge style={{ backgroundColor: CHART_COLORS.warning, color: 'white' }}>
+                          {v3Evaluation?.contributionScore?.corporate || 19}点
+                        </Badge>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-3">法人全体での相対評価（全850名中89位）</p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div className="flex justify-between items-center p-2 bg-white rounded border">
+                          <span className="text-sm font-medium">夏季評価</span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm">11.8点 / 12.5点</span>
+                            <Badge 
+                              style={{
+                                backgroundColor: getGradeDisplay('B', '5stage').bg,
+                                color: getGradeDisplay('B', '5stage').color
+                              }}
+                            >
+                              B
+                            </Badge>
+                          </div>
+                        </div>
+                        <div className="flex justify-between items-center p-2 bg-white rounded border">
+                          <span className="text-sm font-medium">冬季評価</span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm">11.5点 / 12.5点</span>
+                            <Badge 
+                              style={{
+                                backgroundColor: getGradeDisplay('B', '5stage').bg,
+                                color: getGradeDisplay('B', '5stage').color
+                              }}
+                            >
+                              B
+                            </Badge>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
               {/* 総合判定の詳細 */}
               <div className={styles.breakdownSection}>
