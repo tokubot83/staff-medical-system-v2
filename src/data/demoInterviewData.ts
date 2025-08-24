@@ -43,7 +43,74 @@ export const demoStaffProfiles = [
 
 // デモ面談データ（複数の面談タイプと履歴）
 export const demoInterviewData: InterviewData[] = [
-  // 田中花子の面談履歴
+  // 現在使用中の职員ID用のデモデータ
+  {
+    id: 'INT_DEMO_001',
+    staffId: 'OH-NS-2021-001',
+    staffName: '現在のテスト者',
+    interviewType: 'regular_annual',
+    interviewCategory: 'regular',
+    scheduledDate: '2023-11-01T14:00:00.000Z',
+    actualDate: '2023-11-01T14:00:00.000Z',
+    status: 'completed',
+    interviewer: {
+      id: 'MGR_001',
+      name: '高橋部長',
+      position: '看護部長'
+    },
+    location: '会議室A',
+    duration: 30,
+    summary: '前回の定期面談では業務スキルの向上とチームワークについて話し合いました。',
+    keyPoints: [
+      '急変対応スキルが向上している',
+      'コミュニケーション能力が良好',
+      '新人指導に積極的'
+    ],
+    actionItems: [
+      {
+        id: 'ACTION_DEMO_001',
+        description: 'リーダーシップ研修の受講',
+        assignee: '現在のテスト者',
+        dueDate: '2024-02-28',
+        status: 'in-progress'
+      }
+    ],
+    followUpRequired: true,
+    followUpDate: '2024-05-01',
+    sheetData: {
+      section1: {
+        currentStatus: {
+          workload: '適切',
+          stress: '低',
+          satisfaction: '高'
+        }
+      },
+      section2: {
+        skillEvaluation: {
+          emergencyResponse: 7,
+          patientCare: 8,
+          teamwork: 9,
+          communication: 8
+        }
+      },
+      section3: {
+        goals: [
+          'リーダーシップスキルの向上',
+          '新人指導技術の習得'
+        ],
+        challenges: [
+          '多重課題への対応',
+          '時間管理の改善'
+        ]
+      }
+    },
+    metadata: {
+      createdAt: new Date('2023-11-01T14:00:00.000Z'),
+      updatedAt: new Date('2023-11-01T15:00:00.000Z'),
+      createdBy: 'MGR_001'
+    }
+  },
+  // 田中花子の面談履歴（既存データ）
   {
     id: 'INT_001',
     staffId: 'STAFF_001',

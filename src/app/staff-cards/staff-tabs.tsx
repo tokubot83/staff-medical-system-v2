@@ -3727,57 +3727,6 @@ export function GrowthDevelopmentTab({ selectedStaff }: { selectedStaff: any }) 
         </button>
       </div>
       
-      {/* NotebookLMリンク登録モーダル */}
-      {console.log('モーダル表示状態:', showNotebookLinkModal)}
-      {showNotebookLinkModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center" style={{ zIndex: 999999 }}>
-          <div className="bg-white rounded-lg p-6 w-96 max-w-90vw" style={{ border: '5px solid red' }}>
-            <h3 className="text-lg font-semibold mb-4">NotebookLMリンクを追加</h3>
-            
-            <div className="mb-4">
-              <div className="text-sm text-gray-600 mb-2">
-                📅 {currentInterviewDate} - {currentInterviewType === 'regular' ? '定期面談' : 
-                                              currentInterviewType === 'special' ? '特別面談' : 'サポート面談'}
-                {currentInterviewCategory && ` (${currentInterviewCategory})`}
-              </div>
-              
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                NotebookLM URL
-              </label>
-              <input
-                type="url"
-                value={notebookLinkForm.url}
-                onChange={(e) => setNotebookLinkForm({ url: e.target.value })}
-                placeholder="https://notebooklm.google.com/notebook/..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                autoFocus
-              />
-              <div className="text-xs text-gray-500 mt-1">
-                💡 NotebookLMのノートURLをペーストしてください
-              </div>
-            </div>
-            
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={() => {
-                  setShowNotebookLinkModal(false)
-                  setEditingInterviewId(null)
-                }}
-                className="px-4 py-2 text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
-              >
-                キャンセル
-              </button>
-              <button
-                onClick={handleSaveNotebookLink}
-                disabled={!notebookLinkForm.url.trim()}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
-              >
-                保存
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
