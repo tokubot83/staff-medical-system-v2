@@ -1514,43 +1514,149 @@ function EvaluationHistoryTab({ selectedStaff }: { selectedStaff: any }): React.
         </div>
       </div>
 
-      {/* 推移サマリー */}
-      <div className={styles.historyTrendSummary}>
-        <div className={styles.trendCard}>
-          <h3>📈 {showAllHistory ? fullEvaluationHistory.length : defaultDisplayYears}年間の成長推移</h3>
-          <div className={styles.trendHighlights}>
-            <div className={styles.trendItem}>
-              <span className={styles.trendLabel}>総合評価</span>
-              <div className={styles.trendGrades}>
-                <span style={{ color: getGradeColor('C') }}>C</span>
-                <span>→</span>
-                <span style={{ color: getGradeColor('B') }}>B</span>
-                <span>→</span>
-                <span style={{ color: getGradeColor('B') }}>B</span>
-                <span>→</span>
-                <span style={{ color: getGradeColor('A'), fontWeight: 'bold' }}>A</span>
+      {/* 推移サマリー - 線グラフ形式 */}
+      <Card className="border-l-4" style={{ borderLeftColor: CHART_COLORS.primary }}>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-lg">
+            📈 {showAllHistory ? fullEvaluationHistory.length : defaultDisplayYears}年間の成長推移
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {/* 評価点数の線グラフ（SVG） */}
+          <div className="mb-6">
+            <h4 className="text-md font-semibold mb-3 flex items-center gap-2">
+              📊 総合評価点数の推移
+            </h4>
+            <div className="h-48 bg-gray-50 rounded-lg p-4 relative">
+              <svg width="100%" height="100%" viewBox="0 0 400 150" className="overflow-visible">
+                {/* グリッドライン */}
+                <defs>
+                  <pattern id="grid" width="40" height="30" patternUnits="userSpaceOnUse">
+                    <path d="M 40 0 L 0 0 0 30" fill="none" stroke="#e5e7eb" strokeWidth="0.5"/>
+                  </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#grid)" />
+                
+                {/* Y軸ラベル */}
+                <text x="10" y="20" fill="#6b7280" fontSize="10">90</text>
+                <text x="10" y="50" fill="#6b7280" fontSize="10">70</text>
+                <text x="10" y="80" fill="#6b7280" fontSize="10">50</text>
+                <text x="10" y="110" fill="#6b7280" fontSize="10">30</text>
+                
+                {/* データポイントとライン */}
+                <polyline
+                  points="50,110 130,80 210,75 290,35"
+                  fill="none"
+                  stroke={CHART_COLORS.primary}
+                  strokeWidth="3"
+                />
+                
+                {/* データポイント */}
+                <circle cx="50" cy="110" r="4" fill={CHART_COLORS.danger} />
+                <circle cx="130" cy="80" r="4" fill={CHART_COLORS.success} />
+                <circle cx="210" cy="75" r="4" fill={CHART_COLORS.success} />
+                <circle cx="290" cy="35" r="5" fill={CHART_COLORS.primary} strokeWidth="2" stroke="#fff" />
+                
+                {/* X軸ラベル */}
+                <text x="45" y="140" fill="#6b7280" fontSize="10" textAnchor="middle">2021</text>
+                <text x="125" y="140" fill="#6b7280" fontSize="10" textAnchor="middle">2022</text>
+                <text x="205" y="140" fill="#6b7280" fontSize="10" textAnchor="middle">2023</text>
+                <text x="285" y="140" fill="#6b7280" fontSize="10" textAnchor="middle">2024</text>
+                
+                {/* グレード表示 */}
+                <text x="50" y="125" fill={getGradeColor('C')} fontSize="12" fontWeight="bold" textAnchor="middle">C</text>
+                <text x="130" y="95" fill={getGradeColor('B')} fontSize="12" fontWeight="bold" textAnchor="middle">B</text>
+                <text x="210" y="90" fill={getGradeColor('B')} fontSize="12" fontWeight="bold" textAnchor="middle">B</text>
+                <text x="290" y="25" fill={getGradeColor('A')} fontSize="14" fontWeight="bold" textAnchor="middle">A</text>
+              </svg>
+              
+              {/* 成長指標 */}
+              <div className="absolute top-2 right-2">
+                <Badge style={{ backgroundColor: CHART_COLORS.success, color: 'white' }}>
+                  +{(evaluationHistory[0].totalScore - evaluationHistory[evaluationHistory.length - 1].totalScore).toFixed(1)}点向上
+                </Badge>
               </div>
-              <span className={styles.trendResult}>
-                +{(evaluationHistory[0].totalScore - evaluationHistory[evaluationHistory.length - 1].totalScore).toFixed(1)}点の向上
-              </span>
-            </div>
-            <div className={styles.trendItem}>
-              <span className={styles.trendLabel}>施設内順位</span>
-              <div className={styles.trendRanks}>
-                35位 → 22位 → 18位 → 12位
-              </div>
-              <span className={styles.trendResult}>上位10%到達</span>
-            </div>
-            <div className={styles.trendItem}>
-              <span className={styles.trendLabel}>法人内位置</span>
-              <div className={styles.trendRanks}>
-                下位38% → 下位24% → 上位15% → 上位11%
-              </div>
-              <span className={styles.trendResult}>継続的改善</span>
             </div>
           </div>
-        </div>
-      </div>
+          
+          {/* 順位推移の棒グラフ */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h4 className="text-md font-semibold mb-3 flex items-center gap-2">
+                🏢 施設内順位推移
+              </h4>
+              <div className="h-32 bg-gray-50 rounded-lg p-3 relative">
+                <div className="flex items-end justify-between h-full">
+                  {[
+                    { year: '2021', rank: 35, total: 120, color: CHART_COLORS.danger },
+                    { year: '2022', rank: 22, total: 120, color: CHART_COLORS.warning },
+                    { year: '2023', rank: 18, total: 120, color: CHART_COLORS.success },
+                    { year: '2024', rank: 12, total: 120, color: CHART_COLORS.primary }
+                  ].map((item, index) => {
+                    const height = (1 - item.rank / item.total) * 80;
+                    return (
+                      <div key={item.year} className="flex flex-col items-center">
+                        <div className="text-xs font-medium mb-1">{item.rank}位</div>
+                        <div 
+                          className="w-8 rounded-t"
+                          style={{ 
+                            height: `${height}px`,
+                            backgroundColor: item.color,
+                            minHeight: '20px'
+                          }}
+                        />
+                        <div className="text-xs mt-1">{item.year}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="absolute top-1 right-1">
+                  <Badge style={{ backgroundColor: CHART_COLORS.success, color: 'white' }} className="text-xs">
+                    上位10%
+                  </Badge>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <h4 className="text-md font-semibold mb-3 flex items-center gap-2">
+                🌐 法人内位置推移
+              </h4>
+              <div className="h-32 bg-gray-50 rounded-lg p-3 relative">
+                <div className="flex items-end justify-between h-full">
+                  {[
+                    { year: '2021', percentile: 38, position: '下位', color: CHART_COLORS.danger },
+                    { year: '2022', percentile: 24, position: '下位', color: CHART_COLORS.warning },
+                    { year: '2023', percentile: 85, position: '上位', color: CHART_COLORS.success },
+                    { year: '2024', percentile: 89, position: '上位', color: CHART_COLORS.primary }
+                  ].map((item, index) => {
+                    const height = item.percentile * 0.8;
+                    return (
+                      <div key={item.year} className="flex flex-col items-center">
+                        <div className="text-xs font-medium mb-1">{item.position}{item.percentile}%</div>
+                        <div 
+                          className="w-8 rounded-t"
+                          style={{ 
+                            height: `${height}px`,
+                            backgroundColor: item.color,
+                            minHeight: '20px'
+                          }}
+                        />
+                        <div className="text-xs mt-1">{item.year}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="absolute top-1 right-1">
+                  <Badge style={{ backgroundColor: CHART_COLORS.success, color: 'white' }} className="text-xs">
+                    継続改善
+                  </Badge>
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* 年度別詳細履歴 - Card style */}
       <Card className="overflow-hidden">
