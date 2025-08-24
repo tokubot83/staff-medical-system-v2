@@ -112,7 +112,7 @@ export default function InterviewSheetModal({
                   </div>
                 </div>
               }>
-                {SheetComponent ? (
+                {SheetComponent && typeof SheetComponent === 'function' ? (
                   <SheetComponent />
                 ) : (
                   <div className="p-8 text-center text-gray-600">

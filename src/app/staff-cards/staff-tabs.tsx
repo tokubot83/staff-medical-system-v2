@@ -1445,7 +1445,10 @@ interface NotebookLMLink {
   }
 }
 
-export function InterviewTab({ selectedStaff, onShowNotebookModal }: { selectedStaff: any; onShowNotebookModal?: () => void }) {
+export function InterviewTab({ selectedStaff, onShowNotebookModal }: { 
+  selectedStaff: any; 
+  onShowNotebookModal?: (interviewData: { id: string; date: string; type: string; subtype?: string }) => void 
+}) {
   const router = useRouter()
   const { handleError, clearError } = useErrorHandler()
   const [interviewData, setInterviewData] = useState<any>(null)
@@ -2408,7 +2411,12 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: { selectedS
                   type="button"
                   onClick={() => {
                     console.log('外部テストボタンクリック');
-                    onShowNotebookModal?.();
+                    onShowNotebookModal?.({
+                      id: 'test_001',
+                      date: '2024-08-24',
+                      type: 'テスト面談',
+                      subtype: 'デモ用'
+                    });
                   }}
                   className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                 >
@@ -2483,7 +2491,12 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: { selectedS
                               onMouseDown={() => console.log('ボタンマウスダウン:', interview.id)}
                               onClick={() => {
                                 console.log('定期面談NotebookLM登録ボタンクリック:', interview.id);
-                                onShowNotebookModal?.();
+                                onShowNotebookModal?.({
+                                  id: interview.id,
+                                  date: interview.date,
+                                  type: '定期面談',
+                                  subtype: interview.subtypeLabel
+                                });
                               }}
                               className="inline-flex items-center gap-2 px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700"
                               style={{
@@ -2846,7 +2859,12 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: { selectedS
                                 type="button"
                                 onClick={() => {
                                   console.log('特別面談NotebookLM登録ボタンクリック:', interview.id);
-                                  onShowNotebookModal?.();
+                                  onShowNotebookModal?.({
+                                    id: interview.id,
+                                    date: interview.date,
+                                    type: '特別面談',
+                                    subtype: interview.subtypeLabel
+                                  });
                                 }}
                                 className="inline-flex items-center gap-2 px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700"
                               >
@@ -3241,7 +3259,12 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: { selectedS
                                 type="button"
                                 onClick={() => {
                                   console.log('サポート面談NotebookLM登録ボタンクリック:', interview.id);
-                                  onShowNotebookModal?.();
+                                  onShowNotebookModal?.({
+                                    id: interview.id,
+                                    date: interview.date,
+                                    type: 'サポート面談',
+                                    subtype: interview.category
+                                  });
                                 }}
                                 className="inline-flex items-center gap-2 px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700"
                               >

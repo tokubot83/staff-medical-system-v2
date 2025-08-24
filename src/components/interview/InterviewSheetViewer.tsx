@@ -50,7 +50,7 @@ export default function InterviewSheetViewer({
 
   const SheetComponent = interviewSheetComponents[selectedSheet.component as keyof typeof interviewSheetComponents];
 
-  if (!SheetComponent) {
+  if (!SheetComponent || typeof SheetComponent !== 'function') {
     return (
       <Card>
         <CardContent className="p-6">

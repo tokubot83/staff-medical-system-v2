@@ -95,6 +95,12 @@ export default function StaffDetailPage() {
   const staffId = params.staffId as string
   const [activeTab, setActiveTab] = useState('basic')
   const [showNotebookLinkModal, setShowNotebookLinkModal] = useState(false)
+  const [currentInterview, setCurrentInterview] = useState<{
+    id: string
+    date: string
+    type: string
+    subtype?: string
+  } | null>(null)
   
   const selectedStaff = staffDatabase[staffId]
 
@@ -154,7 +160,15 @@ export default function StaffDetailPage() {
           {activeTab === 'evaluation-history' && <EvaluationHistoryTab selectedStaff={selectedStaff} />}
           {activeTab === 'evaluation-report' && <EvaluationReportTab selectedStaff={selectedStaff} />}
           {activeTab === 'recruitment' && <RecruitmentTab selectedStaff={selectedStaff} />}
-          {activeTab === 'interview' && <InterviewTab selectedStaff={selectedStaff} onShowNotebookModal={() => setShowNotebookLinkModal(true)} />}
+          {activeTab === 'interview' && (
+            <InterviewTab 
+              selectedStaff={selectedStaff} 
+              onShowNotebookModal={(interviewData) => {
+                setCurrentInterview(interviewData)
+                setShowNotebookLinkModal(true)
+              }} 
+            />
+          )}
           {activeTab === 'development' && <DevelopmentTab selectedStaff={selectedStaff} />}
           {activeTab === 'education' && <EducationTab selectedStaff={selectedStaff} />}
         </div>
@@ -166,16 +180,79 @@ export default function StaffDetailPage() {
       {/* NotebookLMモーダル（全タブ共通） */}
       {showNotebookLinkModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center" style={{ zIndex: 999999 }}>
-          <div className="bg-white rounded-lg p-6 w-96" style={{ border: '5px solid red' }}>
-            <h3 className="text-lg font-semibold mb-4">NotebookLMリンク登録</h3>
-            <input
-              type="url"
-              placeholder="https://notebooklm.google.com/notebook/..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-md mb-4"
-            />
-            <div className="flex justify-end gap-3">
-              <button onClick={() => setShowNotebookLinkModal(false)} className="px-4 py-2 bg-gray-100 text-gray-600 rounded">キャンセル</button>
-              <button className="px-4 py-2 bg-blue-600 text-white rounded">保存</button>
+          <div className="bg-white rounded-xl shadow-2xl p-6 w-[480px] max-w-[90vw]">
+            {/* ヘッダー */}
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
+                <span className="text-2xl">📝</span>
+                NotebookLMリンク登録
+              </h3>
+              <button
+                onClick={() => setShowNotebookLinkModal(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors p-1 hover:bg-gray-100 rounded-full"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* 面談情報 */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+              <div className="flex items-start gap-3">
+                <span className="text-2xl">👤</span>
+                <div className="flex-1">
+                  <div className="font-semibold text-gray-900 mb-1">{selectedStaff.name}</div>
+                  <div className="text-sm text-blue-700">
+                    📅 {currentInterview?.date || '未選択'} - {currentInterview?.type || '面談タイプ未選択'}
+                    {currentInterview?.subtype && ` (${currentInterview.subtype})`}
+                  </div>
+                  <div className="text-xs text-gray-600 mt-1">
+                    ID: {currentInterview?.id || '未選択'}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* URL入力 */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                NotebookLM URL <span className="text-red-500">*</span>
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="url"
+                  placeholder="https://notebooklm.google.com/notebook/..."
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                />
+                <button 
+                  onClick={() => {
+                    navigator.clipboard.readText().then(text => {
+                      console.log('ペーストされたURL:', text);
+                    });
+                  }}
+                  className="px-3 py-2 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg transition-colors flex items-center gap-1 text-sm font-medium"
+                  title="クリップボードからペースト"
+                >
+                  📋 ペースト
+                </button>
+              </div>
+              <div className="text-xs text-gray-500 mt-1">
+                💡 NotebookLMのノートURLをペーストしてください
+              </div>
+            </div>
+
+            {/* ボタン */}
+            <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+              <button
+                onClick={() => setShowNotebookLinkModal(false)}
+                className="px-5 py-2 text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors font-medium"
+              >
+                キャンセル
+              </button>
+              <button className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium">
+                保存
+              </button>
             </div>
           </div>
         </div>

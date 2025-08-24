@@ -27,7 +27,13 @@ export default function VeteranOutpatientNurseEvaluationV4Pattern5Page() {
         </button>
       </div>
       
-      <EvaluationSheet />
+      {EvaluationSheet && typeof EvaluationSheet === 'function' ? (
+        <EvaluationSheet />
+      ) : (
+        <div className="p-8 text-center text-gray-600">
+          <p>評価シートを読み込めませんでした</p>
+        </div>
+      )}
     </div>
   );
 }
