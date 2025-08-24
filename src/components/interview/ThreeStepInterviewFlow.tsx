@@ -182,12 +182,14 @@ export default function ThreeStepInterviewFlow() {
     const experienceCategory = getExperienceCategory(tenureYears);
     
     return (
-      <InterviewSheetWrapper
-        experienceCategory={experienceCategory}
-        duration={30}
-        staffName={selectedStaff.name}
-        yearsOfExperience={tenureYears}
-      />
+      <div style={{ margin: '-20px' }}>
+        <InterviewSheetWrapper
+          experienceCategory={experienceCategory}
+          duration={30}
+          staffName={selectedStaff.name}
+          yearsOfExperience={tenureYears}
+        />
+      </div>
     );
   }
 
