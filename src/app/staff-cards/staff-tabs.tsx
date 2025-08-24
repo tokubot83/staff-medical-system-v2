@@ -3,6 +3,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { PersonalEvaluationService } from '@/services/evaluationV3Service'
 import { V3PersonalEvaluation } from '@/types/evaluation-v3'
 import { useErrorHandler } from '@/hooks/useErrorHandler'
