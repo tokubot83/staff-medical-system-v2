@@ -64,7 +64,8 @@ const tabs = [
   { id: 'wellbeing', label: '健康・ウェルビーイング', icon: '💚' },
   { id: 'development', label: '能力開発', icon: '🚀' },
   { id: 'interview', label: '面談・指導', icon: '💬' },
-  { id: 'evaluation', label: '人事評価', icon: '📈' },
+  { id: 'evaluation', label: '最新評価（2024年度）', icon: '📈' },
+  { id: 'evaluation-history', label: '評価履歴（全期間）', icon: '📋', isNew: true },
   { id: 'evaluation-report', label: '評価分析レポート', icon: '📊', isNew: true },
   { id: 'analytics', label: '総合分析', icon: '📊' },
   { id: 'recruitment', label: '採用・配属', icon: '👥' },
@@ -134,6 +135,7 @@ export default function StaffDetailPage() {
           {activeTab === 'links' && <ManagementLinksTab selectedStaff={selectedStaff} />}
           {activeTab === 'analytics' && <AnalyticsTab selectedStaff={selectedStaff} />}
           {activeTab === 'evaluation' && <EvaluationTab selectedStaff={selectedStaff} />}
+          {activeTab === 'evaluation-history' && <EvaluationHistoryTab selectedStaff={selectedStaff} />}
           {activeTab === 'evaluation-report' && <EvaluationReportTab selectedStaff={selectedStaff} />}
           {activeTab === 'recruitment' && <RecruitmentTab selectedStaff={selectedStaff} />}
           {activeTab === 'interview' && <InterviewTab selectedStaff={selectedStaff} />}
@@ -1363,6 +1365,301 @@ function MindsetTab({ selectedStaff }: { selectedStaff: any }): React.ReactEleme
             )}
           </div>
         )}
+      </div>
+    </div>
+  )
+}
+
+function EvaluationHistoryTab({ selectedStaff }: { selectedStaff: any }): React.ReactElement {
+  const [showAllHistory, setShowAllHistory] = useState(false);
+  const [displayYears, setDisplayYears] = useState(10);
+  
+  // 勤続年数に基づく表示年数の決定（実際は selectedStaff から取得）
+  const yearsOfService = selectedStaff?.yearsOfService || 7; // 仮で7年とする
+  const defaultDisplayYears = yearsOfService >= 10 ? 10 : yearsOfService;
+  
+  // モック履歴データ（実際には全履歴をAPIから取得）
+  const fullEvaluationHistory = [
+    {
+      year: '2024年度',
+      period: '2023/4-2024/3',
+      facilityGrade: 'A',
+      corporateGrade: 'B',
+      finalGrade: 'A',
+      totalScore: 81.25,
+      technicalScore: 40,
+      contributionScore: 41.25,
+      facilityRank: { rank: 12, total: 120, percentile: 90 },
+      corporateRank: { rank: 89, total: 850, percentile: 89 },
+      status: 'confirmed'
+    },
+    {
+      year: '2023年度',
+      period: '2022/4-2023/3',
+      facilityGrade: 'B',
+      corporateGrade: 'B',
+      finalGrade: 'B',
+      totalScore: 78.5,
+      technicalScore: 38,
+      contributionScore: 40.5,
+      facilityRank: { rank: 18, total: 118, percentile: 85 },
+      corporateRank: { rank: 127, total: 820, percentile: 85 },
+      status: 'confirmed'
+    },
+    {
+      year: '2022年度',
+      period: '2021/4-2022/3',
+      facilityGrade: 'B',
+      corporateGrade: 'C',
+      finalGrade: 'B',
+      totalScore: 75.8,
+      technicalScore: 36,
+      contributionScore: 39.8,
+      facilityRank: { rank: 22, total: 115, percentile: 81 },
+      corporateRank: { rank: 189, total: 800, percentile: 76 },
+      status: 'confirmed'
+    },
+    {
+      year: '2021年度',
+      period: '2020/4-2021/3',
+      facilityGrade: 'C',
+      corporateGrade: 'C',
+      finalGrade: 'C',
+      totalScore: 68.2,
+      technicalScore: 32,
+      contributionScore: 36.2,
+      facilityRank: { rank: 35, total: 112, percentile: 69 },
+      corporateRank: { rank: 298, total: 785, percentile: 62 },
+      status: 'confirmed'
+    },
+    {
+      year: '2020年度',
+      period: '2019/4-2020/3',
+      facilityGrade: 'C',
+      corporateGrade: 'D',
+      finalGrade: 'C',
+      totalScore: 64.1,
+      technicalScore: 30,
+      contributionScore: 34.1,
+      facilityRank: { rank: 42, total: 110, percentile: 62 },
+      corporateRank: { rank: 456, total: 770, percentile: 41 },
+      status: 'confirmed'
+    },
+    {
+      year: '2019年度',
+      period: '2018/4-2019/3',
+      facilityGrade: 'D',
+      corporateGrade: 'D',
+      finalGrade: 'D',
+      totalScore: 58.5,
+      technicalScore: 26,
+      contributionScore: 32.5,
+      facilityRank: { rank: 68, total: 105, percentile: 35 },
+      corporateRank: { rank: 598, total: 750, percentile: 20 },
+      status: 'confirmed'
+    },
+    {
+      year: '2018年度',
+      period: '2017/4-2018/3',
+      facilityGrade: 'D',
+      corporateGrade: 'D',
+      finalGrade: 'D',
+      totalScore: 52.8,
+      technicalScore: 22,
+      contributionScore: 30.8,
+      facilityRank: { rank: 78, total: 102, percentile: 24 },
+      corporateRank: { rank: 642, total: 730, percentile: 12 },
+      status: 'confirmed'
+    }
+  ]
+
+  // 表示する履歴を決定
+  const evaluationHistory = showAllHistory ? fullEvaluationHistory : fullEvaluationHistory.slice(0, defaultDisplayYears)
+
+  const getGradeColor = (grade: string) => {
+    const colors = {
+      'S+': '#8B0000', 'S': '#FF0000', 'A+': '#FF4500', 'A': '#FFA500',
+      'B': '#32CD32', 'C': '#1E90FF', 'D': '#808080'
+    }
+    return colors[grade as keyof typeof colors] || colors['B']
+  }
+
+  return (
+    <div className={styles.evaluationHistoryContainer}>
+      <div className={styles.sectionHeader}>
+        <h2>📋 評価履歴（V3システム）</h2>
+        <div className={styles.sectionActions}>
+          <button className={styles.actionButton}>CSV出力（全履歴）</button>
+          <button className={styles.actionButtonSecondary}>推移分析</button>
+          {fullEvaluationHistory.length > defaultDisplayYears && (
+            <button 
+              className={styles.actionButtonSecondary}
+              onClick={() => setShowAllHistory(!showAllHistory)}
+            >
+              {showAllHistory ? `最新${defaultDisplayYears}年に戻す` : `全${fullEvaluationHistory.length}年表示`}
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* 推移サマリー */}
+      <div className={styles.historyTrendSummary}>
+        <div className={styles.trendCard}>
+          <h3>📈 {showAllHistory ? fullEvaluationHistory.length : defaultDisplayYears}年間の成長推移</h3>
+          <div className={styles.trendHighlights}>
+            <div className={styles.trendItem}>
+              <span className={styles.trendLabel}>総合評価</span>
+              <div className={styles.trendGrades}>
+                <span style={{ color: getGradeColor('C') }}>C</span>
+                <span>→</span>
+                <span style={{ color: getGradeColor('B') }}>B</span>
+                <span>→</span>
+                <span style={{ color: getGradeColor('B') }}>B</span>
+                <span>→</span>
+                <span style={{ color: getGradeColor('A'), fontWeight: 'bold' }}>A</span>
+              </div>
+              <span className={styles.trendResult}>
+                +{(evaluationHistory[0].totalScore - evaluationHistory[evaluationHistory.length - 1].totalScore).toFixed(1)}点の向上
+              </span>
+            </div>
+            <div className={styles.trendItem}>
+              <span className={styles.trendLabel}>施設内順位</span>
+              <div className={styles.trendRanks}>
+                35位 → 22位 → 18位 → 12位
+              </div>
+              <span className={styles.trendResult}>上位10%到達</span>
+            </div>
+            <div className={styles.trendItem}>
+              <span className={styles.trendLabel}>法人内位置</span>
+              <div className={styles.trendRanks}>
+                下位38% → 下位24% → 上位15% → 上位11%
+              </div>
+              <span className={styles.trendResult}>継続的改善</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 年度別詳細履歴 */}
+      <div className={styles.historyDetailTable}>
+        <h3>年度別評価詳細</h3>
+        <div className={styles.tableContainer}>
+          <table className={styles.historyTable}>
+            <thead>
+              <tr>
+                <th>年度</th>
+                <th>評価期間</th>
+                <th>施設内評価</th>
+                <th>法人内評価</th>
+                <th>総合判定</th>
+                <th>総合得点</th>
+                <th>技術評価</th>
+                <th>組織貢献</th>
+                <th>施設内順位</th>
+                <th>法人内順位</th>
+                <th>ステータス</th>
+              </tr>
+            </thead>
+            <tbody>
+              {evaluationHistory.map((history, index) => (
+                <tr key={history.year} className={index === 0 ? styles.latestRow : ''}>
+                  <td>
+                    <strong>{history.year}</strong>
+                    {index === 0 && <span className={styles.latestBadge}>最新</span>}
+                  </td>
+                  <td>{history.period}</td>
+                  <td>
+                    <div 
+                      className={styles.gradeCell} 
+                      style={{ 
+                        backgroundColor: `${getGradeColor(history.facilityGrade)}20`,
+                        color: getGradeColor(history.facilityGrade),
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      {history.facilityGrade}
+                    </div>
+                  </td>
+                  <td>
+                    <div 
+                      className={styles.gradeCell} 
+                      style={{ 
+                        backgroundColor: `${getGradeColor(history.corporateGrade)}20`,
+                        color: getGradeColor(history.corporateGrade),
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      {history.corporateGrade}
+                    </div>
+                  </td>
+                  <td>
+                    <div 
+                      className={styles.gradeCell} 
+                      style={{ 
+                        backgroundColor: `${getGradeColor(history.finalGrade)}20`,
+                        color: getGradeColor(history.finalGrade),
+                        fontWeight: 'bold',
+                        fontSize: '1.1em'
+                      }}
+                    >
+                      {history.finalGrade}
+                    </div>
+                  </td>
+                  <td>
+                    <strong>{history.totalScore}点</strong>
+                  </td>
+                  <td>{history.technicalScore}点</td>
+                  <td>{history.contributionScore}点</td>
+                  <td>
+                    <div className={styles.rankCell}>
+                      <span className={styles.rankNumber}>{history.facilityRank.rank}位</span>
+                      <span className={styles.rankTotal}>/ {history.facilityRank.total}人</span>
+                      <span className={styles.percentile}>上位{100-history.facilityRank.percentile}%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div className={styles.rankCell}>
+                      <span className={styles.rankNumber}>{history.corporateRank.rank}位</span>
+                      <span className={styles.rankTotal}>/ {history.corporateRank.total}人</span>
+                      <span className={styles.percentile}>上位{100-history.corporateRank.percentile}%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span className={styles.statusBadge}>確定</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* 成長分析 */}
+      <div className={styles.growthAnalysis}>
+        <h3>🎯 成長分析・特徴</h3>
+        <div className={styles.analysisGrid}>
+          <div className={styles.analysisCard}>
+            <div className={styles.analysisIcon}>📈</div>
+            <div className={styles.analysisContent}>
+              <h4>継続的成長</h4>
+              <p>{evaluationHistory[evaluationHistory.length - 1].year}の{evaluationHistory[evaluationHistory.length - 1].finalGrade}評価から{evaluationHistory.length}年間で着実にランクアップ。特に直近の成長が顕著で、施設内での評価向上が目立つ。</p>
+            </div>
+          </div>
+          <div className={styles.analysisCard}>
+            <div className={styles.analysisIcon}>🏢</div>
+            <div className={styles.analysisContent}>
+              <h4>現場力の強さ</h4>
+              <p>施設内評価が法人内評価を常に上回る傾向。現場での実践力と同僚・患者からの信頼が高い証拠と考えられる。</p>
+            </div>
+          </div>
+          <div className={styles.analysisCard}>
+            <div className={styles.analysisIcon}>🚀</div>
+            <div className={styles.analysisContent}>
+              <h4>今後の展望</h4>
+              <p>法人規模での活動により一層注力することで、S評価到達も十分に期待できるレベルに成長している。</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )

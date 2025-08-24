@@ -442,12 +442,47 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
     router.push(`/evaluation?tab=execution&staffId=${selectedStaff.id}`)
   }
 
+  // グレード表示用の関数
+  const getGradeDisplay = (grade: string, type: '5stage' | '7stage') => {
+    if (type === '5stage') {
+      const gradeColors = {
+        'S': { color: '#ff0000', bg: '#fff0f0' },
+        'A': { color: '#ff4500', bg: '#fff5f0' },
+        'B': { color: '#32cd32', bg: '#f0fff0' },
+        'C': { color: '#1e90ff', bg: '#f0f8ff' },
+        'D': { color: '#808080', bg: '#f8f8f8' }
+      }
+      return gradeColors[grade as keyof typeof gradeColors] || gradeColors['B']
+    } else {
+      const gradeColors = {
+        'S+': { color: '#8B0000', bg: '#fff0f0' },
+        'S': { color: '#FF0000', bg: '#fff0f0' },
+        'A+': { color: '#FF4500', bg: '#fff5f0' },
+        'A': { color: '#FFA500', bg: '#fff8f0' },
+        'B': { color: '#32CD32', bg: '#f0fff0' },
+        'C': { color: '#1E90FF', bg: '#f0f8ff' },
+        'D': { color: '#808080', bg: '#f8f8f8' }
+      }
+      return gradeColors[grade as keyof typeof gradeColors] || gradeColors['B']
+    }
+  }
+
+  // モック相対評価データ
+  const getRelativeRanking = (type: 'facility' | 'corporate') => {
+    if (type === 'facility') {
+      return { rank: 12, total: 120, percentile: 90 } // 施設内12位/120人中（上位10%）
+    } else {
+      return { rank: 89, total: 850, percentile: 89 } // 法人内89位/850人中（上位11%）
+    }
+  }
+
   return (
     <div className={styles.tabContentSection}>
       <div className={styles.sectionHeader}>
         <h2>📊 人事評価・成長分析（V3システム）</h2>
         <div className={styles.sectionActions}>
           <button className={styles.actionButton} onClick={handleEvaluationInput}>評価入力</button>
+          <Link href="/evaluation-relative-grading" className={styles.actionButtonSecondary}>相対評価管理</Link>
         </div>
       </div>
 
@@ -460,48 +495,397 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
           <div className={styles.interviewSummaryEnhanced}>
             <div className={styles.summaryMainCard}>
               <div className={styles.summaryCardHeader}>
-                <span className={styles.summaryIcon}>📊</span>
-                <h3>最新人事評価（V3システム - 100点満点制）</h3>
+                <span className={styles.summaryIcon}>🏆</span>
+                <h3>2024年3月確定評価（最新）</h3>
               </div>
               
-              <div style={{ marginBottom: '24px' }}>
-                <div className={styles.evaluationSummary}>
-                  <div className={styles.evaluationScores}>
-                    <div className={styles.scoreItem}>
-                      <span className={styles.scoreLabel}>技術評価</span>
-                      <span className={styles.scoreValue}>{v3Evaluation?.technicalScore?.total || 80}点</span>
-                      <span className={styles.scoreDetail}>
-                        （法人統一 {v3Evaluation?.technicalScore?.coreItems || 42}点 + 施設固有 {v3Evaluation?.technicalScore?.facilityItems || 38}点）
-                      </span>
+              {/* メイン評価表示 - 5段階・7段階を強調 */}
+              <div className={styles.evaluationMainGrades}>
+                <div className={styles.gradeSection}>
+                  <div className={styles.gradeSectionTitle}>
+                    <span className={styles.gradeIcon}>🏢</span>
+                    <span>施設内評価</span>
+                  </div>
+                  <div className={styles.gradeDisplay}>
+                    <div 
+                      className={styles.gradeBadgeLarge} 
+                      style={{
+                        backgroundColor: getGradeDisplay('A', '5stage').bg,
+                        color: getGradeDisplay('A', '5stage').color,
+                        border: `2px solid ${getGradeDisplay('A', '5stage').color}`
+                      }}
+                    >
+                      A
                     </div>
-                    <div className={styles.scoreItem}>
-                      <span className={styles.scoreLabel}>組織貢献度</span>
-                      <span className={styles.scoreValue}>{v3Evaluation?.contributionScore?.total || 81.5}点</span>
-                      <span className={styles.scoreDetail}>
-                        （施設内 {v3Evaluation?.contributionScore?.facility || 85}点 + 法人内 {v3Evaluation?.contributionScore?.corporate || 78}点の平均）
+                    <div className={styles.gradeRanking}>
+                      <span className={styles.rankText}>
+                        {getRelativeRanking('facility').rank}位 / {getRelativeRanking('facility').total}人中
                       </span>
-                    </div>
-                    <div className={styles.scoreItem}>
-                      <span className={styles.scoreLabel}>総合評価</span>
-                      <span className={styles.scoreValue} style={{fontSize: '1.8em', fontWeight: 'bold', color: v3Grades[v3Evaluation?.grade || 'A'].color}}>
-                        {v3Evaluation?.totalScore || 81.25}点
-                      </span>
-                      <span className={styles.scoreRank} style={{backgroundColor: v3Grades[v3Evaluation?.grade || 'A'].color, color: 'white', padding: '4px 8px', borderRadius: '4px'}}>
-                        {v3Grades[v3Evaluation?.grade || 'A'].label}
+                      <span className={styles.percentileText}>
+                        上位{100 - getRelativeRanking('facility').percentile}%
                       </span>
                     </div>
                   </div>
-                  <div className={styles.evaluationComments}>
-                    <p>V3評価システムによる総合判定：{v3Evaluation?.experienceLabel || '中堅'}レベルとして優秀な成果を上げています。</p>
-                    <div className={styles.recommendations}>
-                      <div className={styles.recommendItem}>
-                        <strong>強み:</strong> 技術評価80点で安定した専門性を発揮
+                </div>
+                
+                <div className={styles.gradeSection}>
+                  <div className={styles.gradeSectionTitle}>
+                    <span className={styles.gradeIcon}>🌐</span>
+                    <span>法人内評価</span>
+                  </div>
+                  <div className={styles.gradeDisplay}>
+                    <div 
+                      className={styles.gradeBadgeLarge} 
+                      style={{
+                        backgroundColor: getGradeDisplay('B', '5stage').bg,
+                        color: getGradeDisplay('B', '5stage').color,
+                        border: `2px solid ${getGradeDisplay('B', '5stage').color}`
+                      }}
+                    >
+                      B
+                    </div>
+                    <div className={styles.gradeRanking}>
+                      <span className={styles.rankText}>
+                        {getRelativeRanking('corporate').rank}位 / {getRelativeRanking('corporate').total}人中
+                      </span>
+                      <span className={styles.percentileText}>
+                        上位{100 - getRelativeRanking('corporate').percentile}%
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className={styles.gradeSection}>
+                  <div className={styles.gradeSectionTitle}>
+                    <span className={styles.gradeIcon}>⭐</span>
+                    <span>総合判定</span>
+                  </div>
+                  <div className={styles.gradeDisplay}>
+                    <div 
+                      className={styles.gradeBadgeLarge} 
+                      style={{
+                        backgroundColor: getGradeDisplay('A', '7stage').bg,
+                        color: getGradeDisplay('A', '7stage').color,
+                        border: `3px solid ${getGradeDisplay('A', '7stage').color}`,
+                        fontSize: '1.5em',
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      A
+                    </div>
+                    <div className={styles.gradeRanking}>
+                      <span className={styles.scoreText}>
+                        {v3Evaluation?.totalScore || 81.25}点 / 100点
+                      </span>
+                      <span className={styles.gradeLabel}>
+                        優秀レベル
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 暫定評価表示 */}
+              {currentProvisionalEvaluation && (
+                <div className={styles.provisionalEvaluation}>
+                  <div className={styles.provisionalHeader}>
+                    <span className={styles.provisionalIcon}>⚡</span>
+                    <h4>{currentProvisionalEvaluation.title}</h4>
+                    <span className={styles.provisionalBadge}>暫定</span>
+                  </div>
+                  <div className={styles.provisionalScores}>
+                    <div className={styles.provisionalItem}>
+                      <span className={styles.provisionalLabel}>施設貢献</span>
+                      <div className={styles.provisionalGrade}>
+                        <span className={styles.provisionalValue}>12.3点 / 12.5点</span>
+                        <div 
+                          className={styles.provisionalBadge}
+                          style={{
+                            backgroundColor: getGradeDisplay('A', '5stage').bg,
+                            color: getGradeDisplay('A', '5stage').color
+                          }}
+                        >
+                          A
+                        </div>
                       </div>
-                      <div className={styles.recommendItem}>
-                        <strong>特徴:</strong> 施設内組織貢献度が法人内より高く、現場での活躍が顕著
+                    </div>
+                    <div className={styles.provisionalItem}>
+                      <span className={styles.provisionalLabel}>法人貢献</span>
+                      <div className={styles.provisionalGrade}>
+                        <span className={styles.provisionalValue}>11.8点 / 12.5点</span>
+                        <div 
+                          className={styles.provisionalBadge}
+                          style={{
+                            backgroundColor: getGradeDisplay('B', '5stage').bg,
+                            color: getGradeDisplay('B', '5stage').color
+                          }}
+                        >
+                          B
+                        </div>
                       </div>
-                      <div className={styles.recommendItem}>
-                        <strong>次段階目標:</strong> Sグレード（90点以上）到達に向けた法人規模での貢献強化
+                    </div>
+                    <div className={styles.provisionalTotal}>
+                      <span className={styles.provisionalTotalLabel}>暫定総合</span>
+                      <div 
+                        className={styles.provisionalTotalGrade}
+                        style={{
+                          backgroundColor: getGradeDisplay('A', '7stage').bg,
+                          color: getGradeDisplay('A', '7stage').color
+                        }}
+                      >
+                        A
+                      </div>
+                      <span className={styles.provisionalTotalScore}>24.1点 / 25点</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* 補足情報 */}
+              <div className={styles.evaluationSupplement}>
+                <div className={styles.supplementItem}>
+                  <span className={styles.supplementLabel}>評価確定日:</span>
+                  <span className={styles.supplementValue}>2024年3月31日</span>
+                </div>
+                <div className={styles.supplementItem}>
+                  <span className={styles.supplementLabel}>経験レベル:</span>
+                  <span className={styles.supplementValue}>{v3Evaluation?.experienceLabel || '中堅'}</span>
+                </div>
+                <div className={styles.supplementItem}>
+                  <span className={styles.supplementLabel}>評価期間:</span>
+                  <span className={styles.supplementValue}>2023年4月〜2024年3月</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 詳細評価内訳エリア */}
+          <div className={styles.evaluationDetailSection}>
+            <h3 className={styles.detailSectionTitle}>📋 評価項目詳細（V3システム構成）</h3>
+            
+            <div className={styles.evaluationBreakdown}>
+              {/* 技術評価の詳細 */}
+              <div className={styles.breakdownSection}>
+                <div className={styles.breakdownHeader}>
+                  <h4>🔧 技術評価（50点満点）</h4>
+                  <div className={styles.breakdownScore}>
+                    <span className={styles.currentScore}>{v3Evaluation?.technicalScore?.total || 40}点</span>
+                    <span className={styles.maxScore}>/ 50点</span>
+                  </div>
+                </div>
+                
+                <div className={styles.breakdownItems}>
+                  <div className={styles.breakdownCategory}>
+                    <div className={styles.categoryHeader}>
+                      <span className={styles.categoryIcon}>🏢</span>
+                      <span className={styles.categoryTitle}>法人統一項目（30点）</span>
+                      <span className={styles.categoryScore}>{v3Evaluation?.technicalScore?.coreItems || 24}点</span>
+                    </div>
+                    <div className={styles.categoryItems}>
+                      <div className={styles.evaluationItem}>
+                        <span className={styles.itemCode}>C01</span>
+                        <span className={styles.itemName}>専門技術・スキル</span>
+                        <div className={styles.itemScore}>
+                          <span className={styles.score}>8.2点</span>
+                          <span className={styles.maxScore}>/ 10点</span>
+                        </div>
+                        <div className={styles.itemDistribution}>
+                          上司評価: 6.0点 | 本人評価: 2.2点
+                        </div>
+                      </div>
+                      <div className={styles.evaluationItem}>
+                        <span className={styles.itemCode}>C02</span>
+                        <span className={styles.itemName}>対人関係・ケア</span>
+                        <div className={styles.itemScore}>
+                          <span className={styles.score}>8.5点</span>
+                          <span className={styles.maxScore}>/ 10点</span>
+                        </div>
+                        <div className={styles.itemDistribution}>
+                          上司評価: 4.8点 | 本人評価: 3.7点
+                        </div>
+                      </div>
+                      <div className={styles.evaluationItem}>
+                        <span className={styles.itemCode}>C03</span>
+                        <span className={styles.itemName}>安全・品質管理</span>
+                        <div className={styles.itemScore}>
+                          <span className={styles.score}>7.3点</span>
+                          <span className={styles.maxScore}>/ 10点</span>
+                        </div>
+                        <div className={styles.itemDistribution}>
+                          上司評価: 6.1点 | 本人評価: 1.2点
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className={styles.breakdownCategory}>
+                    <div className={styles.categoryHeader}>
+                      <span className={styles.categoryIcon}>🎯</span>
+                      <span className={styles.categoryTitle}>施設特化項目（20点）</span>
+                      <span className={styles.categoryScore}>{v3Evaluation?.technicalScore?.facilityItems || 16}点</span>
+                    </div>
+                    <div className={styles.categoryItems}>
+                      <div className={styles.evaluationItem}>
+                        <span className={styles.itemCode}>F01</span>
+                        <span className={styles.itemName}>回復期リハビリテーション専門性</span>
+                        <div className={styles.itemScore}>
+                          <span className={styles.score}>8.0点</span>
+                          <span className={styles.maxScore}>/ 10点</span>
+                        </div>
+                      </div>
+                      <div className={styles.evaluationItem}>
+                        <span className={styles.itemCode}>F02</span>
+                        <span className={styles.itemName}>多職種連携・チームケア</span>
+                        <div className={styles.itemScore}>
+                          <span className={styles.score}>8.0点</span>
+                          <span className={styles.maxScore}>/ 10点</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 組織貢献度評価の詳細 */}
+              <div className={styles.breakdownSection}>
+                <div className={styles.breakdownHeader}>
+                  <h4>🌟 組織貢献度評価（50点満点）</h4>
+                  <div className={styles.breakdownScore}>
+                    <span className={styles.currentScore}>{v3Evaluation?.contributionScore?.total || 41}点</span>
+                    <span className={styles.maxScore}>/ 50点</span>
+                  </div>
+                </div>
+                
+                <div className={styles.breakdownItems}>
+                  <div className={styles.breakdownCategory}>
+                    <div className={styles.categoryHeader}>
+                      <span className={styles.categoryIcon}>🏢</span>
+                      <span className={styles.categoryTitle}>施設内貢献度（25点）</span>
+                      <span className={styles.categoryScore}>{v3Evaluation?.contributionScore?.facility || 22}点</span>
+                    </div>
+                    <div className={styles.categoryDescription}>
+                      <p>夏季・冬季の相対評価を統合した年間評価</p>
+                      <div className={styles.seasonalBreakdown}>
+                        <div className={styles.seasonItem}>
+                          <span className={styles.seasonLabel}>夏季評価</span>
+                          <span className={styles.seasonScore}>12.3点 / 12.5点</span>
+                          <span className={styles.seasonGrade} style={{ backgroundColor: getGradeDisplay('A', '5stage').bg, color: getGradeDisplay('A', '5stage').color }}>A</span>
+                        </div>
+                        <div className={styles.seasonItem}>
+                          <span className={styles.seasonLabel}>冬季評価</span>
+                          <span className={styles.seasonScore}>12.0点 / 12.5点</span>
+                          <span className={styles.seasonGrade} style={{ backgroundColor: getGradeDisplay('A', '5stage').bg, color: getGradeDisplay('A', '5stage').color }}>A</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className={styles.breakdownCategory}>
+                    <div className={styles.categoryHeader}>
+                      <span className={styles.categoryIcon}>🌐</span>
+                      <span className={styles.categoryTitle}>法人内貢献度（25点）</span>
+                      <span className={styles.categoryScore}>{v3Evaluation?.contributionScore?.corporate || 19}点</span>
+                    </div>
+                    <div className={styles.categoryDescription}>
+                      <p>法人全体での相対評価（全850名中89位）</p>
+                      <div className={styles.seasonalBreakdown}>
+                        <div className={styles.seasonItem}>
+                          <span className={styles.seasonLabel}>夏季評価</span>
+                          <span className={styles.seasonScore}>11.8点 / 12.5点</span>
+                          <span className={styles.seasonGrade} style={{ backgroundColor: getGradeDisplay('B', '5stage').bg, color: getGradeDisplay('B', '5stage').color }}>B</span>
+                        </div>
+                        <div className={styles.seasonItem}>
+                          <span className={styles.seasonLabel}>冬季評価</span>
+                          <span className={styles.seasonScore}>11.5点 / 12.5点</span>
+                          <span className={styles.seasonGrade} style={{ backgroundColor: getGradeDisplay('B', '5stage').bg, color: getGradeDisplay('B', '5stage').color }}>B</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 総合判定の詳細 */}
+              <div className={styles.breakdownSection}>
+                <div className={styles.breakdownHeader}>
+                  <h4>⭐ 総合判定（7段階評価）</h4>
+                  <div className={styles.breakdownScore}>
+                    <span className={styles.currentScore}>{v3Evaluation?.totalScore || 81}点</span>
+                    <span className={styles.maxScore}>/ 100点</span>
+                  </div>
+                </div>
+                
+                <div className={styles.gradeStandards}>
+                  <h5>グレード基準</h5>
+                  <div className={styles.gradeTable}>
+                    <div className={styles.gradeRow}>
+                      <span className={styles.gradeCell} style={{ backgroundColor: '#fff0f0', color: '#8B0000' }}>S+</span>
+                      <span className={styles.gradeCell}>95-100点</span>
+                      <span className={styles.gradeCell}>超優秀</span>
+                    </div>
+                    <div className={styles.gradeRow}>
+                      <span className={styles.gradeCell} style={{ backgroundColor: '#fff0f0', color: '#FF0000' }}>S</span>
+                      <span className={styles.gradeCell}>90-94点</span>
+                      <span className={styles.gradeCell}>卓越</span>
+                    </div>
+                    <div className={styles.gradeRow}>
+                      <span className={styles.gradeCell} style={{ backgroundColor: '#fff5f0', color: '#FF4500' }}>A+</span>
+                      <span className={styles.gradeCell}>85-89点</span>
+                      <span className={styles.gradeCell}>優秀+</span>
+                    </div>
+                    <div className={`${styles.gradeRow} ${styles.currentGrade}`}>
+                      <span className={styles.gradeCell} style={{ backgroundColor: '#fff8f0', color: '#FFA500', fontWeight: 'bold' }}>A</span>
+                      <span className={styles.gradeCell} style={{ fontWeight: 'bold' }}>80-84点</span>
+                      <span className={styles.gradeCell} style={{ fontWeight: 'bold' }}>優秀 ← 現在</span>
+                    </div>
+                    <div className={styles.gradeRow}>
+                      <span className={styles.gradeCell} style={{ backgroundColor: '#f0fff0', color: '#32CD32' }}>B</span>
+                      <span className={styles.gradeCell}>70-79点</span>
+                      <span className={styles.gradeCell}>良好</span>
+                    </div>
+                    <div className={styles.gradeRow}>
+                      <span className={styles.gradeCell} style={{ backgroundColor: '#f0f8ff', color: '#1E90FF' }}>C</span>
+                      <span className={styles.gradeCell}>60-69点</span>
+                      <span className={styles.gradeCell}>普通</span>
+                    </div>
+                    <div className={styles.gradeRow}>
+                      <span className={styles.gradeCell} style={{ backgroundColor: '#f8f8f8', color: '#808080' }}>D</span>
+                      <span className={styles.gradeCell}>0-59点</span>
+                      <span className={styles.gradeCell}>要改善</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 改善提案・次段階目標 */}
+          <div className={styles.evaluationRecommendations}>
+            <h3 className={styles.recommendationTitle}>🎯 成長に向けた提案</h3>
+            <div className={styles.recommendationGrid}>
+              <div className={styles.recommendationCard}>
+                <div className={styles.recommendationIcon}>💪</div>
+                <div className={styles.recommendationContent}>
+                  <h4>強み活用</h4>
+                  <p>施設内貢献度が法人内より高く、現場での活躍が顕著です。専門技術とケア提供力を活かし、後輩指導や現場改善をさらに推進してください。</p>
+                </div>
+              </div>
+              <div className={styles.recommendationCard}>
+                <div className={styles.recommendationIcon}>🚀</div>
+                <div className={styles.recommendationContent}>
+                  <h4>次段階目標</h4>
+                  <p>Sグレード（90点以上）到達に向け、法人規模での貢献強化が必要です。施設横断プロジェクトへの参加や法人内勉強会での発表を検討してください。</p>
+                </div>
+              </div>
+              <div className={styles.recommendationCard}>
+                <div className={styles.recommendationIcon}>📈</div>
+                <div className={styles.recommendationContent}>
+                  <h4>具体的行動計画</h4>
+                  <p>1) 安全・品質管理分野のスキルアップ研修受講　2) 法人内事例発表への挑戦　3) 新人指導制度への積極参加</p>
+                </div>
+              </div>
+            </div>
+          </div>
                       </div>
                     </div>
                   </div>
