@@ -2453,7 +2453,7 @@ export default function DashboardPage() {
                                   <div>
                                     <CardTitle className="text-xl font-bold text-white">組織貢献評価（夏季）</CardTitle>
                                     <CardDescription className="text-green-100">
-                                      上期の施設・法人貢献度を評価
+                                      12月-5月期の施設・法人貢献度を評価
                                     </CardDescription>
                                   </div>
                                 </div>
@@ -2487,8 +2487,8 @@ export default function DashboardPage() {
                           <div className="p-3 bg-green-50 rounded-lg border-l-4 border-green-500">
                             <div className="text-sm font-semibold text-green-900 mb-2">8月評価の特徴：</div>
                             <div className="space-y-1 text-sm text-green-700">
-                              <div>• 上期（4-7月）の組織貢献度を評価</div>
-                              <div>• 秋季賞与査定の基礎データとして活用</div>
+                              <div>• 12月-5月期の組織貢献度を評価</div>
+                              <div>• 夏季賞与査定の基礎データとして活用</div>
                               <div>• 技術評価は実施せず、貢献度のみ</div>
                               <div>• 合計50点満点で評価</div>
                             </div>
@@ -2513,7 +2513,7 @@ export default function DashboardPage() {
                                   <div>
                                     <CardTitle className="text-xl font-bold text-white">組織貢献評価（冬季）</CardTitle>
                                     <CardDescription className="text-purple-100">
-                                      下期の施設・法人貢献度を評価
+                                      6月-11月期の施設・法人貢献度を評価
                                     </CardDescription>
                                   </div>
                                 </div>
@@ -2547,8 +2547,8 @@ export default function DashboardPage() {
                           <div className="p-3 bg-purple-50 rounded-lg border-l-4 border-purple-500">
                             <div className="text-sm font-semibold text-purple-900 mb-2">12月評価の特徴：</div>
                             <div className="space-y-1 text-sm text-purple-700">
-                              <div>• 下期（8-11月）の組織貢献度を評価</div>
-                              <div>• 春季賞与査定の基礎データとして活用</div>
+                              <div>• 6月-11月期の組織貢献度を評価</div>
+                              <div>• 冬季賞与査定の基礎データとして活用</div>
                               <div>• 3月の総合評価に向けた中間評価</div>
                               <div>• 合計50点満点で評価</div>
                             </div>

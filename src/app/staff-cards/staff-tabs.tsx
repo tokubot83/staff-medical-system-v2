@@ -887,13 +887,6 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
               </div>
             </div>
           </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
 
           {currentProvisionalEvaluation && (
             <div className={styles.sectionCard} style={{ marginTop: '24px', backgroundColor: '#fff3cd', border: '1px solid #ffc107' }}>
