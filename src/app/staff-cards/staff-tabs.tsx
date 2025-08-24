@@ -899,58 +899,137 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
                   </div>
                 </div>
 
-                {/* 総合判定の詳細 */}
-                <div className="border rounded-lg p-4" style={{ borderLeftColor: CHART_COLORS.highlight, borderLeftWidth: '4px' }}>
-                  <div className="flex justify-between items-center mb-4">
-                    <h4 className="text-lg font-semibold flex items-center gap-2">
-                      ⭐ 総合判定（7段階評価）
+                {/* V3評価システム 3軸比較表 */}
+                <div className="border rounded-lg p-6" style={{ borderLeftColor: CHART_COLORS.highlight, borderLeftWidth: '4px' }}>
+                  <div className="mb-6">
+                    <h4 className="text-xl font-bold flex items-center gap-2 mb-2">
+                      📊 V3評価システム 総合判定表
                     </h4>
-                    <div className="flex items-center gap-1">
-                      <span className="text-2xl font-bold" style={{ color: CHART_COLORS.highlight }}>
-                        {v3Evaluation?.totalScore || 81}点
-                      </span>
-                      <span className="text-gray-500">/ 100点</span>
+                    <p className="text-sm text-gray-600">総合評価・施設内評価・法人内評価の3軸比較</p>
+                  </div>
+
+                  {/* 3列評価サマリー */}
+                  <div className="grid grid-cols-3 gap-6 mb-6">
+                    {/* 総合評価 */}
+                    <div className="text-center p-4 bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg border border-yellow-200">
+                      <h5 className="font-bold text-lg mb-2 text-gray-800">⭐ 総合判定</h5>
+                      <p className="text-sm text-gray-600 mb-3">(7段階評価)</p>
+                      <div className="text-3xl font-bold mb-2" style={{ color: CHART_COLORS.highlight }}>
+                        {v3Evaluation?.totalScore || 81.25}点
+                      </div>
+                      <Badge style={{ backgroundColor: '#fff8f0', color: '#FFA500' }} className="text-lg font-bold px-3 py-1">
+                        A
+                      </Badge>
+                      <p className="text-sm font-medium text-gray-700 mt-1">優秀</p>
+                    </div>
+
+                    {/* 施設内評価 */}
+                    <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
+                      <h5 className="font-bold text-lg mb-2 text-gray-800">🏢 施設内評価</h5>
+                      <p className="text-sm text-gray-600 mb-3">(5段階評価)</p>
+                      <div className="text-3xl font-bold mb-2" style={{ color: '#1e40af' }}>
+                        {v3Evaluation?.contributionScore?.facility || 85}点
+                      </div>
+                      <Badge style={{ backgroundColor: '#fff8f0', color: '#FFA500' }} className="text-lg font-bold px-3 py-1">
+                        A
+                      </Badge>
+                      <p className="text-sm font-medium text-gray-700 mt-1">優秀</p>
+                    </div>
+
+                    {/* 法人内評価 */}
+                    <div className="text-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border border-green-200">
+                      <h5 className="font-bold text-lg mb-2 text-gray-800">🌐 法人内評価</h5>
+                      <p className="text-sm text-gray-600 mb-3">(5段階評価)</p>
+                      <div className="text-3xl font-bold mb-2" style={{ color: '#059669' }}>
+                        {v3Evaluation?.contributionScore?.corporate || 78}点
+                      </div>
+                      <Badge style={{ backgroundColor: '#f0fff0', color: '#32CD32' }} className="text-lg font-bold px-3 py-1">
+                        B
+                      </Badge>
+                      <p className="text-sm font-medium text-gray-700 mt-1">良好</p>
                     </div>
                   </div>
-                  
-                  <div className="mb-4">
-                    <h5 className="font-medium mb-3">📊 グレード基準</h5>
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
-                        <Badge style={{ backgroundColor: '#fff0f0', color: '#8B0000' }}>S+</Badge>
-                        <span className="text-sm">95-100点</span>
-                        <span className="text-sm font-medium">超優秀</span>
-                      </div>
-                      <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
-                        <Badge style={{ backgroundColor: '#fff0f0', color: '#FF0000' }}>S</Badge>
-                        <span className="text-sm">90-94点</span>
-                        <span className="text-sm font-medium">卓越</span>
-                      </div>
-                      <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
-                        <Badge style={{ backgroundColor: '#fff5f0', color: '#FF4500' }}>A+</Badge>
-                        <span className="text-sm">85-89点</span>
-                        <span className="text-sm font-medium">優秀+</span>
-                      </div>
-                      <div className="flex justify-between items-center p-3 bg-yellow-50 rounded border-2 border-yellow-200">
-                        <Badge style={{ backgroundColor: '#fff8f0', color: '#FFA500' }} className="font-bold">A</Badge>
-                        <span className="text-sm font-bold">80-84点</span>
-                        <span className="text-sm font-bold text-yellow-700">優秀 ← 現在</span>
-                      </div>
-                      <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
-                        <Badge style={{ backgroundColor: '#f0fff0', color: '#32CD32' }}>B</Badge>
-                        <span className="text-sm">70-79点</span>
-                        <span className="text-sm font-medium">良好</span>
-                      </div>
-                      <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
-                        <Badge style={{ backgroundColor: '#f0f8ff', color: '#1E90FF' }}>C</Badge>
-                        <span className="text-sm">60-69点</span>
-                        <span className="text-sm font-medium">普通</span>
-                      </div>
-                      <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
-                        <Badge style={{ backgroundColor: '#f8f8f8', color: '#808080' }}>D</Badge>
-                        <span className="text-sm">0-59点</span>
-                        <span className="text-sm font-medium">要改善</span>
-                      </div>
+
+                  {/* 統合グレード基準表 */}
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <h5 className="font-bold mb-4 text-gray-800">📋 評価基準対照表</h5>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="border-b border-gray-300">
+                            <th className="text-left py-2 px-3 font-bold">グレード</th>
+                            <th className="text-center py-2 px-3 font-bold">総合評価<br/>(7段階)</th>
+                            <th className="text-center py-2 px-3 font-bold">施設内評価<br/>(5段階)</th>
+                            <th className="text-center py-2 px-3 font-bold">法人内評価<br/>(5段階)</th>
+                            <th className="text-left py-2 px-3 font-bold">評価内容</th>
+                          </tr>
+                        </thead>
+                        <tbody className="space-y-1">
+                          <tr className="border-b border-gray-200">
+                            <td className="py-2 px-3">
+                              <Badge style={{ backgroundColor: '#fff0f0', color: '#8B0000' }}>S+</Badge>
+                            </td>
+                            <td className="text-center py-2 px-3">95-100点</td>
+                            <td className="text-center py-2 px-3 text-gray-400">-</td>
+                            <td className="text-center py-2 px-3 text-gray-400">-</td>
+                            <td className="py-2 px-3 font-medium">超優秀</td>
+                          </tr>
+                          <tr className="border-b border-gray-200">
+                            <td className="py-2 px-3">
+                              <Badge style={{ backgroundColor: '#fff0f0', color: '#FF0000' }}>S</Badge>
+                            </td>
+                            <td className="text-center py-2 px-3">90-94点</td>
+                            <td className="text-center py-2 px-3">90-100点</td>
+                            <td className="text-center py-2 px-3">90-100点</td>
+                            <td className="py-2 px-3 font-medium">卓越</td>
+                          </tr>
+                          <tr className="border-b border-gray-200">
+                            <td className="py-2 px-3">
+                              <Badge style={{ backgroundColor: '#fff5f0', color: '#FF4500' }}>A+</Badge>
+                            </td>
+                            <td className="text-center py-2 px-3">85-89点</td>
+                            <td className="text-center py-2 px-3 text-gray-400">-</td>
+                            <td className="text-center py-2 px-3 text-gray-400">-</td>
+                            <td className="py-2 px-3 font-medium">優秀+</td>
+                          </tr>
+                          <tr className="border-b border-gray-200 bg-yellow-50">
+                            <td className="py-3 px-3">
+                              <Badge style={{ backgroundColor: '#fff8f0', color: '#FFA500' }} className="font-bold">A</Badge>
+                            </td>
+                            <td className="text-center py-3 px-3 font-bold">80-84点</td>
+                            <td className="text-center py-3 px-3 font-bold">80-89点</td>
+                            <td className="text-center py-3 px-3 font-bold">80-89点</td>
+                            <td className="py-3 px-3 font-bold text-yellow-700">優秀 ← 現在</td>
+                          </tr>
+                          <tr className="border-b border-gray-200">
+                            <td className="py-2 px-3">
+                              <Badge style={{ backgroundColor: '#f0fff0', color: '#32CD32' }}>B</Badge>
+                            </td>
+                            <td className="text-center py-2 px-3">70-79点</td>
+                            <td className="text-center py-2 px-3">70-79点</td>
+                            <td className="text-center py-2 px-3">70-79点</td>
+                            <td className="py-2 px-3 font-medium">良好</td>
+                          </tr>
+                          <tr className="border-b border-gray-200">
+                            <td className="py-2 px-3">
+                              <Badge style={{ backgroundColor: '#f0f8ff', color: '#1E90FF' }}>C</Badge>
+                            </td>
+                            <td className="text-center py-2 px-3">60-69点</td>
+                            <td className="text-center py-2 px-3">60-69点</td>
+                            <td className="text-center py-2 px-3">60-69点</td>
+                            <td className="py-2 px-3 font-medium">普通</td>
+                          </tr>
+                          <tr>
+                            <td className="py-2 px-3">
+                              <Badge style={{ backgroundColor: '#f8f8f8', color: '#808080' }}>D</Badge>
+                            </td>
+                            <td className="text-center py-2 px-3">0-59点</td>
+                            <td className="text-center py-2 px-3">0-59点</td>
+                            <td className="text-center py-2 px-3">0-59点</td>
+                            <td className="py-2 px-3 font-medium">要改善</td>
+                          </tr>
+                        </tbody>
+                      </table>
                     </div>
                   </div>
                 </div>
