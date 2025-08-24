@@ -417,7 +417,8 @@ export default function DynamicInterviewSheet({
       'action_planning': ArrowRight,  // アクションプランセクション
       'action_plan': ArrowRight
     };
-    return iconMap[sectionType] || FileText;
+    const IconComponent = iconMap[sectionType] || FileText;
+    return IconComponent && typeof IconComponent === 'function' ? IconComponent : FileText;
   };
 
   return (
@@ -550,11 +551,14 @@ export default function DynamicInterviewSheet({
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
-                {normalizedSheetData.sections?.[activeSection]?.type && 
-                  React.createElement(getSectionIcon(normalizedSheetData.sections[activeSection].type), {
+                {(() => {
+                  const sectionType = normalizedSheetData.sections?.[activeSection]?.type;
+                  const IconComponent = sectionType ? getSectionIcon(sectionType) : null;
+                  return IconComponent ? React.createElement(IconComponent, {
                     className: "mr-3 text-blue-600",
                     size: 24
-                  })}
+                  }) : null;
+                })()}
                 {normalizedSheetData.sections[activeSection].name}
               </CardTitle>
             </CardHeader>

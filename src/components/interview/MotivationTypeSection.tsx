@@ -283,9 +283,14 @@ export function MotivationTypeSection({
                         </h3>
                       </div>
                     </div>
-                    {selectedMotivation?.icon && React.createElement(selectedMotivation.icon, {
-                      className: `h-12 w-12 ${selectedMotivation.color?.split(' ')[0] || ''}`
-                    })}
+                    {(() => {
+                      const IconComponent = selectedMotivation?.icon;
+                      return IconComponent && typeof IconComponent === 'function' 
+                        ? React.createElement(IconComponent, {
+                            className: `h-12 w-12 ${selectedMotivation.color?.split(' ')[0] || ''}`
+                          })
+                        : null;
+                    })()}
                   </div>
                 </CardHeader>
                 <CardContent className="pt-4">

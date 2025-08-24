@@ -1451,7 +1451,7 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
   const [interviewData, setInterviewData] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [activeSubTab, setActiveSubTab] = useState('overview')
-  const [showNotebookLinkModal, setShowNotebookLinkModal] = useState(false)
+  const [showNotebookLinkModal, setShowNotebookLinkModal] = useState(true)
   const [editingInterviewId, setEditingInterviewId] = useState<string | null>(null)
   const [currentInterviewType, setCurrentInterviewType] = useState<'regular' | 'special' | 'support'>('regular')
   const [currentInterviewDate, setCurrentInterviewDate] = useState<string>('')
@@ -2404,6 +2404,16 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
               {/* 定期面談履歴詳細 */}
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-gray-800">📋 定期面談履歴</h3>
+                <button
+                  type="button"
+                  onClick={() => {
+                    console.log('外部テストボタンクリック');
+                    setShowNotebookLinkModal(true);
+                  }}
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
+                  外部テストボタン
+                </button>
                 <div className="grid grid-cols-1 gap-4">
                   {interviewData?.regular?.interviews?.map((interview: any) => (
                     <Card key={interview.id} className="border border-gray-200 hover:shadow-md transition-shadow">
@@ -2469,7 +2479,10 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                           ) : (
                             <button
                               type="button"
+                              onMouseOver={() => console.log('ボタンにマウスオーバー:', interview.id)}
+                              onMouseDown={() => console.log('ボタンマウスダウン:', interview.id)}
                               onClick={(e) => {
+                                console.log('=== ボタンクリック開始 ===', interview.id);
                                 e.preventDefault();
                                 e.stopPropagation();
                                 console.log('NotebookLM登録ボタンクリック:', interview.id);
@@ -2479,8 +2492,14 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                                 setCurrentInterviewCategory(interview.subtypeLabel);
                                 setShowNotebookLinkModal(true);
                                 console.log('モーダル表示設定完了');
+                                alert('ボタンがクリックされました!');
                               }}
                               className="inline-flex items-center gap-2 px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700"
+                              style={{
+                                pointerEvents: 'auto',
+                                zIndex: 1000,
+                                position: 'relative'
+                              }}
                             >
                               <span>📝</span>
                               NotebookLMリンク登録
@@ -3729,8 +3748,8 @@ export function GrowthDevelopmentTab({ selectedStaff }: { selectedStaff: any }) 
       {/* NotebookLMリンク登録モーダル */}
       {console.log('モーダル表示状態:', showNotebookLinkModal)}
       {showNotebookLinkModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]">
-          <div className="bg-white rounded-lg p-6 w-96 max-w-90vw">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center" style={{ zIndex: 999999 }}>
+          <div className="bg-white rounded-lg p-6 w-96 max-w-90vw" style={{ border: '5px solid red' }}>
             <h3 className="text-lg font-semibold mb-4">NotebookLMリンクを追加</h3>
             
             <div className="mb-4">

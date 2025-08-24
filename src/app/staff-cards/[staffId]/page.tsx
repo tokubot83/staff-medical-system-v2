@@ -46,7 +46,7 @@ import {
   EvaluationTab, 
   RecruitmentTab, 
   InterviewTab, 
-  DevelopmentTab, 
+  GrowthDevelopmentTab as DevelopmentTab, 
   EducationTab 
 } from '../staff-tabs'
 import PersonalDashboard from '@/components/dashboard/PersonalDashboard'
