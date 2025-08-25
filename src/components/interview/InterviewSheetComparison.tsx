@@ -86,7 +86,7 @@ export default function InterviewSheetComparison({
 
         {/* メインコンテンツ */}
         <div className={`relative bg-white rounded-lg shadow-xl transition-all transform ${
-          isFullscreen ? 'w-full h-full' : 'w-[95vw] h-[90vh] max-w-7xl'
+          isFullscreen ? 'w-full h-full' : 'w-[98vw] h-[95vh]'
         }`}>
           
           {/* ヘッダー */}
