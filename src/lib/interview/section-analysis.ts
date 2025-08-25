@@ -22,6 +22,7 @@ export interface SectionAnalysisResult {
   diff: number;
   trend: 'up' | 'stable' | 'down';
   priority: 'high' | 'medium' | 'low';
+  fill?: string;
 }
 
 export interface SectionCorrelationData {
@@ -29,6 +30,7 @@ export interface SectionCorrelationData {
   discussion_depth: number;
   improvement_rate: number;
   priority: 'high' | 'medium' | 'low';
+  fill?: string;
 }
 
 // 職階別セクション構成マップ
@@ -143,14 +145,28 @@ export function generateSampleTrendData(role: string): SectionTrendData[] {
  */
 export function generateSectionCompletionData(role: string): SectionAnalysisResult[] {
   const sections = getSectionsByRole(role);
+  const CHART_COLORS = {
+    success: '#16a34a',
+    primary: '#2563eb', 
+    warning: '#ca8a04',
+    neutral: '#e5e7eb'
+  };
   
-  return sections.map(section => ({
+  return sections.map((section, index) => ({
     section: section.name,
     completion: Math.round(Math.random() * 30 + 60), // 60-90%
     diff: Math.round(Math.random() * 20 - 10), // -10〜+10%
     trend: Math.random() > 0.5 ? 'up' : Math.random() > 0.7 ? 'down' : 'stable' as any,
-    priority: section.priority
-  })).sort((a, b) => b.completion - a.completion); // 充実度順にソート
+    priority: section.priority,
+    fill: section.color // セクション固有の色を追加
+  })).sort((a, b) => b.completion - a.completion) // 充実度順にソート
+    .map((item, index) => ({ // ランキング順での色付け
+      ...item,
+      fill: index === 0 ? CHART_COLORS.success :  // 1位
+            index === 1 ? CHART_COLORS.primary :  // 2位
+            index === 2 ? CHART_COLORS.warning :  // 3位
+            CHART_COLORS.neutral  // その他はグレー
+    }));
 }
 
 /**
@@ -158,12 +174,20 @@ export function generateSectionCompletionData(role: string): SectionAnalysisResu
  */
 export function generateSectionCorrelationData(role: string): SectionCorrelationData[] {
   const sections = getSectionsByRole(role);
+  const CHART_COLORS = {
+    warning: '#ca8a04',
+    primary: '#2563eb',
+    neutral: '#e5e7eb'
+  };
   
   return sections.map(section => ({
     section: section.name,
     discussion_depth: Math.round(Math.random() * 40 + 30), // 30-70%
     improvement_rate: Math.round(Math.random() * 40 + 20), // 20-60%
-    priority: section.priority
+    priority: section.priority,
+    fill: section.priority === 'high' ? CHART_COLORS.warning :
+          section.priority === 'medium' ? CHART_COLORS.primary :
+          CHART_COLORS.neutral
   }));
 }
 

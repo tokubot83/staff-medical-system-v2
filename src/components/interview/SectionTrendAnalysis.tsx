@@ -185,16 +185,14 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
                     tick={{ fill: '#374151' }}
                   />
                   
-                  <Bar dataKey="completion" radius={[0, 4, 4, 0]}>
+                  <Bar 
+                    dataKey="completion" 
+                    radius={[0, 4, 4, 0]}
+                  >
                     {sectionCompletionData.map((entry, index) => (
                       <Cell 
-                        key={index}
-                        fill={
-                          index === 0 ? CHART_COLORS.success :  // 1位
-                          index === 1 ? CHART_COLORS.primary :  // 2位
-                          index === 2 ? CHART_COLORS.warning :  // 3位
-                          CHART_COLORS.neutral  // その他はグレー
-                        }
+                        key={`cell-${index}`}
+                        fill={entry.fill || CHART_COLORS.neutral}
                       />
                     ))}
                     
@@ -273,15 +271,14 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
                   <ReferenceLine x={50} stroke="#374151" strokeDasharray="3 3" />
                   <ReferenceLine y={50} stroke="#374151" strokeDasharray="3 3" />
                   
-                  <Scatter name="セクション" data={sectionCorrelationData}>
+                  <Scatter 
+                    name="セクション" 
+                    data={sectionCorrelationData}
+                  >
                     {sectionCorrelationData.map((entry, index) => (
                       <Cell 
-                        key={index} 
-                        fill={
-                          entry.priority === 'high' ? CHART_COLORS.warning :
-                          entry.priority === 'medium' ? CHART_COLORS.primary :
-                          CHART_COLORS.neutral
-                        }
+                        key={`scatter-cell-${index}`} 
+                        fill={entry.fill || CHART_COLORS.neutral}
                       />
                     ))}
                   </Scatter>
