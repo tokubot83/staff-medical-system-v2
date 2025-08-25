@@ -168,7 +168,7 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
                 <BarChart 
                   data={sectionCompletionData} 
                   layout="horizontal"
-                  margin={{ top: 5, right: 80, left: 100, bottom: 5 }}
+                  margin={{ top: 5, right: 80, left: 120, bottom: 5 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
                   <XAxis 
@@ -180,33 +180,23 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
                   <YAxis 
                     type="category" 
                     dataKey="section" 
-                    width={100}
+                    width={120}
                     fontSize={12}
                     tick={{ fill: '#374151' }}
                   />
                   
-                  <Bar 
-                    dataKey="completion" 
-                    radius={[0, 4, 4, 0]}
-                  >
+                  <Bar dataKey="completion" radius={[0, 4, 4, 0]}>
                     {sectionCompletionData.map((entry, index) => (
                       <Cell 
                         key={`cell-${index}`}
                         fill={entry.fill || CHART_COLORS.neutral}
                       />
                     ))}
-                    
-                    {/* 差分表示 */}
-                    <LabelList 
-                      dataKey="diff" 
-                      position="right" 
-                      formatter={(value: number) => `${value > 0 ? '+' : ''}${value}%`}
-                      style={{ fill: '#6b7280', fontSize: '12px' }}
-                    />
                   </Bar>
                   
                   <Tooltip 
-                    formatter={(value: number, name: string) => [`${value}%`, '充実度']}
+                    formatter={(value: number) => [`${value}%`, '充実度']}
+                    labelFormatter={(label) => `セクション: ${label}`}
                   />
                 </BarChart>
               </ResponsiveContainer>

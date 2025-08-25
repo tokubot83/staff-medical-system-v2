@@ -2070,7 +2070,7 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
 
       {/* 印刷プレビュー表示 */}
       {currentStep === 'conducting' && session.useBankSystem && session.bankGeneratedSheet && showPrintView && (
-        <div className="w-full py-4">
+        <div className="fullwidth-interview-container fullwidth-interview-main">
           <DynamicInterviewSheetPrint
             sheetData={session.bankGeneratedSheet}
             staffProfile={{

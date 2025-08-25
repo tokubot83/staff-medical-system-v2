@@ -1,7 +1,8 @@
 .simulator {
   padding: 20px;
-  width: 100%;
-  margin: 0;
+  /* 全幅クラス適用時はCSSクラスが制御するため、以下を削除 */
+  /* width: 100%; */
+  /* margin: 0; */
 }
 
 .header {

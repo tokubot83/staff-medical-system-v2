@@ -5,6 +5,9 @@
 /* 面談シート印刷用スタイル */
 @import '../styles/interview-print.css';
 
+/* 面談シート表示専用の全幅スタイル */
+@import '../styles/fullwidth-interview.css';
+
 /* グローバル印刷用スタイル */
 @media print {
   /* Tailwindのprint:hiddenクラスを強制的に適用 */

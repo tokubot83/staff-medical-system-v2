@@ -531,8 +531,8 @@ export default function DynamicInterviewSheet({
   };
 
   return (
-    <div style={{ margin: '-20px' }} className="bg-gray-50 min-h-screen">
-      <div className="p-6 space-y-6">
+    <div className="bg-gray-50 min-h-screen fullwidth-interview-container">
+      <div className="p-6 space-y-6 fullwidth-interview-content">
       {/* ヘッダー */}
       <Card className="mb-6">
         <CardHeader>

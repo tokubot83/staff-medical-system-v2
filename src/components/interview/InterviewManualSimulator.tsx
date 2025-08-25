@@ -326,7 +326,7 @@ export default function InterviewManualSimulator() {
   }
 
   return (
-    <div className={styles.simulator}>
+    <div className={`${styles.simulator} fullwidth-interview-container`}>
       <div className={styles.header}>
         <h1>🎯 面談マニュアルシミュレーター</h1>
         <p>条件を選択して、実際の面談で使用される質問内容を確認できます</p>
