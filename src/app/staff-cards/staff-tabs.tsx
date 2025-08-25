@@ -22,6 +22,7 @@ import { Badge } from '@/components/ui/badge'
 import { TrendingUp, Target, Award, Calendar, BarChart3, Users, FileText, GitCompare } from 'lucide-react'
 import styles from './StaffCards.module.css'
 import InterviewSheetModal from '@/components/InterviewSheetModal'
+import SectionTrendAnalysis from '@/components/interview/SectionTrendAnalysis'
 
 // V3グレード定義
 const v3Grades = {
@@ -32,6 +33,33 @@ const v3Grades = {
   'B': { color: '#32CD32', label: 'B（良好）', min: 70 },
   'C': { color: '#1E90FF', label: 'C（普通）', min: 60 },
   'D': { color: '#808080', label: 'D（要改善）', min: 0 }
+}
+
+// 職員の職階を判定する関数
+function getStaffRole(staff: any): string {
+  if (!staff) return 'general-nurse';
+  
+  const title = (staff.title || staff.position || '').toLowerCase();
+  const name = (staff.name || '').toLowerCase();
+  const experienceYears = staff.experienceYears || 0;
+  
+  // 病棟師長・師長
+  if (title.includes('師長') || title.includes('manager')) {
+    return 'ward-manager';
+  }
+  
+  // 主任・チーフ
+  if (title.includes('主任') || title.includes('chief') || title.includes('チーフ')) {
+    return 'chief-nurse';
+  }
+  
+  // 先輩看護師（経験5年以上）
+  if (experienceYears >= 5 || title.includes('先輩') || title.includes('senior')) {
+    return 'senior-nurse';
+  }
+  
+  // デフォルトは一般看護師
+  return 'general-nurse';
 }
 
 export function AnalyticsTab({ selectedStaff }: { selectedStaff: any }) {
@@ -2178,63 +2206,16 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                 </div>
               </div>
 
-              {/* 定期面談詳細分析ダッシュボード */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                {/* NotebookLM活用状況 */}
-                <Card>
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-base flex items-center gap-2">
-                      📖 NotebookLM活用状況
-                      <Badge style={{ backgroundColor: CHART_COLORS.primary, color: 'white' }}>
-                        高活用
-                      </Badge>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm">音声記録登録率</span>
-                        <div className="flex items-center gap-2">
-                          <div className="w-16 bg-gray-200 rounded-full h-1.5">
-                            <div 
-                              className="h-1.5 rounded-full" 
-                              style={{ width: '75%', backgroundColor: CHART_COLORS.success }}
-                            ></div>
-                          </div>
-                          <span className="text-sm font-medium">6/8回</span>
-                        </div>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm">AI要約利用率</span>
-                        <div className="flex items-center gap-2">
-                          <div className="w-16 bg-gray-200 rounded-full h-1.5">
-                            <div 
-                              className="h-1.5 rounded-full" 
-                              style={{ width: '100%', backgroundColor: CHART_COLORS.primary }}
-                            ></div>
-                          </div>
-                          <span className="text-sm font-medium">6/6回</span>
-                        </div>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm">マインドマップ作成</span>
-                        <div className="flex items-center gap-2">
-                          <div className="w-16 bg-gray-200 rounded-full h-1.5">
-                            <div 
-                              className="h-1.5 rounded-full" 
-                              style={{ width: '67%', backgroundColor: CHART_COLORS.warning }}
-                            ></div>
-                          </div>
-                          <span className="text-sm font-medium">4/6回</span>
-                        </div>
-                      </div>
-                      <div className="mt-3 p-2 bg-blue-50 rounded text-xs text-blue-800">
-                        ℹ️ 面談後のAI分析を積極的に活用しており、成長計画の精度が向上しています。
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+              {/* セクション別トレンド分析ダッシュボード */}
+              <div className="mb-6">
+                <SectionTrendAnalysis 
+                  staffRole={getStaffRole(selectedStaff)}
+                  staffId={selectedStaff.id}
+                />
+              </div>
 
+              {/* その他の分析データ */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                 {/* 成長軸跡分析 */}
                 <Card>
                   <CardHeader className="pb-3">
@@ -2293,6 +2274,9 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                     </div>
                   </CardContent>
                 </Card>
+
+                {/* 空のカード（将来の拡張用） */}
+                <div></div>
               </div>
 
               {/* 面談効果測定ダッシュボード */}
