@@ -274,8 +274,7 @@ export default function InterviewSheetComparison({
             </div>
           </div>
         </div>
-      </div>
-
+      
       {/* グローバルスタイル（印刷対応） */}
       <style jsx global>{`
         @media print {
