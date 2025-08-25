@@ -76,18 +76,43 @@ export default function InterviewSheetComparison({
   console.log('[InterviewSheetComparison] Modal is opening!');
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden" style={{backgroundColor: 'rgba(255,0,0,0.5)'}}>
-      <div className="flex items-center justify-center min-h-screen">
-        {/* 背景オーバーレイ */}
-        <div 
-          className="fixed inset-0 transition-opacity bg-gray-900 bg-opacity-75" 
-          onClick={onClose}
-        />
+    <div 
+      className="interview-comparison-overlay" 
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        zIndex: 9999,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        overflow: 'hidden'
+      }}
+    >
+      {/* 背景オーバーレイ */}
+      <div 
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'rgba(31, 41, 55, 0.75)'
+        }}
+        onClick={onClose}
+      />
 
-        {/* メインコンテンツ */}
-        <div className={`relative bg-white transition-all transform ${
-          isFullscreen ? 'w-screen h-screen' : 'w-screen h-screen'
-        }`}>
+      {/* メインコンテンツ */}
+      <div 
+        style={{
+          position: 'relative',
+          width: '100vw',
+          height: '100vh',
+          backgroundColor: 'white',
+          display: 'flex',
+          flexDirection: 'column'
+        }}
+      >
           
           {/* ヘッダー */}
           <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-3">
@@ -181,20 +206,20 @@ export default function InterviewSheetComparison({
           </div>
 
           {/* コンテンツエリア */}
-          <div className="flex h-[calc(100%-4rem)]">
+          <div style={{ display: 'flex', flex: '1', height: 'calc(100vh - 120px)' }}>
             
             {/* 前回面談シート（左側） */}
-            <div className="w-1/2 border-r border-gray-200 flex flex-col">
-              <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
-                <h3 className="font-semibold text-gray-800 text-sm">
+            <div style={{ width: '50%', borderRight: '1px solid #e5e7eb', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ backgroundColor: '#f9fafb', padding: '12px 16px', borderBottom: '1px solid #e5e7eb' }}>
+                <h3 style={{ fontWeight: '600', color: '#1f2937', fontSize: '14px', margin: 0 }}>
                   前回の面談シート
                 </h3>
-                <p className="text-xs text-gray-600 mt-1">
+                <p style={{ fontSize: '12px', color: '#6b7280', margin: '4px 0 0 0' }}>
                   同じタイプの直近面談
                 </p>
               </div>
               
-              <div className="flex-1 overflow-y-auto p-2">
+              <div style={{ flex: '1', overflowY: 'auto', padding: '8px' }}>
                 <PreviousInterviewViewer
                   staffId={currentStaffId}
                   currentInterviewType={currentInterviewType}
@@ -206,17 +231,17 @@ export default function InterviewSheetComparison({
             </div>
 
             {/* 今回の面談シート（右側） */}
-            <div className="w-1/2 flex flex-col">
-              <div className="bg-blue-50 px-4 py-3 border-b border-gray-200">
-                <h3 className="font-semibold text-blue-800 text-sm">
+            <div style={{ width: '50%', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ backgroundColor: '#eff6ff', padding: '12px 16px', borderBottom: '1px solid #e5e7eb' }}>
+                <h3 style={{ fontWeight: '600', color: '#1e40af', fontSize: '14px', margin: 0 }}>
                   今回の面談シート
                 </h3>
-                <p className="text-xs text-blue-600 mt-1">
+                <p style={{ fontSize: '12px', color: '#2563eb', margin: '4px 0 0 0' }}>
                   現在実施中の面談
                 </p>
               </div>
               
-              <div className="flex-1 overflow-y-auto p-2">
+              <div style={{ flex: '1', overflowY: 'auto', padding: '8px' }}>
                 <div className="mb-2 p-2 bg-blue-50 text-xs rounded">
                   <strong>Debug:</strong> experienceCategory: {JSON.stringify(currentExperienceCategory)}, duration: {currentDuration}
                 </div>
