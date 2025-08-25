@@ -1264,7 +1264,7 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
   return (
     <div style={{ margin: '-20px' }} className={`space-y-6 ${isPrintMode ? 'print-preview-mode' : ''}`}>
       {/* プログレスバー */}
-      <div className="mb-8 px-6">
+      <div className="mb-8 px-6 fullwidth-interview-progress">
         <div className="relative">
           <Progress value={calculateProgress()} className="h-3" />
           <div className="absolute top-0 right-0 text-xs text-gray-500">

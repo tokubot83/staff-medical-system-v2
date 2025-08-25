@@ -194,7 +194,7 @@ function InterviewsPageContent() {
       </div>
       
       <div className={styles.container}>
-        <div className={`${styles.tabNavigation} print:hidden`}>
+        <div className={`${styles.tabNavigation} fullwidth-interview-tabs print:hidden`}>
           {tabs.map((tab) => (
             <button
               key={tab.id}

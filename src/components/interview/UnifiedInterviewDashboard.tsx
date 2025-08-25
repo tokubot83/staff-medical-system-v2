@@ -521,7 +521,7 @@ export default function UnifiedInterviewDashboard() {
     return (
       <div className="space-y-4">
         {/* ヘッダーバー */}
-        <div className="flex items-center justify-between p-4 bg-white border-b">
+        <div className="flex items-center justify-between p-4 bg-white border-b fullwidth-interview-header-bar">
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
