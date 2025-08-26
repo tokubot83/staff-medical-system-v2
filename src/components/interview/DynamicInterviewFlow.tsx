@@ -1263,21 +1263,110 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
 
   return (
     <div style={{ margin: '-20px' }} className={`space-y-6 ${isPrintMode ? 'print-preview-mode' : ''}`}>
-      {/* プログレスバー */}
-      <div className="mb-8 px-6 fullwidth-interview-progress">
-        <div className="relative">
-          <Progress value={calculateProgress()} className="h-3" />
-          <div className="absolute top-0 right-0 text-xs text-gray-500">
-            {Math.round(calculateProgress())}%
+      {/* ヘッダーレイアウト */}
+      <div className="fullwidth-interview-header-layout">
+        <div className="fullwidth-interview-header-content">
+          {/* トップ行 */}
+          <div className="fullwidth-interview-top-row">
+            {/* 戻るボタンエリア */}
+            <div>
+              {/* 戻るボタンがあればここに配置 */}
+            </div>
+            
+            {/* タイトルエリア */}
+            <div className="flex items-center gap-2">
+              {session.staffMember && (
+                <span className="text-lg font-semibold text-gray-800">
+                  {session.staffMember.name} - {session.staffMember.department}/{session.staffMember.jobRole}
+                </span>
+              )}
+            </div>
+            
+            {/* 完了状況エリア */}
+            <div className="text-sm text-gray-600">
+              {session.interviewType && (
+                <span className="font-medium">{session.interviewType} {Math.round(calculateProgress())}% 完了</span>
+              )}
+            </div>
           </div>
-        </div>
-        <div className="flex justify-between mt-2 text-sm text-gray-600">
-          <span className={currentStep === 'staff-select' ? 'font-bold text-blue-600' : ''}>職員選択</span>
-          <span className={currentStep === 'interview-type' ? 'font-bold text-blue-600' : ''}>面談種類</span>
-          <span className={currentStep === 'duration' ? 'font-bold text-blue-600' : ''}>時間設定</span>
-          <span className={currentStep === 'generating' ? 'font-bold text-blue-600' : ''}>生成中</span>
-          <span className={currentStep === 'conducting' ? 'font-bold text-blue-600' : ''}>面談実施</span>
-          <span className={currentStep === 'completed' ? 'font-bold text-blue-600' : ''}>完了</span>
+          
+          {/* 中央行 - ステップバー */}
+          <div className="fullwidth-interview-middle-row">
+            <div className="flex items-center gap-6 text-sm">
+              <span className={`${currentStep === 'staff-select' ? 'font-bold text-blue-600' : 'text-gray-600'} transition-colors`}>職員選択</span>
+              <span className="text-gray-300">→</span>
+              <span className={`${currentStep === 'interview-type' ? 'font-bold text-blue-600' : 'text-gray-600'} transition-colors`}>面談種類</span>
+              <span className="text-gray-300">→</span>
+              <span className={`${currentStep === 'duration' ? 'font-bold text-blue-600' : 'text-gray-600'} transition-colors`}>時間設定</span>
+              <span className="text-gray-300">→</span>
+              <span className={`${currentStep === 'generating' ? 'font-bold text-blue-600' : 'text-gray-600'} transition-colors`}>生成中</span>
+              <span className="text-gray-300">→</span>
+              <span className={`${currentStep === 'conducting' ? 'font-bold text-blue-600' : 'text-gray-600'} transition-colors`}>面談実施</span>
+            </div>
+          </div>
+          
+          {/* ボトム行 - ボタン群（面談実施時のみ表示） */}
+          {currentStep === 'conducting' && session.useBankSystem && (
+            <div className="fullwidth-interview-bottom-row">
+              <Button
+                variant={!showPrintView ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setShowPrintView(false)}
+              >
+                <FileText className="h-4 w-4 mr-1" />
+                デジタル入力
+              </Button>
+              <Button
+                variant={showPrintView ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setShowPrintView(true)}
+              >
+                <Printer className="h-4 w-4 mr-1" />
+                印刷プレビュー
+              </Button>
+            </div>
+          )}
+          
+          {/* 従来テンプレート時のボタン群 */}
+          {currentStep === 'conducting' && (session.useV6Template || (!session.useBankSystem && session.manual)) && session.manual && (
+            <div className="fullwidth-interview-bottom-row">
+              <Button
+                variant={useImprovedUI ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => {
+                  setUseImprovedUI(true);
+                  setIsPrintMode(false);
+                  setShowPrintPreview(false);
+                }}
+              >
+                <FileText className="h-4 w-4 mr-1" />
+                改善版デジタル入力
+              </Button>
+              <Button
+                variant={!useImprovedUI && !isPrintMode ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => {
+                  setUseImprovedUI(false);
+                  setIsPrintMode(false);
+                  setShowPrintPreview(false);
+                }}
+              >
+                <FileText className="h-4 w-4 mr-1" />
+                従来版デジタル入力
+              </Button>
+              <Button
+                variant={isPrintMode ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => {
+                  setIsPrintMode(true);
+                  setUseImprovedUI(false);
+                }}
+              >
+                <FileText className="h-4 w-4 mr-1" />
+                印刷用モード
+              </Button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -2001,30 +2090,7 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
         </Card>
       )}
 
-      {/* Step 5: 面談実施 - バンクシステム */}
-      {currentStep === 'conducting' && session.useBankSystem && session.bankGeneratedSheet && (
-        <div className="space-y-6">
-          {/* モード切り替えボタン */}
-          <div className="flex justify-end gap-2 print:hidden">
-            <Button
-              variant={!showPrintView ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setShowPrintView(false)}
-            >
-              <FileText className="h-4 w-4 mr-1" />
-              デジタル入力
-            </Button>
-            <Button
-              variant={showPrintView ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setShowPrintView(true)}
-            >
-              <Printer className="h-4 w-4 mr-1" />
-              印刷プレビュー
-            </Button>
-          </div>
-        </div>
-      )}
+      {/* Step 5: 面談実施 - バンクシステム（ボタンはヘッダーに移動済み） */}
 
       {/* バンクシステムの面談シート - フル幅表示 */}
       {currentStep === 'conducting' && session.useBankSystem && session.bankGeneratedSheet && !showPrintView && (
@@ -2100,67 +2166,9 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
         </div>
       )}
 
-      {/* Step 5: 面談実施 - 従来テンプレート（v6含む） */}
+      {/* Step 5: 面談実施 - 従来テンプレート（v6含む）（ボタンはヘッダーに移動済み） */}
       {currentStep === 'conducting' && (session.useV6Template || (!session.useBankSystem && session.manual)) && session.manual && (
         <div className="space-y-6">
-          {/* モード切り替えボタン */}
-          <div className="flex justify-end gap-2 print:hidden">
-            <Button
-              variant={useImprovedUI ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => {
-                setUseImprovedUI(true);
-                setIsPrintMode(false);
-                setShowPrintPreview(false);
-              }}
-            >
-              <FileText className="h-4 w-4 mr-1" />
-              改善版デジタル入力
-            </Button>
-            <Button
-              variant={!useImprovedUI && !isPrintMode ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => {
-                setUseImprovedUI(false);
-                setIsPrintMode(false);
-                setShowPrintPreview(false);
-              }}
-            >
-              <FileText className="h-4 w-4 mr-1" />
-              従来版デジタル入力
-            </Button>
-            <Button
-              variant={isPrintMode ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => {
-                setIsPrintMode(true);
-                setUseImprovedUI(false);
-              }}
-            >
-              <FileText className="h-4 w-4 mr-1" />
-              印刷用モード
-            </Button>
-            {isPrintMode && (
-              <>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setShowPrintPreview(true)}
-                >
-                  <FileText className="h-4 w-4 mr-1" />
-                  プレビュー
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => window.print()}
-                >
-                  <Printer className="h-4 w-4 mr-1" />
-                  印刷
-                </Button>
-              </>
-            )}
-          </div>
 
           {/* ヘッダー情報 */}
           <Card className={isPrintMode ? 'print-mode-card' : ''}>
