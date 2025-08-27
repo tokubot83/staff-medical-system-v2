@@ -862,7 +862,7 @@ export default function UnifiedInterviewDashboard() {
               <p className="text-gray-500 text-lg">本日の面談予定はありません</p>
             </div>
           ) : (
-            <div className="space-y-3 max-h-96 overflow-y-auto">
+            <div className="space-y-3 max-h-[700px] overflow-y-auto">
               {todayReservations.map(reservation => (
                 <div key={reservation.id} className="border-2 border-gray-200 rounded-lg p-4 hover:border-blue-400 hover:shadow-md transition-all bg-white">
                   <div className="flex items-center justify-between">
