@@ -50,11 +50,11 @@ const CHART_COLORS = {
 export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysisProps) {
   // テストデータ（直接作成）
   const testCompletionData = [
-    { section: 'チーム連携', completion: 85, diff: -4, fill: CHART_COLORS.success },
-    { section: '業務遂行能力', completion: 82, diff: -2, fill: CHART_COLORS.primary },
-    { section: 'キャリア志向', completion: 78, diff: -5, fill: CHART_COLORS.warning },
-    { section: 'コミュニケーション', completion: 75, diff: 10, fill: CHART_COLORS.neutral },
-    { section: '成長目標', completion: 72, diff: 8, fill: CHART_COLORS.neutral }
+    { section: 'チーム連携', completion: 85, diff: -4, fill: CHART_COLORS.success, name: 'チーム連携' },
+    { section: '業務遂行能力', completion: 82, diff: -2, fill: CHART_COLORS.primary, name: '業務遂行能力' },
+    { section: 'キャリア志向', completion: 78, diff: -5, fill: CHART_COLORS.warning, name: 'キャリア志向' },
+    { section: 'コミュニケーション', completion: 75, diff: 10, fill: CHART_COLORS.neutral, name: 'コミュニケーション' },
+    { section: '成長目標', completion: 72, diff: 8, fill: CHART_COLORS.neutral, name: '成長目標' }
   ];
   
   // データ生成（実際の実装では API から取得）
@@ -246,6 +246,8 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
                   data={sectionCompletionData} 
                   layout="horizontal"
                   margin={{ top: 5, right: 80, left: 120, bottom: 5 }}
+                  onMouseEnter={(data, index) => console.log('BarChart onMouseEnter:', data, index)}
+                  onMouseLeave={() => console.log('BarChart onMouseLeave')}
                 >
                   <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
                   <XAxis 
@@ -262,7 +264,12 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
                     tick={{ fill: '#374151' }}
                   />
                   
-                  <Bar dataKey="completion" radius={[0, 4, 4, 0]}>
+                  <Bar 
+                    dataKey="completion" 
+                    radius={[0, 4, 4, 0]}
+                    onMouseEnter={(data, index) => console.log('Bar onMouseEnter:', data, index)}
+                    onMouseLeave={() => console.log('Bar onMouseLeave')}
+                  >
                     {sectionCompletionData.map((entry, index) => (
                       <Cell 
                         key={`cell-${index}`}
@@ -272,9 +279,19 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
                   </Bar>
                   
                   <Tooltip 
-                    content={<SectionCompletionTooltip />} 
+                    content={<SectionCompletionTooltip />}
+                    formatter={(value: number, name: string, props: any) => {
+                      console.log('Fallback formatter called:', { value, name, props });
+                      return [`${value}%`, '充実度'];
+                    }}
+                    labelFormatter={(label: string) => {
+                      console.log('Fallback labelFormatter called:', label);
+                      return `セクション: ${label}`;
+                    }}
                     wrapperStyle={{ zIndex: 1000 }}
                     allowEscapeViewBox={{ x: false, y: false }}
+                    cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }}
+                    animationDuration={200}
                   />
                 </BarChart>
               </ResponsiveContainer>
