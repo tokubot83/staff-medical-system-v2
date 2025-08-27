@@ -1372,7 +1372,7 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
 
       {/* Step 1: 職員選択 */}
       {currentStep === 'staff-select' && (
-        <Card>
+        <Card className="bg-white border-2 border-gray-200 shadow-lg">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <User className="h-5 w-5" />
@@ -1429,7 +1429,7 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
 
       {/* Step 2: 面談種類選択 */}
       {currentStep === 'interview-type' && (
-        <Card>
+        <Card className="bg-white border-2 border-gray-200 shadow-lg">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <FileText className="h-5 w-5" />
@@ -1538,7 +1538,7 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
 
       {/* Step 2.5: サポート面談の詳細入力 */}
       {currentStep === 'support-request' && (
-        <Card>
+        <Card className="bg-white border-2 border-gray-200 shadow-lg">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Users className="h-5 w-5" />
@@ -1655,7 +1655,7 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
 
       {/* Step 2.5: 特別面談種類選択 */}
       {currentStep === 'special-type-select' && (
-        <Card>
+        <Card className="bg-white border-2 border-gray-200 shadow-lg">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <AlertCircle className="h-5 w-5" />
@@ -1813,7 +1813,7 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
 
       {/* Step 2.6: 特別面談コンテキスト */}
       {currentStep === 'special-context' && (
-        <Card>
+        <Card className="bg-white border-2 border-gray-200 shadow-lg">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <FileText className="h-5 w-5" />
@@ -1907,7 +1907,7 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
 
       {/* Step 2.7: 定期面談バンクモード選択 */}
       {currentStep === 'bank-mode-select' && (session.interviewType === 'regular_annual' || session.interviewType === 'new_employee_monthly' || session.interviewType === 'management_biannual') && (
-        <Card>
+        <Card className="bg-white border-2 border-gray-200 shadow-lg">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <FileText className="h-5 w-5" />
@@ -1918,10 +1918,10 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
             </p>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-full">
               {/* 定期面談バンクシステム（推奨） */}
               <Card 
-                className="cursor-pointer hover:border-blue-500 transition-colors border-2"
+                className="cursor-pointer hover:border-blue-500 transition-colors border-2 bg-white"
                 onClick={() => {
                   setSession(prev => ({ ...prev, useBankSystem: true }));
                   setCurrentStep('duration');
@@ -1953,7 +1953,7 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
 
               {/* 従来のテンプレート方式（v6統一版） */}
               <Card 
-                className="cursor-pointer hover:border-gray-500 transition-colors"
+                className="cursor-pointer hover:border-gray-500 transition-colors border-2 bg-white"
                 onClick={() => {
                   // v6テンプレートを使用
                   setSession(prev => ({ 
@@ -2002,7 +2002,7 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
 
       {/* Step 3: 時間選択 */}
       {currentStep === 'duration' && (
-        <Card>
+        <Card className="bg-white border-2 border-gray-200 shadow-lg">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Clock className="h-5 w-5" />
@@ -2013,11 +2013,11 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
             </p>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-3 gap-4 w-full max-w-full">
               {[15, 30, 45].map(duration => (
                 <Card
                   key={duration}
-                  className="cursor-pointer hover:border-blue-500 transition-colors"
+                  className="cursor-pointer hover:border-blue-500 transition-colors border-2 bg-white"
                   onClick={() => handleDurationSelect(duration as InterviewDuration)}
                 >
                   <CardContent className="p-6">
@@ -2055,7 +2055,7 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
 
       {/* Step 4: マニュアル生成中 */}
       {currentStep === 'generating' && (
-        <Card>
+        <Card className="bg-white border-2 border-gray-200 shadow-lg">
           <CardContent className="p-12">
             <div className="flex flex-col items-center space-y-6">
               <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
@@ -2698,7 +2698,7 @@ export default function DynamicInterviewFlow({ initialReservation, onComplete }:
 
       {/* Step 6: 完了 */}
       {currentStep === 'completed' && (
-        <Card>
+        <Card className="bg-white border-2 border-gray-200 shadow-lg">
           <CardContent className="p-12">
             <div className="flex flex-col items-center space-y-6">
               <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
