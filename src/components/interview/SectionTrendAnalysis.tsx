@@ -70,13 +70,11 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
   
   // 詳細デバッグ
   sectionCompletionData.forEach((item, index) => {
-    console.log(`Data ${index}:`, {
-      section: item.section,
-      completion: item.completion,
-      fill: item.fill,
-      type: typeof item.completion
-    });
+    console.log(`Data ${index} - Section: "${item.section}", Completion: ${item.completion}, Fill: "${item.fill}", Type: ${typeof item.completion}`);
   });
+  
+  // さらに詳細なデータ検証
+  console.log('First item full object:', JSON.stringify(sectionCompletionData[0], null, 2));
   
   const sections = getSectionsByRole(staffRole);
   const targetValue = getTargetValueByRole(staffRole);
@@ -275,6 +273,12 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
           </CardTitle>
         </CardHeader>
         <CardContent>
+          {/* デバッグ情報表示 */}
+          <div className="mb-4 p-2 bg-gray-100 rounded text-xs">
+            <strong>Debug:</strong> Data items: {sectionCompletionData.length}, 
+            First item: {sectionCompletionData[0]?.section} = {sectionCompletionData[0]?.completion}%
+          </div>
+          
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2">
               <div style={{ width: '100%', height: '350px', position: 'relative' }}>
@@ -314,12 +318,17 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
                   <Bar 
                     dataKey="completion" 
                     name="充実度"
+                    fill="#3b82f6"
+                    stroke="none"
+                    strokeWidth={0}
                     radius={[0, 3, 3, 0]}
+                    minPointSize={5}
                   >
                     {sectionCompletionData.map((entry, index) => (
                       <Cell 
                         key={`cell-${index}`}
                         fill={entry.fill || '#3b82f6'}
+                        stroke="none"
                       />
                     ))}
                   </Bar>
