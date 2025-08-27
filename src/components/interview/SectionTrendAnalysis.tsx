@@ -53,28 +53,14 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
     { section: 'チーム連携', completion: 85, diff: -4, fill: CHART_COLORS.success, name: 'チーム連携' },
     { section: '業務遂行能力', completion: 82, diff: -2, fill: CHART_COLORS.primary, name: '業務遂行能力' },
     { section: 'キャリア志向', completion: 78, diff: -5, fill: CHART_COLORS.warning, name: 'キャリア志向' },
-    { section: 'コミュニケーション', completion: 75, diff: 10, fill: CHART_COLORS.neutral, name: 'コミュニケーション' },
-    { section: '成長目標', completion: 72, diff: 8, fill: CHART_COLORS.neutral, name: '成長目標' }
+    { section: 'コミュニケーション', completion: 75, diff: 10, fill: CHART_COLORS.highlight, name: 'コミュニケーション' },
+    { section: '成長目標', completion: 72, diff: 8, fill: CHART_COLORS.danger, name: '成長目標' }
   ];
   
   // データ生成（実際の実装では API から取得）
   const sectionTrendData = generateSampleTrendData(staffRole);
   const sectionCompletionData = testCompletionData; // generateSectionCompletionData(staffRole);
   const sectionCorrelationData = generateSectionCorrelationData(staffRole);
-  
-  // デバッグ用ログ
-  console.log('SectionTrendAnalysis - staffRole:', staffRole);
-  console.log('SectionTrendAnalysis - sectionCompletionData:', sectionCompletionData);
-  console.log('SectionTrendAnalysis - testCompletionData (raw):', testCompletionData);
-  console.log('SectionTrendAnalysis - CHART_COLORS:', CHART_COLORS);
-  
-  // 詳細デバッグ
-  sectionCompletionData.forEach((item, index) => {
-    console.log(`Data ${index} - Section: "${item.section}", Completion: ${item.completion}, Fill: "${item.fill}", Type: ${typeof item.completion}`);
-  });
-  
-  // さらに詳細なデータ検証
-  console.log('First item full object:', JSON.stringify(sectionCompletionData[0], null, 2));
   
   const sections = getSectionsByRole(staffRole);
   const targetValue = getTargetValueByRole(staffRole);
@@ -273,12 +259,6 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {/* デバッグ情報表示 */}
-          <div className="mb-4 p-2 bg-gray-100 rounded text-xs">
-            <strong>Debug:</strong> Data items: {sectionCompletionData.length}, 
-            First item: {sectionCompletionData[0]?.section} = {sectionCompletionData[0]?.completion}%
-          </div>
-          
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2">
               <div style={{ width: '100%', height: '350px', position: 'relative' }}>
@@ -286,50 +266,24 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
                 <BarChart 
                   data={sectionCompletionData} 
                   layout="horizontal"
-                  margin={{ top: 20, right: 50, left: 10, bottom: 20 }}
-                  width={undefined}
-                  height={undefined}
+                  margin={{ top: 20, right: 50, left: 5, bottom: 20 }}
                 >
-                  <CartesianGrid 
-                    strokeDasharray="3 3" 
-                    stroke="#e5e7eb" 
-                    horizontal={true}
-                    vertical={false}
-                  />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                   <XAxis 
-                    type="number" 
+                    type="number"
                     domain={[0, 100]}
-                    fontSize={12}
-                    tick={{ fill: '#374151', fontSize: 12 }}
-                    tickLine={{ stroke: '#d1d5db' }}
-                    axisLine={{ stroke: '#d1d5db' }}
-                    label={{ value: '充実度 (%)', position: 'insideBottom', offset: -10 }}
+                    tick={{ fontSize: 12 }}
                   />
                   <YAxis 
                     type="category" 
-                    dataKey="section" 
+                    dataKey="section"
                     width={120}
-                    fontSize={11}
-                    tick={{ fill: '#374151', fontSize: 11 }}
-                    tickLine={{ stroke: '#d1d5db' }}
-                    axisLine={{ stroke: '#d1d5db' }}
+                    tick={{ fontSize: 11 }}
                   />
                   
-                  <Bar 
-                    dataKey="completion" 
-                    name="充実度"
-                    fill="#3b82f6"
-                    stroke="none"
-                    strokeWidth={0}
-                    radius={[0, 3, 3, 0]}
-                    minPointSize={5}
-                  >
+                  <Bar dataKey="completion">
                     {sectionCompletionData.map((entry, index) => (
-                      <Cell 
-                        key={`cell-${index}`}
-                        fill={entry.fill || '#3b82f6'}
-                        stroke="none"
-                      />
+                      <Cell key={`cell-${index}`} fill={entry.fill} />
                     ))}
                   </Bar>
                   
