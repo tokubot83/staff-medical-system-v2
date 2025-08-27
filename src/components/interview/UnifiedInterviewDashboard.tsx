@@ -513,7 +513,6 @@ export default function UnifiedInterviewDashboard() {
   };
 
   const todayReservations = getFilteredReservations(getTodayReservations());
-  const upcomingReservations = getFilteredReservations(getUpcomingReservations());
   const overdueReservations = getFilteredReservations(getOverdueReservations());
 
   // 面談フロー表示中の場合
@@ -915,106 +914,8 @@ export default function UnifiedInterviewDashboard() {
       </Card>
     </div>
 
-    {/* 右側：サイドパネル */}
+    {/* 右側：サイドパネル（削除） */}
     <div className="space-y-4">
-          {/* 今後の予定 */}
-          <Card className="border-2 border-gray-200">
-            <CardHeader className="bg-gradient-to-r from-gray-50 to-gray-100 pb-3">
-              <CardTitle className="flex items-center justify-between text-base">
-                <span className="flex items-center gap-2">
-                  <ChevronRight className="h-5 w-5 text-gray-600" />
-                  今後の予定
-                </span>
-                <Badge variant="secondary">{upcomingReservations.length}</Badge>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-3">
-              <div className="space-y-2 max-h-64 overflow-y-auto">
-                {upcomingReservations.slice(0, 5).map(reservation => (
-                  <div key={reservation.id} className="border-l-4 border-blue-400 pl-3 py-2 hover:bg-gray-50 rounded">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <div className="font-medium text-sm">
-                          {new Date(reservation.scheduledDate).toLocaleDateString('ja-JP', { 
-                            month: 'short', 
-                            day: 'numeric' 
-                          })} {reservation.scheduledTime}
-                        </div>
-                        <div className="text-xs text-gray-600">
-                          {reservation.staffName}
-                        </div>
-                        <div className="text-xs text-gray-500">
-                          {getInterviewTypeLabel(reservation)}
-                        </div>
-                      </div>
-                      {getStatusBadge(reservation.status)}
-                    </div>
-                  </div>
-                ))}
-                {upcomingReservations.length > 5 && (
-                  <div className="text-center pt-2">
-                    <span className="text-sm text-gray-500">
-                      他 {upcomingReservations.length - 5} 件
-                    </span>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* 統計サマリー */}
-          <Card className="border-2 border-gray-200">
-            <CardHeader className="bg-gradient-to-r from-purple-50 to-purple-100 pb-3">
-              <CardTitle className="flex items-center gap-2 text-base">
-                <TrendingUp className="h-5 w-5 text-purple-600" />
-                今月の実施状況
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-4">
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium">定期面談</span>
-                  <div className="flex items-center gap-2">
-                    <div className="w-24 bg-gray-200 rounded-full h-2">
-                      <div className="bg-blue-500 h-2 rounded-full" style={{ width: '75%' }}></div>
-                    </div>
-                    <span className="text-xs text-gray-600 font-medium">45/60</span>
-                  </div>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium">特別面談</span>
-                  <div className="flex items-center gap-2">
-                    <div className="w-24 bg-gray-200 rounded-full h-2">
-                      <div className="bg-orange-500 h-2 rounded-full" style={{ width: '100%' }}></div>
-                    </div>
-                    <span className="text-xs text-gray-600 font-medium">5/5</span>
-                  </div>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium">サポート面談</span>
-                  <div className="flex items-center gap-2">
-                    <div className="w-24 bg-gray-200 rounded-full h-2">
-                      <div className="bg-green-500 h-2 rounded-full" style={{ width: '60%' }}></div>
-                    </div>
-                    <span className="text-xs text-gray-600 font-medium">12/20</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="mt-4 pt-3 border-t">
-                <div className="grid grid-cols-2 gap-3 text-center">
-                  <div className="bg-blue-50 rounded-lg p-2">
-                    <div className="text-xl font-bold text-blue-600">92%</div>
-                    <div className="text-xs text-gray-600">実施率</div>
-                  </div>
-                  <div className="bg-green-50 rounded-lg p-2">
-                    <div className="text-xl font-bold text-green-600">4.5</div>
-                    <div className="text-xs text-gray-600">満足度</div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
         </div>
       </div>
       )}
