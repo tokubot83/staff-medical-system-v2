@@ -122,14 +122,35 @@
   transform: translateY(-2px);
 }
 
-.singleView,
-.comparisonView {
+.singleView {
   display: grid;
   gap: 20px;
 }
 
 .comparisonView {
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 20px;
+}
+
+.comparisonView::-webkit-scrollbar {
+  height: 10px;
+}
+
+.comparisonView::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.comparisonView::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.comparisonView::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 .sheetPanel {
@@ -137,6 +158,36 @@
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   overflow: hidden;
+  min-width: 600px;
+  flex-shrink: 0;
+}
+
+.comparisonView .sheetPanel {
+  width: calc(50vw - 40px);
+  max-width: 800px;
+}
+
+/* 横スクロールのヒント表示 */
+.scrollHint {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  z-index: 10;
+  pointer-events: none;
+  animation: fadeInOut 3s ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
 }
 
 .sheetHeader {
@@ -499,7 +550,7 @@
 .modalContent {
   background: white;
   border-radius: 12px;
-  max-width: 800px;
+  max-width: 1000px;
   width: 100%;
   max-height: 90vh;
   overflow: auto;
@@ -543,6 +594,8 @@
 
 .modalBody {
   padding: 30px;
+  background: white;
+  border-radius: 0 0 12px 12px;
 }
 
 .modalDescription {
@@ -557,6 +610,10 @@
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 20px;
   margin-bottom: 30px;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
 }
 
 .comparisonPreview {
@@ -678,7 +735,15 @@
   }
   
   .comparisonView {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  
+  .comparisonView .sheetPanel {
+    width: 100%;
+    max-width: none;
+    min-width: auto;
   }
   
   .features {

@@ -7,6 +7,7 @@ import { generateV4InterviewSheet } from '@/lib/interview-bank/services/v4-gener
 import { ExtendedInterviewParams, StaffProfile as ExtendedStaffProfile } from '@/lib/interview-bank/types-extended'
 import { UnifiedInterviewGeneratorService } from '@/lib/interview-bank/services/unified-generator-service'
 import DynamicInterviewSheet from '@/components/interview-bank/DynamicInterviewSheet'
+import SimulatorComparisonModal from './SimulatorComparisonModal'
 import { 
   StaffLevel, 
   JobRole, 
@@ -457,8 +458,8 @@ export default function InterviewManualSimulator() {
         </div>
       </div>
 
-      {generatedSheet && staffProfile && (
-        <div className={showComparison ? styles.comparisonView : styles.singleView}>
+      {generatedSheet && staffProfile && !showComparison && (
+        <div className={styles.singleView}>
           <div className={styles.sheetPanel}>
             <div className={styles.sheetHeader}>
               <h2>生成された面談シート</h2>
@@ -466,18 +467,6 @@ export default function InterviewManualSimulator() {
                 <span>バージョン: {generatedSheet?.metadata?.version || 'v6'}</span>
                 <span>生成日時: {new Date().toLocaleString()}</span>
               </div>
-              {showComparison && (
-                <div className={styles.conditionSummary}>
-                  <h4>条件</h4>
-                  <ul>
-                    <li>職種: {getJobRoleLabel(jobRole)}</li>
-                    <li>レベル: {staffLevels.find(l => l.value === staffLevel)?.label}</li>
-                    <li>施設: {getFacilityTypeLabel(facilityType)}</li>
-                    <li>種別: {interviewTypes.find(t => t.value === interviewType)?.label}</li>
-                    <li>時間: {duration}分</li>
-                  </ul>
-                </div>
-              )}
             </div>
             <DynamicInterviewSheet 
               sheetData={generatedSheet}
@@ -486,45 +475,35 @@ export default function InterviewManualSimulator() {
               onSave={() => {}}
             />
           </div>
-          
-          {showComparison && comparisonSheet && comparisonStaffProfile && (
-            <div className={styles.sheetPanel}>
-              <div className={styles.sheetHeader}>
-                <h2>比較用面談シート</h2>
-                <div className={styles.sheetMeta}>
-                  <span>バージョン: {comparisonSheet.metadata?.version || 'v6'}</span>
-                  <span>生成日時: {new Date().toLocaleString()}</span>
-                </div>
-                <div className={styles.conditionSummary}>
-                  <h4>条件</h4>
-                  <ul>
-                    <li className={compareJobRole !== jobRole ? styles.diff : ''}>
-                      職種: {getJobRoleLabel(compareJobRole)}
-                    </li>
-                    <li className={compareStaffLevel !== staffLevel ? styles.diff : ''}>
-                      レベル: {staffLevels.find(l => l.value === compareStaffLevel)?.label}
-                    </li>
-                    <li className={compareFacilityType !== facilityType ? styles.diff : ''}>
-                      施設: {getFacilityTypeLabel(compareFacilityType)}
-                    </li>
-                    <li className={compareInterviewType !== interviewType ? styles.diff : ''}>
-                      種別: {interviewTypes.find(t => t.value === compareInterviewType)?.label}
-                    </li>
-                    <li className={compareDuration !== duration ? styles.diff : ''}>
-                      時間: {compareDuration}分
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <DynamicInterviewSheet 
-                sheetData={comparisonSheet}
-                staffProfile={comparisonStaffProfile}
-                readOnly={true}
-                onSave={() => {}}
-              />
-            </div>
-          )}
         </div>
+      )}
+
+      {/* 比較モーダル */}
+      {showComparison && generatedSheet && comparisonSheet && (
+        <SimulatorComparisonModal
+          isOpen={showComparison}
+          onClose={() => setShowComparison(false)}
+          originalSheet={generatedSheet}
+          originalStaffProfile={staffProfile}
+          originalConditions={{
+            jobRole,
+            staffLevel,
+            facilityType,
+            interviewType,
+            duration
+          }}
+          comparisonSheet={comparisonSheet}
+          comparisonStaffProfile={comparisonStaffProfile}
+          comparisonConditions={{
+            jobRole: compareJobRole,
+            staffLevel: compareStaffLevel,
+            facilityType: compareFacilityType,
+            interviewType: compareInterviewType,
+            duration: compareDuration
+          }}
+          staffLevels={staffLevels}
+          interviewTypes={interviewTypes}
+        />
       )}
 
       {!generatedSheet && !isGenerating && (
