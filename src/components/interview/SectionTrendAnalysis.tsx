@@ -97,7 +97,6 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
         <div 
           className="bg-white p-4 border-2 border-gray-300 rounded-lg shadow-xl min-w-[200px]"
           style={{ 
-            position: 'relative',
             zIndex: 9999,
             backgroundColor: '#ffffff',
             border: '2px solid #374151',
@@ -265,8 +264,9 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 relative">
-              <ResponsiveContainer width="100%" height={350} minWidth={300}>
+            <div className="lg:col-span-2">
+              <div style={{ width: '100%', height: '350px', position: 'relative' }}>
+                <ResponsiveContainer width="100%" height={350} minWidth={300}>
                 <BarChart 
                   data={sectionCompletionData} 
                   layout="horizontal"
@@ -305,7 +305,6 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
                     labelFormatter={(label: string) => `セクション: ${label}`}
                     wrapperStyle={{ 
                       zIndex: 10000,
-                      position: 'relative',
                       pointerEvents: 'none'
                     }}
                     allowEscapeViewBox={{ x: false, y: false }}
@@ -313,7 +312,8 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
                     animationDuration={200}
                   />
                 </BarChart>
-              </ResponsiveContainer>
+                </ResponsiveContainer>
+              </div>
             </div>
             
             {/* データ解釈 */}
