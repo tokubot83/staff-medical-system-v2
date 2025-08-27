@@ -89,6 +89,68 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
     return null;
   };
 
+  // セクション充実度用カスタムツールチップ
+  const SectionCompletionTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      return (
+        <div className="bg-white p-4 border rounded-lg shadow-lg min-w-[200px]">
+          <p className="font-bold text-gray-800 mb-2 text-center">{label}</p>
+          <div className="space-y-1">
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-600">充実度:</span>
+              <span className="font-semibold text-blue-600">{payload[0].value}%</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-600">前回比:</span>
+              <span className={`font-semibold ${data.diff >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                {data.diff >= 0 ? '+' : ''}{data.diff}%
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-600">ランキング:</span>
+              <span className="font-semibold text-purple-600">
+                {sectionCompletionData.findIndex(item => item.section === label) + 1}位
+              </span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  // 散布図用カスタムツールチップ
+  const ScatterTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      return (
+        <div className="bg-white p-4 border rounded-lg shadow-lg min-w-[220px]">
+          <p className="font-bold text-gray-800 mb-2 text-center">{data.section}</p>
+          <div className="space-y-1">
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-600">議論深度:</span>
+              <span className="font-semibold text-blue-600">{data.discussion_depth}%</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-600">改善率:</span>
+              <span className="font-semibold text-green-600">{data.improvement_rate}%</span>
+            </div>
+            <div className="mt-2 p-2 bg-gray-50 rounded text-xs">
+              <span className="text-gray-600">
+                {data.discussion_depth >= 50 && data.improvement_rate >= 50 ? '✅ 優良セクション' :
+                 data.discussion_depth < 50 && data.improvement_rate >= 50 ? '⚡ 潜在価値' :
+                 data.discussion_depth < 50 && data.improvement_rate < 50 ? '🔴 要改善' :
+                 '🔄 要再検討'}
+              </span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="space-y-6">
       {/* 1. セクション別評価トレンド（折れ線グラフ） */}
@@ -207,10 +269,7 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
                     ))}
                   </Bar>
                   
-                  <Tooltip 
-                    formatter={(value: number) => [`${value}%`, '充実度']}
-                    labelFormatter={(label) => `セクション: ${label}`}
-                  />
+                  <Tooltip content={<SectionCompletionTooltip />} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -288,11 +347,7 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
                   
                   <Tooltip 
                     cursor={{ strokeDasharray: '3 3' }}
-                    formatter={(value: number, name: string) => [
-                      `${value}%`, 
-                      name === 'discussion_depth' ? '議論深度' : '改善率'
-                    ]}
-                    labelFormatter={(label) => `セクション: ${sectionCorrelationData.find(d => d.discussion_depth.toString() === label)?.section || ''}`}
+                    content={<ScatterTooltip />}
                   />
                 </ScatterChart>
               </ResponsiveContainer>
