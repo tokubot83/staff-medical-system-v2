@@ -91,27 +91,52 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
 
   // セクション充実度用カスタムツールチップ
   const SectionCompletionTooltip = ({ active, payload, label }: any) => {
-    console.log('SectionCompletionTooltip called:', { active, payload, label });
     if (active && payload && payload.length) {
       const data = payload[0].payload;
-      console.log('Tooltip rendering data:', data);
       return (
-        <div className="bg-white p-4 border rounded-lg shadow-lg min-w-[200px] z-50">
-          <p className="font-bold text-gray-800 mb-2 text-center">{label}</p>
+        <div 
+          className="bg-white p-4 border-2 border-gray-300 rounded-lg shadow-xl min-w-[200px]"
+          style={{ 
+            position: 'relative',
+            zIndex: 9999,
+            backgroundColor: '#ffffff',
+            border: '2px solid #374151',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+            fontSize: '14px',
+            fontFamily: 'system-ui, -apple-system, sans-serif'
+          }}
+        >
+          <p 
+            className="font-bold text-gray-800 mb-2 text-center"
+            style={{ color: '#1f2937', fontSize: '16px', fontWeight: 'bold' }}
+          >
+            {label}
+          </p>
           <div className="space-y-1">
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">充実度:</span>
-              <span className="font-semibold text-blue-600">{payload[0].value}%</span>
+              <span className="text-sm text-gray-600" style={{ color: '#6b7280' }}>充実度:</span>
+              <span className="font-semibold text-blue-600" style={{ color: '#2563eb', fontWeight: 'bold' }}>
+                {payload[0].value}%
+              </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">前回比:</span>
-              <span className={`font-semibold ${data.diff >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+              <span className="text-sm text-gray-600" style={{ color: '#6b7280' }}>前回比:</span>
+              <span 
+                className={`font-semibold ${data.diff >= 0 ? 'text-green-600' : 'text-red-600'}`}
+                style={{ 
+                  color: data.diff >= 0 ? '#16a34a' : '#dc2626', 
+                  fontWeight: 'bold' 
+                }}
+              >
                 {data.diff >= 0 ? '+' : ''}{data.diff}%
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">ランキング:</span>
-              <span className="font-semibold text-purple-600">
+              <span className="text-sm text-gray-600" style={{ color: '#6b7280' }}>ランキング:</span>
+              <span 
+                className="font-semibold text-purple-600"
+                style={{ color: '#7c3aed', fontWeight: 'bold' }}
+              >
                 {sectionCompletionData.findIndex(item => item.section === label) + 1}位
               </span>
             </div>
@@ -246,8 +271,6 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
                   data={sectionCompletionData} 
                   layout="horizontal"
                   margin={{ top: 5, right: 80, left: 120, bottom: 5 }}
-                  onMouseEnter={(data, index) => console.log('BarChart onMouseEnter:', data, index)}
-                  onMouseLeave={() => console.log('BarChart onMouseLeave')}
                 >
                   <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
                   <XAxis 
@@ -267,8 +290,6 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
                   <Bar 
                     dataKey="completion" 
                     radius={[0, 4, 4, 0]}
-                    onMouseEnter={(data, index) => console.log('Bar onMouseEnter:', data, index)}
-                    onMouseLeave={() => console.log('Bar onMouseLeave')}
                   >
                     {sectionCompletionData.map((entry, index) => (
                       <Cell 
@@ -280,15 +301,13 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
                   
                   <Tooltip 
                     content={<SectionCompletionTooltip />}
-                    formatter={(value: number, name: string, props: any) => {
-                      console.log('Fallback formatter called:', { value, name, props });
-                      return [`${value}%`, '充実度'];
+                    formatter={(value: number, name: string, props: any) => [`${value}%`, '充実度']}
+                    labelFormatter={(label: string) => `セクション: ${label}`}
+                    wrapperStyle={{ 
+                      zIndex: 10000,
+                      position: 'relative',
+                      pointerEvents: 'none'
                     }}
-                    labelFormatter={(label: string) => {
-                      console.log('Fallback labelFormatter called:', label);
-                      return `セクション: ${label}`;
-                    }}
-                    wrapperStyle={{ zIndex: 1000 }}
                     allowEscapeViewBox={{ x: false, y: false }}
                     cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }}
                     animationDuration={200}
