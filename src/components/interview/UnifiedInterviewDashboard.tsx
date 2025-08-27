@@ -838,9 +838,9 @@ export default function UnifiedInterviewDashboard() {
           }}
         />
       ) : (
-        <div className="fullwidth-interview-container">
-        {/* 本日の面談予定（全幅表示） */}
-        <div className="w-full">
+        <div>
+        {/* 本日の面談予定 */}
+        <div>
           <Card className="border-2 border-blue-200 shadow-lg">
             <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100">
               <CardTitle className="flex items-center justify-between">
@@ -917,7 +917,7 @@ export default function UnifiedInterviewDashboard() {
       )}
 
       {/* 統計・分析セクション */}
-      <Card className="border-2 border-purple-200 shadow-lg fullwidth-interview-container">
+      <Card className="border-2 border-purple-200 shadow-lg">
         <CardHeader className="bg-gradient-to-r from-purple-50 to-purple-100">
           <CardTitle className="flex items-center justify-between">
             <span className="flex items-center gap-2 text-xl">
