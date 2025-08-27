@@ -91,10 +91,12 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
 
   // セクション充実度用カスタムツールチップ
   const SectionCompletionTooltip = ({ active, payload, label }: any) => {
+    console.log('SectionCompletionTooltip called:', { active, payload, label });
     if (active && payload && payload.length) {
       const data = payload[0].payload;
+      console.log('Tooltip rendering data:', data);
       return (
-        <div className="bg-white p-4 border rounded-lg shadow-lg min-w-[200px]">
+        <div className="bg-white p-4 border rounded-lg shadow-lg min-w-[200px] z-50">
           <p className="font-bold text-gray-800 mb-2 text-center">{label}</p>
           <div className="space-y-1">
             <div className="flex justify-between items-center">
@@ -269,7 +271,11 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
                     ))}
                   </Bar>
                   
-                  <Tooltip content={<SectionCompletionTooltip />} />
+                  <Tooltip 
+                    content={<SectionCompletionTooltip />} 
+                    wrapperStyle={{ zIndex: 1000 }}
+                    allowEscapeViewBox={{ x: false, y: false }}
+                  />
                 </BarChart>
               </ResponsiveContainer>
             </div>
