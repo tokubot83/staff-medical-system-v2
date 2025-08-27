@@ -65,6 +65,8 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
   // デバッグ用ログ
   console.log('SectionTrendAnalysis - staffRole:', staffRole);
   console.log('SectionTrendAnalysis - sectionCompletionData:', sectionCompletionData);
+  console.log('SectionTrendAnalysis - testCompletionData (raw):', testCompletionData);
+  console.log('SectionTrendAnalysis - CHART_COLORS:', CHART_COLORS);
   
   const sections = getSectionsByRole(staffRole);
   const targetValue = getTargetValueByRole(staffRole);
@@ -278,6 +280,8 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
                     domain={[0, 100]}
                     fontSize={12}
                     tick={{ fill: '#6b7280' }}
+                    tickLine={true}
+                    axisLine={true}
                   />
                   <YAxis 
                     type="category" 
@@ -285,11 +289,15 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
                     width={140}
                     fontSize={12}
                     tick={{ fill: '#374151', textAnchor: 'end' }}
+                    tickLine={true}
+                    axisLine={true}
                   />
                   
                   <Bar 
                     dataKey="completion" 
                     radius={[0, 4, 4, 0]}
+                    fill={CHART_COLORS.primary}
+                    stroke="none"
                   >
                     {sectionCompletionData.map((entry, index) => (
                       <Cell 
@@ -308,7 +316,7 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
                       pointerEvents: 'none'
                     }}
                     allowEscapeViewBox={{ x: false, y: false }}
-                    cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }}
+                    cursor={false}
                     animationDuration={200}
                   />
                 </BarChart>
