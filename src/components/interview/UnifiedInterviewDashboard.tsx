@@ -838,9 +838,9 @@ export default function UnifiedInterviewDashboard() {
           }}
         />
       ) : (
-        <div className="grid grid-cols-3 gap-6">
-        {/* 左側：本日の面談（大きく表示） */}
-        <div className="col-span-2">
+        <div className="fullwidth-interview-container">
+        {/* 本日の面談予定（全幅表示） */}
+        <div className="w-full">
           <Card className="border-2 border-blue-200 shadow-lg">
             <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100">
               <CardTitle className="flex items-center justify-between">
@@ -913,15 +913,11 @@ export default function UnifiedInterviewDashboard() {
         </CardContent>
       </Card>
     </div>
-
-    {/* 右側：サイドパネル（削除） */}
-    <div className="space-y-4">
         </div>
-      </div>
       )}
 
       {/* 統計・分析セクション */}
-      <Card className="border-2 border-purple-200 shadow-lg">
+      <Card className="border-2 border-purple-200 shadow-lg fullwidth-interview-container">
         <CardHeader className="bg-gradient-to-r from-purple-50 to-purple-100">
           <CardTitle className="flex items-center justify-between">
             <span className="flex items-center gap-2 text-xl">
