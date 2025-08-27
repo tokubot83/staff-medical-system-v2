@@ -68,6 +68,16 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
   console.log('SectionTrendAnalysis - testCompletionData (raw):', testCompletionData);
   console.log('SectionTrendAnalysis - CHART_COLORS:', CHART_COLORS);
   
+  // 詳細デバッグ
+  sectionCompletionData.forEach((item, index) => {
+    console.log(`Data ${index}:`, {
+      section: item.section,
+      completion: item.completion,
+      fill: item.fill,
+      type: typeof item.completion
+    });
+  });
+  
   const sections = getSectionsByRole(staffRole);
   const targetValue = getTargetValueByRole(staffRole);
   const chartTitle = getChartTitleByRole(staffRole);
@@ -272,37 +282,44 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
                 <BarChart 
                   data={sectionCompletionData} 
                   layout="horizontal"
-                  margin={{ top: 10, right: 30, left: 5, bottom: 10 }}
+                  margin={{ top: 20, right: 50, left: 10, bottom: 20 }}
+                  width={undefined}
+                  height={undefined}
                 >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+                  <CartesianGrid 
+                    strokeDasharray="3 3" 
+                    stroke="#e5e7eb" 
+                    horizontal={true}
+                    vertical={false}
+                  />
                   <XAxis 
                     type="number" 
                     domain={[0, 100]}
                     fontSize={12}
-                    tick={{ fill: '#6b7280' }}
-                    tickLine={true}
-                    axisLine={true}
+                    tick={{ fill: '#374151', fontSize: 12 }}
+                    tickLine={{ stroke: '#d1d5db' }}
+                    axisLine={{ stroke: '#d1d5db' }}
+                    label={{ value: '充実度 (%)', position: 'insideBottom', offset: -10 }}
                   />
                   <YAxis 
                     type="category" 
                     dataKey="section" 
-                    width={140}
-                    fontSize={12}
-                    tick={{ fill: '#374151', textAnchor: 'end' }}
-                    tickLine={true}
-                    axisLine={true}
+                    width={120}
+                    fontSize={11}
+                    tick={{ fill: '#374151', fontSize: 11 }}
+                    tickLine={{ stroke: '#d1d5db' }}
+                    axisLine={{ stroke: '#d1d5db' }}
                   />
                   
                   <Bar 
                     dataKey="completion" 
-                    radius={[0, 4, 4, 0]}
-                    fill={CHART_COLORS.primary}
-                    stroke="none"
+                    name="充実度"
+                    radius={[0, 3, 3, 0]}
                   >
                     {sectionCompletionData.map((entry, index) => (
                       <Cell 
                         key={`cell-${index}`}
-                        fill={entry.fill || CHART_COLORS.neutral}
+                        fill={entry.fill || '#3b82f6'}
                       />
                     ))}
                   </Bar>
