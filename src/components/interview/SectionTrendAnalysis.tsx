@@ -265,12 +265,12 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2">
-              <ResponsiveContainer width="100%" height={350}>
+            <div className="lg:col-span-2 relative">
+              <ResponsiveContainer width="100%" height={350} minWidth={300}>
                 <BarChart 
                   data={sectionCompletionData} 
                   layout="horizontal"
-                  margin={{ top: 5, right: 80, left: 120, bottom: 5 }}
+                  margin={{ top: 10, right: 30, left: 5, bottom: 10 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
                   <XAxis 
@@ -282,9 +282,9 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
                   <YAxis 
                     type="category" 
                     dataKey="section" 
-                    width={120}
+                    width={140}
                     fontSize={12}
-                    tick={{ fill: '#374151' }}
+                    tick={{ fill: '#374151', textAnchor: 'end' }}
                   />
                   
                   <Bar 
