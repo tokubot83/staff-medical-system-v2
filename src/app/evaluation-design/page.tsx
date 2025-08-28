@@ -892,7 +892,7 @@ export default function EvaluationDesignPage() {
             <div className="flex items-center justify-between">
               <CardTitle className="flex items-center gap-2">
                 <Zap className="h-5 w-5 text-purple-600" />
-                V3研修連携ダッシュボード
+教育研修連携ダッシュボード
                 <Badge className="bg-purple-100 text-purple-800" variant="outline">New</Badge>
               </CardTitle>
               <Link href="/education">
@@ -1011,7 +1011,7 @@ export default function EvaluationDesignPage() {
               <Link href="/education" className="flex-1">
                 <Button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
                   <Zap className="h-4 w-4 mr-2" />
-                  V3研修システムで詳細分析
+                  教育研修システムで詳細分析
                 </Button>
               </Link>
             </div>
@@ -1317,7 +1317,7 @@ export default function EvaluationDesignPage() {
                 <Link href="/education" className="flex-1">
                   <Button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
                     <Zap className="h-4 w-4 mr-2" />
-                    V3研修システムで詳細計画を作成
+                    教育研修システムで詳細計画を作成
                   </Button>
                 </Link>
                 <Button
