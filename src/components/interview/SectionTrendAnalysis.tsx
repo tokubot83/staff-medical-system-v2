@@ -57,10 +57,41 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
     { section: '成長目標', completion: 72, diff: 8, fill: CHART_COLORS.danger, name: '成長目標' }
   ];
   
+  // 最小限のテストデータ
+  const minimalTestData = [
+    { name: 'テスト1', value: 85 },
+    { name: 'テスト2', value: 72 },
+    { name: 'テスト3', value: 60 }
+  ];
+  
+  // デバッグ用ログ
+  console.log('Bar data check:', testCompletionData.map(d => ({
+    section: d.section,
+    completion: d.completion,
+    hasCompletion: !!d.completion,
+    type: typeof d.completion
+  })));
+  
   // データ生成（実際の実装では API から取得）
   const sectionTrendData = generateSampleTrendData(staffRole);
   const sectionCompletionData = testCompletionData; // generateSectionCompletionData(staffRole);
   const sectionCorrelationData = generateSectionCorrelationData(staffRole);
+  
+  // 横棒グラフ用の簡単なデータ形式に変換
+  console.log('sectionCompletionData:', sectionCompletionData);
+  let horizontalBarData = [];
+  try {
+    horizontalBarData = sectionCompletionData.map(item => ({
+      name: item.section,
+      value: item.completion
+    }));
+    console.log('horizontalBarData:', horizontalBarData);
+  } catch (error) {
+    console.error('Error creating horizontalBarData:', error);
+    horizontalBarData = [
+      { name: '読み込みエラー', value: 0 }
+    ];
+  }
   
   const sections = getSectionsByRole(staffRole);
   const targetValue = getTargetValueByRole(staffRole);
@@ -263,42 +294,17 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
             <div className="lg:col-span-2">
               <div style={{ width: '100%', height: '350px', position: 'relative' }}>
                 <ResponsiveContainer width="100%" height={350} minWidth={300}>
+                {/* 横棒グラフ - 同じデータ形式で */}
                 <BarChart 
-                  data={sectionCompletionData} 
+                  data={horizontalBarData}
                   layout="horizontal"
-                  margin={{ top: 20, right: 50, left: 5, bottom: 20 }}
+                  margin={{ top: 20, right: 50, left: 130, bottom: 20 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis 
-                    type="number"
-                    domain={[0, 100]}
-                    tick={{ fontSize: 12 }}
-                  />
-                  <YAxis 
-                    type="category" 
-                    dataKey="section"
-                    width={120}
-                    tick={{ fontSize: 11 }}
-                  />
-                  
-                  <Bar 
-                    dataKey="completion" 
-                    fill="#3b82f6"
-                    radius={[0, 4, 4, 0]}
-                  />
-                  
-                  <Tooltip 
-                    content={<SectionCompletionTooltip />}
-                    formatter={(value: number, name: string, props: any) => [`${value}%`, '充実度']}
-                    labelFormatter={(label: string) => `セクション: ${label}`}
-                    wrapperStyle={{ 
-                      zIndex: 10000,
-                      pointerEvents: 'none'
-                    }}
-                    allowEscapeViewBox={{ x: false, y: false }}
-                    cursor={false}
-                    animationDuration={200}
-                  />
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis type="number" domain={[0, 100]} />
+                  <YAxis type="category" dataKey="name" width={120} />
+                  <Bar dataKey="value" fill="#3b82f6" />
+                  <Tooltip />
                 </BarChart>
                 </ResponsiveContainer>
               </div>

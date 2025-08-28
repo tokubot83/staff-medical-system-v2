@@ -18,6 +18,7 @@ import RoleSelectionModal from '@/components/RoleSelectionModal'
 import UnifiedInterviewDashboard from '@/components/interview/UnifiedInterviewDashboard'
 import UnifiedInterviewBankSystem from '@/components/interview/UnifiedInterviewBankSystem'
 import InterviewManualSimulator from '@/components/interview/InterviewManualSimulator'
+import InterviewStatisticsChart from '@/components/charts/InterviewStatisticsChart'
 
 // タブ順序を業務フローに合わせて修正
 const tabs = [
@@ -2419,26 +2420,206 @@ interface HistoryAnalysisTabProps {
 }
 
 function HistoryAnalysisTab({ interviews }: HistoryAnalysisTabProps): React.ReactElement {
+  const [showDetailedStats, setShowDetailedStats] = useState(true)
+  const [dateRange, setDateRange] = useState<{ start: string; end: string }>({
+    start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    end: new Date().toISOString().split('T')[0]
+  })
+  const [selectedDepartment, setSelectedDepartment] = useState('all')
+  const [selectedInterviewType, setSelectedInterviewType] = useState('all')
+
+  // 日付範囲でフィルタリング
+  const filteredInterviews = interviews.filter(interview => {
+    const interviewDate = new Date(interview.bookingDate)
+    const startDate = dateRange.start ? new Date(dateRange.start) : null
+    const endDate = dateRange.end ? new Date(dateRange.end) : null
+    
+    const matchesDate = (!startDate || interviewDate >= startDate) && 
+                       (!endDate || interviewDate <= endDate)
+    const matchesDepartment = selectedDepartment === 'all' || interview.department === selectedDepartment
+    const matchesType = selectedInterviewType === 'all' || interview.interviewType === selectedInterviewType
+    
+    return matchesDate && matchesDepartment && matchesType
+  })
+
+  // 部署リストを取得
+  const departments = Array.from(new Set(interviews.map(i => i.department)))
+  
+  // 面談タイプリストを取得
+  const interviewTypes = Array.from(new Set(interviews.map(i => i.interviewType)))
+
   return (
     <div className={styles.historyContainer}>
-      <h2>面談履歴・分析</h2>
+      <div className={styles.historyHeader}>
+        <h2>📊 面談履歴・分析</h2>
+        <p className={styles.historyDescription}>
+          面談データの統計分析と過去の履歴を確認できます
+        </p>
+      </div>
+
+      {/* フィルター */}
+      <div className={styles.filterSection}>
+        <div className={styles.filterRow}>
+          <div className={styles.filterItem}>
+            <label>期間</label>
+            <div className={styles.dateRangeContainer}>
+              <input
+                type="date"
+                value={dateRange.start}
+                onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
+                className={styles.dateInput}
+              />
+              <span className={styles.dateSeparator}>〜</span>
+              <input
+                type="date"
+                value={dateRange.end}
+                onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
+                className={styles.dateInput}
+              />
+            </div>
+          </div>
+          <div className={styles.filterItem}>
+            <label>部署</label>
+            <select
+              value={selectedDepartment}
+              onChange={(e) => setSelectedDepartment(e.target.value)}
+              className={styles.filterSelect}
+            >
+              <option value="all">全部署</option>
+              {departments.map(dept => (
+                <option key={dept} value={dept}>{dept}</option>
+              ))}
+            </select>
+          </div>
+          <div className={styles.filterItem}>
+            <label>面談タイプ</label>
+            <select
+              value={selectedInterviewType}
+              onChange={(e) => setSelectedInterviewType(e.target.value)}
+              className={styles.filterSelect}
+            >
+              <option value="all">全タイプ</option>
+              {interviewTypes.map(type => (
+                <option key={type} value={type}>{type}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </div>
+
+      {/* サマリーカード */}
       <div className={styles.analysisContent}>
         <div className={styles.statsGrid}>
           <div className={styles.statCard}>
+            <div className={styles.statIcon}>✅</div>
             <h3>実施済み面談</h3>
-            <p className={styles.statValue}>{interviews.filter(i => i.status === 'completed').length}</p>
+            <p className={styles.statValue}>
+              {filteredInterviews.filter(i => i.status === 'completed').length}
+            </p>
+            <p className={styles.statSubtext}>
+              全体の{Math.round(filteredInterviews.filter(i => i.status === 'completed').length / filteredInterviews.length * 100) || 0}%
+            </p>
           </div>
           <div className={styles.statCard}>
+            <div className={styles.statIcon}>📅</div>
             <h3>予定面談</h3>
-            <p className={styles.statValue}>{interviews.filter(i => i.status === 'scheduled').length}</p>
+            <p className={styles.statValue}>
+              {filteredInterviews.filter(i => i.status === 'scheduled').length}
+            </p>
+            <p className={styles.statSubtext}>
+              今後実施予定
+            </p>
           </div>
           <div className={styles.statCard}>
+            <div className={styles.statIcon}>📊</div>
             <h3>総面談数</h3>
-            <p className={styles.statValue}>{interviews.length}</p>
+            <p className={styles.statValue}>{filteredInterviews.length}</p>
+            <p className={styles.statSubtext}>
+              選択期間内
+            </p>
+          </div>
+          <div className={styles.statCard}>
+            <div className={styles.statIcon}>⚡</div>
+            <h3>緊急面談</h3>
+            <p className={styles.statValue}>
+              {filteredInterviews.filter(i => i.urgencyLevel === 'urgent').length}
+            </p>
+            <p className={styles.statSubtext}>
+              要対応案件
+            </p>
           </div>
         </div>
-        <div className={styles.comingSoon}>
-          <p>詳細な分析機能は現在開発中です</p>
+
+        {/* 詳細統計チャート */}
+        <div className={styles.chartSection}>
+          <div className={styles.chartHeader}>
+            <h3>📈 詳細統計分析</h3>
+            <button
+              onClick={() => setShowDetailedStats(!showDetailedStats)}
+              className={styles.toggleButton}
+            >
+              {showDetailedStats ? '非表示' : '表示'}
+            </button>
+          </div>
+          {showDetailedStats && (
+            <div className={styles.chartContainer}>
+              <InterviewStatisticsChart />
+            </div>
+          )}
+        </div>
+
+        {/* 面談履歴テーブル */}
+        <div className={styles.historyTableSection}>
+          <h3>📋 面談履歴一覧</h3>
+          <div className={styles.tableContainer}>
+            <table className={styles.historyTable}>
+              <thead>
+                <tr>
+                  <th>実施日</th>
+                  <th>職員名</th>
+                  <th>部署</th>
+                  <th>面談タイプ</th>
+                  <th>ステータス</th>
+                  <th>面談者</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredInterviews.slice(0, 10).map((interview) => (
+                  <tr key={interview.id}>
+                    <td>{new Date(interview.bookingDate).toLocaleDateString('ja-JP')}</td>
+                    <td>{interview.employeeName}</td>
+                    <td>{interview.department}</td>
+                    <td>
+                      <span className={styles.interviewTypeBadge}>
+                        {interview.interviewType === 'individual_consultation' ? '個別相談' :
+                         interview.interviewType === 'regular_meeting' ? '定期面談' :
+                         interview.interviewType === 'career_consultation' ? 'キャリア相談' :
+                         interview.interviewType}
+                      </span>
+                    </td>
+                    <td>
+                      <span className={`${styles.statusBadge} ${styles[`status-${interview.status}`]}`}>
+                        {interview.status === 'completed' ? '完了' :
+                         interview.status === 'scheduled' ? '予定' :
+                         interview.status === 'cancelled' ? 'キャンセル' :
+                         interview.status}
+                      </span>
+                    </td>
+                    <td>{interview.interviewerName}</td>
+                    <td>
+                      <button className={styles.viewButton}>詳細</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {filteredInterviews.length > 10 && (
+              <div className={styles.moreRecords}>
+                他 {filteredInterviews.length - 10} 件の記録があります
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
