@@ -57,20 +57,7 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
     { section: '成長目標', completion: 72, diff: 8, fill: CHART_COLORS.danger, name: '成長目標' }
   ];
   
-  // 最小限のテストデータ
-  const minimalTestData = [
-    { name: 'テスト1', value: 85 },
-    { name: 'テスト2', value: 72 },
-    { name: 'テスト3', value: 60 }
-  ];
   
-  // デバッグ用ログ
-  console.log('Bar data check:', testCompletionData.map(d => ({
-    section: d.section,
-    completion: d.completion,
-    hasCompletion: !!d.completion,
-    type: typeof d.completion
-  })));
   
   // データ生成（実際の実装では API から取得）
   const sectionTrendData = generateSampleTrendData(staffRole);
