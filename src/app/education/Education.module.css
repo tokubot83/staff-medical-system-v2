@@ -1,0 +1,214 @@
+.container {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 20px;
+  background: linear-gradient(to bottom, #f0fdf4, #ffffff);
+  min-height: 100vh;
+}
+
+.tabNavigation {
+  display: flex;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 24px;
+  overflow: hidden;
+  border: 1px solid rgba(34, 197, 94, 0.1);
+}
+
+.tabButton {
+  flex: 1;
+  padding: 18px 24px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #6b7280;
+  transition: all 0.3s ease;
+  border-bottom: 4px solid transparent;
+  position: relative;
+}
+
+.tabButton:hover {
+  background: linear-gradient(to bottom, #f0fdf4, #ecfdf5);
+  color: #22c55e;
+  transform: translateY(-1px);
+}
+
+.tabButton.active {
+  color: #22c55e;
+  background: linear-gradient(to bottom, #ecfdf5, #dcfce7);
+  border-bottom-color: #22c55e;
+  box-shadow: inset 0 2px 4px rgba(34, 197, 94, 0.1);
+}
+
+.tabIcon {
+  font-size: 20px;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.1));
+}
+
+.tabLabel {
+  position: relative;
+}
+
+.tabContent {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  min-height: 600px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+/* 研修ステーション専用スタイル */
+.stationContent {
+  padding: 32px;
+}
+
+.stationCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.stationCard {
+  border-radius: 20px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  position: relative;
+}
+
+.stationCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+.stationCardGradient {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+.stationCardContent {
+  padding: 28px;
+  color: white;
+  position: relative;
+}
+
+.stationCardBadge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+}
+
+.stationCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.stationCardIcon {
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+}
+
+.stationCardTitle {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.stationCardDescription {
+  font-size: 14px;
+  opacity: 0.9;
+  margin: 4px 0 0 0;
+}
+
+.featureGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 20px 0;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.featureItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.actionButton {
+  width: 100%;
+  padding: 16px;
+  background: white;
+  color: #22c55e;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+}
+
+.actionButton:hover {
+  background: rgba(255, 255, 255, 0.95);
+  transform: scale(1.02);
+}
+
+/* タブコンテンツ共通スタイル */
+.tabContentPadding {
+  padding: 32px;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+  
+  .tabNavigation {
+    flex-direction: column;
+  }
+  
+  .tabButton {
+    padding: 16px;
+    font-size: 14px;
+  }
+  
+  .stationCards {
+    grid-template-columns: 1fr;
+  }
+  
+  .stationCardContent {
+    padding: 20px;
+  }
+  
+  .featureGrid {
+    grid-template-columns: 1fr;
+  }
+}
