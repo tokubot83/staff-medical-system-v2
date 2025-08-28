@@ -488,10 +488,10 @@ export default function EvaluationDesignPage() {
                   <div className="space-y-3">
                     <h4 className="font-semibold">研修アクション</h4>
                     <div className="space-y-2">
-                      <Link href="/training-v3">
+                      <Link href="/education">
                         <Button className="w-full justify-start bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
-                          <Zap className="h-5 w-5 mr-3" />
-                          V3研修システムへ
+                          <BookOpen className="h-5 w-5 mr-3" />
+                          教育研修ステーションへ
                         </Button>
                       </Link>
                       <Button 
@@ -770,7 +770,7 @@ export default function EvaluationDesignPage() {
                                       </div>
                                     </div>
                                     {!task.completed && (
-                                      <Link href="/training-v3">
+                                      <Link href="/education">
                                         <Button size="sm" variant="ghost" className="text-purple-600 hover:text-purple-700">
                                           <ArrowRight className="h-4 w-4" />
                                         </Button>
@@ -895,7 +895,7 @@ export default function EvaluationDesignPage() {
                 V3研修連携ダッシュボード
                 <Badge className="bg-purple-100 text-purple-800" variant="outline">New</Badge>
               </CardTitle>
-              <Link href="/training-v3">
+              <Link href="/education">
                 <Button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
                   <ArrowRight className="h-4 w-4 mr-2" />
                   詳細を見る
@@ -1008,7 +1008,7 @@ export default function EvaluationDesignPage() {
                 <TrendingUp className="h-4 w-4 mr-2" />
                 成長予測シミュレーター
               </Button>
-              <Link href="/training-v3" className="flex-1">
+              <Link href="/education" className="flex-1">
                 <Button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
                   <Zap className="h-4 w-4 mr-2" />
                   V3研修システムで詳細分析
@@ -1314,7 +1314,7 @@ export default function EvaluationDesignPage() {
 
               {/* アクションボタン */}
               <div className="flex gap-3">
-                <Link href="/training-v3" className="flex-1">
+                <Link href="/education" className="flex-1">
                   <Button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
                     <Zap className="h-4 w-4 mr-2" />
                     V3研修システムで詳細計画を作成

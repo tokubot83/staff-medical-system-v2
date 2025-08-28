@@ -2801,7 +2801,7 @@ function ManagementLinksTab({ selectedStaff }: { selectedStaff: any }): React.Re
             現在の評価: {selectedStaff.evaluation}
           </div>
         </a>
-        <a href="/training" className={styles.linkCard}>
+        <a href="/education" className={styles.linkCard}>
           <div className={styles.linkIcon}>🎓</div>
           <h3>教育研修システム</h3>
           <p>研修計画・受講履歴の管理</p>

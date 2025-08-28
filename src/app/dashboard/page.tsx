@@ -473,16 +473,16 @@ export default function DashboardPage() {
                         個人ダッシュボード
                       </Button>
                     </Link>
-                    <Link href="/training">
+                    <Link href="/education">
                       <Button variant="outline" size="sm" className="w-full justify-start">
-                        <Award className="mr-2 h-4 w-4" />
-                        研修管理システム
+                        <BookOpen className="mr-2 h-4 w-4" />
+                        教育・研修管理
                       </Button>
                     </Link>
-                    <Link href="/training-v3">
+                    <Link href="/education">
                       <Button variant="outline" size="sm" className="w-full justify-start">
                         <Zap className="mr-2 h-4 w-4" />
-                        評価連動研修
+                        教育研修ステーション
                         <Badge className="ml-2 bg-purple-100 text-purple-800" variant="outline">New</Badge>
                       </Button>
                     </Link>
@@ -548,10 +548,10 @@ export default function DashboardPage() {
                         <p className="text-sm font-bold text-green-900">成長計画</p>
                       </div>
                     </div>
-                    <Link href="/training-v3">
+                    <Link href="/education">
                       <Button className="w-full" variant="outline" size="sm">
-                        <Zap className="mr-2 h-4 w-4" />
-                        研修システム
+                        <BookOpen className="mr-2 h-4 w-4" />
+                        教育研修ステーション
                       </Button>
                     </Link>
                   </div>

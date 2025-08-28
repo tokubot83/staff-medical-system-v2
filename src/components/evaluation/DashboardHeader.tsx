@@ -52,7 +52,7 @@ export default function DashboardHeader({ title, description, onRefresh }: Dashb
       staffName: '山田太郎',
       message: '感染対策研修（2回目）未受講',
       dueDate: '2025-08-20',
-      actionLink: '/training',
+      actionLink: '/education',
       actionLabel: '研修登録'
     },
     {
