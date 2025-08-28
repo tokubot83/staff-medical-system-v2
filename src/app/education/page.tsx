@@ -112,6 +112,7 @@ export default function EducationPage() {
   const [selectedFacility, setSelectedFacility] = useState('acute');
   const [selectedJob, setSelectedJob] = useState('nurse');
   const [selectedLevel, setSelectedLevel] = useState('junior');
+  const [activeTab, setActiveTab] = useState('station');
 
   const getCategoryColor = (category: string) => {
     const colors = {
@@ -161,7 +162,10 @@ export default function EducationPage() {
 
       {/* ナビゲーションカード */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <Link href="/education/planning">
+        <div 
+          onClick={() => setActiveTab('planning')}
+          className="cursor-pointer"
+        >
           <Card className="hover:shadow-lg transition-shadow cursor-pointer">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -174,9 +178,12 @@ export default function EducationPage() {
               </div>
             </CardContent>
           </Card>
-        </Link>
+        </div>
 
-        <Link href="/education/tracking">
+        <div 
+          onClick={() => setActiveTab('management')}
+          className="cursor-pointer"
+        >
           <Card className="hover:shadow-lg transition-shadow cursor-pointer">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -189,7 +196,7 @@ export default function EducationPage() {
               </div>
             </CardContent>
           </Card>
-        </Link>
+        </div>
 
         <Link href="/evaluation/config">
           <Card className="hover:shadow-lg transition-shadow cursor-pointer">
@@ -207,7 +214,7 @@ export default function EducationPage() {
         </Link>
       </div>
 
-      <Tabs defaultValue="station" className="w-full">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="station">研修ステーション</TabsTrigger>
           <TabsTrigger value="planning">年間計画</TabsTrigger>
@@ -260,7 +267,11 @@ export default function EducationPage() {
                     </div>
                   </div>
                 </div>
-                <Button className="w-full bg-white text-blue-600 hover:bg-blue-50" size="lg">
+                <Button 
+                  className="w-full bg-white text-blue-600 hover:bg-blue-50" 
+                  size="lg"
+                  onClick={() => setActiveTab('planning')}
+                >
                   <Calendar className="mr-2 h-5 w-5" />
                   年間計画を開く
                 </Button>
@@ -298,7 +309,11 @@ export default function EducationPage() {
                     <p className="text-2xl font-bold">25名</p>
                   </div>
                 </div>
-                <Button className="w-full bg-white text-purple-600 hover:bg-purple-50" size="lg">
+                <Button 
+                  className="w-full bg-white text-purple-600 hover:bg-purple-50" 
+                  size="lg"
+                  onClick={() => setActiveTab('management')}
+                >
                   <Users className="mr-2 h-5 w-5" />
                   受講管理を開く
                 </Button>
