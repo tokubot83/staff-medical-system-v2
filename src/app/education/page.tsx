@@ -171,18 +171,11 @@ export default function EducationPage() {
             <span className={styles.tabLabel}>研修ステーション</span>
           </button>
           <button 
-            onClick={() => setActiveTab('planning')}
-            className={`${styles.tabButton} ${activeTab === 'planning' ? styles.active : ''}`}
+            onClick={() => setActiveTab('guide')}
+            className={`${styles.tabButton} ${activeTab === 'guide' ? styles.active : ''}`}
           >
-            <span className={styles.tabIcon}>📅</span>
-            <span className={styles.tabLabel}>年間計画</span>
-          </button>
-          <button 
-            onClick={() => setActiveTab('management')}
-            className={`${styles.tabButton} ${activeTab === 'management' ? styles.active : ''}`}
-          >
-            <span className={styles.tabIcon}>👥</span>
-            <span className={styles.tabLabel}>受講管理</span>
+            <span className={styles.tabIcon}>📖</span>
+            <span className={styles.tabLabel}>教育研修ガイド</span>
           </button>
           <button 
             onClick={() => setActiveTab('analytics')}
@@ -304,6 +297,228 @@ export default function EducationPage() {
                     </div>
                   </div>
                 </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* 教育研修ガイドタブ */}
+        {activeTab === 'guide' && (
+          <div className={styles.tabContentPadding}>
+            {/* システム概要 */}
+            <Card className="mb-8">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-2xl text-center justify-center">
+                  <BookOpen className="h-8 w-8 text-blue-600" />
+                  教育・研修管理システム概要
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center mb-6">
+                  <div className="inline-flex items-center gap-4 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl border-2 border-blue-100">
+                    <div className="text-4xl">🎯</div>
+                    <div className="text-left">
+                      <h3 className="text-xl font-semibold text-blue-900 mb-2">目的</h3>
+                      <p className="text-blue-700">評価結果と連動した効果的な研修計画により、職員のスキル向上と組織全体のパフォーマンス向上を実現</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="text-center p-4 bg-green-50 rounded-lg border">
+                    <div className="text-3xl mb-2">📊</div>
+                    <h4 className="font-semibold text-green-800 mb-2">評価連動研修</h4>
+                    <p className="text-sm text-green-700">個人の評価結果に基づく最適な研修プログラムの自動提案</p>
+                  </div>
+                  <div className="text-center p-4 bg-purple-50 rounded-lg border">
+                    <div className="text-3xl mb-2">🔄</div>
+                    <h4 className="font-semibold text-purple-800 mb-2">継続的改善</h4>
+                    <p className="text-sm text-purple-700">研修効果の測定と次期プログラムへの反映による品質向上</p>
+                  </div>
+                  <div className="text-center p-4 bg-orange-50 rounded-lg border">
+                    <div className="text-3xl mb-2">💰</div>
+                    <h4 className="font-semibold text-orange-800 mb-2">ROI最大化</h4>
+                    <p className="text-sm text-orange-700">研修投資効果の可視化と最適な予算配分の実現</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* 年間スケジュール概要 */}
+            <Card className="mb-8">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Calendar className="h-6 w-6 text-blue-600" />
+                  年間スケジュール・評価連携タイムライン
+                </CardTitle>
+                <CardDescription>研修計画と評価実施のタイミングを統合管理</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="p-4 border rounded-lg bg-blue-50">
+                    <h4 className="font-semibold text-blue-800 mb-2">第1四半期（4-6月）</h4>
+                    <ul className="text-sm text-blue-700 space-y-1">
+                      <li>• 基礎研修実施</li>
+                      <li>• 前年度評価フィードバック</li>
+                      <li>• 6月：夏季貢献度評価</li>
+                    </ul>
+                  </div>
+                  <div className="p-4 border rounded-lg bg-green-50">
+                    <h4 className="font-semibold text-green-800 mb-2">第2四半期（7-9月）</h4>
+                    <ul className="text-sm text-green-700 space-y-1">
+                      <li>• 専門研修集中実施</li>
+                      <li>• 個別フォローアップ</li>
+                      <li>• 研修効果測定</li>
+                    </ul>
+                  </div>
+                  <div className="p-4 border rounded-lg bg-orange-50">
+                    <h4 className="font-semibold text-orange-800 mb-2">第3四半期（10-12月）</h4>
+                    <ul className="text-sm text-orange-700 space-y-1">
+                      <li>• スキル向上研修</li>
+                      <li>• 年間成果分析</li>
+                      <li>• 12月：冬季貢献度評価</li>
+                    </ul>
+                  </div>
+                  <div className="p-4 border rounded-lg bg-purple-50">
+                    <h4 className="font-semibold text-purple-800 mb-2">第4四半期（1-3月）</h4>
+                    <ul className="text-sm text-purple-700 space-y-1">
+                      <li>• 年度末総合評価</li>
+                      <li>• 3月：技術評価実施</li>
+                      <li>• 次年度計画策定</li>
+                    </ul>
+                  </div>
+                </div>
+                
+                <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border">
+                  <div className="flex items-center gap-2 mb-2">
+                    <TrendingUp className="h-5 w-5 text-green-600" />
+                    <span className="font-semibold">連携効果</span>
+                  </div>
+                  <p className="text-sm text-gray-700">研修受講者の評価スコアが年間平均+8.5点向上、ROI 125%を達成</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* 機能ストーリー */}
+            <Card className="mb-8">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileText className="h-6 w-6 text-blue-600" />
+                  機能ストーリー・業務フロー
+                </CardTitle>
+                <CardDescription>実際の業務での活用シナリオ</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  <div className="border-l-4 border-blue-500 pl-4">
+                    <h4 className="font-semibold text-blue-800 mb-2">シナリオ1: 評価結果に基づく個別研修計画</h4>
+                    <div className="text-sm text-gray-700 space-y-2">
+                      <p><strong>状況：</strong>3月の技術評価で、看護師Aの「医療安全」スコアが平均より5点低い結果</p>
+                      <p><strong>システム対応：</strong>自動的に医療安全研修を4月の個別計画に追加、優先度「高」で表示</p>
+                      <p><strong>結果：</strong>6月の貢献度評価で該当スコアが8点向上、年間目標達成</p>
+                    </div>
+                  </div>
+                  
+                  <div className="border-l-4 border-green-500 pl-4">
+                    <h4 className="font-semibold text-green-800 mb-2">シナリオ2: ROI分析による研修プログラム最適化</h4>
+                    <div className="text-sm text-gray-700 space-y-2">
+                      <p><strong>状況：</strong>リーダーシップ研修の効果測定で期待値を下回る結果</p>
+                      <p><strong>システム対応：</strong>受講者の評価向上データを分析し、プログラム内容の改善提案を生成</p>
+                      <p><strong>結果：</strong>改善後の研修で効果が2倍に向上、予算効率125%を達成</p>
+                    </div>
+                  </div>
+                  
+                  <div className="border-l-4 border-purple-500 pl-4">
+                    <h4 className="font-semibold text-purple-800 mb-2">シナリオ3: 施設間比較による成功事例共有</h4>
+                    <div className="text-sm text-gray-700 space-y-2">
+                      <p><strong>状況：</strong>A施設の研修完了率が他施設より20%高い状況を発見</p>
+                      <p><strong>システム対応：</strong>成功要因を分析し、他施設への横展開プランを自動生成</p>
+                      <p><strong>結果：</strong>全施設の研修完了率が平均15%向上、組織全体のスキル底上げを実現</p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* クイックアクセス・操作ガイド */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Target className="h-6 w-6 text-blue-600" />
+                  クイックアクセス・操作ガイド
+                </CardTitle>
+                <CardDescription>各機能へのアクセス方法と使い方</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <button 
+                    onClick={() => setActiveTab('station')}
+                    className="p-4 text-left border rounded-lg hover:bg-blue-50 hover:border-blue-300 transition-all"
+                  >
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="text-2xl">🚉</span>
+                      <span className="font-semibold text-blue-800">研修ステーション</span>
+                    </div>
+                    <p className="text-sm text-gray-600">研修計画と受講管理の統合ダッシュボード</p>
+                  </button>
+                  
+                  <button 
+                    onClick={() => setActiveTab('analytics')}
+                    className="p-4 text-left border rounded-lg hover:bg-green-50 hover:border-green-300 transition-all"
+                  >
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="text-2xl">📊</span>
+                      <span className="font-semibold text-green-800">分析・効果測定</span>
+                    </div>
+                    <p className="text-sm text-gray-600">研修ROIと評価連携効果の可視化</p>
+                  </button>
+                  
+                  <button 
+                    onClick={() => setActiveTab('planning')}
+                    className="p-4 text-left border rounded-lg hover:bg-purple-50 hover:border-purple-300 transition-all"
+                  >
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="text-2xl">📅</span>
+                      <span className="font-semibold text-purple-800">年間計画</span>
+                    </div>
+                    <p className="text-sm text-gray-600">研修と評価の連携スケジュール表示</p>
+                  </button>
+                  
+                  <button 
+                    onClick={() => setActiveTab('management')}
+                    className="p-4 text-left border rounded-lg hover:bg-orange-50 hover:border-orange-300 transition-all"
+                  >
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="text-2xl">👥</span>
+                      <span className="font-semibold text-orange-800">受講管理</span>
+                    </div>
+                    <p className="text-sm text-gray-600">個人別進捗と未受講者フォロー</p>
+                  </button>
+                  
+                  <div className="p-4 border rounded-lg bg-gray-50">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="text-2xl">🔗</span>
+                      <span className="font-semibold text-gray-800">評価システム連携</span>
+                    </div>
+                    <p className="text-sm text-gray-600">評価ダッシュボードとのリアルタイム連携</p>
+                  </div>
+                  
+                  <div className="p-4 border rounded-lg bg-yellow-50">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="text-2xl">📈</span>
+                      <span className="font-semibold text-yellow-800">成果予測</span>
+                    </div>
+                    <p className="text-sm text-gray-600">研修効果のシミュレーションと予測</p>
+                  </div>
+                </div>
+                
+                {/* 導入効果の説明 */}
+                <Alert className="mt-6 border-green-200 bg-green-50">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  <AlertDescription className="text-green-800">
+                    <strong>導入効果：</strong>評価連動研修により、職員の技術向上率が従来比150%向上。組織全体のパフォーマンス向上と人材定着率の改善を実現しています。
+                  </AlertDescription>
+                </Alert>
               </CardContent>
             </Card>
           </div>
