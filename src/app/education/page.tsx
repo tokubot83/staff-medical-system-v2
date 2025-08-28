@@ -156,13 +156,13 @@ export default function EducationPage() {
   });
 
   return (
-    <div className={styles.container}>
+    <div>
       <CommonHeader 
         title="教育・研修管理システム"
         subtitle="教育師長管理画面 - 研修プログラムと評価項目の連携"
       />
-
-      <nav className={styles.tabNavigation}>
+      <div className={styles.container}>
+        <div className={styles.tabNavigation}>
         <button 
           onClick={() => setActiveTab('station')}
           className={`${styles.tabButton} ${activeTab === 'station' ? styles.active : ''}`}
@@ -184,16 +184,16 @@ export default function EducationPage() {
           <span className={styles.tabIcon}>👥</span>
           <span className={styles.tabLabel}>受講管理</span>
         </button>
-        <button 
-          onClick={() => setActiveTab('analytics')}
-          className={`${styles.tabButton} ${activeTab === 'analytics' ? styles.active : ''}`}
-        >
-          <span className={styles.tabIcon}>📊</span>
-          <span className={styles.tabLabel}>分析・効果測定</span>
-        </button>
-      </nav>
+          <button 
+            onClick={() => setActiveTab('analytics')}
+            className={`${styles.tabButton} ${activeTab === 'analytics' ? styles.active : ''}`}
+          >
+            <span className={styles.tabIcon}>📊</span>
+            <span className={styles.tabLabel}>分析・効果測定</span>
+          </button>
+        </div>
 
-      <div className={styles.tabContent}>
+        <div className={styles.tabContent}>
 
         {/* 研修ステーションタブ */}
         {activeTab === 'station' && (
@@ -953,6 +953,7 @@ export default function EducationPage() {
             </Card>
           </div>
         )}
+        </div>
       </div>
     </div>
   );
