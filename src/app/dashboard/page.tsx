@@ -85,7 +85,7 @@ export default function DashboardPage() {
       <div className={styles.container}>
         <div className={styles.tabNavigation}>
           {[
-            { id: 'home', label: 'ホーム', icon: '🏠' },
+            { id: 'home', label: '評価ステーション', icon: '🚉' },
             { id: 'guide', label: '評価ガイド', icon: '📖' },
             { id: 'progress', label: '進捗管理', icon: '📊' },
             { id: 'settings', label: '設定・運用', icon: '⚙️' },
