@@ -198,7 +198,7 @@ export default function EducationPage() {
           </Card>
         </div>
 
-        <Link href="/evaluation/config">
+        <Link href="/evaluation-design">
           <Card className="hover:shadow-lg transition-shadow cursor-pointer">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
