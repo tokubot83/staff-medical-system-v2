@@ -281,11 +281,11 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
                     tick={{ fontSize: 11 }}
                   />
                   
-                  <Bar dataKey="completion">
-                    {sectionCompletionData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.fill} />
-                    ))}
-                  </Bar>
+                  <Bar 
+                    dataKey="completion" 
+                    fill="#3b82f6"
+                    radius={[0, 4, 4, 0]}
+                  />
                   
                   <Tooltip 
                     content={<SectionCompletionTooltip />}
