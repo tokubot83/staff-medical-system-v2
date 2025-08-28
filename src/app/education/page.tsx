@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import CommonHeader from '@/components/CommonHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -156,64 +157,10 @@ export default function EducationPage() {
 
   return (
     <div className={styles.container}>
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">教育・研修管理システム</h1>
-        <p className="text-gray-600">教育師長管理画面 - 研修プログラムと評価項目の連携</p>
-      </div>
-
-      {/* ナビゲーションカード */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <div 
-          onClick={() => setActiveTab('planning')}
-          className="cursor-pointer"
-        >
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Calendar className="h-8 w-8 text-blue-500 mb-2" />
-                  <h3 className="font-semibold">年間研修計画</h3>
-                  <p className="text-sm text-gray-600">研修スケジュール管理</p>
-                </div>
-                <ChevronRight className="h-5 w-5 text-gray-400" />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div 
-          onClick={() => setActiveTab('management')}
-          className="cursor-pointer"
-        >
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Users className="h-8 w-8 text-green-500 mb-2" />
-                  <h3 className="font-semibold">受講管理</h3>
-                  <p className="text-sm text-gray-600">個人別研修履歴</p>
-                </div>
-                <ChevronRight className="h-5 w-5 text-gray-400" />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <Link href="/evaluation-design">
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Award className="h-8 w-8 text-purple-500 mb-2" />
-                  <h3 className="font-semibold">評価連携</h3>
-                  <p className="text-sm text-gray-600">評価項目との紐付け</p>
-                </div>
-                <ChevronRight className="h-5 w-5 text-gray-400" />
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-      </div>
+      <CommonHeader 
+        title="教育・研修管理システム"
+        subtitle="教育師長管理画面 - 研修プログラムと評価項目の連携"
+      />
 
       <nav className={styles.tabNavigation}>
         <button 
