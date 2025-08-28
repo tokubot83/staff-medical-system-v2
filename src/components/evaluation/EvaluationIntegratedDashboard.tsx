@@ -232,7 +232,7 @@ export default function EvaluationIntegratedDashboard() {
                 </div>
                 <div className="alertAction">
                   {alert.actionRequired === 'training_register' && (
-                    <Link href="/training">
+                    <Link href="/education">
                       <button className="actionButton">研修登録</button>
                     </Link>
                   )}
@@ -434,7 +434,7 @@ export default function EvaluationIntegratedDashboard() {
             施設特化項目評価入力
           </button>
         </Link>
-        <Link href="/training">
+        <Link href="/education">
           <button className="primaryAction">
             <BookOpen size={20} />
             研修管理

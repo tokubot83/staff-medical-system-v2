@@ -101,6 +101,95 @@ class DevelopmentMemoService {
         tags: ['API', 'REST']
       },
 
+      // ===== 教育研修管理システム（2025年8月28日統合実装） =====
+      {
+        id: 'training-2025-001',
+        category: '教育研修管理',
+        subcategory: 'システム統合',
+        title: '旧研修システムの統合・整理完了',
+        content: '重複していた/training、/training-v3を/educationに統一。全システムのリンクを修正し、旧システムの名残を完全除去。',
+        source: { type: 'file', path: '/src/app/education/page.tsx' },
+        date: '2025-08-28',
+        priority: 'important',
+        status: 'completed',
+        tags: ['リファクタリング', 'システム統合', 'URL統一']
+      },
+      {
+        id: 'training-2025-002',
+        category: '教育研修管理',
+        subcategory: 'UI/UX改善',
+        title: '教育研修ステーションの実装',
+        content: '評価管理ダッシュボードと統一したデザインパターンで研修ステーションを実装。2つのメインカード（研修計画・受講管理）と動的な月別タスク表示機能を追加。',
+        source: { type: 'file', path: '/src/app/education/page.tsx' },
+        date: '2025-08-28',
+        priority: 'important',
+        status: 'completed',
+        tags: ['UI統一', 'ステーション', '動的表示']
+      },
+      {
+        id: 'training-2025-003',
+        category: '教育研修管理',
+        subcategory: 'ナビゲーション最適化',
+        title: '1行ナビゲーション構造の確立',
+        content: '4つのタブに集約：研修ステーション・年間計画・受講管理・分析効果測定。不要だった評価項目マッピングタブを削除し、2列表示UIで自動化。',
+        source: { type: 'file', path: '/src/app/education/page.tsx' },
+        date: '2025-08-28',
+        priority: 'info',
+        status: 'completed',
+        tags: ['ナビゲーション', 'タブ最適化', 'UX改善']
+      },
+      {
+        id: 'training-2025-004',
+        category: '教育研修管理',
+        subcategory: '評価連携強化',
+        title: '研修効果と評価スコアの相関分析機能',
+        content: '分析・効果測定タブに研修ROI、評価スコア向上、相関分析、効果予測シミュレーション機能を追加。研修投資の効果を定量的に測定可能。',
+        source: { type: 'file', path: '/src/app/education/page.tsx' },
+        date: '2025-08-28',
+        priority: 'important',
+        status: 'completed',
+        tags: ['ROI分析', '相関分析', 'シミュレーション', 'データドリブン']
+      },
+      {
+        id: 'training-2025-005',
+        category: '教育研修管理',
+        subcategory: 'アラート機能',
+        title: '未受講者アラート・個別フォローアップ機能',
+        content: '受講管理タブに未受講者の自動検出とアラート機能を実装。個人別受講状況の可視化と要フォロー者の特定機能。評価実施前の研修完了確認を自動化。',
+        source: { type: 'file', path: '/src/app/education/page.tsx' },
+        date: '2025-08-28',
+        priority: 'important',
+        status: 'completed',
+        tags: ['アラート', '個別管理', 'フォローアップ', '自動化']
+      },
+      {
+        id: 'training-2025-006',
+        category: '教育研修管理',
+        subcategory: '2列表示UI実装',
+        title: '2列表示年間UIの実装完了',
+        content: `年間計画タブに教育研修年間UI（左側）と評価管理年間UI（右側）の2列表示UIを完全実装。
+
+【実装機能】
+- 月別2列表示：各月の研修タスクと評価タスクを並列表示
+- リアルタイム連携効果表示：研修が評価スコアに与える影響を可視化
+- 現在月強調表示：8月を青いグラデーションで強調
+- 重要月バッジ：6月(夏季貢献度)、12月(冬季貢献度)、3月(技術評価)を特別表示
+- 年間サマリー：18研修プログラム、4回評価、ROI 125%予測
+
+【技術的改善】
+- 評価制度設計ページのyearScheduleデータ構造を参考に統合
+- currentMonthの動的取得によるリアルタイム表示
+- AlertTriangle、Sparklesアイコンの追加
+- 連携効果の可視化（+3点向上、ROI改善等）
+
+研修と評価の連携フローが一目で把握でき、業務効率と教育効果の最大化を実現。`,
+        source: { type: 'file', path: '/src/app/education/page.tsx' },
+        date: '2025-08-28',
+        priority: 'critical',
+        status: 'completed',
+        tags: ['2列表示', '年間UI', '連携可視化', '実装完了', 'リアルタイム連携']
+      },
+
       // ===== 面談システム =====
       {
         id: 'interview-001',
