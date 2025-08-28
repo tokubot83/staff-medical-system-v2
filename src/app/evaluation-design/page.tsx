@@ -54,15 +54,26 @@ interface MonthData {
     title: string;
     completed: boolean;
     urgent?: boolean;
+    requiresTraining?: boolean; // 研修完了が必要か
+    trainingDependency?: string; // 研修依存の詳細
   }[];
   trainingTasks?: {  // 研修連携タスク
     title: string;
     completed: boolean;
     type: 'planning' | 'execution' | 'analysis';
     expectedImpact?: string;
+    dependsOn?: string; // 評価データ依存の詳細
+    targetGroup?: string; // 対象者の詳細
+    deadline?: string;
   }[];
   highlight?: boolean;
   keyTasks?: string[];
+  linkage?: {
+    type: 'critical' | 'important' | 'moderate';
+    description: string;
+    dataFlow: string; // データの流れの説明
+    educationImpact?: string; // 教育システムへの影響
+  };
 }
 
 export default function EvaluationDesignPage() {
@@ -72,6 +83,7 @@ export default function EvaluationDesignPage() {
   const [showDesignSupport, setShowDesignSupport] = useState(false);
   const [activeTab, setActiveTab] = useState<'evaluation' | 'training' | 'analysis'>('evaluation');
   const [showTrainingSimulator, setShowTrainingSimulator] = useState(false);
+  const [showLinkageDetails, setShowLinkageDetails] = useState<number | null>(null);
 
   // 年間スケジュールデータ
   const yearSchedule: MonthData[] = [
@@ -106,13 +118,42 @@ export default function EvaluationDesignPage() {
       tasks: [
         { title: '各施設から評価データ収集', completed: true },
         { title: 'Excelデータ取込・検証', completed: true },
-        { title: '相対評価ランキング作成', completed: true },
+        { 
+          title: '相対評価ランキング作成', 
+          completed: true,
+          requiresTraining: true,
+          trainingDependency: '研修受講者の貢献度平均+3点向上を反映'
+        },
         { title: '評価確定・承認', completed: true }
       ],
+      linkage: {
+        type: 'important',
+        description: '研修効果測定と夏季貢献度評価の連携',
+        dataFlow: '研修完了データ → 貢献度評価 → 相関分析 → 下半期計画調整',
+        educationImpact: '第1四半期研修受講者の貢献度+3点向上確認'
+      },
       trainingTasks: [
-        { title: '第1四半期研修効果測定', completed: true, type: 'analysis', expectedImpact: '貢献度+3点' },
-        { title: '貢献度スコアと研修受講の相関分析', completed: true, type: 'analysis' },
-        { title: '下半期研修計画の調整', completed: false, type: 'planning' }
+        { 
+          title: '第1四半期研修効果測定', 
+          completed: true, 
+          type: 'analysis', 
+          expectedImpact: '貢献度+3点',
+          dependsOn: '4-5月実施研修の完了データ',
+          targetGroup: '研修受講完了者'
+        },
+        { 
+          title: '貢献度スコアと研修受講の相関分析', 
+          completed: true, 
+          type: 'analysis',
+          dependsOn: '夏季貢献度評価結果（リアルタイム）',
+          expectedImpact: '研修効果の定量的証明'
+        },
+        { 
+          title: '下半期研修計画の調整', 
+          completed: false, 
+          type: 'planning',
+          dependsOn: '相関分析結果に基づく優先度再設定'
+        }
       ]
     },
     {
@@ -164,12 +205,42 @@ export default function EvaluationDesignPage() {
         { title: '各施設から評価データ収集', completed: currentMonth > 12 || currentMonth < 4 },
         { title: 'Excelデータ取込・検証', completed: currentMonth > 12 || currentMonth < 4 },
         { title: '相対評価ランキング作成', completed: currentMonth > 12 || currentMonth < 4 },
-        { title: '年間貢献度スコア確定', completed: currentMonth > 12 || currentMonth < 4 }
+        { 
+          title: '年間貢献度スコア確定', 
+          completed: currentMonth > 12 || currentMonth < 4,
+          requiresTraining: true,
+          trainingDependency: '研修完了者は年間平均+8.5点向上を確認'
+        }
       ],
+      linkage: {
+        type: 'critical',
+        description: '年間成果確定と次年度計画策定の重要な連携',
+        dataFlow: '年間評価確定 → ROI分析 → 成功パターン抽出 → 次年度改善計画',
+        educationImpact: '年間研修ROI 125%達成、次年度プログラム最適化'
+      },
       trainingTasks: [
-        { title: '年間研修ROI分析', completed: currentMonth > 12 || currentMonth < 4, type: 'analysis', expectedImpact: 'ROI 125%' },
-        { title: '次年度研修プログラム改善提案', completed: false, type: 'planning' },
-        { title: '高成果者の研修パターン分析', completed: false, type: 'analysis' }
+        { 
+          title: '年間研修ROI分析', 
+          completed: currentMonth > 12 || currentMonth < 4, 
+          type: 'analysis', 
+          expectedImpact: 'ROI 125%',
+          dependsOn: '年間貢献度スコア確定データ',
+          targetGroup: '全研修受講者'
+        },
+        { 
+          title: '次年度研修プログラム改善提案', 
+          completed: false, 
+          type: 'planning',
+          dependsOn: 'ROI分析・パターン分析結果',
+          deadline: '12月末'
+        },
+        { 
+          title: '高成果者の研修パターン分析', 
+          completed: false, 
+          type: 'analysis',
+          dependsOn: '冬季評価上位者の研修履歴',
+          expectedImpact: '成功モデルの横展開'
+        }
       ]
     },
     {
@@ -179,15 +250,51 @@ export default function EvaluationDesignPage() {
       highlight: true,
       keyTasks: ['評価制度設計・更新'],
       tasks: [
-        { title: '法人統一項目（30点）の配分設計', completed: currentMonth > 1, urgent: currentMonth === 1 },
-        { title: '施設特化項目（20点）の選定', completed: false, urgent: currentMonth === 1 },
+        { 
+          title: '法人統一項目（30点）の配分設計', 
+          completed: currentMonth > 1, 
+          urgent: currentMonth === 1,
+          requiresTraining: true,
+          trainingDependency: '前年度研修完了率を考慮した配点調整'
+        },
+        { 
+          title: '施設特化項目（20点）の選定', 
+          completed: false, 
+          urgent: currentMonth === 1,
+          requiresTraining: false
+        },
         { title: '評価シミュレーション実施', completed: false, urgent: currentMonth === 1 },
         { title: '各施設との調整', completed: false }
       ],
+      linkage: {
+        type: 'critical',
+        description: '評価制度設計と研修計画調整の最重要連携期間',
+        dataFlow: '前年度評価結果 → 研修効果分析 → 評価項目調整 → 次年度計画',
+        educationImpact: '研修完了者に基準点+2点加算、未完了者は減点対象'
+      },
       trainingTasks: [
-        { title: '前年度評価データから研修効果分析', completed: currentMonth > 1, type: 'analysis', expectedImpact: '研修ROI 120%達成' },
-        { title: '評価項目と研修プログラムのマッピング', completed: false, type: 'planning', expectedImpact: '全項目カバー率100%' },
-        { title: '必須研修カリキュラム策定', completed: false, type: 'planning' }
+        { 
+          title: '前年度評価データから研修効果分析', 
+          completed: currentMonth > 1, 
+          type: 'analysis', 
+          expectedImpact: '研修ROI 120%達成',
+          dependsOn: '12月冬季貢献度評価結果（70点未満対象）',
+          targetGroup: '全職員・低スコア者優先',
+          deadline: '1月15日'
+        },
+        { 
+          title: '評価項目と研修プログラムのマッピング', 
+          completed: false, 
+          type: 'planning', 
+          expectedImpact: '全項目カバー率100%',
+          dependsOn: '前年度年間技術評価総合スコア（65点未満・要強化項目）'
+        },
+        { 
+          title: '必須研修カリキュラム策定', 
+          completed: false, 
+          type: 'planning',
+          deadline: '1月31日'
+        }
       ]
     },
     {
@@ -207,15 +314,53 @@ export default function EvaluationDesignPage() {
       highlight: true,
       keyTasks: ['技術評価実施（50点）', '年間総合評価決定'],
       tasks: [
-        { title: '評価シート配布', completed: currentMonth > 3, urgent: currentMonth === 3 },
-        { title: '上司評価・本人評価の実施', completed: currentMonth > 3, urgent: currentMonth === 3 },
+        { 
+          title: '評価シート配布', 
+          completed: currentMonth > 3, 
+          urgent: currentMonth === 3,
+          requiresTraining: true,
+          trainingDependency: '必須研修未完了者は評価対象外または減点'
+        },
+        { 
+          title: '上司評価・本人評価の実施', 
+          completed: currentMonth > 3, 
+          urgent: currentMonth === 3,
+          requiresTraining: true,
+          trainingDependency: '研修受講履歴が評価公正性の担保要素'
+        },
         { title: '100点満点スコア確定', completed: currentMonth > 3 },
         { title: '2軸相対評価で最終グレード決定', completed: currentMonth > 3 }
       ],
+      linkage: {
+        type: 'critical',
+        description: '技術評価実施と研修効果測定の最重要連携月',
+        dataFlow: '技術評価結果 → 即時スコア分析 → 個別研修計画自動生成 → 4月研修開始',
+        educationImpact: '評価結果から48時間以内に研修計画作成、平均+5点向上目標'
+      },
       trainingTasks: [
-        { title: '評価結果即時分析→個別研修計画生成', completed: currentMonth > 3, type: 'analysis', expectedImpact: '平均スコア+5点' },
-        { title: 'スコアギャップ基づく優先研修リスト', completed: currentMonth > 3, type: 'planning' },
-        { title: '新年度研修予算配分提案', completed: false, type: 'planning', expectedImpact: '投資効率15%改善' }
+        { 
+          title: '評価結果即時分析→個別研修計画生成', 
+          completed: currentMonth > 3, 
+          type: 'analysis', 
+          expectedImpact: '平均スコア+5点',
+          dependsOn: '技術評価実施結果（リアルタイム）',
+          targetGroup: 'スコアギャップ対象者',
+          deadline: '評価完了後48時間以内'
+        },
+        { 
+          title: 'スコアギャップ基づく優先研修リスト', 
+          completed: currentMonth > 3, 
+          type: 'planning',
+          dependsOn: '100点満点スコア確定データ',
+          targetGroup: '65点未満職員（約25名予定）'
+        },
+        { 
+          title: '新年度研修予算配分提案', 
+          completed: false, 
+          type: 'planning', 
+          expectedImpact: '投資効率15%改善',
+          dependsOn: '年間総合評価・グレード決定結果'
+        }
       ]
     }
   ];
@@ -284,6 +429,83 @@ export default function EvaluationDesignPage() {
             </Button>
           </div>
         </div>
+
+        {/* 連携状況サマリー */}
+        <Card className="mb-6 border-l-4 border-l-purple-500 bg-gradient-to-r from-purple-50 to-indigo-50">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-purple-800">
+              <Database className="h-5 w-5" />
+              教育研修システム連携状況
+            </CardTitle>
+            <CardDescription>
+              評価管理と研修管理の自動連携・データ同期状況
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* 重要連携月 */}
+              <div className="space-y-2">
+                <h4 className="font-semibold text-sm text-gray-700 flex items-center gap-1">
+                  <Zap className="h-4 w-4 text-red-500" />
+                  重要連携月
+                </h4>
+                <div className="space-y-1">
+                  {yearSchedule.filter(m => m.linkage?.type === 'critical').map(month => (
+                    <div key={month.month} className="flex items-center gap-2 text-sm">
+                      <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                      <span className="font-medium">{month.name}</span>
+                      <Badge className="bg-red-100 text-red-800 text-xs">Critical</Badge>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* データ流れ */}
+              <div className="space-y-2">
+                <h4 className="font-semibold text-sm text-gray-700 flex items-center gap-1">
+                  <ArrowRight className="h-4 w-4 text-blue-500" />
+                  リアルタイム同期
+                </h4>
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2 text-sm">
+                    <div className="w-2 h-2 bg-green-500 rounded-full" />
+                    <span>評価結果 → 研修計画</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <div className="w-2 h-2 bg-green-500 rounded-full" />
+                    <span>研修完了 → 評価加点</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
+                    <span>ROI分析 → 予算配分</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* クロスリンク */}
+              <div className="space-y-2">
+                <h4 className="font-semibold text-sm text-gray-700 flex items-center gap-1">
+                  <Eye className="h-4 w-4 text-purple-500" />
+                  クイックアクセス
+                </h4>
+                <div className="space-y-1">
+                  <Link href="/education" className="block">
+                    <Button size="sm" variant="outline" className="w-full justify-start text-xs hover:bg-purple-50">
+                      <BookOpen className="h-3 w-3 mr-2" />
+                      研修管理画面
+                    </Button>
+                  </Link>
+                  <Link href="/education?tab=planning" className="block">
+                    <Button size="sm" variant="outline" className="w-full justify-start text-xs hover:bg-purple-50">
+                      <Calendar className="h-3 w-3 mr-2" />
+                      研修年間計画
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* 今月のタスク（大きく表示） */}
         {currentMonthData && currentMonthData.tasks.length > 0 && (
@@ -623,6 +845,26 @@ export default function EvaluationDesignPage() {
                           </div>
                         </div>
                         <div className="flex items-center gap-3">
+                          {/* 連携詳細ボタン */}
+                          {month.linkage && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setShowLinkageDetails(
+                                  showLinkageDetails === month.month ? null : month.month
+                                );
+                              }}
+                              className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
+                                month.linkage.type === 'critical'
+                                  ? 'bg-red-100 text-red-800 hover:bg-red-200'
+                                  : month.linkage.type === 'important'
+                                    ? 'bg-orange-100 text-orange-800 hover:bg-orange-200'
+                                    : 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'
+                              }`}
+                            >
+                              🔗 連携詳細
+                            </button>
+                          )}
                           {month.tasks.length > 0 && (
                             <div className="text-right">
                               <div className={`text-sm font-medium ${
@@ -726,6 +968,45 @@ export default function EvaluationDesignPage() {
                             </div>
                           </div>
 
+                          {/* 連携依存関係詳細 */}
+                          {showLinkageDetails === month.month && month.linkage && (
+                            <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border-l-4 border-blue-500">
+                              <div className="mb-3">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <div className={`w-3 h-3 rounded-full ${
+                                    month.linkage.type === 'critical' ? 'bg-red-500'
+                                      : month.linkage.type === 'important' ? 'bg-orange-500'
+                                        : 'bg-yellow-500'
+                                  }`}></div>
+                                  <span className="font-semibold text-gray-800">連携依存関係</span>
+                                </div>
+                                <p className="text-sm text-gray-700 mb-2">{month.linkage.description}</p>
+                                <div className="p-2 bg-gray-50 rounded text-xs text-gray-600 mb-2">
+                                  <strong>データフロー:</strong> {month.linkage.dataFlow}
+                                </div>
+                                {month.linkage.educationImpact && (
+                                  <div className="p-2 bg-yellow-50 rounded text-xs text-yellow-700">
+                                    <strong>教育システムへの影響:</strong> {month.linkage.educationImpact}
+                                  </div>
+                                )}
+                              </div>
+                              
+                              {/* 教育研修管理へのクロスリンク */}
+                              <div className="mt-4 pt-4 border-t">
+                                <a
+                                  href="/education#planning"
+                                  className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all text-sm font-medium"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  <BookOpen className="h-4 w-4" />
+                                  教育研修管理で詳細を確認
+                                  <ChevronRight className="h-4 w-4" />
+                                </a>
+                              </div>
+                            </div>
+                          )}
+                          
                           {/* 研修連携タスク */}
                           {month.trainingTasks && month.trainingTasks.length > 0 && (
                             <div>
@@ -752,6 +1033,24 @@ export default function EvaluationDesignPage() {
                                         }`}>
                                           {task.title}
                                         </span>
+                                        {/* 依存情報表示 */}
+                                        {task.dependsOn && (
+                                          <div className="mt-1 text-xs text-gray-600">
+                                            <strong>依存:</strong> {task.dependsOn}
+                                          </div>
+                                        )}
+                                        {/* 対象グループ表示 */}
+                                        {task.targetGroup && (
+                                          <div className="mt-1 text-xs text-gray-600">
+                                            <strong>対象:</strong> {task.targetGroup}
+                                          </div>
+                                        )}
+                                        {/* 期限表示 */}
+                                        {task.deadline && (
+                                          <div className="mt-1 text-xs text-red-600">
+                                            <strong>期限:</strong> {task.deadline}
+                                          </div>
+                                        )}
                                         <div className="flex gap-2 mt-1">
                                           <Badge className={`text-xs ${
                                             task.type === 'planning' ? 'bg-blue-100 text-blue-800' :
