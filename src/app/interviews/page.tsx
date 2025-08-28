@@ -190,12 +190,9 @@ function InterviewsPageContent() {
 
   return (
     <div>
-      <div className="print:hidden">
-        <CommonHeader title="面談管理" />
-      </div>
-      
+      <CommonHeader title="面談管理" />
       <div className={styles.container}>
-        <div className={`${styles.tabNavigation} fullwidth-interview-tabs print:hidden`}>
+        <div className={styles.tabNavigation}>
           {tabs.map((tab) => (
             <button
               key={tab.id}
