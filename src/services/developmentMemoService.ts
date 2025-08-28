@@ -189,6 +189,34 @@ class DevelopmentMemoService {
         status: 'completed',
         tags: ['2列表示', '年間UI', '連携可視化', '実装完了', 'リアルタイム連携']
       },
+      {
+        id: 'training-2025-007',
+        category: '教育研修管理',
+        subcategory: 'クリーンアップ',
+        title: '不要な旧研修システムページの削除完了',
+        content: `旧システムURL統合により不要となったページディレクトリを削除。
+
+【削除対象】
+- /src/app/training/ (旧研修システムページ)
+  - page.tsx
+  - Training.module.css 
+  - calendar/page.tsx
+- /src/app/training-v3/ (V3研修システムページ)
+  - page.tsx
+  - TrainingV3.module.css
+
+【確認済み】
+- 他のファイルからの参照なし
+- リンク切れなし
+- /education への統合により機能は維持
+
+これによりプロジェクト構造がクリーンになり、メンテナンス性が向上。`,
+        source: { type: 'file', path: '/src/app/' },
+        date: '2025-08-28',
+        priority: 'info',
+        status: 'completed',
+        tags: ['クリーンアップ', '削除', 'リファクタリング', 'プロジェクト最適化']
+      },
 
       // ===== 面談システム =====
       {
