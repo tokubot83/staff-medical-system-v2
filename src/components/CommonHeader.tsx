@@ -5,10 +5,12 @@ import Link from 'next/link';
 
 interface CommonHeaderProps {
   title?: string;
+  subtitle?: string;
 }
 
 export default function CommonHeader({ 
-  title = '職員カルテシステム'
+  title = '職員カルテシステム',
+  subtitle
 }: CommonHeaderProps) {
   return (
     <header className="bg-gray-700 text-white p-5 border-b" style={{ backgroundColor: '#374151' }}>
@@ -20,7 +22,7 @@ export default function CommonHeader({
             </div>
             <div>
               <h1 className="text-2xl font-light">{title}</h1>
-              <p className="text-sm opacity-90">医療法人厚生会</p>
+              <p className="text-sm opacity-90">{subtitle || "医療法人厚生会"}</p>
             </div>
           </div>
         </div>

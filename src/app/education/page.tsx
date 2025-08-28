@@ -156,44 +156,44 @@ export default function EducationPage() {
   });
 
   return (
-    <div className={styles.container}>
+    <div>
       <CommonHeader 
         title="教育・研修管理システム"
         subtitle="教育師長管理画面 - 研修プログラムと評価項目の連携"
       />
+      <div className={styles.container}>
+        <div className={styles.tabNavigation}>
+          <button 
+            onClick={() => setActiveTab('station')}
+            className={`${styles.tabButton} ${activeTab === 'station' ? styles.active : ''}`}
+          >
+            <span className={styles.tabIcon}>🚉</span>
+            <span className={styles.tabLabel}>研修ステーション</span>
+          </button>
+          <button 
+            onClick={() => setActiveTab('planning')}
+            className={`${styles.tabButton} ${activeTab === 'planning' ? styles.active : ''}`}
+          >
+            <span className={styles.tabIcon}>📅</span>
+            <span className={styles.tabLabel}>年間計画</span>
+          </button>
+          <button 
+            onClick={() => setActiveTab('management')}
+            className={`${styles.tabButton} ${activeTab === 'management' ? styles.active : ''}`}
+          >
+            <span className={styles.tabIcon}>👥</span>
+            <span className={styles.tabLabel}>受講管理</span>
+          </button>
+          <button 
+            onClick={() => setActiveTab('analytics')}
+            className={`${styles.tabButton} ${activeTab === 'analytics' ? styles.active : ''}`}
+          >
+            <span className={styles.tabIcon}>📊</span>
+            <span className={styles.tabLabel}>分析・効果測定</span>
+          </button>
+        </div>
 
-      <nav className={styles.tabNavigation}>
-        <button 
-          onClick={() => setActiveTab('station')}
-          className={`${styles.tabButton} ${activeTab === 'station' ? styles.active : ''}`}
-        >
-          <span className={styles.tabIcon}>🚉</span>
-          <span className={styles.tabLabel}>研修ステーション</span>
-        </button>
-        <button 
-          onClick={() => setActiveTab('planning')}
-          className={`${styles.tabButton} ${activeTab === 'planning' ? styles.active : ''}`}
-        >
-          <span className={styles.tabIcon}>📅</span>
-          <span className={styles.tabLabel}>年間計画</span>
-        </button>
-        <button 
-          onClick={() => setActiveTab('management')}
-          className={`${styles.tabButton} ${activeTab === 'management' ? styles.active : ''}`}
-        >
-          <span className={styles.tabIcon}>👥</span>
-          <span className={styles.tabLabel}>受講管理</span>
-        </button>
-        <button 
-          onClick={() => setActiveTab('analytics')}
-          className={`${styles.tabButton} ${activeTab === 'analytics' ? styles.active : ''}`}
-        >
-          <span className={styles.tabIcon}>📊</span>
-          <span className={styles.tabLabel}>分析・効果測定</span>
-        </button>
-      </nav>
-
-      <div className={styles.tabContent}>
+        <div className={styles.tabContent}>
 
         {/* 研修ステーションタブ */}
         {activeTab === 'station' && (
@@ -953,6 +953,7 @@ export default function EducationPage() {
             </Card>
           </div>
         )}
+        </div>
       </div>
     </div>
   );
