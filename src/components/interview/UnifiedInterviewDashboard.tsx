@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Calendar, Clock, User, AlertTriangle, CheckCircle, 
-  ChevronRight, Play, FileText, Users, TrendingUp,
-  Filter, Search, RefreshCw, Bell, Activity, Plus, FilterX, ArrowLeft, CalendarDays
+  ChevronRight, Play, FileText, Users,
+  Filter, Search, RefreshCw, Bell, Plus, FilterX, ArrowLeft, CalendarDays
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -16,7 +16,6 @@ import { VoiceDriveIntegrationService } from '@/services/voicedriveIntegrationSe
 import { useRouter, useSearchParams } from 'next/navigation';
 import { mockInterviews } from '@/data/mockInterviews';
 import ManualReservationModal from './ManualReservationModal';
-import InterviewStatisticsChart from '@/components/charts/InterviewStatisticsChart';
 import AdvancedSearchModal, { AdvancedSearchFilters } from '@/components/search/AdvancedSearchModal';
 import SearchResults from '@/components/search/SearchResults';
 import { AdvancedSearchService } from '@/utils/searchUtils';
@@ -74,7 +73,6 @@ export default function UnifiedInterviewDashboard() {
   const [searchTerm, setSearchTerm] = useState('');
   const [showUrgentOnly, setShowUrgentOnly] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [showStatistics, setShowStatistics] = useState(false);
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
   const [searchResults, setSearchResults] = useState<UnifiedInterviewReservation[]>([]);
   const [isSearchMode, setIsSearchMode] = useState(false);
@@ -916,30 +914,6 @@ export default function UnifiedInterviewDashboard() {
         </div>
       )}
 
-      {/* 統計・分析セクション */}
-      <Card className="border-2 border-purple-200 shadow-lg">
-        <CardHeader className="bg-gradient-to-r from-purple-50 to-purple-100">
-          <CardTitle className="flex items-center justify-between">
-            <span className="flex items-center gap-2 text-xl">
-              <TrendingUp className="h-6 w-6 text-purple-600" />
-              <span className="text-purple-900">面談統計・分析</span>
-            </span>
-            <Button 
-              onClick={() => setShowStatistics(!showStatistics)}
-              variant="outline"
-              className="border-purple-300 text-purple-700 hover:bg-purple-50"
-            >
-              <Activity className="h-4 w-4 mr-2" />
-              {showStatistics ? '統計を非表示' : '統計を表示'}
-            </Button>
-          </CardTitle>
-        </CardHeader>
-        {showStatistics && (
-          <CardContent className="pt-6">
-            <InterviewStatisticsChart />
-          </CardContent>
-        )}
-      </Card>
       
       {/* 手動予約追加モーダル */}
       <ManualReservationModal

@@ -57,11 +57,41 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
     { section: '成長目標', completion: 72, diff: 8, fill: CHART_COLORS.danger, name: '成長目標' }
   ];
   
+  // 最小限のテストデータ
+  const minimalTestData = [
+    { name: 'テスト1', value: 85 },
+    { name: 'テスト2', value: 72 },
+    { name: 'テスト3', value: 60 }
+  ];
+  
+  // デバッグ用ログ
+  console.log('Bar data check:', testCompletionData.map(d => ({
+    section: d.section,
+    completion: d.completion,
+    hasCompletion: !!d.completion,
+    type: typeof d.completion
+  })));
+  
   // データ生成（実際の実装では API から取得）
   const sectionTrendData = generateSampleTrendData(staffRole);
   const sectionCompletionData = testCompletionData; // generateSectionCompletionData(staffRole);
   const sectionCorrelationData = generateSectionCorrelationData(staffRole);
   
+  // 横棒グラフ用の簡単なデータ形式に変換（色情報付き）
+  let horizontalBarData = [];
+  try {
+    horizontalBarData = sectionCompletionData.map(item => ({
+      name: item.section,
+      value: item.completion,
+      color: item.fill,
+      diff: item.diff
+    }));
+  } catch (error) {
+    console.error('Error creating horizontalBarData:', error);
+    horizontalBarData = [
+      { name: '読み込みエラー', value: 0, color: '#3b82f6', diff: 0 }
+    ];
+  }
   const sections = getSectionsByRole(staffRole);
   const targetValue = getTargetValueByRole(staffRole);
   const chartTitle = getChartTitleByRole(staffRole);
@@ -261,46 +291,70 @@ export default function SectionTrendAnalysis({ staffRole }: SectionTrendAnalysis
         <CardContent>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2">
-              <div style={{ width: '100%', height: '350px', position: 'relative' }}>
-                <ResponsiveContainer width="100%" height={350} minWidth={300}>
-                <BarChart 
-                  data={sectionCompletionData} 
-                  layout="horizontal"
-                  margin={{ top: 20, right: 50, left: 5, bottom: 20 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis 
-                    type="number"
-                    domain={[0, 100]}
-                    tick={{ fontSize: 12 }}
-                  />
-                  <YAxis 
-                    type="category" 
-                    dataKey="section"
-                    width={120}
-                    tick={{ fontSize: 11 }}
-                  />
-                  
-                  <Bar dataKey="completion">
-                    {sectionCompletionData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.fill} />
-                    ))}
-                  </Bar>
-                  
-                  <Tooltip 
-                    content={<SectionCompletionTooltip />}
-                    formatter={(value: number, name: string, props: any) => [`${value}%`, '充実度']}
-                    labelFormatter={(label: string) => `セクション: ${label}`}
-                    wrapperStyle={{ 
-                      zIndex: 10000,
-                      pointerEvents: 'none'
-                    }}
-                    allowEscapeViewBox={{ x: false, y: false }}
-                    cursor={false}
-                    animationDuration={200}
-                  />
-                </BarChart>
-                </ResponsiveContainer>
+              <div style={{ width: '100%', height: '350px', padding: '20px' }}>
+                {/* 手動実装の横棒グラフ */}
+                <div className="space-y-3">
+                  <div className="text-sm font-medium text-gray-600 mb-4">充実度ランキング</div>
+                  {horizontalBarData.map((item, index) => (
+                    <div 
+                      key={index} 
+                      className="flex items-center space-x-3 group relative hover:bg-gray-50 p-2 rounded-lg cursor-pointer"
+                    >
+                      {/* ラベル */}
+                      <div className="w-32 text-sm font-medium text-right">
+                        {item.name}
+                      </div>
+                      {/* バー */}
+                      <div className="flex-1 bg-gray-200 rounded-full h-8 relative">
+                        <div
+                          className="h-8 rounded-full flex items-center justify-end pr-2 transition-all duration-300"
+                          style={{ 
+                            width: `${item.value}%`,
+                            minWidth: '30px',
+                            backgroundColor: item.color
+                          }}
+                        >
+                          <span className="text-white text-sm font-medium">
+                            {item.value}%
+                          </span>
+                        </div>
+                      </div>
+                      {/* 順位 */}
+                      <div className="w-8 text-sm text-gray-500">
+                        {index + 1}位
+                      </div>
+                      
+                      {/* ツールチップ */}
+                      <div className="absolute left-0 top-12 bg-white border-2 border-gray-300 rounded-lg shadow-xl p-4 min-w-[200px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50">
+                        <div className="font-bold text-gray-800 mb-2 text-center">
+                          {item.name}
+                        </div>
+                        <div className="space-y-1">
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-gray-600">充実度:</span>
+                            <span className="font-semibold text-blue-600">
+                              {item.value}%
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-gray-600">前回比:</span>
+                            <span 
+                              className={`font-semibold ${item.diff >= 0 ? 'text-green-600' : 'text-red-600'}`}
+                            >
+                              {item.diff >= 0 ? '+' : ''}{item.diff}%
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-gray-600">ランキング:</span>
+                            <span className="font-semibold text-purple-600">
+                              {index + 1}位
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
             
