@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import CommonHeader from '@/components/CommonHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -354,6 +354,7 @@ export default function EducationPage() {
     return new Date().getMonth() + 1;
   });
   const [systemAlerts, setSystemAlerts] = useState<CrossSystemAlert[]>([]);
+  const [, forceUpdate] = useReducer(x => x + 1, 0);
   
   useEffect(() => {
     // 教育研修システム向けアラートを取得
@@ -373,6 +374,9 @@ export default function EducationPage() {
     // アラートを更新
     const updatedAlerts = SystemIntegrationService.getAlertsForSystem('training');
     setSystemAlerts(updatedAlerts);
+    
+    // UIの再レンダリングをトリガー
+    forceUpdate({});
   };
 
   const getCategoryColor = (category: string) => {
@@ -994,24 +998,46 @@ export default function EducationPage() {
                                 教育研修タスク
                               </h4>
                               <div className="space-y-2">
-                                {monthData.trainingTasks.map((task, index) => (
+                                {monthData.trainingTasks.map((task, index) => {
+                                  const taskId = `training-${monthData.month}-${index}`;
+                                  const isCompleted = SystemIntegrationService.getTaskCompletionStatus(taskId, 'training');
+                                  
+                                  return (
                                   <div key={index} className={`p-3 rounded-lg border-l-3 ${
-                                    task.completed 
+                                    isCompleted 
                                       ? 'bg-green-50 border-l-green-500'
                                       : 'bg-yellow-50 border-l-yellow-500'
                                   }`}>
                                     <div className="flex items-start gap-2">
-                                      {task.completed ? (
-                                        <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
-                                      ) : (
-                                        <Clock className="h-4 w-4 text-yellow-500 mt-0.5" />
-                                      )}
+                                      <label className="flex items-center gap-1 cursor-pointer mt-0.5">
+                                        <input
+                                          type="checkbox"
+                                          checked={isCompleted}
+                                          onChange={(e) => handleTaskCompletion(taskId, e.target.checked)}
+                                          className="w-3 h-3 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                        />
+                                        {isCompleted ? (
+                                          <CheckCircle className="h-4 w-4 text-green-500" />
+                                        ) : (
+                                          <Clock className="h-4 w-4 text-yellow-500" />
+                                        )}
+                                      </label>
                                       <div className="flex-1">
-                                        <span className={`text-sm font-medium ${
-                                          task.completed ? 'text-green-700' : 'text-yellow-700'
-                                        }`}>
-                                          {task.title}
-                                        </span>
+                                        <div className="flex items-center gap-2">
+                                          <span className={`text-sm font-medium ${
+                                            isCompleted ? 'text-green-700' : 'text-yellow-700'
+                                          }`}>
+                                            {task.title}
+                                          </span>
+                                          {isCompleted && (
+                                            <span className="text-xs text-green-600 flex items-center gap-1">
+                                              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                              </svg>
+                                              同期済み
+                                            </span>
+                                          )}
+                                        </div>
                                         
                                         {/* 依存情報表示 */}
                                         {task.dependsOn && (
@@ -1045,7 +1071,8 @@ export default function EducationPage() {
                                       </div>
                                     </div>
                                   </div>
-                                ))}
+                                  );
+                                })}
                               </div>
                             </div>
                             
