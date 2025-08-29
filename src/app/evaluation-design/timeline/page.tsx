@@ -74,8 +74,10 @@ interface MonthSchedule {
 }
 
 export default function EvaluationTimelinePage() {
+  // 現在月を取得
+  const currentMonth = new Date().getMonth() + 1;
+  
   const [selectedMonth, setSelectedMonth] = useState(() => {
-    const currentMonth = new Date().getMonth() + 1;
     return currentMonth;
   });
   const [expandedTask, setExpandedTask] = useState<string | null>(null);
