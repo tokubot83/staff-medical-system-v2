@@ -23,6 +23,7 @@ import { TrendingUp, Target, Award, Calendar, BarChart3, Users, FileText, GitCom
 import styles from './StaffCards.module.css'
 import InterviewSheetModal from '@/components/InterviewSheetModal'
 import SectionTrendAnalysis from '@/components/interview/SectionTrendAnalysis'
+import PersonalizedEducationDashboard from '@/components/personalized/PersonalizedEducationDashboard'
 
 // V3グレード定義
 const v3Grades = {
@@ -3720,7 +3721,7 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
   const { handleError, clearError } = useErrorHandler()
   const [trainingData, setTrainingData] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [activeEducationTab, setActiveEducationTab] = useState('progress')
+  const [activeEducationTab, setActiveEducationTab] = useState('personal')
 
   if (!selectedStaff) {
     return (
@@ -3837,6 +3838,7 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
   }
 
   const educationSubTabs = [
+    { id: 'personal', label: 'パーソナル', icon: '👤' },
     { id: 'progress', label: '進捗状況', icon: '📊' },
     { id: 'skills', label: 'スキル開発', icon: '🎯' },
     { id: 'v3alignment', label: 'V3評価連動', icon: '🔗' }
@@ -3877,6 +3879,28 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
         </div>
       ) : (
         <>
+          {activeEducationTab === 'personal' && (
+            <PersonalizedEducationDashboard 
+              staffProfile={{
+                id: selectedStaff.id,
+                name: selectedStaff.name || '未設定',
+                experienceLevel: selectedStaff.experienceLevel || 'midlevel',
+                jobType: selectedStaff.jobType || 'nurse',
+                facility: selectedStaff.facility || 'acute',
+                experienceYears: selectedStaff.experienceYears || 5,
+                currentGrade: selectedStaff.currentGrade || 'B',
+                careerGoals: selectedStaff.careerGoals || ['専門性向上', 'チーム貢献'],
+                evaluationScores: {
+                  technical: selectedStaff.evaluationScores?.technical || 75,
+                  contribution: selectedStaff.evaluationScores?.contribution || 70,
+                  total: selectedStaff.evaluationScores?.total || 
+                    ((selectedStaff.evaluationScores?.technical || 75) + 
+                     (selectedStaff.evaluationScores?.contribution || 70)) / 2
+                }
+              }}
+            />
+          )}
+
           {activeEducationTab === 'progress' && (
             <div className={styles.trainingProgress}>
               <div className={styles.progressSummaryCard}>
