@@ -35,6 +35,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import SystemIntegrationService, { CrossSystemAlert } from '@/services/systemIntegrationService';
+import IntegrationFlowVisualization from '@/components/IntegrationFlowVisualization';
 
 interface MonthTask {
   id: string;
@@ -83,6 +84,7 @@ export default function EvaluationTimelinePage() {
   const [expandedTask, setExpandedTask] = useState<string | null>(null);
   const [simulationMode, setSimulationMode] = useState(false);
   const [systemAlerts, setSystemAlerts] = useState<CrossSystemAlert[]>([]);
+  const [showDataFlow, setShowDataFlow] = useState(false);
   
   useEffect(() => {
     // システム統合アラートを取得
@@ -744,6 +746,70 @@ export default function EvaluationTimelinePage() {
                           </div>
                         ))}
                       </div>
+                    </div>
+                  )}
+
+                  {/* 連携詳細ボタン */}
+                  {selectedMonthData.integrationNote && (
+                    <div className="mb-6 flex justify-center">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setShowDataFlow(!showDataFlow)}
+                        className="border-indigo-300 text-indigo-700 hover:bg-indigo-50"
+                      >
+                        <Target className="h-4 w-4 mr-2" />
+                        {showDataFlow ? 'データフローを閉じる' : '🔗 連携詳細・データフローを表示'}
+                      </Button>
+                    </div>
+                  )}
+
+                  {/* データフロー可視化 */}
+                  {showDataFlow && selectedMonthData.integrationNote && (
+                    <div className="mb-6">
+                      <IntegrationFlowVisualization
+                        month={selectedMonthData.month}
+                        nodes={[
+                          {
+                            id: `${selectedMonthData.month}-eval-1`,
+                            type: 'source',
+                            label: '評価データ',
+                            status: selectedMonthData.tasks?.[0]?.status || 'pending',
+                            data: { impact: '基準データ提供' }
+                          },
+                          {
+                            id: `${selectedMonthData.month}-process-1`,
+                            type: 'process',
+                            label: 'データ分析・処理',
+                            status: 'in-progress',
+                            data: { impact: '相関分析実施' }
+                          },
+                          {
+                            id: `${selectedMonthData.month}-training-1`,
+                            type: 'output',
+                            label: '研修計画生成',
+                            status: selectedMonthData.trainingTasks?.[0]?.status || 'pending',
+                            data: { impact: selectedMonthData.trainingTasks?.[0]?.impact }
+                          }
+                        ]}
+                        edges={[
+                          {
+                            from: `${selectedMonthData.month}-eval-1`,
+                            to: `${selectedMonthData.month}-process-1`,
+                            label: 'データ送信',
+                            type: 'data'
+                          },
+                          {
+                            from: `${selectedMonthData.month}-process-1`,
+                            to: `${selectedMonthData.month}-training-1`,
+                            label: '分析結果',
+                            type: 'trigger'
+                          }
+                        ]}
+                        onNodeClick={(node) => {
+                          console.log('Node clicked:', node);
+                        }}
+                      />
                     </div>
                   )}
 
