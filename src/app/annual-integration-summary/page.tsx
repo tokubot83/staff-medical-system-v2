@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import CommonHeader from '@/components/CommonHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -31,21 +31,79 @@ export default function AnnualIntegrationSummaryPage() {
   const [summaryData, setSummaryData] = useState<AnnualIntegrationSummary | null>(null);
   const [selectedAlert, setSelectedAlert] = useState<CrossSystemAlert | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [autoRefresh, setAutoRefresh] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  const loadSummaryData = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      // 実際の実装では非同期でデータを取得
+      await new Promise(resolve => setTimeout(resolve, 500)); // APIコール模擬
+      const data = SystemIntegrationService.getAnnualIntegrationSummary();
+      setSummaryData(data);
+      setLastUpdated(new Date());
+    } catch (error) {
+      console.error('データの読み込みに失敗しました:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  }, []);
 
   useEffect(() => {
     loadSummaryData();
-  }, []);
+  }, [loadSummaryData]);
 
-  const loadSummaryData = async () => {
-    setRefreshing(true);
-    // 実際の実装では非同期でデータを取得
-    const data = SystemIntegrationService.getAnnualIntegrationSummary();
-    setSummaryData(data);
-    setRefreshing(false);
-  };
+  // 自動更新機能
+  useEffect(() => {
+    if (autoRefresh) {
+      intervalRef.current = setInterval(() => {
+        loadSummaryData();
+      }, 30000); // 30秒ごとに更新
+    } else {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    }
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [autoRefresh, loadSummaryData]);
 
   const handleRefresh = () => {
     loadSummaryData();
+  };
+
+  const toggleAutoRefresh = () => {
+    setAutoRefresh(!autoRefresh);
+  };
+
+  const exportData = () => {
+    if (!summaryData) return;
+    
+    const exportData = {
+      exportDate: new Date().toISOString(),
+      totalSyncRate: summaryData.totalSyncRate,
+      alertResolutionRate: summaryData.alertResolutionRate,
+      preEvaluationTrainingCompletionRate: summaryData.preEvaluationTrainingCompletionRate,
+      monthlyData: summaryData.monthlyStatuses,
+      activeAlerts: summaryData.activeAlerts,
+      recentActivities: summaryData.recentSyncActivities
+    };
+    
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `integration-summary-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   const getStatusColor = (status: string) => {
@@ -94,7 +152,8 @@ export default function AnnualIntegrationSummaryPage() {
         <div className="max-w-7xl mx-auto p-6">
           <div className="text-center py-12">
             <RefreshCw className="h-12 w-12 mx-auto mb-4 text-gray-300 animate-spin" />
-            <p className="text-gray-500">データを読み込み中...</p>
+            <p className="text-gray-500 mb-2">データを読み込み中...</p>
+            <p className="text-xs text-gray-400">システム統合データを取得しています</p>
           </div>
         </div>
       </div>
@@ -111,20 +170,40 @@ export default function AnnualIntegrationSummaryPage() {
           <div>
             <h1 className="text-3xl font-bold mb-2">📊 2025年度 システム連携サマリー</h1>
             <p className="text-gray-600">評価管理と教育研修管理の連携状況を一元監視</p>
+            <p className="text-sm text-gray-500 mt-1">
+              最終更新: {lastUpdated.toLocaleTimeString('ja-JP')} 
+              {autoRefresh && <span className="ml-2 inline-flex items-center gap-1 text-green-600"><span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>自動更新中</span>}
+            </p>
           </div>
           <div className="flex gap-2">
+            <Button 
+              onClick={toggleAutoRefresh}
+              variant={autoRefresh ? "default" : "outline"}
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              <Settings className="h-4 w-4" />
+              {autoRefresh ? '自動更新 ON' : '自動更新 OFF'}
+            </Button>
+            <Button 
+              onClick={exportData} 
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2"
+              disabled={!summaryData}
+            >
+              <Download className="h-4 w-4" />
+              エクスポート
+            </Button>
             <Button 
               variant="outline" 
               size="sm"
               onClick={handleRefresh}
               disabled={refreshing}
+              className="flex items-center gap-2"
             >
-              <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
-              更新
-            </Button>
-            <Button variant="outline" size="sm">
-              <Download className="h-4 w-4 mr-2" />
-              レポート出力
+              <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+              {refreshing ? '更新中...' : '手動更新'}
             </Button>
           </div>
         </div>
@@ -251,9 +330,20 @@ export default function AnnualIntegrationSummaryPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Bell className="h-5 w-5 text-orange-600" />
-                  アクティブアラート
+                  アクティブアラート ({summaryData.activeAlerts.length}件)
+                  {summaryData.activeAlerts.some(a => a.priority === 'high') && (
+                    <span className="inline-flex items-center gap-1 text-red-600 text-sm ml-2">
+                      <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                      高優先度あり
+                    </span>
+                  )}
                 </CardTitle>
-                <CardDescription>対応が必要な問題</CardDescription>
+                <CardDescription>
+                  対応が必要な問題
+                  <span className="ml-2 text-xs text-gray-400">
+                    ({summaryData.activeAlerts.filter(a => a.actionRequired).length}件要対応)
+                  </span>
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
