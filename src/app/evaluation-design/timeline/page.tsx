@@ -125,6 +125,22 @@ export default function EvaluationTimelinePage() {
             { id: 'apr-1-3', title: '昇給・賞与への反映', completed: true }
           ]
         }
+      ],
+      trainingTasks: [
+        {
+          id: 'apr-training-1',
+          title: '基礎看護技術研修 完了',
+          status: 'completed',
+          impact: '新人看護師の技術向上',
+          dependency: '前年度評価結果'
+        },
+        {
+          id: 'apr-training-2',
+          title: '個別研修計画の確定・通知',
+          status: 'completed',
+          impact: '評価連動型研修の開始',
+          dependency: '3月技術評価結果'
+        }
       ]
     },
     {
@@ -138,6 +154,15 @@ export default function EvaluationTimelinePage() {
           description: '施設・法人の上半期活動計画を策定',
           status: 'completed'
         }
+      ],
+      trainingTasks: [
+        {
+          id: 'may-training-1',
+          title: '専門研修プログラム開始',
+          status: 'completed',
+          impact: '専門スキル向上',
+          dependency: '4月基礎研修完了'
+        }
       ]
     },
     {
@@ -145,6 +170,8 @@ export default function EvaluationTimelinePage() {
       name: '6月',
       status: 'completed',
       highlight: true,
+      alerts: systemAlerts.filter(alert => alert.month === 6),
+      integrationNote: '夏季貢献度評価と第1四半期研修効果測定の連携',
       tasks: [
         {
           id: 'jun-1',
@@ -163,6 +190,22 @@ export default function EvaluationTimelinePage() {
             { label: '取込履歴', href: '/evaluation-design/import-history' }
           ]
         }
+      ],
+      trainingTasks: [
+        {
+          id: 'jun-training-1',
+          title: '第1四半期研修効果測定',
+          status: 'completed',
+          impact: '貢献度評価+3点向上',
+          dependency: '4-5月実施研修データ'
+        },
+        {
+          id: 'jun-training-2',
+          title: '貢献度スコアと研修受講の相関分析',
+          status: 'completed',
+          impact: '研修効果の定量的証明',
+          dependency: '夏季貢献度評価結果'
+        }
       ]
     },
     {
@@ -176,13 +219,38 @@ export default function EvaluationTimelinePage() {
           description: '夏季貢献度評価の結果を通知',
           status: 'completed'
         }
+      ],
+      trainingTasks: [
+        {
+          id: 'jul-training-1',
+          title: '下半期研修計画調整',
+          status: 'completed',
+          impact: '評価結果に基づく最適化',
+          dependency: '6月評価相関分析結果'
+        }
       ]
     },
     {
       month: 8,
       name: '8月',
-      status: 'completed',
-      tasks: []
+      status: currentMonth === 8 ? 'current' : currentMonth > 8 ? 'completed' : 'upcoming',
+      tasks: [],
+      trainingTasks: [
+        {
+          id: 'aug-training-1',
+          title: '医療安全研修 集中実施',
+          status: currentMonth > 8 ? 'completed' : 'in-progress',
+          impact: '必須研修の完了',
+          dependency: 'なし'
+        },
+        {
+          id: 'aug-training-2',
+          title: '未受講者への個別対応（25名）',
+          status: currentMonth > 8 ? 'completed' : 'pending',
+          impact: '100%受講達成',
+          dependency: '受講管理データ'
+        }
+      ]
     },
     {
       month: 9,
@@ -276,6 +344,51 @@ export default function EvaluationTimelinePage() {
       ]
     },
     {
+      month: 1,
+      name: '1月',
+      status: currentMonth === 1 ? 'current' : currentMonth > 1 ? 'completed' : 'upcoming',
+      highlight: true,
+      alerts: systemAlerts.filter(alert => alert.month === 1),
+      integrationNote: '研修計画調整期と評価制度設計の相互影響',
+      tasks: [
+        {
+          id: 'jan-1',
+          title: '評価制度設計・更新',
+          description: '新年度評価制度の詳細設計と配点調整',
+          status: currentMonth > 1 ? 'completed' : 'pending',
+          dueDate: '1月31日',
+          subtasks: [
+            { id: 'jan-1-1', title: '法人統一項目（30点）の配分設計', completed: currentMonth > 1 },
+            { id: 'jan-1-2', title: '施設特化項目（20点）の選定', completed: currentMonth > 1 },
+            { id: 'jan-1-3', title: '技術評価項目（50点）の更新', completed: currentMonth > 1 }
+          ]
+        }
+      ],
+      trainingTasks: [
+        {
+          id: 'jan-training-1',
+          title: '前年度評価データから研修効果分析',
+          status: currentMonth > 1 ? 'completed' : 'pending',
+          impact: '研修ROI 120%達成',
+          dependency: '12月冬季貢献度評価結果'
+        },
+        {
+          id: 'jan-training-2',
+          title: '評価項目と研修プログラムのマッピング',
+          status: currentMonth > 1 ? 'completed' : 'pending',
+          impact: '全項目カバー率100%',
+          dependency: '前年度年間技術評価総合スコア'
+        },
+        {
+          id: 'jan-training-3',
+          title: '必須研修カリキュラム策定',
+          status: currentMonth > 1 ? 'completed' : 'pending',
+          impact: '評価制度との整合性確保',
+          dependency: '評価制度設計結果'
+        }
+      ]
+    },
+    {
       month: 2,
       name: '2月',
       status: currentMonth === 2 ? 'current' : currentMonth > 2 ? 'completed' : 'upcoming',
@@ -300,6 +413,59 @@ export default function EvaluationTimelinePage() {
           status: currentMonth > 2 ? 'completed' : 'pending',
           impact: '公正な評価実施の担保',
           dependency: '評価制度承認'
+        },
+        {
+          id: 'feb-training-2',
+          title: 'プリセプター養成研修',
+          status: currentMonth > 2 ? 'completed' : 'planned',
+          impact: '新人教育体制強化',
+          dependency: 'なし'
+        }
+      ]
+    },
+    {
+      month: 3,
+      name: '3月',
+      status: currentMonth === 3 ? 'current' : currentMonth > 3 ? 'completed' : 'upcoming',
+      highlight: true,
+      alerts: systemAlerts.filter(alert => alert.month === 3),
+      integrationNote: '技術評価実施と研修効果測定の最重要連携月',
+      tasks: [
+        {
+          id: 'mar-1',
+          title: '技術評価実施（50点）',
+          description: '年間の技術・スキル評価を実施',
+          status: currentMonth > 3 ? 'completed' : 'pending',
+          dueDate: '3月15日',
+          subtasks: [
+            { id: 'mar-1-1', title: '評価シート配布', completed: currentMonth > 3 },
+            { id: 'mar-1-2', title: '上司評価・本人評価の実施', completed: currentMonth > 3 },
+            { id: 'mar-1-3', title: '100点満点スコア確定', completed: currentMonth > 3 },
+            { id: 'mar-1-4', title: '年間総合評価決定', completed: currentMonth > 3 }
+          ]
+        }
+      ],
+      trainingTasks: [
+        {
+          id: 'mar-training-1',
+          title: '評価結果即時分析→個別研修計画生成',
+          status: currentMonth > 3 ? 'completed' : 'pending',
+          impact: '平均スコア+5点向上目標',
+          dependency: '技術評価実施結果（リアルタイム）'
+        },
+        {
+          id: 'mar-training-2',
+          title: 'スコアギャップ基づく優先研修リスト作成',
+          status: currentMonth > 3 ? 'completed' : 'pending',
+          impact: '65点未満職員への対応',
+          dependency: '100点満点スコア確定データ'
+        },
+        {
+          id: 'mar-training-3',
+          title: '新年度研修予算配分提案',
+          status: currentMonth > 3 ? 'completed' : 'pending',
+          impact: '投資効率15%改善',
+          dependency: '年間総合評価・グレード決定結果'
         }
       ]
     }
