@@ -296,6 +296,45 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
 
+            {/* 年間連携サマリー */}
+            <Card className="mb-6 border-2 border-blue-200 bg-gradient-to-r from-blue-50 to-purple-50">
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <BarChart3 className="h-5 w-5 text-blue-600" />
+                  年間システム連携サマリー
+                  <Badge className="bg-green-100 text-green-800">新機能</Badge>
+                </CardTitle>
+                <CardDescription>
+                  評価システムと教育研修システムの連携状況を一元監視
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                  <div className="text-center p-4 bg-white rounded-lg border">
+                    <div className="text-3xl font-bold text-blue-600">98.5%</div>
+                    <div className="text-sm text-gray-600">総合同期率</div>
+                  </div>
+                  <div className="text-center p-4 bg-white rounded-lg border">
+                    <div className="text-3xl font-bold text-green-600">4</div>
+                    <div className="text-sm text-gray-600">アクティブアラート</div>
+                  </div>
+                  <div className="text-center p-4 bg-white rounded-lg border">
+                    <div className="text-3xl font-bold text-purple-600">89.2%</div>
+                    <div className="text-sm text-gray-600">研修完了率</div>
+                  </div>
+                </div>
+                <div className="flex justify-center">
+                  <Link href="/annual-integration-summary">
+                    <Button className="bg-blue-600 hover:bg-blue-700">
+                      <BarChart3 className="h-4 w-4 mr-2" />
+                      詳細サマリーを表示
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* 評価進捗サマリー */}
             <div className="grid grid-cols-4 gap-4">
           <Card className="bg-white hover:shadow-lg transition-shadow">
