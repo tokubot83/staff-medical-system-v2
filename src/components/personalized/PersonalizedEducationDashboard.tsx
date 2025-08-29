@@ -104,7 +104,7 @@ export default function PersonalizedEducationDashboard({ staffProfile }: { staff
         title: '研修進捗サマリー',
         priority: 'high',
         enabled: true,
-        position: { x: 0, y: 0, width: 6, height: 4 }
+        position: { x: 0, y: 0, width: 12, height: 3 }  // 横幅を広げて高さを抑える
       },
       {
         id: 'recommendations',
@@ -112,7 +112,7 @@ export default function PersonalizedEducationDashboard({ staffProfile }: { staff
         title: 'AI推奨研修',
         priority: 'high',
         enabled: true,
-        position: { x: 6, y: 0, width: 6, height: 4 }
+        position: { x: 0, y: 3, width: 8, height: 4 }  // 左側に配置
       },
       {
         id: 'upcoming-deadlines',
@@ -120,7 +120,7 @@ export default function PersonalizedEducationDashboard({ staffProfile }: { staff
         title: '締切・予定',
         priority: 'high',
         enabled: true,
-        position: { x: 0, y: 4, width: 4, height: 3 }
+        position: { x: 8, y: 3, width: 4, height: 4 }  // 右側に配置
       }
     ];
 
@@ -281,22 +281,33 @@ export default function PersonalizedEducationDashboard({ staffProfile }: { staff
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="text-center p-3 bg-blue-50 rounded-lg">
-                  <div className="text-2xl font-bold text-blue-600">88%</div>
-                  <div className="text-sm text-gray-600">完了率</div>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="text-center p-4 bg-blue-50 rounded-lg transition-all hover:shadow-md">
+                  <div className="text-3xl font-bold text-blue-600">88%</div>
+                  <div className="text-sm text-gray-600 mt-1">完了率</div>
+                  <Progress value={88} className="mt-2 h-1" />
                 </div>
-                <div className="text-center p-3 bg-green-50 rounded-lg">
-                  <div className="text-2xl font-bold text-green-600">245h</div>
-                  <div className="text-sm text-gray-600">履修時間</div>
+                <div className="text-center p-4 bg-green-50 rounded-lg transition-all hover:shadow-md">
+                  <div className="text-3xl font-bold text-green-600">245h</div>
+                  <div className="text-sm text-gray-600 mt-1">履修時間</div>
+                  <div className="text-xs text-green-600 mt-2">目標: 300h</div>
                 </div>
-                <div className="text-center p-3 bg-purple-50 rounded-lg">
-                  <div className="text-2xl font-bold text-purple-600">3</div>
-                  <div className="text-sm text-gray-600">進行中</div>
+                <div className="text-center p-4 bg-purple-50 rounded-lg transition-all hover:shadow-md">
+                  <div className="text-3xl font-bold text-purple-600">3</div>
+                  <div className="text-sm text-gray-600 mt-1">進行中</div>
+                  <div className="flex justify-center gap-1 mt-2">
+                    <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
+                    <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse delay-75"></div>
+                    <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse delay-150"></div>
+                  </div>
                 </div>
-                <div className="text-center p-3 bg-orange-50 rounded-lg">
-                  <div className="text-2xl font-bold text-orange-600">2</div>
-                  <div className="text-sm text-gray-600">締切間近</div>
+                <div className="text-center p-4 bg-orange-50 rounded-lg transition-all hover:shadow-md">
+                  <div className="text-3xl font-bold text-orange-600">2</div>
+                  <div className="text-sm text-gray-600 mt-1">締切間近</div>
+                  <div className="flex items-center justify-center gap-1 mt-2">
+                    <AlertCircle className="h-3 w-3 text-orange-500" />
+                    <span className="text-xs text-orange-600">要確認</span>
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -305,7 +316,7 @@ export default function PersonalizedEducationDashboard({ staffProfile }: { staff
 
       case 'recommendations':
         return (
-          <Card className="h-full">
+          <Card className="h-full overflow-hidden">
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2 text-lg">
                 <Brain className="h-5 w-5 text-purple-600" />
@@ -314,29 +325,41 @@ export default function PersonalizedEducationDashboard({ staffProfile }: { staff
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
-                {aiRecommendations.slice(0, 2).map((rec) => (
-                  <div key={rec.id} className={`p-3 rounded-lg border ${getPriorityColor(rec.priority)}`}>
+              <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2">
+                {aiRecommendations.slice(0, 3).map((rec) => (
+                  <div key={rec.id} className={`p-4 rounded-lg border ${getPriorityColor(rec.priority)} transition-all hover:shadow-md`}>
                     <div className="flex items-start justify-between mb-2">
-                      <h4 className="font-medium text-sm">{rec.title}</h4>
-                      <Badge className={`text-xs ${rec.priority === 'critical' ? 'bg-red-600 text-white' : rec.priority === 'high' ? 'bg-orange-600 text-white' : 'bg-yellow-600 text-white'}`}>
+                      <h4 className="font-medium text-sm line-clamp-2">{rec.title}</h4>
+                      <Badge className={`text-xs flex-shrink-0 ml-2 ${rec.priority === 'critical' ? 'bg-red-600 text-white' : rec.priority === 'high' ? 'bg-orange-600 text-white' : 'bg-yellow-600 text-white'}`}>
                         {rec.priority === 'critical' ? '緊急' : rec.priority === 'high' ? '高' : '中'}
                       </Badge>
                     </div>
-                    <div className="flex items-center gap-4 text-xs text-gray-600">
+                    <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">
                       <span className="flex items-center gap-1">
                         <TrendingUp className="h-3 w-3" />
-                        +{rec.expectedImpact.evaluationBoost}pts
+                        評価 +{rec.expectedImpact.evaluationBoost}pts
                       </span>
                       <span className="flex items-center gap-1">
                         <Clock className="h-3 w-3" />
-                        {rec.estimatedHours}h
+                        {rec.estimatedHours}時間
                       </span>
                     </div>
-                    <p className="text-xs text-gray-600 mt-2">{rec.reason}</p>
+                    <p className="text-xs text-gray-600 mt-2 line-clamp-2">{rec.reason}</p>
+                    {rec.deadline && (
+                      <div className="flex items-center gap-1 mt-2 text-xs text-red-600">
+                        <Calendar className="h-3 w-3" />
+                        期限: {rec.deadline}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
+              {aiRecommendations.length > 3 && (
+                <Button variant="ghost" size="sm" className="w-full mt-3">
+                  さらに{aiRecommendations.length - 3}件を表示
+                  <ArrowRight className="h-3 w-3 ml-1" />
+                </Button>
+              )}
             </CardContent>
           </Card>
         );
@@ -351,20 +374,30 @@ export default function PersonalizedEducationDashboard({ staffProfile }: { staff
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between p-2 bg-red-50 rounded border-l-4 border-red-500">
-                  <div>
+              <div className="space-y-3 max-h-[300px] overflow-y-auto">
+                <div className="flex flex-col gap-2 p-3 bg-red-50 rounded-lg border-l-4 border-red-500 hover:shadow-md transition-all">
+                  <div className="flex items-start justify-between">
                     <div className="font-medium text-sm">医療安全研修</div>
-                    <div className="text-xs text-gray-600">2025-02-15</div>
+                    <Badge className="bg-red-600 text-white text-xs flex-shrink-0">5日後</Badge>
                   </div>
-                  <Badge className="bg-red-600 text-white text-xs">5日後</Badge>
+                  <div className="text-xs text-gray-600">2025-02-15</div>
+                  <Progress value={75} className="h-1 mt-1" />
                 </div>
-                <div className="flex items-center justify-between p-2 bg-orange-50 rounded border-l-4 border-orange-500">
-                  <div>
+                <div className="flex flex-col gap-2 p-3 bg-orange-50 rounded-lg border-l-4 border-orange-500 hover:shadow-md transition-all">
+                  <div className="flex items-start justify-between">
                     <div className="font-medium text-sm">リーダーシップ研修</div>
-                    <div className="text-xs text-gray-600">2025-02-20</div>
+                    <Badge className="bg-orange-600 text-white text-xs flex-shrink-0">10日後</Badge>
                   </div>
-                  <Badge className="bg-orange-600 text-white text-xs">10日後</Badge>
+                  <div className="text-xs text-gray-600">2025-02-20</div>
+                  <Progress value={40} className="h-1 mt-1" />
+                </div>
+                <div className="flex flex-col gap-2 p-3 bg-yellow-50 rounded-lg border-l-4 border-yellow-500 hover:shadow-md transition-all">
+                  <div className="flex items-start justify-between">
+                    <div className="font-medium text-sm">感染管理研修</div>
+                    <Badge className="bg-yellow-600 text-white text-xs flex-shrink-0">15日後</Badge>
+                  </div>
+                  <div className="text-xs text-gray-600">2025-02-25</div>
+                  <Progress value={20} className="h-1 mt-1" />
                 </div>
               </div>
             </CardContent>
@@ -455,16 +488,42 @@ export default function PersonalizedEducationDashboard({ staffProfile }: { staff
 
         {/* ダッシュボードビュー */}
         <TabsContent value="dashboard">
-          <div className="grid grid-cols-12 gap-4" style={{ minHeight: '600px' }}>
-            {customWidgets.filter(w => w.enabled).map((widget) => (
-              <div 
-                key={widget.id} 
-                className={`col-span-${widget.position.width}`}
-                style={{ gridRow: `span ${widget.position.height}` }}
-              >
-                {renderWidget(widget)}
+          <div className="space-y-4" style={{ minHeight: '600px' }}>
+            {/* 研修進捗サマリー（全幅表示） */}
+            {customWidgets.find(w => w.id === 'progress-summary' && w.enabled) && (
+              <div className="w-full">
+                {renderWidget(customWidgets.find(w => w.id === 'progress-summary')!)}
               </div>
-            ))}
+            )}
+            
+            {/* その他のウィジェット（グリッドレイアウト） */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              {/* AI推奨研修（2/3幅） */}
+              {customWidgets.find(w => w.id === 'recommendations' && w.enabled) && (
+                <div className="lg:col-span-2">
+                  {renderWidget(customWidgets.find(w => w.id === 'recommendations')!)}
+                </div>
+              )}
+              
+              {/* 締切・予定（1/3幅） */}
+              {customWidgets.find(w => w.id === 'upcoming-deadlines' && w.enabled) && (
+                <div className="lg:col-span-1">
+                  {renderWidget(customWidgets.find(w => w.id === 'upcoming-deadlines')!)}
+                </div>
+              )}
+            </div>
+            
+            {/* 追加ウィジェット */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {customWidgets.filter(w => 
+                w.enabled && 
+                !['progress-summary', 'recommendations', 'upcoming-deadlines'].includes(w.id)
+              ).map((widget) => (
+                <div key={widget.id}>
+                  {renderWidget(widget)}
+                </div>
+              ))}
+            </div>
           </div>
         </TabsContent>
 
