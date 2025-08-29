@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CommonHeader from '@/components/CommonHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -24,7 +24,8 @@ import {
   AlertCircle,
   BarChart3,
   AlertTriangle,
-  Sparkles
+  Sparkles,
+  Bell
 } from 'lucide-react';
 import Link from 'next/link';
 import {
@@ -32,6 +33,7 @@ import {
   jobCategoryNames,
   experienceLevelNames
 } from '@/data/evaluationMasterData';
+import SystemIntegrationService, { CrossSystemAlert } from '@/services/systemIntegrationService';
 
 interface TrainingProgram {
   id: string;
@@ -347,6 +349,31 @@ export default function EducationPage() {
   const [selectedLevel, setSelectedLevel] = useState('junior');
   const [activeTab, setActiveTab] = useState('station');
   const [showLinkageDetails, setShowLinkageDetails] = useState<number | null>(null);
+  const [selectedMonth, setSelectedMonth] = useState(() => {
+    // 現在月をデフォルトで選択
+    return new Date().getMonth() + 1;
+  });
+  const [systemAlerts, setSystemAlerts] = useState<CrossSystemAlert[]>([]);
+  
+  useEffect(() => {
+    // 教育研修システム向けアラートを取得
+    const alerts = SystemIntegrationService.getAlertsForSystem('training');
+    setSystemAlerts(alerts);
+  }, []);
+  
+  // タスク完了ハンドラー
+  const handleTaskCompletion = (taskId: string, completed: boolean) => {
+    SystemIntegrationService.syncTaskCompletion(taskId, 'training', completed);
+    SystemIntegrationService.addSyncActivity(
+      'training',
+      completed ? `研修タスク完了: ${taskId}` : `研修タスク未完了に変更: ${taskId}`,
+      taskId
+    );
+    
+    // アラートを更新
+    const updatedAlerts = SystemIntegrationService.getAlertsForSystem('training');
+    setSystemAlerts(updatedAlerts);
+  };
 
   const getCategoryColor = (category: string) => {
     const colors = {
@@ -428,38 +455,41 @@ export default function EducationPage() {
               <div className={`${styles.stationCard} ${styles.stationCardGradient}`}>
                 <div className={styles.stationCardBadge}>計画必須</div>
                 <div className={styles.stationCardContent}>
-                  <div className={styles.stationCardHeader}>
-                    <div className={styles.stationCardIcon}>
-                      <Calendar className="h-8 w-8 text-white" />
+                  <div>
+                    <div className={styles.stationCardHeader}>
+                      <div className={styles.stationCardIcon}>
+                        <Calendar className="h-8 w-8 text-white" />
+                      </div>
+                      <div>
+                        <h2 className={styles.stationCardTitle}>研修計画</h2>
+                        <p className={styles.stationCardDescription}>
+                          評価連動型年間研修スケジュール
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h2 className={styles.stationCardTitle}>研修計画</h2>
-                      <p className={styles.stationCardDescription}>
-                        評価連動型年間研修スケジュール
-                      </p>
-                    </div>
-                  </div>
-                  <div className={styles.featureGrid}>
-                    <div className={styles.featureItem}>
-                      <CheckCircle className="h-4 w-4 text-green-300" />
-                      <span>年間研修計画</span>
-                    </div>
-                    <div className={styles.featureItem}>
-                      <CheckCircle className="h-4 w-4 text-green-300" />
-                      <span>評価連動設定</span>
-                    </div>
-                    <div className={styles.featureItem}>
-                      <CheckCircle className="h-4 w-4 text-green-300" />
-                      <span>ROI分析</span>
-                    </div>
-                    <div className={styles.featureItem}>
-                      <CheckCircle className="h-4 w-4 text-green-300" />
-                      <span>効果測定</span>
+                    <div className={styles.featureGrid}>
+                      <div className={styles.featureItem}>
+                        <CheckCircle className="h-4 w-4 text-blue-200" />
+                        <span>年間研修計画</span>
+                      </div>
+                      <div className={styles.featureItem}>
+                        <CheckCircle className="h-4 w-4 text-blue-200" />
+                        <span>評価連動設定</span>
+                      </div>
+                      <div className={styles.featureItem}>
+                        <CheckCircle className="h-4 w-4 text-blue-200" />
+                        <span>ROI分析</span>
+                      </div>
+                      <div className={styles.featureItem}>
+                        <CheckCircle className="h-4 w-4 text-blue-200" />
+                        <span>効果測定</span>
+                      </div>
                     </div>
                   </div>
                   <button 
                     className={styles.actionButton}
                     onClick={() => setActiveTab('planning')}
+                    style={{color: '#3b82f6'}}
                   >
                     <Calendar className="h-5 w-5" />
                     年間計画を開く
@@ -471,30 +501,41 @@ export default function EducationPage() {
               <div className={`${styles.stationCard} ${styles.stationCardGradient}`} style={{background: 'linear-gradient(135deg, #9333ea, #7c3aed)'}}>
                 <div className={styles.stationCardBadge}>進行中</div>
                 <div className={styles.stationCardContent}>
-                  <div className={styles.stationCardHeader}>
-                    <div className={styles.stationCardIcon}>
-                      <Users className="h-8 w-8 text-white" />
+                  <div>
+                    <div className={styles.stationCardHeader}>
+                      <div className={styles.stationCardIcon}>
+                        <Users className="h-8 w-8 text-white" />
+                      </div>
+                      <div>
+                        <h2 className={styles.stationCardTitle}>受講管理</h2>
+                        <p className={styles.stationCardDescription}>
+                          個人別研修履歴と進捗管理
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h2 className={styles.stationCardTitle}>受講管理</h2>
-                      <p className={styles.stationCardDescription}>
-                        個人別研修履歴と進捗管理
-                      </p>
-                    </div>
-                  </div>
-                  <div className={styles.featureGrid}>
-                    <div className={styles.featureItem}>
-                      <span style={{color: 'rgba(255,255,255,0.8)', fontSize: '12px'}}>受講完了</span>
-                      <span style={{fontSize: '18px', fontWeight: 'bold'}}>78%</span>
-                    </div>
-                    <div className={styles.featureItem}>
-                      <span style={{color: 'rgba(255,255,255,0.8)', fontSize: '12px'}}>未受講者</span>
-                      <span style={{fontSize: '18px', fontWeight: 'bold'}}>25名</span>
+                    <div className={styles.featureGrid}>
+                      <div className={styles.featureItem}>
+                        <CheckCircle className="h-4 w-4 text-purple-200" />
+                        <span>個人別進捗</span>
+                      </div>
+                      <div className={styles.featureItem}>
+                        <CheckCircle className="h-4 w-4 text-purple-200" />
+                        <span>受講履歴</span>
+                      </div>
+                      <div className={styles.featureItem}>
+                        <CheckCircle className="h-4 w-4 text-purple-200" />
+                        <span>修了証発行</span>
+                      </div>
+                      <div className={styles.featureItem}>
+                        <CheckCircle className="h-4 w-4 text-purple-200" />
+                        <span>フォロー管理</span>
+                      </div>
                     </div>
                   </div>
                   <button 
                     className={styles.actionButton}
                     onClick={() => setActiveTab('management')}
+                    style={{color: '#9333ea'}}
                   >
                     <Users className="h-5 w-5" />
                     受講管理を開く
@@ -769,6 +810,41 @@ export default function EducationPage() {
                 <CardDescription>評価管理ダッシュボードとリアルタイム連携 - 詳細な依存関係表示</CardDescription>
               </CardHeader>
               <CardContent>
+                {/* システム連携アラート */}
+                {systemAlerts.length > 0 && (
+                  <div className="mb-6 p-4 bg-orange-50 rounded-lg border border-orange-200">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Bell className="h-5 w-5 text-orange-600" />
+                      <span className="font-semibold text-orange-800">研修システムアラート ({systemAlerts.length}件)</span>
+                    </div>
+                    <div className="space-y-2">
+                      {systemAlerts.slice(0, 2).map((alert) => (
+                        <div key={alert.id} className={`p-3 rounded-lg border-l-4 ${
+                          alert.priority === 'high' ? 'border-l-red-500 bg-red-50' :
+                          alert.priority === 'medium' ? 'border-l-orange-500 bg-orange-50' :
+                          'border-l-yellow-500 bg-yellow-50'
+                        }`}>
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <p className="text-sm font-medium text-gray-900">{alert.message}</p>
+                              {alert.month && (
+                                <p className="text-xs text-gray-600 mt-1">対象月: {alert.month}月</p>
+                              )}
+                            </div>
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => SystemIntegrationService.resolveAlert(alert.id)}
+                            >
+                              解決
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 {/* 連携状況サマリー */}
                 <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border">
                   <div className="flex items-center gap-2 mb-3">
@@ -790,14 +866,49 @@ export default function EducationPage() {
                     </div>
                   </div>
                 </div>
+
+                {/* 月選択ナビゲーション */}
+                <div className="mb-6">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="font-medium text-gray-700">月を選択:</span>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {yearSchedule.map((month) => {
+                      const isSelected = selectedMonth === month.month;
+                      const isCurrent = month.month === currentMonth;
+                      return (
+                        <button
+                          key={month.month}
+                          onClick={() => setSelectedMonth(month.month)}
+                          className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                            isSelected
+                              ? 'bg-blue-600 text-white shadow-lg'
+                              : isCurrent
+                              ? 'bg-blue-100 text-blue-800 border-2 border-blue-300 animate-pulse'
+                              : month.highlight
+                              ? 'bg-purple-100 text-purple-800 hover:bg-purple-200'
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          }`}
+                        >
+                          {month.name}
+                          {isCurrent && <span className="ml-1">🎯</span>}
+                          {month.highlight && !isCurrent && <span className="ml-1">✨</span>}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
                 
                 {/* 月別詳細表示 */}
                 <div className="space-y-6">
-                  {yearSchedule.map((monthData) => {
+                  {yearSchedule.filter(month => month.month === selectedMonth).map((monthData) => {
                     const isCurrentMonth = monthData.month === currentMonth;
+                    const isSelectedMonth = monthData.month === selectedMonth;
                     const cardClass = `border-2 ${
                       isCurrentMonth 
                         ? 'border-blue-500 bg-gradient-to-br from-blue-100 via-indigo-50 to-purple-100 shadow-2xl ring-2 ring-blue-200' 
+                        : isSelectedMonth
+                        ? 'border-indigo-400 bg-gradient-to-br from-indigo-50 to-blue-50 shadow-lg'
                         : monthData.highlight 
                           ? 'border-purple-400 bg-gradient-to-br from-purple-50 to-pink-50 shadow-lg'
                           : 'border-gray-200 hover:border-gray-300'
