@@ -284,21 +284,23 @@ export default function ImprovedInterviewFlow({ onBack }: ImprovedInterviewFlowP
     }
     
     return (
-      <div className={styles.sheetViewerSection}>
-        <button onClick={handleBack} className={styles.backButton}>
-          ← 戻る
-        </button>
-        {selectedStaff && selectedSheetDuration && (
-          <InterviewSheetWrapper
-            experienceCategory={getExperienceCategory(
-              selectedStaff.経験年数,
-              selectedStaff.役職 && (selectedStaff.役職.includes('師長') || selectedStaff.役職.includes('主任'))
-            )}
-            duration={selectedSheetDuration}
-            staffName={selectedStaff.name}
-            yearsOfExperience={selectedStaff.経験年数}
-          />
-        )}
+      <div className="interview-sheet-fullwidth">
+        <div className={styles.sheetViewerSection}>
+          <button onClick={handleBack} className={styles.backButton}>
+            ← 戻る
+          </button>
+          {selectedStaff && selectedSheetDuration && (
+            <InterviewSheetWrapper
+              experienceCategory={getExperienceCategory(
+                selectedStaff.経験年数,
+                selectedStaff.役職 && (selectedStaff.役職.includes('師長') || selectedStaff.役職.includes('主任'))
+              )}
+              duration={selectedSheetDuration}
+              staffName={selectedStaff.name}
+              yearsOfExperience={selectedStaff.経験年数}
+            />
+          )}
+        </div>
       </div>
     );
   }

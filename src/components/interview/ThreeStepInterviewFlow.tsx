@@ -182,7 +182,7 @@ export default function ThreeStepInterviewFlow() {
     const experienceCategory = getExperienceCategory(tenureYears);
     
     return (
-      <div style={{ margin: '-20px' }}>
+      <div className="interview-sheet-fullwidth" style={{ margin: '-20px' }}>
         <InterviewSheetWrapper
           experienceCategory={experienceCategory}
           duration={30}

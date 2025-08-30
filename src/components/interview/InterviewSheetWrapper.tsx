@@ -49,53 +49,60 @@ export default function InterviewSheetWrapper({
 
   return (
     <div className="space-y-4">
-      {/* モード選択 */}
-      <div className="print:hidden">
-        <InterviewModeSelector mode={mode} onModeChange={setMode} />
+      {/* ナビゲーション部分（現在の幅を維持） */}
+      <div className="container-limited">
+        {/* モード選択 */}
+        <div className="print:hidden">
+          <InterviewModeSelector mode={mode} onModeChange={setMode} />
+        </div>
+
+        {/* アクションボタン */}
+        <div className={cn(
+          "flex justify-end space-x-2 mb-4",
+          "print:hidden" // 印刷時は非表示
+        )}>
+          {mode === 'input' && (
+            <>
+              <Button variant="outline" onClick={handleSave}>
+                <Save className="h-4 w-4 mr-2" />
+                一時保存
+              </Button>
+              <Button onClick={handleSave}>
+                <Save className="h-4 w-4 mr-2" />
+                保存して完了
+              </Button>
+            </>
+          )}
+          
+          {mode === 'print' && (
+            <Button onClick={handlePrint}>
+              <Printer className="h-4 w-4 mr-2" />
+              印刷する
+            </Button>
+          )}
+          
+          {mode === 'review' && (
+            <Button variant="outline" onClick={handleExportPDF}>
+              <Download className="h-4 w-4 mr-2" />
+              PDFダウンロード
+            </Button>
+          )}
+        </div>
       </div>
 
-      {/* アクションボタン */}
-      <div className={cn(
-        "flex justify-end space-x-2 mb-4",
-        "print:hidden" // 印刷時は非表示
-      )}>
-        {mode === 'input' && (
-          <>
-            <Button variant="outline" onClick={handleSave}>
-              <Save className="h-4 w-4 mr-2" />
-              一時保存
-            </Button>
-            <Button onClick={handleSave}>
-              <Save className="h-4 w-4 mr-2" />
-              保存して完了
-            </Button>
-          </>
-        )}
-        
-        {mode === 'print' && (
-          <Button onClick={handlePrint}>
-            <Printer className="h-4 w-4 mr-2" />
-            印刷する
-          </Button>
-        )}
-        
-        {mode === 'review' && (
-          <Button variant="outline" onClick={handleExportPDF}>
-            <Download className="h-4 w-4 mr-2" />
-            PDFダウンロード
-          </Button>
-        )}
+      {/* 面談シートエリア（完全全幅） */}
+      <div className="interview-sheet-fullwidth">
+        <div className="w-full interview-content">
+          <PrintModeWrapper mode={mode}>
+            <InterviewSheetViewer
+              experienceCategory={experienceCategory}
+              duration={duration}
+              staffName={staffName}
+              yearsOfExperience={yearsOfExperience}
+            />
+          </PrintModeWrapper>
+        </div>
       </div>
-
-      {/* 面談シート本体 */}
-      <PrintModeWrapper mode={mode}>
-        <InterviewSheetViewer
-          experienceCategory={experienceCategory}
-          duration={duration}
-          staffName={staffName}
-          yearsOfExperience={yearsOfExperience}
-        />
-      </PrintModeWrapper>
     </div>
   );
 }

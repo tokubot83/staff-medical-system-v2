@@ -1,10 +1,55 @@
-/* 面談管理ページ全幅対応 CSS */
+/* 面談管理ページ完全全幅対応 CSS */
 
 /* ヘッダー・ナビゲーション部分は既存の幅制限を維持 */
 .container-limited {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px;
+}
+
+/* 面談シート完全全幅表示用クラス */
+.interview-sheet-fullwidth {
+  width: 100vw !important;
+  max-width: none !important;
+  margin-left: calc(-50vw + 50%) !important;
+  margin-right: calc(-50vw + 50%) !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* 親コンテナの制約を無効化 */
+.interview-sheet-fullwidth *,
+.interview-sheet-fullwidth .container,
+.interview-sheet-fullwidth .max-w-7xl,
+.interview-sheet-fullwidth .max-w-6xl,
+.interview-sheet-fullwidth .max-w-5xl,
+.interview-sheet-fullwidth .max-w-4xl,
+.interview-sheet-fullwidth .max-w-3xl,
+.interview-sheet-fullwidth .max-w-2xl,
+.interview-sheet-fullwidth .max-w-xl,
+.interview-sheet-fullwidth .max-w-lg {
+  max-width: none !important;
+}
+
+/* 面談シートコンテンツエリア完全全幅 */
+.interview-sheet-container {
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  width: 100vw;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 面談シート内のコンテンツも全幅対応 */
+.interview-content {
+  width: 100%;
+  padding: 0 20px; /* 最小限の読みやすさ用パディング */
+  box-sizing: border-box;
 }
 
 /* 面談マニュアル生成・シミュレーター用全幅コンテナ */
