@@ -62,6 +62,26 @@
   box-sizing: border-box !important;
 }
 
+/* 面談シートデフォルト表示倍率90% */
+.fullwidth-interview-content,
+.interview-sheet-fullwidth,
+.fullwidth-simulator-container {
+  zoom: 0.9;
+  -webkit-transform: scale(0.9);
+  -moz-transform: scale(0.9);
+  -ms-transform: scale(0.9);
+  -o-transform: scale(0.9);
+  transform: scale(0.9);
+  transform-origin: top center;
+}
+
+/* スケール適用時のコンテナ調整 */
+.interview-sheet-fullwidth,
+.fullwidth-simulator-container {
+  margin-top: 0;
+  margin-bottom: calc(-10% * 2); /* スケールによる余白を補正 */
+}
+
 /* 面談マニュアル生成・シミュレーター用全幅コンテナ */
 .container-fullwidth {
   width: 100vw;
