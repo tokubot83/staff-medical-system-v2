@@ -52,6 +52,16 @@
   box-sizing: border-box;
 }
 
+/* fullwidth-interview-contentの水平パディング強制無効化 */
+.fullwidth-interview-content {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  padding-top: 1.5rem !important;
+  padding-bottom: 1.5rem !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
 /* 面談マニュアル生成・シミュレーター用全幅コンテナ */
 .container-fullwidth {
   width: 100vw;
