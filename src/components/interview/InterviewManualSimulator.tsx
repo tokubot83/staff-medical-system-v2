@@ -327,8 +327,8 @@ export default function InterviewManualSimulator() {
   }
 
   return (
-    <div className={`${styles.simulator} fullwidth-interview-container`}>
-      <div className={styles.header}>
+    <div className={styles.simulator}>
+      <div className={`${styles.header} simulator-header`}>
         <h1>🎯 面談マニュアルシミュレーター</h1>
         <p>条件を選択して、実際の面談で使用される質問内容を確認できます</p>
         <div className={styles.featureNotice}>
@@ -337,7 +337,7 @@ export default function InterviewManualSimulator() {
         </div>
       </div>
 
-      <div className={styles.controls}>
+      <div className={`${styles.controls} simulator-controls`}>
         <div className={styles.controlGroup}>
           <label>職種</label>
           <select 
@@ -459,7 +459,7 @@ export default function InterviewManualSimulator() {
       </div>
 
       {generatedSheet && staffProfile && !showComparison && (
-        <div className={styles.singleView}>
+        <div className={`${styles.singleView} simulator-results`}>
           <div className={styles.sheetPanel}>
             <div className={styles.sheetHeader}>
               <h2>生成された面談シート</h2>

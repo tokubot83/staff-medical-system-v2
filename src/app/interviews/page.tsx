@@ -7,6 +7,7 @@ import DashboardButton from '@/components/DashboardButton'
 import Link from 'next/link'
 import { staffDatabase } from '../data/staffData.js'
 import styles from './Interviews.module.css'
+import '@/styles/fullwidth-interview.css'
 import { Interview, InterviewType, InterviewStatus } from '@/types/interview'
 import { mockInterviews, getUpcomingInterviews } from '@/data/mockInterviews'
 import InterviewModal from '@/components/InterviewModal'
@@ -209,15 +210,24 @@ function InterviewsPageContent() {
           ))}
         </div>
 
-        <div className={styles.tabContent}>
-          {activeTab === 'station' && <UnifiedInterviewDashboard />}
-          {activeTab === 'bank-system' && <UnifiedInterviewBankSystem />}
-          {activeTab === 'record' && <RecordTab selectedInterview={selectedInterview} />}
-          {activeTab === 'analytics' && <HistoryAnalysisTab interviews={interviews} />}
-          {activeTab === 'overview-guide' && <OverviewGuideTab onInterviewTypeClick={handleInterviewTypeClick} />}
-          {activeTab === 'simulator' && <InterviewManualSimulator />}
-          {activeTab === 'settings' && <SettingsTab />}
-        </div>
+        {/* 通常のタブコンテンツ */}
+        {activeTab !== 'simulator' && (
+          <div className={styles.tabContent}>
+            {activeTab === 'station' && <UnifiedInterviewDashboard />}
+            {activeTab === 'bank-system' && <UnifiedInterviewBankSystem />}
+            {activeTab === 'record' && <RecordTab selectedInterview={selectedInterview} />}
+            {activeTab === 'analytics' && <HistoryAnalysisTab interviews={interviews} />}
+            {activeTab === 'overview-guide' && <OverviewGuideTab onInterviewTypeClick={handleInterviewTypeClick} />}
+            {activeTab === 'settings' && <SettingsTab />}
+          </div>
+        )}
+        
+        {/* シミュレータータブ - 全幅対応 */}
+        {activeTab === 'simulator' && (
+          <div className="fullwidth-simulator-container">
+            <InterviewManualSimulator />
+          </div>
+        )}
       </div>
       
       <InterviewModal

@@ -1,234 +1,242 @@
-/* 面談シート表示専用の全幅レイアウト */
+/* 面談管理ページ全幅対応 CSS */
 
-/* 全幅コンテナクラス */
-.fullwidth-interview-container {
-  /* ビューポート全体を使用 */
-  width: 100vw !important;
-  max-width: none !important;
-  
-  /* 親コンテナのパディング/マージンを相殺 */
-  margin-left: calc(50% - 50vw) !important;
-  margin-right: calc(50% - 50vw) !important;
-  
-  /* パディングをリセット */
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-  
-  /* オーバーフロー制御 */
-  overflow-x: hidden;
-  position: relative;
-}
-
-/* 内部コンテンツのパディング調整（必要に応じて） */
-.fullwidth-interview-content {
-  width: 100%;
-  padding: 0;
-}
-
-/* ヘッダー部分の全幅対応 */
-.fullwidth-interview-header {
-  width: 100%;
-  padding: 1rem 2rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-}
-
-/* メインコンテンツエリア */
-.fullwidth-interview-main {
-  width: 100%;
-  min-height: calc(100vh - 120px);
-  display: flex;
-  flex-direction: column;
-}
-
-/* 比較表示時の左右パネル */
-.fullwidth-interview-split {
-  display: flex;
-  width: 100%;
-  height: 100%;
-}
-
-.fullwidth-interview-split-left,
-.fullwidth-interview-split-right {
-  flex: 1;
-  width: 50%;
-  overflow-y: auto;
-  padding: 1rem;
-}
-
-.fullwidth-interview-split-left {
-  border-right: 1px solid #e5e7eb;
-}
-
-/* レスポンシブ対応 */
-@media (max-width: 768px) {
-  .fullwidth-interview-split {
-    flex-direction: column;
-  }
-  
-  .fullwidth-interview-split-left,
-  .fullwidth-interview-split-right {
-    width: 100%;
-    border-right: none;
-  }
-  
-  .fullwidth-interview-split-left {
-    border-bottom: 1px solid #e5e7eb;
-  }
-}
-
-/* 印刷時の調整 */
-@media print {
-  .fullwidth-interview-container {
-    margin: 0 !important;
-    width: 100% !important;
-  }
-  
-  .fullwidth-interview-header {
-    display: none;
-  }
-}
-
-/* 既存のmax-widthやcontainer制約を無効化 */
-.fullwidth-interview-container .container,
-.fullwidth-interview-container .max-w-7xl,
-.fullwidth-interview-container .max-w-6xl,
-.fullwidth-interview-container .max-w-5xl,
-.fullwidth-interview-container .max-w-4xl,
-.fullwidth-interview-container .max-w-3xl,
-.fullwidth-interview-container .max-w-2xl,
-.fullwidth-interview-container .max-w-xl,
-.fullwidth-interview-container .max-w-lg {
-  max-width: none !important;
-  width: 100% !important;
-}
-
-/* z-indexで最前面に配置（モーダル除く） */
-.fullwidth-interview-overlay {
-  position: relative;
-  z-index: 100;
-}
-
-/* 面談ページ専用のタブナビゲーション全幅対応 */
-.fullwidth-interview-tabs {
-  width: 100vw !important;
-  max-width: none !important;
-  margin-left: calc(50% - 50vw) !important;
-  margin-right: calc(50% - 50vw) !important;
-  padding-left: 20px !important;
-  padding-right: 20px !important;
-  box-sizing: border-box;
-}
-
-/* 面談ページ専用のヘッダー部分全幅対応 */
-.fullwidth-interview-header-bar {
-  width: 100vw !important;
-  max-width: none !important;
-  margin-left: calc(50% - 50vw) !important;
-  margin-right: calc(50% - 50vw) !important;
-  padding-left: 20px !important;
-  padding-right: 20px !important;
-  box-sizing: border-box;
-}
-
-/* 面談ページ専用のプログレスバー全幅対応 */
-.fullwidth-interview-progress {
-  width: 100vw !important;
-  max-width: none !important;
-  margin-left: calc(50% - 50vw) !important;
-  margin-right: calc(50% - 50vw) !important;
-  padding-left: 20px !important;
-  padding-right: 20px !important;
-  box-sizing: border-box;
-}
-
-/* 全幅表示時のヘッダー構成 */
-.fullwidth-interview-header-layout {
-  width: 100vw !important;
-  max-width: none !important;
-  margin-left: calc(50% - 50vw) !important;
-  margin-right: calc(50% - 50vw) !important;
-  padding: 16px 24px !important;
-  box-sizing: border-box;
-  background: white;
-  border-bottom: 1px solid #e5e7eb;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-}
-
-/* ヘッダー内部コンテンツのレイアウト */
-.fullwidth-interview-header-content {
+/* ヘッダー・ナビゲーション部分は既存の幅制限を維持 */
+.container-limited {
   max-width: 1200px;
   margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  padding: 0 24px;
 }
 
-/* トップ行（戻るボタン + タイトル + 完了状況） */
+/* 面談マニュアル生成・シミュレーター用全幅コンテナ */
+.container-fullwidth {
+  width: 100vw;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+
+/* 面談マニュアル生成フロー用の全幅ヘッダーバー */
+.fullwidth-interview-header-bar {
+  width: 100vw;
+  max-width: none;
+  margin: 0 -24px;
+  padding: 0 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 面談フロー用全幅ヘッダーレイアウト */
+.fullwidth-interview-header-layout {
+  width: 100vw;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.fullwidth-interview-header-content {
+  max-width: none;
+  margin: 0;
+  padding: 16px 24px;
+}
+
 .fullwidth-interview-top-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 16px;
 }
 
-/* 中央行（ステップバー） */
 .fullwidth-interview-middle-row {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 12px 0;
+  border-top: 1px solid #f3f4f6;
+  border-bottom: 1px solid #f3f4f6;
+  background: #f9fafb;
 }
 
-/* ボトム行（ボタン群） */
 .fullwidth-interview-bottom-row {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: 16px;
+  padding: 12px 0;
+  margin-top: 16px;
 }
 
-/* 面談関連ページのコンテナ制約を無効化（個別適用用） */
-.fullwidth-interview-page .container,
-.fullwidth-interview-page .max-w-7xl,
-.fullwidth-interview-page .max-w-6xl,
-.fullwidth-interview-page .max-w-5xl,
-.fullwidth-interview-page .max-w-4xl,
-.fullwidth-interview-page .max-w-3xl,
-.fullwidth-interview-page .max-w-2xl,
-.fullwidth-interview-page .max-w-xl,
-.fullwidth-interview-page .max-w-lg {
-  max-width: none !important;
-  width: 100% !important;
+/* 面談フロー用メインコンテナ */
+.fullwidth-interview-container {
+  width: 100vw;
+  max-width: none;
+  margin: 0;
+  padding: 24px;
+  background: #f9fafb;
 }
 
-/* ヘッダーレイアウトのレスポンシブ対応 */
-@media (max-width: 768px) {
-  .fullwidth-interview-header-layout {
-    padding: 12px 16px !important;
+.fullwidth-interview-main {
+  min-height: calc(100vh - 200px);
+}
+
+/* 面談マニュアルシミュレーター全幅対応 */
+.fullwidth-simulator-container {
+  width: 100vw;
+  max-width: none;
+  margin: 0;
+  padding: 20px 24px;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  background: #f9fafb;
+  min-height: calc(100vh - 120px);
+}
+
+/* シミュレーターヘッダー調整 */
+.fullwidth-simulator-container .simulator-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 12px;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* シミュレーターコントロール部分 */
+.fullwidth-simulator-container .simulator-controls {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-bottom: 30px;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+/* シミュレーター結果表示エリア */
+.fullwidth-simulator-container .simulator-results {
+  max-width: none;
+  width: 100%;
+}
+
+/* 比較表示時の調整 */
+.fullwidth-simulator-container .comparison-view {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  padding-bottom: 20px;
+}
+
+.fullwidth-simulator-container .comparison-view .sheet-panel {
+  min-width: calc(50vw - 60px);
+  max-width: 800px;
+  flex-shrink: 0;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 1200px) {
+  .container-fullwidth,
+  .fullwidth-simulator-container,
+  .fullwidth-interview-container {
+    padding-left: 16px;
+    padding-right: 16px;
   }
   
   .fullwidth-interview-header-content {
-    max-width: none !important;
-    gap: 12px !important;
+    padding: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container-fullwidth,
+  .fullwidth-simulator-container,
+  .fullwidth-interview-container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  
+  .fullwidth-interview-header-content {
+    padding: 12px;
+  }
+  
+  .fullwidth-simulator-container .simulator-controls {
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+  
+  .fullwidth-simulator-container .comparison-view {
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+  
+  .fullwidth-simulator-container .comparison-view .sheet-panel {
+    min-width: auto;
+    width: 100%;
+    max-width: none;
   }
   
   .fullwidth-interview-top-row {
     flex-direction: column;
+    gap: 12px;
     align-items: flex-start;
-    gap: 8px;
-  }
-  
-  .fullwidth-interview-middle-row {
-    justify-content: flex-start;
-    overflow-x: auto;
-    width: 100%;
-  }
-  
-  .fullwidth-interview-middle-row > div {
-    white-space: nowrap;
   }
   
   .fullwidth-interview-bottom-row {
-    justify-content: flex-start;
     flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container-fullwidth,
+  .fullwidth-simulator-container,
+  .fullwidth-interview-container {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  
+  .fullwidth-interview-middle-row {
+    padding: 8px 0;
+  }
+  
+  .fullwidth-interview-bottom-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+/* プリントモード時の調整 */
+@media print {
+  .container-fullwidth,
+  .fullwidth-simulator-container,
+  .fullwidth-interview-container {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    left: auto;
+    right: auto;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  
+  .fullwidth-interview-header-bar,
+  .fullwidth-interview-header-layout {
+    box-shadow: none;
+    border: none;
   }
 }
