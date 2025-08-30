@@ -62,24 +62,36 @@
   box-sizing: border-box !important;
 }
 
-/* 面談シートデフォルト表示倍率90% */
+/* 面談シートデフォルト表示倍率95%・中央配置 */
 .fullwidth-interview-content,
 .interview-sheet-fullwidth,
 .fullwidth-simulator-container {
-  zoom: 0.9;
-  -webkit-transform: scale(0.9);
-  -moz-transform: scale(0.9);
-  -ms-transform: scale(0.9);
-  -o-transform: scale(0.9);
-  transform: scale(0.9);
-  transform-origin: top center;
+  zoom: 0.95;
+  -webkit-transform: scale(0.95);
+  -moz-transform: scale(0.95);
+  -ms-transform: scale(0.95);
+  -o-transform: scale(0.95);
+  transform: scale(0.95);
+  transform-origin: center center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 /* スケール適用時のコンテナ調整 */
 .interview-sheet-fullwidth,
 .fullwidth-simulator-container {
   margin-top: 0;
-  margin-bottom: calc(-10% * 2); /* スケールによる余白を補正 */
+  margin-bottom: calc(-5% * 2); /* 95%スケールによる余白を補正 */
+  width: 100vw;
+  min-height: 100vh;
+}
+
+/* 面談シートコンテンツの中央配置 */
+.fullwidth-interview-content > * {
+  max-width: 100%;
+  width: 100%;
 }
 
 /* 面談マニュアル生成・シミュレーター用全幅コンテナ */
