@@ -3902,88 +3902,234 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
           )}
 
           {activeEducationTab === 'progress' && (
-            <div className={styles.trainingProgress}>
-              <div className={styles.progressSummaryCard}>
-                <h3>📊 研修進捗サマリー</h3>
-                <div className={styles.progressStats}>
-                  <div className={styles.progressStatItem}>
-                    <span className={styles.statValue}>{trainingData?.progressSummary?.totalHours}h</span>
-                    <span className={styles.statLabel}>受講時間</span>
+            <div className="space-y-6">
+              {/* データストーリーのメインメッセージ - 面談タブと統一 */}
+              <Card className="border-l-4" style={{ borderLeftColor: CHART_COLORS.primary }}>
+                <CardContent className="pt-6">
+                  <h3 className="text-lg font-semibold mb-2">
+                    📊 研修進捗サマリー
+                  </h3>
+                  <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600 bg-gray-50 px-4 py-3 rounded-lg mb-4">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">⏱️ 総受講時間:</span>
+                      <span>{trainingData?.progressSummary?.totalHours || 0}時間</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">🎯 達成率:</span>
+                      <span>{trainingData?.progressSummary?.completionRate || 0}%</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">📚 受講中:</span>
+                      <span>{trainingData?.progressSummary?.ongoingPrograms || 0}プログラム</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">✅ 完了済み:</span>
+                      <span>{trainingData?.progressSummary?.completedPrograms || 0}プログラム</span>
+                    </div>
                   </div>
-                  <div className={styles.progressStatItem}>
-                    <span className={styles.statValue}>{trainingData?.progressSummary?.completionRate}%</span>
-                    <span className={styles.statLabel}>達成率</span>
-                  </div>
-                  <div className={styles.progressStatItem}>
-                    <span className={styles.statValue}>{trainingData?.progressSummary?.ongoingPrograms}</span>
-                    <span className={styles.statLabel}>受講中</span>
-                  </div>
-                  <div className={styles.progressStatItem}>
-                    <span className={styles.statValue}>{trainingData?.progressSummary?.completedPrograms}</span>
-                    <span className={styles.statLabel}>完了済み</span>
-                  </div>
-                </div>
-              </div>
+                  <p className="text-gray-700">
+                    {(trainingData?.progressSummary?.completionRate || 0) >= 90 
+                      ? `優秀な進捗状況で達成率${trainingData?.progressSummary?.completionRate}%。継続的な学習姿勢が評価されます。`
+                      : (trainingData?.progressSummary?.completionRate || 0) >= 70
+                      ? `良好な進捗で達成率${trainingData?.progressSummary?.completionRate}%。期限内完了に向けて順調に進行中。`
+                      : `進捗率${trainingData?.progressSummary?.completionRate}%。重点的なフォローアップをお勧めします。`
+                    }
+                    {trainingData?.progressSummary?.upcomingDeadlines > 0 && 
+                      ` 📅 ${trainingData.progressSummary.upcomingDeadlines}件の期限が迫っています。`
+                    }
+                  </p>
+                </CardContent>
+              </Card>
 
-              <div className={styles.currentProgramsCard}>
-                <h3>📚 現在の研修プログラム</h3>
-                <div className={styles.programsList}>
-                  {trainingData?.currentPrograms?.map((program: any) => (
-                    <div key={program.id} className={styles.programCard}>
-                      <div className={styles.programHeader}>
-                        <div className={styles.programInfo}>
-                          <span className={styles.programName}>{program.name}</span>
-                          <span className={styles.programCategory}>{program.category}</span>
-                        </div>
-                        <div className={styles.programStatus}>
-                          <span className={`${styles.statusBadge} ${program.status}`}>
-                            {program.status === 'completed' ? '完了' : '受講中'}
+              {/* 研修進捗ダッシュボード */}
+              <Card className="mb-6">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    📈 研修進捗状況分析
+                    <Badge variant="outline" style={{ backgroundColor: CHART_COLORS.primary, color: 'white' }}>
+                      リアルタイム
+                    </Badge>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                    {/* 総受講時間 */}
+                    <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
+                      <div className="text-2xl font-bold mb-1" style={{ color: CHART_COLORS.primary }}>
+                        {trainingData?.progressSummary?.totalHours || 0}h
+                      </div>
+                      <div className="text-sm text-gray-600">総受講時間</div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        目標: 200h
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-1 mt-2">
+                        <div 
+                          className="h-1 rounded-full" 
+                          style={{ 
+                            width: `${Math.min(100, (trainingData?.progressSummary?.totalHours || 0) / 200 * 100)}%`,
+                            backgroundColor: CHART_COLORS.primary 
+                          }}
+                        />
+                      </div>
+                    </div>
+                    
+                    {/* 達成率 */}
+                    <div className="text-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border border-green-200">
+                      <div className="text-2xl font-bold mb-1" style={{ color: CHART_COLORS.success }}>
+                        {trainingData?.progressSummary?.completionRate || 0}%
+                      </div>
+                      <div className="text-sm text-gray-600">達成率</div>
+                      <Badge style={{ 
+                        backgroundColor: trainingData?.progressSummary?.completionRate >= 80 ? CHART_COLORS.success : CHART_COLORS.warning, 
+                        color: 'white', 
+                        marginTop: '4px' 
+                      }}>
+                        {trainingData?.progressSummary?.completionRate >= 80 ? '優秀' : '継続中'}
+                      </Badge>
+                    </div>
+                    
+                    {/* 受講中プログラム */}
+                    <div className="text-center p-4 bg-gradient-to-br from-orange-50 to-amber-50 rounded-lg border border-orange-200">
+                      <div className="text-2xl font-bold mb-1" style={{ color: CHART_COLORS.warning }}>
+                        {trainingData?.progressSummary?.ongoingPrograms || 0}
+                      </div>
+                      <div className="text-sm text-gray-600">受講中</div>
+                      <div className="flex items-center justify-center mt-1 text-xs text-gray-500">
+                        <span>📚 アクティブ</span>
+                      </div>
+                    </div>
+                    
+                    {/* 完了プログラム */}
+                    <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-violet-50 rounded-lg border border-purple-200">
+                      <div className="text-2xl font-bold mb-1" style={{ color: '#8b5cf6' }}>
+                        {trainingData?.progressSummary?.completedPrograms || 0}
+                      </div>
+                      <div className="text-sm text-gray-600">完了済み</div>
+                      <div className="flex items-center justify-center mt-1 text-xs text-gray-500">
+                        <span>✅ 達成</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* プログラム別進捗 */}
+                  <div className="space-y-4">
+                    <h4 className="font-medium text-gray-800 flex items-center gap-2">
+                      📚 現在の研修プログラム
+                    </h4>
+                    {trainingData?.currentPrograms?.map((program: any) => (
+                      <div key={program.id} className="p-4 bg-gray-50 rounded-lg">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-3">
+                            <span className="font-medium text-gray-800">{program.name}</span>
+                            <Badge variant="outline">{program.category}</Badge>
+                            <Badge style={{ 
+                              backgroundColor: program.status === 'completed' ? CHART_COLORS.success : CHART_COLORS.primary,
+                              color: 'white'
+                            }}>
+                              {program.status === 'completed' ? '完了' : '受講中'}
+                            </Badge>
+                          </div>
+                          <span className="text-lg font-bold" style={{ 
+                            color: program.progress === 100 ? CHART_COLORS.success : CHART_COLORS.primary 
+                          }}>
+                            {program.progress}%
                           </span>
                         </div>
-                      </div>
-                      <div className={styles.programProgress}>
-                        <div className={styles.progressBar}>
+                        <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
                           <div 
-                            className={styles.progressFill} 
-                            style={{ width: `${program.progress}%` }}
+                            className="h-2 rounded-full transition-all duration-300" 
+                            style={{ 
+                              width: `${program.progress}%`,
+                              backgroundColor: program.progress === 100 ? CHART_COLORS.success : 
+                                              program.progress >= 75 ? CHART_COLORS.primary :
+                                              program.progress >= 50 ? CHART_COLORS.warning : CHART_COLORS.danger
+                            }}
                           />
                         </div>
-                        <span className={styles.progressText}>{program.progress}%</span>
+                        <div className="flex justify-between text-sm text-gray-600">
+                          {program.status === 'completed' ? (
+                            <span>✅ 完了日: {program.completedDate}</span>
+                          ) : (
+                            <>
+                              <span>📅 期限: {program.deadline}</span>
+                              {program.nextSession && (
+                                <span>🔜 次回: {program.nextSession}</span>
+                              )}
+                            </>
+                          )}
+                        </div>
                       </div>
-                      <div className={styles.programDetails}>
-                        {program.status === 'completed' ? (
-                          <span>完了日: {program.completedDate}</span>
-                        ) : (
-                          <>
-                            <span>期限: {program.deadline}</span>
-                            {program.nextSession && (
-                              <span>次回: {program.nextSession}</span>
-                            )}
-                          </>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* 取得資格・認定 */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    🏆 取得資格・認定
+                    <Badge style={{ backgroundColor: CHART_COLORS.success, color: 'white' }}>
+                      {trainingData?.certifications?.length || 0}件
+                    </Badge>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {trainingData?.certifications?.map((cert: any, index: number) => (
+                      <div key={index} className="p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg border border-gray-200">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="font-medium text-gray-800">{cert.name}</span>
+                          <Badge style={{ 
+                            backgroundColor: cert.status === 'valid' ? CHART_COLORS.success : CHART_COLORS.danger,
+                            color: 'white'
+                          }}>
+                            {cert.status === 'valid' ? '有効' : '期限切れ'}
+                          </Badge>
+                        </div>
+                        <div className="flex justify-between text-sm text-gray-600">
+                          <span>🎓 取得: {cert.obtainedDate}</span>
+                          <span>📅 期限: {cert.expiryDate}</span>
+                        </div>
+                        {cert.status === 'valid' && (
+                          <div className="mt-2 text-xs text-green-600">
+                            ✓ 有効期限まであと{Math.floor((new Date(cert.expiryDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))}日
+                          </div>
                         )}
                       </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className={styles.certificationsCard}>
-                <h3>🏆 取得資格・認定</h3>
-                <div className={styles.certificationsList}>
-                  {trainingData?.certifications?.map((cert: any, index: number) => (
-                    <div key={index} className={styles.certificationItem}>
-                      <div className={styles.certificationInfo}>
-                        <span className={styles.certificationName}>{cert.name}</span>
-                        <span className={styles.certificationStatus}>{cert.status === 'valid' ? '有効' : '期限切れ'}</span>
+                    ))}
+                  </div>
+                  
+                  {/* 進捗インサイト */}
+                  <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <h4 className="font-medium text-gray-800 mb-2 flex items-center gap-2">
+                      💡 進捗インサイト
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <div className="flex items-start gap-2 mb-2">
+                          <span className="text-green-600">✓</span>
+                          <span>必須研修の達成率が目標を上回っています</span>
+                        </div>
+                        <div className="flex items-start gap-2 mb-2">
+                          <span className="text-green-600">✓</span>
+                          <span>計画通りのペースで学習が進行中</span>
+                        </div>
                       </div>
-                      <div className={styles.certificationDates}>
-                        <span>取得: {cert.obtainedDate}</span>
-                        <span>期限: {cert.expiryDate}</span>
+                      <div>
+                        <div className="flex items-start gap-2 mb-2">
+                          <span className="text-orange-600">△</span>
+                          <span>リーダーシップ開発研修の進捗に注意</span>
+                        </div>
+                        <div className="flex items-start gap-2 mb-2">
+                          <span className="text-blue-600">ℹ</span>
+                          <span>次回の更新研修まで3ヶ月</span>
+                        </div>
                       </div>
                     </div>
-                  ))}
-                </div>
-              </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           )}
 
