@@ -3840,7 +3840,6 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
   const educationSubTabs = [
     { id: 'personal', label: 'パーソナル', icon: '👤' },
     { id: 'progress', label: '進捗状況', icon: '📊' },
-    { id: 'skills', label: 'スキル開発', icon: '🎯' },
     { id: 'v3alignment', label: 'V3評価連動', icon: '🔗' }
   ]
 
@@ -4133,95 +4132,200 @@ export function EducationTab({ selectedStaff }: { selectedStaff: any }) {
             </div>
           )}
 
-          {activeEducationTab === 'skills' && (
-            <div className={styles.skillDevelopment}>
-              <div className={styles.technicalSkillsCard}>
-                <h3>🛠️ 技術スキル</h3>
-                <div className={styles.skillsList}>
-                  {trainingData?.skillDevelopment?.technicalSkills?.map((skill: any, index: number) => (
-                    <div key={index} className={styles.skillItem}>
-                      <div className={styles.skillHeader}>
-                        <span className={styles.skillName}>{skill.skill}</span>
-                        <span className={styles.skillScore}>{skill.level} / {skill.target}</span>
-                      </div>
-                      <div className={styles.skillProgress}>
-                        <div className={styles.skillBar}>
-                          <div 
-                            className={styles.currentLevel} 
-                            style={{ width: `${skill.level}%` }}
-                          />
-                          <div 
-                            className={styles.targetLine} 
-                            style={{ left: `${skill.target}%` }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className={styles.softSkillsCard}>
-                <h3>🤝 ソフトスキル</h3>
-                <div className={styles.skillsList}>
-                  {trainingData?.skillDevelopment?.softSkills?.map((skill: any, index: number) => (
-                    <div key={index} className={styles.skillItem}>
-                      <div className={styles.skillHeader}>
-                        <span className={styles.skillName}>{skill.skill}</span>
-                        <span className={styles.skillScore}>{skill.level} / {skill.target}</span>
-                      </div>
-                      <div className={styles.skillProgress}>
-                        <div className={styles.skillBar}>
-                          <div 
-                            className={styles.currentLevel} 
-                            style={{ width: `${skill.level}%` }}
-                          />
-                          <div 
-                            className={styles.targetLine} 
-                            style={{ left: `${skill.target}%` }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
 
           {activeEducationTab === 'v3alignment' && (
-            <div className={styles.v3AlignmentCard}>
-              <h3>🔗 V3評価システム連動</h3>
-              <div className={styles.alignmentSummary}>
-                <div className={styles.alignmentScore}>
-                  <span className={styles.scoreValue}>{trainingData?.v3Integration?.evaluationAlignment}%</span>
-                  <span className={styles.scoreLabel}>評価連動度</span>
-                </div>
-                <div className={styles.alignmentDescription}>
-                  V3評価システムの成果向上に向けた研修計画が効果的に実行されています。
-                </div>
-              </div>
-
-              <div className={styles.skillGapAnalysis}>
-                <h4>📈 スキルギャップ分析</h4>
-                {trainingData?.v3Integration?.skillGapAnalysis?.map((gap: any, index: number) => (
-                  <div key={index} className={styles.gapAnalysisItem}>
-                    <div className={styles.gapHeader}>
-                      <span className={styles.gapArea}>{gap.area}</span>
-                      <span className={styles.gapScore}>
-                        {gap.currentLevel} → {gap.targetLevel} (ギャップ: {gap.targetLevel - gap.currentLevel})
-                      </span>
+            <div className="space-y-6">
+              {/* V3評価システム連動サマリー */}
+              <Card className="border-l-4" style={{ borderLeftColor: CHART_COLORS.primary }}>
+                <CardContent className="pt-6">
+                  <h3 className="text-lg font-semibold mb-2">
+                    🔗 V3評価システム連動
+                  </h3>
+                  <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600 bg-gray-50 px-4 py-3 rounded-lg mb-4">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">🎯 評価連動度:</span>
+                      <span>{trainingData?.v3Integration?.evaluationAlignment || 0}%</span>
                     </div>
-                    <div className={styles.gapProgress}>
-                      <div className={styles.currentBar} style={{ width: `${gap.currentLevel}%` }} />
-                      <div className={styles.targetMarker} style={{ left: `${gap.targetLevel}%` }} />
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">📊 改善領域:</span>
+                      <span>{trainingData?.v3Integration?.skillGapAnalysis?.length || 0}項目</span>
                     </div>
-                    <div className={styles.trainingPlan}>
-                      <strong>推奨研修:</strong> {gap.trainingPlan}
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">🎓 推奨研修:</span>
+                      <span>{trainingData?.v3Integration?.skillGapAnalysis?.length || 0}プログラム</span>
                     </div>
                   </div>
-                ))}
-              </div>
+                  <p className="text-gray-700">
+                    V3評価システムの結果と連動した個人向け学習プランが効果的に実行されています。
+                    評価で特定されたスキルギャップに基づく研修推奨により、効率的な能力向上を実現しています。
+                  </p>
+                </CardContent>
+              </Card>
+
+              {/* スキル統合ダッシュボード */}
+              <Card className="mb-6">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    🎯 統合スキル分析
+                    <Badge variant="outline" style={{ backgroundColor: CHART_COLORS.primary, color: 'white' }}>
+                      評価連動
+                    </Badge>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {/* 技術スキルとソフトスキルの統合表示 */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    {/* 技術スキル */}
+                    <div className="space-y-4">
+                      <h4 className="font-medium text-gray-800 flex items-center gap-2">
+                        🛠️ 技術スキル
+                      </h4>
+                      {trainingData?.skillDevelopment?.technicalSkills?.map((skill: any, index: number) => (
+                        <div key={index} className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="font-medium text-gray-800">{skill.skill}</span>
+                            <span className="text-lg font-bold" style={{ color: CHART_COLORS.primary }}>
+                              {skill.level}/{skill.target}
+                            </span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+                            <div 
+                              className="h-2 rounded-full transition-all duration-300" 
+                              style={{ 
+                                width: `${skill.level}%`,
+                                backgroundColor: skill.level >= skill.target ? CHART_COLORS.success : 
+                                                skill.level >= skill.target * 0.8 ? CHART_COLORS.primary :
+                                                skill.level >= skill.target * 0.6 ? CHART_COLORS.warning : CHART_COLORS.danger
+                              }}
+                            />
+                          </div>
+                          <div className="flex justify-between text-sm text-gray-600">
+                            <span>現在レベル: {skill.level}</span>
+                            <span>目標: {skill.target}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* ソフトスキル */}
+                    <div className="space-y-4">
+                      <h4 className="font-medium text-gray-800 flex items-center gap-2">
+                        🤝 ソフトスキル
+                      </h4>
+                      {trainingData?.skillDevelopment?.softSkills?.map((skill: any, index: number) => (
+                        <div key={index} className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="font-medium text-gray-800">{skill.skill}</span>
+                            <span className="text-lg font-bold" style={{ color: CHART_COLORS.success }}>
+                              {skill.level}/{skill.target}
+                            </span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+                            <div 
+                              className="h-2 rounded-full transition-all duration-300" 
+                              style={{ 
+                                width: `${skill.level}%`,
+                                backgroundColor: skill.level >= skill.target ? CHART_COLORS.success : 
+                                                skill.level >= skill.target * 0.8 ? CHART_COLORS.primary :
+                                                skill.level >= skill.target * 0.6 ? CHART_COLORS.warning : CHART_COLORS.danger
+                              }}
+                            />
+                          </div>
+                          <div className="flex justify-between text-sm text-gray-600">
+                            <span>現在レベル: {skill.level}</span>
+                            <span>目標: {skill.target}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* V3評価ギャップ分析 */}
+                  <div className="space-y-4">
+                    <h4 className="font-medium text-gray-800 flex items-center gap-2">
+                      📈 V3評価ギャップ分析
+                    </h4>
+                    {trainingData?.v3Integration?.skillGapAnalysis?.map((gap: any, index: number) => (
+                      <div key={index} className="p-4 bg-gradient-to-r from-purple-50 to-violet-50 rounded-lg border border-purple-200">
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center gap-3">
+                            <span className="font-medium text-gray-800">{gap.area}</span>
+                            <Badge style={{ 
+                              backgroundColor: gap.currentLevel >= gap.targetLevel * 0.9 ? CHART_COLORS.success : 
+                                              gap.currentLevel >= gap.targetLevel * 0.7 ? CHART_COLORS.warning : CHART_COLORS.danger,
+                              color: 'white'
+                            }}>
+                              ギャップ: {gap.targetLevel - gap.currentLevel}
+                            </Badge>
+                          </div>
+                          <span className="text-lg font-bold" style={{ color: '#8b5cf6' }}>
+                            {gap.currentLevel} → {gap.targetLevel}
+                          </span>
+                        </div>
+                        
+                        <div className="w-full bg-gray-200 rounded-full h-3 mb-3 relative">
+                          <div 
+                            className="h-3 rounded-full transition-all duration-300" 
+                            style={{ 
+                              width: `${gap.currentLevel}%`,
+                              backgroundColor: '#8b5cf6'
+                            }}
+                          />
+                          <div 
+                            className="absolute top-0 h-3 w-1 bg-red-500" 
+                            style={{ left: `${gap.targetLevel}%` }}
+                          />
+                          <div 
+                            className="absolute -top-6 text-xs text-red-600 font-medium"
+                            style={{ left: `${gap.targetLevel}%`, transform: 'translateX(-50%)' }}
+                          >
+                            目標
+                          </div>
+                        </div>
+                        
+                        <div className="bg-white p-3 rounded border">
+                          <div className="flex items-start gap-2">
+                            <span className="text-purple-600">🎓</span>
+                            <div>
+                              <span className="font-medium text-gray-800">推奨研修: </span>
+                              <span className="text-gray-700">{gap.trainingPlan}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* 統合インサイト */}
+                  <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <h4 className="font-medium text-gray-800 mb-2 flex items-center gap-2">
+                      💡 統合スキル分析インサイト
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <div className="flex items-start gap-2 mb-2">
+                          <span className="text-green-600">✓</span>
+                          <span>技術スキルの平均達成度: {Math.round((trainingData?.skillDevelopment?.technicalSkills?.reduce((sum: number, skill: any) => sum + skill.level, 0) || 0) / (trainingData?.skillDevelopment?.technicalSkills?.length || 1))}%</span>
+                        </div>
+                        <div className="flex items-start gap-2 mb-2">
+                          <span className="text-green-600">✓</span>
+                          <span>ソフトスキルの平均達成度: {Math.round((trainingData?.skillDevelopment?.softSkills?.reduce((sum: number, skill: any) => sum + skill.level, 0) || 0) / (trainingData?.skillDevelopment?.softSkills?.length || 1))}%</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div className="flex items-start gap-2 mb-2">
+                          <span className="text-orange-600">△</span>
+                          <span>V3評価での重点改善領域に集中した学習が効果的</span>
+                        </div>
+                        <div className="flex items-start gap-2 mb-2">
+                          <span className="text-blue-600">ℹ</span>
+                          <span>評価と研修の連動により効率的なスキル向上を実現</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           )}
         </>
