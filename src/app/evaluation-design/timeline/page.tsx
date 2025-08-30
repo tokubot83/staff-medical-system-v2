@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Calendar,
   CheckCircle2,
+  CheckCircle,
   Circle,
   Clock,
   AlertCircle,
@@ -31,11 +32,299 @@ import {
   Sparkles,
   BookOpen,
   GraduationCap,
-  Bell
+  Bell,
+  AlertTriangle
 } from 'lucide-react';
 import Link from 'next/link';
 import SystemIntegrationService, { CrossSystemAlert } from '@/services/systemIntegrationService';
 import IntegrationFlowVisualization from '@/components/IntegrationFlowVisualization';
+
+// 評価担当者向け動的アクションブロック
+const EvaluationManagerActionBlock: React.FC = () => {
+  const [urgentTasks, setUrgentTasks] = useState<any[]>([]);
+  const [todayTasks, setTodayTasks] = useState<any[]>([]);
+  const [thisWeekTasks, setThisWeekTasks] = useState<any[]>([]);
+  const [upcomingDeadlines, setUpcomingDeadlines] = useState<any[]>([]);
+  const [systemAlerts, setSystemAlerts] = useState<any[]>([]);
+
+  useEffect(() => {
+    // 現在の日時に基づいて動的にタスクを生成
+    const today = new Date();
+    const currentMonth = today.getMonth() + 1;
+    
+    // 緊急タスクの設定（研修システム連動）
+    const urgent = [];
+    const todayTask = [];
+    const weekTask = [];
+    const deadlines = [];
+    const alerts = [];
+
+    // 3月の場合：技術評価実施の重要月
+    if (currentMonth === 3) {
+      urgent.push({
+        id: 'march-urgent-1',
+        title: '技術評価シート配布完了確認',
+        description: '3月15日実施予定の技術評価シート配布状況確認',
+        priority: 'critical',
+        deadline: '今日まで',
+        action: '配布完了率確認',
+        impact: '評価実施スケジュールに直接影響',
+        estimatedTime: '20分',
+        relatedSystem: '研修システム',
+        dependentTraining: '必須研修未完了者17名の対応'
+      });
+      
+      todayTask.push({
+        id: 'march-today-1',
+        title: '評価実施準備の最終確認',
+        description: '技術評価実施に向けた事前チェック',
+        priority: 'high',
+        deadline: '今日中',
+        estimatedTime: '45分'
+      });
+    }
+
+    // 6月の場合：夏季貢献度評価月
+    if (currentMonth === 6) {
+      urgent.push({
+        id: 'june-urgent-1',
+        title: '夏季貢献度評価データ収集',
+        description: '各施設からの評価データ収集期限が近づいています',
+        priority: 'high',
+        deadline: '3日以内',
+        action: 'データ収集状況確認',
+        impact: '評価スケジュールの遵守',
+        estimatedTime: '1時間',
+        relatedSystem: '研修システム',
+        dependentTraining: '第1四半期研修効果測定データと連携'
+      });
+    }
+
+    // 12月の場合：冬季貢献度評価と年間総括
+    if (currentMonth === 12) {
+      urgent.push({
+        id: 'dec-urgent-1',
+        title: '冬季貢献度評価とROI分析連携',
+        description: '年間研修ROI分析結果と貢献度評価の整合性確認',
+        priority: 'high',
+        deadline: '1週間以内',
+        action: 'データ連携確認',
+        impact: '年間評価の公正性確保',
+        estimatedTime: '2時間',
+        relatedSystem: '研修システム',
+        dependentTraining: '年間研修ROI分析完了待ち'
+      });
+    }
+
+    // 1月の場合：評価制度設計更新
+    if (currentMonth === 1) {
+      urgent.push({
+        id: 'jan-urgent-1',
+        title: '新年度評価制度設計と研修マッピング',
+        description: '前年度データを基に評価項目と研修プログラムの整合性確認',
+        priority: 'high',
+        deadline: '2週間以内',
+        action: 'マッピング表更新',
+        impact: '新年度評価の精度向上',
+        estimatedTime: '3時間',
+        relatedSystem: '研修システム',
+        dependentTraining: '前年度研修効果分析データ必須'
+      });
+    }
+
+    // 評価期限の設定
+    deadlines.push({
+      id: 'deadline-1',
+      title: currentMonth === 3 ? '技術評価実施' : 
+              currentMonth === 6 ? '夏季貢献度評価' :
+              currentMonth === 12 ? '冬季貢献度評価' : '次回評価',
+      date: currentMonth === 3 ? '3月15日' : 
+            currentMonth === 6 ? '6月30日' :
+            currentMonth === 12 ? '12月20日' : '未定',
+      participants: currentMonth === 3 ? '技術職全員（85名）' :
+                    currentMonth === 6 ? '全職員（142名）' : 
+                    currentMonth === 12 ? '全職員（142名）' : '未定',
+      trainingDependency: currentMonth === 3 ? '医療安全研修完了必須' :
+                           currentMonth === 6 ? '第1四半期研修効果測定連携' :
+                           currentMonth === 12 ? '年間研修ROI分析連携' : '未定'
+    });
+
+    // システムアラートの設定
+    alerts.push({
+      id: 'alert-1',
+      type: 'integration',
+      title: '研修システム連携状況',
+      status: currentMonth === 3 ? 'attention' : currentMonth === 6 ? 'good' : 'normal',
+      message: currentMonth === 3 ? '必須研修未完了者の評価実施可否要確認' :
+               currentMonth === 6 ? '研修効果測定データとの相関分析準備完了' :
+               '正常に連携中',
+      action: '連携状況詳細確認'
+    });
+
+    setUrgentTasks(urgent);
+    setTodayTasks(todayTask);
+    setThisWeekTasks(weekTask);
+    setUpcomingDeadlines(deadlines);
+    setSystemAlerts(alerts);
+  }, []);
+
+  const getPriorityBadge = (priority: string) => {
+    switch (priority) {
+      case 'critical':
+        return <Badge className="bg-red-600 text-white animate-pulse">🚨 緊急</Badge>;
+      case 'high':
+        return <Badge className="bg-orange-500 text-white">高優先</Badge>;
+      case 'medium':
+        return <Badge className="bg-yellow-500 text-white">中優先</Badge>;
+      default:
+        return <Badge variant="outline">通常</Badge>;
+    }
+  };
+
+  return (
+    <div className="mb-8">
+      <Card className="border-2 border-purple-200 bg-gradient-to-r from-purple-50 to-blue-50">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-3">
+            <div className="p-2 bg-purple-600 rounded-lg">
+              <Target className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-gray-800">評価担当者 - アクションセンター</h3>
+              <p className="text-sm text-gray-600 mt-1">研修システムと連動した評価業務の優先タスクを表示</p>
+            </div>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* 緊急タスク */}
+            <div>
+              <h4 className="font-semibold text-red-800 mb-3 flex items-center gap-2">
+                <AlertTriangle className="h-4 w-4" />
+                緊急対応 ({urgentTasks.length})
+              </h4>
+              <div className="space-y-3">
+                {urgentTasks.map((task) => (
+                  <Card key={task.id} className="border border-red-200 bg-red-50">
+                    <CardContent className="p-4">
+                      <div className="flex items-start justify-between mb-2">
+                        <h5 className="font-medium text-sm text-red-900">{task.title}</h5>
+                        {getPriorityBadge(task.priority)}
+                      </div>
+                      <p className="text-xs text-red-700 mb-3">{task.description}</p>
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <Clock className="h-3 w-3 text-red-500" />
+                          <span className="text-xs text-red-600">期限: {task.deadline}</span>
+                        </div>
+                        {task.relatedSystem && (
+                          <div className="flex items-center gap-2">
+                            <BookOpen className="h-3 w-3 text-purple-500" />
+                            <span className="text-xs text-purple-600">{task.relatedSystem}: {task.dependentTraining}</span>
+                          </div>
+                        )}
+                        <div className="flex items-center gap-2">
+                          <Target className="h-3 w-3 text-blue-500" />
+                          <span className="text-xs text-blue-600">影響: {task.impact}</span>
+                        </div>
+                      </div>
+                      <Button size="sm" className="mt-3 w-full bg-red-600 hover:bg-red-700">
+                        {task.action}
+                      </Button>
+                    </CardContent>
+                  </Card>
+                ))}
+                {urgentTasks.length === 0 && (
+                  <p className="text-sm text-gray-500 text-center p-4">緊急タスクはありません</p>
+                )}
+              </div>
+            </div>
+
+            {/* 今日のタスク */}
+            <div>
+              <h4 className="font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                <Calendar className="h-4 w-4" />
+                今日のタスク ({todayTasks.length})
+              </h4>
+              <div className="space-y-3">
+                {todayTasks.map((task) => (
+                  <Card key={task.id} className="border border-blue-200 bg-blue-50">
+                    <CardContent className="p-4">
+                      <div className="flex items-start justify-between mb-2">
+                        <h5 className="font-medium text-sm text-blue-900">{task.title}</h5>
+                        {getPriorityBadge(task.priority)}
+                      </div>
+                      <p className="text-xs text-blue-700 mb-3">{task.description}</p>
+                      <div className="flex items-center gap-2 mb-2">
+                        <Clock className="h-3 w-3 text-blue-500" />
+                        <span className="text-xs text-blue-600">所要時間: {task.estimatedTime}</span>
+                      </div>
+                      <Button size="sm" className="w-full bg-blue-600 hover:bg-blue-700">
+                        開始
+                      </Button>
+                    </CardContent>
+                  </Card>
+                ))}
+                {todayTasks.length === 0 && (
+                  <p className="text-sm text-gray-500 text-center p-4">今日のタスクはありません</p>
+                )}
+              </div>
+            </div>
+
+            {/* 評価スケジュール・システム連携状況 */}
+            <div>
+              <h4 className="font-semibold text-purple-800 mb-3 flex items-center gap-2">
+                <TrendingUp className="h-4 w-4" />
+                評価予定・システム連携
+              </h4>
+              <div className="space-y-3">
+                {upcomingDeadlines.map((deadline) => (
+                  <Card key={deadline.id} className="border border-purple-200 bg-purple-50">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <h5 className="font-medium text-sm text-purple-900">{deadline.title}</h5>
+                        <Badge className="bg-purple-600 text-white">予定</Badge>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-xs text-purple-700">日程: {deadline.date}</p>
+                        <p className="text-xs text-purple-700">対象: {deadline.participants}</p>
+                        <div className="flex items-center gap-1">
+                          <BookOpen className="h-3 w-3 text-green-500" />
+                          <p className="text-xs text-green-700">研修連携: {deadline.trainingDependency}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+                
+                {systemAlerts.map((alert) => (
+                  <Card key={alert.id} className="border border-green-200 bg-green-50">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <h5 className="font-medium text-sm text-green-900">{alert.title}</h5>
+                        <Badge className={
+                          alert.status === 'good' ? 'bg-green-600 text-white' :
+                          alert.status === 'attention' ? 'bg-orange-500 text-white' :
+                          'bg-gray-500 text-white'
+                        }>
+                          {alert.status === 'good' ? '良好' : alert.status === 'attention' ? '要注意' : '正常'}
+                        </Badge>
+                      </div>
+                      <p className="text-xs text-green-700 mb-2">{alert.message}</p>
+                      <Button size="sm" variant="outline" className="w-full">
+                        {alert.action}
+                      </Button>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
 
 interface MonthTask {
   id: string;
@@ -109,260 +398,27 @@ export default function EvaluationTimelinePage() {
     setSystemAlerts(updatedAlerts);
   };
 
-  // 年間スケジュールデータ
+  // 年間スケジュールデータ（教育・研修管理ページと同じ構造に統一）
   const yearSchedule: MonthSchedule[] = [
-    {
-      month: 4,
-      name: '4月',
-      status: 'completed',
-      tasks: [
-        {
-          id: 'apr-1',
-          title: '前年度評価結果フィードバック',
-          description: '前年度の最終評価結果を各施設・職員へフィードバック',
-          status: 'completed',
-          subtasks: [
-            { id: 'apr-1-1', title: '評価結果通知書の送付', completed: true },
-            { id: 'apr-1-2', title: '個別面談の実施', completed: true },
-            { id: 'apr-1-3', title: '昇給・賞与への反映', completed: true }
-          ]
-        }
-      ],
-      trainingTasks: [
-        {
-          id: 'apr-training-1',
-          title: '基礎看護技術研修 完了',
-          status: 'completed',
-          impact: '新人看護師の技術向上',
-          dependency: '前年度評価結果'
-        },
-        {
-          id: 'apr-training-2',
-          title: '個別研修計画の確定・通知',
-          status: 'completed',
-          impact: '評価連動型研修の開始',
-          dependency: '3月技術評価結果'
-        }
-      ]
-    },
-    {
-      month: 5,
-      name: '5月',
-      status: 'completed',
-      tasks: [
-        {
-          id: 'may-1',
-          title: '上半期活動計画策定',
-          description: '施設・法人の上半期活動計画を策定',
-          status: 'completed'
-        }
-      ],
-      trainingTasks: [
-        {
-          id: 'may-training-1',
-          title: '専門研修プログラム開始',
-          status: 'completed',
-          impact: '専門スキル向上',
-          dependency: '4月基礎研修完了'
-        }
-      ]
-    },
-    {
-      month: 6,
-      name: '6月',
-      status: 'completed',
-      highlight: true,
-      alerts: systemAlerts.filter(alert => alert.month === 6),
-      integrationNote: '夏季貢献度評価と第1四半期研修効果測定の連携',
-      tasks: [
-        {
-          id: 'jun-1',
-          title: '夏季貢献度評価（25点）',
-          description: '上半期の施設・法人貢献度を評価',
-          status: 'completed',
-          dueDate: '6月30日',
-          subtasks: [
-            { id: 'jun-1-1', title: '各施設から評価データ収集', completed: true },
-            { id: 'jun-1-2', title: 'Excelデータ取込・検証', completed: true },
-            { id: 'jun-1-3', title: '相対評価ランキング作成', completed: true },
-            { id: 'jun-1-4', title: '評価確定・承認', completed: true }
-          ],
-          actions: [
-            { label: 'Excelテンプレート', href: '/templates/contribution-summer.xlsx' },
-            { label: '取込履歴', href: '/evaluation-design/import-history' }
-          ]
-        }
-      ],
-      trainingTasks: [
-        {
-          id: 'jun-training-1',
-          title: '第1四半期研修効果測定',
-          status: 'completed',
-          impact: '貢献度評価+3点向上',
-          dependency: '4-5月実施研修データ'
-        },
-        {
-          id: 'jun-training-2',
-          title: '貢献度スコアと研修受講の相関分析',
-          status: 'completed',
-          impact: '研修効果の定量的証明',
-          dependency: '夏季貢献度評価結果'
-        }
-      ]
-    },
-    {
-      month: 7,
-      name: '7月',
-      status: 'completed',
-      tasks: [
-        {
-          id: 'jul-1',
-          title: '夏季評価結果通知',
-          description: '夏季貢献度評価の結果を通知',
-          status: 'completed'
-        }
-      ],
-      trainingTasks: [
-        {
-          id: 'jul-training-1',
-          title: '下半期研修計画調整',
-          status: 'completed',
-          impact: '評価結果に基づく最適化',
-          dependency: '6月評価相関分析結果'
-        }
-      ]
-    },
-    {
-      month: 8,
-      name: '8月',
-      status: currentMonth === 8 ? 'current' : currentMonth > 8 ? 'completed' : 'upcoming',
-      tasks: [],
-      trainingTasks: [
-        {
-          id: 'aug-training-1',
-          title: '医療安全研修 集中実施',
-          status: currentMonth > 8 ? 'completed' : 'in-progress',
-          impact: '必須研修の完了',
-          dependency: 'なし'
-        },
-        {
-          id: 'aug-training-2',
-          title: '未受講者への個別対応（25名）',
-          status: currentMonth > 8 ? 'completed' : 'pending',
-          impact: '100%受講達成',
-          dependency: '受講管理データ'
-        }
-      ]
-    },
-    {
-      month: 9,
-      name: '9月',
-      status: currentMonth === 9 ? 'current' : currentMonth > 9 ? 'completed' : 'upcoming',
-      tasks: [],
-      trainingTasks: [
-        {
-          id: 'sep-training-1',
-          title: 'スキル向上研修実施',
-          status: currentMonth > 9 ? 'completed' : 'pending',
-          impact: '年末評価への準備',
-          dependency: 'なし'
-        }
-      ]
-    },
-    {
-      month: 10,
-      name: '10月',
-      status: currentMonth === 10 ? 'current' : currentMonth > 10 ? 'completed' : 'upcoming',
-      tasks: [
-        {
-          id: 'oct-1',
-          title: '下半期活動計画策定',
-          description: '施設・法人の下半期活動計画を策定',
-          status: currentMonth > 10 ? 'completed' : 'pending'
-        }
-      ],
-      trainingTasks: [
-        {
-          id: 'oct-training-1',
-          title: '年間研修進捗レビュー',
-          status: currentMonth > 10 ? 'completed' : 'pending',
-          impact: '年末評価準備',
-          dependency: 'Q3研修結果'
-        }
-      ]
-    },
-    {
-      month: 11,
-      name: '11月',
-      status: currentMonth === 11 ? 'current' : currentMonth > 11 ? 'completed' : 'upcoming',
-      tasks: [],
-      trainingTasks: [
-        {
-          id: 'nov-training-1',
-          title: '年末評価対策研修',
-          status: currentMonth > 11 ? 'completed' : 'pending',
-          impact: '評価スコア底上げ',
-          dependency: 'なし'
-        }
-      ]
-    },
-    {
-      month: 12,
-      name: '12月',
-      status: currentMonth === 12 ? 'current' : currentMonth > 12 || currentMonth < 4 ? 'completed' : 'upcoming',
-      highlight: true,
-      alerts: systemAlerts.filter(alert => alert.month === 12),
-      integrationNote: '冬季貢献度評価と年間研修ROI分析の重要な連携月',
-      tasks: [
-        {
-          id: 'dec-1',
-          title: '冬季貢献度評価（25点）',
-          description: '下半期の施設・法人貢献度を評価',
-          status: currentMonth > 12 || currentMonth < 4 ? 'completed' : 'pending',
-          dueDate: '12月20日',
-          subtasks: [
-            { id: 'dec-1-1', title: '各施設から評価データ収集', completed: currentMonth > 12 || currentMonth < 4 },
-            { id: 'dec-1-2', title: 'Excelデータ取込・検証', completed: currentMonth > 12 || currentMonth < 4 },
-            { id: 'dec-1-3', title: '相対評価ランキング作成', completed: currentMonth > 12 || currentMonth < 4 },
-            { id: 'dec-1-4', title: '年間貢献度スコア確定', completed: currentMonth > 12 || currentMonth < 4 }
-          ]
-        }
-      ],
-      trainingTasks: [
-        {
-          id: 'dec-training-1',
-          title: '年間研修ROI分析',
-          status: currentMonth > 12 || currentMonth < 4 ? 'completed' : 'pending',
-          impact: 'ROI 125%達成',
-          dependency: '年間貢献度スコア確定データ'
-        },
-        {
-          id: 'dec-training-2',
-          title: '高成果者の研修パターン分析',
-          status: 'pending',
-          impact: '成功モデルの横展開',
-          dependency: '冬季評価上位者の研修履歴'
-        }
-      ]
-    },
+    // 1月 - 評価制度設計・研修計画調整期
     {
       month: 1,
       name: '1月',
       status: currentMonth === 1 ? 'current' : currentMonth > 1 ? 'completed' : 'upcoming',
       highlight: true,
       alerts: systemAlerts.filter(alert => alert.month === 1),
-      integrationNote: '研修計画調整期と評価制度設計の相互影響',
+      integrationNote: '評価制度設計と研修計画調整の重要な連携月',
       tasks: [
         {
-          id: 'jan-1',
+          id: 'jan-eval-1',
           title: '評価制度設計・更新',
           description: '新年度評価制度の詳細設計と配点調整',
           status: currentMonth > 1 ? 'completed' : 'pending',
           dueDate: '1月31日',
           subtasks: [
-            { id: 'jan-1-1', title: '法人統一項目（30点）の配分設計', completed: currentMonth > 1 },
-            { id: 'jan-1-2', title: '施設特化項目（20点）の選定', completed: currentMonth > 1 },
-            { id: 'jan-1-3', title: '技術評価項目（50点）の更新', completed: currentMonth > 1 }
+            { id: 'jan-eval-1-1', title: '法人統一項目（30点）の配分設計', completed: currentMonth > 1 },
+            { id: 'jan-eval-1-2', title: '施設特化項目（20点）の選定', completed: currentMonth > 1 },
+            { id: 'jan-eval-1-3', title: '技術評価項目（50点）の更新', completed: currentMonth > 1 }
           ]
         }
       ],
@@ -371,60 +427,20 @@ export default function EvaluationTimelinePage() {
           id: 'jan-training-1',
           title: '前年度評価データから研修効果分析',
           status: currentMonth > 1 ? 'completed' : 'pending',
-          impact: '研修ROI 120%達成',
-          dependency: '12月冬季貢献度評価結果'
+          impact: '研修ROI 120%達成目標',
+          dependency: '12月冬季貢献度評価結果（70点未満対象）'
         },
         {
           id: 'jan-training-2',
           title: '評価項目と研修プログラムのマッピング',
           status: currentMonth > 1 ? 'completed' : 'pending',
           impact: '全項目カバー率100%',
-          dependency: '前年度年間技術評価総合スコア'
-        },
-        {
-          id: 'jan-training-3',
-          title: '必須研修カリキュラム策定',
-          status: currentMonth > 1 ? 'completed' : 'pending',
-          impact: '評価制度との整合性確保',
-          dependency: '評価制度設計結果'
+          dependency: '前年度年間技術評価総合スコア（65点未満・要強化項目）'
         }
       ]
     },
-    {
-      month: 2,
-      name: '2月',
-      status: currentMonth === 2 ? 'current' : currentMonth > 2 ? 'completed' : 'upcoming',
-      tasks: [
-        {
-          id: 'feb-1',
-          title: '評価制度の承認',
-          description: '法人本部での最終承認と調整',
-          status: currentMonth > 2 ? 'completed' : 'pending',
-          dueDate: '2月28日',
-          subtasks: [
-            { id: 'feb-1-1', title: '法人経営会議での承認', completed: currentMonth > 2 },
-            { id: 'feb-1-2', title: '全施設への通知', completed: currentMonth > 2 },
-            { id: 'feb-1-3', title: '評価者研修の実施', completed: currentMonth > 2 }
-          ]
-        }
-      ],
-      trainingTasks: [
-        {
-          id: 'feb-training-1',
-          title: '評価者向け研修実施',
-          status: currentMonth > 2 ? 'completed' : 'pending',
-          impact: '公正な評価実施の担保',
-          dependency: '評価制度承認'
-        },
-        {
-          id: 'feb-training-2',
-          title: 'プリセプター養成研修',
-          status: currentMonth > 2 ? 'completed' : 'planned',
-          impact: '新人教育体制強化',
-          dependency: 'なし'
-        }
-      ]
-    },
+    
+    // 3月 - 技術評価実施月
     {
       month: 3,
       name: '3月',
@@ -434,16 +450,16 @@ export default function EvaluationTimelinePage() {
       integrationNote: '技術評価実施と研修効果測定の最重要連携月',
       tasks: [
         {
-          id: 'mar-1',
+          id: 'mar-eval-1',
           title: '技術評価実施（50点）',
-          description: '年間の技術・スキル評価を実施',
+          description: '年度末技術評価・年間総合評価決定',
           status: currentMonth > 3 ? 'completed' : 'pending',
           dueDate: '3月15日',
           subtasks: [
-            { id: 'mar-1-1', title: '評価シート配布', completed: currentMonth > 3 },
-            { id: 'mar-1-2', title: '上司評価・本人評価の実施', completed: currentMonth > 3 },
-            { id: 'mar-1-3', title: '100点満点スコア確定', completed: currentMonth > 3 },
-            { id: 'mar-1-4', title: '年間総合評価決定', completed: currentMonth > 3 }
+            { id: 'mar-eval-1-1', title: '評価シート配布', completed: currentMonth > 3 },
+            { id: 'mar-eval-1-2', title: '上司評価・本人評価の実施', completed: currentMonth > 3 },
+            { id: 'mar-eval-1-3', title: '100点満点スコア確定', completed: currentMonth > 3 },
+            { id: 'mar-eval-1-4', title: '年間総合評価決定', completed: currentMonth > 3 }
           ]
         }
       ],
@@ -459,15 +475,94 @@ export default function EvaluationTimelinePage() {
           id: 'mar-training-2',
           title: 'スコアギャップ基づく優先研修リスト作成',
           status: currentMonth > 3 ? 'completed' : 'pending',
-          impact: '65点未満職員への対応',
+          impact: '個別最適化研修',
           dependency: '100点満点スコア確定データ'
+        }
+      ]
+    },
+    
+    // 6月 - 夏季貢献度評価月
+    {
+      month: 6,
+      name: '6月',
+      status: currentMonth === 6 ? 'current' : currentMonth > 6 ? 'completed' : 'upcoming',
+      highlight: true,
+      alerts: systemAlerts.filter(alert => alert.month === 6),
+      integrationNote: '夏季貢献度評価と第1四半期研修効果測定の連携',
+      tasks: [
+        {
+          id: 'jun-eval-1',
+          title: '夏季貢献度評価（25点）',
+          description: '上半期の施設・法人貢献度を評価',
+          status: currentMonth > 6 ? 'completed' : 'pending',
+          dueDate: '6月30日',
+          subtasks: [
+            { id: 'jun-eval-1-1', title: '各施設から評価データ収集', completed: currentMonth > 6 },
+            { id: 'jun-eval-1-2', title: 'Excelデータ取込・検証', completed: currentMonth > 6 },
+            { id: 'jun-eval-1-3', title: '相対評価ランキング作成', completed: currentMonth > 6 },
+            { id: 'jun-eval-1-4', title: '評価確定・承認', completed: currentMonth > 6 }
+          ],
+          actions: [
+            { label: 'Excelテンプレート', href: '/templates/contribution-summer.xlsx' },
+            { label: '取込履歴', href: '/evaluation-design/import-history' }
+          ]
+        }
+      ],
+      trainingTasks: [
+        {
+          id: 'jun-training-1',
+          title: '第1四半期研修効果測定',
+          status: currentMonth > 6 ? 'completed' : 'pending',
+          impact: '貢献度評価+3点向上',
+          dependency: '4-5月実施研修完了データ'
         },
         {
-          id: 'mar-training-3',
-          title: '新年度研修予算配分提案',
-          status: currentMonth > 3 ? 'completed' : 'pending',
-          impact: '投資効率15%改善',
-          dependency: '年間総合評価・グレード決定結果'
+          id: 'jun-training-2',
+          title: '貢献度スコアと研修受講の相関分析',
+          status: currentMonth > 6 ? 'completed' : 'pending',
+          impact: '研修効果の定量的証明',
+          dependency: '夏季貢献度評価結果（リアルタイム）'
+        }
+      ]
+    },
+    
+    // 12月 - 冬季貢献度評価月
+    {
+      month: 12,
+      name: '12月',
+      status: currentMonth === 12 ? 'current' : currentMonth > 12 || currentMonth < 4 ? 'completed' : 'upcoming',
+      highlight: true,
+      alerts: systemAlerts.filter(alert => alert.month === 12),
+      integrationNote: '冬季貢献度評価と年間研修ROI分析の重要な連携月',
+      tasks: [
+        {
+          id: 'dec-eval-1',
+          title: '冬季貢献度評価（25点）',
+          description: '下半期の施設・法人貢献度を評価',
+          status: currentMonth > 12 || currentMonth < 4 ? 'completed' : 'pending',
+          dueDate: '12月20日',
+          subtasks: [
+            { id: 'dec-eval-1-1', title: '各施設から評価データ収集', completed: currentMonth > 12 || currentMonth < 4 },
+            { id: 'dec-eval-1-2', title: 'Excelデータ取込・検証', completed: currentMonth > 12 || currentMonth < 4 },
+            { id: 'dec-eval-1-3', title: '相対評価ランキング作成', completed: currentMonth > 12 || currentMonth < 4 },
+            { id: 'dec-eval-1-4', title: '年間貢献度スコア確定', completed: currentMonth > 12 || currentMonth < 4 }
+          ]
+        }
+      ],
+      trainingTasks: [
+        {
+          id: 'dec-training-1',
+          title: '年間研修ROI分析',
+          status: currentMonth > 12 || currentMonth < 4 ? 'completed' : 'pending',
+          impact: 'ROI 125%達成',
+          dependency: '年間貢献度スコア確定データ'
+        },
+        {
+          id: 'dec-training-2',
+          title: '高成果者の研修パターン分析',
+          status: currentMonth > 12 || currentMonth < 4 ? 'completed' : 'pending',
+          impact: '成功モデルの横展開',
+          dependency: '冬季評価上位者の研修履歴'
         }
       ]
     }
@@ -626,6 +721,9 @@ export default function EvaluationTimelinePage() {
           </Card>
         )}
 
+        {/* 評価担当者向けアクションセンター */}
+        <EvaluationManagerActionBlock />
+
         {/* メインコンテンツ */}
         <div className="grid grid-cols-12 gap-6">
           {/* 年間タイムライン */}
@@ -681,373 +779,123 @@ export default function EvaluationTimelinePage() {
             </Card>
           </div>
 
-          {/* 月別詳細 */}
+          {/* 月別詳細（教育・研修管理ページと同じ構造） */}
           <div className="col-span-9">
-            {selectedMonthData && (
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <CardTitle className="text-2xl flex items-center gap-2">
-                        <Calendar className="h-6 w-6" />
-                        {selectedMonthData.name}の作業・連携状況
-                      </CardTitle>
-                      <CardDescription className="mt-2">
-                        評価タスクと教育研修の連携状況を一元管理
-                      </CardDescription>
-                      {selectedMonthData.integrationNote && (
-                        <div className="mt-3 p-2 bg-blue-50 rounded-lg">
-                          <p className="text-sm text-blue-700 font-medium">
-                            🔗 {selectedMonthData.integrationNote}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {getMonthBadge(selectedMonthData.status)}
+            <div className="space-y-6">
+              {/* 選択月の情報ヘッダー */}
+              {selectedMonthData && (
+                <Card className={`border-2 ${selectedMonthData.status === 'current' ? 'border-blue-500 bg-gradient-to-br from-blue-100 via-indigo-50 to-purple-100 shadow-2xl' : selectedMonthData.highlight ? 'border-purple-400 bg-gradient-to-br from-purple-50 to-pink-50 shadow-lg' : 'border-gray-200'}`}>
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <h3 className={`font-bold text-2xl ${selectedMonthData.status === 'current' ? 'text-blue-800' : selectedMonthData.highlight ? 'text-purple-800' : 'text-gray-800'}`}>
+                          {selectedMonthData.name}
+                        </h3>
+                        {selectedMonthData.status === 'current' && <Badge className="bg-blue-600 text-white animate-pulse">🎯 実施中</Badge>}
+                        {selectedMonthData.highlight && selectedMonthData.status !== 'current' && (
+                          <Badge className="bg-purple-600 text-white">重要月</Badge>
+                        )}
+                      </div>
                       {selectedMonthData.alerts && selectedMonthData.alerts.length > 0 && (
                         <Badge className="bg-orange-100 text-orange-800">
                           <Bell className="h-3 w-3 mr-1" />
-                          {selectedMonthData.alerts.length}
+                          {selectedMonthData.alerts.length}件のアラート
                         </Badge>
                       )}
                     </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  {/* アラート表示 */}
-                  {selectedMonthData.alerts && selectedMonthData.alerts.length > 0 && (
-                    <div className="mb-6">
-                      <h4 className="font-semibold text-orange-800 mb-3 flex items-center gap-2">
-                        <Bell className="h-4 w-4" />
-                        この月のアラート
-                      </h4>
-                      <div className="space-y-2">
-                        {selectedMonthData.alerts.map((alert) => (
-                          <div key={alert.id} className={`p-3 rounded-lg border-l-4 ${
-                            alert.priority === 'high' ? 'border-l-red-500 bg-red-50' :
-                            alert.priority === 'medium' ? 'border-l-orange-500 bg-orange-50' :
-                            'border-l-yellow-500 bg-yellow-50'
-                          }`}>
-                            <p className="text-sm font-medium">{alert.message}</p>
-                            <div className="flex items-center gap-2 mt-2">
-                              <Badge className={
-                                alert.priority === 'high' ? 'bg-red-100 text-red-800' :
-                                alert.priority === 'medium' ? 'bg-orange-100 text-orange-800' :
-                                'bg-yellow-100 text-yellow-800'
-                              } size="sm">
-                                {alert.priority === 'high' ? '高優先' : 
-                                 alert.priority === 'medium' ? '中優先' : '低優先'}
-                              </Badge>
-                              {alert.actionRequired && (
-                                <Badge variant="outline" size="sm">対応必要</Badge>
-                              )}
-                            </div>
-                          </div>
-                        ))}
+                    {selectedMonthData.integrationNote && (
+                      <div className="mt-3 p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border">
+                        <div className="flex items-center gap-2">
+                          <Target className="h-4 w-4 text-purple-600" />
+                          <span className="text-sm font-semibold text-gray-700">システム連携:</span>
+                          <span className="text-sm text-purple-700">{selectedMonthData.integrationNote}</span>
+                        </div>
                       </div>
-                    </div>
-                  )}
-
-                  {/* 連携詳細ボタン */}
-                  {selectedMonthData.integrationNote && (
-                    <div className="mb-6 flex justify-center">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setShowDataFlow(!showDataFlow)}
-                        className="border-indigo-300 text-indigo-700 hover:bg-indigo-50"
-                      >
-                        <Target className="h-4 w-4 mr-2" />
-                        {showDataFlow ? 'データフローを閉じる' : '🔗 連携詳細・データフローを表示'}
-                      </Button>
-                    </div>
-                  )}
-
-                  {/* データフロー可視化 */}
-                  {showDataFlow && selectedMonthData.integrationNote && (
-                    <div className="mb-6">
-                      <IntegrationFlowVisualization
-                        month={selectedMonthData.month}
-                        nodes={[
-                          {
-                            id: `${selectedMonthData.month}-eval-1`,
-                            type: 'source',
-                            label: '評価データ',
-                            status: selectedMonthData.tasks?.[0]?.status || 'pending',
-                            data: { impact: '基準データ提供' }
-                          },
-                          {
-                            id: `${selectedMonthData.month}-process-1`,
-                            type: 'process',
-                            label: 'データ分析・処理',
-                            status: 'in-progress',
-                            data: { impact: '相関分析実施' }
-                          },
-                          {
-                            id: `${selectedMonthData.month}-training-1`,
-                            type: 'output',
-                            label: '研修計画生成',
-                            status: selectedMonthData.trainingTasks?.[0]?.status || 'pending',
-                            data: { impact: selectedMonthData.trainingTasks?.[0]?.impact }
-                          }
-                        ]}
-                        edges={[
-                          {
-                            from: `${selectedMonthData.month}-eval-1`,
-                            to: `${selectedMonthData.month}-process-1`,
-                            label: 'データ送信',
-                            type: 'data'
-                          },
-                          {
-                            from: `${selectedMonthData.month}-process-1`,
-                            to: `${selectedMonthData.month}-training-1`,
-                            label: '分析結果',
-                            type: 'trigger'
-                          }
-                        ]}
-                        onNodeClick={(node) => {
-                          console.log('Node clicked:', node);
-                        }}
-                      />
-                    </div>
-                  )}
-
-                  {/* メインコンテンツ: 2カラム表示 */}
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* 左側: 評価タスク（メイン） */}
-                    <div>
-                      <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 text-purple-800">
-                        <Target className="h-5 w-5" />
-                        評価管理タスク
-                      </h3>
-                      {(!selectedMonthData.tasks || selectedMonthData.tasks.length === 0) ? (
-                        <div className="text-center py-8 text-gray-500">
-                          <Calendar className="h-8 w-8 mx-auto mb-2 text-gray-300" />
-                          <p>この月に予定されている評価作業はありません</p>
-                        </div>
-                      ) : (
-                        <div className="space-y-4">
-                          {selectedMonthData.tasks.map((task) => (
-                            <Card key={task.id} className={`border-2 ${
-                              task.status === 'in-progress' ? 'border-blue-200 bg-blue-50' : ''
-                            }`}>
-                              <CardHeader>
-                                <div className="flex items-start justify-between">
-                                  <div className="flex items-start gap-3">
-                                    {getStatusIcon(task.status)}
-                                    <div className="flex-1">
-                                      <h4 className="font-semibold">{task.title}</h4>
-                                      {task.description && (
-                                        <p className="text-sm text-gray-600 mt-1">{task.description}</p>
-                                      )}
-                                      {task.dueDate && (
-                                        <div className="flex items-center gap-2 mt-2">
-                                          <Clock className="h-4 w-4 text-gray-500" />
-                                          <span className="text-sm text-gray-500">期限: {task.dueDate}</span>
-                                        </div>
-                                      )}
-                                    </div>
-                                  </div>
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => setExpandedTask(expandedTask === task.id ? null : task.id)}
-                                  >
-                                    <ChevronRight className={`h-4 w-4 transition-transform ${
-                                      expandedTask === task.id ? 'rotate-90' : ''
-                                    }`} />
-                                  </Button>
-                                </div>
-                              </CardHeader>
-                          
-                          {expandedTask === task.id && (
-                            <CardContent className="pt-0">
-                              {/* サブタスク */}
-                              {task.subtasks && (
-                                <div className="mb-4">
-                                  <h4 className="font-medium mb-2 text-sm">チェックリスト</h4>
-                                  <div className="space-y-2">
-                                    {task.subtasks.map((subtask) => (
-                                      <div key={subtask.id} className="flex items-center gap-2">
-                                        <input
-                                          type="checkbox"
-                                          checked={subtask.completed || isTaskSynced(subtask.id)}
-                                          className="rounded"
-                                          onChange={(e) => {
-                                            handleTaskCompletion(subtask.id, e.target.checked);
-                                          }}
-                                        />
-                                        <span className={`text-sm ${
-                                          subtask.completed ? 'line-through text-gray-500' : ''
-                                        }`}>
-                                          {subtask.title}
-                                        </span>
-                                      </div>
-                                    ))}
-                                  </div>
-                                  <Progress 
-                                    value={(task.subtasks.filter(st => st.completed).length / task.subtasks.length) * 100}
-                                    className="mt-3 h-2"
-                                  />
-                                </div>
-                              )}
-
-                              {/* アクションボタン */}
-                              {task.actions && (
-                                <div className="flex gap-2">
-                                  {task.actions.map((action, idx) => (
-                                    action.href ? (
-                                      <Link key={idx} href={action.href}>
-                                        <Button size="sm">
-                                          {action.label}
-                                        </Button>
-                                      </Link>
-                                    ) : (
-                                      <Button key={idx} size="sm" onClick={action.onClick}>
-                                        {action.label}
-                                      </Button>
-                                    )
-                                  ))}
-                                </div>
-                              )}
-                            </CardContent>
-                          )}
-                        </Card>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* 右側: 教育研修タスク（連携情報） */}
-                    <div>
-                      <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 text-green-800">
-                        <BookOpen className="h-5 w-5" />
-                        教育研修連携情報
-                      </h3>
-                      {(!selectedMonthData.trainingTasks || selectedMonthData.trainingTasks.length === 0) ? (
-                        <div className="text-center py-8 text-gray-500">
-                          <GraduationCap className="h-8 w-8 mx-auto mb-2 text-gray-300" />
-                          <p>この月に関連する研修情報はありません</p>
-                        </div>
-                      ) : (
-                        <div className="space-y-3">
-                          {selectedMonthData.trainingTasks.map((task) => (
-                            <div key={task.id} className={`p-4 border rounded-lg ${
-                              task.status === 'completed' ? 'bg-green-50 border-green-200' :
-                              task.status === 'in-progress' ? 'bg-blue-50 border-blue-200' :
-                              'bg-gray-50 border-gray-200'
-                            }`}>
-                              <div className="flex items-start gap-3">
-                                {task.status === 'completed' && <CheckCircle2 className="h-4 w-4 text-green-600 mt-0.5" />}
-                                {task.status === 'in-progress' && <Clock className="h-4 w-4 text-blue-600 mt-0.5" />}
-                                {task.status === 'pending' && <Circle className="h-4 w-4 text-gray-400 mt-0.5" />}
+                    )}
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-2 gap-6">
+                      {/* 左側：評価管理タスク */}
+                      <div className="border-r pr-4">
+                        <h4 className="text-md font-semibold mb-3 text-purple-800 flex items-center gap-2">
+                          <Target className="h-4 w-4" />
+                          評価管理タスク
+                        </h4>
+                        <div className="space-y-2">
+                          {selectedMonthData.tasks && selectedMonthData.tasks.length > 0 ? (
+                            selectedMonthData.tasks.map((task) => (
+                              <div key={task.id} className={`flex items-center gap-2 p-2 rounded-lg ${
+                                task.status === 'completed' ? 'bg-green-50' :
+                                task.status === 'in-progress' ? 'bg-blue-50' :
+                                task.status === 'pending' ? 'bg-yellow-50' : 'bg-gray-50'
+                              }`}>
+                                {getStatusIcon(task.status)}
                                 <div className="flex-1">
-                                  <h4 className="font-medium text-sm">{task.title}</h4>
+                                  <span className={`text-sm font-medium ${
+                                    task.status === 'completed' ? 'text-green-700' :
+                                    task.status === 'in-progress' ? 'text-blue-700' :
+                                    task.status === 'pending' ? 'text-yellow-700' : 'text-gray-700'
+                                  }`}>
+                                    {task.title}
+                                  </span>
+                                  {task.dueDate && (
+                                    <div className="text-xs text-gray-600 mt-1">期限: {task.dueDate}</div>
+                                  )}
+                                </div>
+                              </div>
+                            ))
+                          ) : (
+                            <div className="text-center p-3 bg-gray-100 rounded-lg">
+                              <span className="text-sm text-gray-600">通常の評価業務はありません</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      
+                      {/* 右側：研修システム連携状況 */}
+                      <div className="pl-4">
+                        <h4 className="text-md font-semibold mb-3 text-blue-800 flex items-center gap-2">
+                          <BookOpen className="h-4 w-4" />
+                          研修システム連携
+                        </h4>
+                        <div className="space-y-2">
+                          {selectedMonthData.trainingTasks && selectedMonthData.trainingTasks.length > 0 ? (
+                            selectedMonthData.trainingTasks.map((task) => (
+                              <div key={task.id} className={`flex items-center gap-2 p-2 rounded-lg ${
+                                task.status === 'completed' ? 'bg-green-50' :
+                                task.status === 'in-progress' ? 'bg-blue-50' :
+                                task.status === 'pending' ? 'bg-yellow-50' : 'bg-gray-50'
+                              }`}>
+                                {getTrainingTaskIcon(task.status)}
+                                <div className="flex-1">
+                                  <span className={`text-sm font-medium ${
+                                    task.status === 'completed' ? 'text-green-700' :
+                                    task.status === 'in-progress' ? 'text-blue-700' :
+                                    task.status === 'pending' ? 'text-yellow-700' : 'text-gray-700'
+                                  }`}>
+                                    {task.title}
+                                  </span>
                                   {task.impact && (
-                                    <div className="mt-2">
-                                      <span className="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded">
-                                        効果: {task.impact}
-                                      </span>
-                                    </div>
+                                    <div className="text-xs text-blue-600 mt-1">効果: {task.impact}</div>
                                   )}
                                   {task.dependency && (
-                                    <div className="mt-2 text-xs text-gray-600">
-                                      <strong>依存:</strong> {task.dependency}
-                                    </div>
+                                    <div className="text-xs text-gray-600 mt-1">依存: {task.dependency}</div>
                                   )}
                                 </div>
                               </div>
+                            ))
+                          ) : (
+                            <div className="text-center p-3 bg-gray-100 rounded-lg">
+                              <span className="text-sm text-gray-600">研修連携タスクはありません</span>
                             </div>
-                          ))}
-                          
-                          {/* 教育研修システムへのリンク */}
-                          <div className="mt-4 p-3 bg-green-50 rounded-lg border border-green-200">
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <p className="text-sm font-medium text-green-800">教育研修管理で詳細確認</p>
-                                <p className="text-xs text-green-600">研修スケジュールと進捗状況を確認できます</p>
-                              </div>
-                              <Link href={`/education?month=${selectedMonthData.month}`}>
-                                <Button size="sm" variant="outline" className="text-green-700 border-green-300 hover:bg-green-100">
-                                  <BookOpen className="h-4 w-4 mr-1" />
-                                  研修管理へ
-                                </Button>
-                              </Link>
-                            </div>
-                          </div>
+                          )}
                         </div>
-                      )}
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* 月別特別注意事項 */}
-            {selectedMonth === 1 && (
-              <Alert className="mt-6 border-orange-200 bg-orange-50">
-                <AlertCircle className="h-4 w-4 text-orange-600" />
-                <AlertDescription>
-                  <strong>重要:</strong> 1月は次年度の評価制度設計と研修計画の連携調整を行う重要な時期です。
-                  各施設の特性と研修効果を考慮した評価制度を構築してください。
-                  <div className="mt-3 flex gap-2">
-                    <Link href="/evaluation-design/wizard">
-                      <Button size="sm" className="bg-orange-600 hover:bg-orange-700">
-                        設計ウィザードを開始
-                      </Button>
-                    </Link>
-                    <Link href="/education">
-                      <Button size="sm" variant="outline">
-                        <BookOpen className="h-4 w-4 mr-2" />
-                        研修計画を確認
-                      </Button>
-                    </Link>
-                  </div>
-                </AlertDescription>
-              </Alert>
-            )}
-            
-            {selectedMonth === 3 && (
-              <Alert className="mt-6 border-purple-200 bg-purple-50">
-                <AlertCircle className="h-4 w-4 text-purple-600" />
-                <AlertDescription>
-                  <strong>重要:</strong> 3月は技術評価実施と研修効果測定の最重要連携月です。
-                  必須研修の完了状況を確認し、評価結果と研修効果の相関分析を実施してください。
-                  <div className="mt-3 flex gap-2">
-                    <Link href="/evaluation-execution">
-                      <Button size="sm" className="bg-purple-600 hover:bg-purple-700">
-                        評価実施へ
-                      </Button>
-                    </Link>
-                    <Link href="/education">
-                      <Button size="sm" variant="outline">
-                        <GraduationCap className="h-4 w-4 mr-2" />
-                        研修効果測定
-                      </Button>
-                    </Link>
-                  </div>
-                </AlertDescription>
-              </Alert>
-            )}
-
-            {/* 年間サマリーへのリンク */}
-            <Card className="mt-6 border-2 border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50">
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="font-semibold text-blue-800 mb-1">📈 年間連携サマリー</h4>
-                    <p className="text-sm text-blue-600">評価システムと教育研修システムの連携状況を俱瞰</p>
-                  </div>
-                  <Link href="/annual-integration-summary">
-                    <Button className="bg-blue-600 hover:bg-blue-700">
-                      <BarChart3 className="h-4 w-4 mr-2" />
-                      サマリーを表示
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
           </div>
         </div>
       </div>
