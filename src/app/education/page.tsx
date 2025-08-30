@@ -35,6 +35,318 @@ import {
 } from '@/data/evaluationMasterData';
 import SystemIntegrationService, { CrossSystemAlert } from '@/services/systemIntegrationService';
 
+// 教育研修担当者向け動的アクションブロック
+const TrainingManagerActionBlock: React.FC = () => {
+  const [urgentTasks, setUrgentTasks] = useState<any[]>([]);
+  const [todayTasks, setTodayTasks] = useState<any[]>([]);
+  const [thisWeekTasks, setThisWeekTasks] = useState<any[]>([]);
+  const [upcomingEvaluations, setUpcomingEvaluations] = useState<any[]>([]);
+  const [trainingAlerts, setTrainingAlerts] = useState<any[]>([]);
+
+  useEffect(() => {
+    // 現在の日時に基づいて動的にタスクを生成
+    const today = new Date();
+    const currentMonth = today.getMonth() + 1;
+    
+    // 緊急タスクの設定（評価スケジュール連動）
+    const urgent = [];
+    const todayTask = [];
+    const weekTask = [];
+    const evaluations = [];
+    const alerts = [];
+
+    // 3月の場合：技術評価前の必須タスク
+    if (currentMonth === 3) {
+      urgent.push({
+        id: 'march-urgent-1',
+        title: '技術評価前 必須研修未完了者確認',
+        description: '3月15日技術評価前に医療安全研修未完了者17名の対応が必要',
+        priority: 'critical',
+        deadline: '今日まで',
+        action: '個別通知送信',
+        impact: '評価実施可否に直接影響',
+        estimatedTime: '30分',
+        relatedSystem: '評価システム',
+        dependentEvaluation: '技術評価（3月15日予定）'
+      });
+      
+      todayTask.push({
+        id: 'march-today-1',
+        title: '個別研修計画の最終確認',
+        description: '評価結果連動型研修計画の事前チェック',
+        priority: 'high',
+        deadline: '今日中',
+        estimatedTime: '45分'
+      });
+    }
+
+    // 6月の場合：貢献度評価と研修効果測定
+    if (currentMonth === 6) {
+      urgent.push({
+        id: 'june-urgent-1',
+        title: '上半期研修効果測定レポート作成',
+        description: '6月貢献度評価に向けた研修ROI分析が必要',
+        priority: 'high',
+        deadline: '3日以内',
+        action: 'レポート作成開始',
+        impact: '貢献度評価の根拠データ',
+        estimatedTime: '2時間',
+        relatedSystem: '評価システム',
+        dependentEvaluation: '貢献度評価（6月30日予定）'
+      });
+    }
+
+    // 12月の場合：年間総括と次年度準備
+    if (currentMonth === 12) {
+      urgent.push({
+        id: 'dec-urgent-1',
+        title: '年間研修効果測定と次年度計画策定',
+        description: '冬季貢献度評価結果を踏まえた来年度研修計画の準備',
+        priority: 'high',
+        deadline: '1週間以内',
+        action: '計画策定会議設定',
+        impact: '次年度予算・体制に影響',
+        estimatedTime: '3時間',
+        relatedSystem: '評価システム',
+        dependentEvaluation: '冬季貢献度評価（12月20日予定）'
+      });
+    }
+
+    // 4月の場合：新年度研修開始と評価連携準備
+    if (currentMonth === 4) {
+      todayTask.push({
+        id: 'april-today-1',
+        title: '前年度評価結果から個別研修計画生成',
+        description: '3月技術評価結果（70点未満対象）から研修推奨リスト作成',
+        priority: 'high',
+        deadline: '今日中',
+        estimatedTime: '1時間'
+      });
+      
+      weekTask.push({
+        id: 'april-week-1',
+        title: '新人研修プログラムの最終調整',
+        description: '4月入職者向け基礎研修スケジュール確定',
+        priority: 'medium',
+        deadline: '今週中',
+        estimatedTime: '2時間'
+      });
+    }
+
+    // 評価予定の取得
+    evaluations.push({
+      id: 'eval-1',
+      title: currentMonth === 3 ? '技術評価実施予定' : 
+              currentMonth === 6 ? '上半期貢献度評価' :
+              currentMonth === 12 ? '冬季貢献度評価' : '次回評価',
+      date: currentMonth === 3 ? '3月15日' : 
+            currentMonth === 6 ? '6月30日' :
+            currentMonth === 12 ? '12月20日' : '未定',
+      participants: currentMonth === 3 ? '技術職全員（85名）' :
+                    currentMonth === 6 ? '全職員（142名）' : 
+                    currentMonth === 12 ? '全職員（142名）' : '未定',
+      trainingRequirement: currentMonth === 3 ? '医療安全研修完了必須' :
+                           currentMonth === 6 ? '上半期必須研修完了' :
+                           currentMonth === 12 ? '年間継続研修完了' : '未定'
+    });
+
+    // 研修アラートの設定
+    alerts.push({
+      id: 'alert-1',
+      type: 'warning',
+      title: '必須研修未完了者',
+      count: currentMonth === 3 ? 17 : currentMonth === 6 ? 8 : 12,
+      message: currentMonth === 3 ? '技術評価前に完了必須' :
+               currentMonth === 6 ? '貢献度評価に影響する可能性' :
+               '年間目標達成に要注意',
+      action: '個別通知・フォローアップ'
+    });
+
+    setUrgentTasks(urgent);
+    setTodayTasks(todayTask);
+    setThisWeekTasks(weekTask);
+    setUpcomingEvaluations(evaluations);
+    setTrainingAlerts(alerts);
+  }, []);
+
+  const getPriorityBadge = (priority: string) => {
+    switch (priority) {
+      case 'critical':
+        return <Badge className="bg-red-600 text-white animate-pulse">🚨 緊急</Badge>;
+      case 'high':
+        return <Badge className="bg-orange-500 text-white">高優先</Badge>;
+      case 'medium':
+        return <Badge className="bg-yellow-500 text-white">中優先</Badge>;
+      default:
+        return <Badge variant="outline">通常</Badge>;
+    }
+  };
+
+  return (
+    <div className="mb-8">
+      <Card className="border-2 border-blue-200 bg-gradient-to-r from-blue-50 to-purple-50">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-3">
+            <div className="p-2 bg-blue-600 rounded-lg">
+              <Sparkles className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-gray-800">教育研修担当者 - アクションセンター</h3>
+              <p className="text-sm text-gray-600 mt-1">評価スケジュールと連動した優先タスクを表示</p>
+            </div>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* 緊急タスク */}
+            <div className="space-y-4">
+              <h4 className="font-semibold text-red-700 flex items-center gap-2">
+                <AlertTriangle className="h-4 w-4" />
+                🔴 緊急対応 ({urgentTasks.length}件)
+              </h4>
+              <div className="space-y-3">
+                {urgentTasks.map((task) => (
+                  <div key={task.id} className="p-4 bg-white border border-red-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex items-start justify-between mb-2">
+                      <h5 className="font-medium text-gray-900 text-sm leading-tight">{task.title}</h5>
+                      {getPriorityBadge(task.priority)}
+                    </div>
+                    <p className="text-xs text-gray-600 mb-3">{task.description}</p>
+                    <div className="space-y-2 text-xs">
+                      <div className="flex items-center justify-between">
+                        <span className="text-red-600 font-medium">⏰ {task.deadline}</span>
+                        <span className="text-gray-500">所要時間: {task.estimatedTime}</span>
+                      </div>
+                      {task.dependentEvaluation && (
+                        <div className="p-2 bg-orange-50 border border-orange-200 rounded">
+                          <p className="text-orange-700 font-medium">📋 連動評価: {task.dependentEvaluation}</p>
+                          <p className="text-orange-600">影響: {task.impact}</p>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex gap-2 mt-3">
+                      <Button size="sm" className="bg-red-600 hover:bg-red-700 text-xs h-7 px-3">
+                        {task.action}
+                      </Button>
+                      <Button size="sm" variant="outline" className="text-xs h-7 px-3">
+                        詳細確認
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* 今日のタスク */}
+            <div className="space-y-4">
+              <h4 className="font-semibold text-orange-700 flex items-center gap-2">
+                <Clock className="h-4 w-4" />
+                🟡 今日中 ({todayTasks.length}件)
+              </h4>
+              <div className="space-y-3">
+                {todayTasks.map((task) => (
+                  <div key={task.id} className="p-4 bg-white border border-orange-200 rounded-lg shadow-sm">
+                    <div className="flex items-start justify-between mb-2">
+                      <h5 className="font-medium text-gray-900 text-sm">{task.title}</h5>
+                      {getPriorityBadge(task.priority)}
+                    </div>
+                    <p className="text-xs text-gray-600 mb-2">{task.description}</p>
+                    <div className="flex items-center justify-between text-xs mb-3">
+                      <span className="text-orange-600 font-medium">⏰ {task.deadline}</span>
+                      <span className="text-gray-500">所要時間: {task.estimatedTime}</span>
+                    </div>
+                    <Button size="sm" className="bg-orange-500 hover:bg-orange-600 text-xs h-7 w-full">
+                      開始する
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* 今週のタスク・評価予定 */}
+            <div className="space-y-4">
+              <h4 className="font-semibold text-green-700 flex items-center gap-2">
+                <Calendar className="h-4 w-4" />
+                🟢 今週・評価連携 ({thisWeekTasks.length + upcomingEvaluations.length}件)
+              </h4>
+              <div className="space-y-3">
+                {thisWeekTasks.map((task) => (
+                  <div key={task.id} className="p-4 bg-white border border-green-200 rounded-lg shadow-sm">
+                    <div className="flex items-start justify-between mb-2">
+                      <h5 className="font-medium text-gray-900 text-sm">{task.title}</h5>
+                      {getPriorityBadge(task.priority)}
+                    </div>
+                    <p className="text-xs text-gray-600 mb-2">{task.description}</p>
+                    <div className="flex items-center justify-between text-xs mb-3">
+                      <span className="text-green-600 font-medium">⏰ {task.deadline}</span>
+                      <span className="text-gray-500">所要時間: {task.estimatedTime}</span>
+                    </div>
+                    <Button size="sm" variant="outline" className="border-green-300 text-green-700 hover:bg-green-50 text-xs h-7 w-full">
+                      計画確認
+                    </Button>
+                  </div>
+                ))}
+                
+                {/* 評価予定情報 */}
+                {upcomingEvaluations.map((evaluation) => (
+                  <div key={evaluation.id} className="p-4 bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Target className="h-4 w-4 text-purple-600" />
+                      <h5 className="font-medium text-purple-800 text-sm">{evaluation.title}</h5>
+                    </div>
+                    <div className="space-y-1 text-xs">
+                      <p><span className="font-medium">実施日:</span> {evaluation.date}</p>
+                      <p><span className="font-medium">対象:</span> {evaluation.participants}</p>
+                      <p className="text-purple-700 font-medium">📚 必要研修: {evaluation.trainingRequirement}</p>
+                    </div>
+                    <div className="flex gap-2 mt-3">
+                      <Button size="sm" className="bg-purple-600 hover:bg-purple-700 text-xs h-7 px-2">
+                        研修状況確認
+                      </Button>
+                      <Button size="sm" variant="outline" className="border-purple-300 text-purple-700 text-xs h-7 px-2">
+                        評価詳細
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          
+          {/* アラートサマリー */}
+          {trainingAlerts.length > 0 && (
+            <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Bell className="h-5 w-5 text-yellow-600" />
+                  <div>
+                    <h4 className="font-medium text-yellow-800">研修アラート</h4>
+                    {trainingAlerts.map((alert) => (
+                      <p key={alert.id} className="text-sm text-yellow-700">
+                        {alert.title}: {alert.count}名 - {alert.message}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <Button size="sm" className="bg-yellow-600 hover:bg-yellow-700">
+                    一括通知
+                  </Button>
+                  <Link href="/annual-integration-summary">
+                    <Button size="sm" variant="outline" className="border-yellow-400 text-yellow-700">
+                      統合管理画面
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
 interface TrainingProgram {
   id: string;
   name: string;
@@ -804,6 +1116,9 @@ export default function EducationPage() {
         {/* 年間計画タブ - 評価管理ダッシュボードと統一構造 */}
         {activeTab === 'planning' && (
           <div className={styles.tabContentPadding}>
+            {/* 教育研修担当者向け動的アクションブロック */}
+            <TrainingManagerActionBlock />
+            
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
