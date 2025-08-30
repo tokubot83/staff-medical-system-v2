@@ -1,8 +1,7 @@
 .simulator {
-  padding: 20px;
-  /* 全幅クラス適用時はCSSクラスが制御するため、以下を削除 */
-  /* width: 100%; */
-  /* margin: 0; */
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 24px;
 }
 
 .header {
@@ -731,6 +730,11 @@
 }
 
 @media (max-width: 768px) {
+  .simulator {
+    padding: 20px 16px;
+    max-width: 100%;
+  }
+  
   .controls {
     grid-template-columns: 1fr;
   }
