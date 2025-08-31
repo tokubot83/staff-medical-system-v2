@@ -118,13 +118,60 @@ export default function IntegrationPage() {
             </div>
 
             <div>
-              <h4 className="font-semibold mb-2">📋 次のステップ</h4>
-              <ol className="text-sm space-y-1 ml-4">
-                <li>1. 医療システムDB構築計画書作成（基盤システム完成後）</li>
-                <li>2. VoiceDriveDB構築計画書との照合・統合計画書作成</li>
-                <li>3. 共通DBスキーマ設計・実装</li>
-                <li>4. 実職員データでの本格テスト・段階的本格運用開始</li>
-              </ol>
+              <h4 className="font-semibold mb-2">🚀 Phase 3開発計画（共通DB・職員システム統合）</h4>
+              <div className="text-sm space-y-3 ml-4">
+                <div>
+                  <h5 className="font-medium text-green-800">▶ Step 1: 職員基本データ統合システム（2025年9月予定）</h5>
+                  <ul className="space-y-1 ml-4 text-xs">
+                    <li>• Excel一括職員データ取り込み機能実装</li>
+                    <li>• PDF履歴書自動解析・データ抽出機能</li>
+                    <li>• 職員カルテ個人ページ自動生成システム</li>
+                    <li>• 500名既存職員データの完全デジタル化</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h5 className="font-medium text-green-800">▶ Step 2: 共通DB構築・VoiceDrive連携拡張</h5>
+                  <ul className="space-y-1 ml-4 text-xs">
+                    <li>• MySQL共通DB構築（専用PC設置・セキュリティ強化）</li>
+                    <li>• VoiceDrive職員アカウント自動生成機能</li>
+                    <li>• 職員ID・初期パスワード自動発行システム</li>
+                    <li>• 入職初日からの面談予約システム連携</li>
+                    <li>• リアルタイムデータ同期（職員カルテ ⇄ VoiceDrive）</li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h5 className="font-medium text-green-800">▶ Step 3: 統合テスト・本格運用</h5>
+                  <ul className="space-y-1 ml-4 text-xs">
+                    <li>• 医療システムDB構築計画書作成</li>
+                    <li>• VoiceDriveDB構築計画書との統合・照合</li>
+                    <li>• 共通DBスキーマ最終設計・実装</li>
+                    <li>• 実職員データでの統合テスト・段階的本格運用開始</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="font-semibold mb-2">🎯 実装予定機能詳細</h4>
+              <div className="text-sm space-y-2 ml-4">
+                <div className="bg-blue-50 p-3 rounded border border-blue-200">
+                  <h5 className="font-medium text-blue-800">職員データ統合フロー</h5>
+                  <p className="text-xs text-blue-700 mt-1">
+                    Excel職員名簿アップロード → 自動解析・データ変換 → 職員カルテ個人ページ自動生成（500名対応）
+                    → 同時にVoiceDrive職員アカウント作成・認証情報発行 → 入職日から面談予約可能
+                  </p>
+                </div>
+                
+                <div className="bg-purple-50 p-3 rounded border border-purple-200">
+                  <h5 className="font-medium text-purple-800">共通DB中心連動システム</h5>
+                  <p className="text-xs text-purple-700 mt-1">
+                    専用PC（MySQL）を中心に、職員カルテ（人事部）・VoiceDrive（職員個人）・経営企画システム（資格管理）が
+                    リアルタイム連動。評価データ・面談記録・成長履歴が即座に同期・更新される統合環境。
+                  </p>
+                </div>
+              </div>
             </div>
 
             <div className="pt-2 border-t border-green-300">
