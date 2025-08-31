@@ -57,8 +57,8 @@ export default function SimulatorComparisonModal({
 }: SimulatorComparisonModalProps) {
   // 全画面固定のためフラグは削除
   const [activeSection, setActiveSection] = useState(0);
-  const [leftScale, setLeftScale] = useState(0.6); // 左側のシートの拡大率（デフォルト60%）
-  const [rightScale, setRightScale] = useState(0.6); // 右側のシートの拡大率（デフォルト60%）
+  const [leftScale, setLeftScale] = useState(0.7); // 左側のシートの拡大率（デフォルト70%）
+  const [rightScale, setRightScale] = useState(0.7); // 右側のシートの拡大率（デフォルト70%）
 
   useEffect(() => {
     if (isOpen) {
@@ -96,9 +96,9 @@ export default function SimulatorComparisonModal({
 
   const resetZoom = (side: 'left' | 'right') => {
     if (side === 'left') {
-      setLeftScale(0.6);
+      setLeftScale(0.7);
     } else {
-      setRightScale(0.6);
+      setRightScale(0.7);
     }
   };
 
