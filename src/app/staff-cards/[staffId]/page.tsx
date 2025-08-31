@@ -2833,303 +2833,272 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
 
   return (
     <div className="space-y-6 p-6">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-xl">
-            📈 総合評価の推移
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {/* レポートセンター形式のRechartsグラフ */}
-          <div className="mb-6">
-            {/* グラフ上部のコメント */}
-            <div className="mb-4 p-3 bg-blue-50 border-l-4 border-blue-500 rounded">
-              <p className="text-sm text-blue-700">
-                💡 <strong>成長の軌跡：</strong>入社以来、着実な成長を遂げています。特に2023年度以降の成長が顕著で、総合評価点が大幅に向上しています。
-              </p>
+      {/* 評価履歴グラフ並列表示セクション */}
+      <div>
+        <h4 className="text-lg font-semibold flex items-center gap-2 mb-6">
+          📊 評価履歴トレンド比較
+        </h4>
+        
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          {/* 総合評価推移 */}
+          <Card className="border-l-4" style={{ borderLeftColor: '#2563eb' }}>
+            <CardHeader>
+              <CardTitle className="text-base flex items-center gap-2">
+                📈 総合評価の推移
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="h-64 mb-4">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={evaluationData}
+                    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis 
+                      dataKey="year" 
+                      tick={{ fontSize: 12 }}
+                    />
+                    <YAxis 
+                      domain={[50, 100]}
+                      tick={{ fontSize: 12 }}
+                    />
+                    <RechartsTooltip 
+                      content={({ active, payload, label }) => {
+                        if (active && payload && payload.length) {
+                          const data = payload[0].payload;
+                          return (
+                            <div className="bg-white p-4 border rounded-lg shadow-lg">
+                              <p className="font-semibold mb-2">{label}</p>
+                              <div className="space-y-1">
+                                <div className="flex justify-between">
+                                  <span>評価点:</span>
+                                  <span className="font-bold">{data.totalScore}点</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span>グレード:</span>
+                                  <span className="font-bold">{data.grade}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span>順位:</span>
+                                  <span className="font-bold">{data.rank}位</span>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <RechartsLine 
+                      type="monotone" 
+                      dataKey="totalScore" 
+                      stroke="#2563eb" 
+                      strokeWidth={3}
+                      name="総合評価"
+                      dot={{ r: 4, fill: "#2563eb" }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+              
+              <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                <div className="text-sm text-gray-600">
+                  <span className="font-medium">現在:</span> 81.25点 (Aグレード)
+                </div>
+                <div className="text-xs text-gray-500 mt-1">
+                  2020年度から+28.95点の大幅改善を達成
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* 法人内評価推移 */}
+          <Card className="border-l-4" style={{ borderLeftColor: '#10b981' }}>
+            <CardHeader>
+              <CardTitle className="text-base flex items-center gap-2">
+                🌐 法人内評価の推移
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="h-64 mb-4">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={corporateEvaluationData}
+                    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis 
+                      dataKey="year" 
+                      tick={{ fontSize: 12 }}
+                    />
+                    <YAxis 
+                      domain={[40, 80]}
+                      tick={{ fontSize: 12 }}
+                    />
+                    <RechartsTooltip 
+                      content={({ active, payload, label }) => {
+                        if (active && payload && payload.length) {
+                          const data = payload[0].payload;
+                          return (
+                            <div className="bg-white p-4 border rounded-lg shadow-lg">
+                              <p className="font-semibold mb-2">{label}</p>
+                              <div className="space-y-1">
+                                <div className="flex justify-between">
+                                  <span>評価点:</span>
+                                  <span className="font-bold">{data.totalScore}点</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span>グレード:</span>
+                                  <span className="font-bold">{data.grade}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span>法人内順位:</span>
+                                  <span className="font-bold">{data.rank}位</span>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <RechartsLine 
+                      type="monotone" 
+                      dataKey="totalScore" 
+                      stroke="#10b981" 
+                      strokeWidth={3}
+                      name="法人内評価"
+                      dot={{ r: 4, fill: "#10b981" }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+              
+              <div className="mt-4 p-3 bg-green-50 rounded-lg">
+                <div className="text-sm text-gray-600">
+                  <span className="font-medium">現在:</span> 74.3点 (Bグレード) / 215位
+                </div>
+                <div className="text-xs text-gray-500 mt-1">
+                  法人850名中で着実に順位上昇中
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* 施設内評価推移 */}
+          <Card className="border-l-4" style={{ borderLeftColor: '#8b5cf6' }}>
+            <CardHeader>
+              <CardTitle className="text-base flex items-center gap-2">
+                🏢 施設内評価の推移
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="h-64 mb-4">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={facilityEvaluationData}
+                    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis 
+                      dataKey="year" 
+                      tick={{ fontSize: 12 }}
+                    />
+                    <YAxis 
+                      domain={[50, 85]}
+                      tick={{ fontSize: 12 }}
+                    />
+                    <RechartsTooltip 
+                      content={({ active, payload, label }) => {
+                        if (active && payload && payload.length) {
+                          const data = payload[0].payload;
+                          return (
+                            <div className="bg-white p-4 border rounded-lg shadow-lg">
+                              <p className="font-semibold mb-2">{label}</p>
+                              <div className="space-y-1">
+                                <div className="flex justify-between">
+                                  <span>評価点:</span>
+                                  <span className="font-bold">{data.totalScore}点</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span>グレード:</span>
+                                  <span className="font-bold">{data.grade}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span>施設内順位:</span>
+                                  <span className="font-bold">{data.rank}位</span>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <RechartsLine 
+                      type="monotone" 
+                      dataKey="totalScore" 
+                      stroke="#8b5cf6" 
+                      strokeWidth={3}
+                      name="施設内評価"
+                      dot={{ r: 4, fill: "#8b5cf6" }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+              
+              <div className="mt-4 p-3 bg-purple-50 rounded-lg">
+                <div className="text-sm text-gray-600">
+                  <span className="font-medium">現在:</span> 81.25点 (Aグレード) / 8位
+                </div>
+                <div className="text-xs text-gray-500 mt-1">
+                  施設120名中でトップ10入り達成
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* 評価トレンド分析サマリー */}
+        <div className="mt-6 p-4 bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg border">
+          <h5 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+            🔍 評価履歴トレンド分析
+          </h5>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+            <div className="space-y-2">
+              <div className="flex items-start gap-2">
+                <span className="text-blue-600 font-bold">📈</span>
+                <span><strong>総合評価:</strong> 5年間で28.95点向上し、D→Aグレードへの大幅成長を達成。</span>
+              </div>
             </div>
-            <ResponsiveContainer width="100%" height={400}>
-              <LineChart
-                data={evaluationData}
-                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis 
-                  dataKey="year" 
-                  label={{ value: '評価年度', position: 'insideBottomRight', offset: -10 }}
-                />
-                <YAxis 
-                  label={{ value: '総合評価点数', angle: -90, position: 'insideLeft' }}
-                  domain={[50, 100]}
-                />
-                <RechartsTooltip 
-                  formatter={(value, name) => [
-                    `${value}点 (${evaluationData.find(d => d.totalScore === value)?.grade}グレード)`, 
-                    '総合評価'
-                  ]}
-                  labelFormatter={(label) => `${label}`}
-                />
-                <RechartsLegend />
-                <RechartsLine 
-                  type="monotone" 
-                  dataKey="totalScore" 
-                  stroke="#2563eb" 
-                  strokeWidth={3}
-                  name="総合評価"
-                  dot={{ r: 6, fill: "#2563eb" }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-            {/* グラフ下部のコメント */}
-            <div className="mt-4 p-3 bg-gray-50 border-l-4 border-gray-400 rounded">
-              <p className="text-sm text-gray-600">
-                📌 <strong>ポイント：</strong>2023年度の技術評価向上と2024年度の貢献度評価向上が総合評価の改善に大きく寄与しています。
-              </p>
+            <div className="space-y-2">
+              <div className="flex items-start gap-2">
+                <span className="text-green-600 font-bold">🌐</span>
+                <span><strong>法人内評価:</strong> 456位→215位と241順位向上。上位25%まであと2位。</span>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-start gap-2">
+                <span className="text-purple-600 font-bold">🏢</span>
+                <span><strong>施設内評価:</strong> トップ10入り達成。現在8位でリーダー層に成長。</span>
+              </div>
             </div>
           </div>
+        </div>
+      </div>
 
-          {/* 順位推移グラフ */}
-          <div className="mt-6">
-            <h3 className="text-lg font-semibold mb-4">📊 順位推移（施設内）</h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart
-                data={rankData}
-                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis 
-                  dataKey="year"
-                  label={{ value: '評価年度', position: 'insideBottomRight', offset: -10 }}
-                />
-                <YAxis 
-                  label={{ value: '順位（位）', angle: -90, position: 'insideLeft' }}
-                  reversed={true}
-                  domain={[1, 50]}
-                />
-                <RechartsTooltip 
-                  formatter={(value) => [`${value}位`, '施設内順位']}
-                  labelFormatter={(label) => `${label}`}
-                />
-                <RechartsLegend />
-                <RechartsLine 
-                  type="monotone" 
-                  dataKey="rank" 
-                  stroke="#10b981" 
-                  strokeWidth={3}
-                  name="施設内順位"
-                  dot={{ r: 6, fill: "#10b981" }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-            {/* 順位グラフのコメント */}
-            <div className="mt-4 p-3 bg-green-50 border-l-4 border-green-500 rounded">
-              <p className="text-sm text-green-700">
-                🎯 <strong>順位改善：</strong>施設内順位が年々上昇し、現在はトップ10入りを達成。リーダーシップを発揮する立場に成長しています。
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* 法人内評価推移グラフ */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-xl">
-            🌐 法人内評価の推移
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="mb-6">
-            {/* 法人内評価の上部コメント */}
-            <div className="mb-4 p-3 bg-emerald-50 border-l-4 border-emerald-500 rounded">
-              <p className="text-sm text-emerald-700">
-                🚀 <strong>法人内での躍進：</strong>法人全体（850名中）での順位が大幅に改善。2020年度の456位から2024年度は215位まで上昇しました。
-              </p>
-            </div>
-            <ResponsiveContainer width="100%" height={400}>
-              <LineChart
-                data={corporateEvaluationData}
-                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis 
-                  dataKey="year" 
-                  label={{ value: '評価年度', position: 'insideBottomRight', offset: -10 }}
-                />
-                <YAxis 
-                  label={{ value: '法人内評価点数', angle: -90, position: 'insideLeft' }}
-                  domain={[40, 80]}
-                />
-                <RechartsTooltip 
-                  formatter={(value, name) => [
-                    `${value}点 (${corporateEvaluationData.find(d => d.totalScore === value)?.grade}グレード)`, 
-                    '法人内評価'
-                  ]}
-                  labelFormatter={(label) => `${label}`}
-                />
-                <RechartsLegend />
-                <RechartsLine 
-                  type="monotone" 
-                  dataKey="totalScore" 
-                  stroke="#10b981" 
-                  strokeWidth={3}
-                  name="法人内評価"
-                  dot={{ r: 6, fill: "#10b981" }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-            {/* 法人内評価の下部コメント */}
-            <div className="mt-4 p-3 bg-gray-50 border-l-4 border-gray-400 rounded">
-              <p className="text-sm text-gray-600">
-                💪 <strong>改善ポイント：</strong>法人内評価では特に専門技術スキルと問題解決能力の向上が評価されています。
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-6">
-            <h3 className="text-lg font-semibold mb-4">📊 順位推移（法人内）</h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart
-                data={corporateRankData}
-                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis 
-                  dataKey="year"
-                  label={{ value: '評価年度', position: 'insideBottomRight', offset: -10 }}
-                />
-                <YAxis 
-                  label={{ value: '順位（位）', angle: -90, position: 'insideLeft' }}
-                  reversed={true}
-                  domain={[150, 500]}
-                />
-                <RechartsTooltip 
-                  formatter={(value) => [`${value}位`, '法人内順位']}
-                  labelFormatter={(label) => `${label}`}
-                />
-                <RechartsLegend />
-                <RechartsLine 
-                  type="monotone" 
-                  dataKey="rank" 
-                  stroke="#f59e0b" 
-                  strokeWidth={3}
-                  name="法人内順位"
-                  dot={{ r: 6, fill: "#f59e0b" }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-            {/* 法人内順位のコメント */}
-            <div className="mt-4 p-3 bg-amber-50 border-l-4 border-amber-500 rounded">
-              <p className="text-sm text-amber-700">
-                📈 <strong>目標達成率：</strong>法人内上位25%（213位以内）への到達まであと2位。次年度での達成が期待されます。
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* 施設内評価推移グラフ */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-xl">
-            🏢 施設内評価の推移
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="mb-6">
-            {/* 施設内評価の上部コメント */}
-            <div className="mb-4 p-3 bg-purple-50 border-l-4 border-purple-500 rounded">
-              <p className="text-sm text-purple-700">
-                ⭐ <strong>施設のエース級：</strong>施設内120名中8位という優秀な成績。Aグレード評価を獲得し、施設の中核人材として活躍中。
-              </p>
-            </div>
-            <ResponsiveContainer width="100%" height={400}>
-              <LineChart
-                data={facilityEvaluationData}
-                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis 
-                  dataKey="year" 
-                  label={{ value: '評価年度', position: 'insideBottomRight', offset: -10 }}
-                />
-                <YAxis 
-                  label={{ value: '施設内評価点数', angle: -90, position: 'insideLeft' }}
-                  domain={[50, 85]}
-                />
-                <RechartsTooltip 
-                  formatter={(value, name) => [
-                    `${value}点 (${facilityEvaluationData.find(d => d.totalScore === value)?.grade}グレード)`, 
-                    '施設内評価'
-                  ]}
-                  labelFormatter={(label) => `${label}`}
-                />
-                <RechartsLegend />
-                <RechartsLine 
-                  type="monotone" 
-                  dataKey="totalScore" 
-                  stroke="#8b5cf6" 
-                  strokeWidth={3}
-                  name="施設内評価"
-                  dot={{ r: 6, fill: "#8b5cf6" }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-            {/* 施設内評価の下部コメント */}
-            <div className="mt-4 p-3 bg-gray-50 border-l-4 border-gray-400 rounded">
-              <p className="text-sm text-gray-600">
-                🏆 <strong>強み：</strong>施設特化項目（12点満点）と貢献度評価が特に高く、施設運営への積極的な関与が評価されています。
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-6">
-            <h3 className="text-lg font-semibold mb-4">📊 順位推移（施設内）</h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart
-                data={facilityRankData}
-                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis 
-                  dataKey="year"
-                  label={{ value: '評価年度', position: 'insideBottomRight', offset: -10 }}
-                />
-                <YAxis 
-                  label={{ value: '順位（位）', angle: -90, position: 'insideLeft' }}
-                  reversed={true}
-                  domain={[1, 40]}
-                />
-                <RechartsTooltip 
-                  formatter={(value) => [`${value}位`, '施設内順位']}
-                  labelFormatter={(label) => `${label}`}
-                />
-                <RechartsLegend />
-                <RechartsLine 
-                  type="monotone" 
-                  dataKey="rank" 
-                  stroke="#ef4444" 
-                  strokeWidth={3}
-                  name="施設内順位"
-                  dot={{ r: 6, fill: "#ef4444" }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-            {/* 施設内順位のコメント */}
-            <div className="mt-4 p-3 bg-indigo-50 border-l-4 border-indigo-500 rounded">
-              <p className="text-sm text-indigo-700">
-                🎖️ <strong>次のステップ：</strong>施設内トップ5入りまであと3位。マネジメントスキルの更なる向上で達成可能な位置にいます。
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* 年度別評価詳細履歴 */}
+      {/* 年度別評価詳細履歴テーブル（既存保持） */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             📋 年度別評価詳細履歴
+            <button 
+              onClick={() => setShowAllHistory(!showAllHistory)}
+              className="ml-2 px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              {showAllHistory ? '簡潔表示' : '全履歴表示'}
+            </button>
           </CardTitle>
         </CardHeader>
         <CardContent>
