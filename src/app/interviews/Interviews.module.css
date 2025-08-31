@@ -1,7 +1,8 @@
 .container {
-  max-width: 1600px;
-  margin: 0 auto;
-  padding: 20px;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 8px;
   background: linear-gradient(to bottom, #f8faff, #ffffff);
   min-height: 100vh;
 }

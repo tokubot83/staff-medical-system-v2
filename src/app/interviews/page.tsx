@@ -1004,7 +1004,7 @@ function DashboardTab(): React.ReactElement {
 // ガイドセクション（概要・ガイドタブに統合済み）
 function GuideSection({ onInterviewTypeClick }: { onInterviewTypeClick: (type: string) => void }): React.ReactElement {
   return (
-    <div className="max-w-7xl mx-auto space-y-6 mt-8">
+    <div className="w-full space-y-6 mt-8">
       <h2 className="text-2xl font-bold text-gray-800 mb-6">面談管理システム ガイド</h2>
       
       {/* システム概要 */}
@@ -1453,7 +1453,7 @@ function BankSystemTab_Original(): React.ReactElement {
   )
 
   return (
-    <div className="max-w-7xl mx-auto p-6">
+    <div className="w-full p-6">
       {/* ヘッダー */}
       <div className="flex items-center justify-between mb-6">
         <div>
