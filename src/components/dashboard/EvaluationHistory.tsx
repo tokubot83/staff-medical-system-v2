@@ -174,183 +174,57 @@ const EvaluationHistory: React.FC<EvaluationHistoryProps> = ({ employeeId }) => 
     }
   };
 
-  // 折れ線グラフ用の詳細ツールチップ
+  // 折れ線グラフ用の詳細ツールチップ（デバッグ版）
   const LineChartTooltip = ({ active, payload, label }: any) => {
+    console.log('LineChartTooltip called:', { active, payload, label });
+    
     if (active && payload && payload.length) {
-      const currentIndex = historyData.findIndex(d => d.period === label);
-      const currentData = historyData[currentIndex];
-      const previousData = currentIndex > 0 ? historyData[currentIndex - 1] : null;
-      
       return (
-        <div className="bg-white p-4 border rounded-lg shadow-lg min-w-64">
-          <div className="font-semibold text-lg mb-3 text-gray-800 border-b pb-2">{label}</div>
-          
-          {payload.map((entry: any, index: number) => {
-            const previousValue = previousData ? previousData[entry.dataKey] : null;
-            const change = previousValue ? entry.value - previousValue : null;
-            const changePercent = previousValue ? ((entry.value - previousValue) / previousValue * 100) : null;
-            
-            return (
-              <div key={index} className="mb-3 last:mb-0">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="font-medium" style={{ color: entry.color }}>
-                    {entry.name}
-                  </span>
-                  <span className="font-bold text-lg" style={{ color: entry.color }}>
-                    {entry.value}点
-                  </span>
-                </div>
-                
-                {change !== null && (
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">前期比:</span>
-                    <div className="flex items-center gap-1">
-                      {change > 0 ? (
-                        <TrendingUp className="h-3 w-3 text-green-500" />
-                      ) : change < 0 ? (
-                        <TrendingDown className="h-3 w-3 text-red-500" />
-                      ) : null}
-                      <span className={`font-medium ${
-                        change > 0 ? 'text-green-600' : 
-                        change < 0 ? 'text-red-600' : 
-                        'text-gray-600'
-                      }`}>
-                        {change > 0 ? '+' : ''}{change.toFixed(1)}点 
-                        ({changePercent !== null ? (changePercent > 0 ? '+' : '') + changePercent.toFixed(1) + '%' : ''})
-                      </span>
-                    </div>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-          
-          <div className="mt-3 pt-2 border-t text-xs text-gray-500">
-            <div className="flex justify-between">
-              <span>グレード: <span className="font-medium" style={{color: getGradeColor(currentData.grade)}}>{currentData.grade}</span></span>
-              <span>順位: <span className="font-medium">{currentData.rank}位</span></span>
-            </div>
-          </div>
+        <div className="bg-white p-3 border rounded-lg shadow-lg">
+          <p className="font-semibold mb-2">{label}</p>
+          {payload.map((entry: any, index: number) => (
+            <p key={index} style={{ color: entry.color }}>
+              {entry.name}: {entry.value}点
+            </p>
+          ))}
         </div>
       );
     }
     return null;
   };
 
-  // 棒グラフ用の詳細ツールチップ
+  // 棒グラフ用の詳細ツールチップ（デバッグ版）
   const BarChartTooltip = ({ active, payload, label }: any) => {
+    console.log('BarChartTooltip called:', { active, payload, label });
+    
     if (active && payload && payload.length) {
-      const currentData = historyData.find(d => d.period === label);
-      if (!currentData) return null;
-
-      const technicalPercent = (currentData.technicalScore / 50) * 100; // 技術評価は50点満点
-      const contributionPercent = (currentData.contributionScore / 50) * 100; // 貢献度評価は50点満点
-      
       return (
-        <div className="bg-white p-4 border rounded-lg shadow-lg min-w-72">
-          <div className="font-semibold text-lg mb-3 text-gray-800 border-b pb-2">{label}</div>
-          
-          <div className="space-y-3">
-            <div className="bg-green-50 p-3 rounded">
-              <div className="flex items-center justify-between mb-2">
-                <span className="font-medium text-green-700">技術評価</span>
-                <span className="font-bold text-lg text-green-700">{currentData.technicalScore}点</span>
-              </div>
-              <div className="text-sm text-green-600">
-                <div>達成率: {technicalPercent.toFixed(1)}% (50点満点)</div>
-                <div className="mt-1">
-                  内訳: C01({currentData.details.C01}点) + C02({currentData.details.C02}点) + 
-                  C03({currentData.details.C03}点) + 施設特化({currentData.details.facilitySpecific}点)
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-orange-50 p-3 rounded">
-              <div className="flex items-center justify-between mb-2">
-                <span className="font-medium text-orange-700">貢献度評価</span>
-                <span className="font-bold text-lg text-orange-700">{currentData.contributionScore}点</span>
-              </div>
-              <div className="text-sm text-orange-600">
-                <div>達成率: {contributionPercent.toFixed(1)}% (50点満点)</div>
-                <div className="mt-1">
-                  内訳: 施設貢献({label.includes('夏') ? currentData.details.summerFacility : currentData.details.winterFacility}点) + 
-                  法人貢献({label.includes('夏') ? currentData.details.summerCorporate : currentData.details.winterCorporate}点)
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-3 pt-2 border-t text-xs text-gray-500">
-            <div className="flex justify-between">
-              <span>総合: <span className="font-medium text-blue-600">{currentData.totalScore}点</span></span>
-              <span>グレード: <span className="font-medium" style={{color: getGradeColor(currentData.grade)}}>{currentData.grade}</span></span>
-              <span>順位: <span className="font-medium">{currentData.rank}位</span></span>
-            </div>
-          </div>
+        <div className="bg-white p-3 border rounded-lg shadow-lg">
+          <p className="font-semibold mb-2">{label}</p>
+          {payload.map((entry: any, index: number) => (
+            <p key={index} style={{ color: entry.color }}>
+              {entry.name}: {entry.value}点
+            </p>
+          ))}
         </div>
       );
     }
     return null;
   };
 
-  // レーダーチャート用の詳細ツールチップ
+  // レーダーチャート用の詳細ツールチップ（デバッグ版）
   const RadarChartTooltip = ({ active, payload, label }: any) => {
+    console.log('RadarChartTooltip called:', { active, payload, label });
+    
     if (active && payload && payload.length) {
-      const dataPoint = radarData.find(d => d.category === label);
-      if (!dataPoint) return null;
-
-      const currentPercent = (dataPoint.current / dataPoint.max) * 100;
-      const averagePercent = (dataPoint.average / dataPoint.max) * 100;
-      const vsAverage = dataPoint.current - dataPoint.average;
-
       return (
-        <div className="bg-white p-4 border rounded-lg shadow-lg min-w-64">
-          <div className="font-semibold text-lg mb-3 text-gray-800 border-b pb-2">{label}</div>
-          
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <span className="text-blue-600 font-medium">あなたの評価:</span>
-              <div className="text-right">
-                <div className="text-xl font-bold text-blue-600">{dataPoint.current}点</div>
-                <div className="text-sm text-blue-500">達成率 {currentPercent.toFixed(1)}%</div>
-              </div>
-            </div>
-
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600 font-medium">部署平均:</span>
-              <div className="text-right">
-                <div className="text-lg font-semibold text-gray-600">{dataPoint.average}点</div>
-                <div className="text-sm text-gray-500">達成率 {averagePercent.toFixed(1)}%</div>
-              </div>
-            </div>
-
-            <div className="bg-gray-50 p-2 rounded">
-              <div className="flex justify-between items-center">
-                <span className="text-sm font-medium">平均との差:</span>
-                <div className="flex items-center gap-1">
-                  {vsAverage > 0 ? (
-                    <TrendingUp className="h-3 w-3 text-green-500" />
-                  ) : vsAverage < 0 ? (
-                    <TrendingDown className="h-3 w-3 text-red-500" />
-                  ) : null}
-                  <span className={`text-sm font-bold ${
-                    vsAverage > 0 ? 'text-green-600' : 
-                    vsAverage < 0 ? 'text-red-600' : 
-                    'text-gray-600'
-                  }`}>
-                    {vsAverage > 0 ? '+' : ''}{vsAverage.toFixed(1)}点
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-3 pt-2 border-t text-xs text-gray-500">
-            <div className="text-center">
-              満点: {dataPoint.max}点 | 
-              {vsAverage >= 1 ? ' 強み領域' : vsAverage <= -1 ? ' 改善領域' : ' 平均的'}
-            </div>
-          </div>
+        <div className="bg-white p-3 border rounded-lg shadow-lg">
+          <p className="font-semibold mb-2">{label}</p>
+          {payload.map((entry: any, index: number) => (
+            <p key={index} style={{ color: entry.color }}>
+              {entry.name}: {entry.value}点
+            </p>
+          ))}
         </div>
       );
     }
