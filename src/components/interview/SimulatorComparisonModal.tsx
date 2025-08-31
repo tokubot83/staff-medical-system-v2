@@ -156,18 +156,18 @@ export default function SimulatorComparisonModal({
         className="comparison-modal-content"
         style={{
           position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100vw',
-          height: '100vh',
-          maxWidth: 'none',
+          top: isFullscreen ? 0 : '5vh',
+          left: isFullscreen ? 0 : '5vw',
+          width: isFullscreen ? '100vw' : '90vw',
+          height: isFullscreen ? '100vh' : '90vh',
+          maxWidth: isFullscreen ? 'none' : '1400px',
           backgroundColor: 'white',
           display: 'flex',
           flexDirection: 'column',
-          borderRadius: '0',
+          borderRadius: isFullscreen ? '0' : '12px',
           overflow: 'hidden',
-          boxShadow: 'none',
-          margin: '0'
+          boxShadow: isFullscreen ? 'none' : '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+          margin: isFullscreen ? '0' : '0 auto'
         }}
       >
         {/* ヘッダー */}
@@ -283,7 +283,7 @@ export default function SimulatorComparisonModal({
         }}>
           {/* 元のシート */}
           <div style={{ 
-            minWidth: 'calc(50vw - 1px)',
+            minWidth: isFullscreen ? 'calc(50vw - 1px)' : '600px',
             width: '50%',
             borderRight: '2px solid #e5e7eb',
             display: 'flex',
@@ -395,7 +395,7 @@ export default function SimulatorComparisonModal({
 
           {/* 比較シート */}
           <div style={{ 
-            minWidth: 'calc(50vw - 1px)',
+            minWidth: isFullscreen ? 'calc(50vw - 1px)' : '600px',
             width: '50%',
             display: 'flex',
             flexDirection: 'column',
