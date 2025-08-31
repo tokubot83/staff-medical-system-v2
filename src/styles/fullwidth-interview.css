@@ -7,14 +7,24 @@
   padding: 0 24px;
 }
 
-/* 面談シート完全全幅表示用クラス */
-.interview-sheet-fullwidth {
+/* 面談シート背景全幅コンテナ（第1段階：基本の面談シート表示修正） */
+.interview-sheet-fullwidth-background {
   width: 100vw !important;
   max-width: none !important;
   margin-left: calc(-50vw + 50%) !important;
   margin-right: calc(-50vw + 50%) !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
+  padding: 0 !important;
+  background-color: #f8fafc !important;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* 面談シート完全全幅表示用クラス */
+.interview-sheet-fullwidth {
+  width: 100vw !important;
+  max-width: 1600px !important;
+  margin: 0 auto !important;
+  padding: 24px !important;
   box-sizing: border-box;
   position: relative;
 }
@@ -62,7 +72,7 @@
   box-sizing: border-box !important;
 }
 
-/* 面談シートデフォルト表示倍率95%・左寄せ配置 */
+/* 面談シートデフォルト表示倍率95%・左寄せ配置（第5段階：全体統一感の最終確認） */
 .fullwidth-interview-content,
 .interview-sheet-fullwidth,
 .fullwidth-simulator-container {
@@ -77,6 +87,27 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
+}
+
+/* 統一された背景色とパディング */
+.interview-sheet-fullwidth-background,
+.simulator-sheet-fullwidth-background {
+  background-color: #f8fafc !important;
+  padding: 32px 0 !important;
+}
+
+/* 統一されたコンテンツ制限幅 */
+.interview-sheet-fullwidth,
+.simulator-sheet-fullwidth-background .simulator-results {
+  max-width: 1600px !important;
+  margin: 0 auto !important;
+  padding: 0 24px !important;
+}
+
+/* 統一されたヘッダースタイル */
+.simulator-header-fullwidth-background {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  padding: 32px 0 !important;
 }
 
 /* スケール適用時のコンテナ調整 */
@@ -172,7 +203,40 @@
   min-height: calc(100vh - 200px);
 }
 
-/* 面談マニュアルシミュレーター全幅対応 */
+/* 面談マニュアルシミュレーター全幅対応（第2段階：シミュレーター基本修正） */
+
+/* シミュレーターヘッダー背景全幅 */
+.simulator-header-fullwidth-background {
+  width: 100vw !important;
+  max-width: none !important;
+  margin-left: calc(-50vw + 50%) !important;
+  margin-right: calc(-50vw + 50%) !important;
+  padding: 0 !important;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* シミュレーター面談シート背景全幅 */
+.simulator-sheet-fullwidth-background {
+  width: 100vw !important;
+  max-width: none !important;
+  margin-left: calc(-50vw + 50%) !important;
+  margin-right: calc(-50vw + 50%) !important;
+  padding: 24px 0 !important;
+  background-color: #f8fafc !important;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* シミュレーター面談シート内部コンテンツ */
+.simulator-sheet-fullwidth-background .simulator-results {
+  max-width: 1600px !important;
+  margin: 0 auto !important;
+  padding: 0 24px !important;
+  box-sizing: border-box;
+}
+
 .fullwidth-simulator-container {
   width: 100vw;
   max-width: none;
@@ -221,18 +285,50 @@
   width: 100%;
 }
 
-/* 比較表示時の調整 */
+/* 比較表示時の調整（第3段階：比較機能の基本レイアウト修正） */
+
+/* 比較モーダルコンテンツ最適化（第4段階：比較データ表示の最適化） */
+.comparison-modal-content {
+  transform: scale(1) !important;
+  transform-origin: center center !important;
+}
+
+/* 比較モーダル内の面談シートスケーリング */
+.comparison-modal-content .interview-sheet-container,
+.comparison-modal-content .sheet-panel {
+  zoom: 0.85;
+  -webkit-transform: scale(0.85);
+  -moz-transform: scale(0.85);
+  -ms-transform: scale(0.85);
+  -o-transform: scale(0.85);
+  transform: scale(0.85);
+  transform-origin: top left;
+}
+
+/* 比較表示時のスクロール最適化 */
+.comparison-modal-content .sheet-panel {
+  overflow-y: auto;
+  max-height: calc(100vh - 180px);
+}
+
+/* 比較ウィンドウサイズ調整 */
 .fullwidth-simulator-container .comparison-view {
   display: flex;
-  gap: 24px;
+  gap: 20px;
   overflow-x: auto;
-  padding-bottom: 20px;
+  padding: 16px 0 20px 0;
+  margin: 0 auto;
+  max-width: 1400px;
 }
 
 .fullwidth-simulator-container .comparison-view .sheet-panel {
-  min-width: calc(50vw - 60px);
-  max-width: 800px;
+  min-width: calc(45vw - 40px);
+  max-width: 650px;
   flex-shrink: 0;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px;
 }
 
 /* レスポンシブ対応 */
@@ -266,15 +362,28 @@
     padding: 16px;
   }
   
+  /* 第4段階：比較データ表示の最適化 - モバイル対応 */
   .fullwidth-simulator-container .comparison-view {
     flex-direction: column;
     overflow-x: hidden;
+    gap: 16px;
+    padding: 12px 0 16px 0;
   }
   
   .fullwidth-simulator-container .comparison-view .sheet-panel {
     min-width: auto;
     width: 100%;
     max-width: none;
+    padding: 12px;
+  }
+  
+  .comparison-modal-content {
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: none !important;
+    border-radius: 0 !important;
   }
   
   .fullwidth-interview-top-row {

@@ -90,17 +90,19 @@ export default function InterviewSheetWrapper({
         </div>
       </div>
 
-      {/* 面談シートエリア（完全全幅） */}
-      <div className="interview-sheet-fullwidth">
-        <div className="w-full interview-content">
-          <PrintModeWrapper mode={mode}>
-            <InterviewSheetViewer
-              experienceCategory={experienceCategory}
-              duration={duration}
-              staffName={staffName}
-              yearsOfExperience={yearsOfExperience}
-            />
-          </PrintModeWrapper>
+      {/* 面談シートエリア（ブロックレベル背景全幅対応） */}
+      <div className="interview-sheet-fullwidth-background">
+        <div className="interview-sheet-fullwidth">
+          <div className="w-full interview-content">
+            <PrintModeWrapper mode={mode}>
+              <InterviewSheetViewer
+                experienceCategory={experienceCategory}
+                duration={duration}
+                staffName={staffName}
+                yearsOfExperience={yearsOfExperience}
+              />
+            </PrintModeWrapper>
+          </div>
         </div>
       </div>
     </div>

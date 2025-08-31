@@ -328,12 +328,15 @@ export default function InterviewManualSimulator() {
 
   return (
     <div className={styles.simulator}>
-      <div className={`${styles.header} simulator-header`}>
-        <h1>🎯 面談マニュアルシミュレーター</h1>
-        <p>条件を選択して、実際の面談で使用される質問内容を確認できます</p>
-        <div className={styles.featureNotice}>
-          <span className={styles.badge}>NEW</span>
-          サポート面談（キャリア相談・個別相談・フィードバック）と特別面談（退職・復職・インシデント）に対応しました
+      {/* シミュレーターヘッダー（紫グラデーション背景全幅対応） */}
+      <div className="simulator-header-fullwidth-background">
+        <div className={`${styles.header} simulator-header`}>
+          <h1>🎯 面談マニュアルシミュレーター</h1>
+          <p>条件を選択して、実際の面談で使用される質問内容を確認できます</p>
+          <div className={styles.featureNotice}>
+            <span className={styles.badge}>NEW</span>
+            サポート面談（キャリア相談・個別相談・フィードバック）と特別面談（退職・復職・インシデント）に対応しました
+          </div>
         </div>
       </div>
 
@@ -459,14 +462,15 @@ export default function InterviewManualSimulator() {
       </div>
 
       {generatedSheet && staffProfile && !showComparison && (
-        <div className={`${styles.singleView} simulator-results`}>
-          <div className={styles.sheetPanel}>
-            <div className={styles.sheetHeader}>
-              <h2>生成された面談シート</h2>
-              <div className={styles.sheetMeta}>
-                <span>バージョン: {generatedSheet?.metadata?.version || 'v6'}</span>
-                <span>生成日時: {new Date().toLocaleString()}</span>
-              </div>
+        <div className="simulator-sheet-fullwidth-background">
+          <div className={`${styles.singleView} simulator-results`}>
+            <div className={styles.sheetPanel}>
+              <div className={styles.sheetHeader}>
+                <h2>生成された面談シート</h2>
+                <div className={styles.sheetMeta}>
+                  <span>バージョン: {generatedSheet?.metadata?.version || 'v6'}</span>
+                  <span>生成日時: {new Date().toLocaleString()}</span>
+                </div>
             </div>
             <DynamicInterviewSheet 
               sheetData={generatedSheet}
@@ -474,6 +478,7 @@ export default function InterviewManualSimulator() {
               readOnly={true}
               onSave={() => {}}
             />
+            </div>
           </div>
         </div>
       )}

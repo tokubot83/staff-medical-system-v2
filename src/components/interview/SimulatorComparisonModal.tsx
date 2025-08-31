@@ -151,21 +151,23 @@ export default function SimulatorComparisonModal({
         onClick={onClose}
       />
 
-      {/* メインコンテンツ */}
+      {/* メインコンテンツ（第3段階：比較機能の基本レイアウト修正） */}
       <div 
+        className="comparison-modal-content"
         style={{
           position: 'absolute',
-          top: isFullscreen ? 0 : '2.5vh',
-          left: isFullscreen ? 0 : '2.5vw',
-          width: isFullscreen ? '100vw' : '95vw',
-          height: isFullscreen ? '100vh' : '95vh',
-          maxWidth: isFullscreen ? 'none' : '1600px',
+          top: isFullscreen ? 0 : '5vh',
+          left: isFullscreen ? 0 : '5vw',
+          width: isFullscreen ? '100vw' : '90vw',
+          height: isFullscreen ? '100vh' : '90vh',
+          maxWidth: isFullscreen ? 'none' : '1400px',
           backgroundColor: 'white',
           display: 'flex',
           flexDirection: 'column',
           borderRadius: isFullscreen ? '0' : '12px',
           overflow: 'hidden',
-          boxShadow: isFullscreen ? 'none' : '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+          boxShadow: isFullscreen ? 'none' : '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+          margin: isFullscreen ? '0' : '0 auto'
         }}
       >
         {/* ヘッダー */}
