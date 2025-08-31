@@ -357,7 +357,10 @@ const EvaluationHistory: React.FC<EvaluationHistoryProps> = ({ employeeId }) => 
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="period" />
                   <YAxis domain={[60, 80]} />
-                  <Tooltip content={LineChartTooltip} />
+                  <Tooltip 
+                    wrapperStyle={{ zIndex: 1000 }}
+                    cursor={{ stroke: '#3b82f6', strokeWidth: 2 }}
+                  />
                   <Legend />
                   <Line 
                     type="monotone" 
@@ -392,7 +395,10 @@ const EvaluationHistory: React.FC<EvaluationHistoryProps> = ({ employeeId }) => 
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="period" />
                   <YAxis domain={[0, 100]} />
-                  <Tooltip content={BarChartTooltip} />
+                  <Tooltip 
+                    wrapperStyle={{ zIndex: 1000 }}
+                    cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }}
+                  />
                   <Legend />
                   <Bar dataKey="technicalScore" stackId="a" fill="#10b981" name="技術評価" />
                   <Bar dataKey="contributionScore" stackId="a" fill="#f59e0b" name="貢献度評価" />
@@ -422,7 +428,7 @@ const EvaluationHistory: React.FC<EvaluationHistoryProps> = ({ employeeId }) => 
                     fill="#6b7280" 
                     fillOpacity={0.1}
                   />
-                  <Tooltip content={RadarChartTooltip} />
+                  <Tooltip wrapperStyle={{ zIndex: 1000 }} />
                   <Legend />
                 </RadarChart>
               </ResponsiveContainer>
