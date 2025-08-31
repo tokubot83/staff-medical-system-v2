@@ -283,7 +283,7 @@ export class RelativeEvaluationEngine {
       evaluationType: 'summer_contribution',
       maxFacilityPoints: 12.5,
       maxCorporatePoints: 12.5,
-      isProvisional: false
+      isProvisional: true
     });
   }
   

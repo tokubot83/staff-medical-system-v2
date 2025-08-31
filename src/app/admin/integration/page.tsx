@@ -87,6 +87,55 @@ export default function IntegrationPage() {
           </AlertDescription>
         </Alert>
 
+        {/* 開発メモ・進捗状況 */}
+        <Card className="mb-6 border-green-200 bg-green-50">
+          <CardHeader>
+            <CardTitle className="text-green-800 flex items-center">
+              <CheckCircle className="h-5 w-5 mr-2" />
+              開発進捗状況（2025年8月31日更新）
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="text-green-700 space-y-4">
+            <div>
+              <h4 className="font-semibold mb-2">✅ Phase 2完了項目（VoiceDrive連携）</h4>
+              <ul className="text-sm space-y-1 ml-4">
+                <li>• V3評価通知システム実装完了（夏季・冬季・最終評価対応）</li>
+                <li>• 異議申立システム実装完了（VoiceDrive ⇄ 医療システム双方向）</li>
+                <li>• 本番用バッチ処理システム（1000名同時処理対応）</li>
+                <li>• 24時間監視・セキュリティシステム</li>
+                <li>• 統合テスト実行・全項目成功（処理成功率100%）</li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-semibold mb-2">🔄 Phase 3準備中項目</h4>
+              <ul className="text-sm space-y-1 ml-4">
+                <li>• エスポワール立神 組織定義確定・登録（実装待ち）</li>
+                <li>• グループホーム宝寿庵 実装（実装待ち）</li>
+                <li>• 採用・教育研修システム 完成（開発中）</li>
+                <li>• 全施設・組織階層 完成（段階的実装中）</li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-semibold mb-2">📋 次のステップ</h4>
+              <ol className="text-sm space-y-1 ml-4">
+                <li>1. 医療システムDB構築計画書作成（基盤システム完成後）</li>
+                <li>2. VoiceDriveDB構築計画書との照合・統合計画書作成</li>
+                <li>3. 共通DBスキーマ設計・実装</li>
+                <li>4. 実職員データでの本格テスト・段階的本格運用開始</li>
+              </ol>
+            </div>
+
+            <div className="pt-2 border-t border-green-300">
+              <p className="text-xs">
+                <strong>実装ファイル</strong>: 本番用実装6ファイル完成済み<br />
+                <code className="text-xs">route.production.ts, productionDatabase.ts, productionBatchNotificationService.ts, productionEvaluationNotificationService.ts, productionMonitoringService.ts, production-integration-test.js</code>
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
         <Tabs defaultValue="api" className="space-y-4">
           <TabsList>
             <TabsTrigger value="api">
