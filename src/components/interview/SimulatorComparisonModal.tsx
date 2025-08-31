@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { X, ArrowLeft, ArrowRight, RotateCcw, Maximize2, Minimize2, ZoomIn, ZoomOut, RotateCcw as Reset } from 'lucide-react';
+import { X, ArrowLeft, ArrowRight, RotateCcw, ZoomIn, ZoomOut, RotateCcw as Reset } from 'lucide-react';
 import DynamicInterviewSheet from '@/components/interview-bank/DynamicInterviewSheet';
 import { 
   getJobRoleLabel, 
@@ -55,10 +55,10 @@ export default function SimulatorComparisonModal({
   staffLevels,
   interviewTypes
 }: SimulatorComparisonModalProps) {
-  const [isFullscreen, setIsFullscreen] = useState(true); // デフォルトを全画面に
+  // 全画面固定のためフラグは削除
   const [activeSection, setActiveSection] = useState(0);
-  const [leftScale, setLeftScale] = useState(0.5); // 左側のシートの拡大率（デフォルト50%）
-  const [rightScale, setRightScale] = useState(0.5); // 右側のシートの拡大率（デフォルト50%）
+  const [leftScale, setLeftScale] = useState(0.6); // 左側のシートの拡大率（デフォルト60%）
+  const [rightScale, setRightScale] = useState(0.6); // 右側のシートの拡大率（デフォルト60%）
 
   useEffect(() => {
     if (isOpen) {
@@ -96,9 +96,9 @@ export default function SimulatorComparisonModal({
 
   const resetZoom = (side: 'left' | 'right') => {
     if (side === 'left') {
-      setLeftScale(0.5);
+      setLeftScale(0.6);
     } else {
-      setRightScale(0.5);
+      setRightScale(0.6);
     }
   };
 
@@ -156,18 +156,18 @@ export default function SimulatorComparisonModal({
         className="comparison-modal-content"
         style={{
           position: 'absolute',
-          top: isFullscreen ? 0 : '5vh',
-          left: isFullscreen ? 0 : '5vw',
-          width: isFullscreen ? '100vw' : '90vw',
-          height: isFullscreen ? '100vh' : '90vh',
-          maxWidth: isFullscreen ? 'none' : '1400px',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          maxWidth: 'none',
           backgroundColor: 'white',
           display: 'flex',
           flexDirection: 'column',
-          borderRadius: isFullscreen ? '0' : '12px',
+          borderRadius: '0',
           overflow: 'hidden',
-          boxShadow: isFullscreen ? 'none' : '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-          margin: isFullscreen ? '0' : '0 auto'
+          boxShadow: 'none',
+          margin: '0'
         }}
       >
         {/* ヘッダー */}
@@ -192,26 +192,6 @@ export default function SimulatorComparisonModal({
           </div>
           
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-            {/* 全画面切り替え */}
-            <button
-              onClick={() => setIsFullscreen(!isFullscreen)}
-              style={{
-                background: 'rgba(255, 255, 255, 0.2)',
-                border: 'none',
-                borderRadius: '6px',
-                padding: '8px 12px',
-                color: 'white',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                fontSize: '14px'
-              }}
-            >
-              {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
-              {isFullscreen ? 'ウィンドウ表示' : '全画面表示'}
-            </button>
-
             {/* 閉じるボタン */}
             <button
               onClick={onClose}
@@ -283,7 +263,7 @@ export default function SimulatorComparisonModal({
         }}>
           {/* 元のシート */}
           <div style={{ 
-            minWidth: isFullscreen ? 'calc(50vw - 1px)' : '600px',
+            minWidth: 'calc(50vw - 1px)',
             width: '50%',
             borderRight: '2px solid #e5e7eb',
             display: 'flex',
@@ -376,11 +356,11 @@ export default function SimulatorComparisonModal({
               overflowX: 'auto',
               padding: '20px',
               display: 'flex',
-              justifyContent: 'center'
+              justifyContent: 'flex-start'
             }}>
               <div style={{
                 transform: `scale(${leftScale})`,
-                transformOrigin: 'top center',
+                transformOrigin: 'top left',
                 width: leftScale < 1 ? `${100 / leftScale}%` : '100%'
               }}>
                 <DynamicInterviewSheet 
@@ -395,7 +375,7 @@ export default function SimulatorComparisonModal({
 
           {/* 比較シート */}
           <div style={{ 
-            minWidth: isFullscreen ? 'calc(50vw - 1px)' : '600px',
+            minWidth: 'calc(50vw - 1px)',
             width: '50%',
             display: 'flex',
             flexDirection: 'column',
@@ -487,11 +467,11 @@ export default function SimulatorComparisonModal({
               overflowX: 'auto',
               padding: '20px',
               display: 'flex',
-              justifyContent: 'center'
+              justifyContent: 'flex-start'
             }}>
               <div style={{
                 transform: `scale(${rightScale})`,
-                transformOrigin: 'top center',
+                transformOrigin: 'top left',
                 width: rightScale < 1 ? `${100 / rightScale}%` : '100%'
               }}>
                 <DynamicInterviewSheet 
