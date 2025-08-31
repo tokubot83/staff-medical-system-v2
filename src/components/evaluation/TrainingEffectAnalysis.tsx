@@ -14,6 +14,27 @@ import {
   ChevronRight,
   Filter
 } from 'lucide-react'
+import { 
+  BarChart, 
+  Bar, 
+  LineChart, 
+  Line, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  Legend, 
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  Radar,
+  ComposedChart
+} from 'recharts'
 
 // モックデータ
 const mockTrainingData = {
@@ -224,6 +245,48 @@ export default function TrainingEffectAnalysis() {
           </div>
         </div>
 
+        <div className="chartContainer">
+          <h4>研修効果比較チャート</h4>
+          <ResponsiveContainer width="100%" height={400}>
+            <LineChart data={sortedTrainings}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis 
+                dataKey="name" 
+                angle={-45} 
+                textAnchor="end" 
+                height={100}
+                interval={0}
+              />
+              <YAxis label={{ value: '評価点数', angle: -90, position: 'insideLeft' }} />
+              <Tooltip 
+                formatter={(value, name) => {
+                  if (name === 'evaluationBefore') return [`${value}点`, '受講前評価']
+                  if (name === 'evaluationAfter') return [`${value}点`, '受講後評価']
+                  return [`${value}点`, name]
+                }}
+                labelFormatter={(label) => `研修: ${label}`}
+              />
+              <Legend />
+              <Line 
+                type="monotone" 
+                dataKey="evaluationBefore" 
+                stroke="#ef4444" 
+                strokeWidth={2}
+                name="受講前評価"
+                dot={{ r: 4 }}
+              />
+              <Line 
+                type="monotone" 
+                dataKey="evaluationAfter" 
+                stroke="#10b981" 
+                strokeWidth={2}
+                name="受講後評価"
+                dot={{ r: 4 }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+
         <div className="trainingList">
           {sortedTrainings.map((training) => {
             const impactLevel = getImpactLevel(training.impactScore)
@@ -278,6 +341,53 @@ export default function TrainingEffectAnalysis() {
       {/* カテゴリ別分析 */}
       <div className="categoryAnalysisSection">
         <h3>カテゴリ別効果</h3>
+        <div className="analysisGrid">
+          <div className="chartContainer">
+            <h4>研修回数・効果比較</h4>
+            <ResponsiveContainer width="100%" height={300}>
+              <ComposedChart data={data.categoryAnalysis}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="category" angle={-45} textAnchor="end" height={80} />
+                <YAxis yAxisId="left" label={{ value: '研修回数', angle: -90, position: 'insideLeft' }} />
+                <YAxis yAxisId="right" orientation="right" label={{ value: '平均向上点', angle: 90, position: 'insideRight' }} />
+                <Tooltip 
+                  formatter={(value, name) => {
+                    if (name === 'trainings') return [`${value}回`, '研修回数']
+                    return [`+${value}点`, '平均向上']
+                  }}
+                  labelFormatter={(label) => `${label}カテゴリ`}
+                />
+                <Legend />
+                <Bar yAxisId="left" dataKey="trainings" fill="#3b82f6" name="研修回数" />
+                <Line yAxisId="right" type="monotone" dataKey="avgImprovement" stroke="#ef4444" strokeWidth={2} name="平均向上" />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="chartContainer">
+            <h4>貢献度分布</h4>
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={data.categoryAnalysis}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ name, value }) => `${name}: ${value}%`}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="contribution"
+                >
+                  {data.categoryAnalysis.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={['#3b82f6', '#ef4444', '#10b981', '#f59e0b'][index % 4]} />
+                  ))}
+                </Pie>
+                <Tooltip 
+                  formatter={(value) => [`${value}%`, '貢献度']}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
         <div className="categoryGrid">
           {data.categoryAnalysis.map((category, index) => (
             <div key={index} className="categoryCard">
@@ -335,6 +445,22 @@ export default function TrainingEffectAnalysis() {
 
             <div className="benefitBreakdown">
               <h4>効果内訳</h4>
+              <ResponsiveContainer width="100%" height={200}>
+                <BarChart data={data.roiAnalysis.breakdown} layout="horizontal">
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis type="number" tickFormatter={(value) => `¥${(value / 1000).toFixed(0)}K`} />
+                  <YAxis type="category" dataKey="item" width={100} />
+                  <Tooltip 
+                    formatter={(value) => [`¥${Number(value).toLocaleString()}`, '効果額']}
+                    labelFormatter={(label) => label}
+                  />
+                  <Bar dataKey="value">
+                    {data.roiAnalysis.breakdown.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={['#10b981', '#3b82f6', '#f59e0b'][index % 3]} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
               <div className="breakdownList">
                 {data.roiAnalysis.breakdown.map((item, index) => (
                   <div key={index} className="breakdownItem">
@@ -616,6 +742,28 @@ export default function TrainingEffectAnalysis() {
           font-weight: 600;
           color: #333;
           margin-bottom: 20px;
+        }
+
+        .analysisGrid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 24px;
+          margin-bottom: 24px;
+        }
+
+        .chartContainer {
+          background: white;
+          border: 1px solid #e0e0e0;
+          border-radius: 8px;
+          padding: 16px;
+        }
+
+        .chartContainer h4 {
+          font-size: 16px;
+          font-weight: 600;
+          color: #333;
+          margin-bottom: 16px;
+          text-align: center;
         }
 
         .categoryGrid {

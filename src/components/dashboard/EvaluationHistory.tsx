@@ -174,61 +174,6 @@ const EvaluationHistory: React.FC<EvaluationHistoryProps> = ({ employeeId }) => 
     }
   };
 
-  // 非常にシンプルなテスト用ツールチップ
-  const SimpleTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      return (
-        <div style={{ 
-          backgroundColor: 'white', 
-          padding: '8px', 
-          border: '1px solid black',
-          fontSize: '14px'
-        }}>
-          <div>{label}</div>
-          <div>{payload[0].value}点</div>
-        </div>
-      );
-    }
-    return null;
-  };
-
-  // 棒グラフ用の詳細ツールチップ（デバッグ版）
-  const BarChartTooltip = ({ active, payload, label }: any) => {
-    console.log('BarChartTooltip called:', { active, payload, label });
-    
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-white p-3 border rounded-lg shadow-lg">
-          <p className="font-semibold mb-2">{label}</p>
-          {payload.map((entry: any, index: number) => (
-            <p key={index} style={{ color: entry.color }}>
-              {entry.name}: {entry.value}点
-            </p>
-          ))}
-        </div>
-      );
-    }
-    return null;
-  };
-
-  // レーダーチャート用の詳細ツールチップ（デバッグ版）
-  const RadarChartTooltip = ({ active, payload, label }: any) => {
-    console.log('RadarChartTooltip called:', { active, payload, label });
-    
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-white p-3 border rounded-lg shadow-lg">
-          <p className="font-semibold mb-2">{label}</p>
-          {payload.map((entry: any, index: number) => (
-            <p key={index} style={{ color: entry.color }}>
-              {entry.name}: {entry.value}点
-            </p>
-          ))}
-        </div>
-      );
-    }
-    return null;
-  };
 
   const latestEvaluation = historyData[historyData.length - 1];
   const previousEvaluation = historyData[historyData.length - 2];
@@ -319,7 +264,7 @@ const EvaluationHistory: React.FC<EvaluationHistoryProps> = ({ employeeId }) => 
       </div>
 
       {/* グラフ表示 */}
-      <Card style={{ overflow: 'visible' }}>
+      <Card>
         <CardHeader>
           <div className="flex justify-between items-center">
             <CardTitle>評価推移グラフ</CardTitle>
@@ -348,18 +293,18 @@ const EvaluationHistory: React.FC<EvaluationHistoryProps> = ({ employeeId }) => 
             </div>
           </div>
         </CardHeader>
-        <CardContent style={{ overflow: 'visible' }}>
+        <CardContent>
           {chartType === 'line' && (
-            <div className="h-80" style={{ position: 'relative', overflow: 'visible' }}>
+            <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart 
-                  data={historyData} 
-                  margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                >
+                <LineChart data={historyData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="period" />
                   <YAxis domain={[60, 80]} />
-                  <Tooltip content={SimpleTooltip} />
+                  <Tooltip 
+                    formatter={(value) => `${value}点`}
+                    labelFormatter={(label) => `${label}`}
+                  />
                   <Legend />
                   <Line 
                     type="monotone" 
@@ -395,8 +340,8 @@ const EvaluationHistory: React.FC<EvaluationHistoryProps> = ({ employeeId }) => 
                   <XAxis dataKey="period" />
                   <YAxis domain={[0, 100]} />
                   <Tooltip 
-                    wrapperStyle={{ zIndex: 1000 }}
-                    cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }}
+                    formatter={(value) => `${value}点`}
+                    labelFormatter={(label) => `${label}`}
                   />
                   <Legend />
                   <Bar dataKey="technicalScore" stackId="a" fill="#10b981" name="技術評価" />
@@ -427,7 +372,7 @@ const EvaluationHistory: React.FC<EvaluationHistoryProps> = ({ employeeId }) => 
                     fill="#6b7280" 
                     fillOpacity={0.1}
                   />
-                  <Tooltip wrapperStyle={{ zIndex: 1000 }} />
+                  <Tooltip />
                   <Legend />
                 </RadarChart>
               </ResponsiveContainer>

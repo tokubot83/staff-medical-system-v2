@@ -1,6 +1,9 @@
 'use client'
 
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
+import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, Tooltip, Legend } from 'recharts'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 
 interface RadarData {
   categories: string[]
@@ -42,141 +45,14 @@ const defaultData: RadarData = {
 }
 
 export default function StrengthWeaknessRadar({ data = defaultData }: StrengthWeaknessRadarProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-
-  useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
-    // Canvas設定
-    const width = canvas.width
-    const height = canvas.height
-    const centerX = width / 2
-    const centerY = height / 2
-    const radius = Math.min(width, height) * 0.35
-
-    // Clear canvas
-    ctx.clearRect(0, 0, width, height)
-
-    // レーダーチャートの背景を描画
-    const levels = 5
-    const angleStep = (Math.PI * 2) / data.categories.length
-
-    // グリッド線を描画
-    for (let level = 1; level <= levels; level++) {
-      ctx.beginPath()
-      ctx.strokeStyle = '#e0e0e0'
-      ctx.lineWidth = 1
-
-      for (let i = 0; i <= data.categories.length; i++) {
-        const angle = angleStep * i - Math.PI / 2
-        const x = centerX + Math.cos(angle) * radius * (level / levels)
-        const y = centerY + Math.sin(angle) * radius * (level / levels)
-
-        if (i === 0) {
-          ctx.moveTo(x, y)
-        } else {
-          ctx.lineTo(x, y)
-        }
-      }
-      ctx.stroke()
-    }
-
-    // 軸線を描画
-    for (let i = 0; i < data.categories.length; i++) {
-      const angle = angleStep * i - Math.PI / 2
-      ctx.beginPath()
-      ctx.strokeStyle = '#e0e0e0'
-      ctx.lineWidth = 1
-      ctx.moveTo(centerX, centerY)
-      ctx.lineTo(
-        centerX + Math.cos(angle) * radius,
-        centerY + Math.sin(angle) * radius
-      )
-      ctx.stroke()
-    }
-
-    // カテゴリラベルを描画
-    ctx.font = '12px sans-serif'
-    ctx.fillStyle = '#666'
-    ctx.textAlign = 'center'
-    ctx.textBaseline = 'middle'
-
-    for (let i = 0; i < data.categories.length; i++) {
-      const angle = angleStep * i - Math.PI / 2
-      const labelRadius = radius + 25
-      const x = centerX + Math.cos(angle) * labelRadius
-      const y = centerY + Math.sin(angle) * labelRadius
-      
-      // ラベルの位置を調整
-      if (Math.abs(x - centerX) < 10) {
-        ctx.textAlign = 'center'
-      } else if (x > centerX) {
-        ctx.textAlign = 'left'
-      } else {
-        ctx.textAlign = 'right'
-      }
-
-      ctx.fillText(data.categories[i], x, y)
-    }
-
-    // データをプロット
-    data.data.forEach((dataset, dataIndex) => {
-      ctx.beginPath()
-      ctx.strokeStyle = dataset.color
-      ctx.fillStyle = dataset.color + '40' // 透明度を追加
-      ctx.lineWidth = 2
-
-      for (let i = 0; i <= data.categories.length; i++) {
-        const index = i % data.categories.length
-        const angle = angleStep * index - Math.PI / 2
-        const value = dataset.values[index] / 100 // 100点満点として正規化
-        const x = centerX + Math.cos(angle) * radius * value
-        const y = centerY + Math.sin(angle) * radius * value
-
-        if (i === 0) {
-          ctx.moveTo(x, y)
-        } else {
-          ctx.lineTo(x, y)
-        }
-      }
-
-      ctx.fill()
-      ctx.stroke()
-
-      // データポイントを描画
-      for (let i = 0; i < data.categories.length; i++) {
-        const angle = angleStep * i - Math.PI / 2
-        const value = dataset.values[i] / 100
-        const x = centerX + Math.cos(angle) * radius * value
-        const y = centerY + Math.sin(angle) * radius * value
-
-        ctx.beginPath()
-        ctx.arc(x, y, 4, 0, Math.PI * 2)
-        ctx.fillStyle = dataset.color
-        ctx.fill()
-        ctx.strokeStyle = 'white'
-        ctx.lineWidth = 2
-        ctx.stroke()
-      }
-    })
-
-    // スケールラベルを描画
-    ctx.font = '10px sans-serif'
-    ctx.fillStyle = '#999'
-    ctx.textAlign = 'right'
-    ctx.textBaseline = 'middle'
-
-    for (let level = 1; level <= levels; level++) {
-      const value = (level * 20).toString()
-      const y = centerY - radius * (level / levels)
-      ctx.fillText(value, centerX - 5, y)
-    }
-
-  }, [data])
+  // Rechartsのレーダーチャート用にデータを変換
+  const radarData = data.categories.map((category, index) => {
+    const dataPoint: any = { category };
+    data.data.forEach((item) => {
+      dataPoint[item.name] = item.values[index];
+    });
+    return dataPoint;
+  });
 
   // 強み・弱みを分析
   const analyzeStrengthsWeaknesses = () => {
@@ -188,207 +64,142 @@ export default function StrengthWeaknessRadar({ data = defaultData }: StrengthWe
     }))
 
     const sorted = [...scores].sort((a, b) => b.score - a.score)
-    
-    return {
-      strengths: sorted.slice(0, 3),
-      weaknesses: sorted.slice(-3).reverse()
-    }
+    const strengths = sorted.slice(0, 3)
+    const weaknesses = sorted.slice(-3).reverse()
+
+    return { strengths, weaknesses }
   }
 
-  const { strengths, weaknesses } = analyzeStrengthsWeaknesses()
+  const analysis = analyzeStrengthsWeaknesses()
 
-  return (
-    <div className="radarChartContainer">
-      <div className="chartWrapper">
-        <canvas 
-          ref={canvasRef}
-          width={400}
-          height={400}
-          className="radarCanvas"
-        />
-        
-        {/* 凡例 */}
-        <div className="legend">
-          {data.data.map((dataset, index) => (
-            <div key={index} className="legendItem">
-              <div 
-                className="legendColor"
-                style={{ backgroundColor: dataset.color }}
-              />
-              <span className="legendLabel">{dataset.name}</span>
+  // カスタムツールチップ
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white p-4 border rounded-lg shadow-lg">
+          <p className="font-semibold mb-2">{label}</p>
+          {payload.map((entry: any, index: number) => (
+            <div key={index} className="flex items-center justify-between mb-1">
+              <div className="flex items-center gap-2">
+                <div 
+                  className="w-3 h-3 rounded-full" 
+                  style={{ backgroundColor: entry.color }}
+                />
+                <span className="text-sm">{entry.name}</span>
+              </div>
+              <span className="font-bold" style={{ color: entry.color }}>
+                {entry.value}点
+              </span>
             </div>
           ))}
         </div>
-      </div>
+      );
+    }
+    return null;
+  };
 
-      {/* 分析結果 */}
-      <div className="analysisPanel">
-        <div className="strengthsSection">
-          <h4>
-            <span className="sectionIcon">💪</span>
-            強み TOP3
-          </h4>
-          <ul className="analysisList">
-            {strengths.map((item, index) => (
-              <li key={index} className="analysisItem strength">
-                <span className="rank">{index + 1}</span>
-                <span className="category">{item.category}</span>
-                <span className="score">{item.score}点</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+  return (
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            🎯 スキル評価レーダーチャート
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* レーダーチャート */}
+            <div className="lg:col-span-2">
+              <ResponsiveContainer width="100%" height={400}>
+                <RadarChart data={radarData}>
+                  <PolarGrid />
+                  <PolarAngleAxis dataKey="category" />
+                  <PolarRadiusAxis 
+                    angle={90} 
+                    domain={[0, 100]}
+                    tick={false}
+                  />
+                  {data.data.map((item, index) => (
+                    <Radar
+                      key={item.name}
+                      name={item.name}
+                      dataKey={item.name}
+                      stroke={item.color}
+                      fill={item.color}
+                      fillOpacity={0.3}
+                      strokeWidth={2}
+                    />
+                  ))}
+                  <Tooltip content={<CustomTooltip />} />
+                  <Legend />
+                </RadarChart>
+              </ResponsiveContainer>
+            </div>
 
-        <div className="weaknessesSection">
-          <h4>
-            <span className="sectionIcon">📈</span>
-            改善推奨項目
-          </h4>
-          <ul className="analysisList">
-            {weaknesses.map((item, index) => (
-              <li key={index} className="analysisItem weakness">
-                <span className="rank">{index + 1}</span>
-                <span className="category">{item.category}</span>
-                <span className="score">{item.score}点</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
+            {/* 分析結果 */}
+            <div className="space-y-4">
+              <div className="bg-green-50 p-4 rounded-lg">
+                <h3 className="text-lg font-semibold text-green-800 mb-3">
+                  🌟 強み（上位3項目）
+                </h3>
+                {analysis.strengths.map((item, index) => (
+                  <div key={index} className="flex items-center justify-between mb-2">
+                    <span className="text-green-700">{item.category}</span>
+                    <Badge className="bg-green-100 text-green-800">
+                      {item.score}点
+                    </Badge>
+                  </div>
+                ))}
+              </div>
 
-      <style jsx>{`
-        .radarChartContainer {
-          background: white;
-          border-radius: 8px;
-          padding: 24px;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
+              <div className="bg-orange-50 p-4 rounded-lg">
+                <h3 className="text-lg font-semibold text-orange-800 mb-3">
+                  💪 改善領域（下位3項目）
+                </h3>
+                {analysis.weaknesses.map((item, index) => (
+                  <div key={index} className="flex items-center justify-between mb-2">
+                    <span className="text-orange-700">{item.category}</span>
+                    <Badge className="bg-orange-100 text-orange-800">
+                      {item.score}点
+                    </Badge>
+                  </div>
+                ))}
+              </div>
 
-        .chartWrapper {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          margin-bottom: 24px;
-        }
-
-        .radarCanvas {
-          max-width: 100%;
-          height: auto;
-        }
-
-        .legend {
-          display: flex;
-          gap: 24px;
-          margin-top: 16px;
-        }
-
-        .legendItem {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        }
-
-        .legendColor {
-          width: 16px;
-          height: 16px;
-          border-radius: 2px;
-        }
-
-        .legendLabel {
-          font-size: 14px;
-          color: #666;
-        }
-
-        .analysisPanel {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 24px;
-          padding-top: 24px;
-          border-top: 1px solid #e0e0e0;
-        }
-
-        .strengthsSection,
-        .weaknessesSection {
-          background: #f5f5f5;
-          border-radius: 8px;
-          padding: 16px;
-        }
-
-        .strengthsSection h4,
-        .weaknessesSection h4 {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          font-size: 16px;
-          font-weight: 600;
-          color: #333;
-          margin-bottom: 12px;
-        }
-
-        .sectionIcon {
-          font-size: 20px;
-        }
-
-        .analysisList {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-        }
-
-        .analysisItem {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          padding: 8px;
-          margin-bottom: 8px;
-          background: white;
-          border-radius: 6px;
-        }
-
-        .analysisItem:last-child {
-          margin-bottom: 0;
-        }
-
-        .rank {
-          width: 24px;
-          height: 24px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 12px;
-          font-weight: 600;
-        }
-
-        .strength .rank {
-          background: #e8f5e9;
-          color: #2e7d32;
-        }
-
-        .weakness .rank {
-          background: #fff3e0;
-          color: #e65100;
-        }
-
-        .category {
-          flex: 1;
-          font-size: 14px;
-          color: #333;
-        }
-
-        .score {
-          font-size: 14px;
-          font-weight: 600;
-        }
-
-        .strength .score {
-          color: #2e7d32;
-        }
-
-        .weakness .score {
-          color: #e65100;
-        }
-      `}</style>
+              {/* 全体平均との比較 */}
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <h3 className="text-lg font-semibold text-blue-800 mb-3">
+                  📊 部門平均との比較
+                </h3>
+                {data.data[0] && data.data[1] && (
+                  <div className="text-sm text-blue-700">
+                    <div className="mb-2">
+                      あなたの平均: <span className="font-bold">
+                        {(data.data[0].values.reduce((a, b) => a + b, 0) / data.data[0].values.length).toFixed(1)}点
+                      </span>
+                    </div>
+                    <div className="mb-2">
+                      部門平均: <span className="font-bold">
+                        {(data.data[1].values.reduce((a, b) => a + b, 0) / data.data[1].values.length).toFixed(1)}点
+                      </span>
+                    </div>
+                    <div className="text-lg font-bold">
+                      差分: <span className={
+                        (data.data[0].values.reduce((a, b) => a + b, 0) / data.data[0].values.length) > 
+                        (data.data[1].values.reduce((a, b) => a + b, 0) / data.data[1].values.length) 
+                          ? 'text-green-600' : 'text-orange-600'
+                      }>
+                        {((data.data[0].values.reduce((a, b) => a + b, 0) / data.data[0].values.length) - 
+                          (data.data[1].values.reduce((a, b) => a + b, 0) / data.data[1].values.length)).toFixed(1)}点
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }

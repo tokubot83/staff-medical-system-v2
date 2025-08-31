@@ -53,6 +53,8 @@ import PersonalDashboard from '@/components/dashboard/PersonalDashboard'
 import PersonalAnalysisReport from '@/components/evaluation/PersonalAnalysisReport'
 import StrengthWeaknessRadar from '@/components/evaluation/StrengthWeaknessRadar'
 import TrainingEffectAnalysis from '@/components/evaluation/TrainingEffectAnalysis'
+import EvaluationHistory from '@/components/dashboard/EvaluationHistory'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 
 // Chart.jsの登録
 ChartJS.register(
@@ -157,7 +159,7 @@ export default function StaffDetailPage() {
           {activeTab === 'links' && <ManagementLinksTab selectedStaff={selectedStaff} />}
           {activeTab === 'analytics' && <AnalyticsTab selectedStaff={selectedStaff} />}
           {activeTab === 'evaluation' && <EvaluationTab selectedStaff={selectedStaff} />}
-          {activeTab === 'evaluation-history' && <EvaluationHistoryTab selectedStaff={selectedStaff} />}
+          {activeTab === 'evaluation-history' && <EvaluationHistoryTabRecharts selectedStaff={selectedStaff} />}
           {activeTab === 'evaluation-report' && <EvaluationReportTab selectedStaff={selectedStaff} />}
           {activeTab === 'recruitment' && <RecruitmentTab selectedStaff={selectedStaff} />}
           {activeTab === 'interview' && (
@@ -2763,6 +2765,304 @@ function EvaluationHistoryTab({ selectedStaff }: { selectedStaff: any }): React.
       </Card>
     </div>
   )
+}
+
+// レポートセンター形式のRechartsベース評価履歴コンポーネント
+function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any }): React.ReactElement {
+  const [showAllHistory, setShowAllHistory] = useState(false);
+  
+  // 元の手作りSVGと同じ評価データ
+  const evaluationData = [
+    { year: '2020年度', totalScore: 52.3, grade: 'D', rank: 35 },
+    { year: '2021年度', totalScore: 65.8, grade: 'C', rank: 22 },
+    { year: '2022年度', totalScore: 68.2, grade: 'C', rank: 18 },
+    { year: '2023年度', totalScore: 78.4, grade: 'B', rank: 15 },
+    { year: '2024年度', totalScore: 81.25, grade: 'A', rank: 8 }
+  ];
+
+  const rankData = [
+    { year: '2020年度', rank: 35 },
+    { year: '2021年度', rank: 22 },
+    { year: '2022年度', rank: 18 },
+    { year: '2023年度', rank: 15 },
+    { year: '2024年度', rank: 8 }
+  ];
+
+  // 法人内評価データ（元の2つ目のSVGグラフと同じデータ）
+  const corporateEvaluationData = [
+    { year: '2020年度', totalScore: 45.2, grade: 'D', rank: 456 },
+    { year: '2021年度', totalScore: 58.1, grade: 'D', rank: 389 },
+    { year: '2022年度', totalScore: 62.5, grade: 'C', rank: 334 },
+    { year: '2023年度', totalScore: 69.8, grade: 'C', rank: 278 },
+    { year: '2024年度', totalScore: 74.3, grade: 'B', rank: 215 }
+  ];
+
+  const corporateRankData = [
+    { year: '2020年度', rank: 456 },
+    { year: '2021年度', rank: 389 },
+    { year: '2022年度', rank: 334 },
+    { year: '2023年度', rank: 278 },
+    { year: '2024年度', rank: 215 }
+  ];
+
+  // 施設内評価データ（元の3つ目のSVGグラフと同じデータ）
+  const facilityEvaluationData = [
+    { year: '2020年度', totalScore: 52.3, grade: 'D', rank: 35 },
+    { year: '2021年度', totalScore: 65.8, grade: 'C', rank: 22 },
+    { year: '2022年度', totalScore: 68.2, grade: 'C', rank: 18 },
+    { year: '2023年度', totalScore: 78.4, grade: 'B', rank: 15 },
+    { year: '2024年度', totalScore: 81.25, grade: 'A', rank: 8 }
+  ];
+
+  const facilityRankData = [
+    { year: '2020年度', rank: 35 },
+    { year: '2021年度', rank: 22 },
+    { year: '2022年度', rank: 18 },
+    { year: '2023年度', rank: 15 },
+    { year: '2024年度', rank: 8 }
+  ];
+
+  return (
+    <div className="space-y-6 p-6">
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-xl">
+            📈 総合評価の推移
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {/* レポートセンター形式のRechartsグラフ */}
+          <div className="mb-6">
+            <ResponsiveContainer width="100%" height={400}>
+              <LineChart
+                data={evaluationData}
+                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis 
+                  dataKey="year" 
+                  label={{ value: '評価年度', position: 'insideBottomRight', offset: -10 }}
+                />
+                <YAxis 
+                  label={{ value: '総合評価点数', angle: -90, position: 'insideLeft' }}
+                  domain={[50, 100]}
+                />
+                <Tooltip 
+                  formatter={(value, name) => [
+                    `${value}点 (${evaluationData.find(d => d.totalScore === value)?.grade}グレード)`, 
+                    '総合評価'
+                  ]}
+                  labelFormatter={(label) => `${label}`}
+                />
+                <Legend />
+                <Line 
+                  type="monotone" 
+                  dataKey="totalScore" 
+                  stroke="#2563eb" 
+                  strokeWidth={3}
+                  name="総合評価"
+                  dot={{ r: 6, fill: "#2563eb" }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* 順位推移グラフ */}
+          <div className="mt-6">
+            <h3 className="text-lg font-semibold mb-4">📊 順位推移（施設内）</h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart
+                data={rankData}
+                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis 
+                  dataKey="year"
+                  label={{ value: '評価年度', position: 'insideBottomRight', offset: -10 }}
+                />
+                <YAxis 
+                  label={{ value: '順位（位）', angle: -90, position: 'insideLeft' }}
+                  reversed={true}
+                  domain={[1, 50]}
+                />
+                <Tooltip 
+                  formatter={(value) => [`${value}位`, '施設内順位']}
+                  labelFormatter={(label) => `${label}`}
+                />
+                <Legend />
+                <Line 
+                  type="monotone" 
+                  dataKey="rank" 
+                  stroke="#10b981" 
+                  strokeWidth={3}
+                  name="施設内順位"
+                  dot={{ r: 6, fill: "#10b981" }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* 法人内評価推移グラフ */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-xl">
+            🌐 法人内評価の推移
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="mb-6">
+            <ResponsiveContainer width="100%" height={400}>
+              <LineChart
+                data={corporateEvaluationData}
+                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis 
+                  dataKey="year" 
+                  label={{ value: '評価年度', position: 'insideBottomRight', offset: -10 }}
+                />
+                <YAxis 
+                  label={{ value: '法人内評価点数', angle: -90, position: 'insideLeft' }}
+                  domain={[40, 80]}
+                />
+                <Tooltip 
+                  formatter={(value, name) => [
+                    `${value}点 (${corporateEvaluationData.find(d => d.totalScore === value)?.grade}グレード)`, 
+                    '法人内評価'
+                  ]}
+                  labelFormatter={(label) => `${label}`}
+                />
+                <Legend />
+                <Line 
+                  type="monotone" 
+                  dataKey="totalScore" 
+                  stroke="#10b981" 
+                  strokeWidth={3}
+                  name="法人内評価"
+                  dot={{ r: 6, fill: "#10b981" }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+
+          <div className="mt-6">
+            <h3 className="text-lg font-semibold mb-4">📊 順位推移（法人内）</h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart
+                data={corporateRankData}
+                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis 
+                  dataKey="year"
+                  label={{ value: '評価年度', position: 'insideBottomRight', offset: -10 }}
+                />
+                <YAxis 
+                  label={{ value: '順位（位）', angle: -90, position: 'insideLeft' }}
+                  reversed={true}
+                  domain={[150, 500]}
+                />
+                <Tooltip 
+                  formatter={(value) => [`${value}位`, '法人内順位']}
+                  labelFormatter={(label) => `${label}`}
+                />
+                <Legend />
+                <Line 
+                  type="monotone" 
+                  dataKey="rank" 
+                  stroke="#f59e0b" 
+                  strokeWidth={3}
+                  name="法人内順位"
+                  dot={{ r: 6, fill: "#f59e0b" }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* 施設内評価推移グラフ */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-xl">
+            🏢 施設内評価の推移
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="mb-6">
+            <ResponsiveContainer width="100%" height={400}>
+              <LineChart
+                data={facilityEvaluationData}
+                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis 
+                  dataKey="year" 
+                  label={{ value: '評価年度', position: 'insideBottomRight', offset: -10 }}
+                />
+                <YAxis 
+                  label={{ value: '施設内評価点数', angle: -90, position: 'insideLeft' }}
+                  domain={[50, 85]}
+                />
+                <Tooltip 
+                  formatter={(value, name) => [
+                    `${value}点 (${facilityEvaluationData.find(d => d.totalScore === value)?.grade}グレード)`, 
+                    '施設内評価'
+                  ]}
+                  labelFormatter={(label) => `${label}`}
+                />
+                <Legend />
+                <Line 
+                  type="monotone" 
+                  dataKey="totalScore" 
+                  stroke="#8b5cf6" 
+                  strokeWidth={3}
+                  name="施設内評価"
+                  dot={{ r: 6, fill: "#8b5cf6" }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+
+          <div className="mt-6">
+            <h3 className="text-lg font-semibold mb-4">📊 順位推移（施設内）</h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart
+                data={facilityRankData}
+                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis 
+                  dataKey="year"
+                  label={{ value: '評価年度', position: 'insideBottomRight', offset: -10 }}
+                />
+                <YAxis 
+                  label={{ value: '順位（位）', angle: -90, position: 'insideLeft' }}
+                  reversed={true}
+                  domain={[1, 40]}
+                />
+                <Tooltip 
+                  formatter={(value) => [`${value}位`, '施設内順位']}
+                  labelFormatter={(label) => `${label}`}
+                />
+                <Legend />
+                <Line 
+                  type="monotone" 
+                  dataKey="rank" 
+                  stroke="#ef4444" 
+                  strokeWidth={3}
+                  name="施設内順位"
+                  dot={{ r: 6, fill: "#ef4444" }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
 }
 
 function EvaluationReportTab({ selectedStaff }: { selectedStaff: any }): React.ReactElement {
