@@ -20,6 +20,7 @@ import RecruitmentDashboard from '@/components/recruitment/RecruitmentDashboard'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { TrendingUp, Target, Award, Calendar, BarChart3, Users, FileText, GitCompare } from 'lucide-react'
+import { RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip as RechartsTooltip, Legend as RechartsLegend } from 'recharts'
 import styles from './StaffCards.module.css'
 import InterviewSheetModal from '@/components/InterviewSheetModal'
 import SectionTrendAnalysis from '@/components/interview/SectionTrendAnalysis'
@@ -971,6 +972,199 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
                         B
                       </Badge>
                       <p className="text-sm font-medium text-gray-700 mt-1">良好</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* レーダーチャート比較セクション */}
+                <div className="mt-8">
+                  <h4 className="text-lg font-semibold flex items-center gap-2 mb-6">
+                    📊 評価項目レーダーチャート比較
+                  </h4>
+                  
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* 法人統一項目レーダーチャート */}
+                    <Card className="border-l-4" style={{ borderLeftColor: CHART_COLORS.primary }}>
+                      <CardHeader>
+                        <CardTitle className="text-base flex items-center gap-2">
+                          🏢 法人統一項目（30点満点）
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="h-80">
+                          <ResponsiveContainer width="100%" height="100%">
+                            <RadarChart
+                              data={[
+                                { category: 'C01\n専門技術・スキル', current: 8.2, average: 7.5, max: 10 },
+                                { category: 'C02\n対人関係・ケア', current: 8.5, average: 7.8, max: 10 },
+                                { category: 'C03\n安全・品質管理', current: 7.3, average: 7.2, max: 10 }
+                              ]}
+                            >
+                              <PolarGrid />
+                              <PolarAngleAxis dataKey="category" tick={{ fontSize: 11, textAnchor: 'middle' }} />
+                              <PolarRadiusAxis angle={90} domain={[0, 10]} tick={{ fontSize: 10 }} />
+                              <Radar
+                                name="本人評価"
+                                dataKey="current"
+                                stroke={CHART_COLORS.primary}
+                                fill={CHART_COLORS.primary}
+                                fillOpacity={0.3}
+                                strokeWidth={2}
+                              />
+                              <Radar
+                                name="施設平均"
+                                dataKey="average"
+                                stroke="#6b7280"
+                                fill="#6b7280"
+                                fillOpacity={0.1}
+                                strokeWidth={1}
+                                strokeDasharray="5 5"
+                              />
+                              <RechartsTooltip
+                                content={({ active, payload, label }) => {
+                                  if (active && payload && payload.length) {
+                                    return (
+                                      <div className="bg-white p-4 border rounded-lg shadow-lg">
+                                        <p className="font-semibold mb-2">{label}</p>
+                                        {payload.map((entry: any, index: number) => (
+                                          <div key={index} className="flex items-center justify-between mb-1">
+                                            <div className="flex items-center gap-2">
+                                              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: entry.color }}/>
+                                              <span className="text-sm">{entry.name}</span>
+                                            </div>
+                                            <span className="font-bold" style={{ color: entry.color }}>
+                                              {entry.value}点
+                                            </span>
+                                          </div>
+                                        ))}
+                                        <div className="mt-2 pt-2 border-t text-xs text-gray-500">
+                                          満点: 10点
+                                        </div>
+                                      </div>
+                                    );
+                                  }
+                                  return null;
+                                }}
+                              />
+                              <RechartsLegend />
+                            </RadarChart>
+                          </ResponsiveContainer>
+                        </div>
+                        <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                          <div className="text-sm text-gray-600">
+                            <span className="font-medium">合計:</span> 24.0点 / 30点 (80.0%)
+                          </div>
+                          <div className="text-xs text-gray-500 mt-1">
+                            法人全体で標準化された評価基準による技術・ケア・安全管理の評価
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* 施設特化項目レーダーチャート */}
+                    <Card className="border-l-4" style={{ borderLeftColor: CHART_COLORS.success }}>
+                      <CardHeader>
+                        <CardTitle className="text-base flex items-center gap-2">
+                          🎯 施設特化項目（20点満点）
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="h-80">
+                          <ResponsiveContainer width="100%" height="100%">
+                            <RadarChart
+                              data={[
+                                { category: 'F01\n回復期リハビリ\n専門性', current: 8.0, average: 7.3, max: 10 },
+                                { category: 'F02\n多職種連携\nチームケア', current: 8.0, average: 7.8, max: 10 }
+                              ]}
+                            >
+                              <PolarGrid />
+                              <PolarAngleAxis dataKey="category" tick={{ fontSize: 11, textAnchor: 'middle' }} />
+                              <PolarRadiusAxis angle={90} domain={[0, 10]} tick={{ fontSize: 10 }} />
+                              <Radar
+                                name="本人評価"
+                                dataKey="current"
+                                stroke={CHART_COLORS.success}
+                                fill={CHART_COLORS.success}
+                                fillOpacity={0.3}
+                                strokeWidth={2}
+                              />
+                              <Radar
+                                name="施設平均"
+                                dataKey="average"
+                                stroke="#6b7280"
+                                fill="#6b7280"
+                                fillOpacity={0.1}
+                                strokeWidth={1}
+                                strokeDasharray="5 5"
+                              />
+                              <RechartsTooltip
+                                content={({ active, payload, label }) => {
+                                  if (active && payload && payload.length) {
+                                    return (
+                                      <div className="bg-white p-4 border rounded-lg shadow-lg">
+                                        <p className="font-semibold mb-2">{label}</p>
+                                        {payload.map((entry: any, index: number) => (
+                                          <div key={index} className="flex items-center justify-between mb-1">
+                                            <div className="flex items-center gap-2">
+                                              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: entry.color }}/>
+                                              <span className="text-sm">{entry.name}</span>
+                                            </div>
+                                            <span className="font-bold" style={{ color: entry.color }}>
+                                              {entry.value}点
+                                            </span>
+                                          </div>
+                                        ))}
+                                        <div className="mt-2 pt-2 border-t text-xs text-gray-500">
+                                          満点: 10点
+                                        </div>
+                                      </div>
+                                    );
+                                  }
+                                  return null;
+                                }}
+                              />
+                              <RechartsLegend />
+                            </RadarChart>
+                          </ResponsiveContainer>
+                        </div>
+                        <div className="mt-4 p-3 bg-green-50 rounded-lg">
+                          <div className="text-sm text-gray-600">
+                            <span className="font-medium">合計:</span> 16.0点 / 20点 (80.0%)
+                          </div>
+                          <div className="text-xs text-gray-500 mt-1">
+                            回復期リハビリテーション病院特有の専門性・連携力の評価
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  {/* 比較分析サマリー */}
+                  <div className="mt-6 p-4 bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg border">
+                    <h5 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                      🔍 レーダーチャート分析
+                    </h5>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                      <div className="space-y-2">
+                        <div className="flex items-start gap-2">
+                          <span className="text-green-600 font-bold">✓</span>
+                          <span><strong>法人統一項目:</strong> 対人関係・ケア(8.5点)が特に優秀で、施設平均を大幅に上回っています。</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="text-green-600 font-bold">✓</span>
+                          <span><strong>施設特化項目:</strong> 両項目とも8.0点で安定しており、施設の専門性に適応できています。</span>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex items-start gap-2">
+                          <span className="text-yellow-600 font-bold">⚠</span>
+                          <span><strong>改善点:</strong> 安全・品質管理(7.3点)は他項目と比べやや低めで、継続的な向上が期待されます。</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="text-blue-600 font-bold">💡</span>
+                          <span><strong>強み活用:</strong> 高いケア力と専門性を活かし、チーム内のメンター役としても活躍可能です。</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
