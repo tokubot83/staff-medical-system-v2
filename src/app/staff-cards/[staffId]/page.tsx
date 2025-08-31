@@ -54,7 +54,16 @@ import PersonalAnalysisReport from '@/components/evaluation/PersonalAnalysisRepo
 import StrengthWeaknessRadar from '@/components/evaluation/StrengthWeaknessRadar'
 import TrainingEffectAnalysis from '@/components/evaluation/TrainingEffectAnalysis'
 import EvaluationHistory from '@/components/dashboard/EvaluationHistory'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { 
+  LineChart, 
+  Line as RechartsLine, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip as RechartsTooltip, 
+  Legend as RechartsLegend, 
+  ResponsiveContainer 
+} from 'recharts'
 
 // Chart.jsの登録
 ChartJS.register(
@@ -2833,6 +2842,12 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
         <CardContent>
           {/* レポートセンター形式のRechartsグラフ */}
           <div className="mb-6">
+            {/* グラフ上部のコメント */}
+            <div className="mb-4 p-3 bg-blue-50 border-l-4 border-blue-500 rounded">
+              <p className="text-sm text-blue-700">
+                💡 <strong>成長の軌跡：</strong>入社以来、着実な成長を遂げています。特に2023年度以降の成長が顕著で、総合評価点が大幅に向上しています。
+              </p>
+            </div>
             <ResponsiveContainer width="100%" height={400}>
               <LineChart
                 data={evaluationData}
@@ -2847,15 +2862,15 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
                   label={{ value: '総合評価点数', angle: -90, position: 'insideLeft' }}
                   domain={[50, 100]}
                 />
-                <Tooltip 
+                <RechartsTooltip 
                   formatter={(value, name) => [
                     `${value}点 (${evaluationData.find(d => d.totalScore === value)?.grade}グレード)`, 
                     '総合評価'
                   ]}
                   labelFormatter={(label) => `${label}`}
                 />
-                <Legend />
-                <Line 
+                <RechartsLegend />
+                <RechartsLine 
                   type="monotone" 
                   dataKey="totalScore" 
                   stroke="#2563eb" 
@@ -2865,6 +2880,12 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
                 />
               </LineChart>
             </ResponsiveContainer>
+            {/* グラフ下部のコメント */}
+            <div className="mt-4 p-3 bg-gray-50 border-l-4 border-gray-400 rounded">
+              <p className="text-sm text-gray-600">
+                📌 <strong>ポイント：</strong>2023年度の技術評価向上と2024年度の貢献度評価向上が総合評価の改善に大きく寄与しています。
+              </p>
+            </div>
           </div>
 
           {/* 順位推移グラフ */}
@@ -2885,12 +2906,12 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
                   reversed={true}
                   domain={[1, 50]}
                 />
-                <Tooltip 
+                <RechartsTooltip 
                   formatter={(value) => [`${value}位`, '施設内順位']}
                   labelFormatter={(label) => `${label}`}
                 />
-                <Legend />
-                <Line 
+                <RechartsLegend />
+                <RechartsLine 
                   type="monotone" 
                   dataKey="rank" 
                   stroke="#10b981" 
@@ -2900,6 +2921,12 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
                 />
               </LineChart>
             </ResponsiveContainer>
+            {/* 順位グラフのコメント */}
+            <div className="mt-4 p-3 bg-green-50 border-l-4 border-green-500 rounded">
+              <p className="text-sm text-green-700">
+                🎯 <strong>順位改善：</strong>施設内順位が年々上昇し、現在はトップ10入りを達成。リーダーシップを発揮する立場に成長しています。
+              </p>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -2913,6 +2940,12 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
         </CardHeader>
         <CardContent>
           <div className="mb-6">
+            {/* 法人内評価の上部コメント */}
+            <div className="mb-4 p-3 bg-emerald-50 border-l-4 border-emerald-500 rounded">
+              <p className="text-sm text-emerald-700">
+                🚀 <strong>法人内での躍進：</strong>法人全体（850名中）での順位が大幅に改善。2020年度の456位から2024年度は215位まで上昇しました。
+              </p>
+            </div>
             <ResponsiveContainer width="100%" height={400}>
               <LineChart
                 data={corporateEvaluationData}
@@ -2927,15 +2960,15 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
                   label={{ value: '法人内評価点数', angle: -90, position: 'insideLeft' }}
                   domain={[40, 80]}
                 />
-                <Tooltip 
+                <RechartsTooltip 
                   formatter={(value, name) => [
                     `${value}点 (${corporateEvaluationData.find(d => d.totalScore === value)?.grade}グレード)`, 
                     '法人内評価'
                   ]}
                   labelFormatter={(label) => `${label}`}
                 />
-                <Legend />
-                <Line 
+                <RechartsLegend />
+                <RechartsLine 
                   type="monotone" 
                   dataKey="totalScore" 
                   stroke="#10b981" 
@@ -2945,6 +2978,12 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
                 />
               </LineChart>
             </ResponsiveContainer>
+            {/* 法人内評価の下部コメント */}
+            <div className="mt-4 p-3 bg-gray-50 border-l-4 border-gray-400 rounded">
+              <p className="text-sm text-gray-600">
+                💪 <strong>改善ポイント：</strong>法人内評価では特に専門技術スキルと問題解決能力の向上が評価されています。
+              </p>
+            </div>
           </div>
 
           <div className="mt-6">
@@ -2964,12 +3003,12 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
                   reversed={true}
                   domain={[150, 500]}
                 />
-                <Tooltip 
+                <RechartsTooltip 
                   formatter={(value) => [`${value}位`, '法人内順位']}
                   labelFormatter={(label) => `${label}`}
                 />
-                <Legend />
-                <Line 
+                <RechartsLegend />
+                <RechartsLine 
                   type="monotone" 
                   dataKey="rank" 
                   stroke="#f59e0b" 
@@ -2979,6 +3018,12 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
                 />
               </LineChart>
             </ResponsiveContainer>
+            {/* 法人内順位のコメント */}
+            <div className="mt-4 p-3 bg-amber-50 border-l-4 border-amber-500 rounded">
+              <p className="text-sm text-amber-700">
+                📈 <strong>目標達成率：</strong>法人内上位25%（213位以内）への到達まであと2位。次年度での達成が期待されます。
+              </p>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -2992,6 +3037,12 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
         </CardHeader>
         <CardContent>
           <div className="mb-6">
+            {/* 施設内評価の上部コメント */}
+            <div className="mb-4 p-3 bg-purple-50 border-l-4 border-purple-500 rounded">
+              <p className="text-sm text-purple-700">
+                ⭐ <strong>施設のエース級：</strong>施設内120名中8位という優秀な成績。Aグレード評価を獲得し、施設の中核人材として活躍中。
+              </p>
+            </div>
             <ResponsiveContainer width="100%" height={400}>
               <LineChart
                 data={facilityEvaluationData}
@@ -3006,15 +3057,15 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
                   label={{ value: '施設内評価点数', angle: -90, position: 'insideLeft' }}
                   domain={[50, 85]}
                 />
-                <Tooltip 
+                <RechartsTooltip 
                   formatter={(value, name) => [
                     `${value}点 (${facilityEvaluationData.find(d => d.totalScore === value)?.grade}グレード)`, 
                     '施設内評価'
                   ]}
                   labelFormatter={(label) => `${label}`}
                 />
-                <Legend />
-                <Line 
+                <RechartsLegend />
+                <RechartsLine 
                   type="monotone" 
                   dataKey="totalScore" 
                   stroke="#8b5cf6" 
@@ -3024,6 +3075,12 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
                 />
               </LineChart>
             </ResponsiveContainer>
+            {/* 施設内評価の下部コメント */}
+            <div className="mt-4 p-3 bg-gray-50 border-l-4 border-gray-400 rounded">
+              <p className="text-sm text-gray-600">
+                🏆 <strong>強み：</strong>施設特化項目（12点満点）と貢献度評価が特に高く、施設運営への積極的な関与が評価されています。
+              </p>
+            </div>
           </div>
 
           <div className="mt-6">
@@ -3043,12 +3100,12 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
                   reversed={true}
                   domain={[1, 40]}
                 />
-                <Tooltip 
+                <RechartsTooltip 
                   formatter={(value) => [`${value}位`, '施設内順位']}
                   labelFormatter={(label) => `${label}`}
                 />
-                <Legend />
-                <Line 
+                <RechartsLegend />
+                <RechartsLine 
                   type="monotone" 
                   dataKey="rank" 
                   stroke="#ef4444" 
@@ -3058,6 +3115,12 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
                 />
               </LineChart>
             </ResponsiveContainer>
+            {/* 施設内順位のコメント */}
+            <div className="mt-4 p-3 bg-indigo-50 border-l-4 border-indigo-500 rounded">
+              <p className="text-sm text-indigo-700">
+                🎖️ <strong>次のステップ：</strong>施設内トップ5入りまであと3位。マネジメントスキルの更なる向上で達成可能な位置にいます。
+              </p>
+            </div>
           </div>
         </CardContent>
       </Card>
