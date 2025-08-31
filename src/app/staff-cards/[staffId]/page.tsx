@@ -3124,6 +3124,434 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
           </div>
         </CardContent>
       </Card>
+
+      {/* 年度別評価詳細履歴 */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            📋 年度別評価詳細履歴
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-x-auto">
+            <div className="space-y-3">
+              {/* 2024年度 - 最新 */}
+              <div className="rounded-xl bg-card text-card-foreground border-2 border-blue-200 shadow-lg overflow-hidden">
+                <div className="p-4">
+                  <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    <div className="flex flex-col">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-lg font-bold text-gray-800">2024年度</span>
+                        <Badge className="bg-blue-600 text-white text-xs">最新</Badge>
+                      </div>
+                      <div className="text-sm text-gray-500">2023/4-2024/3</div>
+                    </div>
+                    <div className="flex flex-col items-center justify-center">
+                      <div className="text-xs text-gray-500 mb-1">総合判定</div>
+                      <div className="w-12 h-12 rounded-full flex items-center justify-center text-white text-lg font-bold mb-1 bg-orange-500">A</div>
+                      <div className="text-sm font-medium text-gray-700">81.25点</div>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="text-xs text-gray-500 mb-2">詳細評価</div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-xs text-gray-600">施設内</span>
+                        <Badge variant="outline" className="text-orange-500 border-orange-300">A</Badge>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-600">法人内</span>
+                        <Badge variant="outline" className="text-green-500 border-green-300">B</Badge>
+                      </div>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="text-xs text-gray-500 mb-2">得点内訳</div>
+                      <div className="space-y-1">
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs text-gray-600">技術</span>
+                          <span className="text-sm font-medium">40点</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs text-gray-600">組織</span>
+                          <span className="text-sm font-medium">41.25点</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="text-xs text-gray-500 mb-2">施設内順位</div>
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-blue-600">12位</div>
+                        <div className="text-xs text-gray-600">/ 120人中</div>
+                        <Badge className="bg-green-600 text-white text-xs">上位10%</Badge>
+                      </div>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="text-xs text-gray-500 mb-2">法人内順位</div>
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-blue-600">89位</div>
+                        <div className="text-xs text-gray-600">/ 850人中</div>
+                        <Badge className="bg-yellow-600 text-white text-xs">上位11%</Badge>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 2023年度 */}
+              <div className="rounded-xl border bg-card text-card-foreground shadow overflow-hidden">
+                <div className="p-4">
+                  <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    <div className="flex flex-col">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-lg font-bold text-gray-800">2023年度</span>
+                      </div>
+                      <div className="text-sm text-gray-500">2022/4-2023/3</div>
+                    </div>
+                    <div className="flex flex-col items-center justify-center">
+                      <div className="text-xs text-gray-500 mb-1">総合判定</div>
+                      <div className="w-12 h-12 rounded-full flex items-center justify-center text-white text-lg font-bold mb-1 bg-green-500">B</div>
+                      <div className="text-sm font-medium text-gray-700">78.5点</div>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="text-xs text-gray-500 mb-2">詳細評価</div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-xs text-gray-600">施設内</span>
+                        <Badge variant="outline" className="text-green-500 border-green-300">B</Badge>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-600">法人内</span>
+                        <Badge variant="outline" className="text-green-500 border-green-300">B</Badge>
+                      </div>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="text-xs text-gray-500 mb-2">得点内訳</div>
+                      <div className="space-y-1">
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs text-gray-600">技術</span>
+                          <span className="text-sm font-medium">38点</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs text-gray-600">組織</span>
+                          <span className="text-sm font-medium">40.5点</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="text-xs text-gray-500 mb-2">施設内順位</div>
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-blue-600">18位</div>
+                        <div className="text-xs text-gray-600">/ 118人中</div>
+                        <Badge className="bg-yellow-600 text-white text-xs">上位15%</Badge>
+                      </div>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="text-xs text-gray-500 mb-2">法人内順位</div>
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-blue-600">127位</div>
+                        <div className="text-xs text-gray-600">/ 820人中</div>
+                        <Badge className="bg-yellow-600 text-white text-xs">上位15%</Badge>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 2022年度 */}
+              <div className="rounded-xl border bg-card text-card-foreground shadow overflow-hidden">
+                <div className="p-4">
+                  <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    <div className="flex flex-col">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-lg font-bold text-gray-800">2022年度</span>
+                      </div>
+                      <div className="text-sm text-gray-500">2021/4-2022/3</div>
+                    </div>
+                    <div className="flex flex-col items-center justify-center">
+                      <div className="text-xs text-gray-500 mb-1">総合判定</div>
+                      <div className="w-12 h-12 rounded-full flex items-center justify-center text-white text-lg font-bold mb-1 bg-green-500">B</div>
+                      <div className="text-sm font-medium text-gray-700">75.8点</div>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="text-xs text-gray-500 mb-2">詳細評価</div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-xs text-gray-600">施設内</span>
+                        <Badge variant="outline" className="text-green-500 border-green-300">B</Badge>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-600">法人内</span>
+                        <Badge variant="outline" className="text-blue-500 border-blue-300">C</Badge>
+                      </div>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="text-xs text-gray-500 mb-2">得点内訳</div>
+                      <div className="space-y-1">
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs text-gray-600">技術</span>
+                          <span className="text-sm font-medium">36点</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs text-gray-600">組織</span>
+                          <span className="text-sm font-medium">39.8点</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="text-xs text-gray-500 mb-2">施設内順位</div>
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-blue-600">22位</div>
+                        <div className="text-xs text-gray-600">/ 115人中</div>
+                        <Badge className="bg-yellow-600 text-white text-xs">上位19%</Badge>
+                      </div>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="text-xs text-gray-500 mb-2">法人内順位</div>
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-blue-600">189位</div>
+                        <div className="text-xs text-gray-600">/ 800人中</div>
+                        <Badge className="bg-yellow-600 text-white text-xs">上位24%</Badge>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 2021年度 */}
+              <div className="rounded-xl border bg-card text-card-foreground shadow overflow-hidden">
+                <div className="p-4">
+                  <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    <div className="flex flex-col">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-lg font-bold text-gray-800">2021年度</span>
+                      </div>
+                      <div className="text-sm text-gray-500">2020/4-2021/3</div>
+                    </div>
+                    <div className="flex flex-col items-center justify-center">
+                      <div className="text-xs text-gray-500 mb-1">総合判定</div>
+                      <div className="w-12 h-12 rounded-full flex items-center justify-center text-white text-lg font-bold mb-1 bg-blue-500">C</div>
+                      <div className="text-sm font-medium text-gray-700">68.2点</div>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="text-xs text-gray-500 mb-2">詳細評価</div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-xs text-gray-600">施設内</span>
+                        <Badge variant="outline" className="text-blue-500 border-blue-300">C</Badge>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-600">法人内</span>
+                        <Badge variant="outline" className="text-blue-500 border-blue-300">C</Badge>
+                      </div>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="text-xs text-gray-500 mb-2">得点内訳</div>
+                      <div className="space-y-1">
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs text-gray-600">技術</span>
+                          <span className="text-sm font-medium">32点</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs text-gray-600">組織</span>
+                          <span className="text-sm font-medium">36.2点</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="text-xs text-gray-500 mb-2">施設内順位</div>
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-blue-600">35位</div>
+                        <div className="text-xs text-gray-600">/ 112人中</div>
+                        <Badge className="bg-gray-500 text-white text-xs">上位31%</Badge>
+                      </div>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="text-xs text-gray-500 mb-2">法人内順位</div>
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-blue-600">298位</div>
+                        <div className="text-xs text-gray-600">/ 785人中</div>
+                        <Badge className="bg-gray-500 text-white text-xs">上位38%</Badge>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 2020年度 */}
+              <div className="rounded-xl border bg-card text-card-foreground shadow overflow-hidden">
+                <div className="p-4">
+                  <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    <div className="flex flex-col">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-lg font-bold text-gray-800">2020年度</span>
+                      </div>
+                      <div className="text-sm text-gray-500">2019/4-2020/3</div>
+                    </div>
+                    <div className="flex flex-col items-center justify-center">
+                      <div className="text-xs text-gray-500 mb-1">総合判定</div>
+                      <div className="w-12 h-12 rounded-full flex items-center justify-center text-white text-lg font-bold mb-1 bg-blue-500">C</div>
+                      <div className="text-sm font-medium text-gray-700">64.1点</div>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="text-xs text-gray-500 mb-2">詳細評価</div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-xs text-gray-600">施設内</span>
+                        <Badge variant="outline" className="text-blue-500 border-blue-300">C</Badge>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-600">法人内</span>
+                        <Badge variant="outline" className="text-gray-500 border-gray-300">D</Badge>
+                      </div>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="text-xs text-gray-500 mb-2">得点内訳</div>
+                      <div className="space-y-1">
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs text-gray-600">技術</span>
+                          <span className="text-sm font-medium">30点</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs text-gray-600">組織</span>
+                          <span className="text-sm font-medium">34.1点</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="text-xs text-gray-500 mb-2">施設内順位</div>
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-blue-600">42位</div>
+                        <div className="text-xs text-gray-600">/ 110人中</div>
+                        <Badge className="bg-gray-500 text-white text-xs">上位38%</Badge>
+                      </div>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="text-xs text-gray-500 mb-2">法人内順位</div>
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-blue-600">456位</div>
+                        <div className="text-xs text-gray-600">/ 770人中</div>
+                        <Badge className="bg-gray-500 text-white text-xs">上位59%</Badge>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 2019年度 */}
+              <div className="rounded-xl border bg-card text-card-foreground shadow overflow-hidden">
+                <div className="p-4">
+                  <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    <div className="flex flex-col">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-lg font-bold text-gray-800">2019年度</span>
+                      </div>
+                      <div className="text-sm text-gray-500">2018/4-2019/3</div>
+                    </div>
+                    <div className="flex flex-col items-center justify-center">
+                      <div className="text-xs text-gray-500 mb-1">総合判定</div>
+                      <div className="w-12 h-12 rounded-full flex items-center justify-center text-white text-lg font-bold mb-1 bg-gray-500">D</div>
+                      <div className="text-sm font-medium text-gray-700">58.5点</div>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="text-xs text-gray-500 mb-2">詳細評価</div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-xs text-gray-600">施設内</span>
+                        <Badge variant="outline" className="text-gray-500 border-gray-300">D</Badge>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-600">法人内</span>
+                        <Badge variant="outline" className="text-gray-500 border-gray-300">D</Badge>
+                      </div>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="text-xs text-gray-500 mb-2">得点内訳</div>
+                      <div className="space-y-1">
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs text-gray-600">技術</span>
+                          <span className="text-sm font-medium">26点</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs text-gray-600">組織</span>
+                          <span className="text-sm font-medium">32.5点</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="text-xs text-gray-500 mb-2">施設内順位</div>
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-blue-600">68位</div>
+                        <div className="text-xs text-gray-600">/ 105人中</div>
+                        <Badge className="bg-gray-500 text-white text-xs">上位65%</Badge>
+                      </div>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="text-xs text-gray-500 mb-2">法人内順位</div>
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-blue-600">598位</div>
+                        <div className="text-xs text-gray-600">/ 750人中</div>
+                        <Badge className="bg-gray-500 text-white text-xs">上位80%</Badge>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 2018年度 */}
+              <div className="rounded-xl border bg-card text-card-foreground shadow overflow-hidden">
+                <div className="p-4">
+                  <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    <div className="flex flex-col">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-lg font-bold text-gray-800">2018年度</span>
+                      </div>
+                      <div className="text-sm text-gray-500">2017/4-2018/3</div>
+                    </div>
+                    <div className="flex flex-col items-center justify-center">
+                      <div className="text-xs text-gray-500 mb-1">総合判定</div>
+                      <div className="w-12 h-12 rounded-full flex items-center justify-center text-white text-lg font-bold mb-1 bg-gray-500">D</div>
+                      <div className="text-sm font-medium text-gray-700">52.8点</div>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="text-xs text-gray-500 mb-2">詳細評価</div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-xs text-gray-600">施設内</span>
+                        <Badge variant="outline" className="text-gray-500 border-gray-300">D</Badge>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-600">法人内</span>
+                        <Badge variant="outline" className="text-gray-500 border-gray-300">D</Badge>
+                      </div>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="text-xs text-gray-500 mb-2">得点内訳</div>
+                      <div className="space-y-1">
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs text-gray-600">技術</span>
+                          <span className="text-sm font-medium">22点</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs text-gray-600">組織</span>
+                          <span className="text-sm font-medium">30.8点</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="text-xs text-gray-500 mb-2">施設内順位</div>
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-blue-600">78位</div>
+                        <div className="text-xs text-gray-600">/ 102人中</div>
+                        <Badge className="bg-gray-500 text-white text-xs">上位76%</Badge>
+                      </div>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="text-xs text-gray-500 mb-2">法人内順位</div>
+                      <div className="text-center">
+                        <div className="text-lg font-bold text-blue-600">642位</div>
+                        <div className="text-xs text-gray-600">/ 730人中</div>
+                        <Badge className="bg-gray-500 text-white text-xs">上位88%</Badge>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
