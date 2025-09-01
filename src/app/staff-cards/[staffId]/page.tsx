@@ -2888,7 +2888,7 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
     total: item.facilityRank.total,
     percentile: item.facilityRank.percentile,
     grade: item.facilityGrade
-  }))
+  }));
 
   // グレード背景色の設定
   const getGradeColor = (grade: string) => {
@@ -3203,6 +3203,7 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
             </CardContent>
           </Card>
         </div>
+        </div>
 
         {/* 評価トレンド分析サマリー */}
         <div className="mt-6 p-4 bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg border">
@@ -3255,6 +3256,7 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
               className="h-full"
             />
           </div>
+        </div>
         </div>
 
       </div>
