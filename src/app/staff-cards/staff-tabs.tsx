@@ -2817,30 +2817,172 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                         <div className="p-6 pt-0">
                           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                             <div className="lg:col-span-2">
-                              <div className="recharts-responsive-container" style={{width: '100%', height: '350px'}}>
-                                <div className="space-y-4 p-4">
-                                  <div className="text-sm font-medium text-gray-600 mb-4">月別成長推移</div>
-                                  <div className="grid grid-cols-7 gap-2 text-xs">
-                                    <div className="text-center font-medium text-gray-500">1月</div>
-                                    <div className="text-center font-medium text-gray-500">2月</div>
-                                    <div className="text-center font-medium text-gray-500">3月</div>
-                                    <div className="text-center font-medium text-gray-500">4月</div>
-                                    <div className="text-center font-medium text-gray-500">5月</div>
-                                    <div className="text-center font-medium text-gray-500">6月</div>
-                                    <div className="text-center font-medium text-gray-500">7月</div>
-                                    <div className="text-center py-2 bg-blue-100 rounded text-blue-800 font-bold">72</div>
-                                    <div className="text-center py-2 bg-blue-200 rounded text-blue-800 font-bold">75</div>
-                                    <div className="text-center py-2 bg-blue-300 rounded text-blue-800 font-bold">78</div>
-                                    <div className="text-center py-2 bg-blue-400 rounded text-blue-900 font-bold">82</div>
-                                    <div className="text-center py-2 bg-blue-500 rounded text-white font-bold">85</div>
-                                    <div className="text-center py-2 bg-blue-600 rounded text-white font-bold">88</div>
-                                    <div className="text-center py-2 bg-blue-700 rounded text-white font-bold">91</div>
-                                  </div>
-                                  <div className="flex items-center justify-center mt-4">
-                                    <div className="w-full bg-gray-200 rounded-full h-2">
-                                      <div className="bg-blue-600 h-2 rounded-full" style={{width: '91%'}}></div>
-                                    </div>
-                                    <span className="ml-2 text-sm font-medium text-blue-600">91%</span>
+                              <div className="recharts-responsive-container" style={{width: '100%', height: '400px', minWidth: '0px'}}>
+                                <div style={{width: '0px', height: '0px', overflow: 'visible'}}>
+                                  <div className="recharts-wrapper" style={{position: 'relative', cursor: 'default', width: '571px', height: '400px'}}>
+                                    <div xmlns="http://www.w3.org/1999/xhtml" tabIndex="-1" className="recharts-tooltip-wrapper" style={{visibility: 'hidden', pointerEvents: 'none', position: 'absolute', top: '0px', left: '0px'}}></div>
+                                    <svg role="application" tabIndex="0" className="recharts-surface" width="571" height="400" viewBox="0 0 571 400" style={{width: '100%', height: '100%'}}>
+                                      <title></title>
+                                      <desc></desc>
+                                      <defs>
+                                        <clipPath id="recharts1-clip">
+                                          <rect x="65" y="5" height="360" width="501"></rect>
+                                        </clipPath>
+                                      </defs>
+                                      <g className="recharts-cartesian-grid">
+                                        <g className="recharts-cartesian-grid-horizontal">
+                                          <line strokeDasharray="3 3" stroke="#f3f4f6" fill="none" x="65" y="5" width="501" height="360" x1="65" y1="365" x2="566" y2="365"></line>
+                                          <line strokeDasharray="3 3" stroke="#f3f4f6" fill="none" x="65" y="5" width="501" height="360" x1="65" y1="262.14285714285717" x2="566" y2="262.14285714285717"></line>
+                                          <line strokeDasharray="3 3" stroke="#f3f4f6" fill="none" x="65" y="5" width="501" height="360" x1="65" y1="159.2857142857143" x2="566" y2="159.2857142857143"></line>
+                                          <line strokeDasharray="3 3" stroke="#f3f4f6" fill="none" x="65" y="5" width="501" height="360" x1="65" y1="56.428571428571445" x2="566" y2="56.428571428571445"></line>
+                                          <line strokeDasharray="3 3" stroke="#f3f4f6" fill="none" x="65" y="5" width="501" height="360" x1="65" y1="5" x2="566" y2="5"></line>
+                                        </g>
+                                        <g className="recharts-cartesian-grid-vertical">
+                                          <line strokeDasharray="3 3" stroke="#f3f4f6" fill="none" x="65" y="5" width="501" height="360" x1="65" y1="5" x2="65" y2="365"></line>
+                                          <line strokeDasharray="3 3" stroke="#f3f4f6" fill="none" x="65" y="5" width="501" height="360" x1="165.2" y1="5" x2="165.2" y2="365"></line>
+                                          <line strokeDasharray="3 3" stroke="#f3f4f6" fill="none" x="65" y="5" width="501" height="360" x1="265.4" y1="5" x2="265.4" y2="365"></line>
+                                          <line strokeDasharray="3 3" stroke="#f3f4f6" fill="none" x="65" y="5" width="501" height="360" x1="365.6" y1="5" x2="365.6" y2="365"></line>
+                                          <line strokeDasharray="3 3" stroke="#f3f4f6" fill="none" x="65" y="5" width="501" height="360" x1="566" y1="5" x2="566" y2="365"></line>
+                                        </g>
+                                      </g>
+                                      <g className="recharts-layer recharts-cartesian-axis recharts-xAxis xAxis">
+                                        <line fontSize="12" height="30" orientation="bottom" x="65" y="365" width="501" className="recharts-cartesian-axis-line" stroke="#666" fill="none" x1="65" y1="365" x2="566" y2="365"></line>
+                                        <g className="recharts-cartesian-axis-ticks">
+                                          <g className="recharts-layer recharts-cartesian-axis-tick">
+                                            <line fontSize="12" height="30" orientation="bottom" x="65" y="365" width="501" className="recharts-cartesian-axis-tick-line" stroke="#666" fill="none" x1="65" y1="371" x2="65" y2="365"></line>
+                                            <text fontSize="12" height="30" orientation="bottom" width="501" stroke="none" x="65" y="373" className="recharts-text recharts-cartesian-axis-tick-value" textAnchor="middle" fill="#6b7280">
+                                              <tspan x="65" dy="0.71em">2024年1月</tspan>
+                                            </text>
+                                          </g>
+                                          <g className="recharts-layer recharts-cartesian-axis-tick">
+                                            <line fontSize="12" height="30" orientation="bottom" x="65" y="365" width="501" className="recharts-cartesian-axis-tick-line" stroke="#666" fill="none" x1="165.2" y1="371" x2="165.2" y2="365"></line>
+                                            <text fontSize="12" height="30" orientation="bottom" width="501" stroke="none" x="165.2" y="373" className="recharts-text recharts-cartesian-axis-tick-value" textAnchor="middle" fill="#6b7280">
+                                              <tspan x="165.2" dy="0.71em">2024年3月</tspan>
+                                            </text>
+                                          </g>
+                                          <g className="recharts-layer recharts-cartesian-axis-tick">
+                                            <line fontSize="12" height="30" orientation="bottom" x="65" y="365" width="501" className="recharts-cartesian-axis-tick-line" stroke="#666" fill="none" x1="265.4" y1="371" x2="265.4" y2="365"></line>
+                                            <text fontSize="12" height="30" orientation="bottom" width="501" stroke="none" x="265.4" y="373" className="recharts-text recharts-cartesian-axis-tick-value" textAnchor="middle" fill="#6b7280">
+                                              <tspan x="265.4" dy="0.71em">2024年5月</tspan>
+                                            </text>
+                                          </g>
+                                          <g className="recharts-layer recharts-cartesian-axis-tick">
+                                            <line fontSize="12" height="30" orientation="bottom" x="65" y="365" width="501" className="recharts-cartesian-axis-tick-line" stroke="#666" fill="none" x1="365.6" y1="371" x2="365.6" y2="365"></line>
+                                            <text fontSize="12" height="30" orientation="bottom" width="501" stroke="none" x="365.6" y="373" className="recharts-text recharts-cartesian-axis-tick-value" textAnchor="middle" fill="#6b7280">
+                                              <tspan x="365.6" dy="0.71em">2024年7月</tspan>
+                                            </text>
+                                          </g>
+                                          <g className="recharts-layer recharts-cartesian-axis-tick">
+                                            <line fontSize="12" height="30" orientation="bottom" x="65" y="365" width="501" className="recharts-cartesian-axis-tick-line" stroke="#666" fill="none" x1="465.8" y1="371" x2="465.8" y2="365"></line>
+                                            <text fontSize="12" height="30" orientation="bottom" width="501" stroke="none" x="465.8" y="373" className="recharts-text recharts-cartesian-axis-tick-value" textAnchor="middle" fill="#6b7280">
+                                              <tspan x="465.8" dy="0.71em">2024年9月</tspan>
+                                            </text>
+                                          </g>
+                                          <g className="recharts-layer recharts-cartesian-axis-tick">
+                                            <line fontSize="12" height="30" orientation="bottom" x="65" y="365" width="501" className="recharts-cartesian-axis-tick-line" stroke="#666" fill="none" x1="566" y1="371" x2="566" y2="365"></line>
+                                            <text fontSize="12" height="30" orientation="bottom" width="501" stroke="none" x="539.2291660308838" y="373" className="recharts-text recharts-cartesian-axis-tick-value" textAnchor="middle" fill="#6b7280">
+                                              <tspan x="539.2291660308838" dy="0.71em">2024年11月</tspan>
+                                            </text>
+                                          </g>
+                                        </g>
+                                      </g>
+                                      <g className="recharts-layer recharts-cartesian-axis recharts-yAxis yAxis">
+                                        <line fontSize="12" orientation="left" width="60" x="5" y="5" height="360" className="recharts-cartesian-axis-line" stroke="#666" fill="none" x1="65" y1="5" x2="65" y2="365"></line>
+                                        <g className="recharts-cartesian-axis-ticks">
+                                          <g className="recharts-layer recharts-cartesian-axis-tick">
+                                            <line fontSize="12" orientation="left" width="60" x="5" y="5" height="360" className="recharts-cartesian-axis-tick-line" stroke="#666" fill="none" x1="59" y1="365" x2="65" y2="365"></line>
+                                            <text fontSize="12" orientation="left" width="60" height="360" stroke="none" x="57" y="365" className="recharts-text recharts-cartesian-axis-tick-value" textAnchor="end" fill="#6b7280">
+                                              <tspan x="57" dy="0.355em">30</tspan>
+                                            </text>
+                                          </g>
+                                          <g className="recharts-layer recharts-cartesian-axis-tick">
+                                            <line fontSize="12" orientation="left" width="60" x="5" y="5" height="360" className="recharts-cartesian-axis-tick-line" stroke="#666" fill="none" x1="59" y1="262.14285714285717" x2="65" y2="262.14285714285717"></line>
+                                            <text fontSize="12" orientation="left" width="60" height="360" stroke="none" x="57" y="262.14285714285717" className="recharts-text recharts-cartesian-axis-tick-value" textAnchor="end" fill="#6b7280">
+                                              <tspan x="57" dy="0.355em">50</tspan>
+                                            </text>
+                                          </g>
+                                          <g className="recharts-layer recharts-cartesian-axis-tick">
+                                            <line fontSize="12" orientation="left" width="60" x="5" y="5" height="360" className="recharts-cartesian-axis-tick-line" stroke="#666" fill="none" x1="59" y1="159.2857142857143" x2="65" y2="159.2857142857143"></line>
+                                            <text fontSize="12" orientation="left" width="60" height="360" stroke="none" x="57" y="159.2857142857143" className="recharts-text recharts-cartesian-axis-tick-value" textAnchor="end" fill="#6b7280">
+                                              <tspan x="57" dy="0.355em">70</tspan>
+                                            </text>
+                                          </g>
+                                          <g className="recharts-layer recharts-cartesian-axis-tick">
+                                            <line fontSize="12" orientation="left" width="60" x="5" y="5" height="360" className="recharts-cartesian-axis-tick-line" stroke="#666" fill="none" x1="59" y1="56.428571428571445" x2="65" y2="56.428571428571445"></line>
+                                            <text fontSize="12" orientation="left" width="60" height="360" stroke="none" x="57" y="56.428571428571445" className="recharts-text recharts-cartesian-axis-tick-value" textAnchor="end" fill="#6b7280">
+                                              <tspan x="57" dy="0.355em">90</tspan>
+                                            </text>
+                                          </g>
+                                          <g className="recharts-layer recharts-cartesian-axis-tick">
+                                            <line fontSize="12" orientation="left" width="60" x="5" y="5" height="360" className="recharts-cartesian-axis-tick-line" stroke="#666" fill="none" x1="59" y1="5" x2="65" y2="5"></line>
+                                            <text fontSize="12" orientation="left" width="60" height="360" stroke="none" x="57" y="9" className="recharts-text recharts-cartesian-axis-tick-value" textAnchor="end" fill="#6b7280">
+                                              <tspan x="57" dy="0.355em">100</tspan>
+                                            </text>
+                                          </g>
+                                        </g>
+                                      </g>
+                                      <g className="recharts-layer recharts-reference-line">
+                                        <line y="75" stroke="#ef4444" strokeDasharray="5 5" fill="none" fillOpacity="1" strokeWidth="1" x1="65" y1="133.57142857142856" x2="566" y2="133.57142857142856" className="recharts-reference-line-line"></line>
+                                        <text offset="5" x="315.5" y="133.57142857142856" className="recharts-text recharts-label" textAnchor="middle" fill="#808080" style={{fill: 'rgb(239, 68, 68)', fontSize: '12px'}}>
+                                          <tspan x="315.5" dy="0.355em">成長目標</tspan>
+                                        </text>
+                                      </g>
+                                      <g className="recharts-layer recharts-line">
+                                        <path stroke="#2563eb" strokeWidth="3" strokeDasharray="540.594970703125px 0px" name="業務遂行能力" fill="none" height="360" width="501" className="recharts-curve recharts-line-curve" d="M65,154.143C98.4,125.857,131.8,97.571,165.2,97.571C198.6,97.571,232,111.286,265.4,118.143C298.8,125,332.2,138.714,365.6,138.714C399,138.714,432.4,92.429,465.8,82.143C499.2,71.857,532.6,69.286,566,66.714"></path>
+                                        <g className="recharts-layer recharts-line-dots">
+                                          <circle r="4" stroke="#2563eb" strokeWidth="2" strokeDasharray="none" name="業務遂行能力" fill="#2563eb" height="360" width="501" cx="65" cy="154.1428571428571" className="recharts-dot recharts-line-dot"></circle>
+                                          <circle r="4" stroke="#2563eb" strokeWidth="2" strokeDasharray="none" name="業務遂行能力" fill="#2563eb" height="360" width="501" cx="165.2" cy="97.57142857142856" className="recharts-dot recharts-line-dot"></circle>
+                                          <circle r="4" stroke="#2563eb" strokeWidth="2" strokeDasharray="none" name="業務遂行能力" fill="#2563eb" height="360" width="501" cx="265.4" cy="118.14285714285714" className="recharts-dot recharts-line-dot"></circle>
+                                          <circle r="4" stroke="#2563eb" strokeWidth="2" strokeDasharray="none" name="業務遂行能力" fill="#2563eb" height="360" width="501" cx="365.6" cy="138.71428571428572" className="recharts-dot recharts-line-dot"></circle>
+                                          <circle r="4" stroke="#2563eb" strokeWidth="2" strokeDasharray="none" name="業務遂行能力" fill="#2563eb" height="360" width="501" cx="465.8" cy="82.14285714285715" className="recharts-dot recharts-line-dot"></circle>
+                                          <circle r="4" stroke="#2563eb" strokeWidth="2" strokeDasharray="none" name="業務遂行能力" fill="#2563eb" height="360" width="501" cx="566" cy="66.7142857142857" className="recharts-dot recharts-line-dot"></circle>
+                                        </g>
+                                      </g>
+                                      <g className="recharts-layer recharts-line">
+                                        <path stroke="#16a34a" strokeWidth="3" strokeDasharray="567.4482421875px 0px" name="成長目標" fill="none" height="360" width="501" className="recharts-curve recharts-line-curve" d="M65,185C98.4,151.571,131.8,118.143,165.2,118.143C198.6,118.143,232,164.429,265.4,164.429C298.8,164.429,332.2,92.429,365.6,92.429C399,92.429,432.4,107.857,465.8,107.857C499.2,107.857,532.6,95,566,82.143"></path>
+                                        <g className="recharts-layer recharts-line-dots">
+                                          <circle r="4" stroke="#16a34a" strokeWidth="2" strokeDasharray="none" name="成長目標" fill="#16a34a" height="360" width="501" cx="65" cy="185" className="recharts-dot recharts-line-dot"></circle>
+                                          <circle r="4" stroke="#16a34a" strokeWidth="2" strokeDasharray="none" name="成長目標" fill="#16a34a" height="360" width="501" cx="165.2" cy="118.14285714285714" className="recharts-dot recharts-line-dot"></circle>
+                                          <circle r="4" stroke="#16a34a" strokeWidth="2" strokeDasharray="none" name="成長目標" fill="#16a34a" height="360" width="501" cx="265.4" cy="164.42857142857142" className="recharts-dot recharts-line-dot"></circle>
+                                          <circle r="4" stroke="#16a34a" strokeWidth="2" strokeDasharray="none" name="成長目標" fill="#16a34a" height="360" width="501" cx="365.6" cy="92.42857142857144" className="recharts-dot recharts-line-dot"></circle>
+                                          <circle r="4" stroke="#16a34a" strokeWidth="2" strokeDasharray="none" name="成長目標" fill="#16a34a" height="360" width="501" cx="465.8" cy="107.85714285714285" className="recharts-dot recharts-line-dot"></circle>
+                                          <circle r="4" stroke="#16a34a" strokeWidth="2" strokeDasharray="none" name="成長目標" fill="#16a34a" height="360" width="501" cx="566" cy="82.14285714285715" className="recharts-dot recharts-line-dot"></circle>
+                                        </g>
+                                      </g>
+                                      <g className="recharts-layer recharts-line">
+                                        <path stroke="#dc2626" strokeWidth="2" strokeDasharray="5px, 5px" name="チーム連携" fill="none" height="360" width="501" className="recharts-curve recharts-line-curve" d="M65,149C98.4,161.857,131.8,174.714,165.2,174.714C198.6,174.714,232,145.571,265.4,133.571C298.8,121.571,332.2,110.429,365.6,102.714C399,95,432.4,97.571,465.8,87.286C499.2,77,532.6,53.857,566,30.714"></path>
+                                        <g className="recharts-layer recharts-line-dots">
+                                          <circle r="4" stroke="#dc2626" strokeWidth="2" strokeDasharray="5 5" name="チーム連携" fill="#dc2626" height="360" width="501" cx="65" cy="149" className="recharts-dot recharts-line-dot"></circle>
+                                          <circle r="4" stroke="#dc2626" strokeWidth="2" strokeDasharray="5 5" name="チーム連携" fill="#dc2626" height="360" width="501" cx="165.2" cy="174.7142857142857" className="recharts-dot recharts-line-dot"></circle>
+                                          <circle r="4" stroke="#dc2626" strokeWidth="2" strokeDasharray="5 5" name="チーム連携" fill="#dc2626" height="360" width="501" cx="265.4" cy="133.57142857142856" className="recharts-dot recharts-line-dot"></circle>
+                                          <circle r="4" stroke="#dc2626" strokeWidth="2" strokeDasharray="5 5" name="チーム連携" fill="#dc2626" height="360" width="501" cx="365.6" cy="102.71428571428572" className="recharts-dot recharts-line-dot"></circle>
+                                          <circle r="4" stroke="#dc2626" strokeWidth="2" strokeDasharray="5 5" name="チーム連携" fill="#dc2626" height="360" width="501" cx="465.8" cy="87.28571428571428" className="recharts-dot recharts-line-dot"></circle>
+                                          <circle r="4" stroke="#dc2626" strokeWidth="2" strokeDasharray="5 5" name="チーム連携" fill="#dc2626" height="360" width="501" cx="566" cy="30.7142857142857" className="recharts-dot recharts-line-dot"></circle>
+                                        </g>
+                                      </g>
+                                      <g className="recharts-layer recharts-line">
+                                        <path stroke="#ca8a04" strokeWidth="2" strokeDasharray="552.840576171875px 0px" name="キャリア志向" fill="none" height="360" width="501" className="recharts-curve recharts-line-curve" d="M65,190.143C98.4,200.429,131.8,210.714,165.2,210.714C198.6,210.714,232,137,265.4,123.286C298.8,109.571,332.2,102.714,365.6,102.714C399,102.714,432.4,138.714,465.8,138.714C499.2,138.714,532.6,125.857,566,113"></path>
+                                        <g className="recharts-layer recharts-line-dots">
+                                          <circle r="4" stroke="#ca8a04" strokeWidth="2" strokeDasharray="none" name="キャリア志向" fill="#ca8a04" height="360" width="501" cx="65" cy="190.1428571428571" className="recharts-dot recharts-line-dot"></circle>
+                                          <circle r="4" stroke="#ca8a04" strokeWidth="2" strokeDasharray="none" name="キャリア志向" fill="#ca8a04" height="360" width="501" cx="165.2" cy="210.7142857142857" className="recharts-dot recharts-line-dot"></circle>
+                                          <circle r="4" stroke="#ca8a04" strokeWidth="2" strokeDasharray="none" name="キャリア志向" fill="#ca8a04" height="360" width="501" cx="265.4" cy="123.2857142857143" className="recharts-dot recharts-line-dot"></circle>
+                                          <circle r="4" stroke="#ca8a04" strokeWidth="2" strokeDasharray="none" name="キャリア志向" fill="#ca8a04" height="360" width="501" cx="365.6" cy="102.71428571428572" className="recharts-dot recharts-line-dot"></circle>
+                                          <circle r="4" stroke="#ca8a04" strokeWidth="2" strokeDasharray="none" name="キャリア志向" fill="#ca8a04" height="360" width="501" cx="465.8" cy="138.71428571428572" className="recharts-dot recharts-line-dot"></circle>
+                                          <circle r="4" stroke="#ca8a04" strokeWidth="2" strokeDasharray="none" name="キャリア志向" fill="#ca8a04" height="360" width="501" cx="566" cy="113.00000000000001" className="recharts-dot recharts-line-dot"></circle>
+                                        </g>
+                                      </g>
+                                      <g className="recharts-layer recharts-line">
+                                        <path stroke="#e5e7eb" strokeWidth="1" strokeDasharray="576.077880859375px 0px" name="コミュニケーション" fill="none" height="360" width="501" className="recharts-curve recharts-line-curve" d="M65,251.857C98.4,249.286,131.8,246.714,165.2,236.429C198.6,226.143,232,190.143,265.4,174.714C298.8,159.286,332.2,143.857,365.6,143.857C399,143.857,432.4,164.429,465.8,164.429C499.2,164.429,532.6,113,566,61.571"></path>
+                                        <g className="recharts-layer recharts-line-dots">
+                                          <circle r="4" stroke="#e5e7eb" strokeWidth="2" strokeDasharray="none" name="コミュニケーション" fill="#e5e7eb" height="360" width="501" cx="65" cy="251.85714285714286" className="recharts-dot recharts-line-dot"></circle>
+                                          <circle r="4" stroke="#e5e7eb" strokeWidth="2" strokeDasharray="none" name="コミュニケーション" fill="#e5e7eb" height="360" width="501" cx="165.2" cy="236.4285714285714" className="recharts-dot recharts-line-dot"></circle>
+                                          <circle r="4" stroke="#e5e7eb" strokeWidth="2" strokeDasharray="none" name="コミュニケーション" fill="#e5e7eb" height="360" width="501" cx="265.4" cy="174.7142857142857" className="recharts-dot recharts-line-dot"></circle>
+                                          <circle r="4" stroke="#e5e7eb" strokeWidth="2" strokeDasharray="none" name="コミュニケーション" fill="#e5e7eb" height="360" width="501" cx="365.6" cy="143.85714285714286" className="recharts-dot recharts-line-dot"></circle>
+                                          <circle r="4" stroke="#e5e7eb" strokeWidth="2" strokeDasharray="none" name="コミュニケーション" fill="#e5e7eb" height="360" width="501" cx="465.8" cy="164.42857142857142" className="recharts-dot recharts-line-dot"></circle>
+                                          <circle r="4" stroke="#e5e7eb" strokeWidth="2" strokeDasharray="none" name="コミュニケーション" fill="#e5e7eb" height="360" width="501" cx="566" cy="61.57142857142857" className="recharts-dot recharts-line-dot"></circle>
+                                        </g>
+                                      </g>
+                                    </svg>
                                   </div>
                                 </div>
                               </div>
