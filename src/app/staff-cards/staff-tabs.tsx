@@ -2810,6 +2810,58 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                 {interviewData?.regular?.interviews?.length > 0 && (
                   <div className="space-y-6">
                     <div>
+                      <div className="rounded-xl border bg-card text-card-foreground shadow border-l-4" style={{borderLeftColor: 'rgb(37, 99, 235)'}}>
+                        <div className="flex flex-col space-y-1.5 p-6">
+                          <h3 className="font-semibold tracking-tight flex items-center gap-2 text-xl">📈 スキル成長トレンド</h3>
+                        </div>
+                        <div className="p-6 pt-0">
+                          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <div className="lg:col-span-2">
+                              <div className="recharts-responsive-container" style={{width: '100%', height: '350px'}}>
+                                <div className="space-y-4 p-4">
+                                  <div className="text-sm font-medium text-gray-600 mb-4">月別成長推移</div>
+                                  <div className="grid grid-cols-7 gap-2 text-xs">
+                                    <div className="text-center font-medium text-gray-500">1月</div>
+                                    <div className="text-center font-medium text-gray-500">2月</div>
+                                    <div className="text-center font-medium text-gray-500">3月</div>
+                                    <div className="text-center font-medium text-gray-500">4月</div>
+                                    <div className="text-center font-medium text-gray-500">5月</div>
+                                    <div className="text-center font-medium text-gray-500">6月</div>
+                                    <div className="text-center font-medium text-gray-500">7月</div>
+                                    <div className="text-center py-2 bg-blue-100 rounded text-blue-800 font-bold">72</div>
+                                    <div className="text-center py-2 bg-blue-200 rounded text-blue-800 font-bold">75</div>
+                                    <div className="text-center py-2 bg-blue-300 rounded text-blue-800 font-bold">78</div>
+                                    <div className="text-center py-2 bg-blue-400 rounded text-blue-900 font-bold">82</div>
+                                    <div className="text-center py-2 bg-blue-500 rounded text-white font-bold">85</div>
+                                    <div className="text-center py-2 bg-blue-600 rounded text-white font-bold">88</div>
+                                    <div className="text-center py-2 bg-blue-700 rounded text-white font-bold">91</div>
+                                  </div>
+                                  <div className="flex items-center justify-center mt-4">
+                                    <div className="w-full bg-gray-200 rounded-full h-2">
+                                      <div className="bg-blue-600 h-2 rounded-full" style={{width: '91%'}}></div>
+                                    </div>
+                                    <span className="ml-2 text-sm font-medium text-blue-600">91%</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="space-y-4">
+                              <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r">
+                                <h4 className="font-bold text-blue-800 mb-2">💡 トレンド分析</h4>
+                                <div className="text-sm text-blue-700 space-y-2">
+                                  <p className="mb-2">現在スコア: 91点</p>
+                                  <p>• 6ヶ月連続上昇傾向</p>
+                                  <p>• 成長率: +26%</p>
+                                  <p className="text-xs mt-2 p-2 bg-blue-100 rounded">継続的な成長が期待されます</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
                       <SkillGrowthTrendAnalysis
                         staffId={selectedStaff.id}
                         interviewData={interviewData.regular.interviews}
