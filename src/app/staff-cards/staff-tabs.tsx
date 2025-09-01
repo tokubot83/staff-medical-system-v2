@@ -2800,110 +2800,58 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
               {interviewData?.regular?.interviews?.length > 0 && (
                 <div className="space-y-6">
                   {/* 1. スキル別成長トレンド（グラフ） */}
-                  <div className="bg-gradient-to-r from-slate-50 to-gray-50 border-l-4 border-slate-400 rounded-xl shadow-lg p-6">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="p-3 bg-slate-100 rounded-lg">
-                        <span className="text-slate-600 text-2xl">📊</span>
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-bold text-gray-800">スキル別成長トレンド</h3>
-                        <p className="text-sm text-gray-600">時系列でのスキル成長をグラフで可視化</p>
-                      </div>
-                    </div>
-                    <SectionTrendAnalysis 
-                      staffRole={getStaffRole(selectedStaff)}
-                      staffId={selectedStaff.id}
-                    />
-                  </div>
+                  <SectionTrendAnalysis 
+                    staffRole={getStaffRole(selectedStaff)}
+                    staffId={selectedStaff.id}
+                  />
 
                   {/* 2. AIスキル成長トレンド分析（AI） */}
-                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-400 rounded-xl shadow-lg p-6">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="p-3 bg-blue-100 rounded-lg">
-                        <span className="text-blue-600 text-2xl">🧠</span>
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-bold text-gray-800">AIスキル成長トレンド分析</h3>
-                        <p className="text-sm text-gray-600">AIによるスキル成長パターンの深層分析</p>
-                      </div>
-                    </div>
-                    <SkillGrowthTrendAnalysis
-                      staffId={selectedStaff.id}
-                      interviewData={interviewData.regular.interviews}
-                      staffInfo={selectedStaff}
-                      category="regular"
-                    />
-                  </div>
+                  <SkillGrowthTrendAnalysis
+                    staffId={selectedStaff.id}
+                    interviewData={interviewData.regular.interviews}
+                    staffInfo={selectedStaff}
+                    category="regular"
+                  />
 
                   {/* 3. 面談セクション充実度ランキング（グラフ） */}
-                  <div className="bg-gradient-to-r from-purple-50 to-violet-50 border-l-4 border-purple-400 rounded-xl shadow-lg p-6">
+                  <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-6">
                     <div className="flex items-center gap-3 mb-6">
-                      <div className="p-3 bg-purple-100 rounded-lg">
-                        <span className="text-purple-600 text-2xl">📋</span>
+                      <div className="p-3 bg-emerald-100 rounded-lg">
+                        <span className="text-emerald-600 text-2xl">📊</span>
                       </div>
                       <div>
                         <h3 className="text-xl font-bold text-gray-800">面談セクション充実度ランキング</h3>
-                        <p className="text-sm text-gray-600">各セクションの充実度をランキング表示</p>
+                        <p className="text-sm text-gray-600">各セクションの充実度をランキング形式で表示</p>
                       </div>
                     </div>
-                    <InterviewSectionAnalysis
-                      staffId={selectedStaff.id}
-                      interviewData={interviewData.regular.interviews}
-                      staffInfo={selectedStaff}
-                      category="regular"
-                    />
+                    <div className="p-4 bg-gray-50 rounded-lg">
+                      <p className="text-sm text-gray-600">面談セクション充実度ランキンググラフがここに表示されます</p>
+                    </div>
                   </div>
 
                   {/* 4. AI面談セクション分析（AI） */}
-                  <div className="bg-gradient-to-r from-violet-50 to-purple-50 border-l-4 border-violet-400 rounded-xl shadow-lg p-6">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="p-3 bg-violet-100 rounded-lg">
-                        <span className="text-violet-600 text-2xl">🧠</span>
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-bold text-gray-800">AI面談セクション分析</h3>
-                        <p className="text-sm text-gray-600">AIによるセクション充実度の詳細分析</p>
-                      </div>
-                    </div>
-                    <div className="p-4 bg-white/50 rounded-lg">
-                      <p className="text-sm text-gray-600">セクション充実度のAI分析結果がここに表示されます</p>
-                    </div>
-                  </div>
+                  <InterviewSectionAnalysis
+                    staffId={selectedStaff.id}
+                    interviewData={interviewData.regular.interviews}
+                    staffInfo={selectedStaff}
+                    category="regular"
+                  />
 
                   {/* 5. セクション間相関分析（グラフ） */}
-                  <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border-l-4 border-emerald-400 rounded-xl shadow-lg p-6">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="p-3 bg-emerald-100 rounded-lg">
-                        <span className="text-emerald-600 text-2xl">🎯</span>
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-bold text-gray-800">セクション間相関分析</h3>
-                        <p className="text-sm text-gray-600">セクション間の相関関係を可視化</p>
-                      </div>
-                    </div>
-                    <SectionCorrelationAnalysis
-                      staffId={selectedStaff.id}
-                      interviewData={interviewData.regular.interviews}
-                      staffInfo={selectedStaff}
-                      category="regular"
-                    />
-                  </div>
+                  <SectionCorrelationAnalysis
+                    staffId={selectedStaff.id}
+                    interviewData={interviewData.regular.interviews}
+                    staffInfo={selectedStaff}
+                    category="regular"
+                  />
 
-                  {/* 6. AIメンタリング効果分析（AI） */}
-                  <div className="bg-gradient-to-r from-teal-50 to-emerald-50 border-l-4 border-teal-400 rounded-xl shadow-lg p-6">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="p-3 bg-teal-100 rounded-lg">
-                        <span className="text-teal-600 text-2xl">🧠</span>
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-bold text-gray-800">AIメンタリング効果分析</h3>
-                        <p className="text-sm text-gray-600">AIによるメンタリング効果の測定と提案</p>
-                      </div>
-                    </div>
-                    <div className="p-4 bg-white/50 rounded-lg">
-                      <p className="text-sm text-gray-600">メンタリング効果のAI分析結果がここに表示されます</p>
-                    </div>
-                  </div>
+                  {/* 6. AI面談制度最適化分析（AI） */}
+                  <InterviewIntegratedAnalysis
+                    staffId={selectedStaff.id}
+                    interviewData={interviewData.regular.interviews}
+                    staffInfo={selectedStaff}
+                    category="regular"
+                  />
                 </div>
               )}
               </div>
