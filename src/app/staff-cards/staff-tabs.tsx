@@ -553,96 +553,99 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
         </Card>
       ) : (
         <>
-          <Card className="border-l-4" style={{ borderLeftColor: CHART_COLORS.success }}>
+          {/* 統合評価サマリー（冒頭表示） */}
+          <Card className="border-l-4 mb-8" style={{ borderLeftColor: CHART_COLORS.highlight }}>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <span>🏆</span>
-                2024年3月確定評価（最新）
+              <CardTitle className="text-xl font-bold flex items-center gap-2">
+                🏆 V3評価システム 統合サマリー（2024年3月確定）
               </CardTitle>
+              {/* メタ情報 */}
+              <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600 bg-gray-50 px-4 py-3 rounded-lg mt-3">
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">📅 評価確定日:</span>
+                  <span>2024年3月31日</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">👤 経験レベル:</span>
+                  <span>{v3Evaluation?.experienceLabel || '中堅'}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">📋 評価期間:</span>
+                  <span>2023年4月〜2024年3月</span>
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
-              
-              {/* メイン評価表示 - 5段階・7段階を強調 */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                <div className="text-center">
-                  <div className="flex items-center justify-center gap-2 mb-3">
-                    <span>🏢</span>
-                    <span className="font-medium text-gray-700">施設内評価</span>
+              {/* 統合3軸評価表示 */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* 総合判定（7段階） */}
+                <div className="text-center p-4 bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg border border-yellow-200">
+                  <h5 className="font-bold text-lg mb-2 text-gray-800">⭐ 総合判定</h5>
+                  <p className="text-sm text-gray-600 mb-3">(7段階評価)</p>
+                  <div 
+                    className="w-20 h-20 mx-auto rounded-full flex items-center justify-center text-3xl font-bold mb-3"
+                    style={{
+                      backgroundColor: getGradeDisplay('A', '7stage').bg,
+                      color: getGradeDisplay('A', '7stage').color,
+                      border: `4px solid ${getGradeDisplay('A', '7stage').color}`
+                    }}
+                  >
+                    A
                   </div>
-                  <div className="space-y-3">
-                    <div 
-                      className="w-16 h-16 mx-auto rounded-full flex items-center justify-center text-2xl font-bold"
-                      style={{
-                        backgroundColor: getGradeDisplay('A', '5stage').bg,
-                        color: getGradeDisplay('A', '5stage').color,
-                        border: `3px solid ${getGradeDisplay('A', '5stage').color}`
-                      }}
-                    >
-                      A
-                    </div>
-                    <div className="space-y-1">
-                      <div className="text-sm font-medium text-gray-800">
-                        {getRelativeRanking('facility').rank}位 / {getRelativeRanking('facility').total}人中
-                      </div>
-                      <Badge style={{ backgroundColor: CHART_COLORS.success, color: 'white' }}>
-                        上位{100 - getRelativeRanking('facility').percentile}%
-                      </Badge>
-                    </div>
+                  <div className="text-2xl font-bold mb-2" style={{ color: CHART_COLORS.highlight }}>
+                    {v3Evaluation?.totalScore || 81.25}点
                   </div>
+                  <p className="text-sm font-medium text-gray-700">優秀</p>
                 </div>
-                
-                <div className="text-center">
-                  <div className="flex items-center justify-center gap-2 mb-3">
-                    <span>🌐</span>
-                    <span className="font-medium text-gray-700">法人内評価</span>
+
+                {/* 施設内評価（5段階） */}
+                <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
+                  <h5 className="font-bold text-lg mb-2 text-gray-800">🏢 施設内評価</h5>
+                  <p className="text-sm text-gray-600 mb-3">(5段階評価)</p>
+                  <div 
+                    className="w-16 h-16 mx-auto rounded-full flex items-center justify-center text-2xl font-bold mb-3"
+                    style={{
+                      backgroundColor: getGradeDisplay('A', '5stage').bg,
+                      color: getGradeDisplay('A', '5stage').color,
+                      border: `3px solid ${getGradeDisplay('A', '5stage').color}`
+                    }}
+                  >
+                    A
                   </div>
-                  <div className="space-y-3">
-                    <div 
-                      className="w-16 h-16 mx-auto rounded-full flex items-center justify-center text-2xl font-bold"
-                      style={{
-                        backgroundColor: getGradeDisplay('B', '5stage').bg,
-                        color: getGradeDisplay('B', '5stage').color,
-                        border: `3px solid ${getGradeDisplay('B', '5stage').color}`
-                      }}
-                    >
-                      B
+                  <div className="space-y-1 mb-3">
+                    <div className="text-sm font-medium text-gray-800">
+                      {getRelativeRanking('facility').rank}位 / {getRelativeRanking('facility').total}人中
                     </div>
-                    <div className="space-y-1">
-                      <div className="text-sm font-medium text-gray-800">
-                        {getRelativeRanking('corporate').rank}位 / {getRelativeRanking('corporate').total}人中
-                      </div>
-                      <Badge style={{ backgroundColor: CHART_COLORS.warning, color: 'white' }}>
-                        上位{100 - getRelativeRanking('corporate').percentile}%
-                      </Badge>
-                    </div>
+                    <Badge style={{ backgroundColor: CHART_COLORS.success, color: 'white' }}>
+                      上位{100 - getRelativeRanking('facility').percentile}%
+                    </Badge>
                   </div>
+                  <p className="text-sm font-medium text-gray-700">優秀</p>
                 </div>
-                
-                <div className="text-center">
-                  <div className="flex items-center justify-center gap-2 mb-3">
-                    <span>⭐</span>
-                    <span className="font-medium text-gray-700">総合判定</span>
+
+                {/* 法人内評価（5段階） */}
+                <div className="text-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border border-green-200">
+                  <h5 className="font-bold text-lg mb-2 text-gray-800">🌐 法人内評価</h5>
+                  <p className="text-sm text-gray-600 mb-3">(5段階評価)</p>
+                  <div 
+                    className="w-16 h-16 mx-auto rounded-full flex items-center justify-center text-2xl font-bold mb-3"
+                    style={{
+                      backgroundColor: getGradeDisplay('B', '5stage').bg,
+                      color: getGradeDisplay('B', '5stage').color,
+                      border: `3px solid ${getGradeDisplay('B', '5stage').color}`
+                    }}
+                  >
+                    B
                   </div>
-                  <div className="space-y-3">
-                    <div 
-                      className="w-20 h-20 mx-auto rounded-full flex items-center justify-center text-3xl font-bold"
-                      style={{
-                        backgroundColor: getGradeDisplay('A', '7stage').bg,
-                        color: getGradeDisplay('A', '7stage').color,
-                        border: `4px solid ${getGradeDisplay('A', '7stage').color}`
-                      }}
-                    >
-                      A
+                  <div className="space-y-1 mb-3">
+                    <div className="text-sm font-medium text-gray-800">
+                      {getRelativeRanking('corporate').rank}位 / {getRelativeRanking('corporate').total}人中
                     </div>
-                    <div className="space-y-1">
-                      <div className="text-lg font-bold" style={{ color: CHART_COLORS.primary }}>
-                        {v3Evaluation?.totalScore || 81.25}点 / 100点
-                      </div>
-                      <Badge variant="outline" className="text-xs">
-                        {v3Evaluation?.experienceLabel || '中堅'} 7段階判定
-                      </Badge>
-                    </div>
+                    <Badge style={{ backgroundColor: CHART_COLORS.warning, color: 'white' }}>
+                      上位{100 - getRelativeRanking('corporate').percentile}%
+                    </Badge>
                   </div>
+                  <p className="text-sm font-medium text-gray-700">良好</p>
                 </div>
               </div>
             </CardContent>
@@ -910,71 +913,6 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
                   </div>
                 </div>
 
-                {/* V3評価システム 統合サマリー */}
-                <div className="border rounded-lg p-6" style={{ borderLeftColor: CHART_COLORS.highlight, borderLeftWidth: '4px' }}>
-                  {/* ヘッダー + メタ情報 */}
-                  <div className="mb-6">
-                    <h4 className="text-xl font-bold flex items-center gap-2 mb-3">
-                      📊 V3評価システム 統合サマリー
-                    </h4>
-                    <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600 bg-gray-50 px-4 py-3 rounded-lg">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium">📅 評価確定日:</span>
-                        <span>2024年3月31日</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium">👤 経験レベル:</span>
-                        <span>{v3Evaluation?.experienceLabel || '中堅'}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium">📋 評価期間:</span>
-                        <span>2023年4月〜2024年3月</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* 3軸評価カード */}
-                  <div className="grid grid-cols-3 gap-6">
-                    {/* 総合評価 */}
-                    <div className="text-center p-4 bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg border border-yellow-200">
-                      <h5 className="font-bold text-lg mb-2 text-gray-800">⭐ 総合判定</h5>
-                      <p className="text-sm text-gray-600 mb-3">(7段階評価)</p>
-                      <div className="text-3xl font-bold mb-2" style={{ color: CHART_COLORS.highlight }}>
-                        {v3Evaluation?.totalScore || 81.25}点
-                      </div>
-                      <Badge style={{ backgroundColor: '#fff8f0', color: '#FFA500' }} className="text-lg font-bold px-3 py-1">
-                        A
-                      </Badge>
-                      <p className="text-sm font-medium text-gray-700 mt-1">優秀</p>
-                    </div>
-
-                    {/* 施設内評価 */}
-                    <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
-                      <h5 className="font-bold text-lg mb-2 text-gray-800">🏢 施設内評価</h5>
-                      <p className="text-sm text-gray-600 mb-3">(5段階評価)</p>
-                      <div className="text-3xl font-bold mb-2" style={{ color: '#1e40af' }}>
-                        {v3Evaluation?.contributionScore?.facility || 85}点
-                      </div>
-                      <Badge style={{ backgroundColor: '#fff8f0', color: '#FFA500' }} className="text-lg font-bold px-3 py-1">
-                        A
-                      </Badge>
-                      <p className="text-sm font-medium text-gray-700 mt-1">優秀</p>
-                    </div>
-
-                    {/* 法人内評価 */}
-                    <div className="text-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border border-green-200">
-                      <h5 className="font-bold text-lg mb-2 text-gray-800">🌐 法人内評価</h5>
-                      <p className="text-sm text-gray-600 mb-3">(5段階評価)</p>
-                      <div className="text-3xl font-bold mb-2" style={{ color: '#059669' }}>
-                        {v3Evaluation?.contributionScore?.corporate || 78}点
-                      </div>
-                      <Badge style={{ backgroundColor: '#f0fff0', color: '#32CD32' }} className="text-lg font-bold px-3 py-1">
-                        B
-                      </Badge>
-                      <p className="text-sm font-medium text-gray-700 mt-1">良好</p>
-                    </div>
-                  </div>
-                </div>
 
                 {/* レーダーチャート比較セクション - 評価制度の本質を反映 */}
                 <div className="mt-8">
