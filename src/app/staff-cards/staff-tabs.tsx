@@ -875,6 +875,148 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
                 </div>
               </div>
             </div>
+
+            {/* AI人事指導支援コメント */}
+            <div className="mt-6">
+              <div className="border-l-4 border-purple-500 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-purple-100 rounded-lg">
+                      <span className="text-purple-600 text-xl">🤖</span>
+                    </div>
+                    <div>
+                      <h5 className="font-bold text-lg text-gray-800">
+                        AI人事指導支援アドバイス
+                      </h5>
+                      <p className="text-sm text-gray-600">
+                        レーダーチャート分析に基づく個別指導提案
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="px-2 py-1 bg-purple-200 text-purple-800 text-xs rounded-full font-medium">
+                      ローカルLLM対応予定
+                    </div>
+                    <button className="px-3 py-1 bg-purple-600 text-white text-sm rounded-md hover:bg-purple-700 transition-colors">
+                      解釈生成
+                    </button>
+                  </div>
+                </div>
+
+                {/* AI解釈コメント表示エリア */}
+                <div className="space-y-4">
+                  {/* 技術評価解釈 */}
+                  <div className="bg-white rounded-lg p-4 border border-blue-200">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="text-blue-600 text-lg">🎉</span>
+                      <h6 className="font-semibold text-blue-800">技術評価（50点）解釈</h6>
+                      <div className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded font-medium">
+                        40.0点 (80.0%)
+                      </div>
+                    </div>
+                    <div className="space-y-3 text-sm">
+                      <div className="p-3 bg-green-50 border-l-4 border-green-400 rounded">
+                        <p className="font-medium text-green-800 mb-1">🌟 優秀な領域</p>
+                        <p className="text-green-700">
+                          対人関係・ケア能力(8.5点)は施設平均を大幅に上回る優秀な成果です。
+                          患者・家族からの信頼が厚く、チーム内でも頼りにされる存在となっています。
+                        </p>
+                      </div>
+                      <div className="p-3 bg-yellow-50 border-l-4 border-yellow-400 rounded">
+                        <p className="font-medium text-yellow-800 mb-1">⚡ 重点改善領域</p>
+                        <p className="text-yellow-700">
+                          安全・品質管理(7.3点)の向上が優先課題です。インシデント予防研修の受講と
+                          日常業務でのダブルチェック体制の徹底をお勧めします。
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 組織貢献度解釈 */}
+                  <div className="bg-white rounded-lg p-4 border border-green-200">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="text-green-600 text-lg">🎯</span>
+                      <h6 className="font-semibold text-green-800">組織貢献度（50点）解釈</h6>
+                      <div className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded font-medium">
+                        41.3点 (82.6%)
+                      </div>
+                    </div>
+                    <div className="space-y-3 text-sm">
+                      <div className="p-3 bg-blue-50 border-l-4 border-blue-400 rounded">
+                        <p className="font-medium text-blue-800 mb-1">📈 成長パターン</p>
+                        <p className="text-blue-700">
+                          冬季の施設貢献(11.2点)が夏季を上回っており、経験を積むにつれて
+                          貢献度が向上する良好な成長パターンを示しています。
+                        </p>
+                      </div>
+                      <div className="p-3 bg-purple-50 border-l-4 border-purple-400 rounded">
+                        <p className="font-medium text-purple-800 mb-1">🎯 次期目標</p>
+                        <p className="text-purple-700">
+                          法人横断プロジェクトへの参加や他施設での研修経験を通じて、
+                          法人内での認知度向上と更なる貢献度アップを目指しましょう。
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 統合指導アドバイス */}
+                  <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-4 border border-indigo-200">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="text-indigo-600 text-lg">💡</span>
+                      <h6 className="font-semibold text-indigo-800">統合指導アドバイス</h6>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <p className="font-medium text-gray-800 mb-2">📋 短期アクション（1-3ヶ月）</p>
+                        <ul className="space-y-1 text-gray-700">
+                          <li className="flex items-start gap-2">
+                            <span className="text-orange-500">•</span>
+                            <span>安全管理研修の優先受講</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <span className="text-orange-500">•</span>
+                            <span>インシデント予防チェックリスト活用</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <span className="text-orange-500">•</span>
+                            <span>月次1on1面談での進捗確認</span>
+                          </li>
+                        </ul>
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-800 mb-2">🚀 中長期目標（3-12ヶ月）</p>
+                        <ul className="space-y-1 text-gray-700">
+                          <li className="flex items-start gap-2">
+                            <span className="text-blue-500">•</span>
+                            <span>新人指導メンター役の任命</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <span className="text-blue-500">•</span>
+                            <span>法人内事例発表会での講師役</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <span className="text-blue-500">•</span>
+                            <span>主任昇進への準備・育成プラン</span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* LLM実装準備メッセージ */}
+                  <div className="mt-4 p-3 bg-gray-100 rounded-lg border">
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <span className="text-yellow-600">⚡</span>
+                      <span>
+                        <strong>開発予定:</strong> ローカルLLM (Ollama + Llama 3.2) 統合により、
+                        より高度で個別最適化された指導アドバイスを自動生成します。
+                        職員の経験年数・職種・過去の成長パターンを考慮したパーソナライズド解釈が可能になります。
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* 暫定評価表示 */}

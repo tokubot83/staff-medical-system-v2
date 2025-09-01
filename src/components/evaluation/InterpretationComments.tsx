@@ -350,6 +350,182 @@ export const InterpretationComments: React.FC<InterpretationCommentsProps> = ({
                   </span>
                 </div>
               </div>
+
+              {/* 拡張AI人事指導機能 */}
+              <div className="mt-8 border-t border-gray-200 pt-6">
+                <div className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg p-6 border border-emerald-200">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-emerald-100 rounded-lg">
+                        <span className="text-emerald-600 text-xl">📈</span>
+                      </div>
+                      <div>
+                        <h5 className="font-bold text-lg text-gray-800">
+                          時系列成長パターン分析
+                        </h5>
+                        <p className="text-sm text-gray-600">
+                          評価履歴から読み取る成長軌道と指導戦略
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="px-2 py-1 bg-emerald-200 text-emerald-800 text-xs rounded-full font-medium">
+                        ローカルLLM統合予定
+                      </div>
+                      <button className="px-3 py-1 bg-emerald-600 text-white text-sm rounded-md hover:bg-emerald-700 transition-colors">
+                        詳細分析
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* 成長軌道分析 */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* 左カラム：成長パターン */}
+                    <div className="space-y-4">
+                      <div className="bg-white rounded-lg p-4 border border-blue-200">
+                        <h6 className="font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                          <span className="text-blue-600">📊</span>
+                          成長軌道パターン
+                        </h6>
+                        <div className="space-y-3">
+                          <div className="p-3 bg-green-50 border-l-4 border-green-400 rounded">
+                            <p className="font-medium text-green-800 mb-1">🚀 急成長フェーズ検出</p>
+                            <p className="text-sm text-green-700">
+                              2022年7月〜2023年3月の期間で<strong>42位→12位（30位上昇）</strong>の
+                              顕著な成長を確認。この時期の成功要因の分析と再現が重要です。
+                            </p>
+                          </div>
+                          <div className="p-3 bg-blue-50 border-l-4 border-blue-400 rounded">
+                            <p className="font-medium text-blue-800 mb-1">📈 安定成長期</p>
+                            <p className="text-sm text-blue-700">
+                              2023年4月以降は<strong>上位10%</strong>を維持する安定期。
+                              現在の水準を保持しつつ、さらなる高次目標設定が効果的です。
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="bg-white rounded-lg p-4 border border-orange-200">
+                        <h6 className="font-semibold text-orange-800 mb-3 flex items-center gap-2">
+                          <span className="text-orange-600">🔍</span>
+                          成長要因分析
+                        </h6>
+                        <div className="space-y-2 text-sm">
+                          <div className="flex items-start gap-2">
+                            <span className="text-emerald-500 font-bold">✓</span>
+                            <span><strong>技術スキル向上：</strong>専門研修受講後の評価向上が顕著</span>
+                          </div>
+                          <div className="flex items-start gap-2">
+                            <span className="text-emerald-500 font-bold">✓</span>
+                            <span><strong>チームワーク強化：</strong>協調性評価の継続的改善</span>
+                          </div>
+                          <div className="flex items-start gap-2">
+                            <span className="text-emerald-500 font-bold">✓</span>
+                            <span><strong>リーダーシップ発揮：</strong>後輩指導を通じた成長実感</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 右カラム：指導戦略 */}
+                    <div className="space-y-4">
+                      <div className="bg-white rounded-lg p-4 border border-purple-200">
+                        <h6 className="font-semibold text-purple-800 mb-3 flex items-center gap-2">
+                          <span className="text-purple-600">🎯</span>
+                          個別指導戦略
+                        </h6>
+                        <div className="space-y-3">
+                          <div className="p-3 bg-purple-50 border-l-4 border-purple-400 rounded">
+                            <p className="font-medium text-purple-800 mb-1">🌟 強み最大化アプローチ</p>
+                            <p className="text-sm text-purple-700">
+                              現在の<strong>上位10%</strong>ポジションを活かし、施設内リーダー候補として
+                              積極的に責任のある役割を任命することを推奨します。
+                            </p>
+                          </div>
+                          <div className="p-3 bg-indigo-50 border-l-4 border-indigo-400 rounded">
+                            <p className="font-medium text-indigo-800 mb-1">📚 継続成長サポート</p>
+                            <p className="text-sm text-indigo-700">
+                              成長停滞を防ぐため、<strong>法人横断プロジェクト</strong>や
+                              <strong>外部研修</strong>への参加で新たな刺激と学習機会を提供。
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="bg-white rounded-lg p-4 border border-red-200">
+                        <h6 className="font-semibold text-red-800 mb-3 flex items-center gap-2">
+                          <span className="text-red-600">⚠️</span>
+                          注意すべきリスク
+                        </h6>
+                        <div className="space-y-2 text-sm">
+                          <div className="flex items-start gap-2">
+                            <span className="text-red-500 font-bold">!</span>
+                            <span><strong>成長停滞リスク：</strong>現状維持による慢心・モチベーション低下</span>
+                          </div>
+                          <div className="flex items-start gap-2">
+                            <span className="text-amber-500 font-bold">△</span>
+                            <span><strong>バーンアウト予防：</strong>高い期待値によるプレッシャー管理</span>
+                          </div>
+                          <div className="flex items-start gap-2">
+                            <span className="text-blue-500 font-bold">i</span>
+                            <span><strong>定期面談必須：</strong>月1回の1on1での心理的サポート</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 具体的アクションプラン */}
+                  <div className="mt-6 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-lg p-4 border border-indigo-200">
+                    <h6 className="font-semibold text-indigo-800 mb-4 flex items-center gap-2">
+                      <span className="text-indigo-600">📋</span>
+                      次四半期アクションプラン
+                    </h6>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                      <div className="bg-white p-3 rounded-lg border">
+                        <p className="font-medium text-gray-800 mb-2">🎯 第1ヶ月目標</p>
+                        <ul className="space-y-1 text-gray-700">
+                          <li>• 新人指導メンター任命</li>
+                          <li>• 部署改善提案の実施</li>
+                          <li>• リーダーシップ研修受講</li>
+                        </ul>
+                      </div>
+                      <div className="bg-white p-3 rounded-lg border">
+                        <p className="font-medium text-gray-800 mb-2">📈 第2-3ヶ月目標</p>
+                        <ul className="space-y-1 text-gray-700">
+                          <li>• 法人内プロジェクト参加</li>
+                          <li>• 他施設見学・研修</li>
+                          <li>• 専門資格取得準備</li>
+                        </ul>
+                      </div>
+                      <div className="bg-white p-3 rounded-lg border">
+                        <p className="font-medium text-gray-800 mb-2">🚀 長期目標設定</p>
+                        <ul className="space-y-1 text-gray-700">
+                          <li>• 主任候補選抜</li>
+                          <li>• 外部講師・事例発表</li>
+                          <li>• 後継者育成プログラム</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* LLM統合予定機能説明 */}
+                  <div className="mt-6 p-4 bg-gray-100 rounded-lg border">
+                    <div className="flex items-start gap-3">
+                      <span className="text-emerald-600 text-lg">⚡</span>
+                      <div className="text-sm text-gray-600">
+                        <p className="font-medium mb-2">ローカルLLM統合による機能拡張予定</p>
+                        <ul className="space-y-1 text-xs">
+                          <li>• <strong>個人特性分析：</strong>過去の面談記録・評価コメントを統合した性格・行動パターン分析</li>
+                          <li>• <strong>カスタマイズド指導：</strong>職種・経験年数・学習スタイルに応じた最適化アドバイス</li>
+                          <li>• <strong>予測分析：</strong>現在の成長軌道から将来のキャリアパス・リスクを予測</li>
+                          <li>• <strong>比較分析：</strong>類似プロファイル職員の成功パターンとの比較・ベンチマーク</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
         </CardContent>
