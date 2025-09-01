@@ -2798,27 +2798,40 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
               {/* 面談分析ダッシュボード - 完全直列配置 */}
               <div className="mt-8">
               {interviewData?.regular?.interviews?.length > 0 && (
-                <>
-                  {/* 1. スキル別成長トレンド（グラフ） */}
-                  <div className="mb-6">
+                <div className="space-y-8">
+                  {/* === 1番目: グラフ === */}
+                  <div className="border-4 border-blue-500 bg-blue-50 p-2 rounded-lg">
+                    <div className="text-center mb-2 font-bold text-blue-800">【1番目: グラフ】スキル別成長トレンド</div>
                     <SectionTrendAnalysis 
                       staffRole={getStaffRole(selectedStaff)}
                       staffId={selectedStaff.id}
                     />
                   </div>
 
-                  {/* 2. AIスキル成長トレンド分析（AI） */}
-                  <div className="mb-6">
-                    <SkillGrowthTrendAnalysis
-                      staffId={selectedStaff.id}
-                      interviewData={interviewData.regular.interviews}
-                      staffInfo={selectedStaff}
-                      category="regular"
-                    />
+                  {/* === 2番目: AI === */}
+                  <div className="border-4 border-green-500 bg-green-50 p-2 rounded-lg">
+                    <div className="text-center mb-2 font-bold text-green-800">【2番目: AI】スキル成長トレンド分析</div>
+                    {interviewData?.regular?.interviews?.length > 0 ? (
+                      <SkillGrowthTrendAnalysis
+                        staffId={selectedStaff.id}
+                        interviewData={interviewData.regular.interviews}
+                        staffInfo={selectedStaff}
+                        category="regular"
+                      />
+                    ) : (
+                      <div className="p-4 bg-white rounded-lg border border-gray-200">
+                        <div className="text-center">
+                          <span className="text-gray-400 text-4xl">🤖</span>
+                          <p className="text-gray-600 mt-2">面談データが不足しています</p>
+                          <p className="text-gray-500 text-sm">AI分析には複数回の面談データが必要です</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
-                  {/* 3. 面談セクション充実度ランキング（グラフ） - 実際のコンポーネントを使用 */}
-                  <div className="mb-6">
+                  {/* === 3番目: グラフ === */}
+                  <div className="border-4 border-blue-500 bg-blue-50 p-2 rounded-lg">
+                    <div className="text-center mb-2 font-bold text-blue-800">【3番目: グラフ】面談データビジュアライゼーション</div>
                     <InterviewDataVisualization
                       staffId={selectedStaff.id}
                       interviewData={interviewData.regular.interviews}
@@ -2826,18 +2839,30 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                     />
                   </div>
 
-                  {/* 4. AI面談セクション分析（AI） */}
-                  <div className="mb-6">
-                    <InterviewSectionAnalysis
-                      staffId={selectedStaff.id}
-                      interviewData={interviewData.regular.interviews}
-                      staffInfo={selectedStaff}
-                      category="regular"
-                    />
+                  {/* === 4番目: AI === */}
+                  <div className="border-4 border-green-500 bg-green-50 p-2 rounded-lg">
+                    <div className="text-center mb-2 font-bold text-green-800">【4番目: AI】面談セクション分析</div>
+                    {interviewData?.regular?.interviews?.length > 0 ? (
+                      <InterviewSectionAnalysis
+                        staffId={selectedStaff.id}
+                        interviewData={interviewData.regular.interviews}
+                        staffInfo={selectedStaff}
+                        category="regular"
+                      />
+                    ) : (
+                      <div className="p-4 bg-white rounded-lg border border-gray-200">
+                        <div className="text-center">
+                          <span className="text-gray-400 text-4xl">🤖</span>
+                          <p className="text-gray-600 mt-2">面談データが不足しています</p>
+                          <p className="text-gray-500 text-sm">AI分析には複数回の面談データが必要です</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
-                  {/* 5. セクション間相関分析（グラフ） */}
-                  <div className="mb-6">
+                  {/* === 5番目: グラフ === */}
+                  <div className="border-4 border-blue-500 bg-blue-50 p-2 rounded-lg">
+                    <div className="text-center mb-2 font-bold text-blue-800">【5番目: グラフ】セクション間相関分析</div>
                     <SectionCorrelationAnalysis
                       staffId={selectedStaff.id}
                       interviewData={interviewData.regular.interviews}
@@ -2846,16 +2871,27 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                     />
                   </div>
 
-                  {/* 6. AI面談制度最適化分析（AI） */}
-                  <div className="mb-6">
-                    <InterviewIntegratedAnalysis
-                      staffId={selectedStaff.id}
-                      interviewData={interviewData.regular.interviews}
-                      staffInfo={selectedStaff}
-                      category="regular"
-                    />
+                  {/* === 6番目: AI === */}
+                  <div className="border-4 border-green-500 bg-green-50 p-2 rounded-lg">
+                    <div className="text-center mb-2 font-bold text-green-800">【6番目: AI】面談制度最適化分析</div>
+                    {interviewData?.regular?.interviews?.length > 0 ? (
+                      <InterviewIntegratedAnalysis
+                        staffId={selectedStaff.id}
+                        interviewData={interviewData.regular.interviews}
+                        staffInfo={selectedStaff}
+                        category="regular"
+                      />
+                    ) : (
+                      <div className="p-4 bg-white rounded-lg border border-gray-200">
+                        <div className="text-center">
+                          <span className="text-gray-400 text-4xl">🤖</span>
+                          <p className="text-gray-600 mt-2">面談データが不足しています</p>
+                          <p className="text-gray-500 text-sm">AI分析には複数回の面談データが必要です</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                </>
+                </div>
               )}
               </div>
 
