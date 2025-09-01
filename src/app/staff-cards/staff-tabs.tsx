@@ -2810,13 +2810,6 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                 {interviewData?.regular?.interviews?.length > 0 && (
                   <div className="space-y-6">
                     <div>
-                      <SectionTrendAnalysis 
-                        staffRole={getStaffRole(selectedStaff)}
-                        staffId={selectedStaff.id}
-                      />
-                    </div>
-
-                    <div>
                       <SkillGrowthTrendAnalysis
                         staffId={selectedStaff.id}
                         interviewData={interviewData.regular.interviews}
@@ -2826,7 +2819,7 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                     </div>
 
                     <div>
-                      <div className="rounded-xl border bg-white text-gray-800 shadow border-l-4" style={{borderLeftColor: 'rgb(22, 163, 74)'}}>
+                      <div className="rounded-xl border bg-card text-card-foreground shadow border-l-4" style={{borderLeftColor: 'rgb(22, 163, 74)'}}>
                         <div className="flex flex-col space-y-1.5 p-6">
                           <h3 className="font-semibold tracking-tight flex items-center gap-2 text-xl">🎯 面談セクション充実度ランキング</h3>
                         </div>
@@ -2836,7 +2829,6 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                               <div style={{width: '100%', height: '350px', padding: '20px'}}>
                                 <div className="space-y-3">
                                   <div className="text-sm font-medium text-gray-600 mb-4">充実度ランキング</div>
-                                  
                                   <div className="flex items-center space-x-3 group relative hover:bg-gray-50 p-2 rounded-lg cursor-pointer">
                                     <div className="w-32 text-sm font-medium text-right">チーム連携</div>
                                     <div className="flex-1 bg-gray-200 rounded-full h-8 relative">
@@ -2845,8 +2837,24 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                                       </div>
                                     </div>
                                     <div className="w-8 text-sm text-gray-500">1位</div>
+                                    <div className="absolute left-0 top-12 bg-white border-2 border-gray-300 rounded-lg shadow-xl p-4 min-w-[200px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50">
+                                      <div className="font-bold text-gray-800 mb-2 text-center">チーム連携</div>
+                                      <div className="space-y-1">
+                                        <div className="flex justify-between items-center">
+                                          <span className="text-sm text-gray-600">充実度:</span>
+                                          <span className="font-semibold text-blue-600">85%</span>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                          <span className="text-sm text-gray-600">前回比:</span>
+                                          <span className="font-semibold text-red-600">-4%</span>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                          <span className="text-sm text-gray-600">ランキング:</span>
+                                          <span className="font-semibold text-purple-600">1位</span>
+                                        </div>
+                                      </div>
+                                    </div>
                                   </div>
-
                                   <div className="flex items-center space-x-3 group relative hover:bg-gray-50 p-2 rounded-lg cursor-pointer">
                                     <div className="w-32 text-sm font-medium text-right">業務遂行能力</div>
                                     <div className="flex-1 bg-gray-200 rounded-full h-8 relative">
@@ -2855,8 +2863,24 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                                       </div>
                                     </div>
                                     <div className="w-8 text-sm text-gray-500">2位</div>
+                                    <div className="absolute left-0 top-12 bg-white border-2 border-gray-300 rounded-lg shadow-xl p-4 min-w-[200px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50">
+                                      <div className="font-bold text-gray-800 mb-2 text-center">業務遂行能力</div>
+                                      <div className="space-y-1">
+                                        <div className="flex justify-between items-center">
+                                          <span className="text-sm text-gray-600">充実度:</span>
+                                          <span className="font-semibold text-blue-600">82%</span>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                          <span className="text-sm text-gray-600">前回比:</span>
+                                          <span className="font-semibold text-red-600">-2%</span>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                          <span className="text-sm text-gray-600">ランキング:</span>
+                                          <span className="font-semibold text-purple-600">2位</span>
+                                        </div>
+                                      </div>
+                                    </div>
                                   </div>
-
                                   <div className="flex items-center space-x-3 group relative hover:bg-gray-50 p-2 rounded-lg cursor-pointer">
                                     <div className="w-32 text-sm font-medium text-right">キャリア志向</div>
                                     <div className="flex-1 bg-gray-200 rounded-full h-8 relative">
@@ -2865,8 +2889,24 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                                       </div>
                                     </div>
                                     <div className="w-8 text-sm text-gray-500">3位</div>
+                                    <div className="absolute left-0 top-12 bg-white border-2 border-gray-300 rounded-lg shadow-xl p-4 min-w-[200px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50">
+                                      <div className="font-bold text-gray-800 mb-2 text-center">キャリア志向</div>
+                                      <div className="space-y-1">
+                                        <div className="flex justify-between items-center">
+                                          <span className="text-sm text-gray-600">充実度:</span>
+                                          <span className="font-semibold text-blue-600">78%</span>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                          <span className="text-sm text-gray-600">前回比:</span>
+                                          <span className="font-semibold text-red-600">-5%</span>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                          <span className="text-sm text-gray-600">ランキング:</span>
+                                          <span className="font-semibold text-purple-600">3位</span>
+                                        </div>
+                                      </div>
+                                    </div>
                                   </div>
-
                                   <div className="flex items-center space-x-3 group relative hover:bg-gray-50 p-2 rounded-lg cursor-pointer">
                                     <div className="w-32 text-sm font-medium text-right">コミュニケーション</div>
                                     <div className="flex-1 bg-gray-200 rounded-full h-8 relative">
@@ -2875,8 +2915,24 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                                       </div>
                                     </div>
                                     <div className="w-8 text-sm text-gray-500">4位</div>
+                                    <div className="absolute left-0 top-12 bg-white border-2 border-gray-300 rounded-lg shadow-xl p-4 min-w-[200px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50">
+                                      <div className="font-bold text-gray-800 mb-2 text-center">コミュニケーション</div>
+                                      <div className="space-y-1">
+                                        <div className="flex justify-between items-center">
+                                          <span className="text-sm text-gray-600">充実度:</span>
+                                          <span className="font-semibold text-blue-600">75%</span>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                          <span className="text-sm text-gray-600">前回比:</span>
+                                          <span className="font-semibold text-green-600">+10%</span>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                          <span className="text-sm text-gray-600">ランキング:</span>
+                                          <span className="font-semibold text-purple-600">4位</span>
+                                        </div>
+                                      </div>
+                                    </div>
                                   </div>
-
                                   <div className="flex items-center space-x-3 group relative hover:bg-gray-50 p-2 rounded-lg cursor-pointer">
                                     <div className="w-32 text-sm font-medium text-right">成長目標</div>
                                     <div className="flex-1 bg-gray-200 rounded-full h-8 relative">
@@ -2885,6 +2941,23 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                                       </div>
                                     </div>
                                     <div className="w-8 text-sm text-gray-500">5位</div>
+                                    <div className="absolute left-0 top-12 bg-white border-2 border-gray-300 rounded-lg shadow-xl p-4 min-w-[200px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50">
+                                      <div className="font-bold text-gray-800 mb-2 text-center">成長目標</div>
+                                      <div className="space-y-1">
+                                        <div className="flex justify-between items-center">
+                                          <span className="text-sm text-gray-600">充実度:</span>
+                                          <span className="font-semibold text-blue-600">72%</span>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                          <span className="text-sm text-gray-600">前回比:</span>
+                                          <span className="font-semibold text-green-600">+8%</span>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                          <span className="text-sm text-gray-600">ランキング:</span>
+                                          <span className="font-semibold text-purple-600">5位</span>
+                                        </div>
+                                      </div>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
