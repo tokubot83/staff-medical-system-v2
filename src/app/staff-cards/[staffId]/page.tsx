@@ -2943,18 +2943,18 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
                         if (active && payload && payload.length) {
                           const data = payload[0].payload;
                           return (
-                            <div className="bg-white p-4 border rounded-lg shadow-lg">
-                              <p className="font-semibold mb-2">{label}</p>
+                            <div className="bg-white p-3 border rounded-lg shadow-lg text-sm max-w-48">
+                              <p className="font-medium mb-2 text-xs">{label}</p>
                               <div className="space-y-1">
-                                <div className="flex items-center justify-between gap-3">
-                                  <span>総合グレード:</span>
-                                  <Badge style={{ backgroundColor: getGradeColor(data.grade), color: 'white' }}>
-                                    {data.grade}グレード
+                                <div className="flex items-center justify-between gap-2">
+                                  <span className="text-xs">総合グレード:</span>
+                                  <Badge style={{ backgroundColor: getGradeColor(data.grade), color: 'white' }} className="text-xs px-1.5 py-0.5">
+                                    {data.grade}
                                   </Badge>
                                 </div>
                                 <div className="flex justify-between">
-                                  <span>参考点数:</span>
-                                  <span className="text-gray-600">{data.score}点</span>
+                                  <span className="text-xs">参考点数:</span>
+                                  <span className="text-xs text-gray-600">{data.score}点</span>
                                 </div>
                               </div>
                             </div>
@@ -3035,24 +3035,24 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
                         if (active && payload && payload.length) {
                           const data = payload[0].payload;
                           return (
-                            <div className="bg-white p-4 border rounded-lg shadow-lg">
-                              <p className="font-semibold mb-2">{label}</p>
+                            <div className="bg-white p-3 border rounded-lg shadow-lg text-sm max-w-44">
+                              <p className="font-medium mb-2 text-xs">{label}</p>
                               <div className="space-y-1">
-                                <div className="flex items-center justify-between gap-3">
-                                  <span>法人内順位:</span>
-                                  <span className="font-bold text-green-600">
-                                    {data.actualRank}位 / {data.total}人
+                                <div className="flex items-center justify-between gap-2">
+                                  <span className="text-xs">法人内順位:</span>
+                                  <span className="font-medium text-xs text-green-600">
+                                    {data.actualRank}位/{data.total}人
                                   </span>
                                 </div>
-                                <div className="flex items-center justify-between gap-3">
-                                  <span>上位:</span>
-                                  <Badge className="bg-green-600 text-white">
-                                    上位{data.percentile}%
+                                <div className="flex items-center justify-between gap-2">
+                                  <span className="text-xs">上位:</span>
+                                  <Badge className="bg-green-600 text-white text-xs px-1.5 py-0.5">
+                                    {data.percentile}%
                                   </Badge>
                                 </div>
-                                <div className="flex items-center justify-between gap-3">
-                                  <span>グレード:</span>
-                                  <Badge style={{ backgroundColor: getGradeColor(data.grade), color: 'white' }}>
+                                <div className="flex items-center justify-between gap-2">
+                                  <span className="text-xs">グレード:</span>
+                                  <Badge style={{ backgroundColor: getGradeColor(data.grade), color: 'white' }} className="text-xs px-1.5 py-0.5">
                                     {data.grade}
                                   </Badge>
                                 </div>
@@ -3136,24 +3136,24 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
                         if (active && payload && payload.length) {
                           const data = payload[0].payload;
                           return (
-                            <div className="bg-white p-4 border rounded-lg shadow-lg">
-                              <p className="font-semibold mb-2">{label}</p>
+                            <div className="bg-white p-3 border rounded-lg shadow-lg text-sm max-w-44">
+                              <p className="font-medium mb-2 text-xs">{label}</p>
                               <div className="space-y-1">
-                                <div className="flex items-center justify-between gap-3">
-                                  <span>施設内順位:</span>
-                                  <span className="font-bold text-purple-600">
-                                    {data.actualRank}位 / {data.total}人
+                                <div className="flex items-center justify-between gap-2">
+                                  <span className="text-xs">施設内順位:</span>
+                                  <span className="font-medium text-xs text-purple-600">
+                                    {data.actualRank}位/{data.total}人
                                   </span>
                                 </div>
-                                <div className="flex items-center justify-between gap-3">
-                                  <span>上位:</span>
-                                  <Badge className="bg-purple-600 text-white">
-                                    上位{data.percentile}%
+                                <div className="flex items-center justify-between gap-2">
+                                  <span className="text-xs">上位:</span>
+                                  <Badge className="bg-purple-600 text-white text-xs px-1.5 py-0.5">
+                                    {data.percentile}%
                                   </Badge>
                                 </div>
-                                <div className="flex items-center justify-between gap-3">
-                                  <span>グレード:</span>
-                                  <Badge style={{ backgroundColor: getGradeColor(data.grade), color: 'white' }}>
+                                <div className="flex items-center justify-between gap-2">
+                                  <span className="text-xs">グレード:</span>
+                                  <Badge style={{ backgroundColor: getGradeColor(data.grade), color: 'white' }} className="text-xs px-1.5 py-0.5">
                                     {data.grade}
                                   </Badge>
                                 </div>
