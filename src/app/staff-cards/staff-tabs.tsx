@@ -10,6 +10,7 @@ import { useErrorHandler } from '@/hooks/useErrorHandler'
 import { AppError, ErrorLevel } from '@/lib/error/AppError'
 import { StaffCardInterviewService } from '@/services/staffCardInterviewService'
 import InterviewDataVisualization from '@/components/charts/InterviewDataVisualization'
+import InterviewInterpretationComments from '@/components/interview/InterviewInterpretationComments'
 import { CrossTabAnalysisService } from '@/services/crossTabAnalysisService'
 import ComprehensiveGrowthTrend from '@/components/charts/ComprehensiveGrowthTrend'
 import StaffPortfolioAnalysis from '@/components/charts/StaffPortfolioAnalysis'
@@ -2659,37 +2660,48 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                 </CardContent>
               </Card>
 
-              {/* データ可視化セクション */}
+              {/* AI面談支援分析 */}
               {interviewData?.regular?.interviews?.length > 0 && (
-                <div className={styles.dataVisualizationSection}>
-                  <InterviewDataVisualization
-                    staffId={selectedStaff.id}
-                    category="regular"
-                    data={{
-                      trends: {
-                        scores: interviewData.regular.interviews.map((i: any) => 
-                          i.overallScore === 'A' ? 85 : i.overallScore === 'B+' ? 80 : i.overallScore === 'B' ? 75 : 70
-                        ),
-                        dates: interviewData.regular.interviews.map((i: any) => i.date),
-                        avgScore: 81
-                      },
-                      responsePatterns: [
-                        {
-                          questionId: 'career_goal',
-                          question: 'キャリア目標について教えてください',
-                          responses: interviewData.regular.interviews.map((i: any) => ({
-                            date: i.date,
-                            response: i.summary,
-                            score: i.overallScore === 'A' ? 85 : 80
-                          }))
+                <div className="space-y-6">
+                  {/* 面談グラフ群 */}
+                  <div className="space-y-6">
+                    <InterviewDataVisualization
+                      staffId={selectedStaff.id}
+                      category="regular"
+                      data={{
+                        trends: {
+                          scores: interviewData.regular.interviews.map((i: any) => 
+                            i.overallScore === 'A' ? 85 : i.overallScore === 'B+' ? 80 : i.overallScore === 'B' ? 75 : 70
+                          ),
+                          dates: interviewData.regular.interviews.map((i: any) => i.date),
+                          avgScore: 81
+                        },
+                        responsePatterns: [
+                          {
+                            questionId: 'career_goal',
+                            question: 'キャリア目標について教えてください',
+                            responses: interviewData.regular.interviews.map((i: any) => ({
+                              date: i.date,
+                              response: i.summary,
+                              score: i.overallScore === 'A' ? 85 : 80
+                            }))
+                          }
+                        ],
+                        insights: {
+                          strengths: ['V3評価システムでの安定した成果', '技術評価80点台維持'],
+                          improvements: ['法人規模での貢献度向上', 'リーダーシップスキル強化'],
+                          keyTrends: ['継続的な成長傾向', '組織貢献度の向上余地あり']
                         }
-                      ],
-                      insights: {
-                        strengths: ['V3評価システムでの安定した成果', '技術評価80点台維持'],
-                        improvements: ['法人規模での貢献度向上', 'リーダーシップスキル強化'],
-                        keyTrends: ['継続的な成長傾向', '組織貢献度の向上余地あり']
-                      }
-                    }}
+                      }}
+                    />
+                  </div>
+                  
+                  {/* AI面談要因分析 */}
+                  <InterviewInterpretationComments
+                    staffId={selectedStaff.id}
+                    interviewData={interviewData.regular.interviews}
+                    staffInfo={selectedStaff}
+                    category="regular"
                   />
                 </div>
               )}
