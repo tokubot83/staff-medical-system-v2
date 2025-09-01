@@ -12,8 +12,6 @@ import {
   AlertTriangle, 
   Trophy,
   Lightbulb,
-  Eye,
-  EyeOff,
   RefreshCw
 } from 'lucide-react'
 import { 
@@ -254,77 +252,85 @@ export const InterpretationComments: React.FC<InterpretationCommentsProps> = ({
 
   if (loading) {
     return (
-      <Card className={`${className}`}>
-        <CardContent className="p-6">
+      <div className={`mt-6 ${className}`}>
+        <div className="border-l-4 border-purple-500 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg p-6">
           <div className="flex items-center justify-center space-x-2">
             <RefreshCw className="animate-spin" size={20} />
             <span className="text-gray-600">AI解釈を生成中...</span>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     )
   }
 
   if (error) {
     return (
-      <Card className={`border-red-200 bg-red-50 ${className}`}>
-        <CardContent className="p-6">
-          <div className="flex items-center space-x-2 text-red-600">
-            <AlertTriangle size={20} />
-            <span>{error}</span>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={generateComments}
-              className="ml-auto"
-            >
-              再試行
-            </Button>
+      <div className={`mt-6 ${className}`}>
+        <div className="rounded-xl border text-card-foreground shadow border-red-200 bg-red-50">
+          <div className="p-6">
+            <div className="flex items-center space-x-2 text-red-600">
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="20" 
+                height="20" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                className="lucide lucide-triangle-alert" 
+                aria-hidden="true"
+              >
+                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path>
+                <path d="M12 9v4"></path>
+                <path d="M12 17h.01"></path>
+              </svg>
+              <span>コメントの生成に失敗しました</span>
+              <button 
+                className="inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 rounded-md px-3 text-xs ml-auto"
+                onClick={generateComments}
+              >
+                再試行
+              </button>
+            </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     )
   }
 
   return (
-    <Card className={className}>
-      <CardHeader className="pb-4">
-        <div className="flex items-center justify-between">
+    <div className={`mt-6 ${className}`}>
+      <div className="border-l-4 border-purple-500 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg p-6">
+        <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <MessageCircle className="text-blue-600" size={20} />
+            <div className="p-2 bg-purple-100 rounded-lg">
+              <span className="text-purple-600 text-xl">🤖</span>
             </div>
             <div>
-              <CardTitle className="text-lg font-semibold">
-                🤖 人事指導支援AI解釈
-              </CardTitle>
-              <p className="text-sm text-gray-600 mt-1">
-                評価データに基づく指導アドバイスと成長支援提案
+              <h5 className="font-bold text-lg text-gray-800">
+                AI人事指導支援アドバイス
+              </h5>
+              <p className="text-sm text-gray-600">
+                評価履歴分析に基づく個別指導提案
               </p>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
+            <div className="px-2 py-1 bg-purple-200 text-purple-800 text-xs rounded-full font-medium">
+              ローカルLLM対応予定
+            </div>
+            <button 
+              className="px-3 py-1 bg-purple-600 text-white text-sm rounded-md hover:bg-purple-700 transition-colors"
               onClick={toggleAllComments}
-              className="text-xs"
             >
               {expandedComments.size === comments.length ? '全て閉じる' : '全て展開'}
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsVisible(!isVisible)}
-            >
-              {isVisible ? <EyeOff size={16} /> : <Eye size={16} />}
-            </Button>
+            </button>
           </div>
         </div>
-      </CardHeader>
-      
-      {isVisible && (
-        <CardContent>
+
+        <div className="space-y-4">
           {comments.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               <MessageCircle size={48} className="mx-auto mb-3 opacity-50" />
@@ -526,11 +532,9 @@ export const InterpretationComments: React.FC<InterpretationCommentsProps> = ({
                   </div>
                 </div>
               </div>
-            </div>
-          )}
-        </CardContent>
-      )}
-    </Card>
+        </div>
+      </div>
+    </div>
   )
 }
 
