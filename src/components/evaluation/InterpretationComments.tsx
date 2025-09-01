@@ -330,38 +330,37 @@ export const InterpretationComments: React.FC<InterpretationCommentsProps> = ({
           </div>
         </div>
 
-        <div className="space-y-4">
-          {comments.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
-              <MessageCircle size={48} className="mx-auto mb-3 opacity-50" />
-              <p>評価データが不足しているため、解釈コメントを生成できません。</p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {comments.map((comment) => (
-                <CommentCard
-                  key={comment.id}
-                  comment={comment}
-                  isExpanded={expandedComments.has(comment.id)}
-                  onToggle={() => toggleComment(comment.id)}
-                />
-              ))}
-              
-              <div className="mt-6 p-4 bg-gray-50 rounded-lg border">
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <RefreshCw size={14} />
-                  <span>
-                    このAI解釈は評価データのパターン分析に基づいています。
-                    将来的にはLLMによるより高度な解釈に対応予定です。
-                  </span>
-                </div>
+        {comments.length === 0 ? (
+          <div className="text-center py-8 text-gray-500">
+            <MessageCircle size={48} className="mx-auto mb-3 opacity-50" />
+            <p>評価データが不足しているため、解釈コメントを生成できません。</p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {comments.map((comment) => (
+              <CommentCard
+                key={comment.id}
+                comment={comment}
+                isExpanded={expandedComments.has(comment.id)}
+                onToggle={() => toggleComment(comment.id)}
+              />
+            ))}
+            
+            <div className="mt-6 p-4 bg-gray-50 rounded-lg border">
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <RefreshCw size={14} />
+                <span>
+                  このAI解釈は評価データのパターン分析に基づいています。
+                  将来的にはLLMによるより高度な解釈に対応予定です。
+                </span>
               </div>
+            </div>
 
-              {/* 拡張AI人事指導機能 */}
-              <div className="mt-8 border-t border-gray-200 pt-6">
-                <div className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg p-6 border border-emerald-200">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-3">
+            {/* 拡張AI人事指導機能 */}
+            <div className="mt-8 border-t border-gray-200 pt-6">
+              <div className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg p-6 border border-emerald-200">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
                       <div className="p-2 bg-emerald-100 rounded-lg">
                         <span className="text-emerald-600 text-xl">📈</span>
                       </div>
@@ -532,7 +531,8 @@ export const InterpretationComments: React.FC<InterpretationCommentsProps> = ({
                   </div>
                 </div>
               </div>
-        </div>
+            </div>
+        )}
       </div>
     </div>
   )
