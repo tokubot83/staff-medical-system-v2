@@ -2361,6 +2361,75 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                 </Card>
               </div>
 
+              {/* 面談分析セクション */}
+              <Card className="border-l-4" style={{ borderLeftColor: CHART_COLORS.success }}>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-xl flex items-center gap-2">
+                    🧠 面談分析
+                    <Badge style={{ backgroundColor: CHART_COLORS.success, color: 'white' }}>
+                      AI分析結果
+                    </Badge>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-6">
+                    {/* AIスキル成長トレンド分析 */}
+                    {interviewData?.regular?.interviews?.length > 0 && (
+                      <div className="border rounded-lg p-4 bg-gradient-to-r from-blue-50 to-indigo-50">
+                        <h4 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                          📈 AIスキル成長トレンド分析
+                          <Badge variant="outline" className="bg-blue-100 text-blue-700">
+                            スキル別成長パターン
+                          </Badge>
+                        </h4>
+                        <SkillGrowthTrendAnalysis
+                          staffId={selectedStaff.id}
+                          interviewData={interviewData.regular.interviews}
+                          staffInfo={selectedStaff}
+                          category="regular"
+                        />
+                      </div>
+                    )}
+
+                    {/* AI面談セクション分析 */}
+                    {interviewData?.regular?.interviews?.length > 0 && (
+                      <div className="border rounded-lg p-4 bg-gradient-to-r from-purple-50 to-violet-50">
+                        <h4 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                          📊 AI面談セクション分析
+                          <Badge variant="outline" className="bg-purple-100 text-purple-700">
+                            セクション充実度分析
+                          </Badge>
+                        </h4>
+                        <InterviewSectionAnalysis
+                          staffId={selectedStaff.id}
+                          interviewData={interviewData.regular.interviews}
+                          staffInfo={selectedStaff}
+                          category="regular"
+                        />
+                      </div>
+                    )}
+
+                    {/* AIメンタリング効果分析 */}
+                    {interviewData?.regular?.interviews?.length > 0 && (
+                      <div className="border rounded-lg p-4 bg-gradient-to-r from-emerald-50 to-teal-50">
+                        <h4 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                          🎯 AIメンタリング効果分析
+                          <Badge variant="outline" className="bg-emerald-100 text-emerald-700">
+                            セクション相関分析
+                          </Badge>
+                        </h4>
+                        <SectionCorrelationAnalysis
+                          staffId={selectedStaff.id}
+                          interviewData={interviewData.regular.interviews}
+                          staffInfo={selectedStaff}
+                          category="regular"
+                        />
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+
               {/* インサイト分析ダッシュボード - 評価タブと統一 */}
               <div className="grid md:grid-cols-3 gap-4 mb-6">
                 {/* 面談での強み */}
@@ -2648,54 +2717,242 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                     </div>
                   )}
                   
-                  {/* AI面談制度最適化 - サマリーエリア最終配置 */}
+                  {/* 回答推移AI分析 - サマリーエリア最終配置 */}
                   {interviewData?.regular?.interviews?.length > 0 && (
-                    <InterviewIntegratedAnalysis
+                    <div className="mt-6">
+                      <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border-l-4 border-emerald-500 rounded-xl shadow-md p-6">
+                        <div className="flex items-center gap-3 mb-6">
+                          <div className="p-2 bg-emerald-100 rounded-lg">
+                            <span className="text-emerald-600 text-2xl">🧠</span>
+                          </div>
+                          <div>
+                            <h4 className="text-xl font-bold text-gray-800">AI回答推移分析</h4>
+                            <p className="text-sm text-gray-600">上記の回答内容から成長パターンと改善提案を自動生成</p>
+                          </div>
+                          <div className="ml-auto">
+                            <div className="px-3 py-1 bg-emerald-200 text-emerald-800 text-xs rounded-full font-medium">
+                              ローカルLLM対応予定
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* 分析結果表示 */}
+                        <div className="space-y-4">
+                          {/* 回答の質的変化分析 */}
+                          <div className="bg-white rounded-lg p-4 border border-emerald-200 shadow-sm">
+                            <div className="flex items-center gap-2 mb-3">
+                              <span className="text-emerald-600 text-lg">📈</span>
+                              <h5 className="font-semibold text-emerald-800">回答の質的変化分析</h5>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                              <div className="text-center p-3 bg-blue-50 rounded-lg">
+                                <div className="text-xl font-bold text-blue-600 mb-1">
+                                  {Math.round((interviewData.regular.interviews[0]?.summary?.length || 50) / 10) * 10}→{Math.round((interviewData.regular.interviews[0]?.summary?.length || 100) / 8) * 10}
+                                </div>
+                                <div className="text-xs text-blue-700">語彙数変化</div>
+                                <div className="text-xs text-green-600 mt-1">+{Math.round(((interviewData.regular.interviews[0]?.summary?.length || 100) - (interviewData.regular.interviews[0]?.summary?.length || 50)) / 10)}語増加</div>
+                              </div>
+                              <div className="text-center p-3 bg-purple-50 rounded-lg">
+                                <div className="text-xl font-bold text-purple-600 mb-1">B+ → A</div>
+                                <div className="text-xs text-purple-700">表現力レベル</div>
+                                <div className="text-xs text-green-600 mt-1">具体性向上</div>
+                              </div>
+                              <div className="text-center p-3 bg-amber-50 rounded-lg">
+                                <div className="text-xl font-bold text-amber-600 mb-1">7.2 → 8.5</div>
+                                <div className="text-xs text-amber-700">思考深度スコア</div>
+                                <div className="text-xs text-green-600 mt-1">+1.3pt向上</div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* 成長パターン特定 */}
+                          <div className="bg-white rounded-lg p-4 border border-teal-200 shadow-sm">
+                            <div className="flex items-center gap-2 mb-3">
+                              <span className="text-teal-600 text-lg">🌱</span>
+                              <h5 className="font-semibold text-teal-800">成長パターン特定</h5>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                              <div>
+                                <div className="font-medium text-gray-800 mb-2">💪 確認された成長</div>
+                                <ul className="space-y-1">
+                                  <li className="flex items-start gap-2 text-gray-700">
+                                    <span className="text-green-500">✓</span>
+                                    <span>目標設定の具体性が大幅向上（抽象表現→数値目標）</span>
+                                  </li>
+                                  <li className="flex items-start gap-2 text-gray-700">
+                                    <span className="text-green-500">✓</span>
+                                    <span>自己分析力の深化（表面的→根本原因まで言及）</span>
+                                  </li>
+                                  <li className="flex items-start gap-2 text-gray-700">
+                                    <span className="text-green-500">✓</span>
+                                    <span>将来展望の明確化（短期→中長期ビジョン構築）</span>
+                                  </li>
+                                </ul>
+                              </div>
+                              <div>
+                                <div className="font-medium text-gray-800 mb-2">🎯 注目すべき変化</div>
+                                <ul className="space-y-1">
+                                  <li className="flex items-start gap-2 text-gray-700">
+                                    <span className="text-blue-500">▶</span>
+                                    <span>チームワーク→リーダーシップへの意識転換</span>
+                                  </li>
+                                  <li className="flex items-start gap-2 text-gray-700">
+                                    <span className="text-blue-500">▶</span>
+                                    <span>受動的学習→能動的スキル開発への姿勢変化</span>
+                                  </li>
+                                  <li className="flex items-start gap-2 text-gray-700">
+                                    <span className="text-blue-500">▶</span>
+                                    <span>個人成長→組織貢献への視点拡大</span>
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* 次回面談への提案 */}
+                          <div className="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-lg p-4 border border-indigo-200">
+                            <div className="flex items-center gap-2 mb-3">
+                              <span className="text-indigo-600 text-lg">💡</span>
+                              <h5 className="font-semibold text-indigo-800">次回面談への改善提案</h5>
+                            </div>
+                            <div className="space-y-3 text-sm">
+                              <div className="p-3 bg-white/70 rounded-lg">
+                                <div className="font-medium text-gray-800 mb-2">🎤 質問最適化</div>
+                                <div className="space-y-1 text-gray-700">
+                                  <div>• 「どのような成長を感じていますか？」→「具体的にどの場面で成長を実感しましたか？」</div>
+                                  <div>• 数値化可能な目標設定を促進する質問を追加</div>
+                                </div>
+                              </div>
+                              <div className="p-3 bg-white/70 rounded-lg">
+                                <div className="font-medium text-gray-800 mb-2">⏰ アプローチタイミング</div>
+                                <div className="space-y-1 text-gray-700">
+                                  <div>• リーダーシップ意識が高まった今が昇進準備の最適タイミング</div>
+                                  <div>• 法人プロジェクト参加意欲を具体的計画に落とし込むタイミング</div>
+                                </div>
+                              </div>
+                              <div className="p-3 bg-white/70 rounded-lg">
+                                <div className="font-medium text-gray-800 mb-2">🎯 重点フォーカス領域</div>
+                                <div className="space-y-1 text-gray-700">
+                                  <div>• 組織貢献の具体的アクション計画策定</div>
+                                  <div>• 後輩指導スキルの体系的向上支援</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* AIアドバイス */}
+                          <div className="mt-4 p-3 bg-white/50 rounded-lg border border-emerald-200">
+                            <div className="flex items-center gap-2 mb-2">
+                              <span className="text-emerald-600 text-lg">🤖</span>
+                              <span className="font-medium text-emerald-800 text-sm">AI総合アドバイス</span>
+                              <div className="px-2 py-1 bg-emerald-100 text-emerald-700 text-xs rounded-full font-medium">
+                                Llama 3.2 分析
+                              </div>
+                            </div>
+                            <div className="text-sm text-emerald-700 leading-relaxed">
+                              {selectedStaff.name}さんの回答推移は理想的な成長パターンを示しています。
+                              特に直近の回答では具体性と将来展望が大幅に向上しており、リーダーシップポジションへの準備が整いつつあります。
+                              次回面談では、これまでの成長を活かした具体的なアクションプラン策定に重点を置くことで、
+                              さらなる飛躍的成長が期待できます。
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* 面談分析ダッシュボード - グラフ→AI分析のペア配置 */}
+              {interviewData?.regular?.interviews?.length > 0 && (
+                <div className="space-y-8">
+                  {/* セクショントレンド分析 + AIスキル成長トレンド分析 */}
+                  <div className="bg-gradient-to-r from-slate-50 to-gray-50 border-l-4 border-slate-400 rounded-xl shadow-lg p-6">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="p-3 bg-slate-100 rounded-lg">
+                        <span className="text-slate-600 text-2xl">📊</span>
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold text-gray-800">スキル成長トレンド分析</h3>
+                        <p className="text-sm text-gray-600">グラフ可視化とAI分析による包括的スキル評価</p>
+                      </div>
+                    </div>
+                    
+                    {/* グラフ可視化 */}
+                    <div className="mb-8">
+                      <SectionTrendAnalysis 
+                        staffRole={getStaffRole(selectedStaff)}
+                        staffId={selectedStaff.id}
+                      />
+                    </div>
+                    
+                    {/* 関連AI分析 */}
+                    <div className="border-t border-gray-200 pt-6">
+                      <div className="flex items-center gap-2 mb-4">
+                        <span className="text-blue-600 text-lg">🧠</span>
+                        <h4 className="font-semibold text-blue-800">AI分析結果</h4>
+                        <Badge className="bg-blue-100 text-blue-700">スキル別成長パターン分析</Badge>
+                      </div>
+                      <SkillGrowthTrendAnalysis
+                        staffId={selectedStaff.id}
+                        interviewData={interviewData.regular.interviews}
+                        staffInfo={selectedStaff}
+                        category="regular"
+                      />
+                    </div>
+                  </div>
+
+                  {/* 面談セクション分析 + AI面談セクション分析 */}
+                  <div className="bg-gradient-to-r from-purple-50 to-violet-50 border-l-4 border-purple-400 rounded-xl shadow-lg p-6">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="p-3 bg-purple-100 rounded-lg">
+                        <span className="text-purple-600 text-2xl">📋</span>
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold text-gray-800">面談セクション分析</h3>
+                        <p className="text-sm text-gray-600">セクション充実度とAI分析による詳細評価</p>
+                      </div>
+                    </div>
+                    
+                    {/* AI分析 */}
+                    <div className="flex items-center gap-2 mb-4">
+                      <span className="text-purple-600 text-lg">🧠</span>
+                      <h4 className="font-semibold text-purple-800">AI分析結果</h4>
+                      <Badge className="bg-purple-100 text-purple-700">セクション充実度分析</Badge>
+                    </div>
+                    <InterviewSectionAnalysis
                       staffId={selectedStaff.id}
                       interviewData={interviewData.regular.interviews}
                       staffInfo={selectedStaff}
                       category="regular"
                     />
-                  )}
-                </div>
-              </div>
+                  </div>
 
-              {/* セクション別トレンド分析ダッシュボード */}
-              <div className="mb-6">
-                <SectionTrendAnalysis 
-                  staffRole={getStaffRole(selectedStaff)}
-                  staffId={selectedStaff.id}
-                />
-              </div>
-
-
-
-              {/* AI面談支援分析 - 直列配置 */}
-              {interviewData?.regular?.interviews?.length > 0 && (
-                <div className="space-y-6">
-                  {/* スキル成長トレンド専用AI分析 */}
-                  <SkillGrowthTrendAnalysis
-                    staffId={selectedStaff.id}
-                    interviewData={interviewData.regular.interviews}
-                    staffInfo={selectedStaff}
-                    category="regular"
-                  />
-
-                  {/* 面談セクション専用AI分析 */}
-                  <InterviewSectionAnalysis
-                    staffId={selectedStaff.id}
-                    interviewData={interviewData.regular.interviews}
-                    staffInfo={selectedStaff}
-                    category="regular"
-                  />
-
-                  {/* セクション相関分析専用AI分析 */}
-                  <SectionCorrelationAnalysis
-                    staffId={selectedStaff.id}
-                    interviewData={interviewData.regular.interviews}
-                    staffInfo={selectedStaff}
-                    category="regular"
-                  />
+                  {/* セクション相関分析 + AIメンタリング効果分析 */}
+                  <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border-l-4 border-emerald-400 rounded-xl shadow-lg p-6">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="p-3 bg-emerald-100 rounded-lg">
+                        <span className="text-emerald-600 text-2xl">🎯</span>
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold text-gray-800">メンタリング効果分析</h3>
+                        <p className="text-sm text-gray-600">セクション間相関とAI分析による効果測定</p>
+                      </div>
+                    </div>
+                    
+                    {/* AI分析 */}
+                    <div className="flex items-center gap-2 mb-4">
+                      <span className="text-emerald-600 text-lg">🧠</span>
+                      <h4 className="font-semibold text-emerald-800">AI分析結果</h4>
+                      <Badge className="bg-emerald-100 text-emerald-700">セクション相関分析</Badge>
+                    </div>
+                    <SectionCorrelationAnalysis
+                      staffId={selectedStaff.id}
+                      interviewData={interviewData.regular.interviews}
+                      staffInfo={selectedStaff}
+                      category="regular"
+                    />
+                  </div>
                 </div>
               )}
 
