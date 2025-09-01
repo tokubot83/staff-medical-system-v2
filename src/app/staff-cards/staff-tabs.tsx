@@ -2864,6 +2864,7 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
               </div>
 
               {/* 面談分析ダッシュボード - グラフ→AI分析のペア配置 */}
+              <div className="mt-8">
               {interviewData?.regular?.interviews?.length > 0 && (
                 <div className="space-y-8">
                   {/* セクショントレンド分析 + AIスキル成長トレンド分析 */}
@@ -2955,6 +2956,7 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                   </div>
                 </div>
               )}
+              </div>
 
               {/* 定期面談履歴詳細 - 強調タイムラインデザイン */}
               <div className="bg-gradient-to-r from-slate-50 to-gray-50 border-l-4 border-slate-500 rounded-xl shadow-lg p-6">
