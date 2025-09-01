@@ -2798,61 +2798,64 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
               {/* 面談分析ダッシュボード - 完全直列配置 */}
               <div className="mt-8">
               {interviewData?.regular?.interviews?.length > 0 && (
-                <div className="space-y-6">
+                <>
                   {/* 1. スキル別成長トレンド（グラフ） */}
-                  <SectionTrendAnalysis 
-                    staffRole={getStaffRole(selectedStaff)}
-                    staffId={selectedStaff.id}
-                  />
+                  <div className="mb-6">
+                    <SectionTrendAnalysis 
+                      staffRole={getStaffRole(selectedStaff)}
+                      staffId={selectedStaff.id}
+                    />
+                  </div>
 
                   {/* 2. AIスキル成長トレンド分析（AI） */}
-                  <SkillGrowthTrendAnalysis
-                    staffId={selectedStaff.id}
-                    interviewData={interviewData.regular.interviews}
-                    staffInfo={selectedStaff}
-                    category="regular"
-                  />
+                  <div className="mb-6">
+                    <SkillGrowthTrendAnalysis
+                      staffId={selectedStaff.id}
+                      interviewData={interviewData.regular.interviews}
+                      staffInfo={selectedStaff}
+                      category="regular"
+                    />
+                  </div>
 
-                  {/* 3. 面談セクション充実度ランキング（グラフ） */}
-                  <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-6">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="p-3 bg-emerald-100 rounded-lg">
-                        <span className="text-emerald-600 text-2xl">📊</span>
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-bold text-gray-800">面談セクション充実度ランキング</h3>
-                        <p className="text-sm text-gray-600">各セクションの充実度をランキング形式で表示</p>
-                      </div>
-                    </div>
-                    <div className="p-4 bg-gray-50 rounded-lg">
-                      <p className="text-sm text-gray-600">面談セクション充実度ランキンググラフがここに表示されます</p>
-                    </div>
+                  {/* 3. 面談セクション充実度ランキング（グラフ） - 実際のコンポーネントを使用 */}
+                  <div className="mb-6">
+                    <InterviewDataVisualization
+                      staffId={selectedStaff.id}
+                      interviewData={interviewData.regular.interviews}
+                      category="regular"
+                    />
                   </div>
 
                   {/* 4. AI面談セクション分析（AI） */}
-                  <InterviewSectionAnalysis
-                    staffId={selectedStaff.id}
-                    interviewData={interviewData.regular.interviews}
-                    staffInfo={selectedStaff}
-                    category="regular"
-                  />
+                  <div className="mb-6">
+                    <InterviewSectionAnalysis
+                      staffId={selectedStaff.id}
+                      interviewData={interviewData.regular.interviews}
+                      staffInfo={selectedStaff}
+                      category="regular"
+                    />
+                  </div>
 
                   {/* 5. セクション間相関分析（グラフ） */}
-                  <SectionCorrelationAnalysis
-                    staffId={selectedStaff.id}
-                    interviewData={interviewData.regular.interviews}
-                    staffInfo={selectedStaff}
-                    category="regular"
-                  />
+                  <div className="mb-6">
+                    <SectionCorrelationAnalysis
+                      staffId={selectedStaff.id}
+                      interviewData={interviewData.regular.interviews}
+                      staffInfo={selectedStaff}
+                      category="regular"
+                    />
+                  </div>
 
                   {/* 6. AI面談制度最適化分析（AI） */}
-                  <InterviewIntegratedAnalysis
-                    staffId={selectedStaff.id}
-                    interviewData={interviewData.regular.interviews}
-                    staffInfo={selectedStaff}
-                    category="regular"
-                  />
-                </div>
+                  <div className="mb-6">
+                    <InterviewIntegratedAnalysis
+                      staffId={selectedStaff.id}
+                      interviewData={interviewData.regular.interviews}
+                      staffInfo={selectedStaff}
+                      category="regular"
+                    />
+                  </div>
+                </>
               )}
               </div>
 
