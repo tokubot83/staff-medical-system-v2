@@ -10,10 +10,10 @@ import { useErrorHandler } from '@/hooks/useErrorHandler'
 import { AppError, ErrorLevel } from '@/lib/error/AppError'
 import { StaffCardInterviewService } from '@/services/staffCardInterviewService'
 import InterviewDataVisualization from '@/components/charts/InterviewDataVisualization'
-import InterviewOverallAnalysis from '@/components/interview/InterviewOverallAnalysis'
-import ScoreProgressionAnalysis from '@/components/interview/ScoreProgressionAnalysis'
-import ResponseQualityAnalysis from '@/components/interview/ResponseQualityAnalysis'
-import MentorshipEffectivenessAnalysis from '@/components/interview/MentorshipEffectivenessAnalysis'
+import InterviewIntegratedAnalysis from '@/components/interview/InterviewIntegratedAnalysis'
+import SkillGrowthTrendAnalysis from '@/components/interview/SkillGrowthTrendAnalysis'
+import InterviewSectionAnalysis from '@/components/interview/InterviewSectionAnalysis'
+import SectionCorrelationAnalysis from '@/components/interview/SectionCorrelationAnalysis'
 import { CrossTabAnalysisService } from '@/services/crossTabAnalysisService'
 import ComprehensiveGrowthTrend from '@/components/charts/ComprehensiveGrowthTrend'
 import StaffPortfolioAnalysis from '@/components/charts/StaffPortfolioAnalysis'
@@ -2519,7 +2519,7 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                   
                   {/* AI面談制度最適化 - サマリーエリア内統合 */}
                   {interviewData?.regular?.interviews?.length > 0 && (
-                    <InterviewOverallAnalysis
+                    <InterviewIntegratedAnalysis
                       staffId={selectedStaff.id}
                       interviewData={interviewData.regular.interviews}
                       staffInfo={selectedStaff}
@@ -2699,8 +2699,8 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                       </div>
                     </div>
                   </div>
-                  {/* スコア推移専用AI分析 */}
-                  <ScoreProgressionAnalysis
+                  {/* スキル成長トレンド専用AI分析 */}
+                  <SkillGrowthTrendAnalysis
                     staffId={selectedStaff.id}
                     interviewData={interviewData.regular.interviews}
                     staffInfo={selectedStaff}
@@ -2729,8 +2729,8 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                       </div>
                     </div>
                   </div>
-                  {/* 回答品質専用AI分析 */}
-                  <ResponseQualityAnalysis
+                  {/* 面談セクション専用AI分析 */}
+                  <InterviewSectionAnalysis
                     staffId={selectedStaff.id}
                     interviewData={interviewData.regular.interviews}
                     staffInfo={selectedStaff}
@@ -2788,8 +2788,8 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                       </div>
                     </div>
                   </div>
-                  {/* メンタリング効果専用AI分析 */}
-                  <MentorshipEffectivenessAnalysis
+                  {/* セクション相関分析専用AI分析 */}
+                  <SectionCorrelationAnalysis
                     staffId={selectedStaff.id}
                     interviewData={interviewData.regular.interviews}
                     staffInfo={selectedStaff}

@@ -5,14 +5,14 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { RefreshCw, Brain, MessageSquare, TrendingUp } from 'lucide-react'
 
-interface ResponseQualityAnalysisProps {
+interface InterviewSectionAnalysisProps {
   staffId: string
   interviewData: any[]
   staffInfo: any
   category: 'regular' | 'special' | 'support'
 }
 
-interface ResponseQualityData {
+interface InterviewSectionData {
   title: string
   qualityScore: number
   reflectionLevel: string
@@ -28,54 +28,54 @@ interface ResponseQualityData {
   }
 }
 
-export default function ResponseQualityAnalysis({
+export default function InterviewSectionAnalysis({
   staffId,
   interviewData,
   staffInfo,
   category
-}: ResponseQualityAnalysisProps) {
+}: InterviewSectionAnalysisProps) {
   const [isAnalyzing, setIsAnalyzing] = useState(false)
-  const [analysisData, setAnalysisData] = useState<ResponseQualityData | null>(null)
+  const [analysisData, setAnalysisData] = useState<InterviewSectionData | null>(null)
 
-  // 回答品質専用プロンプト生成
-  const generateResponseAnalysisPrompt = (data: any[], staff: any) => {
-    return `面談回答品質と自己省察力の詳細分析を実施してください。
+  // 面談セクション専用プロンプト生成
+  const generateSectionAnalysisPrompt = (data: any[], staff: any) => {
+    return `医療職員の面談セクション充実度ランキングの詳細分析を実施してください。
 
 【分析対象】
 - 職員: ${staff.name || '未設定'}
 - 面談種別: ${category}面談
-- 回答データ: ${data.length}回分の面談記録
+- セクションデータ: ${data.length}回分の面談セクション記録
 
 【分析要求】
-面談回答パターンの質的変化に特化した分析:
+面談セクション充実度ランキンググラフの解釈に特化した分析:
 
-1. 【回答品質進化分析】
-   - 回答の詳細度・具体性の変化推移
-   - 語彙の豊富さと表現力の向上
-   - 論理構成力の発達度合い
+1. 【セクション充実度分析】
+   - 各面談セクションの充実度ランキング推移
+   - 高ランクセクションの特徴と成功要因分析
+   - 低ランクセクションの改善ポイント特定
 
-2. 【自己省察力評価】
-   - 自己分析の深度と客観性
-   - 問題認識から解決策提案への思考発展
-   - メタ認知能力の向上度
+2. 【セクション間バランス評価】
+   - 全セクションの均衡性と特化度合い
+   - 強みセクションと成長領域の最適配分
+   - スキルマップに基づく優先順位付け
 
-3. 【メンタルヘルス状態分析】
-   - 回答から読み取れる心理状態変化
-   - ストレス指標と回復力評価
-   - 前向き表現と消極的表現の比率分析
+3. 【セクション向上戦略】
+   - 各セクションの最適化アプローチ
+   - セクション間連携効果の活用方法
+   - 個別セクション強化のタイミング最適化
 
-回答品質向上のための個別指導方針を提案してください。`
+セクション充実度向上のための具体的面談改善方針を提案してください。`
   }
 
-  // 回答品質AI分析実行
-  const performResponseAnalysis = async () => {
+  // 面談セクションAI分析実行
+  const performSectionAnalysis = async () => {
     setIsAnalyzing(true)
     
     try {
       await new Promise(resolve => setTimeout(resolve, 3200))
       
-      const mockAnalysisData: ResponseQualityData = {
-        title: '回答品質・自己省察力分析',
+      const mockAnalysisData: InterviewSectionData = {
+        title: '面談セクション充実度分析',
         qualityScore: 88,
         reflectionLevel: '高度な自己分析レベル',
         detailImprovement: '回答の詳細度が初回面談時の平均25語から現在85語まで向上（+240%）。具体的な事例や数値を含む回答が増加し、抽象的表現から実践的な内容へと質的変化。',
@@ -106,7 +106,7 @@ export default function ResponseQualityAnalysis({
       
       setAnalysisData(mockAnalysisData)
     } catch (error) {
-      console.error('Response analysis failed:', error)
+      console.error('Section analysis failed:', error)
     } finally {
       setIsAnalyzing(false)
     }
@@ -114,7 +114,7 @@ export default function ResponseQualityAnalysis({
 
   useEffect(() => {
     if (interviewData && interviewData.length > 0) {
-      performResponseAnalysis()
+      performSectionAnalysis()
     }
   }, [staffId, interviewData])
 
@@ -130,8 +130,8 @@ export default function ResponseQualityAnalysis({
             <span className="text-green-600 text-xl">🤖</span>
           </div>
           <div>
-            <h5 className="font-bold text-lg text-gray-800">AI回答品質分析</h5>
-            <p className="text-sm text-gray-600">自己省察力向上と言語表現力発達評価</p>
+            <h5 className="font-bold text-lg text-gray-800">AI面談セクション分析</h5>
+            <p className="text-sm text-gray-600">セクション充実度ランキングとバランス評価</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -139,7 +139,7 @@ export default function ResponseQualityAnalysis({
             ローカルLLM対応予定
           </div>
           <Button
-            onClick={performResponseAnalysis}
+            onClick={performSectionAnalysis}
             disabled={isAnalyzing}
             className="px-3 py-1 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition-colors gap-2"
           >
@@ -153,7 +153,7 @@ export default function ResponseQualityAnalysis({
         <div className="flex items-center justify-center py-8">
           <div className="flex items-center gap-3 text-green-700">
             <RefreshCw className="h-6 w-6 animate-spin" />
-            <span className="font-medium">回答パターンを詳細分析中...</span>
+            <span className="font-medium">セクションランキングを分析中...</span>
           </div>
         </div>
       ) : analysisData ? (
