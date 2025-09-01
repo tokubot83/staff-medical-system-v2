@@ -3630,35 +3630,51 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
           ) : (
             <>
               {/* 特別面談サマリーエリア */}
-              <div className={styles.categoryTabSummary}>
-                <div className={styles.categorySummaryCard}>
-                  <div className={styles.summaryCardHeader}>
-                    <span className={styles.summaryIcon}>⚡</span>
-                    <h3>特別面談サマリー</h3>
-                  </div>
-                  <div className={styles.summaryContent}>
-                    <div className={styles.summaryMetrics}>
-                      <div className={styles.metricItem}>
-                        <span className={styles.metricValue}>{interviewData?.special?.summary?.total || 0}</span>
-                        <span className={styles.metricLabel}>実施回数</span>
-                      </div>
-                      <div className={styles.metricItem}>
-                        <span className={styles.metricValue}>{interviewData?.special?.summary?.lastDate || '未実施'}</span>
-                        <span className={styles.metricLabel}>最新実施</span>
-                      </div>
-                      <div className={styles.metricItem}>
-                        <span className={styles.metricValue}>
-                          {interviewData?.special?.summary?.mainReason === 'career-consultation' ? 'キャリア相談' : '其他'}
-                        </span>
-                        <span className={styles.metricLabel}>主な理由</span>
-                      </div>
-                      <div className={styles.metricItem}>
-                        <span className={styles.metricValue}>
-                          {interviewData?.special?.summary?.outcome === 'resolved' ? '✅ 解決' : '⏳ 継続'}
-                        </span>
-                        <span className={styles.metricLabel}>結果</span>
-                      </div>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div className="bg-gradient-to-br from-blue-50 to-indigo-100 border border-blue-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center shadow-sm">
+                      <span className="text-white text-lg">⚡</span>
                     </div>
+                    <div className="text-xs font-medium text-blue-600 uppercase tracking-wide">実施回数</div>
+                  </div>
+                  <div className="text-2xl font-bold text-gray-800 mb-1">{interviewData?.special?.summary?.total || 0}</div>
+                  <div className="text-xs text-blue-600 font-medium">回実施済み</div>
+                </div>
+                <div className="bg-gradient-to-br from-green-50 to-emerald-100 border border-green-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center shadow-sm">
+                      <span className="text-white text-lg">📅</span>
+                    </div>
+                    <div className="text-xs font-medium text-green-600 uppercase tracking-wide">最新実施</div>
+                  </div>
+                  <div className="text-lg font-bold text-gray-800 mb-1">{interviewData?.special?.summary?.lastDate || '未実施'}</div>
+                  <div className="text-xs text-green-600 font-medium">最終実施日</div>
+                </div>
+                <div className="bg-gradient-to-br from-purple-50 to-violet-100 border border-purple-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center shadow-sm">
+                      <span className="text-white text-lg">🎯</span>
+                    </div>
+                    <div className="text-xs font-medium text-purple-600 uppercase tracking-wide">主な理由</div>
+                  </div>
+                  <div className="text-xl font-bold text-gray-800 mb-1">
+                    {interviewData?.special?.summary?.mainReason === 'career-consultation' ? 'キャリア相談' : '其他'}
+                  </div>
+                  <div className="text-xs text-purple-600 font-medium">面談理由</div>
+                </div>
+                <div className="bg-gradient-to-br from-amber-50 to-orange-100 border border-amber-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-10 h-10 bg-amber-500 rounded-full flex items-center justify-center shadow-sm">
+                      <span className="text-white text-lg">📊</span>
+                    </div>
+                    <div className="text-xs font-medium text-amber-600 uppercase tracking-wide">結果</div>
+                  </div>
+                  <div className="text-xl font-bold text-gray-800 mb-1">
+                    {interviewData?.special?.summary?.outcome === 'resolved' ? '✅ 解決' : '⏳ 継続'}
+                  </div>
+                  <div className={`text-xs font-medium ${interviewData?.special?.summary?.outcome === 'resolved' ? 'text-green-600' : 'text-amber-600'}`}>
+                    {interviewData?.special?.summary?.outcome === 'resolved' ? '問題解決済み' : '継続対応中'}
                   </div>
                 </div>
               </div>
@@ -3998,35 +4014,51 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
           ) : (
             <>
               {/* サポート面談サマリーエリア */}
-              <div className={styles.categoryTabSummary}>
-                <div className={styles.categorySummaryCard}>
-                  <div className={styles.summaryCardHeader}>
-                    <span className={styles.summaryIcon}>🤝</span>
-                    <h3>サポート面談サマリー</h3>
-                  </div>
-                  <div className={styles.summaryContent}>
-                    <div className={styles.summaryMetrics}>
-                      <div className={styles.metricItem}>
-                        <span className={styles.metricValue}>{interviewData?.support?.summary?.total || 0}</span>
-                        <span className={styles.metricLabel}>実施回数</span>
-                      </div>
-                      <div className={styles.metricItem}>
-                        <span className={styles.metricValue}>{interviewData?.support?.summary?.lastDate || '未実施'}</span>
-                        <span className={styles.metricLabel}>最新実施</span>
-                      </div>
-                      <div className={styles.metricItem}>
-                        <span className={styles.metricValue}>
-                          {interviewData?.support?.summary?.mainCategory === 'skill-development' ? 'スキル開発' : '其他'}
-                        </span>
-                        <span className={styles.metricLabel}>主要カテゴリ</span>
-                      </div>
-                      <div className={styles.metricItem}>
-                        <span className={styles.metricValue}>
-                          {interviewData?.support?.summary?.supportLevel || '未設定'}
-                        </span>
-                        <span className={styles.metricLabel}>支援レベル</span>
-                      </div>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div className="bg-gradient-to-br from-blue-50 to-indigo-100 border border-blue-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center shadow-sm">
+                      <span className="text-white text-lg">🤝</span>
                     </div>
+                    <div className="text-xs font-medium text-blue-600 uppercase tracking-wide">実施回数</div>
+                  </div>
+                  <div className="text-2xl font-bold text-gray-800 mb-1">{interviewData?.support?.summary?.total || 0}</div>
+                  <div className="text-xs text-blue-600 font-medium">回実施済み</div>
+                </div>
+                <div className="bg-gradient-to-br from-green-50 to-emerald-100 border border-green-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center shadow-sm">
+                      <span className="text-white text-lg">📅</span>
+                    </div>
+                    <div className="text-xs font-medium text-green-600 uppercase tracking-wide">最新実施</div>
+                  </div>
+                  <div className="text-lg font-bold text-gray-800 mb-1">{interviewData?.support?.summary?.lastDate || '未実施'}</div>
+                  <div className="text-xs text-green-600 font-medium">最終実施日</div>
+                </div>
+                <div className="bg-gradient-to-br from-purple-50 to-violet-100 border border-purple-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center shadow-sm">
+                      <span className="text-white text-lg">📚</span>
+                    </div>
+                    <div className="text-xs font-medium text-purple-600 uppercase tracking-wide">主要カテゴリ</div>
+                  </div>
+                  <div className="text-xl font-bold text-gray-800 mb-1">
+                    {interviewData?.support?.summary?.mainCategory === 'skill-development' ? 'スキル開発' : '其他'}
+                  </div>
+                  <div className="text-xs text-purple-600 font-medium">支援分野</div>
+                </div>
+                <div className="bg-gradient-to-br from-amber-50 to-orange-100 border border-amber-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-10 h-10 bg-amber-500 rounded-full flex items-center justify-center shadow-sm">
+                      <span className="text-white text-lg">💪</span>
+                    </div>
+                    <div className="text-xs font-medium text-amber-600 uppercase tracking-wide">支援レベル</div>
+                  </div>
+                  <div className="text-xl font-bold text-gray-800 mb-1">
+                    {interviewData?.support?.summary?.supportLevel || '未設定'}
+                  </div>
+                  <div className={`text-xs font-medium ${interviewData?.support?.summary?.supportLevel === 'active' ? 'text-green-600' : 'text-amber-600'}`}>
+                    {interviewData?.support?.summary?.supportLevel === 'active' ? 'アクティブ支援中' : '支援状況'}
                   </div>
                 </div>
               </div>
