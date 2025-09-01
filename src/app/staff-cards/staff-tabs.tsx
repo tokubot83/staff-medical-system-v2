@@ -10,7 +10,10 @@ import { useErrorHandler } from '@/hooks/useErrorHandler'
 import { AppError, ErrorLevel } from '@/lib/error/AppError'
 import { StaffCardInterviewService } from '@/services/staffCardInterviewService'
 import InterviewDataVisualization from '@/components/charts/InterviewDataVisualization'
-import InterviewInterpretationComments from '@/components/interview/InterviewInterpretationComments'
+import InterviewOverallAnalysis from '@/components/interview/InterviewOverallAnalysis'
+import ScoreProgressionAnalysis from '@/components/interview/ScoreProgressionAnalysis'
+import ResponseQualityAnalysis from '@/components/interview/ResponseQualityAnalysis'
+import MentorshipEffectivenessAnalysis from '@/components/interview/MentorshipEffectivenessAnalysis'
 import { CrossTabAnalysisService } from '@/services/crossTabAnalysisService'
 import ComprehensiveGrowthTrend from '@/components/charts/ComprehensiveGrowthTrend'
 import StaffPortfolioAnalysis from '@/components/charts/StaffPortfolioAnalysis'
@@ -2513,6 +2516,16 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                       </div>
                     </div>
                   </div>
+                  
+                  {/* AI面談制度最適化 - サマリーエリア内統合 */}
+                  {interviewData?.regular?.interviews?.length > 0 && (
+                    <InterviewOverallAnalysis
+                      staffId={selectedStaff.id}
+                      interviewData={interviewData.regular.interviews}
+                      staffInfo={selectedStaff}
+                      category="regular"
+                    />
+                  )}
                 </div>
               </div>
 
@@ -2660,49 +2673,128 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                 </CardContent>
               </Card>
 
-              {/* AI面談支援分析 */}
+              {/* AI面談支援分析 - 直列配置 */}
               {interviewData?.regular?.interviews?.length > 0 && (
                 <div className="space-y-6">
-                  {/* AI面談効果分析 - 冒頭配置 */}
-                  <InterviewInterpretationComments
+                  {/* 面談スコア推移グラフ */}
+                  <div className="mb-6">
+                    <h4 className="text-lg font-semibold text-gray-800 mb-4">📈 面談スコア推移</h4>
+                    {/* TrendVisualization部分を抽出表示 */}
+                    <div className="bg-white border border-gray-200 rounded-lg p-4">
+                      <div className="h-48 border border-gray-200 rounded-lg p-4 bg-gradient-to-b from-blue-50/30 to-white">
+                        {/* 簡易スコア推移表示 */}
+                        <div className="flex items-center justify-between h-full">
+                          {interviewData.regular.interviews.slice(0, 5).map((interview: any, index: number) => {
+                            const score = interview.overallScore === 'A' ? 85 : interview.overallScore === 'B+' ? 80 : interview.overallScore === 'B' ? 75 : 70
+                            return (
+                              <div key={index} className="text-center">
+                                <div className="w-8 h-8 rounded-full bg-blue-500 text-white text-sm flex items-center justify-center mb-2">
+                                  {score}
+                                </div>
+                                <div className="text-xs text-gray-500">{interview.date}</div>
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {/* スコア推移専用AI分析 */}
+                  <ScoreProgressionAnalysis
                     staffId={selectedStaff.id}
                     interviewData={interviewData.regular.interviews}
                     staffInfo={selectedStaff}
                     category="regular"
                   />
-                  
-                  {/* 面談グラフ群 - AI分析後に配置 */}
-                  <div className="space-y-6">
-                    <InterviewDataVisualization
-                      staffId={selectedStaff.id}
-                      category="regular"
-                      data={{
-                        trends: {
-                          scores: interviewData.regular.interviews.map((i: any) => 
-                            i.overallScore === 'A' ? 85 : i.overallScore === 'B+' ? 80 : i.overallScore === 'B' ? 75 : 70
-                          ),
-                          dates: interviewData.regular.interviews.map((i: any) => i.date),
-                          avgScore: 81
-                        },
-                        responsePatterns: [
-                          {
-                            questionId: 'career_goal',
-                            question: 'キャリア目標について教えてください',
-                            responses: interviewData.regular.interviews.map((i: any) => ({
-                              date: i.date,
-                              response: i.summary,
-                              score: i.overallScore === 'A' ? 85 : 80
-                            }))
-                          }
-                        ],
-                        insights: {
-                          strengths: ['V3評価システムでの安定した成果', '技術評価80点台維持'],
-                          improvements: ['法人規模での貢献度向上', 'リーダーシップスキル強化'],
-                          keyTrends: ['継続的な成長傾向', '組織貢献度の向上余地あり']
-                        }
-                      }}
-                    />
+
+                  {/* 回答パターン分析グラフ */}
+                  <div className="mb-6">
+                    <h4 className="text-lg font-semibold text-gray-800 mb-4">💬 主要質問の回答推移</h4>
+                    <div className="bg-white border border-gray-200 rounded-lg p-4">
+                      <div className="space-y-3">
+                        <h5 className="font-medium text-sm text-gray-800">Q. キャリア目標について教えてください</h5>
+                        {interviewData.regular.interviews.slice(0, 3).map((interview: any, index: number) => (
+                          <div key={index} className="border-l-2 border-blue-200 pl-3">
+                            <div className="flex justify-between items-center mb-1">
+                              <span className="text-xs text-gray-500">{interview.date}</span>
+                              <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                                {interview.overallScore === 'A' ? '85' : '80'}点
+                              </span>
+                            </div>
+                            <p className="text-sm text-gray-700">
+                              {interview.summary.substring(0, 100)}...
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
+                  {/* 回答品質専用AI分析 */}
+                  <ResponseQualityAnalysis
+                    staffId={selectedStaff.id}
+                    interviewData={interviewData.regular.interviews}
+                    staffInfo={selectedStaff}
+                    category="regular"
+                  />
+
+                  {/* インサイトダッシュボード */}
+                  <div className="mb-6">
+                    <h4 className="text-lg font-semibold text-gray-800 mb-4">💪 面談インサイト</h4>
+                    <div className="grid md:grid-cols-3 gap-4">
+                      <div className="bg-white border border-gray-200 rounded-lg p-4">
+                        <h6 className="font-semibold text-green-800 mb-2 flex items-center gap-2">
+                          💪 確認された強み
+                        </h6>
+                        <ul className="space-y-1 text-sm">
+                          <li className="flex items-start gap-2">
+                            <div className="w-2 h-2 rounded-full bg-green-500 mt-1.5"></div>
+                            V3評価システムでの安定した成果
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <div className="w-2 h-2 rounded-full bg-green-500 mt-1.5"></div>
+                            技術評価80点台維持
+                          </li>
+                        </ul>
+                      </div>
+                      <div className="bg-white border border-gray-200 rounded-lg p-4">
+                        <h6 className="font-semibold text-yellow-800 mb-2 flex items-center gap-2">
+                          🎯 成長機会
+                        </h6>
+                        <ul className="space-y-1 text-sm">
+                          <li className="flex items-start gap-2">
+                            <div className="w-2 h-2 rounded-full bg-yellow-500 mt-1.5"></div>
+                            法人規模での貢献度向上
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <div className="w-2 h-2 rounded-full bg-yellow-500 mt-1.5"></div>
+                            リーダーシップスキル強化
+                          </li>
+                        </ul>
+                      </div>
+                      <div className="bg-white border border-gray-200 rounded-lg p-4">
+                        <h6 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
+                          📊 主要トレンド
+                        </h6>
+                        <ul className="space-y-1 text-sm">
+                          <li className="flex items-start gap-2">
+                            <div className="w-2 h-2 rounded-full bg-blue-500 mt-1.5"></div>
+                            継続的な成長傾向
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <div className="w-2 h-2 rounded-full bg-blue-500 mt-1.5"></div>
+                            組織貢献度の向上余地あり
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  {/* メンタリング効果専用AI分析 */}
+                  <MentorshipEffectivenessAnalysis
+                    staffId={selectedStaff.id}
+                    interviewData={interviewData.regular.interviews}
+                    staffInfo={selectedStaff}
+                    category="regular"
+                  />
                 </div>
               )}
 
