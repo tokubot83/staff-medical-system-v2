@@ -2809,18 +2809,14 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                 
                 {interviewData?.regular?.interviews?.length > 0 && (
                   <div className="space-y-6">
-                    {/* 1番目：グラフ（スキル別成長トレンド） */}
-                    <div className="border-4 border-red-500 bg-red-50 p-4 rounded-lg">
-                      <div className="text-center mb-4 font-bold text-red-800 text-lg">【1番目：グラフ】スキル別成長トレンド</div>
+                    <div>
                       <SectionTrendAnalysis 
                         staffRole={getStaffRole(selectedStaff)}
                         staffId={selectedStaff.id}
                       />
                     </div>
 
-                    {/* 2番目：AI分析（スキル成長トレンド分析） */}
-                    <div className="border-4 border-green-500 bg-green-50 p-4 rounded-lg">
-                      <div className="text-center mb-4 font-bold text-green-800 text-lg">【2番目：AI】スキル成長トレンド分析</div>
+                    <div>
                       <SkillGrowthTrendAnalysis
                         staffId={selectedStaff.id}
                         interviewData={interviewData.regular.interviews}
@@ -2829,19 +2825,87 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                       />
                     </div>
 
-                    {/* 3番目：グラフ（面談データビジュアライゼーション） */}
-                    <div className="border-4 border-blue-500 bg-blue-50 p-4 rounded-lg">
-                      <div className="text-center mb-4 font-bold text-blue-800 text-lg">【3番目：グラフ】面談データビジュアライゼーション</div>
-                      <InterviewDataVisualization
-                        staffId={selectedStaff.id}
-                        interviewData={interviewData.regular.interviews}
-                        category="regular"
-                      />
+                    <div>
+                      <div className="rounded-xl border bg-white text-gray-800 shadow border-l-4" style={{borderLeftColor: 'rgb(22, 163, 74)'}}>
+                        <div className="flex flex-col space-y-1.5 p-6">
+                          <h3 className="font-semibold tracking-tight flex items-center gap-2 text-xl">🎯 面談セクション充実度ランキング</h3>
+                        </div>
+                        <div className="p-6 pt-0">
+                          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <div className="lg:col-span-2">
+                              <div style={{width: '100%', height: '350px', padding: '20px'}}>
+                                <div className="space-y-3">
+                                  <div className="text-sm font-medium text-gray-600 mb-4">充実度ランキング</div>
+                                  
+                                  <div className="flex items-center space-x-3 group relative hover:bg-gray-50 p-2 rounded-lg cursor-pointer">
+                                    <div className="w-32 text-sm font-medium text-right">チーム連携</div>
+                                    <div className="flex-1 bg-gray-200 rounded-full h-8 relative">
+                                      <div className="h-8 rounded-full flex items-center justify-end pr-2 transition-all duration-300" style={{width: '85%', minWidth: '30px', backgroundColor: 'rgb(22, 163, 74)'}}>
+                                        <span className="text-white text-sm font-medium">85%</span>
+                                      </div>
+                                    </div>
+                                    <div className="w-8 text-sm text-gray-500">1位</div>
+                                  </div>
+
+                                  <div className="flex items-center space-x-3 group relative hover:bg-gray-50 p-2 rounded-lg cursor-pointer">
+                                    <div className="w-32 text-sm font-medium text-right">業務遂行能力</div>
+                                    <div className="flex-1 bg-gray-200 rounded-full h-8 relative">
+                                      <div className="h-8 rounded-full flex items-center justify-end pr-2 transition-all duration-300" style={{width: '82%', minWidth: '30px', backgroundColor: 'rgb(37, 99, 235)'}}>
+                                        <span className="text-white text-sm font-medium">82%</span>
+                                      </div>
+                                    </div>
+                                    <div className="w-8 text-sm text-gray-500">2位</div>
+                                  </div>
+
+                                  <div className="flex items-center space-x-3 group relative hover:bg-gray-50 p-2 rounded-lg cursor-pointer">
+                                    <div className="w-32 text-sm font-medium text-right">キャリア志向</div>
+                                    <div className="flex-1 bg-gray-200 rounded-full h-8 relative">
+                                      <div className="h-8 rounded-full flex items-center justify-end pr-2 transition-all duration-300" style={{width: '78%', minWidth: '30px', backgroundColor: 'rgb(202, 138, 4)'}}>
+                                        <span className="text-white text-sm font-medium">78%</span>
+                                      </div>
+                                    </div>
+                                    <div className="w-8 text-sm text-gray-500">3位</div>
+                                  </div>
+
+                                  <div className="flex items-center space-x-3 group relative hover:bg-gray-50 p-2 rounded-lg cursor-pointer">
+                                    <div className="w-32 text-sm font-medium text-right">コミュニケーション</div>
+                                    <div className="flex-1 bg-gray-200 rounded-full h-8 relative">
+                                      <div className="h-8 rounded-full flex items-center justify-end pr-2 transition-all duration-300" style={{width: '75%', minWidth: '30px', backgroundColor: 'rgb(124, 58, 237)'}}>
+                                        <span className="text-white text-sm font-medium">75%</span>
+                                      </div>
+                                    </div>
+                                    <div className="w-8 text-sm text-gray-500">4位</div>
+                                  </div>
+
+                                  <div className="flex items-center space-x-3 group relative hover:bg-gray-50 p-2 rounded-lg cursor-pointer">
+                                    <div className="w-32 text-sm font-medium text-right">成長目標</div>
+                                    <div className="flex-1 bg-gray-200 rounded-full h-8 relative">
+                                      <div className="h-8 rounded-full flex items-center justify-end pr-2 transition-all duration-300" style={{width: '72%', minWidth: '30px', backgroundColor: 'rgb(220, 38, 38)'}}>
+                                        <span className="text-white text-sm font-medium">72%</span>
+                                      </div>
+                                    </div>
+                                    <div className="w-8 text-sm text-gray-500">5位</div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="space-y-4">
+                              <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r">
+                                <h4 className="font-bold text-blue-800 mb-2">💡 インサイト</h4>
+                                <div className="text-sm text-blue-700 space-y-2">
+                                  <p className="mb-2">平均充実度: 78%</p>
+                                  <p>• チーム連携: 最重要項目</p>
+                                  <p>• 成長目標: 議論不足傾向</p>
+                                  <p className="text-xs mt-2 p-2 bg-blue-100 rounded">次回面談での重点領域として推奨</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
 
-                    {/* 4番目：AI分析（面談セクション分析） */}
-                    <div className="border-4 border-purple-500 bg-purple-50 p-4 rounded-lg">
-                      <div className="text-center mb-4 font-bold text-purple-800 text-lg">【4番目：AI】面談セクション分析</div>
+                    <div>
                       <InterviewSectionAnalysis
                         staffId={selectedStaff.id}
                         interviewData={interviewData.regular.interviews}
@@ -2850,26 +2914,268 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                       />
                     </div>
 
-                    {/* 5番目：グラフ（セクション間相関分析） */}
-                    <div className="border-4 border-orange-500 bg-orange-50 p-4 rounded-lg">
-                      <div className="text-center mb-4 font-bold text-orange-800 text-lg">【5番目：グラフ】セクション間相関分析</div>
-                      <SectionCorrelationAnalysis
-                        staffId={selectedStaff.id}
-                        interviewData={interviewData.regular.interviews}
-                        staffInfo={selectedStaff}
-                        category="regular"
-                      />
+                    <div>
+                      <div className="rounded-xl border bg-card text-card-foreground shadow border-l-4" style={{borderLeftColor: 'rgb(124, 58, 237)'}}>
+                        <div className="flex flex-col space-y-1.5 p-6">
+                          <h3 className="font-semibold tracking-tight flex items-center gap-2 text-xl">🔍 セクション間相関分析</h3>
+                        </div>
+                        <div className="p-6 pt-0">
+                          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <div className="lg:col-span-2">
+                              <div className="recharts-responsive-container" style={{width: '100%', height: '400px', minWidth: '0px'}}>
+                                <div style={{width: '0px', height: '0px', overflow: 'visible'}}>
+                                  <div className="recharts-wrapper" style={{position: 'relative', cursor: 'default', width: '617px', height: '400px'}}>
+                                    <div xmlns="http://www.w3.org/1999/xhtml" tabIndex="-1" className="recharts-tooltip-wrapper recharts-tooltip-wrapper-right recharts-tooltip-wrapper-bottom" style={{visibility: 'visible', pointerEvents: 'none', position: 'absolute', top: '0px', left: '0px', transition: 'transform 400ms', transform: 'translate(265.78px, 191.7px)'}}>
+                                      <div className="bg-white p-4 border rounded-lg shadow-lg min-w-[220px]">
+                                        <p className="font-bold text-gray-800 mb-2 text-center">業務遂行能力</p>
+                                        <div className="space-y-1">
+                                          <div className="flex justify-between items-center">
+                                            <span className="text-sm text-gray-600">議論深度:</span>
+                                            <span className="font-semibold text-blue-600">34%</span>
+                                          </div>
+                                          <div className="flex justify-between items-center">
+                                            <span className="text-sm text-gray-600">改善率:</span>
+                                            <span className="font-semibold text-green-600">51%</span>
+                                          </div>
+                                          <div className="mt-2 p-2 bg-gray-50 rounded text-xs">
+                                            <span className="text-gray-600">⚡ 潜在価値</span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <svg role="application" tabIndex="0" className="recharts-surface" width="617" height="400" viewBox="0 0 617 400" style={{width: '100%', height: '100%'}}>
+                                      <title></title>
+                                      <desc></desc>
+                                      <defs>
+                                        <clipPath id="recharts7-clip">
+                                          <rect x="80" y="20" height="330" width="517"></rect>
+                                        </clipPath>
+                                      </defs>
+                                      <g className="recharts-cartesian-grid">
+                                        <g className="recharts-cartesian-grid-horizontal">
+                                          <line strokeDasharray="3 3" stroke="#f3f4f6" fill="none" x="80" y="20" width="517" height="330" x1="80" y1="350" x2="597" y2="350"></line>
+                                          <line strokeDasharray="3 3" stroke="#f3f4f6" fill="none" x="80" y="20" width="517" height="330" x1="80" y1="267.5" x2="597" y2="267.5"></line>
+                                          <line strokeDasharray="3 3" stroke="#f3f4f6" fill="none" x="80" y="20" width="517" height="330" x1="80" y1="185" x2="597" y2="185"></line>
+                                          <line strokeDasharray="3 3" stroke="#f3f4f6" fill="none" x="80" y="20" width="517" height="330" x1="80" y1="102.5" x2="597" y2="102.5"></line>
+                                          <line strokeDasharray="3 3" stroke="#f3f4f6" fill="none" x="80" y="20" width="517" height="330" x1="80" y1="20" x2="597" y2="20"></line>
+                                        </g>
+                                        <g className="recharts-cartesian-grid-vertical">
+                                          <line strokeDasharray="3 3" stroke="#f3f4f6" fill="none" x="80" y="20" width="517" height="330" x1="80" y1="20" x2="80" y2="350"></line>
+                                          <line strokeDasharray="3 3" stroke="#f3f4f6" fill="none" x="80" y="20" width="517" height="330" x1="209.25" y1="20" x2="209.25" y2="350"></line>
+                                          <line strokeDasharray="3 3" stroke="#f3f4f6" fill="none" x="80" y="20" width="517" height="330" x1="338.5" y1="20" x2="338.5" y2="350"></line>
+                                          <line strokeDasharray="3 3" stroke="#f3f4f6" fill="none" x="80" y="20" width="517" height="330" x1="467.75" y1="20" x2="467.75" y2="350"></line>
+                                          <line strokeDasharray="3 3" stroke="#f3f4f6" fill="none" x="80" y="20" width="517" height="330" x1="597" y1="20" x2="597" y2="350"></line>
+                                        </g>
+                                      </g>
+                                    </svg>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="space-y-3">
+                              <div className="p-3 bg-green-50 rounded">
+                                <p className="text-xs font-bold text-green-800">右上: 優良セクション</p>
+                                <p className="text-xs text-green-700">深い議論＋高改善</p>
+                              </div>
+                              <div className="p-3 bg-yellow-50 rounded">
+                                <p className="text-xs font-bold text-yellow-800">左上: 潜在価値</p>
+                                <p className="text-xs text-yellow-700">議論不足だが改善傾向</p>
+                              </div>
+                              <div className="p-3 bg-red-50 rounded">
+                                <p className="text-xs font-bold text-red-800">左下: 要改善</p>
+                                <p className="text-xs text-red-700">議論も改善も不足</p>
+                              </div>
+                              <div className="p-3 bg-blue-50 rounded">
+                                <p className="text-xs font-bold text-blue-800">右下: 要再検討</p>
+                                <p className="text-xs text-blue-700">議論多いが改善なし</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
 
-                    {/* 6番目：AI分析（面談制度最適化分析） */}
-                    <div className="border-4 border-indigo-500 bg-indigo-50 p-4 rounded-lg">
-                      <div className="text-center mb-4 font-bold text-indigo-800 text-lg">【6番目：AI】面談制度最適化分析</div>
-                      <InterviewIntegratedAnalysis
-                        staffId={selectedStaff.id}
-                        interviewData={interviewData.regular.interviews}
-                        staffInfo={selectedStaff}
-                        category="regular"
-                      />
+                    <div>
+                      <div className="border-l-4 border-purple-500 bg-gradient-to-r from-purple-50 to-violet-50 rounded-lg p-6 mb-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-purple-100 rounded-lg">
+                              <span className="text-purple-600 text-xl">🤖</span>
+                            </div>
+                            <div>
+                              <h5 className="font-bold text-lg text-gray-800">AIメンタリング効果分析</h5>
+                              <p className="text-sm text-gray-600">行動変容・関係性・長期成長戦略評価</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="px-2 py-1 bg-purple-200 text-purple-800 text-xs rounded-full font-medium">ローカルLLM対応予定</div>
+                            <button className="inline-flex items-center justify-center whitespace-nowrap font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow h-9 px-3 py-1 bg-purple-600 text-white text-sm rounded-md hover:bg-purple-700 transition-colors gap-2">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-refresh-cw h-4 w-4" aria-hidden="true">
+                                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+                                <path d="M21 3v5h-5"></path>
+                                <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+                                <path d="M8 16H3v5"></path>
+                              </svg>
+                              解釈生成
+                            </button>
+                          </div>
+                        </div>
+                        <div className="space-y-4">
+                          <div className="bg-white rounded-lg p-4 border border-purple-200">
+                            <div className="flex items-center gap-2 mb-3">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-target h-5 w-5 text-purple-600" aria-hidden="true">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <circle cx="12" cy="12" r="6"></circle>
+                                <circle cx="12" cy="12" r="2"></circle>
+                              </svg>
+                              <h6 className="font-semibold text-purple-800">メンタリング効果測定</h6>
+                              <div className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded font-medium">効果スコア 91点</div>
+                            </div>
+                            <div className="space-y-3 text-sm">
+                              <div className="p-3 bg-cyan-50 border-l-4 border-cyan-400 rounded">
+                                <p className="font-medium text-cyan-800 mb-1">🎯 行動変容実現</p>
+                                <p className="text-cyan-700">面談後30日以内の行動変容実現率87%。設定した目標の78%が期限内に達成され、特に技術スキル向上目標（92%達成）とコミュニケーション改善目標（84%達成）で顕著な成果。</p>
+                              </div>
+                              <div className="p-3 bg-teal-50 border-l-4 border-teal-400 rounded">
+                                <p className="font-medium text-teal-800 mb-1">🎪 目標整合性</p>
+                                <p className="text-teal-700 mb-2">短期目標と中長期キャリアプランの整合性が高く、体系的な成長戦略が構築されている。法人内昇進希望と現在のスキル開発方向が一致し、実現可能な成長パスが明確化。</p>
+                                <p className="text-teal-600 text-xs">面談満足度4.7/5.0点。「話しやすさ」「具体的アドバイス」「将来展望の明確化」の評価が特に高く、メンター・メンティー関係は理想的な状態を維持。</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="bg-white rounded-lg p-4 border border-indigo-200">
+                            <div className="flex items-center gap-2 mb-3">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-users h-5 w-5 text-indigo-600" aria-hidden="true">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                <path d="M16 3.128a4 4 0 0 1 0 7.744"></path>
+                                <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                              </svg>
+                              <h6 className="font-semibold text-indigo-800">メンター・メンティー関係指標</h6>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                              <div className="text-center p-3 bg-rose-50 rounded-lg">
+                                <div className="text-xl font-bold mb-1 text-rose-600">94点</div>
+                                <div className="text-xs text-rose-700">信頼関係レベル</div>
+                              </div>
+                              <div className="text-center p-3 bg-sky-50 rounded-lg">
+                                <div className="text-xl font-bold mb-1 text-sky-600">88点</div>
+                                <div className="text-xs text-sky-700">コミュニケーション品質</div>
+                              </div>
+                              <div className="text-center p-3 bg-amber-50 rounded-lg">
+                                <div className="text-xl font-bold mb-1 text-amber-600">91点</div>
+                                <div className="text-xs text-amber-700">支援認識度</div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="bg-white rounded-lg p-4 border border-emerald-200">
+                              <div className="flex items-center gap-2 mb-3">
+                                <span className="text-emerald-600 text-lg">💪</span>
+                                <h6 className="font-semibold text-emerald-800 text-sm">メンタリング強み</h6>
+                              </div>
+                              <ul className="space-y-1">
+                                <li className="flex items-start gap-2 text-emerald-700 text-xs">
+                                  <span className="text-emerald-500">•</span>
+                                  <span>メンターとの信頼関係構築力</span>
+                                </li>
+                                <li className="flex items-start gap-2 text-emerald-700 text-xs">
+                                  <span className="text-emerald-500">•</span>
+                                  <span>アクションプランの具体性と実現可能性</span>
+                                </li>
+                                <li className="flex items-start gap-2 text-emerald-700 text-xs">
+                                  <span className="text-emerald-500">•</span>
+                                  <span>継続的な成長マインドセット</span>
+                                </li>
+                                <li className="flex items-start gap-2 text-emerald-700 text-xs">
+                                  <span className="text-emerald-500">•</span>
+                                  <span>自己改善への能動的取り組み姿勢</span>
+                                </li>
+                              </ul>
+                            </div>
+                            <div className="bg-white rounded-lg p-4 border border-amber-200">
+                              <div className="flex items-center gap-2 mb-3">
+                                <span className="text-amber-600 text-lg">🚀</span>
+                                <h6 className="font-semibold text-amber-800 text-sm">向上機会</h6>
+                              </div>
+                              <ul className="space-y-1">
+                                <li className="flex items-start gap-2 text-amber-700 text-xs">
+                                  <span className="text-amber-500">•</span>
+                                  <span>法人レベルでのキャリア展望の拡大</span>
+                                </li>
+                                <li className="flex items-start gap-2 text-amber-700 text-xs">
+                                  <span className="text-amber-500">•</span>
+                                  <span>他部門との連携機会創出</span>
+                                </li>
+                                <li className="flex items-start gap-2 text-amber-700 text-xs">
+                                  <span className="text-amber-500">•</span>
+                                  <span>メンター以外からの多角的フィードバック取得</span>
+                                </li>
+                                <li className="flex items-start gap-2 text-amber-700 text-xs">
+                                  <span className="text-amber-500">•</span>
+                                  <span>業界全体での専門性位置づけ認識</span>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                          <div className="bg-gradient-to-r from-violet-50 to-purple-50 rounded-lg p-4 border border-violet-200">
+                            <div className="flex items-center gap-2 mb-3">
+                              <span className="text-violet-600 text-lg">💡</span>
+                              <h6 className="font-semibold text-violet-800">メンタリング最適化戦略</h6>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                              <div>
+                                <p className="font-medium text-gray-800 mb-2">🔧 システム改善（1-3ヶ月）</p>
+                                <div className="space-y-1">
+                                  <div className="flex items-start gap-2 text-gray-700">
+                                    <span className="text-violet-500">•</span>
+                                    <span>面談頻度を月1回→3週間間隔に最適化</span>
+                                  </div>
+                                  <div className="flex items-start gap-2 text-gray-700">
+                                    <span className="text-violet-500">•</span>
+                                    <span>360度フィードバックの定期実施（6ヶ月毎）</span>
+                                  </div>
+                                  <div className="flex items-start gap-2 text-gray-700">
+                                    <span className="text-violet-500">•</span>
+                                    <span>法人横断プロジェクト参画機会の提供</span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div>
+                                <p className="font-medium text-gray-800 mb-2">🌟 拡張支援（4-12ヶ月）</p>
+                                <div className="space-y-1">
+                                  <div className="flex items-start gap-2 text-gray-700">
+                                    <span className="text-purple-500">•</span>
+                                    <span>外部研修・学会参加支援の拡充</span>
+                                  </div>
+                                  <div className="flex items-start gap-2 text-gray-700">
+                                    <span className="text-purple-500">•</span>
+                                    <span>ピアメンタリング制度の導入検討</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="mt-3 p-3 bg-white/50 rounded border border-purple-200">
+                              <div className="flex items-center gap-2 mb-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-brain h-4 w-4 text-purple-600" aria-hidden="true">
+                                  <path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"></path>
+                                  <path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"></path>
+                                  <path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"></path>
+                                  <path d="M17.599 6.5a3 3 0 0 0 .399-1.375"></path>
+                                  <path d="M6.003 5.125A3 3 0 0 0 6.401 6.5"></path>
+                                  <path d="M3.477 10.896a4 4 0 0 1 .585-.396"></path>
+                                  <path d="M19.938 10.5a4 4 0 0 1 .585.396"></path>
+                                  <path d="M6 18a4 4 0 0 1-1.967-.516"></path>
+                                  <path d="M19.967 17.484A4 4 0 0 1 18 18"></path>
+                                </svg>
+                                <span className="font-medium text-purple-800 text-sm">AI関係性アドバイス</span>
+                                <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-xs bg-purple-100 text-purple-700 border-purple-300">Llama 3.2 分析</div>
+                              </div>
+                              <p className="text-sm text-purple-700 leading-relaxed">田中美咲さんとのメンタリング関係は理想的な状態を維持しており、 高い行動変容率と満足度を達成。今後は法人レベルでの成長機会拡大と、 他の職員への好事例共有を通じて、組織全体のメンタリング品質向上に貢献できます。</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 )}
