@@ -2663,7 +2663,15 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
               {/* AI面談支援分析 */}
               {interviewData?.regular?.interviews?.length > 0 && (
                 <div className="space-y-6">
-                  {/* 面談グラフ群 */}
+                  {/* AI面談効果分析 - 冒頭配置 */}
+                  <InterviewInterpretationComments
+                    staffId={selectedStaff.id}
+                    interviewData={interviewData.regular.interviews}
+                    staffInfo={selectedStaff}
+                    category="regular"
+                  />
+                  
+                  {/* 面談グラフ群 - AI分析後に配置 */}
                   <div className="space-y-6">
                     <InterviewDataVisualization
                       staffId={selectedStaff.id}
@@ -2695,14 +2703,6 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                       }}
                     />
                   </div>
-                  
-                  {/* AI面談要因分析 */}
-                  <InterviewInterpretationComments
-                    staffId={selectedStaff.id}
-                    interviewData={interviewData.regular.interviews}
-                    staffInfo={selectedStaff}
-                    category="regular"
-                  />
                 </div>
               )}
 
