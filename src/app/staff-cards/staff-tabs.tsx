@@ -976,18 +976,20 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
                   </div>
                 </div>
 
-                {/* レーダーチャート比較セクション */}
+                {/* レーダーチャート比較セクション - 評価制度の本質を反映 */}
                 <div className="mt-8">
                   <h4 className="text-lg font-semibold flex items-center gap-2 mb-6">
-                    📊 評価項目レーダーチャート比較
+                    📊 評価項目レーダーチャート分析
+                    <Badge variant="outline" className="text-xs">技術評価50点 ＋ 組織貢献度50点</Badge>
                   </h4>
                   
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* 法人統一項目レーダーチャート */}
+                    {/* 技術評価レーダーチャート（法人統一＋施設特化統合版） */}
                     <Card className="border-l-4" style={{ borderLeftColor: CHART_COLORS.primary }}>
                       <CardHeader>
                         <CardTitle className="text-base flex items-center gap-2">
-                          🏢 法人統一項目（30点満点）
+                          🎉 技術評価項目（50点満点）
+                          <Badge className="bg-blue-100 text-blue-700 text-xs">法人統一＋施設特化</Badge>
                         </CardTitle>
                       </CardHeader>
                       <CardContent>
@@ -995,13 +997,15 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
                           <ResponsiveContainer width="100%" height="100%">
                             <RadarChart
                               data={[
-                                { category: 'C01\n専門技術・スキル', current: 8.2, average: 7.5, max: 10 },
-                                { category: 'C02\n対人関係・ケア', current: 8.5, average: 7.8, max: 10 },
-                                { category: 'C03\n安全・品質管理', current: 7.3, average: 7.2, max: 10 }
+                                { category: 'C01\n専門技術\nスキル', current: 8.2, average: 7.5, target: 8.5, max: 10 },
+                                { category: 'C02\n対人関係\nケア', current: 8.5, average: 7.8, target: 9.0, max: 10 },
+                                { category: 'C03\n安全\n品質管理', current: 7.3, average: 7.2, target: 8.0, max: 10 },
+                                { category: 'F01\n施設特化\n専門性', current: 8.0, average: 7.3, target: 8.5, max: 10 },
+                                { category: 'F02\n多職種連携\nチームケア', current: 8.0, average: 7.8, target: 8.5, max: 10 }
                               ]}
                             >
                               <PolarGrid />
-                              <PolarAngleAxis dataKey="category" tick={{ fontSize: 11, textAnchor: 'middle' }} />
+                              <PolarAngleAxis dataKey="category" tick={{ fontSize: 10, textAnchor: 'middle' }} />
                               <PolarRadiusAxis angle={90} domain={[0, 10]} tick={{ fontSize: 10 }} />
                               <Radar
                                 name="本人評価"
@@ -1019,6 +1023,15 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
                                 fillOpacity={0.1}
                                 strokeWidth={1}
                                 strokeDasharray="5 5"
+                              />
+                              <Radar
+                                name="目標値"
+                                dataKey="target"
+                                stroke={CHART_COLORS.success}
+                                fill={CHART_COLORS.success}
+                                fillOpacity={0}
+                                strokeWidth={1.5}
+                                strokeDasharray="3 3"
                               />
                               <RechartsTooltip
                                 content={({ active, payload, label }) => {
@@ -1052,20 +1065,25 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
                         </div>
                         <div className="mt-4 p-3 bg-blue-50 rounded-lg">
                           <div className="text-sm text-gray-600">
-                            <span className="font-medium">合計:</span> 24.0点 / 30点 (80.0%)
+                            <span className="font-medium">技術評価合計:</span> 40.0点 / 50点 (80.0%)
+                          </div>
+                          <div className="grid grid-cols-2 gap-2 mt-2 text-xs text-gray-500">
+                            <div>法人統一: 24.0点/30点</div>
+                            <div>施設特化: 16.0点/20点</div>
                           </div>
                           <div className="text-xs text-gray-500 mt-1">
-                            法人全体で標準化された評価基準による技術・ケア・安全管理の評価
+                            技術・ケア・安全管理・施設専門性の統合評価
                           </div>
                         </div>
                       </CardContent>
                     </Card>
 
-                    {/* 施設特化項目レーダーチャート */}
+                    {/* 組織貢献度レーダーチャート（夏季・冬季×施設・法人） */}
                     <Card className="border-l-4" style={{ borderLeftColor: CHART_COLORS.success }}>
                       <CardHeader>
                         <CardTitle className="text-base flex items-center gap-2">
-                          🎯 施設特化項目（20点満点）
+                          🎯 組織貢献度評価（50点満点）
+                          <Badge className="bg-green-100 text-green-700 text-xs">夏季・冬季評価</Badge>
                         </CardTitle>
                       </CardHeader>
                       <CardContent>
@@ -1073,15 +1091,17 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
                           <ResponsiveContainer width="100%" height="100%">
                             <RadarChart
                               data={[
-                                { category: 'F01\n回復期リハビリ\n専門性', current: 8.0, average: 7.3, max: 10 },
-                                { category: 'F02\n多職種連携\nチームケア', current: 8.0, average: 7.8, max: 10 }
+                                { category: '夏季\n施設貢献', current: 10.3, average: 9.5, target: 11.0, max: 12.5 },
+                                { category: '夏季\n法人貢献', current: 9.8, average: 9.2, target: 10.5, max: 12.5 },
+                                { category: '冬季\n施設貢献', current: 11.2, average: 10.0, target: 11.5, max: 12.5 },
+                                { category: '冬季\n法人貢献', current: 10.0, average: 9.5, target: 11.0, max: 12.5 }
                               ]}
                             >
                               <PolarGrid />
-                              <PolarAngleAxis dataKey="category" tick={{ fontSize: 11, textAnchor: 'middle' }} />
-                              <PolarRadiusAxis angle={90} domain={[0, 10]} tick={{ fontSize: 10 }} />
+                              <PolarAngleAxis dataKey="category" tick={{ fontSize: 10, textAnchor: 'middle' }} />
+                              <PolarRadiusAxis angle={90} domain={[0, 12.5]} tick={{ fontSize: 10 }} />
                               <Radar
-                                name="本人評価"
+                                name="実績値"
                                 dataKey="current"
                                 stroke={CHART_COLORS.success}
                                 fill={CHART_COLORS.success}
@@ -1097,25 +1117,34 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
                                 strokeWidth={1}
                                 strokeDasharray="5 5"
                               />
+                              <Radar
+                                name="目標値"
+                                dataKey="target"
+                                stroke={CHART_COLORS.warning}
+                                fill={CHART_COLORS.warning}
+                                fillOpacity={0}
+                                strokeWidth={1.5}
+                                strokeDasharray="3 3"
+                              />
                               <RechartsTooltip
                                 content={({ active, payload, label }) => {
                                   if (active && payload && payload.length) {
                                     return (
-                                      <div className="bg-white p-4 border rounded-lg shadow-lg">
-                                        <p className="font-semibold mb-2">{label}</p>
+                                      <div className="bg-white p-3 border rounded-lg shadow-lg text-sm max-w-48">
+                                        <p className="font-medium mb-2 text-xs">{label}</p>
                                         {payload.map((entry: any, index: number) => (
                                           <div key={index} className="flex items-center justify-between mb-1">
                                             <div className="flex items-center gap-2">
-                                              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: entry.color }}/>
-                                              <span className="text-sm">{entry.name}</span>
+                                              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }}/>
+                                              <span className="text-xs">{entry.name}</span>
                                             </div>
-                                            <span className="font-bold" style={{ color: entry.color }}>
+                                            <span className="font-medium text-xs" style={{ color: entry.color }}>
                                               {entry.value}点
                                             </span>
                                           </div>
                                         ))}
                                         <div className="mt-2 pt-2 border-t text-xs text-gray-500">
-                                          満点: 10点
+                                          各項目満点: 12.5点
                                         </div>
                                       </div>
                                     );
@@ -1129,10 +1158,14 @@ export function EvaluationTab({ selectedStaff }: { selectedStaff: any }) {
                         </div>
                         <div className="mt-4 p-3 bg-green-50 rounded-lg">
                           <div className="text-sm text-gray-600">
-                            <span className="font-medium">合計:</span> 16.0点 / 20点 (80.0%)
+                            <span className="font-medium">組織貢献度合計:</span> 41.3点 / 50点 (82.6%)
                           </div>
-                          <div className="text-xs text-gray-500 mt-1">
-                            回復期リハビリテーション病院特有の専門性・連携力の評価
+                          <div className="grid grid-cols-2 gap-2 mt-2 text-xs text-gray-500">
+                            <div>夏季評価: 20.1点/25点</div>
+                            <div>冬季評価: 21.2点/25点</div>
+                          </div>
+                          <div className="text-xs text-gray-500 mt-2">
+                            <span className="font-medium">パターン分析:</span> 冬季の施設貢献が特に高い傾向
                           </div>
                         </div>
                       </CardContent>
