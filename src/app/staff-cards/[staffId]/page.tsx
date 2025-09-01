@@ -2908,8 +2908,12 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
           📊 評価履歴トレンド比較（評価制度システム準拠）
         </h4>
         
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-          {/* 総合評価推移（グレード表示） */}
+        {/* グラフとAI解釈の統合レイアウト */}
+        <div className="grid grid-cols-1 2xl:grid-cols-4 gap-6 mt-6">
+          {/* グラフエリア（左側 3/4） */}
+          <div className="2xl:col-span-3">
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+              {/* 総合評価推移（グレード表示） */}
           <Card className="border-l-4" style={{ borderLeftColor: '#2563eb' }}>
             <CardHeader>
               <CardTitle className="text-base flex items-center gap-2">
@@ -3237,20 +3241,22 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
               </div>
             </div>
           </div>
+          
+          {/* AI解釈コメントエリア（右側） */}
+          <div>
+            <InterpretationComments
+              evaluationData={evaluationHistoryData}
+              staffInfo={{
+                id: selectedStaff?.id || 'unknown',
+                name: selectedStaff?.name || '不明',
+                position: selectedStaff?.position || '不明',
+                yearsOfService: selectedStaff?.yearsOfService || 0
+              }}
+              className="h-full"
+            />
+          </div>
         </div>
 
-        {/* 人事指導支援AI解釈コメント */}
-        <div className="mt-6">
-          <InterpretationComments
-            evaluationData={evaluationHistoryData}
-            staffInfo={{
-              id: selectedStaff?.id || 'unknown',
-              name: selectedStaff?.name || '不明',
-              position: selectedStaff?.position || '不明',
-              yearsOfService: selectedStaff?.yearsOfService || 0
-            }}
-          />
-        </div>
       </div>
 
       {/* 年度別評価詳細履歴テーブル（既存保持） */}
