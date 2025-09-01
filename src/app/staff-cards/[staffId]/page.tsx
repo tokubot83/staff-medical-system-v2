@@ -54,6 +54,7 @@ import PersonalAnalysisReport from '@/components/evaluation/PersonalAnalysisRepo
 import StrengthWeaknessRadar from '@/components/evaluation/StrengthWeaknessRadar'
 import TrainingEffectAnalysis from '@/components/evaluation/TrainingEffectAnalysis'
 import EvaluationHistory from '@/components/dashboard/EvaluationHistory'
+import InterpretationComments from '@/components/evaluation/InterpretationComments'
 import { 
   LineChart, 
   Line as RechartsLine, 
@@ -3236,6 +3237,19 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
               </div>
             </div>
           </div>
+        </div>
+
+        {/* 人事指導支援AI解釈コメント */}
+        <div className="mt-6">
+          <InterpretationComments
+            evaluationData={evaluationHistoryData}
+            staffInfo={{
+              id: selectedStaff?.id || 'unknown',
+              name: selectedStaff?.name || '不明',
+              position: selectedStaff?.position || '不明',
+              yearsOfService: selectedStaff?.yearsOfService || 0
+            }}
+          />
         </div>
       </div>
 
