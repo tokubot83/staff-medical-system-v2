@@ -3203,62 +3203,17 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
         </div>
         </div>
 
-        {/* AI分析エリア（全幅2行目） */}
+        {/* AI分析エリア */}
         <div className="mt-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* 評価トレンド分析サマリー */}
-            <div className="p-4 bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg border">
-              <h5 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                🔍 評価履歴トレンド分析
-              </h5>
-              <div className="grid grid-cols-1 gap-4 text-sm">
-                <div className="space-y-2">
-                  <div className="flex items-start gap-2">
-                    <span className="text-blue-600 font-bold">📈</span>
-                    <div>
-                      <strong>総合評価:</strong> 
-                      <span className="ml-1">Cグレード → Aグレード（2段階昇格）</span>
-                      <div className="text-xs text-gray-600 mt-1">5年間で継続的な成長を実現</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-start gap-2">
-                    <span className="text-green-600 font-bold">🌐</span>
-                    <div>
-                      <strong>法人内順位:</strong> 
-                      <span className="ml-1">456位 → 89位（367位上昇）</span>
-                      <div className="text-xs text-gray-600 mt-1">上位59% → 上位11%へ大幅改善</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-start gap-2">
-                    <span className="text-purple-600 font-bold">🏢</span>
-                    <div>
-                      <strong>施設内順位:</strong> 
-                      <span className="ml-1">42位 → 12位（30位上昇）</span>
-                      <div className="text-xs text-gray-600 mt-1">上位38% → 上位10%のトップ層入り</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* AI解釈コメント */}
-            <div>
-              <InterpretationComments
-                evaluationData={evaluationHistoryData}
-                staffInfo={{
-                  id: selectedStaff?.id || 'unknown',
-                  name: selectedStaff?.name || '不明',
-                  position: selectedStaff?.position || '不明',
-                  yearsOfService: selectedStaff?.yearsOfService || 0
-                }}
-                className="h-full"
-              />
-            </div>
-          </div>
+          <InterpretationComments
+            evaluationData={evaluationHistoryData}
+            staffInfo={{
+              id: selectedStaff?.id || 'unknown',
+              name: selectedStaff?.name || '不明',
+              position: selectedStaff?.position || '不明',
+              yearsOfService: selectedStaff?.yearsOfService || 0
+            }}
+          />
         </div>
 
       </div>

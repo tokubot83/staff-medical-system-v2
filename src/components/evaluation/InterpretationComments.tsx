@@ -234,28 +234,67 @@ export const InterpretationComments: React.FC<InterpretationCommentsProps> = ({
     setExpandedComments(newExpanded)
   }
 
-  // ローカルLLM解釈生成
+  // ローカルLLM要因分析生成
   const handleLLMGeneration = async () => {
     setIsGenerating(true)
     try {
       if (onLLMGenerate) {
+        // 評価データから要因分析プロンプトを生成
+        const analysisPrompt = generateFactorAnalysisPrompt(evaluationData, staffInfo)
         const llmData = await onLLMGenerate({
           evaluationData,
           staffInfo,
-          context: 'evaluation-history'
+          context: 'factor-analysis',
+          prompt: analysisPrompt
         })
-        console.log('ローカルLLM生成完了:', llmData)
+        console.log('ローカルLLM要因分析完了:', llmData)
         // 生成されたデータでUIを更新する処理を追加
       } else {
-        console.log('ローカルLLM解釈生成開始 - 実装準備完了')
+        console.log('ローカルLLM要因分析生成開始 - Llama 3.2統合準備完了')
+        console.log('分析対象:', {
+          期間: `${evaluationData.length}年間`,
+          成長: `${evaluationData[0]?.finalGrade} → ${evaluationData[evaluationData.length - 1]?.finalGrade}`,
+          施設内順位向上: `${evaluationData[0]?.facilityRank?.rank || 42}位 → ${evaluationData[evaluationData.length - 1]?.facilityRank?.rank || 12}位`,
+          法人内順位向上: `${evaluationData[0]?.corporateRank?.rank || 456}位 → ${evaluationData[evaluationData.length - 1]?.corporateRank?.rank || 89}位`
+        })
         // デモ用の待機処理
         await new Promise(resolve => setTimeout(resolve, 2000))
       }
     } catch (error) {
-      console.error('LLM生成エラー:', error)
+      console.error('LLM要因分析エラー:', error)
     } finally {
       setIsGenerating(false)
     }
+  }
+
+  // 要因分析プロンプト生成
+  const generateFactorAnalysisPrompt = (data: any[], staff: any) => {
+    const startGrade = data[0]?.finalGrade || 'C'
+    const endGrade = data[data.length - 1]?.finalGrade || 'A'
+    const startFacilityRank = data[0]?.facilityRank?.rank || 42
+    const endFacilityRank = data[data.length - 1]?.facilityRank?.rank || 12
+    const startCorporateRank = data[0]?.corporateRank?.rank || 456
+    const endCorporateRank = data[data.length - 1]?.corporateRank?.rank || 89
+    
+    return `医療職員の評価向上要因を分析してください。
+
+【職員情報】
+- 氏名: ${staff.name}
+- 職種: ${staff.position}
+- 勤続年数: ${staff.yearsOfService}年
+
+【成長実績】
+- 総合評価: ${startGrade}グレード → ${endGrade}グレード
+- 施設内順位: ${startFacilityRank}位 → ${endFacilityRank}位 (${startFacilityRank - endFacilityRank}位向上)
+- 法人内順位: ${startCorporateRank}位 → ${endCorporateRank}位 (${startCorporateRank - endCorporateRank}位向上)
+- 分析期間: ${data.length}年間
+
+以下3つの観点で要因分析してください:
+1. 技術力向上要因（専門スキル、患者ケア能力）
+2. 組織貢献度向上（チームワーク、コミュニケーション）
+3. 継続成長の秘訣（学習姿勢、目標設定能力）
+
+各要因は100文字程度で簡潔に分析してください。`
   }
 
   const toggleAllComments = () => {
@@ -346,7 +385,7 @@ export const InterpretationComments: React.FC<InterpretationCommentsProps> = ({
               onClick={handleLLMGeneration}
               disabled={isGenerating}
             >
-              {isGenerating ? '生成中...' : '解釈生成'}
+              {isGenerating ? '分析中...' : '要因分析'}
             </button>
           </div>
         </div>
@@ -355,29 +394,38 @@ export const InterpretationComments: React.FC<InterpretationCommentsProps> = ({
         <div className="space-y-4">
           {evaluationData && evaluationData.length > 0 ? (
             <>
-              {/* 成長トレンド分析 */}
+              {/* 成長要因分析 */}
               <div className="bg-white rounded-lg p-4 border border-blue-200">
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="text-blue-600 text-lg">🎉</span>
-                  <h6 className="font-semibold text-blue-800">成長トレンド分析</h6>
+                  <span className="text-blue-600 text-lg">🔍</span>
+                  <h6 className="font-semibold text-blue-800">成長要因分析</h6>
                   <div className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded font-medium">
                     {evaluationData[0]?.finalGrade || 'C'}グレード → {evaluationData[evaluationData.length - 1]?.finalGrade || 'A'}グレード
                   </div>
                 </div>
                 <div className="space-y-3 text-sm">
                   <div className="p-3 bg-green-50 border-l-4 border-green-400 rounded">
-                    <p className="font-medium text-green-800 mb-1">🌟 優秀な成長実績</p>
+                    <p className="font-medium text-green-800 mb-1">🎯 技術力向上要因</p>
                     <p className="text-green-700">
-                      {evaluationData.length}年間で継続的な成長を実現しています。
-                      特に直近の評価では{evaluationData[evaluationData.length - 1]?.finalGrade || 'A'}グレードを達成し、
-                      安定した高いパフォーマンスを維持しています。
+                      継続的な研修参加と実務経験の蓄積により、専門技術が着実に向上。
+                      特に患者ケアの質と安全管理能力が大幅に改善され、
+                      施設内での信頼度が高まりました。
                     </p>
                   </div>
-                  <div className="p-3 bg-yellow-50 border-l-4 border-yellow-400 rounded">
-                    <p className="font-medium text-yellow-800 mb-1">⚡ 継続的改善ポイント</p>
-                    <p className="text-yellow-700">
-                      順位向上の背景にある具体的な改善活動を継続し、
-                      さらなる専門性向上と後進指導能力の開発が期待されます。
+                  <div className="p-3 bg-blue-50 border-l-4 border-blue-400 rounded">
+                    <p className="font-medium text-blue-800 mb-1">🤝 組織貢献度向上</p>
+                    <p className="text-blue-700">
+                      チームワークとコミュニケーション能力の向上により、
+                      他職種との連携が円滑になり、組織全体の業務効率化に貢献。
+                      後輩指導にも積極的に取り組んでいます。
+                    </p>
+                  </div>
+                  <div className="p-3 bg-purple-50 border-l-4 border-purple-400 rounded">
+                    <p className="font-medium text-purple-800 mb-1">📈 継続成長の秘訣</p>
+                    <p className="text-purple-700">
+                      自己学習意欲と目標設定能力が高く、
+                      定期的な振り返りと改善サイクルを確立。
+                      長期的視点での成長戦略が効果的に機能しています。
                     </p>
                   </div>
                 </div>
@@ -461,8 +509,9 @@ export const InterpretationComments: React.FC<InterpretationCommentsProps> = ({
                   <span className="text-yellow-600">⚡</span>
                   <span>
                     <strong>開発予定:</strong> ローカルLLM (Ollama + Llama 3.2) 統合により、
-                    個人の成長履歴パターンを分析した、より精密な長期育成計画を自動生成します。
-                    過去の変遷データから個人特性を学習し、最適化された指導アドバイスを提供予定です。
+                    評価データから個人特性を解析し、成長要因を自動分析します。
+                    医療業界特化のプロンプトエンジニアリングにより、
+                    より精密で実用的な要因分析と育成提案を生成予定です。
                   </span>
                 </div>
               </div>
