@@ -2780,79 +2780,148 @@ function EvaluationHistoryTab({ selectedStaff }: { selectedStaff: any }): React.
 function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any }): React.ReactElement {
   const [showAllHistory, setShowAllHistory] = useState(false);
   
-  // 元の手作りSVGと同じ評価データ
-  const evaluationData = [
-    { year: '2020年度', totalScore: 52.3, grade: 'D', rank: 35 },
-    { year: '2021年度', totalScore: 65.8, grade: 'C', rank: 22 },
-    { year: '2022年度', totalScore: 68.2, grade: 'C', rank: 18 },
-    { year: '2023年度', totalScore: 78.4, grade: 'B', rank: 15 },
-    { year: '2024年度', totalScore: 81.25, grade: 'A', rank: 8 }
+  // 評価制度システムに準拠したデータ構造
+  const evaluationHistoryData = [
+    {
+      year: '2020年度',
+      period: '2019/4-2020/3',
+      // グレード情報（評価制度の本質）
+      facilityGrade: 'C' as const,
+      corporateGrade: 'D' as const,
+      finalGrade: 'C' as const,
+      // 順位情報（最重要指標）
+      facilityRank: { rank: 42, total: 110, percentile: 62 },
+      corporateRank: { rank: 456, total: 770, percentile: 41 },
+      // 点数（参考値）
+      totalScore: 64.1,
+      technicalScore: 30,
+      contributionScore: 34.1
+    },
+    {
+      year: '2021年度',
+      period: '2020/4-2021/3',
+      facilityGrade: 'C' as const,
+      corporateGrade: 'C' as const,
+      finalGrade: 'C' as const,
+      facilityRank: { rank: 35, total: 112, percentile: 69 },
+      corporateRank: { rank: 298, total: 785, percentile: 62 },
+      totalScore: 68.2,
+      technicalScore: 32,
+      contributionScore: 36.2
+    },
+    {
+      year: '2022年度',
+      period: '2021/4-2022/3',
+      facilityGrade: 'B' as const,
+      corporateGrade: 'C' as const,
+      finalGrade: 'B' as const,
+      facilityRank: { rank: 22, total: 115, percentile: 81 },
+      corporateRank: { rank: 189, total: 800, percentile: 76 },
+      totalScore: 75.8,
+      technicalScore: 36,
+      contributionScore: 39.8
+    },
+    {
+      year: '2023年度',
+      period: '2022/4-2023/3',
+      facilityGrade: 'B' as const,
+      corporateGrade: 'B' as const,
+      finalGrade: 'B' as const,
+      facilityRank: { rank: 18, total: 118, percentile: 85 },
+      corporateRank: { rank: 127, total: 820, percentile: 85 },
+      totalScore: 78.5,
+      technicalScore: 38,
+      contributionScore: 40.5
+    },
+    {
+      year: '2024年度',
+      period: '2023/4-2024/3',
+      facilityGrade: 'A' as const,
+      corporateGrade: 'B' as const,
+      finalGrade: 'A' as const,
+      facilityRank: { rank: 12, total: 120, percentile: 90 },
+      corporateRank: { rank: 89, total: 850, percentile: 89 },
+      totalScore: 81.25,
+      technicalScore: 40,
+      contributionScore: 41.25
+    }
   ];
 
-  const rankData = [
-    { year: '2020年度', rank: 35 },
-    { year: '2021年度', rank: 22 },
-    { year: '2022年度', rank: 18 },
-    { year: '2023年度', rank: 15 },
-    { year: '2024年度', rank: 8 }
-  ];
+  // グレードを数値に変換する関数（グラフ表示用）
+  const gradeToValue = (grade: string): number => {
+    const gradeMap: { [key: string]: number } = {
+      'D': 1,
+      'C': 2,
+      'B': 3,
+      'A': 4,
+      'A+': 5,
+      'S': 6,
+      'S+': 7
+    };
+    return gradeMap[grade] || 0;
+  };
 
-  // 法人内評価データ（元の2つ目のSVGグラフと同じデータ）
-  const corporateEvaluationData = [
-    { year: '2020年度', totalScore: 45.2, grade: 'D', rank: 456 },
-    { year: '2021年度', totalScore: 58.1, grade: 'D', rank: 389 },
-    { year: '2022年度', totalScore: 62.5, grade: 'C', rank: 334 },
-    { year: '2023年度', totalScore: 69.8, grade: 'C', rank: 278 },
-    { year: '2024年度', totalScore: 74.3, grade: 'B', rank: 215 }
-  ];
+  // 総合評価用データ（グレード表示）
+  const finalGradeData = evaluationHistoryData.map(item => ({
+    year: item.year,
+    gradeValue: gradeToValue(item.finalGrade),
+    grade: item.finalGrade,
+    score: item.totalScore
+  }));
 
-  const corporateRankData = [
-    { year: '2020年度', rank: 456 },
-    { year: '2021年度', rank: 389 },
-    { year: '2022年度', rank: 334 },
-    { year: '2023年度', rank: 278 },
-    { year: '2024年度', rank: 215 }
-  ];
+  // 法人内順位データ（順位を逆スケールで表示）
+  const corporateRankData = evaluationHistoryData.map(item => ({
+    year: item.year,
+    rankDisplay: item.corporateRank.total - item.corporateRank.rank + 1, // 順位を逆転（上位ほど上）
+    actualRank: item.corporateRank.rank,
+    total: item.corporateRank.total,
+    percentile: item.corporateRank.percentile,
+    grade: item.corporateGrade
+  }));
 
-  // 施設内評価データ（元の3つ目のSVGグラフと同じデータ）
-  const facilityEvaluationData = [
-    { year: '2020年度', totalScore: 52.3, grade: 'D', rank: 35 },
-    { year: '2021年度', totalScore: 65.8, grade: 'C', rank: 22 },
-    { year: '2022年度', totalScore: 68.2, grade: 'C', rank: 18 },
-    { year: '2023年度', totalScore: 78.4, grade: 'B', rank: 15 },
-    { year: '2024年度', totalScore: 81.25, grade: 'A', rank: 8 }
-  ];
+  // 施設内順位データ（順位を逆スケールで表示）
+  const facilityRankData = evaluationHistoryData.map(item => ({
+    year: item.year,
+    rankDisplay: item.facilityRank.total - item.facilityRank.rank + 1, // 順位を逆転（上位ほど上）
+    actualRank: item.facilityRank.rank,
+    total: item.facilityRank.total,
+    percentile: item.facilityRank.percentile,
+    grade: item.facilityGrade
+  }))
 
-  const facilityRankData = [
-    { year: '2020年度', rank: 35 },
-    { year: '2021年度', rank: 22 },
-    { year: '2022年度', rank: 18 },
-    { year: '2023年度', rank: 15 },
-    { year: '2024年度', rank: 8 }
-  ];
+  // グレード背景色の設定
+  const getGradeColor = (grade: string) => {
+    const colors: { [key: string]: string } = {
+      'S+': '#8B0000', 'S': '#DC143C', 
+      'A+': '#FF4500', 'A': '#FF8C00',
+      'B': '#32CD32', 'C': '#4169E1', 'D': '#808080'
+    };
+    return colors[grade] || '#808080';
+  };
 
   return (
     <div className="space-y-6 p-6">
       {/* 評価履歴グラフ並列表示セクション */}
       <div>
         <h4 className="text-lg font-semibold flex items-center gap-2 mb-6">
-          📊 評価履歴トレンド比較
+          📊 評価履歴トレンド比較（評価制度システム準拠）
         </h4>
         
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-          {/* 総合評価推移 */}
+          {/* 総合評価推移（グレード表示） */}
           <Card className="border-l-4" style={{ borderLeftColor: '#2563eb' }}>
             <CardHeader>
               <CardTitle className="text-base flex items-center gap-2">
-                📈 総合評価の推移
+                📈 総合評価グレードの推移
+                <Badge variant="outline" className="text-xs">7段階評価</Badge>
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-64 mb-4">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart
-                    data={evaluationData}
-                    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                    data={finalGradeData}
+                    margin={{ top: 20, right: 40, left: 20, bottom: 5 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis 
@@ -2860,7 +2929,12 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
                       tick={{ fontSize: 12 }}
                     />
                     <YAxis 
-                      domain={[50, 100]}
+                      domain={[0, 8]}
+                      ticks={[1, 2, 3, 4, 5, 6, 7]}
+                      tickFormatter={(value) => {
+                        const grades = ['', 'D', 'C', 'B', 'A', 'A+', 'S', 'S+'];
+                        return grades[value] || '';
+                      }}
                       tick={{ fontSize: 12 }}
                     />
                     <RechartsTooltip 
@@ -2871,17 +2945,15 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
                             <div className="bg-white p-4 border rounded-lg shadow-lg">
                               <p className="font-semibold mb-2">{label}</p>
                               <div className="space-y-1">
-                                <div className="flex justify-between">
-                                  <span>評価点:</span>
-                                  <span className="font-bold">{data.totalScore}点</span>
+                                <div className="flex items-center justify-between gap-3">
+                                  <span>総合グレード:</span>
+                                  <Badge style={{ backgroundColor: getGradeColor(data.grade), color: 'white' }}>
+                                    {data.grade}グレード
+                                  </Badge>
                                 </div>
                                 <div className="flex justify-between">
-                                  <span>グレード:</span>
-                                  <span className="font-bold">{data.grade}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span>順位:</span>
-                                  <span className="font-bold">{data.rank}位</span>
+                                  <span>参考点数:</span>
+                                  <span className="text-gray-600">{data.score}点</span>
                                 </div>
                               </div>
                             </div>
@@ -2892,40 +2964,52 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
                     />
                     <RechartsLine 
                       type="monotone" 
-                      dataKey="totalScore" 
+                      dataKey="gradeValue" 
                       stroke="#2563eb" 
                       strokeWidth={3}
-                      name="総合評価"
-                      dot={{ r: 4, fill: "#2563eb" }}
+                      name="総合グレード"
+                      dot={(props: any) => {
+                        const { cx, cy, payload } = props;
+                        return (
+                          <g>
+                            <circle cx={cx} cy={cy} r={6} fill={getGradeColor(payload.grade)} />
+                            <text x={cx} y={cy} fill="white" textAnchor="middle" dominantBaseline="middle" fontSize="10" fontWeight="bold">
+                              {payload.grade}
+                            </text>
+                          </g>
+                        );
+                      }}
                     />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
               
               <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                <div className="text-sm text-gray-600">
-                  <span className="font-medium">現在:</span> 81.25点 (Aグレード)
+                <div className="text-sm text-gray-600 flex items-center gap-2">
+                  <span className="font-medium">現在:</span>
+                  <Badge style={{ backgroundColor: getGradeColor('A'), color: 'white' }}>Aグレード</Badge>
                 </div>
                 <div className="text-xs text-gray-500 mt-1">
-                  2020年度から+28.95点の大幅改善を達成
+                  C → A への2段階昇格を達成（5年間）
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* 法人内評価推移 */}
+          {/* 法人内評価推移（順位表示） */}
           <Card className="border-l-4" style={{ borderLeftColor: '#10b981' }}>
             <CardHeader>
               <CardTitle className="text-base flex items-center gap-2">
-                🌐 法人内評価の推移
+                🌐 法人内順位の推移
+                <Badge variant="outline" className="text-xs">同職種内</Badge>
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-64 mb-4">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart
-                    data={corporateEvaluationData}
-                    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                    data={corporateRankData}
+                    margin={{ top: 20, right: 50, left: 50, bottom: 5 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis 
@@ -2933,8 +3017,17 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
                       tick={{ fontSize: 12 }}
                     />
                     <YAxis 
-                      domain={[40, 80]}
-                      tick={{ fontSize: 12 }}
+                      domain={[0, 900]}
+                      ticks={[0, 150, 300, 450, 600, 750, 900]}
+                      tickFormatter={(value) => {
+                        // 逆順位表示（850人中の場合）
+                        const displayRank = 850 - value + 1;
+                        if (displayRank <= 0) return '850位';
+                        if (displayRank >= 850) return '1位';
+                        return `${displayRank}位`;
+                      }}
+                      tick={{ fontSize: 11 }}
+                      label={{ value: '順位（上位ほど上）', angle: -90, position: 'insideLeft', style: { fontSize: 10 } }}
                     />
                     <RechartsTooltip 
                       content={({ active, payload, label }) => {
@@ -2944,17 +3037,23 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
                             <div className="bg-white p-4 border rounded-lg shadow-lg">
                               <p className="font-semibold mb-2">{label}</p>
                               <div className="space-y-1">
-                                <div className="flex justify-between">
-                                  <span>評価点:</span>
-                                  <span className="font-bold">{data.totalScore}点</span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span>グレード:</span>
-                                  <span className="font-bold">{data.grade}</span>
-                                </div>
-                                <div className="flex justify-between">
+                                <div className="flex items-center justify-between gap-3">
                                   <span>法人内順位:</span>
-                                  <span className="font-bold">{data.rank}位</span>
+                                  <span className="font-bold text-green-600">
+                                    {data.actualRank}位 / {data.total}人
+                                  </span>
+                                </div>
+                                <div className="flex items-center justify-between gap-3">
+                                  <span>上位:</span>
+                                  <Badge className="bg-green-600 text-white">
+                                    上位{data.percentile}%
+                                  </Badge>
+                                </div>
+                                <div className="flex items-center justify-between gap-3">
+                                  <span>グレード:</span>
+                                  <Badge style={{ backgroundColor: getGradeColor(data.grade), color: 'white' }}>
+                                    {data.grade}
+                                  </Badge>
                                 </div>
                               </div>
                             </div>
@@ -2965,11 +3064,21 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
                     />
                     <RechartsLine 
                       type="monotone" 
-                      dataKey="totalScore" 
+                      dataKey="rankDisplay" 
                       stroke="#10b981" 
                       strokeWidth={3}
-                      name="法人内評価"
-                      dot={{ r: 4, fill: "#10b981" }}
+                      name="法人内順位"
+                      dot={(props: any) => {
+                        const { cx, cy, payload } = props;
+                        return (
+                          <g>
+                            <circle cx={cx} cy={cy} r={5} fill="#10b981" />
+                            <text x={cx} y={cy - 10} fill="#10b981" textAnchor="middle" fontSize="10" fontWeight="bold">
+                              {payload.actualRank}
+                            </text>
+                          </g>
+                        );
+                      }}
                     />
                   </LineChart>
                 </ResponsiveContainer>
@@ -2977,28 +3086,31 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
               
               <div className="mt-4 p-3 bg-green-50 rounded-lg">
                 <div className="text-sm text-gray-600">
-                  <span className="font-medium">現在:</span> 74.3点 (Bグレード) / 215位
+                  <span className="font-medium">現在:</span> 
+                  <span className="font-bold"> 89位 / 850人</span>
+                  <Badge className="ml-2 bg-green-600 text-white">上位11%</Badge>
                 </div>
                 <div className="text-xs text-gray-500 mt-1">
-                  法人850名中で着実に順位上昇中
+                  456位→89位へ367位上昇（5年間）
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* 施設内評価推移 */}
+          {/* 施設内評価推移（順位表示） */}
           <Card className="border-l-4" style={{ borderLeftColor: '#8b5cf6' }}>
             <CardHeader>
               <CardTitle className="text-base flex items-center gap-2">
-                🏢 施設内評価の推移
+                🏢 施設内順位の推移
+                <Badge variant="outline" className="text-xs">同職種内</Badge>
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-64 mb-4">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart
-                    data={facilityEvaluationData}
-                    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                    data={facilityRankData}
+                    margin={{ top: 20, right: 50, left: 40, bottom: 5 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis 
@@ -3006,8 +3118,17 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
                       tick={{ fontSize: 12 }}
                     />
                     <YAxis 
-                      domain={[50, 85]}
-                      tick={{ fontSize: 12 }}
+                      domain={[0, 130]}
+                      ticks={[0, 20, 40, 60, 80, 100, 120]}
+                      tickFormatter={(value) => {
+                        // 逆順位表示（120人中の場合）
+                        const displayRank = 120 - value + 1;
+                        if (displayRank <= 0) return '120位';
+                        if (displayRank >= 120) return '1位';
+                        return `${displayRank}位`;
+                      }}
+                      tick={{ fontSize: 11 }}
+                      label={{ value: '順位（上位ほど上）', angle: -90, position: 'insideLeft', style: { fontSize: 10 } }}
                     />
                     <RechartsTooltip 
                       content={({ active, payload, label }) => {
@@ -3017,17 +3138,23 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
                             <div className="bg-white p-4 border rounded-lg shadow-lg">
                               <p className="font-semibold mb-2">{label}</p>
                               <div className="space-y-1">
-                                <div className="flex justify-between">
-                                  <span>評価点:</span>
-                                  <span className="font-bold">{data.totalScore}点</span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span>グレード:</span>
-                                  <span className="font-bold">{data.grade}</span>
-                                </div>
-                                <div className="flex justify-between">
+                                <div className="flex items-center justify-between gap-3">
                                   <span>施設内順位:</span>
-                                  <span className="font-bold">{data.rank}位</span>
+                                  <span className="font-bold text-purple-600">
+                                    {data.actualRank}位 / {data.total}人
+                                  </span>
+                                </div>
+                                <div className="flex items-center justify-between gap-3">
+                                  <span>上位:</span>
+                                  <Badge className="bg-purple-600 text-white">
+                                    上位{data.percentile}%
+                                  </Badge>
+                                </div>
+                                <div className="flex items-center justify-between gap-3">
+                                  <span>グレード:</span>
+                                  <Badge style={{ backgroundColor: getGradeColor(data.grade), color: 'white' }}>
+                                    {data.grade}
+                                  </Badge>
                                 </div>
                               </div>
                             </div>
@@ -3038,11 +3165,21 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
                     />
                     <RechartsLine 
                       type="monotone" 
-                      dataKey="totalScore" 
+                      dataKey="rankDisplay" 
                       stroke="#8b5cf6" 
                       strokeWidth={3}
-                      name="施設内評価"
-                      dot={{ r: 4, fill: "#8b5cf6" }}
+                      name="施設内順位"
+                      dot={(props: any) => {
+                        const { cx, cy, payload } = props;
+                        return (
+                          <g>
+                            <circle cx={cx} cy={cy} r={5} fill="#8b5cf6" />
+                            <text x={cx} y={cy - 10} fill="#8b5cf6" textAnchor="middle" fontSize="10" fontWeight="bold">
+                              {payload.actualRank}
+                            </text>
+                          </g>
+                        );
+                      }}
                     />
                   </LineChart>
                 </ResponsiveContainer>
@@ -3050,10 +3187,12 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
               
               <div className="mt-4 p-3 bg-purple-50 rounded-lg">
                 <div className="text-sm text-gray-600">
-                  <span className="font-medium">現在:</span> 81.25点 (Aグレード) / 8位
+                  <span className="font-medium">現在:</span>
+                  <span className="font-bold"> 12位 / 120人</span>
+                  <Badge className="ml-2 bg-purple-600 text-white">上位10%</Badge>
                 </div>
                 <div className="text-xs text-gray-500 mt-1">
-                  施設120名中でトップ10入り達成
+                  42位→12位へ30位上昇、トップ層入り
                 </div>
               </div>
             </CardContent>
@@ -3069,19 +3208,31 @@ function EvaluationHistoryTabRecharts({ selectedStaff }: { selectedStaff: any })
             <div className="space-y-2">
               <div className="flex items-start gap-2">
                 <span className="text-blue-600 font-bold">📈</span>
-                <span><strong>総合評価:</strong> 5年間で28.95点向上し、D→Aグレードへの大幅成長を達成。</span>
+                <div>
+                  <strong>総合評価:</strong> 
+                  <span className="ml-1">Cグレード → Aグレード（2段階昇格）</span>
+                  <div className="text-xs text-gray-600 mt-1">5年間で継続的な成長を実現</div>
+                </div>
               </div>
             </div>
             <div className="space-y-2">
               <div className="flex items-start gap-2">
                 <span className="text-green-600 font-bold">🌐</span>
-                <span><strong>法人内評価:</strong> 456位→215位と241順位向上。上位25%まであと2位。</span>
+                <div>
+                  <strong>法人内順位:</strong> 
+                  <span className="ml-1">456位 → 89位（367位上昇）</span>
+                  <div className="text-xs text-gray-600 mt-1">上位59% → 上位11%へ大幅改善</div>
+                </div>
               </div>
             </div>
             <div className="space-y-2">
               <div className="flex items-start gap-2">
                 <span className="text-purple-600 font-bold">🏢</span>
-                <span><strong>施設内評価:</strong> トップ10入り達成。現在8位でリーダー層に成長。</span>
+                <div>
+                  <strong>施設内順位:</strong> 
+                  <span className="ml-1">42位 → 12位（30位上昇）</span>
+                  <div className="text-xs text-gray-600 mt-1">上位38% → 上位10%のトップ層入り</div>
+                </div>
               </div>
             </div>
           </div>
