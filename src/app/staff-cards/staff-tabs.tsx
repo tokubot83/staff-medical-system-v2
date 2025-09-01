@@ -2795,104 +2795,84 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                 </div>
               </div>
 
-              {/* 面談分析ダッシュボード - 完全直列配置 */}
-              <div className="mt-8">
-              {interviewData?.regular?.interviews?.length > 0 && (
-                <div className="space-y-8">
-                  {/* === 1番目: グラフ === */}
-                  <div className="border-4 border-blue-500 bg-blue-50 p-2 rounded-lg">
-                    <div className="text-center mb-2 font-bold text-blue-800">【1番目: グラフ】スキル別成長トレンド</div>
-                    <SectionTrendAnalysis 
-                      staffRole={getStaffRole(selectedStaff)}
-                      staffId={selectedStaff.id}
-                    />
+              {/* 面談分析セクション */}
+              <div className="mt-8 bg-gradient-to-r from-slate-50 to-gray-50 border-l-4 border-indigo-500 rounded-xl shadow-lg p-6">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="p-3 bg-indigo-100 rounded-lg">
+                    <span className="text-indigo-600 text-2xl">📊</span>
                   </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-800">面談分析</h3>
+                    <p className="text-sm text-gray-600">グラフとAI分析による包括的な面談データ評価</p>
+                  </div>
+                </div>
+                
+                {interviewData?.regular?.interviews?.length > 0 && (
+                  <div className="space-y-6">
+                    {/* 1番目：グラフ（スキル別成長トレンド） */}
+                    <div className="border-4 border-red-500 bg-red-50 p-4 rounded-lg">
+                      <div className="text-center mb-4 font-bold text-red-800 text-lg">【1番目：グラフ】スキル別成長トレンド</div>
+                      <SectionTrendAnalysis 
+                        staffRole={getStaffRole(selectedStaff)}
+                        staffId={selectedStaff.id}
+                      />
+                    </div>
 
-                  {/* === 2番目: AI === */}
-                  <div className="border-4 border-green-500 bg-green-50 p-2 rounded-lg">
-                    <div className="text-center mb-2 font-bold text-green-800">【2番目: AI】スキル成長トレンド分析</div>
-                    {interviewData?.regular?.interviews?.length > 0 ? (
+                    {/* 2番目：AI分析（スキル成長トレンド分析） */}
+                    <div className="border-4 border-green-500 bg-green-50 p-4 rounded-lg">
+                      <div className="text-center mb-4 font-bold text-green-800 text-lg">【2番目：AI】スキル成長トレンド分析</div>
                       <SkillGrowthTrendAnalysis
                         staffId={selectedStaff.id}
                         interviewData={interviewData.regular.interviews}
                         staffInfo={selectedStaff}
                         category="regular"
                       />
-                    ) : (
-                      <div className="p-4 bg-white rounded-lg border border-gray-200">
-                        <div className="text-center">
-                          <span className="text-gray-400 text-4xl">🤖</span>
-                          <p className="text-gray-600 mt-2">面談データが不足しています</p>
-                          <p className="text-gray-500 text-sm">AI分析には複数回の面談データが必要です</p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                    </div>
 
-                  {/* === 3番目: グラフ === */}
-                  <div className="border-4 border-blue-500 bg-blue-50 p-2 rounded-lg">
-                    <div className="text-center mb-2 font-bold text-blue-800">【3番目: グラフ】面談データビジュアライゼーション</div>
-                    <InterviewDataVisualization
-                      staffId={selectedStaff.id}
-                      interviewData={interviewData.regular.interviews}
-                      category="regular"
-                    />
-                  </div>
+                    {/* 3番目：グラフ（面談データビジュアライゼーション） */}
+                    <div className="border-4 border-blue-500 bg-blue-50 p-4 rounded-lg">
+                      <div className="text-center mb-4 font-bold text-blue-800 text-lg">【3番目：グラフ】面談データビジュアライゼーション</div>
+                      <InterviewDataVisualization
+                        staffId={selectedStaff.id}
+                        interviewData={interviewData.regular.interviews}
+                        category="regular"
+                      />
+                    </div>
 
-                  {/* === 4番目: AI === */}
-                  <div className="border-4 border-green-500 bg-green-50 p-2 rounded-lg">
-                    <div className="text-center mb-2 font-bold text-green-800">【4番目: AI】面談セクション分析</div>
-                    {interviewData?.regular?.interviews?.length > 0 ? (
+                    {/* 4番目：AI分析（面談セクション分析） */}
+                    <div className="border-4 border-purple-500 bg-purple-50 p-4 rounded-lg">
+                      <div className="text-center mb-4 font-bold text-purple-800 text-lg">【4番目：AI】面談セクション分析</div>
                       <InterviewSectionAnalysis
                         staffId={selectedStaff.id}
                         interviewData={interviewData.regular.interviews}
                         staffInfo={selectedStaff}
                         category="regular"
                       />
-                    ) : (
-                      <div className="p-4 bg-white rounded-lg border border-gray-200">
-                        <div className="text-center">
-                          <span className="text-gray-400 text-4xl">🤖</span>
-                          <p className="text-gray-600 mt-2">面談データが不足しています</p>
-                          <p className="text-gray-500 text-sm">AI分析には複数回の面談データが必要です</p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                    </div>
 
-                  {/* === 5番目: グラフ === */}
-                  <div className="border-4 border-blue-500 bg-blue-50 p-2 rounded-lg">
-                    <div className="text-center mb-2 font-bold text-blue-800">【5番目: グラフ】セクション間相関分析</div>
-                    <SectionCorrelationAnalysis
-                      staffId={selectedStaff.id}
-                      interviewData={interviewData.regular.interviews}
-                      staffInfo={selectedStaff}
-                      category="regular"
-                    />
-                  </div>
+                    {/* 5番目：グラフ（セクション間相関分析） */}
+                    <div className="border-4 border-orange-500 bg-orange-50 p-4 rounded-lg">
+                      <div className="text-center mb-4 font-bold text-orange-800 text-lg">【5番目：グラフ】セクション間相関分析</div>
+                      <SectionCorrelationAnalysis
+                        staffId={selectedStaff.id}
+                        interviewData={interviewData.regular.interviews}
+                        staffInfo={selectedStaff}
+                        category="regular"
+                      />
+                    </div>
 
-                  {/* === 6番目: AI === */}
-                  <div className="border-4 border-green-500 bg-green-50 p-2 rounded-lg">
-                    <div className="text-center mb-2 font-bold text-green-800">【6番目: AI】面談制度最適化分析</div>
-                    {interviewData?.regular?.interviews?.length > 0 ? (
+                    {/* 6番目：AI分析（面談制度最適化分析） */}
+                    <div className="border-4 border-indigo-500 bg-indigo-50 p-4 rounded-lg">
+                      <div className="text-center mb-4 font-bold text-indigo-800 text-lg">【6番目：AI】面談制度最適化分析</div>
                       <InterviewIntegratedAnalysis
                         staffId={selectedStaff.id}
                         interviewData={interviewData.regular.interviews}
                         staffInfo={selectedStaff}
                         category="regular"
                       />
-                    ) : (
-                      <div className="p-4 bg-white rounded-lg border border-gray-200">
-                        <div className="text-center">
-                          <span className="text-gray-400 text-4xl">🤖</span>
-                          <p className="text-gray-600 mt-2">面談データが不足しています</p>
-                          <p className="text-gray-500 text-sm">AI分析には複数回の面談データが必要です</p>
-                        </div>
-                      </div>
-                    )}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
               </div>
 
               {/* 定期面談履歴詳細 - 強調タイムラインデザイン */}
