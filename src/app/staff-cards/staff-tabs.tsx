@@ -2494,25 +2494,74 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                     <span className={styles.summaryIcon}>📅</span>
                     <h3>定期面談サマリー</h3>
                   </div>
-                  <div className={styles.summaryContent}>
-                    <div className={styles.summaryMetrics}>
-                      <div className={styles.metricItem}>
-                        <span className={styles.metricValue}>{interviewData?.regular?.summary?.total || 0}</span>
-                        <span className={styles.metricLabel}>実施回数</span>
+                  <div className="p-4">
+                    {/* 強調メトリクス表示 */}
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                      {/* 実施回数 */}
+                      <div className="bg-gradient-to-br from-blue-50 to-indigo-100 border border-blue-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center shadow-sm">
+                            <span className="text-white text-lg">📊</span>
+                          </div>
+                          <div className="text-xs font-medium text-blue-600 uppercase tracking-wide">実施回数</div>
+                        </div>
+                        <div className="text-2xl font-bold text-gray-800 mb-1">
+                          {interviewData?.regular?.summary?.total || 0}
+                        </div>
+                        <div className="text-xs text-blue-600 font-medium">回実施済み</div>
                       </div>
-                      <div className={styles.metricItem}>
-                        <span className={styles.metricValue}>{interviewData?.regular?.summary?.lastDate || '未実施'}</span>
-                        <span className={styles.metricLabel}>最新実施</span>
+
+                      {/* 最新実施 */}
+                      <div className="bg-gradient-to-br from-green-50 to-emerald-100 border border-green-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center shadow-sm">
+                            <span className="text-white text-lg">📅</span>
+                          </div>
+                          <div className="text-xs font-medium text-green-600 uppercase tracking-wide">最新実施</div>
+                        </div>
+                        <div className="text-lg font-bold text-gray-800 mb-1">
+                          {interviewData?.regular?.summary?.lastDate || '未実施'}
+                        </div>
+                        <div className="text-xs text-green-600 font-medium">最終実施日</div>
                       </div>
-                      <div className={styles.metricItem}>
-                        <span className={styles.metricValue}>{interviewData?.regular?.summary?.avgScore || '-'}</span>
-                        <span className={styles.metricLabel}>平均評価</span>
+
+                      {/* 平均評価 */}
+                      <div className="bg-gradient-to-br from-purple-50 to-violet-100 border border-purple-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center shadow-sm">
+                            <span className="text-white text-lg">⭐</span>
+                          </div>
+                          <div className="text-xs font-medium text-purple-600 uppercase tracking-wide">平均評価</div>
+                        </div>
+                        <div className="text-2xl font-bold text-gray-800 mb-1">
+                          {interviewData?.regular?.summary?.avgScore || '-'}
+                        </div>
+                        <div className={`text-xs font-medium ${
+                          interviewData?.regular?.summary?.avgScore === 'A' ? 'text-green-600' :
+                          interviewData?.regular?.summary?.avgScore === 'B+' ? 'text-blue-600' :
+                          'text-purple-600'
+                        }`}>
+                          {interviewData?.regular?.summary?.avgScore === 'A' ? '優秀レベル' :
+                           interviewData?.regular?.summary?.avgScore === 'B+' ? '良好レベル' : '評価中'}
+                        </div>
                       </div>
-                      <div className={styles.metricItem}>
-                        <span className={styles.metricValue}>
+
+                      {/* 成長傾向 */}
+                      <div className="bg-gradient-to-br from-amber-50 to-orange-100 border border-amber-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="w-10 h-10 bg-amber-500 rounded-full flex items-center justify-center shadow-sm">
+                            <span className="text-white text-lg">📈</span>
+                          </div>
+                          <div className="text-xs font-medium text-amber-600 uppercase tracking-wide">成長傾向</div>
+                        </div>
+                        <div className="text-xl font-bold text-gray-800 mb-1">
                           {interviewData?.regular?.summary?.trend === 'improving' ? '📈 向上' : '➡️ 安定'}
-                        </span>
-                        <span className={styles.metricLabel}>傾向</span>
+                        </div>
+                        <div className={`text-xs font-medium ${
+                          interviewData?.regular?.summary?.trend === 'improving' ? 'text-green-600' : 'text-amber-600'
+                        }`}>
+                          {interviewData?.regular?.summary?.trend === 'improving' ? '継続的成長中' : '安定維持'}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -2537,70 +2586,6 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                 />
               </div>
 
-              {/* その他の分析データ */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                {/* 成長軸跡分析 */}
-                <Card>
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-base flex items-center gap-2">
-                      📈 成長軸跡分析
-                      <Badge style={{ backgroundColor: CHART_COLORS.success, color: 'white' }}>
-                        継続成長
-                      </Badge>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {/* スキル進歩グラフ */}
-                      <div>
-                        <div className="flex justify-between text-sm mb-2">
-                          <span>技術スキル</span>
-                          <span className="font-medium text-green-600">↑ +15%</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div 
-                            className="h-2 rounded-full bg-gradient-to-r from-blue-400 to-green-500" 
-                            style={{ width: '85%' }}
-                          ></div>
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <div className="flex justify-between text-sm mb-2">
-                          <span>リーダーシップ</span>
-                          <span className="font-medium text-green-600">↑ +22%</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div 
-                            className="h-2 rounded-full bg-gradient-to-r from-purple-400 to-blue-500" 
-                            style={{ width: '78%' }}
-                          ></div>
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <div className="flex justify-between text-sm mb-2">
-                          <span>コミュニケーション</span>
-                          <span className="font-medium text-green-600">↑ +8%</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div 
-                            className="h-2 rounded-full bg-gradient-to-r from-orange-400 to-yellow-500" 
-                            style={{ width: '92%' }}
-                          ></div>
-                        </div>
-                      </div>
-                      
-                      <div className="mt-3 p-2 bg-green-50 rounded text-xs text-green-800">
-                        🎆 直近3回の面談で全領域で進歩を確認。特にリーダーシップ領域での成長が顕著です。
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* 空のカード（将来の拡張用） */}
-                <div></div>
-              </div>
 
               {/* 面談効果測定ダッシュボード */}
               <Card className="mb-6">
@@ -2676,29 +2661,6 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
               {/* AI面談支援分析 - 直列配置 */}
               {interviewData?.regular?.interviews?.length > 0 && (
                 <div className="space-y-6">
-                  {/* 面談スコア推移グラフ */}
-                  <div className="mb-6">
-                    <h4 className="text-lg font-semibold text-gray-800 mb-4">📈 面談スコア推移</h4>
-                    {/* TrendVisualization部分を抽出表示 */}
-                    <div className="bg-white border border-gray-200 rounded-lg p-4">
-                      <div className="h-48 border border-gray-200 rounded-lg p-4 bg-gradient-to-b from-blue-50/30 to-white">
-                        {/* 簡易スコア推移表示 */}
-                        <div className="flex items-center justify-between h-full">
-                          {interviewData.regular.interviews.slice(0, 5).map((interview: any, index: number) => {
-                            const score = interview.overallScore === 'A' ? 85 : interview.overallScore === 'B+' ? 80 : interview.overallScore === 'B' ? 75 : 70
-                            return (
-                              <div key={index} className="text-center">
-                                <div className="w-8 h-8 rounded-full bg-blue-500 text-white text-sm flex items-center justify-center mb-2">
-                                  {score}
-                                </div>
-                                <div className="text-xs text-gray-500">{interview.date}</div>
-                              </div>
-                            )
-                          })}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                   {/* スキル成長トレンド専用AI分析 */}
                   <SkillGrowthTrendAnalysis
                     staffId={selectedStaff.id}
@@ -2707,25 +2669,82 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                     category="regular"
                   />
 
-                  {/* 回答パターン分析グラフ */}
+                  {/* 主要質問の回答推移 - 強調デザイン */}
                   <div className="mb-6">
-                    <h4 className="text-lg font-semibold text-gray-800 mb-4">💬 主要質問の回答推移</h4>
-                    <div className="bg-white border border-gray-200 rounded-lg p-4">
-                      <div className="space-y-3">
-                        <h5 className="font-medium text-sm text-gray-800">Q. キャリア目標について教えてください</h5>
-                        {interviewData.regular.interviews.slice(0, 3).map((interview: any, index: number) => (
-                          <div key={index} className="border-l-2 border-blue-200 pl-3">
-                            <div className="flex justify-between items-center mb-1">
-                              <span className="text-xs text-gray-500">{interview.date}</span>
-                              <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                                {interview.overallScore === 'A' ? '85' : '80'}点
-                              </span>
-                            </div>
-                            <p className="text-sm text-gray-700">
-                              {interview.summary.substring(0, 100)}...
-                            </p>
+                    <div className="bg-gradient-to-r from-indigo-50 to-blue-50 border-l-4 border-indigo-500 rounded-xl shadow-md p-6">
+                      <div className="flex items-center gap-3 mb-6">
+                        <div className="p-2 bg-indigo-100 rounded-lg">
+                          <span className="text-indigo-600 text-xl">💬</span>
+                        </div>
+                        <div>
+                          <h4 className="text-xl font-bold text-gray-800">主要質問の回答推移</h4>
+                          <p className="text-sm text-gray-600">面談での具体的な回答内容の変化を時系列で確認</p>
+                        </div>
+                      </div>
+                      
+                      {/* 質問セクション */}
+                      <div className="bg-white rounded-lg border border-indigo-200 shadow-sm mb-4">
+                        <div className="bg-gradient-to-r from-indigo-500 to-blue-600 text-white px-4 py-3 rounded-t-lg">
+                          <div className="flex items-center gap-2">
+                            <span className="text-white text-lg">❓</span>
+                            <h5 className="font-semibold text-base">キャリア目標について教えてください</h5>
                           </div>
-                        ))}
+                        </div>
+                        
+                        {/* 回答推移 */}
+                        <div className="p-4 space-y-4">
+                          {interviewData.regular.interviews.slice(0, 3).map((interview: any, index: number) => (
+                            <div key={index} className="relative">
+                              {/* タイムライン線 */}
+                              {index < interviewData.regular.interviews.slice(0, 3).length - 1 && (
+                                <div className="absolute left-6 top-12 w-0.5 h-8 bg-gradient-to-b from-blue-300 to-blue-200"></div>
+                              )}
+                              
+                              {/* 回答カード */}
+                              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-200">
+                                <div className="flex items-center justify-between mb-3">
+                                  <div className="flex items-center gap-3">
+                                    <div className="w-3 h-3 rounded-full bg-blue-500 shadow-sm"></div>
+                                    <span className="text-sm font-medium text-blue-800 bg-blue-100 px-3 py-1 rounded-full">
+                                      {interview.date}
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-xs text-gray-500">評価スコア</span>
+                                    <span className="text-sm font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-3 py-1 rounded-full shadow-sm">
+                                      {interview.overallScore === 'A' ? '85' : interview.overallScore === 'B+' ? '80' : '75'}点
+                                    </span>
+                                  </div>
+                                </div>
+                                <div className="bg-white rounded-lg p-3 border border-blue-100 shadow-sm">
+                                  <p className="text-sm text-gray-700 leading-relaxed">
+                                    {interview.summary}
+                                  </p>
+                                </div>
+                                
+                                {/* キートピック表示 */}
+                                <div className="flex flex-wrap gap-2 mt-3">
+                                  {interview.keyTopics?.slice(0, 3).map((topic: string, topicIndex: number) => (
+                                    <span key={topicIndex} className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-md font-medium">
+                                      #{topic}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      {/* サマリー */}
+                      <div className="mt-4 p-3 bg-white/50 rounded-lg border border-indigo-200">
+                        <div className="flex items-center gap-2 text-sm">
+                          <span className="text-indigo-600">📊</span>
+                          <span className="font-medium text-indigo-800">推移サマリー:</span>
+                          <span className="text-gray-700">
+                            {interviewData.regular.interviews.length}回の面談記録から成長パターンを確認できます
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -2737,57 +2756,6 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                     category="regular"
                   />
 
-                  {/* インサイトダッシュボード */}
-                  <div className="mb-6">
-                    <h4 className="text-lg font-semibold text-gray-800 mb-4">💪 面談インサイト</h4>
-                    <div className="grid md:grid-cols-3 gap-4">
-                      <div className="bg-white border border-gray-200 rounded-lg p-4">
-                        <h6 className="font-semibold text-green-800 mb-2 flex items-center gap-2">
-                          💪 確認された強み
-                        </h6>
-                        <ul className="space-y-1 text-sm">
-                          <li className="flex items-start gap-2">
-                            <div className="w-2 h-2 rounded-full bg-green-500 mt-1.5"></div>
-                            V3評価システムでの安定した成果
-                          </li>
-                          <li className="flex items-start gap-2">
-                            <div className="w-2 h-2 rounded-full bg-green-500 mt-1.5"></div>
-                            技術評価80点台維持
-                          </li>
-                        </ul>
-                      </div>
-                      <div className="bg-white border border-gray-200 rounded-lg p-4">
-                        <h6 className="font-semibold text-yellow-800 mb-2 flex items-center gap-2">
-                          🎯 成長機会
-                        </h6>
-                        <ul className="space-y-1 text-sm">
-                          <li className="flex items-start gap-2">
-                            <div className="w-2 h-2 rounded-full bg-yellow-500 mt-1.5"></div>
-                            法人規模での貢献度向上
-                          </li>
-                          <li className="flex items-start gap-2">
-                            <div className="w-2 h-2 rounded-full bg-yellow-500 mt-1.5"></div>
-                            リーダーシップスキル強化
-                          </li>
-                        </ul>
-                      </div>
-                      <div className="bg-white border border-gray-200 rounded-lg p-4">
-                        <h6 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
-                          📊 主要トレンド
-                        </h6>
-                        <ul className="space-y-1 text-sm">
-                          <li className="flex items-start gap-2">
-                            <div className="w-2 h-2 rounded-full bg-blue-500 mt-1.5"></div>
-                            継続的な成長傾向
-                          </li>
-                          <li className="flex items-start gap-2">
-                            <div className="w-2 h-2 rounded-full bg-blue-500 mt-1.5"></div>
-                            組織貢献度の向上余地あり
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
                   {/* セクション相関分析専用AI分析 */}
                   <SectionCorrelationAnalysis
                     staffId={selectedStaff.id}
@@ -2798,100 +2766,172 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                 </div>
               )}
 
-              {/* 定期面談履歴詳細 */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-gray-800">📋 定期面談履歴</h3>
-                <div className="grid grid-cols-1 gap-4">
-                  {interviewData?.regular?.interviews?.map((interview: any) => (
-                    <Card key={interview.id} className="border border-gray-200 hover:shadow-md transition-shadow">
-                      <CardHeader className="pb-3">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-4">
-                            <div className="text-sm font-medium text-blue-600">{interview.date}</div>
-                            <Badge variant="outline">{interview.subtypeLabel}</Badge>
-                            <div className="text-sm text-gray-600">面談者: {interview.interviewer}</div>
+              {/* 定期面談履歴詳細 - 強調タイムラインデザイン */}
+              <div className="bg-gradient-to-r from-slate-50 to-gray-50 border-l-4 border-slate-500 rounded-xl shadow-lg p-6">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="p-3 bg-slate-100 rounded-lg">
+                    <span className="text-slate-600 text-2xl">📋</span>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-800">定期面談履歴</h3>
+                    <p className="text-sm text-gray-600">時系列順で面談記録を確認・NotebookLMとの連携管理</p>
+                  </div>
+                </div>
+                
+                {/* タイムライン形式の履歴表示 */}
+                <div className="relative">
+                  {/* 縦のタイムライン */}
+                  <div className="absolute left-8 top-0 w-1 bg-gradient-to-b from-blue-400 via-purple-400 to-green-400 rounded-full" 
+                       style={{ height: `${(interviewData?.regular?.interviews?.length || 1) * 280}px` }}></div>
+                  
+                  <div className="space-y-6">
+                    {interviewData?.regular?.interviews?.map((interview: any, index: number) => {
+                      const isLatest = index === 0;
+                      const gradientBg = isLatest 
+                        ? 'from-blue-50 to-indigo-50 border-blue-300' 
+                        : index === 1 
+                        ? 'from-purple-50 to-violet-50 border-purple-300'
+                        : 'from-green-50 to-emerald-50 border-green-300';
+                      
+                      const timelineColor = isLatest ? 'bg-blue-500' : index === 1 ? 'bg-purple-500' : 'bg-green-500';
+                      const scoreColor = interview.overallScore === 'A' ? 'from-emerald-500 to-green-600' : 
+                                        interview.overallScore === 'B+' ? 'from-amber-500 to-orange-600' : 
+                                        'from-blue-500 to-indigo-600';
+                      
+                      return (
+                        <div key={interview.id} className="relative pl-20">
+                          {/* タイムラインドット */}
+                          <div className={`absolute left-6 w-5 h-5 ${timelineColor} rounded-full shadow-lg flex items-center justify-center`}>
+                            <div className="w-2 h-2 bg-white rounded-full"></div>
                           </div>
-                          <Badge 
-                            style={{
-                              backgroundColor: interview.overallScore === 'A' ? '#10b981' : '#f59e0b',
-                              color: 'white'
-                            }}
-                          >
-                            {interview.overallScore}
-                          </Badge>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div className="text-sm text-gray-700">
-                          {interview.summary}
-                        </div>
-                        
-                        <div>
-                          <div className="text-sm font-medium text-gray-800 mb-2">主要テーマ:</div>
-                          <div className="flex flex-wrap gap-2">
-                            {interview.keyTopics?.map((topic: string, index: number) => (
-                              <Badge key={index} variant="secondary" className="text-xs">
-                                {topic}
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-                        
-                        <div>
-                          <div className="text-sm font-medium text-gray-800 mb-2">次回アクション:</div>
-                          <ul className="text-sm text-gray-700 space-y-1 ml-4">
-                            {interview.nextActions?.map((action: string, index: number) => (
-                              <li key={index} className="list-disc">{action}</li>
-                            ))}
-                          </ul>
-                        </div>
-                        
-                        {/* NotebookLMボタン - 定期面談 */}
-                        <div className="pt-3 border-t border-gray-100">
-                          {interview.notebookLmLink ? (
-                            <div className="flex items-center gap-2">
-                              <a 
-                                href={interview.notebookLmLink.url} 
-                                target="_blank" 
-                                rel="noopener noreferrer" 
-                                className="inline-flex items-center gap-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
-                              >
-                                <span>📖</span>
-                                NotebookLMで開く
-                              </a>
-                              <span className="text-xs text-gray-500">
-                                登録済み ({new Date(interview.notebookLmLink.createdAt || Date.now()).toLocaleDateString('ja-JP')})
-                              </span>
+                          
+                          {/* 面談カード */}
+                          <div className={`bg-gradient-to-br ${gradientBg} border-2 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1`}>
+                            {/* カードヘッダー */}
+                            <div className="p-6 pb-4">
+                              <div className="flex items-center justify-between mb-4">
+                                <div className="flex items-center gap-4">
+                                  {/* 日付強調 */}
+                                  <div className="bg-white rounded-lg px-4 py-2 shadow-sm border">
+                                    <div className="text-lg font-bold text-gray-800">{interview.date}</div>
+                                    <div className="text-xs text-gray-500">面談実施日</div>
+                                  </div>
+                                  {/* 面談タイプ */}
+                                  <div className="bg-white/80 rounded-full px-3 py-1 border">
+                                    <span className="text-sm font-medium text-gray-700">{interview.subtypeLabel}</span>
+                                  </div>
+                                  {/* 面談者 */}
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-gray-600 text-sm">👤</span>
+                                    <span className="text-sm font-medium text-gray-700">{interview.interviewer}</span>
+                                  </div>
+                                </div>
+                                
+                                {/* 評価グレード強調 */}
+                                <div className={`bg-gradient-to-r ${scoreColor} text-white px-4 py-2 rounded-full shadow-lg`}>
+                                  <div className="text-center">
+                                    <div className="text-xl font-bold">{interview.overallScore}</div>
+                                    <div className="text-xs opacity-90">評価</div>
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              {/* 最新マーク */}
+                              {isLatest && (
+                                <div className="inline-flex items-center gap-2 bg-blue-500 text-white px-3 py-1 rounded-full text-xs font-bold mb-3">
+                                  <span>⭐</span>最新面談
+                                </div>
+                              )}
                             </div>
-                          ) : (
-                            <button
-                              type="button"
-                              onMouseOver={() => console.log('ボタンにマウスオーバー:', interview.id)}
-                              onMouseDown={() => console.log('ボタンマウスダウン:', interview.id)}
-                              onClick={() => {
-                                console.log('定期面談NotebookLM登録ボタンクリック:', interview.id);
-                                onShowNotebookModal?.({
-                                  id: interview.id,
-                                  date: interview.date,
-                                  type: '定期面談',
-                                  subtype: interview.subtypeLabel
-                                });
-                              }}
-                              className="inline-flex items-center gap-2 px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700"
-                              style={{
-                                pointerEvents: 'auto',
-                                zIndex: 1000,
-                                position: 'relative'
-                              }}
-                            >
-                              <span>📝</span>
-                              NotebookLMリンク登録
-                            </button>
-                          )}
+
+                            {/* カード内容 */}
+                            <div className="px-6 pb-6 space-y-5">
+                              {/* 面談サマリー */}
+                              <div className="bg-white/70 rounded-lg p-4 border border-white/50">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <span className="text-slate-600">📝</span>
+                                  <span className="font-medium text-gray-800">面談サマリー</span>
+                                </div>
+                                <p className="text-sm text-gray-700 leading-relaxed">{interview.summary}</p>
+                              </div>
+                              
+                              {/* 主要テーマ */}
+                              <div className="bg-white/70 rounded-lg p-4 border border-white/50">
+                                <div className="flex items-center gap-2 mb-3">
+                                  <span className="text-slate-600">🏷️</span>
+                                  <span className="font-medium text-gray-800">主要テーマ</span>
+                                </div>
+                                <div className="flex flex-wrap gap-2">
+                                  {interview.keyTopics?.map((topic: string, topicIndex: number) => (
+                                    <span key={topicIndex} className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 py-1 rounded-full text-xs font-medium shadow-sm">
+                                      #{topic}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                              
+                              {/* 次回アクション */}
+                              <div className="bg-white/70 rounded-lg p-4 border border-white/50">
+                                <div className="flex items-center gap-2 mb-3">
+                                  <span className="text-slate-600">🎯</span>
+                                  <span className="font-medium text-gray-800">次回アクション</span>
+                                </div>
+                                <ul className="space-y-2">
+                                  {interview.nextActions?.map((action: string, actionIndex: number) => (
+                                    <li key={actionIndex} className="flex items-start gap-2 text-sm text-gray-700">
+                                      <span className="text-blue-500 font-bold">▶</span>
+                                      <span>{action}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                              
+                              {/* NotebookLM連携 */}
+                              <div className="bg-white/70 rounded-lg p-4 border border-white/50">
+                                <div className="flex items-center gap-2 mb-3">
+                                  <span className="text-slate-600">🔗</span>
+                                  <span className="font-medium text-gray-800">NotebookLM連携</span>
+                                </div>
+                                {interview.notebookLmLink ? (
+                                  <div className="flex items-center gap-3">
+                                    <a 
+                                      href={interview.notebookLmLink.url} 
+                                      target="_blank" 
+                                      rel="noopener noreferrer" 
+                                      className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md font-medium"
+                                    >
+                                      <span>📖</span>
+                                      NotebookLMで開く
+                                    </a>
+                                    <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium">
+                                      ✓ 登録済み ({new Date(interview.notebookLmLink.createdAt || Date.now()).toLocaleDateString('ja-JP')})
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      console.log('定期面談NotebookLM登録ボタンクリック:', interview.id);
+                                      onShowNotebookModal?.({
+                                        id: interview.id,
+                                        date: interview.date,
+                                        type: '定期面談',
+                                        subtype: interview.subtypeLabel
+                                      });
+                                    }}
+                                    className="inline-flex items-center gap-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 py-2 rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all shadow-md font-medium"
+                                  >
+                                    <span>📝</span>
+                                    NotebookLMリンク登録
+                                  </button>
+                                )}
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             </>
