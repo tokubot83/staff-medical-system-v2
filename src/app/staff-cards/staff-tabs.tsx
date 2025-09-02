@@ -2238,51 +2238,35 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                       
                       {/* 動的ボタン：NotebookLMリンクの有無で表示を切り替え */}
                       <div className="flex gap-2">
+                        {/* NotebookLMボタン（自動切り替え） */}
                         {linkedNotebook ? (
-                          // NotebookLMリンクが存在する場合：リンクボタンと管理ボタン
-                          <>
-                            <a
-                              href={linkedNotebook.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
-                              title={`NotebookLM: ${linkedNotebook.title}\n作成日: ${new Date(linkedNotebook.createdAt).toLocaleString('ja-JP')}\n${linkedNotebook.features.hasMindMap ? 'マインドマップ機能: 有効' : ''}\nクリックでNotebookLMに移動`}
-                            >
-                              📖 NotebookLMで開く
-                              {linkedNotebook.features.hasMindMap && <span title="マインドマップ機能有効">🗺️</span>}
-                            </a>
-                            <button
-                              onClick={() => handleInterviewClick(interview)}
-                              className="px-2 py-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors"
-                              title="詳細・リンク管理"
-                            >
-                              ⚙️
-                            </button>
-                          </>
+                          <a
+                            href={linkedNotebook.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
+                            title={`NotebookLM: ${linkedNotebook.title}\n作成日: ${new Date(linkedNotebook.createdAt).toLocaleString('ja-JP')}\n${linkedNotebook.features.hasMindMap ? 'マインドマップ機能: 有効' : ''}\nクリックでNotebookLMに移動`}
+                          >
+                            📖 NotebookLMで開く
+                            {linkedNotebook.features.hasMindMap && <span title="マインドマップ機能有効">🗺️</span>}
+                          </a>
                         ) : (
-                          // NotebookLMリンクが存在しない場合：登録ボタンと詳細ボタン
-                          <>
-                            <button
-                              onClick={() => handleAddInterviewNotebookLink(interview)}
-                              className="inline-flex items-center gap-2 px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors"
-                              title={`この面談にNotebookLMリンクを登録します\n面談日: ${interview.date}\n面談者: ${interview.interviewer}\nクリックで登録モーダルを開きます`}
-                            >
-                              📝 NotebookLMリンク登録
-                            </button>
-                            <button
-                              onClick={() => handleShowInterviewSheet(interview)}
-                              className="px-3 py-1.5 bg-purple-600 text-white text-xs rounded-md hover:bg-purple-700 transition-colors inline-flex items-center gap-1"
-                            >
-                              📋 面談シート
-                            </button>
-                            <button
-                              onClick={() => handleInterviewClick(interview)}
-                              className="px-2 py-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors"
-                            >
-                              詳細
-                            </button>
-                          </>
+                          <button
+                            onClick={() => handleAddInterviewNotebookLink(interview)}
+                            className="inline-flex items-center gap-2 px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors"
+                            title={`この面談にNotebookLMリンクを登録します\n面談日: ${interview.date}\n面談者: ${interview.interviewer}\nクリックで登録モーダルを開きます`}
+                          >
+                            📝 NotebookLMリンク登録
+                          </button>
                         )}
+                        
+                        {/* 面談シートボタン（常に表示） */}
+                        <button
+                          onClick={() => handleShowInterviewSheet(interview)}
+                          className="px-3 py-1.5 bg-purple-600 text-white text-xs rounded-md hover:bg-purple-700 transition-colors inline-flex items-center gap-1"
+                        >
+                          📋 面談シート
+                        </button>
                       </div>
                     </div>
                     
@@ -2356,46 +2340,33 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                       
                       {/* 動的ボタン：NotebookLMリンクの有無で表示を切り替え */}
                       <div className="flex gap-2">
+                        {/* NotebookLMボタン（自動切り替え） */}
                         {linkedNotebook ? (
-                          <>
-                            <a
-                              href={linkedNotebook.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
-                            >
-                              📖 NotebookLMで開く
-                              {linkedNotebook.features.hasMindMap && <span title="マインドマップ機能有効">🗺️</span>}
-                            </a>
-                            <button
-                              onClick={() => handleInterviewClick(interview)}
-                              className="px-2 py-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors"
-                            >
-                              ⚙️
-                            </button>
-                          </>
+                          <a
+                            href={linkedNotebook.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
+                          >
+                            📖 NotebookLMで開く
+                            {linkedNotebook.features.hasMindMap && <span title="マインドマップ機能有効">🗺️</span>}
+                          </a>
                         ) : (
-                          <>
-                            <button
-                              onClick={() => handleShowInterviewSheet(interview)}
-                              className="px-3 py-1.5 bg-purple-600 text-white text-xs rounded-md hover:bg-purple-700 transition-colors inline-flex items-center gap-1"
-                            >
-                              📋 面談シート
-                            </button>
-                            <button
-                              onClick={() => handleAddInterviewNotebookLink(interview)}
-                              className="inline-flex items-center gap-2 px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors"
-                            >
-                              📝 NotebookLMリンク登録
-                            </button>
-                            <button
-                              onClick={() => handleInterviewClick(interview)}
-                              className="px-2 py-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors"
-                            >
-                              詳細
-                            </button>
-                          </>
+                          <button
+                            onClick={() => handleAddInterviewNotebookLink(interview)}
+                            className="inline-flex items-center gap-2 px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors"
+                          >
+                            📝 NotebookLMリンク登録
+                          </button>
                         )}
+                        
+                        {/* 面談シートボタン（常に表示） */}
+                        <button
+                          onClick={() => handleShowInterviewSheet(interview)}
+                          className="px-3 py-1.5 bg-purple-600 text-white text-xs rounded-md hover:bg-purple-700 transition-colors inline-flex items-center gap-1"
+                        >
+                          📋 面談シート
+                        </button>
                       </div>
                     </div>
                     
@@ -2635,156 +2606,114 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
 
       {/* NotebookLMリンク登録モーダル */}
       {showNotebookLinkModal && (
-        <div className={styles.modalOverlay} style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1001
-        }}>
-          <div className={styles.modalContent} style={{
-            backgroundColor: 'white',
-            borderRadius: '8px',
-            padding: '24px',
-            maxWidth: '500px',
-            width: '90%'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-              <h3>NotebookLMリンク追加</h3>
-              <button
-                onClick={() => {
-                  setShowNotebookLinkModal(false)
-                  setNewNotebookLink({ url: '', title: '' })
-                }}
-                style={{ 
-                  backgroundColor: 'transparent', 
-                  border: 'none', 
-                  fontSize: '24px', 
-                  cursor: 'pointer' 
-                }}
-              >
-                ×
-              </button>
-            </div>
-            
-            <div style={{ marginBottom: '16px' }}>
-              <label style={{ display: 'block', marginBottom: '4px', fontWeight: 'bold' }}>
-                リンクタイトル:
-              </label>
-              <input
-                type="text"
-                value={newNotebookLink.title}
-                onChange={(e) => setNewNotebookLink(prev => ({ ...prev, title: e.target.value }))}
-                placeholder="例: 面談記録 - マインドマップ"
-                style={{
-                  width: '100%',
-                  padding: '8px',
-                  border: '1px solid #d1d5db',
-                  borderRadius: '4px'
-                }}
-              />
-            </div>
-            
-            <div style={{ marginBottom: '16px' }}>
-              <label style={{ display: 'block', marginBottom: '4px', fontWeight: 'bold' }}>
-                NotebookLM URL:
-              </label>
-              <input
-                type="url"
-                value={newNotebookLink.url}
-                onChange={(e) => setNewNotebookLink(prev => ({ ...prev, url: e.target.value }))}
-                placeholder="https://notebooklm.google.com/notebook/..."
-                style={{
-                  width: '100%',
-                  padding: '8px',
-                  border: '1px solid #d1d5db',
-                  borderRadius: '4px'
-                }}
-              />
-            </div>
-            
-            {/* 機能フラグセクション */}
-            <div style={{ marginBottom: '16px' }}>
-              <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
-                含まれる機能:
-              </label>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-                  <input
-                    type="checkbox"
-                    checked={notebookFeatures.hasAudioSummary}
-                    onChange={(e) => setNotebookFeatures(prev => ({ ...prev, hasAudioSummary: e.target.checked }))}
-                  />
-                  <span>📝 AI要約あり</span>
-                </label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-                  <input
-                    type="checkbox"
-                    checked={notebookFeatures.hasMindMap}
-                    onChange={(e) => setNotebookFeatures(prev => ({ ...prev, hasMindMap: e.target.checked }))}
-                  />
-                  <span>🗺️ マインドマップあり</span>
-                </label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-                  <input
-                    type="checkbox"
-                    checked={notebookFeatures.hasTranscript}
-                    onChange={(e) => setNotebookFeatures(prev => ({ ...prev, hasTranscript: e.target.checked }))}
-                  />
-                  <span>📜 音声転写あり</span>
-                </label>
+        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center" style={{ zIndex: 999999 }}>
+          <div className="bg-white rounded-xl shadow-2xl w-[480px] max-w-[90vw] p-0 overflow-hidden">
+            {/* ヘッダー */}
+            <div className="bg-gradient-to-br from-blue-600 to-purple-600 text-white p-6 relative">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-white bg-opacity-20 rounded-lg backdrop-blur-sm">
+                    📝
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold mb-1">NotebookLMリンク登録</h3>
+                    <p className="text-blue-100 text-sm opacity-90">面談情報をAIで分析</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    setShowNotebookLinkModal(false)
+                    setNewNotebookLink({ url: '', title: '' })
+                  }}
+                  className="text-white hover:bg-white hover:bg-opacity-20 rounded-lg p-2 transition-colors"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
               </div>
             </div>
             
-            {selectedInterview && (
-              <div style={{ 
-                backgroundColor: '#f3f4f6', 
-                padding: '12px', 
-                borderRadius: '4px', 
-                marginBottom: '16px' 
-              }}>
-                <p style={{ margin: 0, fontSize: '14px', color: '#6b7280' }}>
-                  関連付け面談: {selectedInterview.date} - {selectedInterview.interviewer}
-                </p>
+            {/* コンテンツ */}
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  リンクタイトル
+                </label>
+                <input
+                  type="text"
+                  value={newNotebookLink.title}
+                  onChange={(e) => setNewNotebookLink(prev => ({ ...prev, title: e.target.value }))}
+                  placeholder="例: 面談記録 - マインドマップ"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                />
               </div>
-            )}
-            
-            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
-              <button
-                onClick={() => {
-                  setShowNotebookLinkModal(false)
-                  setNewNotebookLink({ url: '', title: '' })
-                }}
-                style={{
-                  backgroundColor: '#6b7280',
-                  color: 'white',
-                  border: 'none',
-                  padding: '8px 16px',
-                  borderRadius: '4px',
-                  cursor: 'pointer'
-                }}
-              >
-                キャンセル
-              </button>
-              <button
-                onClick={handleAddNotebookLink}
-                disabled={!newNotebookLink.url || !newNotebookLink.title}
-                style={{
-                  backgroundColor: newNotebookLink.url && newNotebookLink.title ? '#059669' : '#d1d5db',
-                  color: 'white',
-                  border: 'none',
-                  padding: '8px 16px',
-                  borderRadius: '4px',
-                  cursor: newNotebookLink.url && newNotebookLink.title ? 'pointer' : 'not-allowed'
-                }}
-              >
-                追加
-              </button>
+              
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-sm font-semibold text-gray-700">
+                    NotebookLM URL
+                  </label>
+                  <button
+                    onClick={async () => {
+                      try {
+                        const text = await navigator.clipboard.readText();
+                        if (text && text.includes('notebooklm.google.com')) {
+                          setNewNotebookLink(prev => ({ ...prev, url: text }));
+                        }
+                      } catch (err) {
+                        console.log('クリップボードの読み取りに失敗:', err);
+                      }
+                    }}
+                    className="flex items-center gap-1 px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md text-sm transition-colors"
+                  >
+                    📋 ペースト
+                  </button>
+                </div>
+                <input
+                  type="url"
+                  value={newNotebookLink.url}
+                  onChange={(e) => setNewNotebookLink(prev => ({ ...prev, url: e.target.value }))}
+                  placeholder="https://notebooklm.google.com/notebook/..."
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                />
+              </div>
+              
+              {selectedInterview && (
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-blue-600">💬</span>
+                    <span className="text-sm font-medium text-blue-900">関連付け面談</span>
+                  </div>
+                  <p className="text-sm text-blue-800">
+                    {selectedInterview.date} - {selectedInterview.interviewer}
+                  </p>
+                </div>
+              )}
+              
+              {/* ボタン */}
+              <div className="flex gap-3 pt-4">
+                <button
+                  onClick={() => {
+                    setShowNotebookLinkModal(false)
+                    setNewNotebookLink({ url: '', title: '' })
+                  }}
+                  className="flex-1 px-4 py-3 text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                >
+                  キャンセル
+                </button>
+                <button
+                  onClick={handleAddNotebookLink}
+                  disabled={!newNotebookLink.url || !newNotebookLink.title}
+                  className={`flex-1 px-4 py-3 rounded-lg font-medium transition-all ${
+                    newNotebookLink.url && newNotebookLink.title
+                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-lg'
+                      : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                  }`}
+                >
+                  登録する
+                </button>
+              </div>
             </div>
           </div>
         </div>

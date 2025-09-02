@@ -63,6 +63,166 @@ class DevelopmentMemoService {
         tags: ['DB設計', 'スキーマ']
       },
 
+      // ===== 面談システム統合問題 =====
+      {
+        id: 'interview-integration-001',
+        category: '面談システム',
+        subcategory: '統合問題',
+        title: '面談シート表示機能の統合問題分析',
+        content: `【問題概要】
+職員カルテの面談シートボタンと面談管理ページの動的生成システムの統合時にエラーが発生。
+根本原因：保存処理の未実装と複雑なデータ構造の不整合。
+
+【技術的問題】
+1. 面談管理ページの結果記録タブで保存ボタンに機能なし（onClick未実装）
+2. InterviewDataServiceとの連携が存在しない
+3. バンクシステムの保存処理が「TODO」のまま
+4. 動的生成シートと固定HTMLデータの構造不整合
+
+【データフロー問題】
+面談実施 → 保存処理なし → 結果記録されない → staff-tabs表示データ存在しない`,
+        source: { type: 'file', path: '/src/app/staff-cards/staff-tabs.tsx', line: 2020 },
+        date: '2025-09-02',
+        priority: 'critical',
+        status: 'pending',
+        tags: ['面談システム', 'データ統合', 'エラー修正']
+      },
+      {
+        id: 'interview-integration-002',
+        category: '面談システム',
+        subcategory: '実装順序',
+        title: '面談シート統合の推奨実装順序',
+        content: `【DB構築前（LocalStorage版）】
+Phase 1: 保存機能の実装
+1. 結果記録タブの保存ボタン機能実装 (interviews/page.tsx:2393)
+2. InterviewDataService.completeInterview()との連携
+3. sheetDataの統一フォーマット設計
+
+Phase 2: 読み込み機能の実装
+4. staff-tabs.tsxのhandleShowInterviewSheet修正
+5. データ存在確認とエラーハンドリング
+6. 「データなし」時のフォールバック表示
+
+Phase 3: バンク機能統合
+7. UnifiedInterviewBankSystemの保存処理実装
+8. カスタム質問の保存形式統一
+9. 動的生成データの構造化
+
+【DB構築後】
+Phase 4: データベース統合
+10. 統一データスキーマ設計
+11. 面談結果テーブル設計
+12. API実装とフロントエンド接続`,
+        source: { type: 'document', path: '/analysis/interview-integration-analysis.md' },
+        date: '2025-09-02',
+        priority: 'critical',
+        status: 'pending',
+        tags: ['実装計画', '優先順位', 'DB設計']
+      },
+      {
+        id: 'interview-integration-003',
+        category: '面談システム',
+        subcategory: 'データ構造',
+        title: '面談データ構造の複雑性分析',
+        content: `【データ構造の種類】
+1. 固定シートデータ（staff-tabs.tsx）
+   - 300行のハードコードされたHTML
+   - 単一の面談シート構造
+
+2. 動的生成データ（InterviewSheetViewer）
+   - InterviewSectionInstance[]配列
+   - 経験年数・職種・施設別の動的質問選択
+   - lazy loadingによるコンポーネント読み込み
+
+3. バンクカスタムデータ
+   - CustomQuestion[]配列
+   - ユーザー定義質問
+   - セクション別質問組み合わせ
+
+4. 保存データ形式（InterviewDataService）
+   - sheetData: any（型不明）
+   - 現在未使用
+
+【統合時の課題】
+- データ形式の不統一によるJSX構文エラー
+- 複雑な動的生成ロジックとの競合
+- 保存・読み込み処理の未実装`,
+        source: { type: 'file', path: '/src/components/interview/InterviewSheetViewer.tsx', line: 87 },
+        date: '2025-09-02',
+        priority: 'important',
+        status: 'pending',
+        tags: ['データ構造', '技術仕様', '複雑性']
+      },
+      {
+        id: 'interview-integration-004',
+        category: '面談システム',
+        subcategory: 'DB設計要件',
+        title: 'DB構築時の面談システム統合要件',
+        content: `【必要なテーブル設計】
+1. interview_sessions（面談セッション）
+   - session_id, staff_id, interviewer_id, date, type, status
+
+2. interview_sheet_data（面談シートデータ）
+   - sheet_id, session_id, sheet_type, structure_version, raw_data(JSON)
+
+3. interview_responses（面談回答）
+   - response_id, sheet_id, question_id, response_value, score
+
+4. custom_questions（カスタム質問）
+   - question_id, creator_id, question_text, category, type
+
+5. question_banks（質問バンク）
+   - bank_id, facility_type, profession, experience_level, questions(JSON)
+
+【API設計要件】
+- POST /api/interviews/sessions （面談セッション作成）
+- PUT /api/interviews/sessions/{id}/complete （面談完了・保存）
+- GET /api/interviews/sheets/{sessionId} （面談シート取得）
+- POST /api/interviews/custom-questions （カスタム質問作成）
+
+【移行戦略】
+- LocalStorageからDB移行時のデータ変換
+- 既存の固定HTMLデータの構造化
+- バージョニング戦略（v4,v5シート対応）`,
+        source: { type: 'document', path: '/database/interview_schema_design.md' },
+        date: '2025-09-02',
+        priority: 'important',
+        status: 'pending',
+        tags: ['DB設計', 'API設計', '移行戦略']
+      },
+      {
+        id: 'interview-integration-005',
+        category: '面談システム',
+        subcategory: 'リスク回避',
+        title: '統合実装時のリスク回避策',
+        content: `【前回エラーの教訓】
+- 大規模ファイル（staff-tabs.tsx）での一度の複雑な修正は高リスク
+- 動的生成システムと固定データの混在は予期しない競合を起こす
+- 保存処理未実装の状態でデータ読み込み処理を実装すると必ずエラー
+
+【推奨アプローチ】
+1. 段階的実装
+   - 1つの機能ずつ実装し、各段階でビルド確認
+   - 既存システムを最小限の修正に留める
+
+2. データ存在確認の徹底
+   - 読み込み処理前に必ずデータ存在チェック
+   - エラーハンドリングとフォールバック処理
+
+3. 統合前のテスト
+   - 保存処理が正常に動作してから読み込み処理を実装
+   - モックデータでの動作確認
+
+【緊急時対応】
+- git reset --hard {安全なコミット} による即座の復旧
+- 機能フラグによる新機能の無効化オプション`,
+        source: { type: 'comment', path: 'integration-lessons-learned' },
+        date: '2025-09-02',
+        priority: 'critical',
+        status: 'pending',
+        tags: ['リスク管理', '実装戦略', '品質保証']
+      },
+
       // ===== マスターデータ管理 =====
       {
         id: 'master-001',
