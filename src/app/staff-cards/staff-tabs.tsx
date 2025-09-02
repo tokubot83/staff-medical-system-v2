@@ -1793,6 +1793,11 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
   const [showNotebookLinkModal, setShowNotebookLinkModal] = useState(false)
   const [notebookLinks, setNotebookLinks] = useState<NotebookLMLink[]>([])
   const [newNotebookLink, setNewNotebookLink] = useState({ url: '', title: '' })
+  const [notebookFeatures, setNotebookFeatures] = useState({
+    hasAudioSummary: false,
+    hasMindMap: true,
+    hasTranscript: false
+  })
 
   if (!selectedStaff) {
     return (
@@ -1930,6 +1935,8 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
   // NotebookLMリンクを追加する関数
   const handleAddNotebookLink = () => {
     if (newNotebookLink.url && newNotebookLink.title && selectedInterview) {
+      const interviewCategory = getInterviewCategory(selectedInterview, activeSubTab)
+      
       const newLink: NotebookLMLink = {
         url: newNotebookLink.url,
         noteId: `note_${Date.now()}`,
@@ -1937,19 +1944,16 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
         linkedInterview: {
           id: selectedInterview.interviewId,
           date: selectedInterview.date,
-          type: 'regular',
-          category: '定期面談'
+          type: interviewCategory.type,
+          category: interviewCategory.category
         },
         createdAt: new Date().toISOString(),
-        features: {
-          hasAudioSummary: false,
-          hasMindMap: true,
-          hasTranscript: false
-        }
+        features: notebookFeatures
       }
       
       setNotebookLinks(prev => [...prev, newLink])
       setNewNotebookLink({ url: '', title: '' })
+      setNotebookFeatures({ hasAudioSummary: false, hasMindMap: true, hasTranscript: false })
       setShowNotebookLinkModal(false)
       
       // LocalStorageに保存
@@ -1981,6 +1985,20 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
   const handleAddInterviewNotebookLink = (interview: any) => {
     setSelectedInterview(interview)
     setShowNotebookLinkModal(true)
+  }
+
+  // 面談の種別とカテゴリーを動的に判定
+  const getInterviewCategory = (interview: any, tabType: string): { type: 'regular' | 'special' | 'support', category: string } => {
+    switch (tabType) {
+      case 'regular':
+        return { type: 'regular', category: '定期面談' }
+      case 'special':
+        return { type: 'special', category: interview.reason || '特別面談' }
+      case 'support':
+        return { type: 'support', category: interview.category || 'サポート面談' }
+      default:
+        return { type: 'regular', category: '定期面談' }
+    }
   }
 
   // NotebookLMリンクを削除
@@ -2150,122 +2168,79 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
               const linkedNotebook = getInterviewNotebookLink(interview.interviewId)
               
               return (
-                <div key={index} className={styles.interviewItem}>
-                  <div className={styles.interviewHeader}>
-                    <span className={styles.interviewDate}>{interview.date}</span>
-                    <span className={styles.interviewer}>面談者: {interview.interviewer}</span>
-                    <span className={styles.score}>評価: {interview.score}</span>
+                <Card key={index} className="mb-4 shadow-sm hover:shadow-md transition-shadow duration-200">
+                  <CardContent className="p-4">
+                    {/* 面談ヘッダー */}
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-4">
+                        <span className="text-sm font-medium text-gray-900">{interview.date}</span>
+                        <span className="text-sm text-gray-600">面談者: {interview.interviewer}</span>
+                        <span className="text-sm text-gray-600">評価: {interview.score}</span>
+                      </div>
+                      
+                      {/* 動的ボタン：NotebookLMリンクの有無で表示を切り替え */}
+                      <div className="flex gap-2">
+                        {linkedNotebook ? (
+                          // NotebookLMリンクが存在する場合：リンクボタンと管理ボタン
+                          <>
+                            <a
+                              href={linkedNotebook.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
+                              title={`NotebookLM: ${linkedNotebook.title}\n作成日: ${new Date(linkedNotebook.createdAt).toLocaleString('ja-JP')}\n${linkedNotebook.features.hasMindMap ? 'マインドマップ機能: 有効' : ''}\nクリックでNotebookLMに移動`}
+                            >
+                              📖 NotebookLMで開く
+                              {linkedNotebook.features.hasMindMap && <span title="マインドマップ機能有効">🗺️</span>}
+                            </a>
+                            <button
+                              onClick={() => handleInterviewClick(interview)}
+                              className="px-2 py-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors"
+                              title="詳細・リンク管理"
+                            >
+                              ⚙️
+                            </button>
+                          </>
+                        ) : (
+                          // NotebookLMリンクが存在しない場合：登録ボタンと詳細ボタン
+                          <>
+                            <button
+                              onClick={() => handleAddInterviewNotebookLink(interview)}
+                              className="inline-flex items-center gap-2 px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors"
+                              title={`この面談にNotebookLMリンクを登録します\n面談日: ${interview.date}\n面談者: ${interview.interviewer}\nクリックで登録モーダルを開きます`}
+                            >
+                              📝 NotebookLMリンク登録
+                            </button>
+                            <button
+                              onClick={() => handleInterviewClick(interview)}
+                              className="px-2 py-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors"
+                            >
+                              詳細
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </div>
                     
-                    {/* 動的ボタン：NotebookLMリンクの有無で表示を切り替え */}
-                    <div style={{ marginLeft: 'auto', display: 'flex', gap: '4px' }}>
-                      {linkedNotebook ? (
-                        // NotebookLMリンクが存在する場合：リンクボタンと管理ボタン
-                        <>
-                          <a
-                            href={linkedNotebook.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{ 
-                              padding: '4px 12px', 
-                              backgroundColor: '#059669', 
-                              color: 'white', 
-                              border: 'none', 
-                              borderRadius: '4px',
-                              fontSize: '12px',
-                              textDecoration: 'none',
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '4px',
-                              position: 'relative'
-                            }}
-                            title={`NotebookLM: ${linkedNotebook.title}\n作成日: ${new Date(linkedNotebook.createdAt).toLocaleString('ja-JP')}\n${linkedNotebook.features.hasMindMap ? 'マインドマップ機能: 有効' : ''}\nクリックでNotebookLMに移動`}
-                            onMouseEnter={(e) => {
-                              // ホバー時の詳細表示（簡易版はtitleで実装、より高度な場合は追加のtooltip要素を作成可能）
-                            }}
-                          >
-                            📝 {linkedNotebook.title.length > 15 ? linkedNotebook.title.substring(0, 15) + '...' : linkedNotebook.title}
-                            {linkedNotebook.features.hasMindMap && <span title="マインドマップ機能有効">🗺️</span>}
-                          </a>
-                          <button
-                            onClick={() => handleInterviewClick(interview)}
-                            style={{ 
-                              padding: '4px 8px', 
-                              backgroundColor: '#6b7280', 
-                              color: 'white', 
-                              border: 'none', 
-                              borderRadius: '4px',
-                              fontSize: '12px',
-                              cursor: 'pointer'
-                            }}
-                            title="詳細・リンク管理"
-                          >
-                            ⚙️
-                          </button>
-                        </>
-                      ) : (
-                        // NotebookLMリンクが存在しない場合：登録ボタンと詳細ボタン
-                        <>
-                          <button
-                            onClick={() => handleAddInterviewNotebookLink(interview)}
-                            style={{ 
-                              padding: '4px 12px', 
-                              backgroundColor: '#d97706', 
-                              color: 'white', 
-                              border: 'none', 
-                              borderRadius: '4px',
-                              fontSize: '12px',
-                              cursor: 'pointer',
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '4px'
-                            }}
-                            title={`この面談にNotebookLMリンクを登録します\n面談日: ${interview.date}\n面談者: ${interview.interviewer}\nクリックで登録モーダルを開きます`}
-                          >
-                            📝 NotebookLM登録
-                          </button>
-                          <button
-                            onClick={() => handleInterviewClick(interview)}
-                            style={{ 
-                              padding: '4px 8px', 
-                              backgroundColor: '#3b82f6', 
-                              color: 'white', 
-                              border: 'none', 
-                              borderRadius: '4px',
-                              fontSize: '12px',
-                              cursor: 'pointer'
-                            }}
-                          >
-                            詳細
-                          </button>
-                        </>
-                      )}
+                    {/* 面談サマリー */}
+                    <div className="mb-3">
+                      <p className="text-sm text-gray-700 leading-relaxed">{interview.summary}</p>
                     </div>
-                  </div>
-                  <div className={styles.interviewSummary}>
-                    <p>{interview.summary}</p>
-                  </div>
-                  
-                  {/* NotebookLMリンクの簡易表示 */}
-                  {linkedNotebook && (
-                    <div style={{ 
-                      fontSize: '11px', 
-                      color: '#6b7280', 
-                      marginTop: '8px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      backgroundColor: '#f9fafb',
-                      padding: '4px 8px',
-                      borderRadius: '4px',
-                      border: '1px solid #e5e7eb'
-                    }}>
-                      <span>🔗 NotebookLMリンク登録済み</span>
-                      <span style={{ color: '#9ca3af' }}>
-                        {new Date(linkedNotebook.createdAt).toLocaleDateString('ja-JP')} 作成
-                      </span>
-                    </div>
-                  )}
-                </div>
+                    
+                    {/* NotebookLMリンクの状態表示 */}
+                    {linkedNotebook && (
+                      <div className="flex items-center gap-2 text-xs text-gray-500 bg-gray-50 px-3 py-2 rounded-md border">
+                        <span className="text-green-600">🔗</span>
+                        <span>NotebookLMリンク登録済み</span>
+                        <span className="text-gray-400">•</span>
+                        <span>{new Date(linkedNotebook.createdAt).toLocaleDateString('ja-JP')} 作成</span>
+                        {linkedNotebook.features.hasAudioSummary && <span title="AI要約あり">📝</span>}
+                        {linkedNotebook.features.hasMindMap && <span title="マインドマップあり">🗺️</span>}
+                        {linkedNotebook.features.hasTranscript && <span title="音声転写あり">📜</span>}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
               )
             })}
           </div>
@@ -2302,20 +2277,85 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
             </div>
           </div>
           <div className={styles.interviewList}>
-            {displayData.special.interviews.map((interview, index) => (
-              <div key={index} className={styles.interviewItem}>
-                <div className={styles.interviewHeader}>
-                  <span className={styles.interviewDate}>{interview.date}</span>
-                  <span className={styles.interviewer}>面談者: {interview.interviewer}</span>
-                </div>
-                <div className={styles.interviewReason}>
-                  <strong>相談理由:</strong> {interview.reason}
-                </div>
-                <div className={styles.interviewSummary}>
-                  <p>{interview.summary}</p>
-                </div>
-              </div>
-            ))}
+            {displayData.special.interviews.map((interview, index) => {
+              const linkedNotebook = getInterviewNotebookLink(interview.interviewId)
+              
+              return (
+                <Card key={index} className="mb-4 shadow-sm hover:shadow-md transition-shadow duration-200">
+                  <CardContent className="p-4">
+                    {/* 面談ヘッダー */}
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-4">
+                        <span className="text-sm font-medium text-gray-900">{interview.date}</span>
+                        <span className="text-sm text-gray-600">面談者: {interview.interviewer}</span>
+                      </div>
+                      
+                      {/* 動的ボタン：NotebookLMリンクの有無で表示を切り替え */}
+                      <div className="flex gap-2">
+                        {linkedNotebook ? (
+                          <>
+                            <a
+                              href={linkedNotebook.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
+                            >
+                              📖 NotebookLMで開く
+                              {linkedNotebook.features.hasMindMap && <span title="マインドマップ機能有効">🗺️</span>}
+                            </a>
+                            <button
+                              onClick={() => handleInterviewClick(interview)}
+                              className="px-2 py-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors"
+                            >
+                              ⚙️
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <button
+                              onClick={() => handleAddInterviewNotebookLink(interview)}
+                              className="inline-flex items-center gap-2 px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors"
+                            >
+                              📝 NotebookLMリンク登録
+                            </button>
+                            <button
+                              onClick={() => handleInterviewClick(interview)}
+                              className="px-2 py-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors"
+                            >
+                              詳細
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    
+                    {/* 相談理由 */}
+                    <div className="mb-2">
+                      <span className="text-sm font-medium text-gray-700">相談理由:</span>
+                      <span className="text-sm text-gray-600 ml-2">{interview.reason}</span>
+                    </div>
+                    
+                    {/* 面談サマリー */}
+                    <div className="mb-3">
+                      <p className="text-sm text-gray-700 leading-relaxed">{interview.summary}</p>
+                    </div>
+                    
+                    {/* NotebookLMリンクの状態表示 */}
+                    {linkedNotebook && (
+                      <div className="flex items-center gap-2 text-xs text-gray-500 bg-gray-50 px-3 py-2 rounded-md border">
+                        <span className="text-green-600">🔗</span>
+                        <span>NotebookLMリンク登録済み</span>
+                        <span className="text-gray-400">•</span>
+                        <span>{new Date(linkedNotebook.createdAt).toLocaleDateString('ja-JP')} 作成</span>
+                        {linkedNotebook.features.hasAudioSummary && <span title="AI要約あり">📝</span>}
+                        {linkedNotebook.features.hasMindMap && <span title="マインドマップあり">🗺️</span>}
+                        {linkedNotebook.features.hasTranscript && <span title="音声転写あり">📜</span>}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              )
+            })}
           </div>
         </div>
       )}
@@ -2332,20 +2372,55 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
             </div>
           </div>
           <div className={styles.interviewList}>
-            {displayData.support.interviews.map((interview, index) => (
-              <div key={index} className={styles.interviewItem}>
-                <div className={styles.interviewHeader}>
-                  <span className={styles.interviewDate}>{interview.date}</span>
-                  <span className={styles.interviewer}>担当者: {interview.interviewer}</span>
-                </div>
-                <div className={styles.supportCategory}>
-                  <strong>サポート分野:</strong> {interview.category}
-                </div>
-                <div className={styles.interviewSummary}>
-                  <p>{interview.summary}</p>
-                </div>
-              </div>
-            ))}
+            {displayData.support.interviews.map((interview, index) => {
+              const linkedNotebook = getInterviewNotebookLink(interview.interviewId);
+              
+              return (
+                <Card key={index} className="mb-4 shadow-sm hover:shadow-md transition-shadow duration-200">
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-4">
+                        <span className="text-sm font-medium text-gray-900">{interview.date}</span>
+                        <span className="text-sm text-gray-600">担当者: {interview.interviewer}</span>
+                      </div>
+                      <div className="flex gap-2">
+                        {linkedNotebook ? (
+                          <a
+                            href={linkedNotebook.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-3 py-1.5 bg-blue-600 text-white text-xs rounded-md hover:bg-blue-700 transition-colors inline-flex items-center gap-1"
+                          >
+                            📖 NotebookLMで開く
+                          </a>
+                        ) : (
+                          <button
+                            onClick={() => handleAddInterviewNotebookLink(interview)}
+                            className="px-3 py-1.5 bg-green-600 text-white text-xs rounded-md hover:bg-green-700 transition-colors inline-flex items-center gap-1"
+                          >
+                            📝 NotebookLMリンク登録
+                          </button>
+                        )}
+                        <button
+                          onClick={() => handleInterviewClick(interview)}
+                          className="px-3 py-1.5 bg-gray-100 text-gray-700 text-xs rounded-md hover:bg-gray-200 transition-colors"
+                        >
+                          詳細
+                        </button>
+                      </div>
+                    </div>
+                    <div className="mb-2">
+                      <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                        サポート分野: {interview.category}
+                      </span>
+                    </div>
+                    <div className="text-sm text-gray-700">
+                      <p>{interview.summary}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </div>
       )}
@@ -2555,6 +2630,39 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                   borderRadius: '4px'
                 }}
               />
+            </div>
+            
+            {/* 機能フラグセクション */}
+            <div style={{ marginBottom: '16px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
+                含まれる機能:
+              </label>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                  <input
+                    type="checkbox"
+                    checked={notebookFeatures.hasAudioSummary}
+                    onChange={(e) => setNotebookFeatures(prev => ({ ...prev, hasAudioSummary: e.target.checked }))}
+                  />
+                  <span>📝 AI要約あり</span>
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                  <input
+                    type="checkbox"
+                    checked={notebookFeatures.hasMindMap}
+                    onChange={(e) => setNotebookFeatures(prev => ({ ...prev, hasMindMap: e.target.checked }))}
+                  />
+                  <span>🗺️ マインドマップあり</span>
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                  <input
+                    type="checkbox"
+                    checked={notebookFeatures.hasTranscript}
+                    onChange={(e) => setNotebookFeatures(prev => ({ ...prev, hasTranscript: e.target.checked }))}
+                  />
+                  <span>📜 音声転写あり</span>
+                </label>
+              </div>
             </div>
             
             {selectedInterview && (
