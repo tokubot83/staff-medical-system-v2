@@ -2212,15 +2212,38 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
       {/* 定期面談タブ */}
       {activeSubTab === 'regular' && (
         <div className={styles.regularContent}>
-          <div className={styles.categoryHeader}>
-            <h3>📅 定期面談記録</h3>
-            <div className={styles.categorySummary}>
-              <span>実施回数: {displayData.regular.total}回</span>
-              <span>完了: {displayData.regular.completed || displayData.regular.total}回</span>
-              <span>最終実施: {displayData.regular.lastDate}</span>
-              <span>平均評価: {displayData.regular.avgScore}</span>
-            </div>
-          </div>
+          {/* 定期面談統計カード */}
+          <Card className="mb-6 shadow-md">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 bg-blue-100 rounded-lg">
+                  <span className="text-2xl">📅</span>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-800 mb-1">定期面談記録</h3>
+                  <p className="text-gray-600 text-sm">職員の成長を定期的に確認・支援</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-3 rounded-lg border border-blue-200">
+                  <div className="text-sm text-blue-600 font-medium mb-1">実施回数</div>
+                  <div className="text-lg font-bold text-blue-800">{displayData.regular.total}回</div>
+                </div>
+                <div className="bg-gradient-to-br from-green-50 to-green-100 p-3 rounded-lg border border-green-200">
+                  <div className="text-sm text-green-600 font-medium mb-1">完了</div>
+                  <div className="text-lg font-bold text-green-800">{displayData.regular.completed || displayData.regular.total}回</div>
+                </div>
+                <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-3 rounded-lg border border-purple-200">
+                  <div className="text-sm text-purple-600 font-medium mb-1">最終実施</div>
+                  <div className="text-lg font-bold text-purple-800">{displayData.regular.lastDate}</div>
+                </div>
+                <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-3 rounded-lg border border-orange-200">
+                  <div className="text-sm text-orange-600 font-medium mb-1">平均評価</div>
+                  <div className="text-lg font-bold text-orange-800">{displayData.regular.avgScore}</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
           <div className={styles.interviewList}>
             {displayData.regular.interviews.map((interview, index) => {
               const linkedNotebook = getInterviewNotebookLink(interview.interviewId)
@@ -2298,14 +2321,34 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
       {/* 特別面談タブ */}
       {activeSubTab === 'special' && (
         <div className={styles.specialContent}>
-          <div className={styles.categoryHeader}>
-            <h3>⚡ 特別面談記録</h3>
-            <div className={styles.categorySummary}>
-              <span>実施回数: {displayData.special.total}回</span>
-              <span>完了: {displayData.special.completed || displayData.special.total}回</span>
-              <span>最終実施: {displayData.special.lastDate}</span>
-            </div>
-          </div>
+          {/* 特別面談統計カード */}
+          <Card className="mb-6 shadow-md">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 bg-yellow-100 rounded-lg">
+                  <span className="text-2xl">⚡</span>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-800 mb-1">特別面談記録</h3>
+                  <p className="text-gray-600 text-sm">緊急性や特殊事情に対応した面談</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 p-3 rounded-lg border border-yellow-200">
+                  <div className="text-sm text-yellow-600 font-medium mb-1">実施回数</div>
+                  <div className="text-lg font-bold text-yellow-800">{displayData.special.total}回</div>
+                </div>
+                <div className="bg-gradient-to-br from-green-50 to-green-100 p-3 rounded-lg border border-green-200">
+                  <div className="text-sm text-green-600 font-medium mb-1">完了</div>
+                  <div className="text-lg font-bold text-green-800">{displayData.special.completed || displayData.special.total}回</div>
+                </div>
+                <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-3 rounded-lg border border-purple-200">
+                  <div className="text-sm text-purple-600 font-medium mb-1">最終実施</div>
+                  <div className="text-lg font-bold text-purple-800">{displayData.special.lastDate}</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
           <div className={styles.interviewList}>
             {displayData.special.interviews.map((interview, index) => {
               const linkedNotebook = getInterviewNotebookLink(interview.interviewId)
@@ -2386,14 +2429,34 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
       {/* サポート面談タブ */}
       {activeSubTab === 'support' && (
         <div className={styles.supportContent}>
-          <div className={styles.categoryHeader}>
-            <h3>🤝 サポート面談記録</h3>
-            <div className={styles.categorySummary}>
-              <span>実施回数: {displayData.support.total}回</span>
-              <span>完了: {displayData.support.completed || displayData.support.total}回</span>
-              <span>最終実施: {displayData.support.lastDate}</span>
-            </div>
-          </div>
+          {/* サポート面談統計カード */}
+          <Card className="mb-6 shadow-md">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 bg-green-100 rounded-lg">
+                  <span className="text-2xl">🤝</span>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-800 mb-1">サポート面談記録</h3>
+                  <p className="text-gray-600 text-sm">職員のサポートニーズに応じた面談</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-gradient-to-br from-teal-50 to-teal-100 p-3 rounded-lg border border-teal-200">
+                  <div className="text-sm text-teal-600 font-medium mb-1">実施回数</div>
+                  <div className="text-lg font-bold text-teal-800">{displayData.support.total}回</div>
+                </div>
+                <div className="bg-gradient-to-br from-green-50 to-green-100 p-3 rounded-lg border border-green-200">
+                  <div className="text-sm text-green-600 font-medium mb-1">完了</div>
+                  <div className="text-lg font-bold text-green-800">{displayData.support.completed || displayData.support.total}回</div>
+                </div>
+                <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-3 rounded-lg border border-purple-200">
+                  <div className="text-sm text-purple-600 font-medium mb-1">最終実施</div>
+                  <div className="text-lg font-bold text-purple-800">{displayData.support.lastDate}</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
           <div className={styles.interviewList}>
             {displayData.support.interviews.map((interview, index) => {
               const linkedNotebook = getInterviewNotebookLink(interview.interviewId);
