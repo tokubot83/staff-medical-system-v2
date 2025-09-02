@@ -2249,7 +2249,9 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
               const linkedNotebook = getInterviewNotebookLink(interview.interviewId)
               
               return (
-                <Card key={index} className="mb-4 shadow-sm hover:shadow-md transition-shadow duration-200">
+                <Card key={index} className={`mb-4 shadow-sm hover:shadow-md transition-shadow duration-200 ${
+                  index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
+                }`}>
                   <CardContent className="p-4">
                     {/* 面談ヘッダー */}
                     <div className="flex items-center justify-between mb-3">
@@ -2354,7 +2356,9 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
               const linkedNotebook = getInterviewNotebookLink(interview.interviewId)
               
               return (
-                <Card key={index} className="mb-4 shadow-sm hover:shadow-md transition-shadow duration-200">
+                <Card key={index} className={`mb-4 shadow-sm hover:shadow-md transition-shadow duration-200 ${
+                  index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
+                }`}>
                   <CardContent className="p-4">
                     {/* 面談ヘッダー */}
                     <div className="flex items-center justify-between mb-3">
@@ -2462,7 +2466,9 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
               const linkedNotebook = getInterviewNotebookLink(interview.interviewId);
               
               return (
-                <Card key={index} className="mb-4 shadow-sm hover:shadow-md transition-shadow duration-200">
+                <Card key={index} className={`mb-4 shadow-sm hover:shadow-md transition-shadow duration-200 ${
+                  index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
+                }`}>
                   <CardContent className="p-4">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-4">
