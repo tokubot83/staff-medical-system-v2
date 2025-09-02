@@ -2425,6 +2425,7 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                         <span className="text-sm text-gray-600">担当者: {interview.interviewer}</span>
                       </div>
                       <div className="flex gap-2">
+                        {/* NotebookLMボタン（自動切り替え） */}
                         {linkedNotebook ? (
                           <a
                             href={linkedNotebook.url}
@@ -2442,17 +2443,13 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                             📝 NotebookLMリンク登録
                           </button>
                         )}
+                        
+                        {/* 面談シートボタン（常に表示） */}
                         <button
                           onClick={() => handleShowInterviewSheet(interview)}
                           className="px-3 py-1.5 bg-purple-600 text-white text-xs rounded-md hover:bg-purple-700 transition-colors inline-flex items-center gap-1"
                         >
                           📋 面談シート
-                        </button>
-                        <button
-                          onClick={() => handleInterviewClick(interview)}
-                          className="px-3 py-1.5 bg-gray-100 text-gray-700 text-xs rounded-md hover:bg-gray-200 transition-colors"
-                        >
-                          詳細
                         </button>
                       </div>
                     </div>
