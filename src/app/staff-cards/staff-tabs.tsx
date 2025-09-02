@@ -2292,24 +2292,6 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
               )
             })}
           </div>
-          
-          {/* NotebookLMリンク追加ボタン */}
-          <div style={{ marginTop: '16px', textAlign: 'center' }}>
-            <button
-              onClick={() => setShowNotebookLinkModal(true)}
-              className={styles.actionButtonSecondary}
-              style={{ 
-                padding: '8px 16px',
-                backgroundColor: '#059669',
-                color: 'white',
-                border: 'none',
-                borderRadius: '6px',
-                fontSize: '14px'
-              }}
-            >
-              📝 NotebookLMリンク追加
-            </button>
-          </div>
         </div>
       )}
 
@@ -2579,23 +2561,6 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                   まだNotebookLMリンクが登録されていません
                 </div>
               )}
-              
-              <div style={{ textAlign: 'center', marginTop: '12px' }}>
-                <button
-                  onClick={() => setShowNotebookLinkModal(true)}
-                  style={{
-                    backgroundColor: '#059669',
-                    color: 'white',
-                    border: 'none',
-                    padding: '8px 16px',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                    fontSize: '14px'
-                  }}
-                >
-                  + NotebookLMリンク追加
-                </button>
-              </div>
             </div>
           </div>
         </div>
