@@ -2187,10 +2187,22 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
           <div className={styles.categoryHeader}>
             <h3>📅 定期面談記録</h3>
             <div className={styles.categorySummary}>
-              <span>実施回数: {displayData.regular.total}回</span>
-              <span>完了: {displayData.regular.completed || displayData.regular.total}回</span>
-              <span>最終実施: {displayData.regular.lastDate}</span>
-              <span>平均評価: {displayData.regular.avgScore}</span>
+              <div className={styles.statCard}>
+                <span className={styles.statLabel}>実施回数</span>
+                <span className={styles.statValue}>{displayData.regular.total}回</span>
+              </div>
+              <div className={styles.statCard}>
+                <span className={styles.statLabel}>完了</span>
+                <span className={styles.statValue}>{displayData.regular.completed || displayData.regular.total}回</span>
+              </div>
+              <div className={styles.statCard}>
+                <span className={styles.statLabel}>最終実施</span>
+                <span className={styles.statValue}>{displayData.regular.lastDate}</span>
+              </div>
+              <div className={styles.statCard}>
+                <span className={styles.statLabel}>平均評価</span>
+                <span className={`${styles.statValue} ${styles.highlight}`}>{displayData.regular.avgScore}</span>
+              </div>
             </div>
           </div>
           <div className={styles.interviewList}>
@@ -2291,9 +2303,18 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
           <div className={styles.categoryHeader}>
             <h3>⚡ 特別面談記録</h3>
             <div className={styles.categorySummary}>
-              <span>実施回数: {displayData.special.total}回</span>
-              <span>完了: {displayData.special.completed || displayData.special.total}回</span>
-              <span>最終実施: {displayData.special.lastDate}</span>
+              <div className={styles.statCard}>
+                <span className={styles.statLabel}>実施回数</span>
+                <span className={styles.statValue}>{displayData.special.total}回</span>
+              </div>
+              <div className={styles.statCard}>
+                <span className={styles.statLabel}>完了</span>
+                <span className={styles.statValue}>{displayData.special.completed || displayData.special.total}回</span>
+              </div>
+              <div className={styles.statCard}>
+                <span className={styles.statLabel}>最終実施</span>
+                <span className={styles.statValue}>{displayData.special.lastDate}</span>
+              </div>
             </div>
           </div>
           <div className={styles.interviewList}>
@@ -2379,9 +2400,18 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
           <div className={styles.categoryHeader}>
             <h3>🤝 サポート面談記録</h3>
             <div className={styles.categorySummary}>
-              <span>実施回数: {displayData.support.total}回</span>
-              <span>完了: {displayData.support.completed || displayData.support.total}回</span>
-              <span>最終実施: {displayData.support.lastDate}</span>
+              <div className={styles.statCard}>
+                <span className={styles.statLabel}>実施回数</span>
+                <span className={styles.statValue}>{displayData.support.total}回</span>
+              </div>
+              <div className={styles.statCard}>
+                <span className={styles.statLabel}>完了</span>
+                <span className={styles.statValue}>{displayData.support.completed || displayData.support.total}回</span>
+              </div>
+              <div className={styles.statCard}>
+                <span className={styles.statLabel}>最終実施</span>
+                <span className={styles.statValue}>{displayData.support.lastDate}</span>
+              </div>
             </div>
           </div>
           <div className={styles.interviewList}>
