@@ -2815,12 +2815,11 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                           <h3 className="font-semibold tracking-tight flex items-center gap-2 text-xl">📈 スキル成長トレンド</h3>
                         </div>
                         <div className="p-6 pt-0">
-                          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                            <div className="lg:col-span-2">
-                              <div className="recharts-responsive-container" style={{width: '100%', height: '400px', minWidth: '0px'}}>
-                                <div style={{width: '0px', height: '0px', overflow: 'visible'}}>
-                                  <div className="recharts-wrapper" style={{position: 'relative', cursor: 'default', width: '571px', height: '400px'}}>
-                                    <div xmlns="http://www.w3.org/1999/xhtml" tabIndex="-1" className="recharts-tooltip-wrapper" style={{visibility: 'hidden', pointerEvents: 'none', position: 'absolute', top: '0px', left: '0px'}}></div>
+                          <div className="w-full">
+                            <div className="recharts-responsive-container" style={{width: '100%', height: '400px', minWidth: '0px'}}>
+                              <div style={{width: '0px', height: '0px', overflow: 'visible'}}>
+                                <div className="recharts-wrapper" style={{position: 'relative', cursor: 'default', width: '100%', height: '400px'}}>
+                                  <div xmlns="http://www.w3.org/1999/xhtml" tabIndex="-1" className="recharts-tooltip-wrapper" style={{visibility: 'visible', pointerEvents: 'auto', position: 'absolute', top: '0px', left: '0px'}}></div>
                                     <svg role="application" tabIndex="0" className="recharts-surface" width="571" height="400" viewBox="0 0 571 400" style={{width: '100%', height: '100%'}}>
                                       <title></title>
                                       <desc></desc>
@@ -3187,58 +3186,804 @@ export function InterviewTab({ selectedStaff, onShowNotebookModal }: {
                           <h3 className="font-semibold tracking-tight flex items-center gap-2 text-xl">🔍 セクション間相関分析</h3>
                         </div>
                         <div className="p-6 pt-0">
-                          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                            <div className="lg:col-span-2">
-                              <div className="recharts-responsive-container" style={{width: '100%', height: '400px', minWidth: '0px'}}>
-                                <div style={{width: '0px', height: '0px', overflow: 'visible'}}>
-                                  <div className="recharts-wrapper" style={{position: 'relative', cursor: 'default', width: '617px', height: '400px'}}>
-                                    <div xmlns="http://www.w3.org/1999/xhtml" tabIndex="-1" className="recharts-tooltip-wrapper recharts-tooltip-wrapper-right recharts-tooltip-wrapper-bottom" style={{visibility: 'visible', pointerEvents: 'none', position: 'absolute', top: '0px', left: '0px', transition: 'transform 400ms', transform: 'translate(265.78px, 191.7px)'}}>
-                                      <div className="bg-white p-4 border rounded-lg shadow-lg min-w-[220px]">
-                                        <p className="font-bold text-gray-800 mb-2 text-center">業務遂行能力</p>
-                                        <div className="space-y-1">
-                                          <div className="flex justify-between items-center">
-                                            <span className="text-sm text-gray-600">議論深度:</span>
-                                            <span className="font-semibold text-blue-600">34%</span>
-                                          </div>
-                                          <div className="flex justify-between items-center">
-                                            <span className="text-sm text-gray-600">改善率:</span>
-                                            <span className="font-semibold text-green-600">51%</span>
-                                          </div>
-                                          <div className="mt-2 p-2 bg-gray-50 rounded text-xs">
-                                            <span className="text-gray-600">⚡ 潜在価値</span>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <svg role="application" tabIndex="0" className="recharts-surface" width="617" height="400" viewBox="0 0 617 400" style={{width: '100%', height: '100%'}}>
-                                      <title></title>
-                                      <desc></desc>
-                                      <defs>
-                                        <clipPath id="recharts7-clip">
-                                          <rect x="80" y="20" height="330" width="517"></rect>
-                                        </clipPath>
-                                      </defs>
-                                      <g className="recharts-cartesian-grid">
-                                        <g className="recharts-cartesian-grid-horizontal">
-                                          <line strokeDasharray="3 3" stroke="#f3f4f6" fill="none" x="80" y="20" width="517" height="330" x1="80" y1="350" x2="597" y2="350"></line>
-                                          <line strokeDasharray="3 3" stroke="#f3f4f6" fill="none" x="80" y="20" width="517" height="330" x1="80" y1="267.5" x2="597" y2="267.5"></line>
-                                          <line strokeDasharray="3 3" stroke="#f3f4f6" fill="none" x="80" y="20" width="517" height="330" x1="80" y1="185" x2="597" y2="185"></line>
-                                          <line strokeDasharray="3 3" stroke="#f3f4f6" fill="none" x="80" y="20" width="517" height="330" x1="80" y1="102.5" x2="597" y2="102.5"></line>
-                                          <line strokeDasharray="3 3" stroke="#f3f4f6" fill="none" x="80" y="20" width="517" height="330" x1="80" y1="20" x2="597" y2="20"></line>
-                                        </g>
-                                        <g className="recharts-cartesian-grid-vertical">
-                                          <line strokeDasharray="3 3" stroke="#f3f4f6" fill="none" x="80" y="20" width="517" height="330" x1="80" y1="20" x2="80" y2="350"></line>
-                                          <line strokeDasharray="3 3" stroke="#f3f4f6" fill="none" x="80" y="20" width="517" height="330" x1="209.25" y1="20" x2="209.25" y2="350"></line>
-                                          <line strokeDasharray="3 3" stroke="#f3f4f6" fill="none" x="80" y="20" width="517" height="330" x1="338.5" y1="20" x2="338.5" y2="350"></line>
-                                          <line strokeDasharray="3 3" stroke="#f3f4f6" fill="none" x="80" y="20" width="517" height="330" x1="467.75" y1="20" x2="467.75" y2="350"></line>
-                                          <line strokeDasharray="3 3" stroke="#f3f4f6" fill="none" x="80" y="20" width="517" height="330" x1="597" y1="20" x2="597" y2="350"></line>
-                                        </g>
-                                      </g>
-                                    </svg>
+                          <div className="w-full">
+                            <div style={{width: '100%', height: '400px'}}>
+                              <div className="h-full border border-gray-200 rounded-lg p-4 bg-gradient-to-b from-purple-50/30 to-white relative">
+                                {/* 散布図のデータポイント */}
+                                <svg className="w-full h-full">
+                                  {/* グリッド線 */}
+                                  <defs>
+                                    <pattern id="correlation-grid" width="50" height="50" patternUnits="userSpaceOnUse">
+                                      <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#f3f4f6" strokeWidth="1" strokeDasharray="3,3"/>
+                                    </pattern>
+                                  </defs>
+                                  <rect width="100%" height="100%" fill="url(#correlation-grid)" />
+                                  
+                                  {/* データポイント（散布図の点） */}
+                                  <g>
+                                    <circle cx="20%" cy="30%" r="8" fill="#22c55e" stroke="white" strokeWidth="2" className="hover:r-10 transition-all cursor-pointer">
+                                      <title>チーム連携: 85% 充実度, 高相関</title>
+                                    </circle>
+                                    <circle cx="35%" cy="45%" r="8" fill="#3b82f6" stroke="white" strokeWidth="2" className="hover:r-10 transition-all cursor-pointer">
+                                      <title>業務遂行能力: 82% 充実度, 中相関</title>
+                                    </circle>
+                                    <circle cx="55%" cy="55%" r="8" fill="#f59e0b" stroke="white" strokeWidth="2" className="hover:r-10 transition-all cursor-pointer">
+                                      <title>キャリア志向: 78% 充実度, 中相関</title>
+                                    </circle>
+                                    <circle cx="70%" cy="60%" r="8" fill="#8b5cf6" stroke="white" strokeWidth="2" className="hover:r-10 transition-all cursor-pointer">
+                                      <title>コミュニケーション: 75% 充実度, 低相関</title>
+                                    </circle>
+                                    <circle cx="80%" cy="75%" r="8" fill="#ef4444" stroke="white" strokeWidth="2" className="hover:r-10 transition-all cursor-pointer">
+                                      <title>成長目標: 72% 充実度, 低相関</title>
+                                    </circle>
+                                  </g>
+                                  
+                                  {/* 軸ラベル */}
+                                  <text x="50%" y="95%" textAnchor="middle" className="text-sm fill-gray-600">議論深度 (%)</text>
+                                  <text x="5%" y="50%" textAnchor="middle" className="text-sm fill-gray-600" transform="rotate(-90, 5%, 50%)">改善率 (%)</text>
+                                  
+                                  {/* 数値軸（X軸） */}
+                                  <text x="10%" y="92%" textAnchor="middle" className="text-xs fill-gray-500">0</text>
+                                  <text x="30%" y="92%" textAnchor="middle" className="text-xs fill-gray-500">25</text>
+                                  <text x="50%" y="92%" textAnchor="middle" className="text-xs fill-gray-500">50</text>
+                                  <text x="70%" y="92%" textAnchor="middle" className="text-xs fill-gray-500">75</text>
+                                  <text x="90%" y="92%" textAnchor="middle" className="text-xs fill-gray-500">100</text>
+                                  
+                                  {/* 数値軸（Y軸） */}
+                                  <text x="8%" y="85%" textAnchor="middle" className="text-xs fill-gray-500">0</text>
+                                  <text x="8%" y="65%" textAnchor="middle" className="text-xs fill-gray-500">25</text>
+                                  <text x="8%" y="45%" textAnchor="middle" className="text-xs fill-gray-500">50</text>
+                                  <text x="8%" y="25%" textAnchor="middle" className="text-xs fill-gray-500">75</text>
+                                  <text x="8%" y="10%" textAnchor="middle" className="text-xs fill-gray-500">100</text>
+                                </svg>
+                                
+                                {/* 凡例 */}
+                                <div className="absolute bottom-2 right-2 bg-white/90 p-2 rounded border text-xs">
+                                  <div className="flex items-center gap-1 mb-1">
+                                    <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                                    <span>高相関</span>
+                                  </div>
+                                  <div className="flex items-center gap-1 mb-1">
+                                    <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                                    <span>中相関</span>
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                                    <span>低相関</span>
                                   </div>
                                 </div>
                               </div>
                             </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="border-l-4 border-purple-500 bg-gradient-to-r from-purple-50 to-violet-50 rounded-lg p-6 mb-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-purple-100 rounded-lg">
+                              <span className="text-purple-600 text-xl">🤖</span>
+                            </div>
+                            <div>
+                              <h5 className="font-bold text-lg text-gray-800">AIメンタリング効果分析</h5>
+                              <p className="text-sm text-gray-600">行動変容・関係性・長期成長戦略評価</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="px-2 py-1 bg-purple-200 text-purple-800 text-xs rounded-full font-medium">ローカルLLM対応予定</div>
+                            <button className="inline-flex items-center justify-center whitespace-nowrap font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow h-9 px-3 py-1 bg-purple-600 text-white text-sm rounded-md hover:bg-purple-700 transition-colors gap-2">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-refresh-cw h-4 w-4" aria-hidden="true">
+                                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+                                <path d="M21 3v5h-5"></path>
+                                <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+                                <path d="M8 16H3v5"></path>
+                              </svg>
+                              解釈生成
+                            </button>
+                          </div>
+                        </div>
+                        <div className="bg-white/50 p-4 rounded-lg">
+                          <p className="text-sm text-gray-700 leading-relaxed">
+                            <span className="font-medium text-purple-700">🔍 面談データ総合分析:</span><br/>
+                            現在のデータから、チーム連携が最も高い相関を示しており（85%充実度）、成長の核となる領域として機能している可能性があります。業務遂行能力（82%）との相互作用により、組織内での影響力拡大が期待できます。一方、成長目標設定（72%）は相対的に低い相関を示しており、個人の内発的動機強化が今後の重要課題として浮上しています。
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* AI面談効果分析コンポーネント */}
+                {interviewData?.regular?.interviews?.length > 0 && (
+                  <div className="space-y-6">
+                    <div>
+                      <div className="border-l-4 border-indigo-500 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-lg p-6 mb-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-indigo-100 rounded-lg">
+                              <span className="text-indigo-600 text-xl">🎯</span>
+                            </div>
+                            <div>
+                              <h5 className="font-bold text-lg text-gray-800">AI面談効果分析</h5>
+                              <p className="text-sm text-gray-600">定量データ×質的洞察の統合分析</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="px-2 py-1 bg-indigo-200 text-indigo-800 text-xs rounded-full font-medium">ローカルLLM対応予定</div>
+                            <button className="inline-flex items-center justify-center whitespace-nowrap font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow h-9 px-3 py-1 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-700 transition-colors gap-2">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-refresh-cw h-4 w-4" aria-hidden="true">
+                                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+                                <path d="M21 3v5h-5"></path>
+                                <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+                                <path d="M8 16H3v5"></path>
+                              </svg>
+                              解釈生成
+                            </button>
+                          </div>
+                        </div>
+                        <div className="bg-white/50 p-4 rounded-lg">
+                          <p className="text-sm text-gray-700 leading-relaxed">
+                            <span className="font-medium text-indigo-700">📊 効果測定結果:</span><br/>
+                            定期面談を通じて、対象職員の専門性向上（評価スコア平均81点）と組織貢献意識の向上が確認されました。特に、技術面での成長と後輩指導への取り組み姿勢が顕著に改善されており、面談による行動変容効果が明確に表れています。今後は法人横断プロジェクトへの参加など、より大きな挑戦機会の提供が成長加速につながると予測されます。
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="border-l-4 border-teal-500 bg-gradient-to-r from-teal-50 to-cyan-50 rounded-lg p-6 mb-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-teal-100 rounded-lg">
+                              <span className="text-teal-600 text-xl">🧠</span>
+                            </div>
+                            <div>
+                              <h5 className="font-bold text-lg text-gray-800">AI成長要因分析</h5>
+                              <p className="text-sm text-gray-600">パターン認識による成長ドライバー特定</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="px-2 py-1 bg-teal-200 text-teal-800 text-xs rounded-full font-medium">ローカルLLM対応予定</div>
+                            <button className="inline-flex items-center justify-center whitespace-nowrap font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow h-9 px-3 py-1 bg-teal-600 text-white text-sm rounded-md hover:bg-teal-700 transition-colors gap-2">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-refresh-cw h-4 w-4" aria-hidden="true">
+                                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+                                <path d="M21 3v5h-5"></path>
+                                <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+                                <path d="M8 16H3v5"></path>
+                              </svg>
+                              解釈生成
+                            </button>
+                          </div>
+                        </div>
+                        <div className="bg-white/50 p-4 rounded-lg">
+                          <p className="text-sm text-gray-700 leading-relaxed">
+                            <span className="font-medium text-teal-700">🔬 成長パターン解析:</span><br/>
+                            面談データから抽出された成長要因として、①組織内プロジェクトへの積極的参加、②技術研鑽の継続的実践、③メンタリング活動への自発的関与の3要素が特定されました。これらの相互作用により、個人のスキル向上と組織貢献のポジティブフィードバックループが形成されており、持続的な成長基盤が構築されていることが確認できます。
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="border-l-4 border-orange-500 bg-gradient-to-r from-orange-50 to-amber-50 rounded-lg p-6 mb-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-orange-100 rounded-lg">
+                              <span className="text-orange-600 text-xl">🚀</span>
+                            </div>
+                            <div>
+                              <h5 className="font-bold text-lg text-gray-800">AI成長予測分析</h5>
+                              <p className="text-sm text-gray-600">機械学習による将来成長シナリオ予測</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="px-2 py-1 bg-orange-200 text-orange-800 text-xs rounded-full font-medium">ローカルLLM対応予定</div>
+                            <button className="inline-flex items-center justify-center whitespace-nowrap font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow h-9 px-3 py-1 bg-orange-600 text-white text-sm rounded-md hover:bg-orange-700 transition-colors gap-2">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-refresh-cw h-4 w-4" aria-hidden="true">
+                                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+                                <path d="M21 3v5h-5"></path>
+                                <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+                                <path d="M8 16H3v5"></path>
+                              </svg>
+                              解釈生成
+                            </button>
+                          </div>
+                        </div>
+                        <div className="bg-white/50 p-4 rounded-lg">
+                          <p className="text-sm text-gray-700 leading-relaxed">
+                            <span className="font-medium text-orange-700">📈 成長予測モデル:</span><br/>
+                            現在の成長軌道を基に予測すると、6ヶ月後には主任級の責任範囲での安定した成果創出、12ヶ月後には法人横断プロジェクトでのリーダーシップ発揮が期待されます。ただし、成長加速のためには①専門分野での資格取得、②外部研修への積極的参加、③異部署との連携強化の3点が重要な成長促進要因として機能することが予測されています。
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+              </div>
+            )}
+
+            {/* 特別面談 */}
+            <div 
+              className={`${activeTab === 'special' ? '' : 'hidden'}`}
+              role="tabpanel" 
+              id="special" 
+              aria-labelledby="special-tab"
+            >
+              <div className="space-y-6">
+                
+                {/* 面談実施状況の概要 */}
+                <div className="bg-gradient-to-r from-orange-50 to-red-50 rounded-xl p-6 border-l-4 border-orange-500">
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-800">特別面談実施状況</h3>
+                      <p className="text-sm text-gray-600">課題対応・緊急支援・専門相談の実施記録</p>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-2xl font-bold text-orange-600">{interviewData?.special?.summary?.total || 0}</div>
+                      <div className="text-sm text-gray-600">実施回数</div>
+                    </div>
+                  </div>
+                  
+                  {interviewData?.special?.summary && (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="bg-white/70 p-4 rounded-lg">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-orange-500 text-lg">📅</span>
+                          <span className="font-medium text-gray-700">最終実施日</span>
+                        </div>
+                        <div className="text-sm text-gray-600">{interviewData.special.summary.lastDate || '未実施'}</div>
+                      </div>
+                      <div className="bg-white/70 p-4 rounded-lg">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-orange-500 text-lg">🎯</span>
+                          <span className="font-medium text-gray-700">対応状況</span>
+                        </div>
+                        <div className="text-sm text-gray-600">{interviewData.special.summary.status || '良好'}</div>
+                      </div>
+                      <div className="bg-white/70 p-4 rounded-lg">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-orange-500 text-lg">📊</span>
+                          <span className="font-medium text-gray-700">効果測定</span>
+                        </div>
+                        <div className="text-sm text-gray-600">{interviewData.special.summary.effectiveness || '改善傾向'}</div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* 特別面談記録一覧 */}
+                {interviewData?.special?.interviews?.length > 0 ? (
+                  <div className="space-y-4">
+                    <h4 className="text-lg font-semibold text-gray-800">実施記録</h4>
+                    {interviewData.special.interviews.map((interview: any, index: number) => (
+                      <div key={index} className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow">
+                        <div className="flex justify-between items-start mb-4">
+                          <div>
+                            <div className="flex items-center gap-3 mb-2">
+                              <span className="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-sm font-medium">
+                                {interview.subtypeLabel || '特別面談'}
+                              </span>
+                              <span className="text-sm text-gray-500">{interview.date}</span>
+                            </div>
+                            <h5 className="font-semibold text-lg text-gray-800">{interview.title || '特別面談記録'}</h5>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-sm text-gray-500">面談者</div>
+                            <div className="font-medium text-gray-700">{interview.interviewer}</div>
+                          </div>
+                        </div>
+                        
+                        <div className="mb-4">
+                          <p className="text-gray-700 leading-relaxed">{interview.summary}</p>
+                        </div>
+                        
+                        {interview.keyTopics && (
+                          <div className="mb-4">
+                            <h6 className="text-sm font-medium text-gray-600 mb-2">主要トピック</h6>
+                            <div className="flex flex-wrap gap-2">
+                              {interview.keyTopics.map((topic: string, topicIndex: number) => (
+                                <span 
+                                  key={topicIndex}
+                                  className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-sm"
+                                >
+                                  {topic}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        
+                        {interview.nextActions && (
+                          <div className="mb-4">
+                            <h6 className="text-sm font-medium text-gray-600 mb-2">フォローアップ事項</h6>
+                            <ul className="space-y-1">
+                              {interview.nextActions.map((action: string, actionIndex: number) => (
+                                <li key={actionIndex} className="flex items-start gap-2">
+                                  <span className="text-orange-500 mt-1">•</span>
+                                  <span className="text-sm text-gray-700">{action}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        
+                        {interview.notebookLmLink && (
+                          <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                            <div className="flex items-center gap-3">
+                              <span className="text-sm text-gray-600">📝 NotebookLM連携</span>
+                              <div className="flex gap-2">
+                                {interview.notebookLmLink.features.hasAudioSummary && (
+                                  <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">🎧 音声要約</span>
+                                )}
+                                {interview.notebookLmLink.features.hasMindMap && (
+                                  <span className="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">🗺️ マインドマップ</span>
+                                )}
+                                {interview.notebookLmLink.features.hasTranscript && (
+                                  <span className="bg-purple-100 text-purple-700 px-2 py-1 rounded text-xs">📄 文字起こし</span>
+                                )}
+                              </div>
+                            </div>
+                            <button 
+                              onClick={() => window.open(interview.notebookLmLink.url, '_blank')}
+                              className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-md text-sm transition-colors"
+                            >
+                              NotebookLMで開く ↗
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12 text-gray-500">
+                    <div className="text-4xl mb-4">📋</div>
+                    <h4 className="text-lg font-medium mb-2">特別面談記録なし</h4>
+                    <p className="text-sm">現在、特別面談の実施記録はありません</p>
+                  </div>
+                )}
+
+              </div>
+            )}
+
+            {/* 支援面談 */}
+            <div 
+              className={`${activeTab === 'support' ? '' : 'hidden'}`}
+              role="tabpanel" 
+              id="support" 
+              aria-labelledby="support-tab"
+            >
+              <div className="space-y-6">
+                
+                {/* 支援面談実施状況の概要 */}
+                <div className="bg-gradient-to-r from-green-50 to-teal-50 rounded-xl p-6 border-l-4 border-green-500">
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-800">支援面談実施状況</h3>
+                      <p className="text-sm text-gray-600">メンタルヘルス・キャリア相談・技術支援の実施記録</p>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-2xl font-bold text-green-600">{interviewData?.support?.summary?.total || 0}</div>
+                      <div className="text-sm text-gray-600">実施回数</div>
+                    </div>
+                  </div>
+                  
+                  {interviewData?.support?.summary && (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="bg-white/70 p-4 rounded-lg">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-green-500 text-lg">📅</span>
+                          <span className="font-medium text-gray-700">最終実施日</span>
+                        </div>
+                        <div className="text-sm text-gray-600">{interviewData.support.summary.lastDate || '未実施'}</div>
+                      </div>
+                      <div className="bg-white/70 p-4 rounded-lg">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-green-500 text-lg">💚</span>
+                          <span className="font-medium text-gray-700">支援状況</span>
+                        </div>
+                        <div className="text-sm text-gray-600">{interviewData.support.summary.supportLevel || 'サポート継続中'}</div>
+                      </div>
+                      <div className="bg-white/70 p-4 rounded-lg">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-green-500 text-lg">📈</span>
+                          <span className="font-medium text-gray-700">回復傾向</span>
+                        </div>
+                        <div className="text-sm text-gray-600">{interviewData.support.summary.recoveryTrend || '良好'}</div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* 支援面談記録一覧 */}
+                {interviewData?.support?.interviews?.length > 0 ? (
+                  <div className="space-y-4">
+                    <h4 className="text-lg font-semibold text-gray-800">実施記録</h4>
+                    {interviewData.support.interviews.map((interview: any, index: number) => (
+                      <div key={index} className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow">
+                        <div className="flex justify-between items-start mb-4">
+                          <div>
+                            <div className="flex items-center gap-3 mb-2">
+                              <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
+                                {interview.subtypeLabel || '支援面談'}
+                              </span>
+                              <span className="text-sm text-gray-500">{interview.date}</span>
+                            </div>
+                            <h5 className="font-semibold text-lg text-gray-800">{interview.title || '支援面談記録'}</h5>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-sm text-gray-500">面談者</div>
+                            <div className="font-medium text-gray-700">{interview.interviewer}</div>
+                          </div>
+                        </div>
+                        
+                        <div className="mb-4">
+                          <p className="text-gray-700 leading-relaxed">{interview.summary}</p>
+                        </div>
+                        
+                        {interview.keyTopics && (
+                          <div className="mb-4">
+                            <h6 className="text-sm font-medium text-gray-600 mb-2">支援ポイント</h6>
+                            <div className="flex flex-wrap gap-2">
+                              {interview.keyTopics.map((topic: string, topicIndex: number) => (
+                                <span 
+                                  key={topicIndex}
+                                  className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-sm"
+                                >
+                                  {topic}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        
+                        {interview.nextActions && (
+                          <div className="mb-4">
+                            <h6 className="text-sm font-medium text-gray-600 mb-2">継続支援計画</h6>
+                            <ul className="space-y-1">
+                              {interview.nextActions.map((action: string, actionIndex: number) => (
+                                <li key={actionIndex} className="flex items-start gap-2">
+                                  <span className="text-green-500 mt-1">•</span>
+                                  <span className="text-sm text-gray-700">{action}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        
+                        {interview.notebookLmLink && (
+                          <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                            <div className="flex items-center gap-3">
+                              <span className="text-sm text-gray-600">📝 NotebookLM連携</span>
+                              <div className="flex gap-2">
+                                {interview.notebookLmLink.features.hasAudioSummary && (
+                                  <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">🎧 音声要約</span>
+                                )}
+                                {interview.notebookLmLink.features.hasMindMap && (
+                                  <span className="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">🗺️ マインドマップ</span>
+                                )}
+                                {interview.notebookLmLink.features.hasTranscript && (
+                                  <span className="bg-purple-100 text-purple-700 px-2 py-1 rounded text-xs">📄 文字起こし</span>
+                                )}
+                              </div>
+                            </div>
+                            <button 
+                              onClick={() => window.open(interview.notebookLmLink.url, '_blank')}
+                              className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-md text-sm transition-colors"
+                            >
+                              NotebookLMで開く ↗
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12 text-gray-500">
+                    <div className="text-4xl mb-4">🤝</div>
+                    <h4 className="text-lg font-medium mb-2">支援面談記録なし</h4>
+                    <p className="text-sm">現在、支援面談の実施記録はありません</p>
+                  </div>
+                )}
+
+              </div>
+            )}
+          </div>
+        )
+      }
+
+      {/* 評価タブ */}
+      {activeMainTab === 'evaluation' && (
+        <div className="space-y-6">
+          
+          {/* 評価概要セクション */}
+          <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl p-6 border-l-4 border-purple-500">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-xl font-bold text-gray-800">評価実施状況</h3>
+                <p className="text-sm text-gray-600">V3評価システムによる総合評価記録</p>
+              </div>
+              <div className="text-right">
+                <div className="text-2xl font-bold text-purple-600">{evaluationData?.summary?.totalEvaluations || 0}</div>
+                <div className="text-sm text-gray-600">評価回数</div>
+              </div>
+            </div>
+            
+            {evaluationData?.summary && (
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="bg-white/70 p-4 rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-purple-500 text-lg">📅</span>
+                    <span className="font-medium text-gray-700">最新評価日</span>
+                  </div>
+                  <div className="text-sm text-gray-600">{evaluationData.summary.latestDate}</div>
+                </div>
+                <div className="bg-white/70 p-4 rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-purple-500 text-lg">🏆</span>
+                    <span className="font-medium text-gray-700">現在グレード</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div 
+                      className="w-3 h-3 rounded-full" 
+                      style={{ backgroundColor: v3Grades[evaluationData.summary.currentGrade as keyof typeof v3Grades]?.color || '#6b7280' }}
+                    ></div>
+                    <span className="text-sm font-medium text-gray-800">{evaluationData.summary.currentGrade}</span>
+                  </div>
+                </div>
+                <div className="bg-white/70 p-4 rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-purple-500 text-lg">📊</span>
+                    <span className="font-medium text-gray-700">平均スコア</span>
+                  </div>
+                  <div className="text-sm font-medium text-gray-800">{evaluationData.summary.averageScore}点</div>
+                </div>
+                <div className="bg-white/70 p-4 rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-purple-500 text-lg">📈</span>
+                    <span className="font-medium text-gray-700">傾向</span>
+                  </div>
+                  <div className="text-sm text-gray-600">{evaluationData.summary.trend === 'improving' ? '向上傾向' : evaluationData.summary.trend === 'stable' ? '安定' : '要注意'}</div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* V3評価記録一覧 */}
+          {evaluationData?.evaluations?.length > 0 ? (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h4 className="text-lg font-semibold text-gray-800">V3評価記録</h4>
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <span>グレード:</span>
+                    <div className="flex gap-1">
+                      {Object.entries(v3Grades).map(([grade, config]) => (
+                        <div key={grade} className="flex items-center gap-1">
+                          <div 
+                            className="w-2 h-2 rounded-full" 
+                            style={{ backgroundColor: config.color }}
+                          ></div>
+                          <span className="text-xs">{grade}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {evaluationData.evaluations.map((evaluation: any, index: number) => (
+                <div key={index} className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow">
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <div className="flex items-center gap-3 mb-2">
+                        <span 
+                          className="px-3 py-1 rounded-full text-sm font-medium text-white"
+                          style={{ backgroundColor: v3Grades[evaluation.overallGrade as keyof typeof v3Grades]?.color || '#6b7280' }}
+                        >
+                          {evaluation.overallGrade} - {v3Grades[evaluation.overallGrade as keyof typeof v3Grades]?.label || evaluation.overallGrade}
+                        </span>
+                        <span className="text-sm text-gray-500">{evaluation.evaluationDate}</span>
+                        <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-sm">{evaluation.evaluationType}</span>
+                      </div>
+                      <h5 className="font-semibold text-lg text-gray-800">総合スコア: {evaluation.totalScore}点</h5>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-sm text-gray-500">評価者</div>
+                      <div className="font-medium text-gray-700">{evaluation.evaluator}</div>
+                    </div>
+                  </div>
+                  
+                  {/* カテゴリ別評価 */}
+                  <div className="mb-4">
+                    <h6 className="text-sm font-medium text-gray-600 mb-3">カテゴリ別評価</h6>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {evaluation.categoryScores.map((category: any, categoryIndex: number) => (
+                        <div key={categoryIndex} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                          <div>
+                            <div className="font-medium text-gray-800">{category.categoryName}</div>
+                            <div className="text-sm text-gray-600">{category.description}</div>
+                          </div>
+                          <div className="text-right">
+                            <div 
+                              className="text-lg font-bold"
+                              style={{ color: v3Grades[category.grade as keyof typeof v3Grades]?.color || '#6b7280' }}
+                            >
+                              {category.grade}
+                            </div>
+                            <div className="text-sm text-gray-600">{category.score}pt</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* 評価コメント */}
+                  <div className="mb-4">
+                    <h6 className="text-sm font-medium text-gray-600 mb-2">評価コメント</h6>
+                    <p className="text-gray-700 leading-relaxed bg-gray-50 p-3 rounded-lg">{evaluation.comments}</p>
+                  </div>
+                  
+                  {/* 強み・改善点 */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    {evaluation.strengths && (
+                      <div>
+                        <h6 className="text-sm font-medium text-green-600 mb-2">🌟 確認された強み</h6>
+                        <ul className="space-y-1">
+                          {evaluation.strengths.map((strength: string, strengthIndex: number) => (
+                            <li key={strengthIndex} className="flex items-start gap-2">
+                              <span className="text-green-500 mt-1">•</span>
+                              <span className="text-sm text-gray-700">{strength}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    {evaluation.improvements && (
+                      <div>
+                        <h6 className="text-sm font-medium text-orange-600 mb-2">🎯 改善ポイント</h6>
+                        <ul className="space-y-1">
+                          {evaluation.improvements.map((improvement: string, improvementIndex: number) => (
+                            <li key={improvementIndex} className="flex items-start gap-2">
+                              <span className="text-orange-500 mt-1">•</span>
+                              <span className="text-sm text-gray-700">{improvement}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* 次回目標 */}
+                  {evaluation.nextGoals && (
+                    <div className="mb-4">
+                      <h6 className="text-sm font-medium text-gray-600 mb-2">🚀 次回評価に向けた目標</h6>
+                      <ul className="space-y-1">
+                        {evaluation.nextGoals.map((goal: string, goalIndex: number) => (
+                          <li key={goalIndex} className="flex items-start gap-2">
+                            <span className="text-blue-500 mt-1">•</span>
+                            <span className="text-sm text-gray-700">{goal}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  
+                  {/* NotebookLM連携 */}
+                  {evaluation.notebookLmLink && (
+                    <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                      <div className="flex items-center gap-3">
+                        <span className="text-sm text-gray-600">📝 NotebookLM連携</span>
+                        <div className="flex gap-2">
+                          {evaluation.notebookLmLink.features.hasAudioSummary && (
+                            <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">🎧 音声要約</span>
+                          )}
+                          {evaluation.notebookLmLink.features.hasMindMap && (
+                            <span className="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">🗺️ マインドマップ</span>
+                          )}
+                          {evaluation.notebookLmLink.features.hasTranscript && (
+                            <span className="bg-purple-100 text-purple-700 px-2 py-1 rounded text-xs">📄 文字起こし</span>
+                          )}
+                        </div>
+                      </div>
+                      <button 
+                        onClick={() => window.open(evaluation.notebookLmLink.url, '_blank')}
+                        className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-md text-sm transition-colors"
+                      >
+                        NotebookLMで開く ↗
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12 text-gray-500">
+              <div className="text-4xl mb-4">📊</div>
+              <h4 className="text-lg font-medium mb-2">評価記録なし</h4>
+              <p className="text-sm">まだV3評価システムによる評価記録がありません</p>
+            </div>
+          )}
+
+        </div>
+      )}
+
+    </div>
+  )
+}
+
+export default function StaffTabs({ selectedStaff }: StaffTabsProps) {
+  const [analyticsData, setAnalyticsData] = useState<any>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [activeMainTab, setActiveMainTab] = useState('interview')
+
+  const handleTabChange = (tab: string) => {
+    setActiveMainTab(tab)
+  }
+
+  // メインタブの定義
+  const mainTabs = [
+    {
+      id: 'interview',
+      label: '面談・指導',
+      icon: '💬',
+      description: '面談記録と指導内容の管理'
+    },
+    {
+      id: 'evaluation',
+      label: '評価',
+      icon: '📊',
+      description: 'V3評価システムによる評価記録'
+    },
+    {
+      id: 'analytics',
+      label: '分析',
+      icon: '📈',
+      description: 'データ分析と洞察'
+    }
+  ]
+
+  return (
+    <div className="space-y-6">
+      {/* メインタブナビゲーション */}
+      <div className="border-b border-gray-200">
+        <nav className="-mb-px flex space-x-8">
+          {mainTabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => handleTabChange(tab.id)}
+              className={`group inline-flex items-center py-4 px-1 border-b-2 font-medium text-sm ${
+                activeMainTab === tab.id
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              } transition-colors duration-200`}
+            >
+              <span className="mr-2 text-lg">{tab.icon}</span>
+              <div className="text-left">
+                <div className="font-medium">{tab.label}</div>
+                <div className="text-xs text-gray-400 group-hover:text-gray-600">
+                  {tab.description}
+                </div>
+              </div>
+            </button>
+          ))}
+        </nav>
+      </div>
+
+      {/* タブコンテンツ */}
+      <StaffTabContent 
+        selectedStaff={selectedStaff}
+        activeMainTab={activeMainTab}
+        analyticsData={analyticsData}
+        isLoading={isLoading}
+        setAnalyticsData={setAnalyticsData}
+        setIsLoading={setIsLoading}
+      />
+    </div>
+  )
+}
                             <div className="space-y-3">
                               <div className="p-3 bg-green-50 rounded">
                                 <p className="text-xs font-bold text-green-800">右上: 優良セクション</p>
