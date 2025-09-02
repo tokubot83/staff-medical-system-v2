@@ -1972,6 +1972,29 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
     }
   }, [selectedStaff.id])
 
+  // 面談にNotebookLMリンクが存在するかチェック
+  const getInterviewNotebookLink = (interviewId: string) => {
+    return notebookLinks.find(link => link.linkedInterview.id === interviewId)
+  }
+
+  // 面談専用のNotebookLMリンク登録
+  const handleAddInterviewNotebookLink = (interview: any) => {
+    setSelectedInterview(interview)
+    setShowNotebookLinkModal(true)
+  }
+
+  // NotebookLMリンクを削除
+  const handleDeleteNotebookLink = (linkToDelete: NotebookLMLink) => {
+    const updatedLinks = notebookLinks.filter(link => link.noteId !== linkToDelete.noteId)
+    setNotebookLinks(updatedLinks)
+    
+    try {
+      localStorage.setItem(`notebookLinks_${selectedStaff.id}`, JSON.stringify(updatedLinks))
+    } catch (error) {
+      console.error('Failed to delete notebook link:', error)
+    }
+  }
+
   // シンプルなデモデータ（フォールバック用）
   const interviewData = {
     overview: {
@@ -2123,60 +2146,128 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
             </div>
           </div>
           <div className={styles.interviewList}>
-            {displayData.regular.interviews.map((interview, index) => (
-              <div key={index} className={styles.interviewItem}>
-                <div className={styles.interviewHeader}>
-                  <span className={styles.interviewDate}>{interview.date}</span>
-                  <span className={styles.interviewer}>面談者: {interview.interviewer}</span>
-                  <span className={styles.score}>評価: {interview.score}</span>
-                  <button
-                    onClick={() => handleInterviewClick(interview)}
-                    className={styles.detailButton}
-                    style={{ 
-                      marginLeft: 'auto', 
-                      padding: '4px 12px', 
-                      backgroundColor: '#3b82f6', 
-                      color: 'white', 
-                      border: 'none', 
-                      borderRadius: '4px',
-                      fontSize: '12px',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    詳細
-                  </button>
-                </div>
-                <div className={styles.interviewSummary}>
-                  <p>{interview.summary}</p>
-                </div>
-                {/* NotebookLMリンク表示 */}
-                <div className={styles.notebookLinks}>
-                  {notebookLinks
-                    .filter(link => link.linkedInterview.id === interview.interviewId)
-                    .map((link, linkIndex) => (
-                    <div key={linkIndex} style={{ 
-                      fontSize: '12px', 
+            {displayData.regular.interviews.map((interview, index) => {
+              const linkedNotebook = getInterviewNotebookLink(interview.interviewId)
+              
+              return (
+                <div key={index} className={styles.interviewItem}>
+                  <div className={styles.interviewHeader}>
+                    <span className={styles.interviewDate}>{interview.date}</span>
+                    <span className={styles.interviewer}>面談者: {interview.interviewer}</span>
+                    <span className={styles.score}>評価: {interview.score}</span>
+                    
+                    {/* 動的ボタン：NotebookLMリンクの有無で表示を切り替え */}
+                    <div style={{ marginLeft: 'auto', display: 'flex', gap: '4px' }}>
+                      {linkedNotebook ? (
+                        // NotebookLMリンクが存在する場合：リンクボタンと管理ボタン
+                        <>
+                          <a
+                            href={linkedNotebook.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ 
+                              padding: '4px 12px', 
+                              backgroundColor: '#059669', 
+                              color: 'white', 
+                              border: 'none', 
+                              borderRadius: '4px',
+                              fontSize: '12px',
+                              textDecoration: 'none',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '4px',
+                              position: 'relative'
+                            }}
+                            title={`NotebookLM: ${linkedNotebook.title}\n作成日: ${new Date(linkedNotebook.createdAt).toLocaleString('ja-JP')}\n${linkedNotebook.features.hasMindMap ? 'マインドマップ機能: 有効' : ''}\nクリックでNotebookLMに移動`}
+                            onMouseEnter={(e) => {
+                              // ホバー時の詳細表示（簡易版はtitleで実装、より高度な場合は追加のtooltip要素を作成可能）
+                            }}
+                          >
+                            📝 {linkedNotebook.title.length > 15 ? linkedNotebook.title.substring(0, 15) + '...' : linkedNotebook.title}
+                            {linkedNotebook.features.hasMindMap && <span title="マインドマップ機能有効">🗺️</span>}
+                          </a>
+                          <button
+                            onClick={() => handleInterviewClick(interview)}
+                            style={{ 
+                              padding: '4px 8px', 
+                              backgroundColor: '#6b7280', 
+                              color: 'white', 
+                              border: 'none', 
+                              borderRadius: '4px',
+                              fontSize: '12px',
+                              cursor: 'pointer'
+                            }}
+                            title="詳細・リンク管理"
+                          >
+                            ⚙️
+                          </button>
+                        </>
+                      ) : (
+                        // NotebookLMリンクが存在しない場合：登録ボタンと詳細ボタン
+                        <>
+                          <button
+                            onClick={() => handleAddInterviewNotebookLink(interview)}
+                            style={{ 
+                              padding: '4px 12px', 
+                              backgroundColor: '#d97706', 
+                              color: 'white', 
+                              border: 'none', 
+                              borderRadius: '4px',
+                              fontSize: '12px',
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '4px'
+                            }}
+                            title={`この面談にNotebookLMリンクを登録します\n面談日: ${interview.date}\n面談者: ${interview.interviewer}\nクリックで登録モーダルを開きます`}
+                          >
+                            📝 NotebookLM登録
+                          </button>
+                          <button
+                            onClick={() => handleInterviewClick(interview)}
+                            style={{ 
+                              padding: '4px 8px', 
+                              backgroundColor: '#3b82f6', 
+                              color: 'white', 
+                              border: 'none', 
+                              borderRadius: '4px',
+                              fontSize: '12px',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            詳細
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                  <div className={styles.interviewSummary}>
+                    <p>{interview.summary}</p>
+                  </div>
+                  
+                  {/* NotebookLMリンクの簡易表示 */}
+                  {linkedNotebook && (
+                    <div style={{ 
+                      fontSize: '11px', 
                       color: '#6b7280', 
                       marginTop: '8px',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '8px'
+                      gap: '8px',
+                      backgroundColor: '#f9fafb',
+                      padding: '4px 8px',
+                      borderRadius: '4px',
+                      border: '1px solid #e5e7eb'
                     }}>
-                      <span>📝</span>
-                      <a 
-                        href={link.url} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        style={{ color: '#3b82f6', textDecoration: 'underline' }}
-                      >
-                        {link.title}
-                      </a>
-                      {link.features.hasMindMap && <span title="マインドマップ有り">🗺️</span>}
+                      <span>🔗 NotebookLMリンク登録済み</span>
+                      <span style={{ color: '#9ca3af' }}>
+                        {new Date(linkedNotebook.createdAt).toLocaleDateString('ja-JP')} 作成
+                      </span>
                     </div>
-                  ))}
+                  )}
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
           
           {/* NotebookLMリンク追加ボタン */}
@@ -2316,32 +2407,76 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                   backgroundColor: '#f3f4f6', 
                   padding: '12px', 
                   borderRadius: '4px', 
-                  marginBottom: '8px' 
+                  marginBottom: '8px',
+                  border: '1px solid #e5e7eb'
                 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span>📝</span>
-                    <a href={link.url} target="_blank" rel="noopener noreferrer" style={{ color: '#3b82f6' }}>
-                      {link.title}
-                    </a>
-                    {link.features.hasMindMap && <span title="マインドマップ有り">🗺️</span>}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1 }}>
+                      <span>📝</span>
+                      <a href={link.url} target="_blank" rel="noopener noreferrer" style={{ 
+                        color: '#3b82f6', 
+                        textDecoration: 'none', 
+                        fontWeight: '500',
+                        flex: 1
+                      }}>
+                        {link.title}
+                      </a>
+                      {link.features.hasMindMap && <span title="マインドマップ有り">🗺️</span>}
+                    </div>
+                    <button
+                      onClick={() => handleDeleteNotebookLink(link)}
+                      style={{
+                        backgroundColor: '#dc2626',
+                        color: 'white',
+                        border: 'none',
+                        padding: '4px 8px',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        fontSize: '12px'
+                      }}
+                      title="リンクを削除"
+                    >
+                      🗑️
+                    </button>
+                  </div>
+                  <div style={{ 
+                    fontSize: '11px', 
+                    color: '#9ca3af', 
+                    marginTop: '4px',
+                    marginLeft: '24px'
+                  }}>
+                    作成日: {new Date(link.createdAt).toLocaleString('ja-JP')}
                   </div>
                 </div>
               ))}
               
-              <button
-                onClick={() => setShowNotebookLinkModal(true)}
-                style={{
-                  backgroundColor: '#059669',
-                  color: 'white',
-                  border: 'none',
-                  padding: '8px 16px',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  fontSize: '14px'
-                }}
-              >
-                + NotebookLMリンク追加
-              </button>
+              {notebookLinks.filter(link => link.linkedInterview.id === selectedInterview.interviewId).length === 0 && (
+                <div style={{ 
+                  textAlign: 'center', 
+                  color: '#9ca3af', 
+                  padding: '16px',
+                  fontStyle: 'italic' 
+                }}>
+                  まだNotebookLMリンクが登録されていません
+                </div>
+              )}
+              
+              <div style={{ textAlign: 'center', marginTop: '12px' }}>
+                <button
+                  onClick={() => setShowNotebookLinkModal(true)}
+                  style={{
+                    backgroundColor: '#059669',
+                    color: 'white',
+                    border: 'none',
+                    padding: '8px 16px',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontSize: '14px'
+                  }}
+                >
+                  + NotebookLMリンク追加
+                </button>
+              </div>
             </div>
           </div>
         </div>
