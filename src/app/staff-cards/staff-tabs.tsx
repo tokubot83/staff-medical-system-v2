@@ -1839,7 +1839,7 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
             latestDate: allInterviews.length > 0 ? 
               new Date(allInterviews[0].scheduledDate).toLocaleDateString('ja-JP') : '実施なし',
             latestType: allInterviews.length > 0 && allInterviews[0].status === 'completed' ?
-              getInterviewTypeLabel(allInterviews[0].type) : '未実施',
+              getInterviewTypeLabel(allInterviews[0]) : '未実施',
             latestFeedback: summary.lastInterview?.hrFeedback || '特記事項なし',
             nextScheduled: summary.criticalStatus?.upcomingMandatory?.dueDate ? 
               new Date(summary.criticalStatus.upcomingMandatory.dueDate).toLocaleDateString('ja-JP') : '未設定',
@@ -1873,7 +1873,7 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
               .map(interview => ({
                 date: new Date(interview.conductedAt || interview.scheduledDate).toLocaleDateString('ja-JP'),
                 interviewer: interview.interviewerName || '面談者名未設定',
-                reason: getInterviewTypeLabel(interview.type),
+                reason: getInterviewTypeLabel(interview),
                 summary: interview.outcomeSummary || '特別面談実施済み',
                 interviewId: interview.id
               }))
@@ -1889,7 +1889,7 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
               .map(interview => ({
                 date: new Date(interview.conductedAt || interview.scheduledDate).toLocaleDateString('ja-JP'),
                 interviewer: interview.interviewerName || '担当者名未設定',
-                category: getInterviewTypeLabel(interview.type),
+                category: getInterviewTypeLabel(interview),
                 summary: interview.outcomeSummary || 'サポート面談実施済み',
                 interviewId: interview.id
               }))
@@ -1910,20 +1910,47 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
   }, [selectedStaff.id])
 
   // 面談タイプのラベル変換
-  const getInterviewTypeLabel = (interviewType: string): string => {
-    const labels: Record<string, string> = {
-      'new_employee_monthly': '新入職員月次面談',
-      'regular_annual': '一般職員年次面談', 
-      'management_biannual': '管理職半年面談',
-      'return_to_work': '復職面談',
-      'incident_followup': 'インシデント後面談',
-      'exit_interview': '退職面談',
-      'feedback': 'フィードバック面談',
-      'career_support': 'キャリア支援面談',
-      'workplace_support': '職場環境支援面談',
-      'individual_consultation': '個別相談面談'
+  const getInterviewTypeLabel = (interview: any): string => {
+    // 定期面談のラベル
+    if (interview.type === 'regular' && interview.regularType) {
+      const regularLabels: Record<string, string> = {
+        'new_employee': '新入職員面談',
+        'annual': '年次面談',
+        'management': '管理職面談'
+      }
+      return regularLabels[interview.regularType] || '定期面談'
     }
-    return labels[interviewType] || interviewType
+    
+    // 特別面談のラベル  
+    if (interview.type === 'special' && interview.specialType) {
+      const specialLabels: Record<string, string> = {
+        'return': '復職面談',
+        'promotion': '昇進面談',
+        'exit': '退職面談',
+        'transfer': '異動面談',
+        'disciplinary': '懲戒面談'
+      }
+      return specialLabels[interview.specialType] || '特別面談'
+    }
+    
+    // サポート面談のラベル
+    if (interview.type === 'support' && interview.supportCategory) {
+      const supportLabels: Record<string, string> = {
+        'feedback': 'フィードバック面談',
+        'career_support': 'キャリア支援面談',
+        'workplace_support': '職場環境支援面談',
+        'individual_consultation': '個別相談面談'
+      }
+      return supportLabels[interview.supportCategory] || 'サポート面談'
+    }
+    
+    // フォールバック
+    const fallbackLabels: Record<string, string> = {
+      'regular': '定期面談',
+      'special': '特別面談',
+      'support': 'サポート面談'
+    }
+    return fallbackLabels[interview.type] || '面談'
   }
 
   // 面談詳細を表示する関数
@@ -1989,15 +2016,10 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
 
   // 面談の種別とカテゴリーを動的に判定
   const getInterviewCategory = (interview: any, tabType: string): { type: 'regular' | 'special' | 'support', category: string } => {
-    switch (tabType) {
-      case 'regular':
-        return { type: 'regular', category: '定期面談' }
-      case 'special':
-        return { type: 'special', category: interview.reason || '特別面談' }
-      case 'support':
-        return { type: 'support', category: interview.category || 'サポート面談' }
-      default:
-        return { type: 'regular', category: '定期面談' }
+    const interviewType = tabType as 'regular' | 'special' | 'support'
+    return {
+      type: interviewType,
+      category: getInterviewTypeLabel(interview)
     }
   }
 

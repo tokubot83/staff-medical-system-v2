@@ -61,6 +61,15 @@ export interface UnifiedInterviewReservation {
   // 予約ソース
   source?: 'manual' | 'voicedrive' | 'system';
   createdBy?: string;
+
+  // 面談完了データ（職員カルテ用）
+  conductedAt?: Date;
+  interviewerName?: string;
+  outcomeSummary?: string;
+  outcomeActionItems?: string[];
+  outcomeFollowupRequired?: boolean;
+  outcomeFollowupDate?: Date;
+  responses?: Record<string, any>;
 }
 
 export default function UnifiedInterviewDashboard() {

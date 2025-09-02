@@ -141,12 +141,10 @@ export class StaffCardInterviewService {
     staffId: string, 
     category: InterviewTabCategory
   ) {
-    const categoryTypes = INTERVIEW_CATEGORY_MAPPING[category];
     const allInterviews = await this.getAllInterviews(staffId);
     
-    return allInterviews.filter(interview => 
-      categoryTypes.includes(interview.type as any)
-    );
+    // typeフィールドで直接分類
+    return allInterviews.filter(interview => interview.type === category);
   }
 
   /**
