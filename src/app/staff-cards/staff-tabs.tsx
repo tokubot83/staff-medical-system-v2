@@ -2015,37 +2015,9 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
   }
 
   // 面談シート表示
-  const handleShowInterviewSheet = async (interview: any) => {
-    try {
-      // InterviewDataServiceから実際の面談データを取得
-      const { interviewDataService } = await import('@/services/interview/interviewDataService')
-      const interviewData = await interviewDataService.getInterview(interview.interviewId)
-      
-      if (interviewData && interviewData.sheetData) {
-        // 実際の面談シートデータがある場合
-        setSelectedInterviewSheet({
-          ...interview,
-          sheetData: interviewData.sheetData,
-          hasRealData: true
-        })
-      } else {
-        // データが無い場合はデフォルト表示
-        setSelectedInterviewSheet({
-          ...interview,
-          hasRealData: false
-        })
-      }
-      
-      setShowInterviewSheetModal(true)
-    } catch (error) {
-      console.error('Error loading interview sheet data:', error)
-      // エラー時はデフォルト表示
-      setSelectedInterviewSheet({
-        ...interview,
-        hasRealData: false
-      })
-      setShowInterviewSheetModal(true)
-    }
+  const handleShowInterviewSheet = (interview: any) => {
+    setSelectedInterviewSheet(interview)
+    setShowInterviewSheetModal(true)
   }
 
   // 面談の種別とカテゴリーを動的に判定
@@ -2229,7 +2201,7 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
               const linkedNotebook = getInterviewNotebookLink(interview.interviewId)
               
               return (
-                <Card key={index} className={`mb-4 shadow-sm hover:shadow-md transition-shadow duration-200 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                <Card key={index} className="mb-4 shadow-sm hover:shadow-md transition-shadow duration-200">
                   <CardContent className="p-4">
                     {/* 面談ヘッダー */}
                     <div className="flex items-center justify-between mb-3">
@@ -2294,6 +2266,24 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
               )
             })}
           </div>
+          
+          {/* NotebookLMリンク追加ボタン */}
+          <div style={{ marginTop: '16px', textAlign: 'center' }}>
+            <button
+              onClick={() => setShowNotebookLinkModal(true)}
+              className={styles.actionButtonSecondary}
+              style={{ 
+                padding: '8px 16px',
+                backgroundColor: '#059669',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                fontSize: '14px'
+              }}
+            >
+              📝 NotebookLMリンク追加
+            </button>
+          </div>
         </div>
       )}
 
@@ -2322,7 +2312,7 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
               const linkedNotebook = getInterviewNotebookLink(interview.interviewId)
               
               return (
-                <Card key={index} className={`mb-4 shadow-sm hover:shadow-md transition-shadow duration-200 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                <Card key={index} className="mb-4 shadow-sm hover:shadow-md transition-shadow duration-200">
                   <CardContent className="p-4">
                     {/* 面談ヘッダー */}
                     <div className="flex items-center justify-between mb-3">
@@ -2419,7 +2409,7 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
               const linkedNotebook = getInterviewNotebookLink(interview.interviewId);
               
               return (
-                <Card key={index} className={`mb-4 shadow-sm hover:shadow-md transition-shadow duration-200 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                <Card key={index} className="mb-4 shadow-sm hover:shadow-md transition-shadow duration-200">
                   <CardContent className="p-4">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-4">
@@ -2427,7 +2417,6 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                         <span className="text-sm text-gray-600">担当者: {interview.interviewer}</span>
                       </div>
                       <div className="flex gap-2">
-                        {/* NotebookLMボタン（自動切り替え） */}
                         {linkedNotebook ? (
                           <a
                             href={linkedNotebook.url}
@@ -2445,13 +2434,17 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                             📝 NotebookLMリンク登録
                           </button>
                         )}
-                        
-                        {/* 面談シートボタン（常に表示） */}
                         <button
                           onClick={() => handleShowInterviewSheet(interview)}
                           className="px-3 py-1.5 bg-purple-600 text-white text-xs rounded-md hover:bg-purple-700 transition-colors inline-flex items-center gap-1"
                         >
                           📋 面談シート
+                        </button>
+                        <button
+                          onClick={() => handleInterviewClick(interview)}
+                          className="px-3 py-1.5 bg-gray-100 text-gray-700 text-xs rounded-md hover:bg-gray-200 transition-colors"
+                        >
+                          詳細
                         </button>
                       </div>
                     </div>
@@ -2580,6 +2573,23 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                   まだNotebookLMリンクが登録されていません
                 </div>
               )}
+              
+              <div style={{ textAlign: 'center', marginTop: '12px' }}>
+                <button
+                  onClick={() => setShowNotebookLinkModal(true)}
+                  style={{
+                    backgroundColor: '#059669',
+                    color: 'white',
+                    border: 'none',
+                    padding: '8px 16px',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontSize: '14px'
+                  }}
+                >
+                  + NotebookLMリンク追加
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -2700,46 +2710,29 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
         </div>
       )}
 
-      {/* 新型面談シート表示モーダル */}
+      {/* 面談シート表示モーダル */}
       {showInterviewSheetModal && selectedInterviewSheet && (
-        selectedInterviewSheet.hasRealData && selectedInterviewSheet.sheetData ? (
-          // 実際のシートデータがある場合は高機能モーダル
-          <InterviewSheetModal
-            isOpen={showInterviewSheetModal}
-            onClose={() => {
-              setShowInterviewSheetModal(false)
-              setSelectedInterviewSheet(null)
-            }}
-            sheetName={`${selectedInterviewSheet.reason || selectedInterviewSheet.category || '面談'} - ${selectedInterviewSheet.date}`}
-            sheetPath={selectedInterviewSheet.sheetData?.sheetPath || ''}
-            staffId={selectedStaff.id}
-            staffName={selectedStaff.name}
-            interviewType={selectedInterviewSheet.reason || selectedInterviewSheet.category}
-            interviewId={selectedInterviewSheet.interviewId}
-          />
-        ) : (
-          // データが無い場合は簡易表示
-          <div className={styles.modalOverlay} style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1002
+        <div className={styles.modalOverlay} style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1002
+        }}>
+          <div className={styles.modalContent} style={{
+            backgroundColor: 'white',
+            borderRadius: '8px',
+            padding: '24px',
+            maxWidth: '800px',
+            width: '90%',
+            maxHeight: '80vh',
+            overflow: 'auto'
           }}>
-            <div className={styles.modalContent} style={{
-              backgroundColor: 'white',
-              borderRadius: '8px',
-              padding: '24px',
-              maxWidth: '600px',
-              width: '90%',
-              maxHeight: '80vh',
-              overflow: 'auto'
-            }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
               <h3 style={{ margin: 0, color: '#7c3aed' }}>📋 面談シート表示</h3>
               <button
@@ -2778,29 +2771,84 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
               </div>
             </div>
 
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <button
-                  onClick={() => {
-                    setShowInterviewSheetModal(false)
-                    setSelectedInterviewSheet(null)
-                  }}
-                  style={{
-                    backgroundColor: '#7c3aed',
-                    color: 'white',
-                    border: 'none',
-                    padding: '12px 24px',
-                    borderRadius: '6px',
-                    fontSize: '16px',
-                    fontWeight: 'bold',
-                    cursor: 'pointer'
-                  }}
-                >
-                  閉じる
-                </button>
+            {/* 面談シート内容 */}
+            <div style={{ marginBottom: '20px' }}>
+              <h4 style={{ color: '#374151', marginBottom: '12px' }}>面談内容</h4>
+              <div style={{ 
+                backgroundColor: '#f9fafb', 
+                padding: '16px', 
+                borderRadius: '6px',
+                border: '1px solid #e5e7eb'
+              }}>
+                <p style={{ margin: 0, lineHeight: '1.6' }}>
+                  {selectedInterviewSheet.summary}
+                </p>
               </div>
             </div>
-          )
-        )
+
+            {/* デモ用の追加項目 */}
+            <div style={{ marginBottom: '20px' }}>
+              <h4 style={{ color: '#374151', marginBottom: '12px' }}>面談詳細項目</h4>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                <div>
+                  <label style={{ fontWeight: 'bold', color: '#6b7280' }}>現在の状況:</label>
+                  <p style={{ margin: '4px 0', padding: '8px', backgroundColor: '#f3f4f6', borderRadius: '4px' }}>
+                    業務に積極的に取り組んでおり、チームワークも良好です。
+                  </p>
+                </div>
+                <div>
+                  <label style={{ fontWeight: 'bold', color: '#6b7280' }}>今後の目標:</label>
+                  <p style={{ margin: '4px 0', padding: '8px', backgroundColor: '#f3f4f6', borderRadius: '4px' }}>
+                    スキルアップを図り、リーダーシップを発揮したいと考えています。
+                  </p>
+                </div>
+                <div>
+                  <label style={{ fontWeight: 'bold', color: '#6b7280' }}>課題・改善点:</label>
+                  <p style={{ margin: '4px 0', padding: '8px', backgroundColor: '#f3f4f6', borderRadius: '4px' }}>
+                    時間管理をより効率的に行う必要があります。
+                  </p>
+                </div>
+                <div>
+                  <label style={{ fontWeight: 'bold', color: '#6b7280' }}>サポート要望:</label>
+                  <p style={{ margin: '4px 0', padding: '8px', backgroundColor: '#f3f4f6', borderRadius: '4px' }}>
+                    研修機会の提供と定期的なフィードバックを希望します。
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* アクションプラン */}
+            <div style={{ marginBottom: '20px' }}>
+              <h4 style={{ color: '#374151', marginBottom: '12px' }}>アクションプラン</h4>
+              <ul style={{ margin: 0, paddingLeft: '20px' }}>
+                <li style={{ marginBottom: '8px' }}>月次での進捗確認ミーティングを設定</li>
+                <li style={{ marginBottom: '8px' }}>スキルアップ研修への参加を推奨</li>
+                <li style={{ marginBottom: '8px' }}>メンター制度の活用を検討</li>
+                <li style={{ marginBottom: '8px' }}>3ヶ月後のフォローアップ面談を実施</li>
+              </ul>
+            </div>
+
+            {/* 閉じるボタン */}
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <button
+                onClick={() => {
+                  setShowInterviewSheetModal(false)
+                  setSelectedInterviewSheet(null)
+                }}
+                style={{
+                  backgroundColor: '#7c3aed',
+                  color: 'white',
+                  border: 'none',
+                  padding: '10px 20px',
+                  borderRadius: '6px',
+                  cursor: 'pointer'
+                }}
+              >
+                閉じる
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )
