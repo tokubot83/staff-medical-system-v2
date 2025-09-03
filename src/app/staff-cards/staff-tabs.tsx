@@ -1852,14 +1852,12 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
             completed: regularInterviews.filter(i => i.status === 'completed').length,
             lastDate: regularInterviews.length > 0 ? 
               new Date(regularInterviews[0].scheduledDate).toLocaleDateString('ja-JP') : '実施なし',
-            avgScore: 'A',
             interviews: regularInterviews
               .filter(i => i.status === 'completed')
               .slice(0, 5)
               .map(interview => ({
                 date: new Date(interview.conductedAt || interview.scheduledDate).toLocaleDateString('ja-JP'),
                 interviewer: interview.interviewerName || '面談者名未設定',
-                score: 'A',
                 summary: interview.outcomeSummary || '面談実施済み',
                 interviewId: interview.id
               }))
@@ -2056,18 +2054,15 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
     regular: {
       total: 8,
       lastDate: '2024年3月15日',
-      avgScore: 'A',
       interviews: [
         {
           date: '2024年3月15日',
           interviewer: '看護部長',
-          score: 'A',
           summary: 'キャリア目標の進捗が順調。技術面での成長も著しく、後輩指導にも積極的。'
         },
         {
           date: '2024年2月15日', 
           interviewer: '主任看護師',
-          score: 'B+',
           summary: '業務習熟度が向上し、患者対応においても安定した成果を示している。'
         }
       ]
@@ -2199,10 +2194,6 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                 <span className={styles.statLabel}>最終実施</span>
                 <span className={styles.statValue}>{displayData.regular.lastDate}</span>
               </div>
-              <div className={styles.statCard}>
-                <span className={styles.statLabel}>平均評価</span>
-                <span className={`${styles.statValue} ${styles.highlight}`}>{displayData.regular.avgScore}</span>
-              </div>
             </div>
           </div>
           <div className={styles.interviewList}>
@@ -2217,7 +2208,6 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                       <div className="flex items-center gap-4">
                         <span className="text-sm font-medium text-gray-900">{interview.date}</span>
                         <span className="text-sm text-gray-600">面談者: {interview.interviewer}</span>
-                        <span className="text-sm text-gray-600">評価: {interview.score}</span>
                       </div>
                       
                       {/* 動的ボタン：NotebookLMリンクの有無で表示を切り替え */}
@@ -2515,7 +2505,6 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
             <div style={{ marginBottom: '16px' }}>
               <p><strong>実施日:</strong> {selectedInterview.date}</p>
               <p><strong>面談者:</strong> {selectedInterview.interviewer}</p>
-              <p><strong>評価:</strong> {selectedInterview.score}</p>
             </div>
             
             <div style={{ marginBottom: '16px' }}>
