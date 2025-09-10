@@ -29,6 +29,7 @@ import styles from './StaffCards.module.css'
 import InterviewSheetModal from '@/components/InterviewSheetModal'
 import SectionTrendAnalysis from '@/components/interview/SectionTrendAnalysis'
 import PersonalizedEducationDashboard from '@/components/personalized/PersonalizedEducationDashboard'
+import InterviewAIAnalysis from '@/components/interview/InterviewAIAnalysis'
 
 // V3グレード定義
 const v3Grades = {
@@ -1800,6 +1801,8 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
   })
   const [showInterviewSheetModal, setShowInterviewSheetModal] = useState(false)
   const [selectedInterviewSheet, setSelectedInterviewSheet] = useState<any>(null)
+  const [showAIAnalysis, setShowAIAnalysis] = useState(false)
+  const [selectedInterviewForAI, setSelectedInterviewForAI] = useState<any>(null)
 
   if (!selectedStaff) {
     return (
@@ -2018,6 +2021,12 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
   const handleShowInterviewSheet = (interview: any) => {
     setSelectedInterviewSheet(interview)
     setShowInterviewSheetModal(true)
+  }
+
+  // AI分析表示
+  const handleShowAIAnalysis = (interview: any) => {
+    setSelectedInterviewForAI(interview)
+    setShowAIAnalysis(true)
   }
 
   // 面談の種別とカテゴリーを動的に判定
@@ -2241,6 +2250,15 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                         >
                           📋 面談シート
                         </button>
+                        
+                        {/* AI分析ボタン */}
+                        <button
+                          onClick={() => handleShowAIAnalysis(interview)}
+                          className="px-3 py-1.5 bg-indigo-600 text-white text-xs rounded-md hover:bg-indigo-700 transition-colors inline-flex items-center gap-1"
+                          title="AIによる面談内容分析"
+                        >
+                          🤖 AI分析
+                        </button>
                       </div>
                     </div>
                     
@@ -2349,6 +2367,15 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                           className="px-3 py-1.5 bg-purple-600 text-white text-xs rounded-md hover:bg-purple-700 transition-colors inline-flex items-center gap-1"
                         >
                           📋 面談シート
+                        </button>
+                        
+                        {/* AI分析ボタン */}
+                        <button
+                          onClick={() => handleShowAIAnalysis(interview)}
+                          className="px-3 py-1.5 bg-indigo-600 text-white text-xs rounded-md hover:bg-indigo-700 transition-colors inline-flex items-center gap-1"
+                          title="AIによる面談内容分析"
+                        >
+                          🤖 AI分析
                         </button>
                       </div>
                     </div>
@@ -2849,6 +2876,20 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
             </div>
           </div>
         </div>
+      )}
+
+      {/* AI分析モーダル */}
+      {showAIAnalysis && selectedInterviewForAI && (
+        <InterviewAIAnalysis
+          interview={selectedInterviewForAI}
+          interviewType={activeSubTab as 'regular' | 'special' | 'support'}
+          staffName={selectedStaff?.name}
+          isOpen={showAIAnalysis}
+          onClose={() => {
+            setShowAIAnalysis(false)
+            setSelectedInterviewForAI(null)
+          }}
+        />
       )}
     </div>
   )
