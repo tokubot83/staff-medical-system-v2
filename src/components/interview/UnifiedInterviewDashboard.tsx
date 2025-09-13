@@ -1,10 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { 
-  Calendar, Clock, User, AlertTriangle, CheckCircle, 
+import {
+  Calendar, Clock, User, AlertTriangle, CheckCircle,
   ChevronRight, Play, FileText, Users,
-  Filter, Search, RefreshCw, Bell, Plus, FilterX, ArrowLeft, CalendarDays
+  Filter, Search, RefreshCw, Bell, Plus, FilterX, ArrowLeft, CalendarDays,
+  Settings, BarChart3, Brain, Zap
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -23,6 +24,10 @@ import InterviewTemplateManager from '@/components/templates/InterviewTemplateMa
 import DynamicInterviewFlow from './DynamicInterviewFlow';
 import InterviewCalendar from './InterviewCalendar';
 import EnhancedOverdueAlert from './EnhancedOverdueAlert';
+import InterviewerManagement from './InterviewerManagement';
+import PatternDAnalytics from './PatternDAnalytics';
+import { EnhancedInterviewReservation } from '@/types/pattern-d-interview';
+import { TimeSlotManager } from '@/services/time-slot-manager';
 
 // 面談予約の統合型定義
 export interface UnifiedInterviewReservation {
@@ -89,14 +94,67 @@ export default function UnifiedInterviewDashboard() {
   const [isSearching, setIsSearching] = useState(false);
   const [showTemplateManager, setShowTemplateManager] = useState(false);
   const [showCalendarView, setShowCalendarView] = useState(false);
-  
+
   // サブビュー表示制御
   const [showInterviewFlow, setShowInterviewFlow] = useState(false);
   const [currentReservation, setCurrentReservation] = useState<UnifiedInterviewReservation | null>(null);
 
+  // Pattern D機能用状態
+  const [activeMainTab, setActiveMainTab] = useState<'dashboard' | 'interviewer-management' | 'pattern-d-analytics'>('dashboard');
+  const [patternDReservations, setPatternDReservations] = useState<EnhancedInterviewReservation[]>([]);
+  const [timeSlotManager] = useState(new TimeSlotManager());
+
   useEffect(() => {
     loadReservations();
+    loadPatternDReservations();
   }, [selectedDate]);
+
+  // Pattern D予約データ読み込み
+  const loadPatternDReservations = async () => {
+    try {
+      // TODO: Pattern D予約API呼び出し
+      // const response = await fetch('/api/interviews/pattern-d-reservations');
+      // const data = await response.json();
+      // setPatternDReservations(data.reservations);
+
+      // 現在はモックデータ
+      const mockPatternDData: EnhancedInterviewReservation[] = [
+        {
+          id: 'AI-BOOK-001',
+          type: 'support',
+          staffId: 'OH-NS-2021-001',
+          staffName: '田中 花子',
+          department: '内科',
+          position: '看護師',
+          experienceYears: 3,
+          scheduledDate: new Date('2025-09-20'),
+          scheduledTime: '14:30',
+          duration: 45,
+          status: 'confirmed',
+          bookingType: 'ai_optimized',
+          interviewerInfo: {
+            id: 'INT-001',
+            name: '田中美香子',
+            title: '看護師長',
+            department: 'キャリア支援室'
+          },
+          source: 'voicedrive',
+          createdBy: '職員:田中 花子',
+          createdAt: new Date('2025-09-13'),
+          updatedAt: new Date('2025-09-13'),
+          qualityMetrics: {
+            staffSatisfaction: 4.8,
+            matchingAccuracy: 92,
+            timeliness: 95
+          }
+        }
+      ];
+
+      setPatternDReservations(mockPatternDData);
+    } catch (error) {
+      console.error('Pattern D予約データの読み込みエラー:', error);
+    }
+  };
 
   // URLパラメータの監視
   useEffect(() => {
@@ -564,8 +622,29 @@ export default function UnifiedInterviewDashboard() {
   // 通常のダッシュボード表示
   return (
     <div className="space-y-6">
-      {/* ヘッダー - より目立つデザイン */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-6 text-white shadow-lg">
+      {/* Pattern D統合タブナビゲーション */}
+      <Tabs value={activeMainTab} onValueChange={(v) => setActiveMainTab(v as any)}>
+        <div className="flex justify-between items-center">
+          <TabsList className="grid w-auto grid-cols-3">
+            <TabsTrigger value="dashboard" className="flex items-center gap-2">
+              <Calendar className="h-4 w-4" />
+              面談ダッシュボード
+            </TabsTrigger>
+            <TabsTrigger value="interviewer-management" className="flex items-center gap-2">
+              <Settings className="h-4 w-4" />
+              担当者管理
+            </TabsTrigger>
+            <TabsTrigger value="pattern-d-analytics" className="flex items-center gap-2">
+              <Brain className="h-4 w-4" />
+              AI最適化分析
+            </TabsTrigger>
+          </TabsList>
+        </div>
+
+        {/* メインダッシュボードタブ */}
+        <TabsContent value="dashboard" className="space-y-6">
+          {/* ヘッダー - より目立つデザイン */}
+          <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-6 text-white shadow-lg">
         <div className="flex justify-between items-start">
           <div>
             <h1 className="text-3xl font-bold flex items-center gap-3">
@@ -922,8 +1001,22 @@ export default function UnifiedInterviewDashboard() {
     </div>
         </div>
       )}
+        </TabsContent>
 
-      
+        {/* 担当者管理タブ */}
+        <TabsContent value="interviewer-management">
+          <InterviewerManagement accessLevel="L8" />
+        </TabsContent>
+
+        {/* Pattern D AI最適化分析タブ */}
+        <TabsContent value="pattern-d-analytics">
+          <PatternDAnalytics
+            patternDReservations={patternDReservations}
+            onRefresh={loadPatternDReservations}
+          />
+        </TabsContent>
+      </Tabs>
+
       {/* 手動予約追加モーダル */}
       <ManualReservationModal
         isOpen={showAddModal}
