@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { VoiceDriveIntegrationService } from '@/services/voicedriveIntegrationService';
 
 // 予約管理用インポート
@@ -47,6 +48,15 @@ interface ProvisionalReservation {
   adjustmentCount?: number;
   lastSentAt?: Date;
   approvedProposal?: number;
+  // 新しい承認ワークフロー用フィールド
+  workflowStage: 'initial' | 'awaiting_approval' | 'confirmed' | 'rejected';
+  voicedriveApprovalReceived?: boolean;
+  voicedriveApprovalAt?: Date;
+  humanConfirmationRequired?: boolean;
+  confirmedBy?: string;
+  confirmedAt?: Date;
+  rejectionCount?: number;
+  needsReproposal?: boolean;
 }
 import { useRouter, useSearchParams } from 'next/navigation';
 import { mockInterviews } from '@/data/mockInterviews';
@@ -59,7 +69,6 @@ import DynamicInterviewFlow from './DynamicInterviewFlow';
 import InterviewCalendar from './InterviewCalendar';
 import EnhancedOverdueAlert from './EnhancedOverdueAlert';
 import InterviewerManagement from './InterviewerManagement';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import PatternDAnalytics from './PatternDAnalytics';
 import { EnhancedInterviewReservation } from '@/types/pattern-d-interview';
 import { TimeSlotManager } from '@/services/time-slot-manager';
@@ -196,6 +205,7 @@ export default function UnifiedInterviewDashboard() {
     try {
       // Mockデータを生成
       const mockData: ProvisionalReservation[] = [
+        // 仮予約カラム用（初回受付）
         {
           id: 'PROV-001',
           staffId: 'OH-NS-2021-001',
@@ -206,11 +216,16 @@ export default function UnifiedInterviewDashboard() {
           preferredDates: [new Date('2025-09-20'), new Date('2025-09-21')],
           urgency: 'medium',
           source: 'voicedrive',
-          status: 'confirmed', // 確定済みとして右側に表示
+          status: 'pending',
           receivedAt: new Date('2025-09-15'),
           notes: 'キャリア相談を希望',
-          adjustmentCount: 1
+          adjustmentCount: 0,
+          workflowStage: 'initial',
+          voicedriveApprovalReceived: false,
+          humanConfirmationRequired: false,
+          needsReproposal: false
         },
+        // 承認待ちカラム用（VoiceDriveから承認通知受信済み、確認ボタン待ち）
         {
           id: 'PROV-002',
           staffId: 'OH-DR-2020-003',
@@ -223,7 +238,32 @@ export default function UnifiedInterviewDashboard() {
           source: 'voicedrive',
           status: 'awaiting',
           receivedAt: new Date('2025-09-14'),
-          adjustmentCount: 0
+          adjustmentCount: 1,
+          workflowStage: 'awaiting_approval',
+          voicedriveApprovalReceived: true,
+          voicedriveApprovalAt: new Date('2025-09-15T10:30:00'),
+          humanConfirmationRequired: true,
+          needsReproposal: false
+        },
+        // 承認待ちカラム用（再提案が必要）
+        {
+          id: 'PROV-003',
+          staffId: 'OH-NS-2022-005',
+          staffName: '佐藤 美和',
+          department: '整形外科',
+          position: '看護師',
+          interviewType: 'special',
+          preferredDates: [new Date('2025-09-18'), new Date('2025-09-19')],
+          urgency: 'urgent',
+          source: 'voicedrive',
+          status: 'awaiting',
+          receivedAt: new Date('2025-09-13'),
+          notes: '緊急メンタルヘルス相談',
+          adjustmentCount: 2,
+          workflowStage: 'awaiting_approval',
+          voicedriveApprovalReceived: false,
+          rejectionCount: 1,
+          needsReproposal: true
         },
         {
           id: 'PROV-003',
@@ -594,7 +634,7 @@ export default function UnifiedInterviewDashboard() {
     // 🚀 NEW: VoiceDriveで承認済みの予約を面談予約形式に変換して追加
     // 承認待ち状態から confirmed になったものを右側に表示
     const voiceDriveApprovedReservations = provisionalReservations
-      .filter(r => r.status === 'confirmed') // VoiceDriveで承認済み
+      .filter(r => r.status === 'confirmed' && r.workflowStage === 'confirmed') // VoiceDriveで承認済み + 人事確認済み
       .map(convertProvisionalToUnified);
 
     return [...existingReservations, ...voiceDriveApprovedReservations];
@@ -1156,6 +1196,7 @@ interface ReservationManagementSectionProps {
 
 function ReservationManagementSection({ provisionalReservations, onConfirmed, onStatusChange, onShowInterviewerManagement, onShowPatternDAnalytics }: ReservationManagementSectionProps) {
   const [showProcessingModal, setShowProcessingModal] = useState(false);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [selectedReservation, setSelectedReservation] = useState<ProvisionalReservation | null>(null);
 
   const handleProcessReservation = (reservation: ProvisionalReservation) => {
@@ -1175,6 +1216,26 @@ function ReservationManagementSection({ provisionalReservations, onConfirmed, on
     // 承認待ち → 確定済み（左側カラムは削除し、右側に直接表示）
     onStatusChange(reservation, 'confirmed');
   };
+
+  // 新しいワークフロー機能
+  const handleHumanConfirmation = (reservation: ProvisionalReservation) => {
+    console.log('人事確認開始:', reservation);
+    setSelectedReservation(reservation);
+    setShowConfirmationModal(true);
+  };
+
+  const handleReproposal = (reservation: ProvisionalReservation) => {
+    console.log('再提案開始:', reservation);
+    setSelectedReservation(reservation);
+    setShowProcessingModal(true);
+  };
+
+  // カラムフィルタリング関数
+  const getInitialReservations = () =>
+    provisionalReservations.filter(r => r.workflowStage === 'initial');
+
+  const getAwaitingApprovalReservations = () =>
+    provisionalReservations.filter(r => r.workflowStage === 'awaiting_approval');
 
   const getStatusColor = (status: ReservationStatus) => {
     const colors = {
@@ -1242,14 +1303,14 @@ function ReservationManagementSection({ provisionalReservations, onConfirmed, on
       </CardHeader>
       <CardContent className="pt-4">
         <div className="grid grid-cols-2 gap-6 h-full">
-          {/* 仮予約カラム */}
+          {/* 仮予約カラム - 初回受付のみ */}
           <div className="space-y-2">
             <h3 className="font-semibold text-blue-900 text-center">
-              仮予約 ({provisionalReservations.filter(r => r.status === 'pending').length}件)
+              🟡 仮予約 ({getInitialReservations().length}件)
             </h3>
+            <p className="text-xs text-gray-600 text-center mb-3">VoiceDriveからの初回受付</p>
             <div className="space-y-3 max-h-96 overflow-y-auto">
-              {provisionalReservations
-                .filter(r => r.status === 'pending')
+              {getInitialReservations()
                 .map(reservation => (
                   <Card key={reservation.id} className="p-4 border-2 border-blue-200 hover:border-blue-400 hover:shadow-lg transition-all cursor-pointer">
                     <div className="flex justify-between items-start mb-3">
@@ -1321,35 +1382,56 @@ function ReservationManagementSection({ provisionalReservations, onConfirmed, on
             </div>
           </div>
 
-          {/* 承認待ちカラム */}
+          {/* 承認待ちカラム - VoiceDrive承認済み・確認待ち */}
           <div className="space-y-2">
             <h3 className="font-semibold text-yellow-900 text-center">
-              承認待ち ({provisionalReservations.filter(r => r.status === 'awaiting').length}件)
+              🔵 承認待ち ({getAwaitingApprovalReservations().length}件)
             </h3>
+            <p className="text-xs text-gray-600 text-center mb-3">VoiceDrive承認済み・人事確認待ち</p>
             <div className="space-y-3 max-h-96 overflow-y-auto">
-              {provisionalReservations
-                .filter(r => r.status === 'awaiting')
+              {getAwaitingApprovalReservations()
                 .map(reservation => {
                   const daysSinceSubmission = Math.floor((new Date().getTime() - (reservation.lastSentAt || reservation.receivedAt).getTime()) / (1000 * 60 * 60 * 24));
-                  const progressPercentage = Math.min((daysSinceSubmission / 7) * 100, 100); // 7日で100%
+                  const progressPercentage = Math.min((daysSinceSubmission / 7) * 100, 100); // 7日間での進捗として計算
+                  const isApprovalReceived = reservation.voicedriveApprovalReceived;
+                  const needsReproposal = reservation.needsReproposal;
 
                   return (
-                    <Card key={reservation.id} className="p-4 border-2 border-yellow-200 bg-yellow-50/50">
+                    <Card key={reservation.id} className={`p-4 border-2 ${
+                      needsReproposal ? 'border-red-200 bg-red-50/50' :
+                      isApprovalReceived ? 'border-green-200 bg-green-50/50' : 'border-yellow-200 bg-yellow-50/50'
+                    }`}>
                       <div className="flex justify-between items-start mb-3">
                         <div className="flex-1">
-                          <h4 className="font-bold text-lg text-yellow-900">{reservation.staffName}</h4>
+                          <h4 className="font-bold text-lg">{reservation.staffName}</h4>
                           <div className="flex items-center gap-2 mt-1">
-                            <Badge variant="outline" className="border-yellow-500 text-yellow-700">
+                            <Badge variant="outline" className={
+                              needsReproposal ? 'border-red-500 text-red-700' :
+                              isApprovalReceived ? 'border-green-500 text-green-700' : 'border-yellow-500 text-yellow-700'
+                            }>
                               {reservation.interviewType === 'regular' ? '定期面談' :
                                reservation.interviewType === 'special' ? '特別面談' : 'サポート面談'}
                             </Badge>
-                            <Badge variant="secondary" className="bg-yellow-200 text-yellow-800">
+                            <Badge variant="secondary" className="bg-blue-100 text-blue-800">
                               調整{reservation.adjustmentCount || 0}回目
                             </Badge>
                           </div>
                           <div className="text-sm text-gray-600 mt-1">
                             {reservation.department} / {reservation.position}
                           </div>
+                          {/* 新しい状態表示 */}
+                          {isApprovalReceived && reservation.voicedriveApprovalAt && (
+                            <div className="text-xs text-green-600 mt-2 flex items-center gap-1">
+                              <CheckCircle className="h-3 w-3" />
+                              VoiceDrive承認済み ({reservation.voicedriveApprovalAt.toLocaleString()})
+                            </div>
+                          )}
+                          {needsReproposal && (
+                            <div className="text-xs text-red-600 mt-2 flex items-center gap-1">
+                              <AlertTriangle className="h-3 w-3" />
+                              再提案が必要 (拒否回数: {reservation.rejectionCount || 0})
+                            </div>
+                          )}
                         </div>
                       </div>
 
@@ -1400,6 +1482,34 @@ function ReservationManagementSection({ provisionalReservations, onConfirmed, on
                         </div>
                       </div>
 
+                      {/* 新しいワークフローボタン */}
+                      <div className="mt-3 flex gap-2">
+                        {needsReproposal ? (
+                          // 再提案が必要な場合
+                          <Button
+                            size="sm"
+                            className="flex-1 bg-red-600 hover:bg-red-700 text-white"
+                            onClick={() => handleReproposal(reservation)}
+                          >
+                            🔄 再提案
+                          </Button>
+                        ) : isApprovalReceived ? (
+                          // VoiceDrive承認済み、人事確認待ち
+                          <Button
+                            size="sm"
+                            className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+                            onClick={() => handleHumanConfirmation(reservation)}
+                          >
+                            ✅ 確認・移行
+                          </Button>
+                        ) : (
+                          // 承認待ち中（VoiceDrive側で検討中）
+                          <div className="flex-1 text-center text-gray-500 text-sm py-2 border border-gray-200 rounded">
+                            VoiceDrive側で検討中...
+                          </div>
+                        )}
+                      </div>
+
                       {/* 開発用シミュレーション */}
                       {process.env.NODE_ENV === 'development' && (
                         <div className="mt-3 border-2 border-dashed border-gray-300 p-2 rounded">
@@ -1447,6 +1557,25 @@ function ReservationManagementSection({ provisionalReservations, onConfirmed, on
           if (newStatus === 'confirmed') {
             onConfirmed([reservation]);
           }
+        }}
+      />
+
+      {/* 最終確認モーダル */}
+      <FinalConfirmationModal
+        isOpen={showConfirmationModal}
+        onClose={() => setShowConfirmationModal(false)}
+        reservation={selectedReservation}
+        onConfirm={(reservation, confirmedBy) => {
+          const updatedReservation = {
+            ...reservation,
+            workflowStage: 'confirmed' as const,
+            confirmedBy,
+            confirmedAt: new Date(),
+            humanConfirmationRequired: false
+          };
+          setShowConfirmationModal(false);
+          onStatusChange(updatedReservation, 'confirmed');
+          onConfirmed([updatedReservation]);
         }}
       />
     </Card>
@@ -2102,36 +2231,86 @@ function IntegratedWorkflowDisplay({
     </div>
   );
 
-  const renderManagementStage = () => (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2 mb-4">
-        <Calendar className="h-5 w-5 text-blue-600" />
-        <h3 className="text-lg font-semibold text-blue-900">予約管理 - 仮予約・承認待ちリスト</h3>
+  const renderManagementStage = () => {
+    const initialReservations = provisionalReservations.filter(r => r.workflowStage === 'initial');
+    const awaitingApprovalReservations = provisionalReservations.filter(r => r.workflowStage === 'awaiting_approval');
+
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center gap-2 mb-4">
+          <Calendar className="h-5 w-5 text-blue-600" />
+          <h3 className="text-lg font-semibold text-blue-900">予約管理 - 新ワークフロー表示</h3>
+        </div>
+
+        {/* 仮予約セクション */}
+        <div>
+          <h4 className="text-md font-semibold text-blue-800 mb-3">🟡 仮予約 ({initialReservations.length}件)</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {initialReservations.map(reservation => (
+              <Card key={reservation.id} className="border-2 border-blue-200">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base flex items-center justify-between">
+                    <span>{reservation.staffName}</span>
+                    <Badge variant={reservation.urgency === 'urgent' ? 'destructive' : 'outline'}>
+                      {reservation.urgency === 'urgent' ? '🚨 緊急' : '📋 通常'}
+                    </Badge>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-gray-600 mb-2">{reservation.department} / {reservation.position}</p>
+                  <p className="text-xs text-blue-700 mb-3">{reservation.notes}</p>
+                  <Button size="sm" className="w-full">詳細処理</Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        {/* 承認待ちセクション */}
+        <div>
+          <h4 className="text-md font-semibold text-yellow-800 mb-3">🔵 承認待ち ({awaitingApprovalReservations.length}件)</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {awaitingApprovalReservations.map(reservation => (
+              <Card key={reservation.id} className={`border-2 ${
+                reservation.needsReproposal ? 'border-red-200 bg-red-50/20' :
+                reservation.voicedriveApprovalReceived ? 'border-green-200 bg-green-50/20' : 'border-yellow-200 bg-yellow-50/20'
+              }`}>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base flex items-center justify-between">
+                    <span>{reservation.staffName}</span>
+                    <div className="flex gap-1">
+                      <Badge variant={reservation.urgency === 'urgent' ? 'destructive' : 'outline'}>
+                        {reservation.urgency === 'urgent' ? '🚨 緊急' : '📋 通常'}
+                      </Badge>
+                      {reservation.voicedriveApprovalReceived && (
+                        <Badge variant="secondary" className="bg-green-100 text-green-800">✅ 承認済み</Badge>
+                      )}
+                      {reservation.needsReproposal && (
+                        <Badge variant="secondary" className="bg-red-100 text-red-800">🔄 再提案要</Badge>
+                      )}
+                    </div>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-gray-600 mb-2">{reservation.department} / {reservation.position}</p>
+                  <p className="text-xs text-gray-700 mb-3">{reservation.notes}</p>
+                  <div className="flex gap-2">
+                    {reservation.needsReproposal ? (
+                      <Button size="sm" className="flex-1 bg-red-600 hover:bg-red-700 text-white">🔄 再提案</Button>
+                    ) : reservation.voicedriveApprovalReceived ? (
+                      <Button size="sm" className="flex-1 bg-green-600 hover:bg-green-700 text-white">✅ 確認・移行</Button>
+                    ) : (
+                      <div className="flex-1 text-center text-gray-500 text-sm py-1">VoiceDrive側で検討中...</div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {provisionalReservations.filter(r => r.status === 'pending' || r.status === 'awaiting').map(reservation => (
-          <Card key={reservation.id} className="border-2 border-blue-200">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base flex items-center justify-between">
-                <span>{reservation.staffName}</span>
-                <Badge variant={reservation.urgency === 'urgent' ? 'destructive' : 'outline'}>
-                  {reservation.urgency === 'urgent' ? '🚨 緊急' : '📋 通常'}
-                </Badge>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-600 mb-2">{reservation.department} / {reservation.position}</p>
-              <p className="text-xs text-blue-700 mb-3">{reservation.notes}</p>
-              <div className="flex gap-2">
-                <Button size="sm" className="flex-1">詳細処理</Button>
-                <Button size="sm" variant="outline">承認</Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </div>
-  );
+    );
+  };
 
   const renderExecutionStage = () => (
     <div className="space-y-4">
@@ -2385,5 +2564,208 @@ function IntegratedCalendarView({
       {/* カレンダー表示 */}
       {viewMode === 'week' ? renderWeekView() : renderMonthView()}
     </div>
+  );
+}
+
+// 最終確認モーダル - VoiceDrive通知機能付き
+interface FinalConfirmationModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  reservation: ProvisionalReservation | null;
+  onConfirm: (reservation: ProvisionalReservation, confirmedBy: string) => void;
+}
+
+function FinalConfirmationModal({ isOpen, onClose, reservation, onConfirm }: FinalConfirmationModalProps) {
+  const [confirmedBy, setConfirmedBy] = useState('');
+  const [isNotifying, setIsNotifying] = useState(false);
+  const [notificationStep, setNotificationStep] = useState<'confirm' | 'notifying' | 'completed'>('confirm');
+
+  useEffect(() => {
+    if (isOpen) {
+      setConfirmedBy('');
+      setNotificationStep('confirm');
+      setIsNotifying(false);
+    }
+  }, [isOpen]);
+
+  const handleConfirm = async () => {
+    if (!reservation || !confirmedBy.trim()) {
+      alert('承認者名を入力してください。');
+      return;
+    }
+
+    setNotificationStep('notifying');
+    setIsNotifying(true);
+
+    try {
+      // VoiceDrive通知シミュレーション
+      await simulateVoiceDriveNotification(reservation);
+
+      setNotificationStep('completed');
+
+      // 2秒後に確定処理実行
+      setTimeout(() => {
+        onConfirm(reservation, confirmedBy.trim());
+      }, 2000);
+
+    } catch (error) {
+      console.error('VoiceDrive通知エラー:', error);
+      alert('VoiceDriveへの通知に失敗しました。再度お試しください。');
+      setNotificationStep('confirm');
+      setIsNotifying(false);
+    }
+  };
+
+  const simulateVoiceDriveNotification = async (reservation: ProvisionalReservation) => {
+    // VoiceDrive API通知のシミュレーション
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        console.log('VoiceDrive面談確定通知送信:', {
+          staffId: reservation.staffId,
+          staffName: reservation.staffName,
+          interviewDate: reservation.scheduledDate,
+          interviewTime: reservation.scheduledTime,
+          interviewer: reservation.interviewerInfo,
+          confirmedBy: confirmedBy,
+          confirmedAt: new Date().toISOString(),
+          notificationType: 'interview_confirmed'
+        });
+        resolve(true);
+      }, 3000); // 3秒間の送信シミュレーション
+    });
+  };
+
+  if (!isOpen || !reservation) return null;
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-2xl">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2 text-lg">
+            {notificationStep === 'confirm' && <CheckCircle className="h-5 w-5 text-green-600" />}
+            {notificationStep === 'notifying' && <Clock className="h-5 w-5 text-blue-600 animate-spin" />}
+            {notificationStep === 'completed' && <CheckCircle className="h-5 w-5 text-green-600" />}
+            面談予約 最終確認・VoiceDrive通知
+          </DialogTitle>
+        </DialogHeader>
+
+        <div className="space-y-6">
+          {notificationStep === 'confirm' && (
+            <>
+              {/* 予約詳細確認 */}
+              <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+                <h3 className="font-semibold text-blue-900 mb-3">📋 予約詳細確認</h3>
+                <div className="space-y-2 text-sm">
+                  <div><strong>職員:</strong> {reservation.staffName} ({reservation.department})</div>
+                  <div><strong>希望日程:</strong> {reservation.preferredDates?.map(date => date.toLocaleDateString()).join(', ') || '未設定'}</div>
+                  <div><strong>面談種類:</strong> {reservation.interviewType === 'regular' ? '定期面談' : reservation.interviewType === 'special' ? '特別面談' : 'サポート面談'}</div>
+                  <div><strong>緊急度:</strong> {
+                    reservation.urgency === 'urgent' ? '緊急' :
+                    reservation.urgency === 'high' ? '高' :
+                    reservation.urgency === 'medium' ? '中' : '低'
+                  }</div>
+                  <div><strong>申込元:</strong> {reservation.source === 'voicedrive' ? 'VoiceDrive' : '手動'}</div>
+                  {reservation.notes && <div><strong>備考:</strong> {reservation.notes}</div>}
+                </div>
+              </div>
+
+              {/* 承認者入力 */}
+              <div className="space-y-3">
+                <label className="block">
+                  <span className="font-semibold text-gray-700">承認者名 <span className="text-red-500">*</span></span>
+                  <input
+                    type="text"
+                    value={confirmedBy}
+                    onChange={(e) => setConfirmedBy(e.target.value)}
+                    placeholder="承認者名を入力してください"
+                    className="mt-1 w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </label>
+                <p className="text-xs text-gray-600">
+                  ※ この情報は面談記録に保存され、VoiceDriveにも通知されます
+                </p>
+              </div>
+
+              {/* 注意事項 */}
+              <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
+                <h4 className="font-semibold text-yellow-800 mb-2">⚠️ 確認事項</h4>
+                <ul className="text-sm text-yellow-700 space-y-1">
+                  <li>• この操作により面談予約が正式に確定されます</li>
+                  <li>• VoiceDriveアプリに確定通知が送信されます</li>
+                  <li>• 職員には面談詳細がプッシュ通知で届きます</li>
+                  <li>• 確定後のキャンセルは担当者に直接連絡が必要です</li>
+                </ul>
+              </div>
+            </>
+          )}
+
+          {notificationStep === 'notifying' && (
+            <div className="text-center py-8 space-y-4">
+              <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-600 border-t-transparent mx-auto"></div>
+              <div className="space-y-2">
+                <h3 className="font-semibold text-lg">VoiceDriveに通知中...</h3>
+                <p className="text-gray-600">面談確定情報を職員のアプリに送信しています</p>
+                <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg text-sm">
+                  <div className="flex items-center justify-center gap-2 text-blue-700">
+                    <Clock className="h-4 w-4" />
+                    通知送信中 - しばらくお待ちください
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {notificationStep === 'completed' && (
+            <div className="text-center py-8 space-y-4">
+              <div className="rounded-full h-16 w-16 bg-green-100 flex items-center justify-center mx-auto">
+                <CheckCircle className="h-10 w-10 text-green-600" />
+              </div>
+              <div className="space-y-2">
+                <h3 className="font-semibold text-lg text-green-800">通知完了！</h3>
+                <p className="text-gray-600">VoiceDriveへの通知が完了しました</p>
+                <div className="bg-green-50 border border-green-200 p-3 rounded-lg text-sm">
+                  <div className="text-green-700">
+                    ✅ 職員への確定通知送信完了<br />
+                    ✅ 面談予約が正式確定されました
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="flex justify-end gap-3 pt-4">
+          {notificationStep === 'confirm' && (
+            <>
+              <Button variant="outline" onClick={onClose}>
+                キャンセル
+              </Button>
+              <Button
+                onClick={handleConfirm}
+                disabled={!confirmedBy.trim() || isNotifying}
+                className="bg-green-600 hover:bg-green-700 text-white"
+              >
+                <CheckCircle className="h-4 w-4 mr-2" />
+                確定・通知送信
+              </Button>
+            </>
+          )}
+
+          {notificationStep === 'notifying' && (
+            <Button disabled className="bg-blue-600 text-white">
+              <Clock className="h-4 w-4 mr-2 animate-spin" />
+              通知送信中...
+            </Button>
+          )}
+
+          {notificationStep === 'completed' && (
+            <Button disabled className="bg-green-600 text-white">
+              <CheckCircle className="h-4 w-4 mr-2" />
+              完了
+            </Button>
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
