@@ -56,7 +56,7 @@ interface Interviewer {
 }
 
 export default function ReservationManagement() {
-  const [activeSubTab, setActiveSubTab] = useState<'dashboard' | 'provisional' | 'interviewer' | 'ai-optimization'>('dashboard');
+  const [activeSubTab, setActiveSubTab] = useState<'dashboard' | 'interviewer' | 'ai-optimization'>('dashboard');
   const [provisionalReservations, setProvisionalReservations] = useState<ProvisionalReservation[]>([]);
   const [interviewers, setInterviewers] = useState<Interviewer[]>([]);
   const [selectedReservation, setSelectedReservation] = useState<ProvisionalReservation | null>(null);
@@ -534,14 +534,10 @@ export default function ReservationManagement() {
     <div className="w-full h-full flex flex-col">
       {/* サブタブナビゲーション */}
       <Tabs value={activeSubTab} onValueChange={(value: any) => setActiveSubTab(value)} className="flex-1 flex flex-col">
-        <TabsList className="grid w-full grid-cols-4 mb-4">
+        <TabsList className="grid w-full grid-cols-3 mb-4">
           <TabsTrigger value="dashboard" className="flex items-center gap-2">
             <BarChart3 className="w-4 h-4" />
-            ダッシュボード
-          </TabsTrigger>
-          <TabsTrigger value="provisional" className="flex items-center gap-2">
-            <RefreshCw className="w-4 h-4" />
-            仮予約処理
+            予約管理ダッシュボード
           </TabsTrigger>
           <TabsTrigger value="interviewer" className="flex items-center gap-2">
             <Users className="w-4 h-4" />
@@ -752,138 +748,117 @@ export default function ReservationManagement() {
               </div>
             </div>
 
-            {/* カレンダー表示（下部60%） */}
-            <div className="flex-1" style={{ minHeight: '400px' }}>
-              <h3 className="text-lg font-semibold mb-3">週間予約カレンダー</h3>
-              <Card className="h-full">
-                <CardContent className="p-4 h-full">
-                  <CalendarView reservations={provisionalReservations} />
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </TabsContent>
+            {/* 下部: カレンダーと詳細処理ワークスペース */}
+            <div className="flex-1 grid grid-cols-3 gap-4" style={{ minHeight: '400px' }}>
+              {/* 左側: カレンダービュー */}
+              <div className="col-span-2">
+                <h3 className="text-lg font-semibold mb-3">週間予約カレンダー</h3>
+                <Card className="h-full">
+                  <CardContent className="p-4 h-full">
+                    <CalendarView reservations={provisionalReservations} />
+                  </CardContent>
+                </Card>
+              </div>
 
-        {/* 仮予約処理タブ */}
-        <TabsContent value="provisional" className="flex-1 overflow-auto">
-          <div className="grid grid-cols-2 gap-4 h-full">
-            {/* 左側: 仮予約リスト */}
-            <Card className="h-full">
-              <CardHeader>
-                <div className="flex justify-between items-center">
-                  <CardTitle>仮予約受信一覧</CardTitle>
+              {/* 右側: 詳細処理ワークスペース */}
+              <div>
+                <div className="flex justify-between items-center mb-3">
+                  <h3 className="text-lg font-semibold">詳細処理</h3>
                   <Button size="sm" onClick={() => setShowManualReservationModal(true)}>
                     <Plus className="w-4 h-4 mr-1" />
                     手動追加
                   </Button>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {provisionalReservations.filter(r => r.status === 'pending' || r.status === 'analyzing').map((reservation) => (
-                    <div
-                      key={reservation.id}
-                      className={`p-3 border rounded-lg cursor-pointer transition-colors ${
-                        selectedReservation?.id === reservation.id ? 'border-blue-500 bg-blue-50' : 'hover:bg-gray-50'
-                      }`}
-                      onClick={() => setSelectedReservation(reservation)}
-                    >
-                      <div className="flex justify-between items-start">
+                <Card className="h-full">
+                  <CardContent className="p-4">
+                    {selectedReservation ? (
+                      <div className="space-y-4">
+                        {/* 予約詳細 */}
                         <div>
-                          <div className="font-medium">{reservation.staffName}</div>
-                          <div className="text-sm text-gray-600">
-                            {reservation.department} / {reservation.position}
-                          </div>
-                          <div className="text-xs text-gray-500 mt-1">
-                            受信: {reservation.receivedAt.toLocaleString('ja-JP')}
+                          <h4 className="font-medium mb-2">予約詳細</h4>
+                          <div className="space-y-2 text-sm">
+                            <div><span className="text-gray-600">职員:</span> {selectedReservation.staffName}</div>
+                            <div><span className="text-gray-600">部署:</span> {selectedReservation.department}</div>
+                            <div><span className="text-gray-600">種別:</span>
+                              {selectedReservation.interviewType === 'regular' ? '定期面談' :
+                               selectedReservation.interviewType === 'special' ? '特別面談' : 'サポート面談'}
+                              {selectedReservation.subType && ` (${selectedReservation.subType})`}
+                            </div>
+                            <div><span className="text-gray-600">緊急度:</span>
+                              <Badge className={getUrgencyBadgeColor(selectedReservation.urgency)} variant="outline">
+                                {selectedReservation.urgency === 'urgent' ? '緊急' :
+                                 selectedReservation.urgency === 'high' ? '高' :
+                                 selectedReservation.urgency === 'medium' ? '中' : '低'}
+                              </Badge>
+                            </div>
+                            {selectedReservation.notes && (
+                              <div><span className="text-gray-600">備考:</span> {selectedReservation.notes}</div>
+                            )}
                           </div>
                         </div>
-                        <Badge className={getUrgencyBadgeColor(reservation.urgency)}>
-                          {reservation.urgency === 'urgent' ? '緊急' :
-                           reservation.urgency === 'high' ? '高' :
-                           reservation.urgency === 'medium' ? '中' : '低'}
-                        </Badge>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
 
-            {/* 右側: AI最適化ワークスペース */}
-            <Card className="h-full">
-              <CardHeader>
-                <CardTitle>AI最適化ワークスペース</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {selectedReservation ? (
-                  <div className="space-y-4">
-                    <div>
-                      <h4 className="font-medium mb-2">予約詳細</h4>
-                      <div className="space-y-2 text-sm">
-                        <div><span className="text-gray-600">職員:</span> {selectedReservation.staffName}</div>
-                        <div><span className="text-gray-600">部署:</span> {selectedReservation.department}</div>
-                        <div><span className="text-gray-600">種別:</span>
-                          {selectedReservation.interviewType === 'regular' ? '定期面談' :
-                           selectedReservation.interviewType === 'special' ? '特別面談' : 'サポート面談'}
-                          {selectedReservation.subType && ` (${selectedReservation.subType})`}
-                        </div>
-                        {selectedReservation.notes && (
-                          <div><span className="text-gray-600">備考:</span> {selectedReservation.notes}</div>
+                        {/* AI分析結果 */}
+                        {selectedReservation.aiAnalysis ? (
+                          <div>
+                            <h4 className="font-medium mb-2">AI分析結果</h4>
+                            <div className="p-3 bg-blue-50 rounded-lg space-y-2">
+                              <div className="flex justify-between">
+                                <span className="text-sm text-gray-600">推奨担当者:</span>
+                                <span className="font-medium">{selectedReservation.aiAnalysis.recommendedInterviewer}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-sm text-gray-600">推奨時間帯:</span>
+                                <span className="font-medium">{selectedReservation.aiAnalysis.recommendedTimeSlot}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-sm text-gray-600">マッチング度:</span>
+                                <span className="font-medium">{selectedReservation.aiAnalysis.matchingScore}%</span>
+                              </div>
+                              <div className="pt-2 border-t">
+                                <p className="text-sm text-gray-700">{selectedReservation.aiAnalysis.reasoning}</p>
+                              </div>
+                            </div>
+
+                            {/* アクションボタン */}
+                            <div className="flex gap-2 mt-4">
+                              <Button
+                                className="flex-1"
+                                onClick={() => handleSendProposal(selectedReservation)}
+                                disabled={selectedReservation.status === 'confirmed'}
+                              >
+                                <Send className="w-4 h-4 mr-1" />
+                                {selectedReservation.status === 'confirmed' ? '送信済み' : '提案を送信'}
+                              </Button>
+                              <Button variant="outline" className="flex-1">
+                                <Edit className="w-4 h-4 mr-1" />
+                                編集
+                              </Button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="text-center py-8">
+                            <Button
+                              onClick={() => handleAIOptimization(selectedReservation)}
+                              disabled={selectedReservation.status === 'analyzing'}
+                            >
+                              <Brain className="w-4 h-4 mr-1" />
+                              {selectedReservation.status === 'analyzing' ? 'AI分析中...' : 'AI最適化分析を開始'}
+                            </Button>
+                          </div>
                         )}
                       </div>
-                    </div>
-
-                    {selectedReservation.aiAnalysis ? (
-                      <div>
-                        <h4 className="font-medium mb-2">AI分析結果</h4>
-                        <div className="p-3 bg-blue-50 rounded-lg space-y-2">
-                          <div className="flex justify-between">
-                            <span className="text-sm text-gray-600">推奨担当者:</span>
-                            <span className="font-medium">{selectedReservation.aiAnalysis.recommendedInterviewer}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-sm text-gray-600">推奨時間帯:</span>
-                            <span className="font-medium">{selectedReservation.aiAnalysis.recommendedTimeSlot}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-sm text-gray-600">マッチング度:</span>
-                            <span className="font-medium">{selectedReservation.aiAnalysis.matchingScore}%</span>
-                          </div>
-                          <div className="pt-2 border-t">
-                            <p className="text-sm text-gray-700">{selectedReservation.aiAnalysis.reasoning}</p>
-                          </div>
-                        </div>
-
-                        <div className="flex gap-2 mt-4">
-                          <Button className="flex-1" onClick={() => handleSendProposal(selectedReservation)}>
-                            <Send className="w-4 h-4 mr-1" />
-                            提案を送信
-                          </Button>
-                          <Button variant="outline" className="flex-1">
-                            <Edit className="w-4 h-4 mr-1" />
-                            編集
-                          </Button>
-                        </div>
-                      </div>
                     ) : (
-                      <div className="text-center py-8">
-                        <Button onClick={() => handleAIOptimization(selectedReservation)}>
-                          <Brain className="w-4 h-4 mr-1" />
-                          AI最適化分析を開始
-                        </Button>
+                      <div className="text-center text-gray-500 py-8">
+                        左側のリストから仮予約を選択してください
                       </div>
                     )}
-                  </div>
-                ) : (
-                  <div className="text-center text-gray-500 py-8">
-                    左側のリストから仮予約を選択してください
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
           </div>
         </TabsContent>
+
 
         {/* 担当者管理タブ */}
         <TabsContent value="interviewer" className="flex-1 overflow-auto">
