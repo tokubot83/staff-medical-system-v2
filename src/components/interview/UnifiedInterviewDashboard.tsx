@@ -59,9 +59,43 @@ import DynamicInterviewFlow from './DynamicInterviewFlow';
 import InterviewCalendar from './InterviewCalendar';
 import EnhancedOverdueAlert from './EnhancedOverdueAlert';
 import InterviewerManagement from './InterviewerManagement';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import PatternDAnalytics from './PatternDAnalytics';
 import { EnhancedInterviewReservation } from '@/types/pattern-d-interview';
 import { TimeSlotManager } from '@/services/time-slot-manager';
+
+// 担当者管理連携用の型定義
+interface EnhancedInterviewerProfile {
+  id: string;
+  name: string;
+  title: string;
+  department: string;
+  specialties: string[];
+  experienceYears: number;
+  workingDays: {
+    monday: boolean;
+    tuesday: boolean;
+    wednesday: boolean;
+    thursday: boolean;
+    friday: boolean;
+    saturday: boolean;
+    sunday: boolean;
+  };
+  dailySchedule: {
+    [day: string]: {
+      isAvailable: boolean;
+      timeSlots: string[];
+      restrictions?: string[];
+    };
+  };
+  currentStatus: 'active' | 'on-leave' | 'inactive';
+  workloadAnalysis: {
+    currentWeekLoad: number;
+    maxCapacity: number;
+    efficiency: number;
+    nextAvailableSlot: string;
+  };
+}
 
 // 面談予約の統合型定義
 export interface UnifiedInterviewReservation {
@@ -142,6 +176,7 @@ export default function UnifiedInterviewDashboard() {
   const [provisionalReservations, setProvisionalReservations] = useState<ProvisionalReservation[]>([]);
   const [selectedReservation, setSelectedReservation] = useState<ProvisionalReservation | null>(null);
   const [showProcessingModal, setShowProcessingModal] = useState(false);
+  const [showInterviewerManagement, setShowInterviewerManagement] = useState(false);
 
   useEffect(() => {
     loadReservations();
@@ -762,10 +797,6 @@ export default function UnifiedInterviewDashboard() {
               <Calendar className="h-4 w-4" />
               面談ダッシュボード
             </TabsTrigger>
-            <TabsTrigger value="interviewer-management" className="flex items-center gap-2">
-              <Settings className="h-4 w-4" />
-              担当者管理
-            </TabsTrigger>
             <TabsTrigger value="pattern-d-analytics" className="flex items-center gap-2">
               <Brain className="h-4 w-4" />
               AI最適化分析
@@ -1061,6 +1092,7 @@ export default function UnifiedInterviewDashboard() {
           {/* 👈 左側: 面談予約管理セクション */}
           <ReservationManagementSection
             provisionalReservations={provisionalReservations}
+            onShowInterviewerManagement={() => setShowInterviewerManagement(true)}
             onConfirmed={(confirmed) => {
               // 確定済み予約を右側に送信
               console.log('確定済み予約:', confirmed);
@@ -1095,10 +1127,6 @@ export default function UnifiedInterviewDashboard() {
       )}
         </TabsContent>
 
-        {/* 担当者管理タブ */}
-        <TabsContent value="interviewer-management">
-          <InterviewerManagement accessLevel="L8" />
-        </TabsContent>
 
         {/* Pattern D AI最適化分析タブ */}
         <TabsContent value="pattern-d-analytics">
@@ -1133,6 +1161,21 @@ export default function UnifiedInterviewDashboard() {
           setShowTemplateManager(false);
         }}
       />
+
+      {/* 担当者管理モーダル */}
+      <Dialog open={showInterviewerManagement} onOpenChange={setShowInterviewerManagement}>
+        <DialogContent className="max-w-7xl w-[95vw] max-h-[90vh] overflow-hidden flex flex-col">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <User className="h-5 w-5" />
+              面談担当者管理
+            </DialogTitle>
+          </DialogHeader>
+          <div className="flex-1 overflow-y-auto">
+            <InterviewerManagement accessLevel="L8" />
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
@@ -1142,9 +1185,10 @@ interface ReservationManagementSectionProps {
   provisionalReservations: ProvisionalReservation[];
   onConfirmed: (confirmed: ProvisionalReservation[]) => void;
   onStatusChange: (reservation: ProvisionalReservation, newStatus: ReservationStatus) => void;
+  onShowInterviewerManagement: () => void;
 }
 
-function ReservationManagementSection({ provisionalReservations, onConfirmed, onStatusChange }: ReservationManagementSectionProps) {
+function ReservationManagementSection({ provisionalReservations, onConfirmed, onStatusChange, onShowInterviewerManagement }: ReservationManagementSectionProps) {
   const [showProcessingModal, setShowProcessingModal] = useState(false);
   const [selectedReservation, setSelectedReservation] = useState<ProvisionalReservation | null>(null);
 
@@ -1197,10 +1241,24 @@ function ReservationManagementSection({ provisionalReservations, onConfirmed, on
   return (
     <Card className="border-2 border-blue-200 h-full">
       <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100">
-        <CardTitle className="flex items-center gap-2">
-          <Calendar className="h-5 w-5 text-blue-600" />
-          🔄 面談予約管理 - VoiceDrive連携
-        </CardTitle>
+        <div className="flex justify-between items-center">
+          <CardTitle className="flex items-center gap-2">
+            <Calendar className="h-5 w-5 text-blue-600" />
+            🔄 面談予約管理 - VoiceDrive連携
+          </CardTitle>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              console.log('担当者管理ボタンクリック');
+              onShowInterviewerManagement();
+            }}
+            className="flex items-center gap-2 bg-white hover:bg-blue-50"
+          >
+            <Settings className="h-4 w-4" />
+            担当者管理
+          </Button>
+        </div>
       </CardHeader>
       <CardContent className="pt-4">
         <div className="grid grid-cols-2 gap-6 h-full">
@@ -1584,15 +1642,16 @@ function ReservationProcessingModal({ isOpen, onClose, reservation, onStatusChan
 
   if (!isOpen || !reservation) return null;
 
-  // Step 1: AI分析実行
+  // Step 1: AI分析実行 - 実際の担当者データを使用
   const executeAIAnalysis = async () => {
     setIsAnalyzing(true);
     setAnalysisProgress(0);
 
     const stages = [
-      { stage: '職員データ分析中...', progress: 20 },
-      { stage: '面談履歴を確認中...', progress: 40 },
-      { stage: 'スケジュール最適化中...', progress: 60 },
+      { stage: '職員データ分析中...', progress: 15 },
+      { stage: '面談履歴を確認中...', progress: 30 },
+      { stage: '担当者スケジュール確認中...', progress: 45 },
+      { stage: '担当者専門分野マッチング中...', progress: 60 },
       { stage: 'AI推薦案生成中...', progress: 80 },
       { stage: '最終調整中...', progress: 100 }
     ];
@@ -1600,41 +1659,162 @@ function ReservationProcessingModal({ isOpen, onClose, reservation, onStatusChan
     for (const { stage, progress } of stages) {
       setAnalysisStage(stage);
       setAnalysisProgress(progress);
-      await new Promise(resolve => setTimeout(resolve, 800));
+      await new Promise(resolve => setTimeout(resolve, 700));
     }
 
-    // モックAI分析結果生成
-    const mockProposals: AIProposals = {
-      proposals: [
-        {
-          rank: 1,
-          interviewer: '田中人事部長',
-          timeSlot: '2024年3月20日 14:00-15:00',
-          matchingScore: 92,
-          reasoning: '過去の面談履歴と職員の専門性を考慮し、同部署経験豊富な田中部長が最適。午後の時間帯は職員の集中力が高く、建設的な面談が期待できます。'
-        },
-        {
-          rank: 2,
-          interviewer: '佐藤課長',
-          timeSlot: '2024年3月21日 10:00-11:00',
-          matchingScore: 87,
-          reasoning: '職員との年齢が近く、親しみやすい雰囲気で面談を進められます。朝の時間帯は双方とも集中でき、効率的な面談が可能です。'
-        },
-        {
-          rank: 3,
-          interviewer: 'AI面談システム',
-          timeSlot: '2024年3月19日 16:00-17:00',
-          matchingScore: 78,
-          reasoning: 'AI面談システムによる客観的な評価。時間的制約がある場合の代替案として有効。データに基づいた公平な面談が実施できます。'
-        }
-      ],
-      recommendedChoice: 1
-    };
+    // 実際の担当者データを使用したAI分析結果生成
+    const realInterviewerProposals = generateRealInterviewerProposals(reservation);
 
-    setAiProposals(mockProposals);
-    setSelectedProposal(mockProposals.recommendedChoice);
+    setAiProposals(realInterviewerProposals);
+    setSelectedProposal(realInterviewerProposals.recommendedChoice);
     setIsAnalyzing(false);
     setCurrentStep(2);
+  };
+
+  // 実際の担当者データに基づくAI提案生成
+  const generateRealInterviewerProposals = (reservation: ProvisionalReservation): AIProposals => {
+    // 実際の担当者管理データ（InterviewerManagementから取得想定）
+    const realInterviewers = [
+      {
+        id: 'INT-001',
+        name: '田中美香子',
+        title: '看護師長',
+        department: 'キャリア支援室',
+        specialties: ['キャリア相談', '職場環境改善', 'メンタルヘルス'],
+        experienceYears: 15,
+        workingDays: { monday: true, tuesday: true, wednesday: true, thursday: true, friday: true },
+        dailySchedule: {
+          monday: { isAvailable: true, timeSlots: ['9:00-10:00', '14:00-15:00', '16:00-17:00'] },
+          tuesday: { isAvailable: true, timeSlots: ['10:00-11:00', '14:30-15:30'] },
+          wednesday: { isAvailable: true, timeSlots: ['9:00-10:00', '13:00-14:00', '15:00-16:00'] }
+        },
+        workloadAnalysis: { currentWeekLoad: 65, maxCapacity: 100, efficiency: 88, nextAvailableSlot: '2025-09-20 14:00' }
+      },
+      {
+        id: 'INT-002',
+        name: '佐藤健一',
+        title: '人事課長',
+        department: '人事部',
+        specialties: ['人事評価', '労務管理', '昇進・異動相談'],
+        experienceYears: 12,
+        workingDays: { monday: true, tuesday: true, wednesday: false, thursday: true, friday: true },
+        dailySchedule: {
+          monday: { isAvailable: true, timeSlots: ['9:30-10:30', '15:00-16:00'] },
+          tuesday: { isAvailable: true, timeSlots: ['10:30-11:30', '14:00-15:00'] },
+          thursday: { isAvailable: true, timeSlots: ['9:00-10:00', '13:30-14:30'] }
+        },
+        workloadAnalysis: { currentWeekLoad: 80, maxCapacity: 100, efficiency: 92, nextAvailableSlot: '2025-09-21 10:30' }
+      },
+      {
+        id: 'INT-003',
+        name: '山田雅子',
+        title: '主任医療社会事業専門員',
+        department: '医療社会事業部',
+        specialties: ['職場復帰支援', '福利厚生相談', 'ワークライフバランス'],
+        experienceYears: 8,
+        workingDays: { monday: true, tuesday: true, wednesday: true, thursday: false, friday: true },
+        dailySchedule: {
+          monday: { isAvailable: true, timeSlots: ['10:00-11:00', '16:00-17:00'] },
+          tuesday: { isAvailable: true, timeSlots: ['9:00-10:00', '14:00-15:00', '15:30-16:30'] },
+          friday: { isAvailable: true, timeSlots: ['10:30-11:30', '13:00-14:00'] }
+        },
+        workloadAnalysis: { currentWeekLoad: 45, maxCapacity: 80, efficiency: 95, nextAvailableSlot: '2025-09-19 16:00' }
+      }
+    ];
+
+    // 面談タイプと職員情報に基づくマッチング分析
+    const matchingResults = realInterviewers.map(interviewer => {
+      let baseScore = 70;
+      let reasoning = '';
+
+      // 専門分野マッチング
+      const interviewTypeMapping: Record<string, string[]> = {
+        'support': ['キャリア相談', '職場環境改善', 'メンタルヘルス'],
+        'regular': ['人事評価', '労務管理'],
+        'special': ['職場復帰支援', '福利厚生相談']
+      };
+
+      const relevantSpecialties = interviewTypeMapping[reservation.interviewType] || [];
+      const matchingSpecialties = interviewer.specialties.filter(spec =>
+        relevantSpecialties.some(rel => spec.includes(rel) || rel.includes(spec))
+      );
+
+      if (matchingSpecialties.length > 0) {
+        baseScore += 15;
+        reasoning += `専門分野「${matchingSpecialties.join('、')}」が面談内容と合致。`;
+      }
+
+      // 部署関連性
+      if (reservation.department.includes('看護') && interviewer.department.includes('キャリア')) {
+        baseScore += 10;
+        reasoning += '看護部門の職員サポート経験豊富。';
+      }
+      if (reservation.interviewType === 'regular' && interviewer.department === '人事部') {
+        baseScore += 12;
+        reasoning += '人事部所属で定期面談の実施経験多数。';
+      }
+
+      // ワークロード分析
+      if (interviewer.workloadAnalysis.currentWeekLoad < 60) {
+        baseScore += 8;
+        reasoning += '現在の業務負荷が軽く、十分な面談時間を確保可能。';
+      } else if (interviewer.workloadAnalysis.currentWeekLoad > 85) {
+        baseScore -= 5;
+        reasoning += '業務負荷が高いが、効率性でカバー。';
+      }
+
+      // 効率性評価
+      if (interviewer.workloadAnalysis.efficiency > 90) {
+        baseScore += 5;
+        reasoning += `業務効率性${interviewer.workloadAnalysis.efficiency}%で高品質な面談が期待。`;
+      }
+
+      // 経験年数
+      if (interviewer.experienceYears >= 10) {
+        baseScore += 3;
+        reasoning += `${interviewer.experienceYears}年の豊富な経験。`;
+      }
+
+      // 緊急度に応じた対応可能性
+      if (reservation.urgency === 'high' || reservation.urgency === 'urgent') {
+        const nextSlot = new Date(interviewer.workloadAnalysis.nextAvailableSlot);
+        const today = new Date();
+        const daysUntilAvailable = Math.ceil((nextSlot.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+        if (daysUntilAvailable <= 1) {
+          baseScore += 10;
+          reasoning += '緊急対応可能なスケジュール。';
+        } else if (daysUntilAvailable <= 3) {
+          baseScore += 5;
+          reasoning += '近日中の対応が可能。';
+        }
+      }
+
+      return {
+        interviewer,
+        score: Math.min(baseScore, 98), // 最大スコア98%
+        reasoning: reasoning || '一般的な面談対応が可能。'
+      };
+    });
+
+    // スコア順でソート
+    matchingResults.sort((a, b) => b.score - a.score);
+
+    // 上位3つの提案を生成
+    const proposals = matchingResults.slice(0, 3).map((result, index) => ({
+      rank: (index + 1) as 1 | 2 | 3,
+      interviewer: `${result.interviewer.name}（${result.interviewer.title}）`,
+      timeSlot: result.interviewer.workloadAnalysis.nextAvailableSlot.replace('2025-09-', '9月').replace(' ', ' ') + '-' +
+                (parseInt(result.interviewer.workloadAnalysis.nextAvailableSlot.split(' ')[1].split(':')[0]) + 1) + ':' +
+                result.interviewer.workloadAnalysis.nextAvailableSlot.split(':')[1],
+      matchingScore: result.score,
+      reasoning: `${result.reasoning} ${result.interviewer.department}所属で、現在の業務負荷は${result.interviewer.workloadAnalysis.currentWeekLoad}%。`
+    }));
+
+    return {
+      proposals,
+      recommendedChoice: 1
+    };
   };
 
   // Step 2: 提案内容編集

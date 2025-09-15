@@ -29,29 +29,68 @@ import {
   User,
   Award,
   Settings,
-  BarChart3
+  BarChart3,
+  Activity,
+  Pause,
+  Play,
+  AlertCircle,
+  CheckCircle,
+  X
 } from 'lucide-react';
 import { InterviewerProfile, TimeSlot } from '@/types/pattern-d-interview';
+
+// 拡張された担当者プロファイル
+interface EnhancedInterviewerProfile extends InterviewerProfile {
+  workingDays: {
+    monday: boolean;
+    tuesday: boolean;
+    wednesday: boolean;
+    thursday: boolean;
+    friday: boolean;
+    saturday: boolean;
+    sunday: boolean;
+  };
+  dailySchedule: {
+    [day: string]: {
+      isAvailable: boolean;
+      timeSlots: string[];
+      restrictions?: string[];
+    };
+  };
+  unavailableDates: string[];
+  specialAvailableDates: string[];
+  currentStatus: 'active' | 'on-leave' | 'inactive';
+  workloadAnalysis: {
+    currentWeekLoad: number;
+    maxCapacity: number;
+    efficiency: number;
+    nextAvailableSlot: string;
+  };
+}
 
 interface InterviewerManagementProps {
   accessLevel: string;
 }
 
 export default function InterviewerManagement({ accessLevel }: InterviewerManagementProps) {
-  const [interviewers, setInterviewers] = useState<InterviewerProfile[]>([]);
-  const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
-  const [selectedInterviewer, setSelectedInterviewer] = useState<InterviewerProfile | null>(null);
+  const [interviewers, setInterviewers] = useState<EnhancedInterviewerProfile[]>([]);
+  const [selectedInterviewer, setSelectedInterviewer] = useState<EnhancedInterviewerProfile | null>(null);
   const [isAddingInterviewer, setIsAddingInterviewer] = useState(false);
-  const [activeTab, setActiveTab] = useState('interviewers');
+  const [newInterviewer, setNewInterviewer] = useState<EnhancedInterviewerProfile | null>(null);
+  const [isEditingSchedule, setIsEditingSchedule] = useState(false);
+  const [activeView, setActiveView] = useState<'active' | 'management'>('active');
+  const [selectedDay, setSelectedDay] = useState<string>('monday');
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const [editedInterviewer, setEditedInterviewer] = useState<EnhancedInterviewerProfile | null>(null);
+  const [editingDetails, setEditingDetails] = useState<EnhancedInterviewerProfile | null>(null);
 
   useEffect(() => {
     loadInterviewers();
-    loadTimeSlots();
   }, []);
 
   const loadInterviewers = async () => {
     // TODO: API呼び出し
-    const mockInterviewers: InterviewerProfile[] = [
+    const mockInterviewers: EnhancedInterviewerProfile[] = [
       {
         id: 'INT-001',
         personalInfo: {
@@ -85,6 +124,51 @@ export default function InterviewerManagement({ accessLevel }: InterviewerManage
           staffLevels: ['新人', '中堅', 'ベテラン'],
           departments: ['内科', '外科', 'ICU'],
           interviewTypes: ['support', 'regular']
+        },
+        workingDays: {
+          monday: true,
+          tuesday: true,
+          wednesday: true,
+          thursday: true,
+          friday: true,
+          saturday: false,
+          sunday: false
+        },
+        dailySchedule: {
+          monday: {
+            isAvailable: true,
+            timeSlots: ['09:00-12:00', '14:00-17:00'],
+            restrictions: []
+          },
+          tuesday: {
+            isAvailable: true,
+            timeSlots: ['09:00-12:00', '14:00-16:00'],
+            restrictions: ['会議日(16:00-17:00)']
+          },
+          wednesday: {
+            isAvailable: true,
+            timeSlots: ['10:00-12:00', '14:00-17:00'],
+            restrictions: []
+          },
+          thursday: {
+            isAvailable: true,
+            timeSlots: ['09:00-12:00', '13:00-16:00'],
+            restrictions: []
+          },
+          friday: {
+            isAvailable: true,
+            timeSlots: ['09:00-11:00', '14:00-16:00'],
+            restrictions: ['定例会議(11:00-12:00)']
+          }
+        },
+        unavailableDates: ['2024-03-20', '2024-03-25'],
+        specialAvailableDates: ['2024-03-23'],
+        currentStatus: 'active',
+        workloadAnalysis: {
+          currentWeekLoad: 8,
+          maxCapacity: 12,
+          efficiency: 87,
+          nextAvailableSlot: '明日 14:00'
         }
       },
       {
@@ -120,6 +204,126 @@ export default function InterviewerManagement({ accessLevel }: InterviewerManage
           staffLevels: ['新人', '中堅'],
           departments: ['全部署'],
           interviewTypes: ['regular', 'special']
+        },
+        workingDays: {
+          monday: true,
+          tuesday: true,
+          wednesday: false,
+          thursday: true,
+          friday: true,
+          saturday: true,
+          sunday: false
+        },
+        dailySchedule: {
+          monday: {
+            isAvailable: true,
+            timeSlots: ['08:30-12:00', '13:00-17:00'],
+            restrictions: []
+          },
+          tuesday: {
+            isAvailable: true,
+            timeSlots: ['09:00-12:00', '13:00-15:00'],
+            restrictions: ['研修準備(15:00-17:00)']
+          },
+          thursday: {
+            isAvailable: true,
+            timeSlots: ['09:00-12:00', '14:00-17:00'],
+            restrictions: []
+          },
+          friday: {
+            isAvailable: true,
+            timeSlots: ['09:00-11:00', '13:00-16:00'],
+            restrictions: []
+          },
+          saturday: {
+            isAvailable: true,
+            timeSlots: ['09:00-12:00'],
+            restrictions: ['午後不可']
+          }
+        },
+        unavailableDates: ['2024-03-22'],
+        specialAvailableDates: [],
+        currentStatus: 'active',
+        workloadAnalysis: {
+          currentWeekLoad: 5,
+          maxCapacity: 10,
+          efficiency: 92,
+          nextAvailableSlot: '今日 15:00'
+        }
+      },
+      {
+        id: 'INT-003',
+        personalInfo: {
+          name: '山田花子',
+          title: '副看護師長',
+          department: 'メンタルヘルス科',
+          experienceYears: 8,
+          gender: 'female'
+        },
+        specialties: {
+          primaryAreas: ['メンタルヘルス', 'ストレス管理', 'カウンセリング'],
+          secondaryAreas: ['復職支援', '人間関係調整'],
+          certifications: ['精神保健福祉士', 'カウンセラー']
+        },
+        availability: {
+          weeklySchedule: [],
+          unavailableDates: [],
+          preferredDuration: {
+            min: 45,
+            max: 90,
+            default: 60
+          }
+        },
+        performanceMetrics: {
+          satisfactionScore: 4.9,
+          completionRate: 98,
+          averageRating: 4.8,
+          totalInterviews: 156
+        },
+        matchingPreferences: {
+          staffLevels: ['全レベル'],
+          departments: ['全部署'],
+          interviewTypes: ['support', 'special']
+        },
+        workingDays: {
+          monday: true,
+          tuesday: true,
+          wednesday: true,
+          thursday: false,
+          friday: true,
+          saturday: false,
+          sunday: false
+        },
+        dailySchedule: {
+          monday: {
+            isAvailable: true,
+            timeSlots: ['10:00-12:00', '14:00-16:00'],
+            restrictions: []
+          },
+          tuesday: {
+            isAvailable: true,
+            timeSlots: ['09:00-12:00', '13:30-17:00'],
+            restrictions: []
+          },
+          wednesday: {
+            isAvailable: true,
+            timeSlots: ['14:00-17:00'],
+            restrictions: ['午前不可(外来対応)']
+          },
+          friday: {
+            isAvailable: true,
+            timeSlots: ['09:00-11:00', '14:00-16:00'],
+            restrictions: ['グループカウンセリング(11:00-13:00)']
+          }
+        },
+        unavailableDates: ['2024-03-28', '2024-03-29'],
+        specialAvailableDates: [],
+        currentStatus: 'on-leave',
+        workloadAnalysis: {
+          currentWeekLoad: 0,
+          maxCapacity: 8,
+          efficiency: 0,
+          nextAvailableSlot: '復帰予定: 3/25'
         }
       }
     ];
@@ -127,63 +331,347 @@ export default function InterviewerManagement({ accessLevel }: InterviewerManage
     setInterviewers(mockInterviewers);
   };
 
-  const loadTimeSlots = async () => {
-    // TODO: API呼び出し
-    const mockTimeSlots: TimeSlot[] = [
-      {
-        id: 'SLOT-001',
-        dayOfWeek: 1, // 月曜日
-        startTime: '09:00',
-        endTime: '09:45',
-        duration: 45,
-        maxBookings: 1,
-        slotType: 'morning',
-        isActive: true
-      },
-      {
-        id: 'SLOT-002',
-        dayOfWeek: 1,
-        startTime: '14:00',
-        endTime: '14:30',
-        duration: 30,
-        maxBookings: 1,
-        slotType: 'afternoon',
-        isActive: true
-      }
-    ];
+  // 稼働中担当者のフィルタリング
+  const activeInterviewers = interviewers.filter(i => i.currentStatus === 'active');
+  const onLeaveInterviewers = interviewers.filter(i => i.currentStatus === 'on-leave');
+  const inactiveInterviewers = interviewers.filter(i => i.currentStatus === 'inactive');
 
-    setTimeSlots(mockTimeSlots);
+  // ステータス変更関数
+  const handleStatusChange = (interviewerId: string, newStatus: 'active' | 'on-leave' | 'inactive') => {
+    setInterviewers(prev => prev.map(interviewer =>
+      interviewer.id === interviewerId
+        ? { ...interviewer, currentStatus: newStatus }
+        : interviewer
+    ));
   };
 
-  const InterviewerCard = ({ interviewer }: { interviewer: InterviewerProfile }) => (
-    <Card className="cursor-pointer hover:shadow-md transition-shadow">
+  // 新規担当者の初期データ作成
+  const createNewInterviewer = (): EnhancedInterviewerProfile => {
+    const newId = `INT-${String(interviewers.length + 1).padStart(3, '0')}`;
+    return {
+      id: newId,
+      personalInfo: {
+        name: '',
+        title: '',
+        department: '',
+        experienceYears: 0,
+        gender: 'female' as const
+      },
+      specialties: {
+        primaryAreas: [''],
+        secondaryAreas: [],
+        certifications: []
+      },
+      availability: {
+        weeklySchedule: [],
+        unavailableDates: [],
+        preferredDuration: {
+          min: 30,
+          max: 60,
+          default: 45
+        }
+      },
+      performanceMetrics: {
+        satisfactionScore: 0,
+        completionRate: 0,
+        averageRating: 0,
+        totalInterviews: 0
+      },
+      matchingPreferences: {
+        staffLevels: [],
+        departments: [],
+        interviewTypes: []
+      },
+      workingDays: {
+        monday: true,
+        tuesday: true,
+        wednesday: true,
+        thursday: true,
+        friday: true,
+        saturday: false,
+        sunday: false
+      },
+      dailySchedule: {
+        monday: { isAvailable: true, timeSlots: ['09:00-12:00', '14:00-17:00'], restrictions: [] },
+        tuesday: { isAvailable: true, timeSlots: ['09:00-12:00', '14:00-17:00'], restrictions: [] },
+        wednesday: { isAvailable: true, timeSlots: ['09:00-12:00', '14:00-17:00'], restrictions: [] },
+        thursday: { isAvailable: true, timeSlots: ['09:00-12:00', '14:00-17:00'], restrictions: [] },
+        friday: { isAvailable: true, timeSlots: ['09:00-12:00', '14:00-17:00'], restrictions: [] },
+        saturday: { isAvailable: false, timeSlots: [], restrictions: [] },
+        sunday: { isAvailable: false, timeSlots: [], restrictions: [] }
+      },
+      unavailableDates: [],
+      specialAvailableDates: [],
+      currentStatus: 'active',
+      workloadAnalysis: {
+        currentWeekLoad: 0,
+        maxCapacity: 10,
+        efficiency: 0,
+        nextAvailableSlot: '未設定'
+      }
+    };
+  };
+
+  // 新規担当者の追加処理
+  const handleAddInterviewer = async () => {
+    if (!newInterviewer) return;
+
+    // バリデーション
+    if (!newInterviewer.personalInfo.name) {
+      alert('氏名は必須です。');
+      return;
+    }
+
+    try {
+      // TODO: 実際のAPI呼び出し
+      // await createInterviewer(newInterviewer);
+
+      // ローカル状態に追加
+      setInterviewers(prev => [...prev, newInterviewer]);
+
+      // 成功通知
+      setSaveSuccess(true);
+      setTimeout(() => setSaveSuccess(false), 3000);
+
+      // モーダルを閉じる
+      setIsAddingInterviewer(false);
+      setNewInterviewer(null);
+
+      console.log('新規担当者追加完了:', newInterviewer);
+    } catch (error) {
+      console.error('追加エラー:', error);
+      alert('追加に失敗しました。もう一度お試しください。');
+    }
+  };
+
+  // 詳細情報の保存処理
+  const handleSaveDetails = async () => {
+    if (!editingDetails) return;
+
+    try {
+      // TODO: 実際のAPI呼び出し
+      // await updateInterviewerDetails(editingDetails);
+
+      // ローカル状態を更新
+      setInterviewers(prev => prev.map(interviewer =>
+        interviewer.id === editingDetails.id ? editingDetails : interviewer
+      ));
+
+      // 選択中の担当者も更新
+      setSelectedInterviewer(editingDetails);
+
+      // 成功通知
+      setSaveSuccess(true);
+      setTimeout(() => setSaveSuccess(false), 3000);
+
+      // モーダルを閉じる
+      setEditingDetails(null);
+      setSelectedInterviewer(null);
+
+      console.log('担当者詳細保存完了:', editingDetails);
+    } catch (error) {
+      console.error('保存エラー:', error);
+      alert('保存に失敗しました。もう一度お試しください。');
+    }
+  };
+
+  // 稼働日・時間枠の保存処理
+  const handleSaveSchedule = async () => {
+    if (!editedInterviewer) return;
+
+    try {
+      // TODO: 実際のAPI呼び出し
+      // await updateInterviewerSchedule(editedInterviewer);
+
+      // ローカル状態を更新
+      setInterviewers(prev => prev.map(interviewer =>
+        interviewer.id === editedInterviewer.id ? editedInterviewer : interviewer
+      ));
+
+      // 選択中の担当者も更新
+      setSelectedInterviewer(editedInterviewer);
+
+      // 成功通知
+      setSaveSuccess(true);
+      setTimeout(() => setSaveSuccess(false), 3000);
+
+      // モーダルを閉じる
+      setIsEditingSchedule(false);
+      setEditedInterviewer(null);
+
+      console.log('稼働スケジュール保存完了:', editedInterviewer);
+    } catch (error) {
+      console.error('保存エラー:', error);
+      alert('保存に失敗しました。もう一度お試しください。');
+    }
+  };
+
+  // 稼働中担当者カード（負荷分析表示付き）
+  const ActiveInterviewerCard = ({ interviewer }: { interviewer: EnhancedInterviewerProfile }) => {
+    const loadPercentage = (interviewer.workloadAnalysis.currentWeekLoad / interviewer.workloadAnalysis.maxCapacity) * 100;
+    const getLoadColor = (percentage: number) => {
+      if (percentage >= 90) return 'text-red-600 bg-red-50';
+      if (percentage >= 70) return 'text-yellow-600 bg-yellow-50';
+      return 'text-green-600 bg-green-50';
+    };
+
+    return (
+      <Card className="hover:shadow-md transition-shadow">
+        <CardHeader className="pb-3">
+          <div className="flex justify-between items-start">
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-1">
+                <CardTitle className="text-lg">{interviewer.personalInfo.name}</CardTitle>
+                <Badge variant={interviewer.currentStatus === 'active' ? 'default' : 'secondary'}>
+                  {interviewer.currentStatus === 'active' ? '稼働中' : '休止中'}
+                </Badge>
+              </div>
+              <p className="text-sm text-gray-600">
+                {interviewer.personalInfo.title} | {interviewer.personalInfo.department}
+              </p>
+            </div>
+            <div className="flex gap-1">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setSelectedInterviewer(interviewer);
+                  setEditedInterviewer(JSON.parse(JSON.stringify(interviewer))); // Deep copy
+                  setIsEditingSchedule(true);
+                }}
+              >
+                <Calendar className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {/* リアルタイム負荷分析 */}
+          <div className={`p-3 rounded-lg ${getLoadColor(loadPercentage)}`}>
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm font-medium">今週の負荷状況</span>
+              <Badge variant="outline" className="text-xs">
+                {interviewer.workloadAnalysis.currentWeekLoad}/{interviewer.workloadAnalysis.maxCapacity}件
+              </Badge>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+              <div
+                className={`h-2 rounded-full transition-all ${
+                  loadPercentage >= 90 ? 'bg-red-500' :
+                  loadPercentage >= 70 ? 'bg-yellow-500' : 'bg-green-500'
+                }`}
+                style={{ width: `${Math.min(loadPercentage, 100)}%` }}
+              ></div>
+            </div>
+            <div className="flex justify-between text-xs">
+              <span>負荷率: {Math.round(loadPercentage)}%</span>
+              <span>効率性: {interviewer.workloadAnalysis.efficiency}%</span>
+            </div>
+          </div>
+
+          {/* 次回空き時間 */}
+          <div className="flex items-center justify-between p-2 bg-blue-50 rounded">
+            <div className="flex items-center gap-2">
+              <Clock className="h-4 w-4 text-blue-600" />
+              <span className="text-sm text-blue-700">次回空き</span>
+            </div>
+            <span className="text-sm font-medium text-blue-900">
+              {interviewer.workloadAnalysis.nextAvailableSlot}
+            </span>
+          </div>
+
+          {/* 専門分野 */}
+          <div>
+            <p className="text-xs text-gray-600 mb-2">専門分野</p>
+            <div className="flex flex-wrap gap-1">
+              {interviewer.specialties.primaryAreas.slice(0, 2).map((area, index) => (
+                <Badge key={index} variant="secondary" className="text-xs">
+                  {area}
+                </Badge>
+              ))}
+            </div>
+          </div>
+
+          {/* 稼働日表示 */}
+          <div>
+            <p className="text-xs text-gray-600 mb-2">稼働日</p>
+            <div className="flex gap-1">
+              {Object.entries(interviewer.workingDays).map(([day, isWorking]) => (
+                <div
+                  key={day}
+                  className={`w-6 h-6 rounded text-xs flex items-center justify-center ${
+                    isWorking ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400'
+                  }`}
+                >
+                  {day.charAt(0).toUpperCase()}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* パフォーマンス */}
+          <div className="grid grid-cols-2 gap-4 pt-2 border-t text-center">
+            <div>
+              <p className="text-xs text-gray-600">満足度</p>
+              <p className="font-semibold text-sm">{interviewer.performanceMetrics.satisfactionScore}/5.0</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-600">総面談数</p>
+              <p className="font-semibold text-sm">{interviewer.performanceMetrics.totalInterviews}回</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
+
+  // 管理用担当者カード（ステータス変更機能付き）
+  const ManagementInterviewerCard = ({ interviewer }: { interviewer: EnhancedInterviewerProfile }) => (
+    <Card className="hover:shadow-md transition-shadow">
       <CardHeader className="pb-3">
         <div className="flex justify-between items-start">
-          <div>
-            <CardTitle className="text-lg">{interviewer.personalInfo.name}</CardTitle>
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-1">
+              <CardTitle className="text-lg">{interviewer.personalInfo.name}</CardTitle>
+              <Select
+                value={interviewer.currentStatus}
+                onValueChange={(value: 'active' | 'on-leave' | 'inactive') =>
+                  handleStatusChange(interviewer.id, value)
+                }
+              >
+                <SelectTrigger className="w-24 h-6 text-xs">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="active">稼働中</SelectItem>
+                  <SelectItem value="on-leave">休止中</SelectItem>
+                  <SelectItem value="inactive">非稼働</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
             <p className="text-sm text-gray-600">
               {interviewer.personalInfo.title} | {interviewer.personalInfo.department}
             </p>
           </div>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setSelectedInterviewer(interviewer)}
-            >
+          <div className="flex gap-1">
+            <Button variant="outline" size="sm" onClick={() => {
+              setSelectedInterviewer(interviewer);
+              setEditingDetails(JSON.parse(JSON.stringify(interviewer)));
+            }}>
               <Edit2 className="h-4 w-4" />
+            </Button>
+            <Button variant="outline" size="sm">
+              <Trash2 className="h-4 w-4 text-red-500" />
             </Button>
           </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-3">
-        {/* 基本情報 */}
         <div className="flex items-center gap-2">
           <User className="h-4 w-4 text-gray-500" />
           <span className="text-sm">経験年数: {interviewer.personalInfo.experienceYears}年</span>
         </div>
 
-        {/* 専門分野 */}
         <div>
           <p className="text-xs text-gray-600 mb-1">専門分野</p>
           <div className="flex flex-wrap gap-1">
@@ -195,7 +683,6 @@ export default function InterviewerManagement({ accessLevel }: InterviewerManage
           </div>
         </div>
 
-        {/* パフォーマンス指標 */}
         <div className="grid grid-cols-2 gap-4 pt-2 border-t">
           <div>
             <p className="text-xs text-gray-600">満足度</p>
@@ -353,10 +840,16 @@ export default function InterviewerManagement({ accessLevel }: InterviewerManage
       {/* ヘッダー */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold">面談担当者・時間枠管理</h2>
-          <p className="text-gray-600">Pattern D AI最適化システム用の設定管理</p>
+          <h2 className="text-2xl font-bold">面談担当者管理</h2>
+          <p className="text-gray-600">AI最適化システム用の担当者・稼働状況管理</p>
         </div>
         <div className="flex gap-2">
+          <Badge variant="outline" className="text-xs">
+            稼働中: {activeInterviewers.length}名
+          </Badge>
+          <Badge variant="secondary" className="text-xs">
+            休止中: {onLeaveInterviewers.length}名
+          </Badge>
           <Button variant="outline">
             <Settings className="h-4 w-4 mr-2" />
             設定
@@ -364,21 +857,114 @@ export default function InterviewerManagement({ accessLevel }: InterviewerManage
         </div>
       </div>
 
-      {/* タブナビゲーション */}
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="interviewers">面談担当者</TabsTrigger>
-          <TabsTrigger value="timeslots">時間枠設定</TabsTrigger>
-          <TabsTrigger value="analytics">負荷分析</TabsTrigger>
+      {/* 保存成功通知 */}
+      {saveSuccess && (
+        <div className="fixed top-4 right-4 z-50 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 animate-slide-in-right">
+          <CheckCircle className="h-5 w-5" />
+          <span>稼働スケジュールを保存しました</span>
+        </div>
+      )}
+
+      {/* 2画面タブナビゲーション */}
+      <Tabs value={activeView} onValueChange={setActiveView}>
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="active" className="flex items-center gap-2">
+            <Activity className="h-4 w-4" />
+            稼働担当者ダッシュボード
+          </TabsTrigger>
+          <TabsTrigger value="management" className="flex items-center gap-2">
+            <Settings className="h-4 w-4" />
+            担当者マスタ管理
+          </TabsTrigger>
         </TabsList>
 
-        {/* 面談担当者管理 */}
-        <TabsContent value="interviewers" className="space-y-4">
+        {/* 稼働担当者ダッシュボード */}
+        <TabsContent value="active" className="space-y-6">
+          {/* 全体負荷サマリー */}
+          <div className="grid grid-cols-3 gap-4">
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                  <div>
+                    <p className="text-sm text-gray-600">稼働中</p>
+                    <p className="text-2xl font-bold text-green-600">{activeInterviewers.length}名</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2">
+                  <BarChart3 className="h-5 w-5 text-blue-600" />
+                  <div>
+                    <p className="text-sm text-gray-600">平均負荷率</p>
+                    <p className="text-2xl font-bold text-blue-600">
+                      {Math.round(activeInterviewers.reduce((acc, i) => acc + (i.workloadAnalysis.currentWeekLoad / i.workloadAnalysis.maxCapacity * 100), 0) / activeInterviewers.length || 0)}%
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2">
+                  <AlertCircle className="h-5 w-5 text-yellow-600" />
+                  <div>
+                    <p className="text-sm text-gray-600">高負荷担当者</p>
+                    <p className="text-2xl font-bold text-yellow-600">
+                      {activeInterviewers.filter(i => (i.workloadAnalysis.currentWeekLoad / i.workloadAnalysis.maxCapacity) >= 0.8).length}名
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* 稼働中担当者一覧 */}
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <h3 className="text-lg font-semibold">稼働中担当者 ({activeInterviewers.length}名)</h3>
+              <div className="text-sm text-gray-600">
+                次回空き時間で並び替え済み
+              </div>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {activeInterviewers.map((interviewer) => (
+                <ActiveInterviewerCard key={interviewer.id} interviewer={interviewer} />
+              ))}
+            </div>
+          </div>
+
+          {/* 休止中担当者 */}
+          {onLeaveInterviewers.length > 0 && (
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">休止中担当者 ({onLeaveInterviewers.length}名)</h3>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {onLeaveInterviewers.map((interviewer) => (
+                  <ActiveInterviewerCard key={interviewer.id} interviewer={interviewer} />
+                ))}
+              </div>
+            </div>
+          )}
+        </TabsContent>
+
+        {/* 担当者マスタ管理 */}
+        <TabsContent value="management" className="space-y-4">
           <div className="flex justify-between items-center">
-            <p className="text-sm text-gray-600">
-              登録されている面談担当者: {interviewers.length}名
-            </p>
-            <Button onClick={() => setIsAddingInterviewer(true)}>
+            <div>
+              <h3 className="text-lg font-semibold">担当者マスタ管理</h3>
+              <p className="text-sm text-gray-600">
+                全担当者: {interviewers.length}名 |
+                稼働中: {activeInterviewers.length}名 |
+                休止中: {onLeaveInterviewers.length}名 |
+                非稼働: {inactiveInterviewers.length}名
+              </p>
+            </div>
+            <Button onClick={() => {
+              setNewInterviewer(createNewInterviewer());
+              setIsAddingInterviewer(true);
+            }}>
               <Plus className="h-4 w-4 mr-2" />
               担当者追加
             </Button>
@@ -386,36 +972,585 @@ export default function InterviewerManagement({ accessLevel }: InterviewerManage
 
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {interviewers.map((interviewer) => (
-              <InterviewerCard key={interviewer.id} interviewer={interviewer} />
+              <ManagementInterviewerCard key={interviewer.id} interviewer={interviewer} />
             ))}
           </div>
         </TabsContent>
-
-        {/* 時間枠設定 */}
-        <TabsContent value="timeslots">
-          <TimeSlotManagement />
-        </TabsContent>
-
-        {/* 負荷分析 */}
-        <TabsContent value="analytics">
-          <WorkloadAnalytics />
-        </TabsContent>
       </Tabs>
 
-      {/* 担当者詳細/編集ダイアログ */}
-      <Dialog open={!!selectedInterviewer} onOpenChange={() => setSelectedInterviewer(null)}>
-        <DialogContent className="max-w-2xl">
+      {/* 稼働日・時間枠設定ダイアログ */}
+      <Dialog open={isEditingSchedule} onOpenChange={(open) => {
+        if (!open) {
+          setIsEditingSchedule(false);
+          setEditedInterviewer(null);
+        }
+      }}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
           <DialogHeader>
             <DialogTitle>
-              担当者詳細: {selectedInterviewer?.personalInfo.name}
+              稼働日・時間枠設定: {editedInterviewer?.personalInfo.name}
             </DialogTitle>
           </DialogHeader>
-          {selectedInterviewer && (
-            <div className="space-y-4">
-              {/* 詳細情報の表示/編集フォーム */}
-              <p className="text-sm text-gray-600">担当者の詳細情報と設定</p>
-              {/* TODO: 詳細フォーム実装 */}
+          {editedInterviewer && (
+            <div className="flex-1 overflow-y-auto space-y-6 pr-2">
+              {/* 稼働日設定 */}
+              <div>
+                <h4 className="font-semibold mb-3">稼働日設定</h4>
+                <div className="grid grid-cols-7 gap-2">
+                  {Object.entries(editedInterviewer.workingDays).map(([day, isWorking]) => (
+                    <Button
+                      key={day}
+                      variant={isWorking ? "default" : "outline"}
+                      size="sm"
+                      className="text-xs"
+                      onClick={() => {
+                        setEditedInterviewer(prev => prev ? {
+                          ...prev,
+                          workingDays: { ...prev.workingDays, [day]: !isWorking }
+                        } : null);
+                      }}
+                    >
+                      {day === 'monday' && '月'}
+                      {day === 'tuesday' && '火'}
+                      {day === 'wednesday' && '水'}
+                      {day === 'thursday' && '木'}
+                      {day === 'friday' && '金'}
+                      {day === 'saturday' && '土'}
+                      {day === 'sunday' && '日'}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
+              {/* 曜日別時間枠設定 */}
+              <div>
+                <h4 className="font-semibold mb-3">曜日別時間枠設定</h4>
+                <Tabs value={selectedDay} onValueChange={setSelectedDay}>
+                  <TabsList className="grid w-full grid-cols-7">
+                    <TabsTrigger value="monday">月</TabsTrigger>
+                    <TabsTrigger value="tuesday">火</TabsTrigger>
+                    <TabsTrigger value="wednesday">水</TabsTrigger>
+                    <TabsTrigger value="thursday">木</TabsTrigger>
+                    <TabsTrigger value="friday">金</TabsTrigger>
+                    <TabsTrigger value="saturday">土</TabsTrigger>
+                    <TabsTrigger value="sunday">日</TabsTrigger>
+                  </TabsList>
+
+                  {Object.entries(editedInterviewer.dailySchedule).map(([day, schedule]) => (
+                    <TabsContent key={day} value={day} className="space-y-4">
+                      <div className="p-4 border rounded-lg">
+                        <div className="flex items-center gap-2 mb-3">
+                          <input
+                            type="checkbox"
+                            checked={schedule.isAvailable}
+                            onChange={(e) => {
+                              const newSchedule = { ...schedule, isAvailable: e.target.checked };
+                              setEditedInterviewer(prev => prev ? {
+                                ...prev,
+                                dailySchedule: { ...prev.dailySchedule, [day]: newSchedule }
+                              } : null);
+                            }}
+                          />
+                          <span className="font-medium">この日は面談可能</span>
+                        </div>
+
+                        {schedule.isAvailable && (
+                          <div className="space-y-3">
+                            <div>
+                              <label className="block text-sm font-medium mb-2">時間枠</label>
+                              <div className="space-y-2">
+                                {schedule.timeSlots.map((slot, index) => (
+                                  <div key={index} className="flex items-center gap-2">
+                                    <Input
+                                      value={slot}
+                                      onChange={(e) => {
+                                        const newSlots = [...schedule.timeSlots];
+                                        newSlots[index] = e.target.value;
+                                        const newSchedule = { ...schedule, timeSlots: newSlots };
+                                        setEditedInterviewer(prev => prev ? {
+                                          ...prev,
+                                          dailySchedule: { ...prev.dailySchedule, [day]: newSchedule }
+                                        } : null);
+                                      }}
+                                      placeholder="例: 09:00-12:00"
+                                      className="flex-1"
+                                    />
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => {
+                                        const newSlots = schedule.timeSlots.filter((_, i) => i !== index);
+                                        const newSchedule = { ...schedule, timeSlots: newSlots };
+                                        setEditedInterviewer(prev => prev ? {
+                                          ...prev,
+                                          dailySchedule: { ...prev.dailySchedule, [day]: newSchedule }
+                                        } : null);
+                                      }}
+                                    >
+                                      <X className="h-4 w-4" />
+                                    </Button>
+                                  </div>
+                                ))}
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    const newSlots = [...schedule.timeSlots, ''];
+                                    const newSchedule = { ...schedule, timeSlots: newSlots };
+                                    setEditedInterviewer(prev => prev ? {
+                                      ...prev,
+                                      dailySchedule: { ...prev.dailySchedule, [day]: newSchedule }
+                                    } : null);
+                                  }}
+                                >
+                                  <Plus className="h-4 w-4 mr-1" />
+                                  時間枠追加
+                                </Button>
+                              </div>
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium mb-2">制約事項</label>
+                              <Input
+                                value={schedule.restrictions?.join(', ') || ''}
+                                onChange={(e) => {
+                                  const restrictions = e.target.value.split(',').map(r => r.trim()).filter(r => r);
+                                  const newSchedule = { ...schedule, restrictions };
+                                  setEditedInterviewer(prev => prev ? {
+                                    ...prev,
+                                    dailySchedule: { ...prev.dailySchedule, [day]: newSchedule }
+                                  } : null);
+                                }}
+                                placeholder="例: 会議日(14:00-15:00), 研修対応"
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </TabsContent>
+                  ))}
+                </Tabs>
+              </div>
+
             </div>
+          )}
+          {editedInterviewer && (
+            <div className="flex justify-end gap-2 pt-4 border-t">
+              <Button variant="outline" onClick={() => {
+                setIsEditingSchedule(false);
+                setEditedInterviewer(null);
+              }}>
+                キャンセル
+              </Button>
+              <Button onClick={handleSaveSchedule} className="bg-blue-600 hover:bg-blue-700">
+                保存
+              </Button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* 担当者詳細/編集ダイアログ */}
+      <Dialog open={!!selectedInterviewer && !isEditingSchedule} onOpenChange={(open) => {
+        if (!open) {
+          setSelectedInterviewer(null);
+          setEditingDetails(null);
+        }
+      }}>
+        <DialogContent className="max-w-3xl max-h-[85vh] overflow-hidden flex flex-col">
+          <DialogHeader className="pb-4 border-b">
+            <DialogTitle className="text-xl flex items-center gap-2">
+              <Edit2 className="h-5 w-5" />
+              担当者詳細編集: {editingDetails?.personalInfo.name}
+            </DialogTitle>
+          </DialogHeader>
+          {editingDetails && (
+            <>
+              <div className="flex-1 overflow-y-auto px-6 py-4 space-y-6">
+                {/* 基本情報 */}
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-lg border-b pb-2">基本情報</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-1">氏名</label>
+                      <Input
+                        value={editingDetails.personalInfo.name}
+                        onChange={(e) => setEditingDetails({
+                          ...editingDetails,
+                          personalInfo: { ...editingDetails.personalInfo, name: e.target.value }
+                        })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">役職</label>
+                      <Input
+                        value={editingDetails.personalInfo.title}
+                        onChange={(e) => setEditingDetails({
+                          ...editingDetails,
+                          personalInfo: { ...editingDetails.personalInfo, title: e.target.value }
+                        })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">部署</label>
+                      <Input
+                        value={editingDetails.personalInfo.department}
+                        onChange={(e) => setEditingDetails({
+                          ...editingDetails,
+                          personalInfo: { ...editingDetails.personalInfo, department: e.target.value }
+                        })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">経験年数</label>
+                      <Input
+                        type="number"
+                        value={editingDetails.personalInfo.experienceYears}
+                        onChange={(e) => setEditingDetails({
+                          ...editingDetails,
+                          personalInfo: { ...editingDetails.personalInfo, experienceYears: parseInt(e.target.value) || 0 }
+                        })}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* 専門分野 */}
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-lg border-b pb-2">専門分野</h3>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">主要専門分野</label>
+                    <div className="space-y-2">
+                      {editingDetails.specialties.primaryAreas.map((area, index) => (
+                        <div key={index} className="flex gap-2">
+                          <Input
+                            value={area}
+                            className="flex-1"
+                            onChange={(e) => {
+                              const newAreas = [...editingDetails.specialties.primaryAreas];
+                              newAreas[index] = e.target.value;
+                              setEditingDetails({
+                                ...editingDetails,
+                                specialties: { ...editingDetails.specialties, primaryAreas: newAreas }
+                              });
+                            }}
+                          />
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              const newAreas = editingDetails.specialties.primaryAreas.filter((_, i) => i !== index);
+                              setEditingDetails({
+                                ...editingDetails,
+                                specialties: { ...editingDetails.specialties, primaryAreas: newAreas }
+                              });
+                            }}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ))}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          const newAreas = [...editingDetails.specialties.primaryAreas, ''];
+                          setEditingDetails({
+                            ...editingDetails,
+                            specialties: { ...editingDetails.specialties, primaryAreas: newAreas }
+                          });
+                        }}
+                      >
+                        <Plus className="h-4 w-4 mr-1" />
+                        分野追加
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 稼働状況 */}
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-lg border-b pb-2">稼働状況</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-1">現在のステータス</label>
+                      <Select
+                        value={editingDetails.currentStatus}
+                        onValueChange={(value: 'active' | 'on-leave' | 'inactive') => {
+                          setEditingDetails({ ...editingDetails, currentStatus: value });
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="active">稼働中</SelectItem>
+                          <SelectItem value="on-leave">休止中</SelectItem>
+                          <SelectItem value="inactive">非稼働</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">最大処理件数/週</label>
+                      <Input
+                        type="number"
+                        value={editingDetails.workloadAnalysis.maxCapacity}
+                        onChange={(e) => setEditingDetails({
+                          ...editingDetails,
+                          workloadAnalysis: {
+                            ...editingDetails.workloadAnalysis,
+                            maxCapacity: parseInt(e.target.value) || 0
+                          }
+                        })}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* 稼働スケジュール編集ボタン */}
+                <div className="pt-4">
+                  <Button
+                    onClick={() => {
+                      setEditedInterviewer(JSON.parse(JSON.stringify(editingDetails)));
+                      setIsEditingSchedule(true);
+                    }}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                  >
+                    <Calendar className="h-4 w-4 mr-2" />
+                    稼働日・時間枠を編集
+                  </Button>
+                </div>
+              </div>
+
+              {/* フッター */}
+              <div className="flex justify-end gap-2 px-6 py-4 border-t bg-gray-50">
+                <Button variant="outline" onClick={() => {
+                  setSelectedInterviewer(null);
+                  setEditingDetails(null);
+                }}>
+                  閉じる
+                </Button>
+                <Button onClick={handleSaveDetails} className="bg-green-600 hover:bg-green-700">
+                  変更を保存
+                </Button>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* 新規担当者追加ダイアログ */}
+      <Dialog open={isAddingInterviewer} onOpenChange={(open) => {
+        if (!open) {
+          setIsAddingInterviewer(false);
+          setNewInterviewer(null);
+        }
+      }}>
+        <DialogContent className="max-w-3xl max-h-[85vh] overflow-hidden flex flex-col">
+          <DialogHeader className="pb-4 border-b">
+            <DialogTitle className="text-xl flex items-center gap-2">
+              <Plus className="h-5 w-5" />
+              新規担当者追加
+            </DialogTitle>
+          </DialogHeader>
+          {newInterviewer && (
+            <>
+              <div className="flex-1 overflow-y-auto px-6 py-4 space-y-6">
+                {/* 基本情報 */}
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-lg border-b pb-2">基本情報 <span className="text-red-500">*</span></h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-1">
+                        氏名 <span className="text-red-500">*</span>
+                      </label>
+                      <Input
+                        value={newInterviewer.personalInfo.name}
+                        onChange={(e) => setNewInterviewer({
+                          ...newInterviewer,
+                          personalInfo: { ...newInterviewer.personalInfo, name: e.target.value }
+                        })}
+                        placeholder="例: 山田太郎"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">
+                        役職 <span className="text-red-500">*</span>
+                      </label>
+                      <Input
+                        value={newInterviewer.personalInfo.title}
+                        onChange={(e) => setNewInterviewer({
+                          ...newInterviewer,
+                          personalInfo: { ...newInterviewer.personalInfo, title: e.target.value }
+                        })}
+                        placeholder="例: 看護師長"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">
+                        部署 <span className="text-red-500">*</span>
+                      </label>
+                      <Input
+                        value={newInterviewer.personalInfo.department}
+                        onChange={(e) => setNewInterviewer({
+                          ...newInterviewer,
+                          personalInfo: { ...newInterviewer.personalInfo, department: e.target.value }
+                        })}
+                        placeholder="例: 人事部"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">経験年数</label>
+                      <Input
+                        type="number"
+                        value={newInterviewer.personalInfo.experienceYears}
+                        onChange={(e) => setNewInterviewer({
+                          ...newInterviewer,
+                          personalInfo: { ...newInterviewer.personalInfo, experienceYears: parseInt(e.target.value) || 0 }
+                        })}
+                        placeholder="例: 10"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* 専門分野 */}
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-lg border-b pb-2">専門分野</h3>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">主要専門分野</label>
+                    <div className="space-y-2">
+                      {newInterviewer.specialties.primaryAreas.map((area, index) => (
+                        <div key={index} className="flex gap-2">
+                          <Input
+                            value={area}
+                            className="flex-1"
+                            onChange={(e) => {
+                              const newAreas = [...newInterviewer.specialties.primaryAreas];
+                              newAreas[index] = e.target.value;
+                              setNewInterviewer({
+                                ...newInterviewer,
+                                specialties: { ...newInterviewer.specialties, primaryAreas: newAreas }
+                              });
+                            }}
+                            placeholder="例: キャリア開発"
+                          />
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              const newAreas = newInterviewer.specialties.primaryAreas.filter((_, i) => i !== index);
+                              setNewInterviewer({
+                                ...newInterviewer,
+                                specialties: { ...newInterviewer.specialties, primaryAreas: newAreas }
+                              });
+                            }}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ))}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          const newAreas = [...newInterviewer.specialties.primaryAreas, ''];
+                          setNewInterviewer({
+                            ...newInterviewer,
+                            specialties: { ...newInterviewer.specialties, primaryAreas: newAreas }
+                          });
+                        }}
+                      >
+                        <Plus className="h-4 w-4 mr-1" />
+                        分野追加
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 稼働設定 */}
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-lg border-b pb-2">稼働設定</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-1">初期ステータス</label>
+                      <Select
+                        value={newInterviewer.currentStatus}
+                        onValueChange={(value: 'active' | 'on-leave' | 'inactive') => {
+                          setNewInterviewer({ ...newInterviewer, currentStatus: value });
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="active">稼働中</SelectItem>
+                          <SelectItem value="on-leave">休止中</SelectItem>
+                          <SelectItem value="inactive">非稼働</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">最大処理件数/週</label>
+                      <Input
+                        type="number"
+                        value={newInterviewer.workloadAnalysis.maxCapacity}
+                        onChange={(e) => setNewInterviewer({
+                          ...newInterviewer,
+                          workloadAnalysis: {
+                            ...newInterviewer.workloadAnalysis,
+                            maxCapacity: parseInt(e.target.value) || 0
+                          }
+                        })}
+                        placeholder="例: 10"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* 稼働日設定 */}
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-lg border-b pb-2">稼働日設定</h3>
+                  <div className="grid grid-cols-7 gap-2">
+                    {Object.entries(newInterviewer.workingDays).map(([day, isWorking]) => (
+                      <Button
+                        key={day}
+                        variant={isWorking ? "default" : "outline"}
+                        size="sm"
+                        className="text-xs"
+                        onClick={() => {
+                          setNewInterviewer({
+                            ...newInterviewer,
+                            workingDays: { ...newInterviewer.workingDays, [day]: !isWorking }
+                          });
+                        }}
+                      >
+                        {day === 'monday' && '月'}
+                        {day === 'tuesday' && '火'}
+                        {day === 'wednesday' && '水'}
+                        {day === 'thursday' && '木'}
+                        {day === 'friday' && '金'}
+                        {day === 'saturday' && '土'}
+                        {day === 'sunday' && '日'}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* フッター */}
+              <div className="flex justify-end gap-2 px-6 py-4 border-t bg-gray-50">
+                <Button variant="outline" onClick={() => {
+                  setIsAddingInterviewer(false);
+                  setNewInterviewer(null);
+                }}>
+                  キャンセル
+                </Button>
+                <Button onClick={handleAddInterviewer} className="bg-green-600 hover:bg-green-700">
+                  追加
+                </Button>
+              </div>
+            </>
           )}
         </DialogContent>
       </Dialog>
