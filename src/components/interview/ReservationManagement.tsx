@@ -6,7 +6,7 @@ import {
   ChevronRight, Play, FileText, Users,
   Filter, Search, RefreshCw, Bell, Plus, FilterX,
   ArrowLeft, CalendarDays, Settings, BarChart3,
-  Brain, Zap, Send, Edit, UserPlus, ClockIcon
+  Brain, Zap, Send, Edit, UserPlus, ClockIcon, X
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -63,6 +63,7 @@ export default function ReservationManagement() {
   const [viewMode, setViewMode] = useState<'calendar' | 'list'>('list');
   const [showAddInterviewerModal, setShowAddInterviewerModal] = useState(false);
   const [showManualReservationModal, setShowManualReservationModal] = useState(false);
+  const [showProcessingModal, setShowProcessingModal] = useState(false);
 
   useEffect(() => {
     // モックデータの初期化
@@ -614,8 +615,7 @@ export default function ReservationManagement() {
                         .map((reservation) => (
                           <div
                             key={reservation.id}
-                            className="p-3 bg-white border rounded-lg hover:shadow-md transition-shadow cursor-pointer"
-                            onClick={() => setSelectedReservation(reservation)}
+                            className="p-3 bg-white border rounded-lg hover:shadow-md transition-shadow"
                           >
                             <div className="font-medium text-sm">{reservation.staffName}</div>
                             <div className="text-xs text-gray-600">
@@ -630,9 +630,17 @@ export default function ReservationManagement() {
                                  reservation.urgency === 'high' ? '高' :
                                  reservation.urgency === 'medium' ? '中' : '低'}
                               </Badge>
-                              {reservation.status === 'analyzing' && (
-                                <span className="text-xs text-blue-600">AI分析中...</span>
-                              )}
+                              <Button
+                                size="sm"
+                                className="h-6 text-xs"
+                                onClick={() => {
+                                  setSelectedReservation(reservation);
+                                  setShowProcessingModal(true);
+                                }}
+                              >
+                                <Settings className="w-3 h-3 mr-1" />
+                                詳細処理
+                              </Button>
                             </div>
                           </div>
                         ))}
@@ -663,8 +671,7 @@ export default function ReservationManagement() {
                         .map((reservation) => (
                           <div
                             key={reservation.id}
-                            className="p-3 bg-white border rounded-lg hover:shadow-md transition-shadow cursor-pointer"
-                            onClick={() => setSelectedReservation(reservation)}
+                            className="p-3 bg-white border rounded-lg hover:shadow-md transition-shadow"
                           >
                             <div className="font-medium text-sm">{reservation.staffName}</div>
                             <div className="text-xs text-gray-600">
@@ -679,15 +686,17 @@ export default function ReservationManagement() {
                                  reservation.urgency === 'high' ? '高' :
                                  reservation.urgency === 'medium' ? '中' : '低'}
                               </Badge>
-                              {reservation.status === 'proposed' && (
-                                <Button size="sm" className="h-6 text-xs" onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleSendProposal(reservation);
-                                }}>
-                                  <Send className="w-3 h-3 mr-1" />
-                                  通知
-                                </Button>
-                              )}
+                              <Button
+                                size="sm"
+                                className="h-6 text-xs"
+                                onClick={() => {
+                                  setSelectedReservation(reservation);
+                                  setShowProcessingModal(true);
+                                }}
+                              >
+                                <Settings className="w-3 h-3 mr-1" />
+                                詳細処理
+                              </Button>
                             </div>
                           </div>
                         ))}
@@ -713,8 +722,7 @@ export default function ReservationManagement() {
                         .map((reservation) => (
                           <div
                             key={reservation.id}
-                            className="p-3 bg-white border border-orange-300 rounded-lg hover:shadow-md transition-shadow cursor-pointer"
-                            onClick={() => setSelectedReservation(reservation)}
+                            className="p-3 bg-white border border-orange-300 rounded-lg hover:shadow-md transition-shadow"
                           >
                             <div className="font-medium text-sm">{reservation.staffName}</div>
                             <div className="text-xs text-gray-600">
@@ -727,12 +735,17 @@ export default function ReservationManagement() {
                               <Badge className="bg-red-100 text-red-800" variant="outline">
                                 緊急対応
                               </Badge>
-                              <Button size="sm" variant="destructive" className="h-6 text-xs" onClick={(e) => {
-                                e.stopPropagation();
-                                handleAIOptimization(reservation);
-                              }}>
+                              <Button
+                                size="sm"
+                                variant="destructive"
+                                className="h-6 text-xs"
+                                onClick={() => {
+                                  setSelectedReservation(reservation);
+                                  setShowProcessingModal(true);
+                                }}
+                              >
                                 <Zap className="w-3 h-3 mr-1" />
-                                優先処理
+                                緊急処理
                               </Button>
                             </div>
                           </div>
@@ -748,113 +761,20 @@ export default function ReservationManagement() {
               </div>
             </div>
 
-            {/* 下部: カレンダーと詳細処理ワークスペース */}
-            <div className="flex-1 grid grid-cols-3 gap-4" style={{ minHeight: '400px' }}>
-              {/* 左側: カレンダービュー */}
-              <div className="col-span-2">
-                <h3 className="text-lg font-semibold mb-3">週間予約カレンダー</h3>
-                <Card className="h-full">
-                  <CardContent className="p-4 h-full">
-                    <CalendarView reservations={provisionalReservations} />
-                  </CardContent>
-                </Card>
+            {/* 下部: カレンダー表示 */}
+            <div className="flex-1" style={{ minHeight: '400px' }}>
+              <div className="flex justify-between items-center mb-3">
+                <h3 className="text-lg font-semibold">週間予約カレンダー</h3>
+                <Button size="sm" onClick={() => setShowManualReservationModal(true)}>
+                  <Plus className="w-4 h-4 mr-1" />
+                  手動追加
+                </Button>
               </div>
-
-              {/* 右側: 詳細処理ワークスペース */}
-              <div>
-                <div className="flex justify-between items-center mb-3">
-                  <h3 className="text-lg font-semibold">詳細処理</h3>
-                  <Button size="sm" onClick={() => setShowManualReservationModal(true)}>
-                    <Plus className="w-4 h-4 mr-1" />
-                    手動追加
-                  </Button>
-                </div>
-                <Card className="h-full">
-                  <CardContent className="p-4">
-                    {selectedReservation ? (
-                      <div className="space-y-4">
-                        {/* 予約詳細 */}
-                        <div>
-                          <h4 className="font-medium mb-2">予約詳細</h4>
-                          <div className="space-y-2 text-sm">
-                            <div><span className="text-gray-600">职員:</span> {selectedReservation.staffName}</div>
-                            <div><span className="text-gray-600">部署:</span> {selectedReservation.department}</div>
-                            <div><span className="text-gray-600">種別:</span>
-                              {selectedReservation.interviewType === 'regular' ? '定期面談' :
-                               selectedReservation.interviewType === 'special' ? '特別面談' : 'サポート面談'}
-                              {selectedReservation.subType && ` (${selectedReservation.subType})`}
-                            </div>
-                            <div><span className="text-gray-600">緊急度:</span>
-                              <Badge className={getUrgencyBadgeColor(selectedReservation.urgency)} variant="outline">
-                                {selectedReservation.urgency === 'urgent' ? '緊急' :
-                                 selectedReservation.urgency === 'high' ? '高' :
-                                 selectedReservation.urgency === 'medium' ? '中' : '低'}
-                              </Badge>
-                            </div>
-                            {selectedReservation.notes && (
-                              <div><span className="text-gray-600">備考:</span> {selectedReservation.notes}</div>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* AI分析結果 */}
-                        {selectedReservation.aiAnalysis ? (
-                          <div>
-                            <h4 className="font-medium mb-2">AI分析結果</h4>
-                            <div className="p-3 bg-blue-50 rounded-lg space-y-2">
-                              <div className="flex justify-between">
-                                <span className="text-sm text-gray-600">推奨担当者:</span>
-                                <span className="font-medium">{selectedReservation.aiAnalysis.recommendedInterviewer}</span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span className="text-sm text-gray-600">推奨時間帯:</span>
-                                <span className="font-medium">{selectedReservation.aiAnalysis.recommendedTimeSlot}</span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span className="text-sm text-gray-600">マッチング度:</span>
-                                <span className="font-medium">{selectedReservation.aiAnalysis.matchingScore}%</span>
-                              </div>
-                              <div className="pt-2 border-t">
-                                <p className="text-sm text-gray-700">{selectedReservation.aiAnalysis.reasoning}</p>
-                              </div>
-                            </div>
-
-                            {/* アクションボタン */}
-                            <div className="flex gap-2 mt-4">
-                              <Button
-                                className="flex-1"
-                                onClick={() => handleSendProposal(selectedReservation)}
-                                disabled={selectedReservation.status === 'confirmed'}
-                              >
-                                <Send className="w-4 h-4 mr-1" />
-                                {selectedReservation.status === 'confirmed' ? '送信済み' : '提案を送信'}
-                              </Button>
-                              <Button variant="outline" className="flex-1">
-                                <Edit className="w-4 h-4 mr-1" />
-                                編集
-                              </Button>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="text-center py-8">
-                            <Button
-                              onClick={() => handleAIOptimization(selectedReservation)}
-                              disabled={selectedReservation.status === 'analyzing'}
-                            >
-                              <Brain className="w-4 h-4 mr-1" />
-                              {selectedReservation.status === 'analyzing' ? 'AI分析中...' : 'AI最適化分析を開始'}
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-                    ) : (
-                      <div className="text-center text-gray-500 py-8">
-                        左側のリストから仮予約を選択してください
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </div>
+              <Card className="h-full">
+                <CardContent className="p-4 h-full">
+                  <CalendarView reservations={provisionalReservations} />
+                </CardContent>
+              </Card>
             </div>
           </div>
         </TabsContent>
@@ -969,6 +889,198 @@ export default function ReservationManagement() {
           </div>
         </TabsContent>
       </Tabs>
+
+      {/* 詳細処理モーダル */}
+      {showProcessingModal && selectedReservation && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            {/* モーダルヘッダー */}
+            <div className="flex justify-between items-center p-6 border-b">
+              <div>
+                <h2 className="text-xl font-semibold">面談予約詳細処理</h2>
+                <p className="text-sm text-gray-600 mt-1">
+                  {selectedReservation.staffName} さんの
+                  {selectedReservation.interviewType === 'regular' ? '定期面談' :
+                   selectedReservation.interviewType === 'special' ? '特別面談' : 'サポート面談'}
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowProcessingModal(false)}
+              >
+                <X className="w-4 h-4" />
+                閉じる
+              </Button>
+            </div>
+
+            {/* モーダル内容 */}
+            <div className="p-6 space-y-6">
+              {/* 予約詳細情報 */}
+              <div>
+                <h3 className="text-lg font-medium mb-4">予約詳細</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-3">
+                    <div>
+                      <span className="text-sm text-gray-600">職員名</span>
+                      <div className="font-medium">{selectedReservation.staffName}</div>
+                    </div>
+                    <div>
+                      <span className="text-sm text-gray-600">部署</span>
+                      <div className="font-medium">{selectedReservation.department}</div>
+                    </div>
+                    <div>
+                      <span className="text-sm text-gray-600">職位</span>
+                      <div className="font-medium">{selectedReservation.position}</div>
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <div>
+                      <span className="text-sm text-gray-600">面談種別</span>
+                      <div className="flex items-center gap-2">
+                        <Badge className={
+                          selectedReservation.interviewType === 'regular' ? 'bg-blue-100 text-blue-800' :
+                          selectedReservation.interviewType === 'support' ? 'bg-green-100 text-green-800' :
+                          'bg-red-100 text-red-800'
+                        }>
+                          {selectedReservation.interviewType === 'regular' ? '📅 定期面談' :
+                           selectedReservation.interviewType === 'support' ? '💬 サポート面談' :
+                           '⚠️ 特別面談'}
+                        </Badge>
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-sm text-gray-600">サブタイプ</span>
+                      <div className="font-medium">{selectedReservation.subType || '未設定'}</div>
+                    </div>
+                    <div>
+                      <span className="text-sm text-gray-600">緊急度</span>
+                      <Badge className={getUrgencyBadgeColor(selectedReservation.urgency)} variant="outline">
+                        {selectedReservation.urgency === 'urgent' ? '🔴 緊急' :
+                         selectedReservation.urgency === 'high' ? '🟡 高' :
+                         selectedReservation.urgency === 'medium' ? '🟢 中' : '⚪ 低'}
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+
+                {selectedReservation.notes && (
+                  <div className="mt-4">
+                    <span className="text-sm text-gray-600">備考</span>
+                    <div className="mt-1 p-3 bg-gray-50 rounded-lg">
+                      <p className="text-sm">{selectedReservation.notes}</p>
+                    </div>
+                  </div>
+                )}
+
+                <div className="mt-4">
+                  <span className="text-sm text-gray-600">受信日時</span>
+                  <div className="font-medium">{selectedReservation.receivedAt.toLocaleString('ja-JP')}</div>
+                </div>
+              </div>
+
+              {/* AI分析セクション */}
+              <div className="border-t pt-6">
+                <h3 className="text-lg font-medium mb-4">AI最適化分析</h3>
+
+                {selectedReservation.aiAnalysis ? (
+                  <div>
+                    {/* AI分析結果表示 */}
+                    <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
+                      <div className="flex items-center gap-2 mb-3">
+                        <Brain className="w-5 h-5 text-blue-600" />
+                        <span className="font-medium text-blue-900">AI分析完了</span>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                          <span className="text-sm text-blue-700">推奨担当者</span>
+                          <div className="font-semibold text-blue-900">{selectedReservation.aiAnalysis.recommendedInterviewer}</div>
+                        </div>
+                        <div>
+                          <span className="text-sm text-blue-700">推奨時間帯</span>
+                          <div className="font-semibold text-blue-900">{selectedReservation.aiAnalysis.recommendedTimeSlot}</div>
+                        </div>
+                      </div>
+
+                      <div className="mb-4">
+                        <span className="text-sm text-blue-700">マッチング精度</span>
+                        <div className="flex items-center gap-2 mt-1">
+                          <div className="flex-1 bg-blue-200 rounded-full h-2">
+                            <div
+                              className="bg-blue-600 h-2 rounded-full"
+                              style={{ width: `${selectedReservation.aiAnalysis.matchingScore}%` }}
+                            ></div>
+                          </div>
+                          <span className="font-bold text-blue-900">{selectedReservation.aiAnalysis.matchingScore}%</span>
+                        </div>
+                      </div>
+
+                      <div>
+                        <span className="text-sm text-blue-700">分析根拠</span>
+                        <p className="text-sm text-blue-800 mt-1">{selectedReservation.aiAnalysis.reasoning}</p>
+                      </div>
+                    </div>
+
+                    {/* アクションボタン */}
+                    <div className="flex gap-3 mt-6">
+                      <Button
+                        className="flex-1"
+                        onClick={() => {
+                          handleSendProposal(selectedReservation);
+                          setShowProcessingModal(false);
+                        }}
+                        disabled={selectedReservation.status === 'confirmed'}
+                      >
+                        <Send className="w-4 h-4 mr-2" />
+                        {selectedReservation.status === 'confirmed' ? 'VoiceDriveへ送信済み' : 'VoiceDriveへ提案送信'}
+                      </Button>
+                      <Button variant="outline" className="flex-1">
+                        <Edit className="w-4 h-4 mr-2" />
+                        提案内容を編集
+                      </Button>
+                      <Button variant="outline" onClick={() => {
+                        // AI分析をリセット
+                        const resetReservation = { ...selectedReservation, aiAnalysis: undefined, status: 'pending' as const };
+                        setSelectedReservation(resetReservation);
+                        setProvisionalReservations(prev =>
+                          prev.map(r => r.id === selectedReservation.id ? resetReservation : r)
+                        );
+                      }}>
+                        <RefreshCw className="w-4 h-4 mr-2" />
+                        再分析
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <Brain className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-600 mb-6">
+                      AI最適化分析を実行して、最適な担当者と時間帯を自動提案します。
+                    </p>
+                    <Button
+                      size="lg"
+                      onClick={() => handleAIOptimization(selectedReservation)}
+                      disabled={selectedReservation.status === 'analyzing'}
+                      className="min-w-[200px]"
+                    >
+                      <Brain className="w-5 h-5 mr-2" />
+                      {selectedReservation.status === 'analyzing' ? (
+                        <>
+                          <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                          AI分析実行中...
+                        </>
+                      ) : (
+                        'AI最適化分析を開始'
+                      )}
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
