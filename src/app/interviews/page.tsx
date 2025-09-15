@@ -24,7 +24,7 @@ import InterviewStatisticsChart from '@/components/charts/InterviewStatisticsCha
 
 // タブ順序を業務フローに合わせて修正（統合面談ステーション→バンク→分析）
 const tabs = [
-  { id: 'station', label: '面談ステーション', icon: '🚉', badge: 'UPDATED', isNew: true },
+  { id: 'station', label: '面談ステーション', icon: '🚉', badge: '', isNew: false },
   { id: 'bank-system', label: 'バンク', icon: '🏦', badge: '', isNew: false },
   { id: 'overview-guide', label: 'ガイド', icon: '📖', badge: '', isNew: false },
   { id: 'simulator', label: 'シミュレーター', icon: '🎯', badge: '', isNew: false },
