@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Calendar, Clock, User, AlertTriangle, CheckCircle,
   ChevronRight, Play, FileText, Users, MessageSquare,
   Filter, Search, RefreshCw, Bell, Plus, FilterX, ArrowLeft, CalendarDays,
-  Settings, BarChart3, Brain, Zap, X
+  Settings, BarChart3, Brain, Zap, X, Activity
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -178,6 +178,12 @@ export default function UnifiedInterviewDashboard() {
   const [showProcessingModal, setShowProcessingModal] = useState(false);
   const [showInterviewerManagement, setShowInterviewerManagement] = useState(false);
   const [showPatternDAnalytics, setShowPatternDAnalytics] = useState(false);
+
+  // 新統合システム用状態
+  const [selectedStage, setSelectedStage] = useState<'booking' | 'management' | 'execution' | 'feedback' | null>(null);
+
+  // 統合ダッシュボードへのスクロール用ref
+  const integratedDashboardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     loadReservations();
@@ -855,7 +861,15 @@ export default function UnifiedInterviewDashboard() {
 
       {/* 業務フローセクション */}
       <div className="grid grid-cols-4 gap-4">
-        <div className="bg-gradient-to-br from-green-50 to-green-100 border-2 border-green-200 rounded-xl p-4 hover:shadow-lg transition-all">
+        <div
+          className={`bg-gradient-to-br from-green-50 to-green-100 border-2 ${
+            selectedStage === 'booking' ? 'border-green-500 shadow-lg' : 'border-green-200'
+          } rounded-xl p-4 hover:shadow-lg transition-all cursor-pointer`}
+          onClick={() => {
+            setSelectedStage(selectedStage === 'booking' ? null : 'booking');
+            integratedDashboardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }}
+        >
           <div className="flex items-center gap-3 mb-3">
             <div className="bg-green-500 text-white rounded-full p-3">
               <Plus className="h-6 w-6" />
@@ -865,15 +879,28 @@ export default function UnifiedInterviewDashboard() {
               <p className="text-sm text-green-700">電話・対面・VoiceDrive</p>
             </div>
           </div>
-          <Button 
-            onClick={() => setShowAddModal(true)} 
-            className="w-full bg-green-600 hover:bg-green-700 text-white"
-          >
-            手動で予約を追加
-          </Button>
+          <div className="text-center">
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowAddModal(true);
+              }}
+              className="bg-green-600 hover:bg-green-700 text-white"
+            >
+              手動で予約を追加
+            </Button>
+          </div>
         </div>
 
-        <div className="bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-200 rounded-xl p-4 hover:shadow-lg transition-all">
+        <div
+          className={`bg-gradient-to-br from-blue-50 to-blue-100 border-2 ${
+            selectedStage === 'management' ? 'border-blue-500 shadow-lg' : 'border-blue-200'
+          } rounded-xl p-4 hover:shadow-lg transition-all cursor-pointer`}
+          onClick={() => {
+            setSelectedStage(selectedStage === 'management' ? null : 'management');
+            integratedDashboardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }}
+        >
           <div className="flex items-center gap-3 mb-3">
             <div className="bg-blue-500 text-white rounded-full p-3">
               <Calendar className="h-6 w-6" />
@@ -907,7 +934,15 @@ export default function UnifiedInterviewDashboard() {
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-orange-50 to-orange-100 border-2 border-orange-200 rounded-xl p-4 hover:shadow-lg transition-all">
+        <div
+          className={`bg-gradient-to-br from-orange-50 to-orange-100 border-2 ${
+            selectedStage === 'execution' ? 'border-orange-500 shadow-lg' : 'border-orange-200'
+          } rounded-xl p-4 hover:shadow-lg transition-all cursor-pointer`}
+          onClick={() => {
+            setSelectedStage(selectedStage === 'execution' ? null : 'execution');
+            integratedDashboardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }}
+        >
           <div className="flex items-center gap-3 mb-3">
             <div className="bg-orange-500 text-white rounded-full p-3">
               <Play className="h-6 w-6" />
@@ -922,7 +957,15 @@ export default function UnifiedInterviewDashboard() {
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-purple-50 to-purple-100 border-2 border-purple-200 rounded-xl p-4 hover:shadow-lg transition-all">
+        <div
+          className={`bg-gradient-to-br from-purple-50 to-purple-100 border-2 ${
+            selectedStage === 'feedback' ? 'border-purple-500 shadow-lg' : 'border-purple-200'
+          } rounded-xl p-4 hover:shadow-lg transition-all cursor-pointer`}
+          onClick={() => {
+            setSelectedStage(selectedStage === 'feedback' ? null : 'feedback');
+            integratedDashboardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }}
+        >
           <div className="flex items-center gap-3 mb-3">
             <div className="bg-purple-500 text-white rounded-full p-3">
               <MessageSquare className="h-6 w-6" />
@@ -957,214 +1000,89 @@ export default function UnifiedInterviewDashboard() {
         </div>
       </div>
 
-      {/* メインコンテンツエリア - 最優先表示 */}
-      {isSearchMode ? (
-        /* 検索結果表示 */
-        <SearchResults
-          results={searchResults}
-          filters={currentSearchFilters!}
-          isLoading={isSearching}
-          onResultClick={(reservation) => {
-            console.log('検索結果クリック:', reservation);
+      {/* 左右分割メインコンテンツ - 最優先業務エリア */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* 👈 左側: 面談予約管理セクション */}
+        <ReservationManagementSection
+          provisionalReservations={provisionalReservations}
+          onShowInterviewerManagement={() => setShowInterviewerManagement(true)}
+          onShowPatternDAnalytics={() => setShowPatternDAnalytics(true)}
+          onConfirmed={(confirmed) => {
+            // 確定済み予約を右側に送信
+            console.log('確定済み予約:', confirmed);
+            // 予約管理データを更新
+            setProvisionalReservations(prev =>
+              prev.map(r =>
+                confirmed.find(c => c.id === r.id) ? { ...r, status: 'confirmed' as const } : r
+              )
+            );
+            loadReservations(); // 右側データ更新
           }}
-          onStartInterview={handleStartInterviewFromSearch}
-        />
-      ) : showCalendarView ? (
-        // カレンダービュー
-        <InterviewCalendar
-          interviews={reservations.map(r => ({
-            id: r.id,
-            date: r.scheduledDate.toISOString().split('T')[0],
-            time: r.scheduledTime,
-            staffName: r.staffName,
-            staffId: r.staffId,
-            department: r.department,
-            interviewer: r.createdBy || '人事部',
-            type: r.type === 'regular' ? 'regular' :
-                  r.type === 'special' ? 'emergency' : 'followup',
-            status: r.status === 'pending' ? 'scheduled' :
-                   r.status === 'confirmed' ? 'scheduled' :
-                   r.status === 'completed' ? 'completed' :
-                   r.status === 'cancelled' ? 'cancelled' : 'scheduled',
-            duration: r.duration || 30,
-            location: '人事部面談室',
-            notes: r.notes
-          }))}
-          onDateSelect={(date) => setSelectedDate(date)}
-          onEventClick={(event) => {
-            const reservation = reservations.find(r => r.id === event.id);
-            if (reservation) {
-              handleStartInterview(reservation);
+          onStatusChange={(reservation, newStatus) => {
+            // 予約ステータス変更処理
+            setProvisionalReservations(prev =>
+              prev.map(r => r.id === reservation.id ? { ...r, status: newStatus } : r)
+            );
+            if (newStatus === 'confirmed') {
+              // 🚀 NEW: 確定済みになったら承認待ちから削除し、右側に直接表示
+              console.log('VoiceDrive承認完了 → 右側面談実施セクションに表示:', reservation);
+              // 右側データは getTodayReservations() で自動取得される
             }
           }}
         />
-      ) : (
-        /* 左右分割メインコンテンツ - 最優先業務エリア */
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* 👈 左側: 面談予約管理セクション */}
-          <ReservationManagementSection
-            provisionalReservations={provisionalReservations}
-            onShowInterviewerManagement={() => setShowInterviewerManagement(true)}
-            onShowPatternDAnalytics={() => setShowPatternDAnalytics(true)}
-            onConfirmed={(confirmed) => {
-              // 確定済み予約を右側に送信
-              console.log('確定済み予約:', confirmed);
-              // 予約管理データを更新
-              setProvisionalReservations(prev =>
-                prev.map(r =>
-                  confirmed.find(c => c.id === r.id) ? { ...r, status: 'confirmed' as const } : r
-                )
-              );
-              loadReservations(); // 右側データ更新
-            }}
-            onStatusChange={(reservation, newStatus) => {
-              // 予約ステータス変更処理
-              setProvisionalReservations(prev =>
-                prev.map(r => r.id === reservation.id ? { ...r, status: newStatus } : r)
-              );
-              if (newStatus === 'confirmed') {
-                // 🚀 NEW: 確定済みになったら承認待ちから削除し、右側に直接表示
-                console.log('VoiceDrive承認完了 → 右側面談実施セクションに表示:', reservation);
-                // 右側データは getTodayReservations() で自動取得される
-              }
-            }}
-          />
 
-          {/* 👉 右側: 面談実施管理セクション */}
-          <InterviewExecutionSection
+        {/* 👉 右側: 面談実施管理セクション */}
+        <InterviewExecutionSection
+          todayReservations={todayReservations}
+          loading={loading}
+          onStartInterview={handleStartInterview}
+        />
+      </div>
+
+      {/* 4ステージ統合表示エリア - カード連動型 */}
+      <Card className="border-2 border-blue-200" ref={integratedDashboardRef}>
+        <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100">
+          <CardTitle className="flex items-center gap-2">
+            <Activity className="h-5 w-5 text-blue-600" />
+            統合ダッシュボード - 業務フロー詳細
+          </CardTitle>
+          <p className="text-sm text-gray-600">上部カードクリックで対応する詳細表示</p>
+        </CardHeader>
+        <CardContent className="pt-4">
+          <IntegratedWorkflowDisplay
+            selectedStage={selectedStage}
+            provisionalReservations={provisionalReservations}
             todayReservations={todayReservations}
-            loading={loading}
+            reservations={reservations}
+            onStageChange={setSelectedStage}
             onStartInterview={handleStartInterview}
           />
-        </div>
-      )}
-
-      {/* 検索・フィルター - 必要に応じて使用 */}
-      <Card className="border-2 border-gray-200">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center justify-between">
-            <span className="flex items-center gap-2">
-              <Search className="h-5 w-5" />
-              検索・フィルター
-            </span>
-            {isSearchMode && (
-              <Button variant="outline" size="sm" onClick={handleClearSearch}>
-                <FilterX className="h-4 w-4 mr-2" />
-                検索クリア
-              </Button>
-            )}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {/* 検索バー */}
-            <div className="flex gap-2">
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  placeholder="職員名、部署、面談内容で検索..."
-                  value={searchTerm}
-                  onChange={(e) => handleQuickSearch(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-              <Button
-                variant="outline"
-                onClick={() => setShowAdvancedSearch(true)}
-                className="flex-shrink-0"
-              >
-                <Filter className="h-4 w-4 mr-2" />
-                高度な検索
-              </Button>
-            </div>
-
-            {/* フィルター */}
-            {!isSearchMode && (
-              <div className="flex gap-4 items-center">
-                <Tabs value={filterType} onValueChange={(v) => setFilterType(v as any)}>
-                  <TabsList>
-                    <TabsTrigger value="all">すべて</TabsTrigger>
-                    <TabsTrigger value="regular">定期</TabsTrigger>
-                    <TabsTrigger value="special">特別</TabsTrigger>
-                    <TabsTrigger value="support">サポート</TabsTrigger>
-                  </TabsList>
-                </Tabs>
-                <Button
-                  variant={showUrgentOnly ? "default" : "outline"}
-                  onClick={() => setShowUrgentOnly(!showUrgentOnly)}
-                >
-                  <AlertTriangle className="h-4 w-4 mr-2" />
-                  緊急のみ
-                </Button>
-              </div>
-            )}
-          </div>
         </CardContent>
       </Card>
 
-      {/* 強化された未実施面談アラート */}
-      <EnhancedOverdueAlert
-        overdueInterviews={overdueReservations.map(r => ({
-          id: r.id,
-          staffName: r.staffName,
-          interviewType: getInterviewTypeLabel(r),
-          category: r.supportCategory,
-          scheduledDate: r.scheduledDate,
-          urgency: calculateUrgency(r),
-          daysOverdue: Math.ceil((new Date().getTime() - r.scheduledDate.getTime()) / (1000 * 60 * 60 * 24)),
-          department: r.department,
-          position: r.position || '職員',
-          notes: r.notes
-        }))}
-        onScheduleInterview={(interview) => {
-          // 面談予約処理
-          const reservation = reservations.find(r => r.id === interview.id);
-          if (reservation) {
-            handleStartInterview(reservation);
-          }
-        }}
-        onBulkAction={(interviews, action) => {
-          console.log('一括処理:', action, interviews);
-          // 一括処理のロジックを実装
-        }}
-        showInCalendarView={showCalendarView}
-      />
-
-      {/* 表示切り替えタブ - 補助機能 */}
-      {!isSearchMode && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
-          <div className="flex border-b border-gray-200">
-            <button
-              onClick={() => setShowCalendarView(false)}
-              className={`flex-1 px-6 py-3 text-sm font-medium transition-colors flex items-center justify-center gap-2 ${
-                !showCalendarView
-                  ? 'bg-blue-50 text-blue-700 border-b-2 border-blue-500'
-                  : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-              }`}
-            >
-              <Users className="h-4 w-4" />
-              リスト表示
-              <Badge variant="outline" className="ml-2">
-                {getTodayReservations().length}件
-              </Badge>
-            </button>
-            <button
-              onClick={() => setShowCalendarView(true)}
-              className={`flex-1 px-6 py-3 text-sm font-medium transition-colors flex items-center justify-center gap-2 ${
-                showCalendarView
-                  ? 'bg-blue-50 text-blue-700 border-b-2 border-blue-500'
-                  : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-              }`}
-            >
-              <CalendarDays className="h-4 w-4" />
-              カレンダー表示
-              <Badge variant="outline" className="ml-2">
-                月次/週次
-              </Badge>
-            </button>
-          </div>
-        </div>
-      )}
+      {/* 統合カレンダー - 常時表示 */}
+      <Card className="border-2 border-green-200">
+        <CardHeader className="bg-gradient-to-r from-green-50 to-green-100">
+          <CardTitle className="flex items-center gap-2">
+            <Calendar className="h-5 w-5 text-green-600" />
+            統合スケジュールカレンダー
+          </CardTitle>
+          <p className="text-sm text-gray-600">確定予約の週・月表示 / 先々の予定管理</p>
+        </CardHeader>
+        <CardContent className="pt-4">
+          <IntegratedCalendarView
+            reservations={reservations}
+            provisionalReservations={provisionalReservations}
+            patternDReservations={patternDReservations}
+            onEventClick={(event) => {
+              const reservation = reservations.find(r => r.id === event.id);
+              if (reservation) {
+                handleStartInterview(reservation);
+              }
+            }}
+          />
+        </CardContent>
+      </Card>
 
       {/* 手動予約追加モーダル */}
       <ManualReservationModal
@@ -1173,7 +1091,7 @@ export default function UnifiedInterviewDashboard() {
         onSubmit={handleAddManualReservation}
       />
 
-      {/* 高度な検索モーダル */}
+      {/* 高度な検索モーダル - 削除予定 */}
       <AdvancedSearchModal
         isOpen={showAdvancedSearch}
         onClose={() => setShowAdvancedSearch(false)}
@@ -2135,6 +2053,337 @@ function ReservationProcessingModal({ isOpen, onClose, reservation, onStatusChan
         {currentStep === 2 && renderStep2()}
         {currentStep === 3 && renderStep3()}
       </div>
+    </div>
+  );
+}
+
+// 統合ワークフロー表示コンポーネント
+interface IntegratedWorkflowDisplayProps {
+  selectedStage: 'booking' | 'management' | 'execution' | 'feedback' | null;
+  provisionalReservations: ProvisionalReservation[];
+  todayReservations: UnifiedInterviewReservation[];
+  reservations: UnifiedInterviewReservation[];
+  onStageChange: (stage: 'booking' | 'management' | 'execution' | 'feedback' | null) => void;
+  onStartInterview: (reservation: UnifiedInterviewReservation) => void;
+}
+
+function IntegratedWorkflowDisplay({
+  selectedStage,
+  provisionalReservations,
+  todayReservations,
+  reservations,
+  onStageChange,
+  onStartInterview
+}: IntegratedWorkflowDisplayProps) {
+  if (!selectedStage) {
+    return (
+      <div className="text-center py-12 text-gray-500">
+        <Activity className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+        <p className="text-lg font-medium">業務ステージを選択してください</p>
+        <p className="text-sm">上部のカードをクリックすると対応する詳細が表示されます</p>
+      </div>
+    );
+  }
+
+  const renderBookingStage = () => (
+    <div className="space-y-4">
+      <div className="flex items-center gap-2 mb-4">
+        <Plus className="h-5 w-5 text-green-600" />
+        <h3 className="text-lg font-semibold text-green-900">予約受付 - 手動予約履歴</h3>
+      </div>
+      <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+        <p className="text-green-800">最近の手動予約追加履歴がここに表示されます。</p>
+        <div className="mt-3 space-y-2">
+          <div className="text-sm text-green-700">• 電話予約: 3件</div>
+          <div className="text-sm text-green-700">• 対面予約: 2件</div>
+          <div className="text-sm text-green-700">• 直接入力: 1件</div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderManagementStage = () => (
+    <div className="space-y-4">
+      <div className="flex items-center gap-2 mb-4">
+        <Calendar className="h-5 w-5 text-blue-600" />
+        <h3 className="text-lg font-semibold text-blue-900">予約管理 - 仮予約・承認待ちリスト</h3>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {provisionalReservations.filter(r => r.status === 'pending' || r.status === 'awaiting').map(reservation => (
+          <Card key={reservation.id} className="border-2 border-blue-200">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base flex items-center justify-between">
+                <span>{reservation.staffName}</span>
+                <Badge variant={reservation.urgency === 'urgent' ? 'destructive' : 'outline'}>
+                  {reservation.urgency === 'urgent' ? '🚨 緊急' : '📋 通常'}
+                </Badge>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-gray-600 mb-2">{reservation.department} / {reservation.position}</p>
+              <p className="text-xs text-blue-700 mb-3">{reservation.notes}</p>
+              <div className="flex gap-2">
+                <Button size="sm" className="flex-1">詳細処理</Button>
+                <Button size="sm" variant="outline">承認</Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderExecutionStage = () => (
+    <div className="space-y-4">
+      <div className="flex items-center gap-2 mb-4">
+        <Play className="h-5 w-5 text-orange-600" />
+        <h3 className="text-lg font-semibold text-orange-900">面談実施 - 本日のスケジュール</h3>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {todayReservations.map(reservation => (
+          <Card key={reservation.id} className="border-2 border-orange-200">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base flex items-center justify-between">
+                <span>{reservation.staffName}</span>
+                <span className="text-sm text-orange-600">{reservation.scheduledTime}</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-gray-600 mb-2">{reservation.department}</p>
+              <p className="text-xs text-orange-700 mb-3">
+                {reservation.type === 'regular' ? '定期面談' :
+                 reservation.type === 'special' ? '特別面談' : 'サポート面談'}
+              </p>
+              <Button
+                size="sm"
+                className="w-full bg-orange-600 hover:bg-orange-700"
+                onClick={() => onStartInterview(reservation)}
+              >
+                面談開始
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderFeedbackStage = () => {
+    const completedReservations = reservations.filter(r => r.status === 'completed');
+    const pendingFeedback = completedReservations.filter(r => Math.random() > 0.7); // Mock: 30%がフィードバック未完了
+
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 mb-4">
+          <MessageSquare className="h-5 w-5 text-purple-600" />
+          <h3 className="text-lg font-semibold text-purple-900">フィードバック管理 - 未完了職員リスト</h3>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {pendingFeedback.map(reservation => (
+            <Card key={reservation.id} className="border-2 border-purple-200">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base flex items-center justify-between">
+                  <span>{reservation.staffName}</span>
+                  <Badge variant="outline" className="text-purple-600">未完了</Badge>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-600 mb-2">{reservation.department}</p>
+                <p className="text-xs text-purple-700 mb-3">
+                  実施日: {reservation.conductedAt?.toLocaleDateString() || reservation.scheduledDate.toLocaleDateString()}
+                </p>
+                <div className="flex gap-2">
+                  <Button size="sm" className="flex-1 bg-purple-600 hover:bg-purple-700">
+                    職員カルテへ
+                  </Button>
+                  <Button size="sm" variant="outline">
+                    フィードバック送信
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div>
+      {selectedStage === 'booking' && renderBookingStage()}
+      {selectedStage === 'management' && renderManagementStage()}
+      {selectedStage === 'execution' && renderExecutionStage()}
+      {selectedStage === 'feedback' && renderFeedbackStage()}
+    </div>
+  );
+}
+
+// 統合カレンダービューコンポーネント
+interface IntegratedCalendarViewProps {
+  reservations: UnifiedInterviewReservation[];
+  provisionalReservations: ProvisionalReservation[];
+  patternDReservations: EnhancedInterviewReservation[];
+  onEventClick: (event: any) => void;
+}
+
+function IntegratedCalendarView({
+  reservations,
+  provisionalReservations,
+  patternDReservations,
+  onEventClick
+}: IntegratedCalendarViewProps) {
+  const [viewMode, setViewMode] = useState<'week' | 'month'>('week');
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  // カレンダーイベントデータ統合
+  const getAllEvents = () => {
+    const events = [];
+
+    // 確定済み面談
+    reservations.forEach(r => {
+      events.push({
+        id: r.id,
+        title: `${r.staffName} (${r.type === 'regular' ? '定期' : r.type === 'special' ? '特別' : 'サポート'})`,
+        start: new Date(`${r.scheduledDate.toISOString().split('T')[0]}T${r.scheduledTime}`),
+        type: 'confirmed',
+        status: r.status,
+        color: r.status === 'completed' ? '#10B981' : '#3B82F6'
+      });
+    });
+
+    // 仮予約
+    provisionalReservations.forEach(r => {
+      if (r.status === 'pending' || r.status === 'awaiting') {
+        events.push({
+          id: `prov-${r.id}`,
+          title: `${r.staffName} (仮予約)`,
+          start: r.preferredDates[0] ? new Date(r.preferredDates[0]) : new Date(),
+          type: 'provisional',
+          status: r.status,
+          color: r.urgency === 'urgent' ? '#EF4444' : '#F59E0B'
+        });
+      }
+    });
+
+    return events;
+  };
+
+  const events = getAllEvents();
+
+  const renderWeekView = () => (
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <h4 className="font-medium">週表示</h4>
+        <div className="flex gap-2">
+          <Button size="sm" variant="outline" onClick={() => setCurrentDate(new Date(currentDate.setDate(currentDate.getDate() - 7)))}>
+            前週
+          </Button>
+          <Button size="sm" variant="outline" onClick={() => setCurrentDate(new Date())}>
+            今週
+          </Button>
+          <Button size="sm" variant="outline" onClick={() => setCurrentDate(new Date(currentDate.setDate(currentDate.getDate() + 7)))}>
+            翌週
+          </Button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-7 gap-2">
+        {['月', '火', '水', '木', '金', '土', '日'].map((day, index) => (
+          <div key={day} className="border rounded-lg p-2 min-h-[120px]">
+            <div className="font-medium text-center mb-2">{day}</div>
+            <div className="space-y-1">
+              {events.filter(event => {
+                const eventDate = new Date(event.start);
+                const dayOfWeek = eventDate.getDay();
+                const targetDayOfWeek = index === 6 ? 0 : index + 1; // 日曜日を0にする
+                return dayOfWeek === targetDayOfWeek;
+              }).map(event => (
+                <div
+                  key={event.id}
+                  className="text-xs p-1 rounded cursor-pointer hover:opacity-80"
+                  style={{ backgroundColor: event.color, color: 'white' }}
+                  onClick={() => onEventClick(event)}
+                >
+                  {event.title}
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderMonthView = () => (
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <h4 className="font-medium">{currentDate.getFullYear()}年{currentDate.getMonth() + 1}月</h4>
+        <div className="flex gap-2">
+          <Button size="sm" variant="outline" onClick={() => setCurrentDate(new Date(currentDate.setMonth(currentDate.getMonth() - 1)))}>
+            前月
+          </Button>
+          <Button size="sm" variant="outline" onClick={() => setCurrentDate(new Date())}>
+            今月
+          </Button>
+          <Button size="sm" variant="outline" onClick={() => setCurrentDate(new Date(currentDate.setMonth(currentDate.getMonth() + 1)))}>
+            翌月
+          </Button>
+        </div>
+      </div>
+
+      <div className="text-center text-gray-600">
+        <Calendar className="h-16 w-16 mx-auto mb-2" />
+        <p>月表示カレンダーは開発中です</p>
+        <p className="text-sm">確定予約: {events.filter(e => e.type === 'confirmed').length}件</p>
+        <p className="text-sm">仮予約: {events.filter(e => e.type === 'provisional').length}件</p>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="space-y-4">
+      {/* カレンダー表示切り替え */}
+      <div className="flex justify-between items-center">
+        <div className="flex gap-2">
+          <Button
+            size="sm"
+            variant={viewMode === 'week' ? 'default' : 'outline'}
+            onClick={() => setViewMode('week')}
+          >
+            週表示
+          </Button>
+          <Button
+            size="sm"
+            variant={viewMode === 'month' ? 'default' : 'outline'}
+            onClick={() => setViewMode('month')}
+          >
+            月表示
+          </Button>
+        </div>
+
+        {/* 凡例 */}
+        <div className="flex gap-4 text-xs">
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 bg-blue-500 rounded"></div>
+            <span>確定予約</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 bg-green-500 rounded"></div>
+            <span>完了</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 bg-yellow-500 rounded"></div>
+            <span>仮予約</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 bg-red-500 rounded"></div>
+            <span>緊急</span>
+          </div>
+        </div>
+      </div>
+
+      {/* カレンダー表示 */}
+      {viewMode === 'week' ? renderWeekView() : renderMonthView()}
     </div>
   );
 }
