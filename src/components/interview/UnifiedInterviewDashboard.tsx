@@ -1209,39 +1209,79 @@ function ReservationManagementSection({ provisionalReservations, onConfirmed, on
             <h3 className="font-semibold text-blue-900 text-center">
               仮予約 ({provisionalReservations.filter(r => r.status === 'pending').length}件)
             </h3>
-            <div className="space-y-2 max-h-96 overflow-y-auto">
+            <div className="space-y-3 max-h-96 overflow-y-auto">
               {provisionalReservations
                 .filter(r => r.status === 'pending')
                 .map(reservation => (
-                  <div
-                    key={reservation.id}
-                    className={`p-3 rounded-lg border-2 ${getStatusColor(reservation.status)} cursor-pointer hover:shadow-md transition-all`}
-                    onClick={() => handleProcessReservation(reservation)}
-                  >
-                    <div className="font-medium text-sm">{reservation.staffName}</div>
-                    <div className="text-xs text-gray-600">{reservation.department}</div>
-                    <div className="text-xs mt-1">
-                      <Badge variant="outline" className="text-xs">
-                        {reservation.interviewType === 'regular' ? '定期' :
-                         reservation.interviewType === 'special' ? '特別' : 'サポート'}
-                      </Badge>
-                      <span className="ml-2 text-gray-500">
-                        {reservation.urgency === 'urgent' ? '緊急' :
-                         reservation.urgency === 'high' ? '高' :
-                         reservation.urgency === 'medium' ? '中' : '低'}
-                      </span>
+                  <Card key={reservation.id} className="p-4 border-2 border-blue-200 hover:border-blue-400 hover:shadow-lg transition-all cursor-pointer">
+                    <div className="flex justify-between items-start mb-3">
+                      <div className="flex-1">
+                        <h4 className="font-bold text-lg text-blue-900">{reservation.staffName}</h4>
+                        <div className="flex items-center gap-2 mt-1">
+                          <Badge variant={reservation.interviewType === 'regular' ? 'default' :
+                                         reservation.interviewType === 'special' ? 'destructive' : 'secondary'}>
+                            {reservation.interviewType === 'regular' ? '定期面談' :
+                             reservation.interviewType === 'special' ? '特別面談' : 'サポート面談'}
+                          </Badge>
+                          <Badge variant={reservation.urgency === 'urgent' ? 'destructive' :
+                                         reservation.urgency === 'high' ? 'destructive' :
+                                         reservation.urgency === 'medium' ? 'outline' : 'secondary'}>
+                            {reservation.urgency === 'urgent' ? '🚨 緊急' :
+                             reservation.urgency === 'high' ? '⚠️ 高' :
+                             reservation.urgency === 'medium' ? '📋 中' : '📝 低'}
+                          </Badge>
+                        </div>
+                        <div className="text-sm text-gray-600 mt-1">
+                          {reservation.department} / {reservation.position}
+                        </div>
+                      </div>
+                      <div className="text-right text-xs text-gray-500">
+                        受信: {new Date(reservation.receivedAt).toLocaleDateString()}
+                      </div>
                     </div>
-                    <Button
-                      size="sm"
-                      className="w-full mt-2 bg-blue-600 hover:bg-blue-700 text-white"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleAIOptimization(reservation);
-                      }}
-                    >
-                      詳細処理
-                    </Button>
-                  </div>
+
+                    {/* 希望日程表示 */}
+                    <div className="bg-blue-50 p-3 rounded-md mb-3">
+                      <h5 className="font-medium text-sm text-blue-900 mb-2">📅 希望日程</h5>
+                      <div className="space-y-1">
+                        {reservation.preferredDates.slice(0, 2).map((date, index) => (
+                          <div key={index} className="text-sm text-blue-700">
+                            {index + 1}. {new Date(date).toLocaleDateString('ja-JP', {
+                              month: 'long', day: 'numeric', weekday: 'short'
+                            })}
+                          </div>
+                        ))}
+                        {reservation.preferredDates.length > 2 && (
+                          <div className="text-xs text-blue-600">他 {reservation.preferredDates.length - 2}件</div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* 相談内容 */}
+                    {reservation.notes && (
+                      <div className="bg-gray-50 p-2 rounded mb-3">
+                        <h5 className="font-medium text-xs text-gray-700 mb-1">💬 相談内容</h5>
+                        <p className="text-xs text-gray-600 line-clamp-2">{reservation.notes}</p>
+                      </div>
+                    )}
+
+                    {/* アクションボタン */}
+                    <div className="flex gap-2">
+                      <Button
+                        className="flex-1 bg-purple-600 hover:bg-purple-700 text-white"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAIOptimization(reservation);
+                        }}
+                      >
+                        🤖 AI最適化分析
+                      </Button>
+                      <Button variant="outline" size="sm" className="px-3">
+                        ✏️
+                      </Button>
+                    </div>
+                  </Card>
                 ))}
             </div>
           </div>
@@ -1254,31 +1294,109 @@ function ReservationManagementSection({ provisionalReservations, onConfirmed, on
             <p className="text-xs text-center text-gray-500 mb-2">
               VoiceDrive承認後 → 右側面談実施セクションに表示
             </p>
-            <div className="space-y-2 max-h-96 overflow-y-auto">
+            <div className="space-y-3 max-h-96 overflow-y-auto">
               {provisionalReservations
                 .filter(r => r.status === 'awaiting')
-                .map(reservation => (
-                  <div
-                    key={reservation.id}
-                    className={`p-3 rounded-lg border-2 ${getStatusColor(reservation.status)}`}
-                  >
-                    <div className="font-medium text-sm">{reservation.staffName}</div>
-                    <div className="text-xs text-gray-600">{reservation.department}</div>
-                    <div className="text-xs mt-1 text-yellow-700">
-                      調整回数: {reservation.adjustmentCount || 0}回
-                    </div>
-                    <div className="text-xs mt-2 bg-yellow-50 p-2 rounded text-yellow-800">
-                      💡 承認後は右側面談実施セクションに移動
-                    </div>
-                    <Button
-                      size="sm"
-                      className="w-full mt-2 bg-green-600 hover:bg-green-700 text-white"
-                      onClick={() => handleVoiceDriveApproval(reservation)}
-                    >
-                      ✅ VoiceDrive承認完了
-                    </Button>
-                  </div>
-                ))}
+                .map(reservation => {
+                  const daysSinceSubmission = Math.floor((new Date().getTime() - (reservation.lastSentAt || reservation.receivedAt).getTime()) / (1000 * 60 * 60 * 24));
+                  const progressPercentage = Math.min((daysSinceSubmission / 7) * 100, 100); // 7日で100%
+
+                  return (
+                    <Card key={reservation.id} className="p-4 border-2 border-yellow-200 bg-yellow-50/50">
+                      <div className="flex justify-between items-start mb-3">
+                        <div className="flex-1">
+                          <h4 className="font-bold text-lg text-yellow-900">{reservation.staffName}</h4>
+                          <div className="flex items-center gap-2 mt-1">
+                            <Badge variant="outline" className="border-yellow-500 text-yellow-700">
+                              {reservation.interviewType === 'regular' ? '定期面談' :
+                               reservation.interviewType === 'special' ? '特別面談' : 'サポート面談'}
+                            </Badge>
+                            <Badge variant="secondary" className="bg-yellow-200 text-yellow-800">
+                              調整{reservation.adjustmentCount || 0}回目
+                            </Badge>
+                          </div>
+                          <div className="text-sm text-gray-600 mt-1">
+                            {reservation.department} / {reservation.position}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* AI分析結果表示 */}
+                      {reservation.aiAnalysis && (
+                        <div className="bg-purple-50 border border-purple-200 p-3 rounded-md mb-3">
+                          <h5 className="font-medium text-sm text-purple-900 mb-2 flex items-center">
+                            🧠 AI推奨案 (スコア: {reservation.aiAnalysis.proposals[0]?.matchingScore || 85}%)
+                          </h5>
+                          <div className="text-sm text-purple-800">
+                            📅 {reservation.aiAnalysis.proposals[0]?.timeSlot || '2025-09-20 14:00-15:00'}<br/>
+                            👤 {reservation.aiAnalysis.proposals[0]?.interviewer || '田中部長（人事部）'}
+                          </div>
+                          <div className="text-xs text-purple-600 mt-1">
+                            {reservation.aiAnalysis.proposals[0]?.reasoning || '専門分野が一致し、最適な時間帯です。'}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* VoiceDrive送信状況 */}
+                      <div className="bg-blue-50 border border-blue-200 p-3 rounded-md mb-3">
+                        <h5 className="font-medium text-sm text-blue-900 mb-2">📱 VoiceDrive送信状況</h5>
+                        <div className="text-sm text-blue-700 mb-2">
+                          送信日: {new Date(reservation.lastSentAt || reservation.receivedAt).toLocaleDateString()}
+                          <span className="ml-2 text-blue-600">({daysSinceSubmission}日経過)</span>
+                        </div>
+
+                        {/* プログレスバー */}
+                        <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+                          <div
+                            className="bg-yellow-500 h-2 rounded-full transition-all duration-300"
+                            style={{width: `${progressPercentage}%`}}
+                          />
+                        </div>
+                        <div className="text-xs text-gray-600 text-center">
+                          職員側での確認・検討期間
+                        </div>
+                      </div>
+
+                      {/* 待機状態表示 */}
+                      <div className="bg-yellow-50 border border-yellow-200 p-3 rounded-md">
+                        <div className="flex items-center justify-center gap-2 text-yellow-700 mb-2">
+                          <div className="animate-spin rounded-full h-4 w-4 border-2 border-yellow-600 border-t-transparent"></div>
+                          <span className="text-sm font-medium">職員からの回答待ち...</span>
+                        </div>
+                        <div className="text-xs text-center text-yellow-600">
+                          VoiceDriveアプリで承認処理中
+                        </div>
+                      </div>
+
+                      {/* 開発用シミュレーション */}
+                      {process.env.NODE_ENV === 'development' && (
+                        <div className="mt-3 border-2 border-dashed border-gray-300 p-2 rounded">
+                          <div className="text-xs text-gray-500 text-center mb-2">
+                            🛠️ 開発用シミュレーション
+                          </div>
+                          <div className="flex gap-1">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="flex-1 text-xs"
+                              onClick={() => handleVoiceDriveApproval(reservation)}
+                            >
+                              ✅ 承認テスト
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="flex-1 text-xs"
+                              onClick={() => onStatusChange(reservation, 'pending')}
+                            >
+                              ❌ 拒否テスト
+                            </Button>
+                          </div>
+                        </div>
+                      )}
+                    </Card>
+                  );
+                })}
             </div>
           </div>
         </div>
