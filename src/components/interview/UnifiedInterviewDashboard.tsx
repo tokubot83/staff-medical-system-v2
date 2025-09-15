@@ -177,6 +177,7 @@ export default function UnifiedInterviewDashboard() {
   const [selectedReservation, setSelectedReservation] = useState<ProvisionalReservation | null>(null);
   const [showProcessingModal, setShowProcessingModal] = useState(false);
   const [showInterviewerManagement, setShowInterviewerManagement] = useState(false);
+  const [showPatternDAnalytics, setShowPatternDAnalytics] = useState(false);
 
   useEffect(() => {
     loadReservations();
@@ -789,23 +790,7 @@ export default function UnifiedInterviewDashboard() {
   // 通常のダッシュボード表示
   return (
     <div className="space-y-6">
-      {/* Pattern D統合タブナビゲーション */}
-      <Tabs value={activeMainTab} onValueChange={(v) => setActiveMainTab(v as any)}>
-        <div className="flex justify-between items-center">
-          <TabsList className="grid w-auto grid-cols-3">
-            <TabsTrigger value="dashboard" className="flex items-center gap-2">
-              <Calendar className="h-4 w-4" />
-              面談ダッシュボード
-            </TabsTrigger>
-            <TabsTrigger value="pattern-d-analytics" className="flex items-center gap-2">
-              <Brain className="h-4 w-4" />
-              AI最適化分析
-            </TabsTrigger>
-          </TabsList>
-        </div>
-
-        {/* メインダッシュボードタブ */}
-        <TabsContent value="dashboard" className="space-y-6">
+      {/* 面談ダッシュボード - サブタブ構造を削除、内容は完全保持 */}
           {/* ヘッダー - より目立つデザイン */}
           <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-6 text-white shadow-lg">
         <div className="flex justify-between items-start">
@@ -1093,6 +1078,7 @@ export default function UnifiedInterviewDashboard() {
           <ReservationManagementSection
             provisionalReservations={provisionalReservations}
             onShowInterviewerManagement={() => setShowInterviewerManagement(true)}
+            onShowPatternDAnalytics={() => setShowPatternDAnalytics(true)}
             onConfirmed={(confirmed) => {
               // 確定済み予約を右側に送信
               console.log('確定済み予約:', confirmed);
@@ -1125,17 +1111,6 @@ export default function UnifiedInterviewDashboard() {
           />
         </div>
       )}
-        </TabsContent>
-
-
-        {/* Pattern D AI最適化分析タブ */}
-        <TabsContent value="pattern-d-analytics">
-          <PatternDAnalytics
-            patternDReservations={patternDReservations}
-            onRefresh={loadPatternDReservations}
-          />
-        </TabsContent>
-      </Tabs>
 
       {/* 手動予約追加モーダル */}
       <ManualReservationModal
@@ -1176,6 +1151,24 @@ export default function UnifiedInterviewDashboard() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* AI最適化分析モーダル */}
+      <Dialog open={showPatternDAnalytics} onOpenChange={setShowPatternDAnalytics}>
+        <DialogContent className="max-w-7xl w-[95vw] max-h-[90vh] overflow-hidden flex flex-col">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Brain className="h-5 w-5" />
+              AI最適化分析 - Pattern D統合分析
+            </DialogTitle>
+          </DialogHeader>
+          <div className="flex-1 overflow-y-auto">
+            <PatternDAnalytics
+              patternDReservations={patternDReservations}
+              onRefresh={loadPatternDReservations}
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
@@ -1186,9 +1179,10 @@ interface ReservationManagementSectionProps {
   onConfirmed: (confirmed: ProvisionalReservation[]) => void;
   onStatusChange: (reservation: ProvisionalReservation, newStatus: ReservationStatus) => void;
   onShowInterviewerManagement: () => void;
+  onShowPatternDAnalytics: () => void;
 }
 
-function ReservationManagementSection({ provisionalReservations, onConfirmed, onStatusChange, onShowInterviewerManagement }: ReservationManagementSectionProps) {
+function ReservationManagementSection({ provisionalReservations, onConfirmed, onStatusChange, onShowInterviewerManagement, onShowPatternDAnalytics }: ReservationManagementSectionProps) {
   const [showProcessingModal, setShowProcessingModal] = useState(false);
   const [selectedReservation, setSelectedReservation] = useState<ProvisionalReservation | null>(null);
 
@@ -1246,18 +1240,32 @@ function ReservationManagementSection({ provisionalReservations, onConfirmed, on
             <Calendar className="h-5 w-5 text-blue-600" />
             🔄 面談予約管理 - VoiceDrive連携
           </CardTitle>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              console.log('担当者管理ボタンクリック');
-              onShowInterviewerManagement();
-            }}
-            className="flex items-center gap-2 bg-white hover:bg-blue-50"
-          >
-            <Settings className="h-4 w-4" />
-            担当者管理
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                console.log('担当者管理ボタンクリック');
+                onShowInterviewerManagement();
+              }}
+              className="flex items-center gap-2 bg-white hover:bg-blue-50"
+            >
+              <Settings className="h-4 w-4" />
+              担当者管理
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                console.log('AI最適化分析ボタンクリック');
+                onShowPatternDAnalytics();
+              }}
+              className="flex items-center gap-2 bg-white hover:bg-green-50"
+            >
+              <Brain className="h-4 w-4" />
+              AI最適化分析
+            </Button>
+          </div>
         </div>
       </CardHeader>
       <CardContent className="pt-4">
