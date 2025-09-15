@@ -1,12 +1,161 @@
 # 管理者設定ページ 開発メモ
 
-最終更新日: 2025年8月28日  
-文書バージョン: 1.1
+最終更新日: 2025年9月14日
+文書バージョン: 1.2
 
 ## 概要
 医療職員管理システムの管理者設定ページに関する開発進捗と今後の実装予定を記録する開発メモです。
 
 ## 開発履歴
+
+### 2025年9月14日 - 面談フィードバックサマリ作成機能の実装 ✅
+
+#### 実装概要
+職員カルテ個人ページの面談履歴に「📄 サマリ作成」ボタンを追加し、人事部が職員向けのフィードバックサマリを作成・VoiceDrive通知する機能を実装しました。
+
+#### 実装内容
+
+**1. 新規サマリ作成ボタン追加** ✅
+```typescript
+// 既存ボタン群
+📝 NotebookLMリンク登録  📋 面談シート  🤖 AI分析
+
+// 新規追加
+📄 サマリ作成
+```
+
+**2. AI仮サマリ生成機能** ✅
+- ローカルLLM対応予定の基盤実装
+- 面談種別による自動切り替え
+  - **定期面談**: 構造化サマリ（技術専門性、対人関係ケア、安全品質管理、施設貢献、総合評価、次回目標）
+  - **特別・サポート面談**: 自由記述（面談概要、主な議題、合意事項、フォローアップ、職員へのメッセージ）
+
+**3. サマリ作成UI** ✅
+- 2パネル構成（左: 参考情報、右: サマリ編集）
+- 参考情報パネル
+  - 🎙️ NotebookLM音声解説へのリンク
+  - 📋 面談シート情報
+  - 🤖 AI分析結果へのリンク
+- サマリ編集パネル
+  - AI仮生成ボタン
+  - 項目別テキストエリア（編集可能）
+  - リアルタイム編集機能
+
+**4. VoiceDrive連携機能** ✅
+- 職員通知チェックボックス
+- 保存時のVoiceDrive API呼び出し
+- 面談ステーションでの閲覧機能連携
+
+#### 技術実装詳細
+
+**ファイル更新**
+- `src/app/staff-cards/staff-tabs.tsx`
+  - 新規state追加（showSummaryModal, selectedInterviewForSummary, aiGeneratedSummary, editedSummary, isGeneratingSummary）
+  - handleShowSummaryCreation(), generateAISummary(), handleSaveSummary() 関数実装
+  - サマリ作成モーダル UI実装
+
+**AI生成ロジック**
+```typescript
+// 面談タイプ別サマリ生成
+if (interview.type === 'regular') {
+  // 定期面談: 構造化サマリ
+  generatedSummary = {
+    技術専門性: "...",
+    対人関係ケア: "...",
+    安全品質管理: "...",
+    施設貢献: "...",
+    総合評価: "...",
+    次回目標: "..."
+  }
+} else {
+  // 特別・サポート面談: 自由記述
+  generatedSummary = {
+    面談概要: "...",
+    主な議題: "...",
+    合意事項: "...",
+    フォローアップ: "...",
+    職員へのメッセージ: "..."
+  }
+}
+```
+
+#### 共通DB構築前後の対応
+
+**現在（共通DB未構築）** ✅
+- 暫定面談シートデータからのAI仮生成
+- ローカルストレージ／メモリでの一時保存
+- VoiceDrive通知のモック実装
+- UI/UX完全動作確認
+
+**DB構築後に移行が必要な作業**
+1. **データ保存先の切り替え**
+   ```typescript
+   // 現在: メモリ保存
+   console.log('Saving summary:', editedSummary)
+
+   // DB構築後: API呼び出し
+   await fetch('/api/interview-summaries', {
+     method: 'POST',
+     body: JSON.stringify(summaryData)
+   })
+   ```
+
+2. **実面談シートとの連携**
+   ```typescript
+   // 現在: 暫定シートデータ使用
+   const sheetData = getCurrentTempSheet(interviewId)
+
+   // DB構築後: 動的生成シートデータ取得
+   const sheetData = await getDynamicSheetData(interviewId)
+   ```
+
+3. **VoiceDrive API実連携**
+   ```typescript
+   // 現在: モック通知
+   alert('職員への通知を送信しました')
+
+   // DB構築後: 実API呼び出し
+   await fetch('/api/voicedrive/notifications', {
+     method: 'POST',
+     body: JSON.stringify(notificationData)
+   })
+   ```
+
+4. **ローカルLLM統合**
+   ```typescript
+   // 現在: 2秒待機のシミュレーション
+   await new Promise(resolve => setTimeout(resolve, 2000))
+
+   // ローカルLLM構築後: 実AI生成
+   const response = await fetch('/api/llm/generate-summary', {
+     method: 'POST',
+     body: JSON.stringify({ interviewData, sheetData })
+   })
+   ```
+
+#### 人事部ワークフロー
+
+**Step 1: 情報収集・分析**
+1. NotebookLMリンク → 音声解説で概要把握
+2. 面談シートボタン → 詳細内容確認
+3. AI分析ボタン → 指導ポイント把握
+
+**Step 2: フィードバック作成**
+4. サマリ作成ボタン → AI仮生成 → 人事職員編集 → 完成
+
+**Step 3: 職員通知**
+5. VoiceDrive通知送信 → 職員が面談ステーションで閲覧
+
+#### 期待効果
+- **人事部**: AI支援による効率的なフィードバック作成
+- **職員**: 透明性のある面談結果共有
+- **組織**: 双方向コミュニケーションの強化
+
+#### 関連ファイル
+- `src/app/staff-cards/staff-tabs.tsx` - メイン実装
+- `docs/admin-settings-dev-memo.md` - 本文書（実装記録）
+
+---
 
 ### 2025年9月1日 - ローカルLLM統合開発計画の策定と段階的実装 ✅
 

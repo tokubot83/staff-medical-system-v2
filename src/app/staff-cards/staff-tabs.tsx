@@ -1803,6 +1803,11 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
   const [selectedInterviewSheet, setSelectedInterviewSheet] = useState<any>(null)
   const [showAIAnalysis, setShowAIAnalysis] = useState(false)
   const [selectedInterviewForAI, setSelectedInterviewForAI] = useState<any>(null)
+  const [showSummaryModal, setShowSummaryModal] = useState(false)
+  const [selectedInterviewForSummary, setSelectedInterviewForSummary] = useState<any>(null)
+  const [aiGeneratedSummary, setAiGeneratedSummary] = useState<any>(null)
+  const [editedSummary, setEditedSummary] = useState<any>(null)
+  const [isGeneratingSummary, setIsGeneratingSummary] = useState(false)
 
   if (!selectedStaff) {
     return (
@@ -2027,6 +2032,74 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
   const handleShowAIAnalysis = (interview: any) => {
     setSelectedInterviewForAI(interview)
     setShowAIAnalysis(true)
+  }
+
+  // サマリ作成表示
+  const handleShowSummaryCreation = (interview: any) => {
+    setSelectedInterviewForSummary(interview)
+    setShowSummaryModal(true)
+    // AI仮サマリ生成を開始
+    generateAISummary(interview)
+  }
+
+  // AI仮サマリ生成
+  const generateAISummary = async (interview: any) => {
+    setIsGeneratingSummary(true)
+    try {
+      // ローカルLLM対応予定機能のシミュレーション
+      await new Promise(resolve => setTimeout(resolve, 2000)) // 2秒待機
+
+      // 面談タイプに応じたサマリ生成
+      let generatedSummary: any
+
+      if (interview.type === 'regular') {
+        // 定期面談: 構造化サマリ
+        generatedSummary = {
+          技術専門性: `${interview.interviewer}との面談で確認された技術面での成長点と課題をまとめます。専門知識の習得状況と実践での活用について評価いたします。`,
+          対人関係ケア: `患者様・ご家族との関係構築および同僚との連携について、面談での内容をもとに総合的な評価をいたします。`,
+          安全品質管理: `安全管理・品質向上への取り組み状況と今後の改善点について、面談結果を踏まえてフィードバックいたします。`,
+          施設貢献: `施設運営への貢献度と組織への関わり方について、面談で議論された内容をまとめます。`,
+          総合評価: `今回の面談全体を通じての総合的な評価と今後の成長に向けた提案をいたします。`,
+          次回目標: `次回面談までの具体的な目標設定と行動計画について合意した内容をまとめます。`
+        }
+      } else {
+        // 特別面談・サポート面談: 自由記述形式
+        generatedSummary = {
+          面談概要: `${interview.interviewer}との面談において議論された主要なポイントと合意事項をまとめます。`,
+          主な議題: `面談で取り上げられた具体的な課題や相談事項について詳細を記載いたします。`,
+          合意事項: `面談で決定された事項や今後の方針について確認された内容をまとめます。`,
+          フォローアップ: `継続的なサポートや次回の面談予定について合意した内容を記載いたします。`,
+          職員へのメッセージ: `面談を通じて職員への励ましやアドバイスとして伝えたい内容をまとめます。`
+        }
+      }
+
+      setAiGeneratedSummary(generatedSummary)
+      setEditedSummary({ ...generatedSummary })
+    } catch (error) {
+      console.error('AI summary generation failed:', error)
+    } finally {
+      setIsGeneratingSummary(false)
+    }
+  }
+
+  // サマリ保存・VoiceDrive通知
+  const handleSaveSummary = async (sendToVoiceDrive: boolean = false) => {
+    try {
+      // TODO: サマリをデータベースに保存
+      console.log('Saving summary:', editedSummary)
+
+      if (sendToVoiceDrive) {
+        // TODO: VoiceDrive通知API呼び出し
+        console.log('Sending notification to VoiceDrive')
+        alert('職員への通知を送信しました。VoiceDriveの面談ステーションで確認できます。')
+      }
+
+      setShowSummaryModal(false)
+      alert('面談サマリを保存しました。')
+    } catch (error) {
+      console.error('Failed to save summary:', error)
+      alert('保存に失敗しました。')
+    }
   }
 
   // 面談の種別とカテゴリーを動的に判定
@@ -2259,6 +2332,15 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                         >
                           🤖 AI分析
                         </button>
+
+                        {/* フィードバックサマリボタン（新規追加） */}
+                        <button
+                          onClick={() => handleShowSummaryCreation(interview)}
+                          className="px-3 py-1.5 bg-emerald-600 text-white text-xs rounded-md hover:bg-emerald-700 transition-colors inline-flex items-center gap-1"
+                          title="職員向けフィードバックサマリ作成"
+                        >
+                          📄 サマリ作成
+                        </button>
                       </div>
                     </div>
                     
@@ -2376,6 +2458,15 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
                           title="AIによる面談内容分析"
                         >
                           🤖 AI分析
+                        </button>
+
+                        {/* フィードバックサマリボタン（新規追加） */}
+                        <button
+                          onClick={() => handleShowSummaryCreation(interview)}
+                          className="px-3 py-1.5 bg-emerald-600 text-white text-xs rounded-md hover:bg-emerald-700 transition-colors inline-flex items-center gap-1"
+                          title="職員向けフィードバックサマリ作成"
+                        >
+                          📄 サマリ作成
                         </button>
                       </div>
                     </div>
@@ -2890,6 +2981,284 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
             setSelectedInterviewForAI(null)
           }}
         />
+      )}
+
+      {/* フィードバックサマリ作成モーダル */}
+      {showSummaryModal && selectedInterviewForSummary && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center" style={{ zIndex: 999999 }}>
+          <div className="bg-white rounded-xl shadow-2xl w-[900px] max-w-[95vw] max-h-[90vh] overflow-hidden">
+            {/* ヘッダー */}
+            <div className="bg-gradient-to-br from-emerald-600 to-teal-600 text-white p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-white bg-opacity-20 rounded-lg backdrop-blur-sm">
+                    📄
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold mb-1">面談フィードバックサマリ作成</h3>
+                    <p className="text-emerald-100 text-sm opacity-90">
+                      職員: {selectedStaff?.name} | 面談日: {selectedInterviewForSummary.date}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    setShowSummaryModal(false)
+                    setSelectedInterviewForSummary(null)
+                    setAiGeneratedSummary(null)
+                    setEditedSummary(null)
+                  }}
+                  className="text-white hover:bg-white hover:bg-opacity-20 rounded-lg p-2 transition-colors"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            {/* コンテンツ */}
+            <div className="flex h-[70vh]">
+              {/* 左パネル: 参考情報 */}
+              <div className="w-1/3 bg-gray-50 border-r p-4 overflow-y-auto">
+                <h4 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                  📚 参考情報
+                </h4>
+
+                {/* NotebookLM情報 */}
+                <div className="mb-4 p-3 bg-white rounded-lg border">
+                  <h5 className="font-medium text-gray-700 mb-2">🎙️ 音声解説 (NotebookLM)</h5>
+                  <p className="text-sm text-gray-600">
+                    面談の録音からAI生成された音声解説を確認してください。
+                  </p>
+                  <button className="mt-2 px-3 py-1 bg-blue-100 text-blue-700 text-xs rounded">
+                    音声解説を聞く
+                  </button>
+                </div>
+
+                {/* 面談シート情報 */}
+                <div className="mb-4 p-3 bg-white rounded-lg border">
+                  <h5 className="font-medium text-gray-700 mb-2">📋 面談シート</h5>
+                  <p className="text-sm text-gray-600">
+                    面談者: {selectedInterviewForSummary.interviewer}<br/>
+                    面談種別: {selectedInterviewForSummary.reason || selectedInterviewForSummary.category}
+                  </p>
+                  <button className="mt-2 px-3 py-1 bg-purple-100 text-purple-700 text-xs rounded">
+                    シート詳細
+                  </button>
+                </div>
+
+                {/* AI分析結果 */}
+                <div className="mb-4 p-3 bg-white rounded-lg border">
+                  <h5 className="font-medium text-gray-700 mb-2">🤖 AI分析</h5>
+                  <p className="text-sm text-gray-600">
+                    面談内容のAI分析結果を参考にサマリを作成できます。
+                  </p>
+                  <button className="mt-2 px-3 py-1 bg-indigo-100 text-indigo-700 text-xs rounded">
+                    分析結果確認
+                  </button>
+                </div>
+              </div>
+
+              {/* 右パネル: サマリ編集 */}
+              <div className="w-2/3 p-4 overflow-y-auto">
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="font-semibold text-gray-800 flex items-center gap-2">
+                    ✏️ フィードバックサマリ編集
+                  </h4>
+                  <div className="flex items-center gap-2">
+                    <div className="px-2 py-1 bg-emerald-200 text-emerald-800 text-xs rounded-full font-medium">
+                      ローカルLLM対応予定
+                    </div>
+                    {isGeneratingSummary ? (
+                      <div className="px-3 py-1 bg-gray-200 text-gray-600 text-sm rounded-md">
+                        生成中...
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => generateAISummary(selectedInterviewForSummary)}
+                        className="px-3 py-1 bg-emerald-600 text-white text-sm rounded-md hover:bg-emerald-700 transition-colors"
+                      >
+                        AI仮生成
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* AI生成完了時の編集エリア */}
+                {editedSummary && (
+                  <div className="space-y-4">
+                    {selectedInterviewForSummary.type === 'regular' ? (
+                      // 定期面談: 構造化フォーム
+                      <>
+                        <div className="bg-white border rounded-lg p-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">🎯 技術・専門性</label>
+                          <textarea
+                            value={editedSummary.技術専門性 || ''}
+                            onChange={(e) => setEditedSummary(prev => ({ ...prev, 技術専門性: e.target.value }))}
+                            className="w-full h-20 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none"
+                            placeholder="技術面での成長点や今後の課題について..."
+                          />
+                        </div>
+
+                        <div className="bg-white border rounded-lg p-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">🤝 対人関係・ケア</label>
+                          <textarea
+                            value={editedSummary.対人関係ケア || ''}
+                            onChange={(e) => setEditedSummary(prev => ({ ...prev, 対人関係ケア: e.target.value }))}
+                            className="w-full h-20 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none"
+                            placeholder="患者・同僚との関係性について..."
+                          />
+                        </div>
+
+                        <div className="bg-white border rounded-lg p-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">🛡️ 安全・品質管理</label>
+                          <textarea
+                            value={editedSummary.安全品質管理 || ''}
+                            onChange={(e) => setEditedSummary(prev => ({ ...prev, 安全品質管理: e.target.value }))}
+                            className="w-full h-20 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none"
+                            placeholder="安全管理・品質向上について..."
+                          />
+                        </div>
+
+                        <div className="bg-white border rounded-lg p-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">🏥 施設貢献</label>
+                          <textarea
+                            value={editedSummary.施設貢献 || ''}
+                            onChange={(e) => setEditedSummary(prev => ({ ...prev, 施設貢献: e.target.value }))}
+                            className="w-full h-20 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none"
+                            placeholder="施設運営への貢献について..."
+                          />
+                        </div>
+
+                        <div className="bg-white border rounded-lg p-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">⭐ 総合評価</label>
+                          <textarea
+                            value={editedSummary.総合評価 || ''}
+                            onChange={(e) => setEditedSummary(prev => ({ ...prev, 総合評価: e.target.value }))}
+                            className="w-full h-20 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none"
+                            placeholder="今回の面談の総合評価..."
+                          />
+                        </div>
+
+                        <div className="bg-white border rounded-lg p-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">🎯 次回目標</label>
+                          <textarea
+                            value={editedSummary.次回目標 || ''}
+                            onChange={(e) => setEditedSummary(prev => ({ ...prev, 次回目標: e.target.value }))}
+                            className="w-full h-20 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none"
+                            placeholder="次回面談までの目標..."
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      // 特別面談・サポート面談: 自由記述
+                      <>
+                        <div className="bg-white border rounded-lg p-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">📋 面談概要</label>
+                          <textarea
+                            value={editedSummary.面談概要 || ''}
+                            onChange={(e) => setEditedSummary(prev => ({ ...prev, 面談概要: e.target.value }))}
+                            className="w-full h-20 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none"
+                            placeholder="面談の主要なポイント..."
+                          />
+                        </div>
+
+                        <div className="bg-white border rounded-lg p-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">💬 主な議題</label>
+                          <textarea
+                            value={editedSummary.主な議題 || ''}
+                            onChange={(e) => setEditedSummary(prev => ({ ...prev, 主な議題: e.target.value }))}
+                            className="w-full h-20 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none"
+                            placeholder="議論された具体的な内容..."
+                          />
+                        </div>
+
+                        <div className="bg-white border rounded-lg p-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">✅ 合意事項</label>
+                          <textarea
+                            value={editedSummary.合意事項 || ''}
+                            onChange={(e) => setEditedSummary(prev => ({ ...prev, 合意事項: e.target.value }))}
+                            className="w-full h-20 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none"
+                            placeholder="決定事項や今後の方針..."
+                          />
+                        </div>
+
+                        <div className="bg-white border rounded-lg p-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">🔄 フォローアップ</label>
+                          <textarea
+                            value={editedSummary.フォローアップ || ''}
+                            onChange={(e) => setEditedSummary(prev => ({ ...prev, フォローアップ: e.target.value }))}
+                            className="w-full h-20 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none"
+                            placeholder="継続サポートや次回予定..."
+                          />
+                        </div>
+
+                        <div className="bg-white border rounded-lg p-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">💌 職員へのメッセージ</label>
+                          <textarea
+                            value={editedSummary.職員へのメッセージ || ''}
+                            onChange={(e) => setEditedSummary(prev => ({ ...prev, 職員へのメッセージ: e.target.value }))}
+                            className="w-full h-20 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none"
+                            placeholder="励ましやアドバイス..."
+                          />
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
+
+                {/* 初期状態のガイド */}
+                {!editedSummary && !isGeneratingSummary && (
+                  <div className="text-center py-8 text-gray-500">
+                    <div className="text-4xl mb-4">🤖</div>
+                    <p className="mb-4">「AI仮生成」ボタンをクリックして、<br/>面談シートの内容をもとにサマリの下書きを作成します。</p>
+                    <p className="text-sm">生成後、左側の参考情報を確認しながら編集できます。</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* フッター */}
+            <div className="bg-gray-50 px-6 py-4 border-t">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <label className="flex items-center gap-2">
+                    <input type="checkbox" className="rounded" />
+                    <span className="text-sm text-gray-700">VoiceDriveに通知して職員が閲覧できるようにする</span>
+                  </label>
+                </div>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => {
+                      setShowSummaryModal(false)
+                      setSelectedInterviewForSummary(null)
+                      setAiGeneratedSummary(null)
+                      setEditedSummary(null)
+                    }}
+                    className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md transition-colors"
+                  >
+                    キャンセル
+                  </button>
+                  <button
+                    onClick={() => handleSaveSummary(false)}
+                    disabled={!editedSummary}
+                    className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    下書き保存
+                  </button>
+                  <button
+                    onClick={() => handleSaveSummary(true)}
+                    disabled={!editedSummary}
+                    className="px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    保存 & 職員通知
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )
