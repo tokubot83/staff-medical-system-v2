@@ -16,6 +16,29 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
+// 予約ステータス型定義
+type ReservationStatus =
+  | 'pending'        // 仮予約受信
+  | 'analyzing'      // AI分析中
+  | 'proposals'      // 3案提示中
+  | 'editing'        // 人事編集中
+  | 'sent'          // VD送信済み
+  | 'awaiting'      // 承認待ち
+  | 'confirmed'     // 本予約確定
+  | 'rejected';     // 再調整要求
+
+// AI分析結果型定義
+interface AIProposals {
+  proposals: Array<{
+    rank: 1 | 2 | 3;
+    interviewer: string;
+    timeSlot: string;
+    matchingScore: number;
+    reasoning: string;
+  }>;
+  recommendedChoice: 1 | 2 | 3;
+}
+
 // 仮予約データの型定義
 interface ProvisionalReservation {
   id: string;
@@ -28,15 +51,13 @@ interface ProvisionalReservation {
   preferredDates: Date[];
   urgency: 'low' | 'medium' | 'high' | 'urgent';
   source: 'voicedrive' | 'manual';
-  status: 'pending' | 'analyzing' | 'proposed' | 'confirmed';
+  status: ReservationStatus;
   receivedAt: Date;
   notes?: string;
-  aiAnalysis?: {
-    recommendedInterviewer?: string;
-    recommendedTimeSlot?: string;
-    matchingScore?: number;
-    reasoning?: string;
-  };
+  aiAnalysis?: AIProposals;
+  adjustmentCount?: number;  // 調整回数
+  lastSentAt?: Date;        // 最終送信日時
+  approvedProposal?: number; // 承認された提案番号(1-3)
 }
 
 // 担当者情報の型定義
@@ -78,9 +99,9 @@ export default function ReservationManagement() {
       return date;
     };
 
-    // 仮予約のモックデータ
+    // 仮予約のモックデータ（新仕様）
     const mockProvisional: ProvisionalReservation[] = [
-      // 定期面談
+      // pending（仮予約）
       {
         id: 'PROV-REG-001',
         staffId: 'OH-NS-2023-001',
@@ -307,14 +328,132 @@ export default function ReservationManagement() {
         preferredDates: [getThisWeekDate(1)],
         urgency: 'urgent',
         source: 'voicedrive',
-        status: 'analyzing',
+        status: 'pending',
         receivedAt: new Date('2025-09-15T08:00:00'),
-        notes: '家庭の事情により退職予定',
+        notes: '家庭の事情により退職予定'
+      },
+
+      // awaiting（承認待ち）
+      {
+        id: 'AWAIT-001',
+        staffId: 'OH-NS-2023-010',
+        staffName: '田中 次郎',
+        department: '外科',
+        position: '看護師',
+        interviewType: 'support',
+        subType: 'キャリア相談',
+        preferredDates: [getThisWeekDate(2)],
+        urgency: 'medium',
+        source: 'voicedrive',
+        status: 'awaiting',
+        receivedAt: new Date('2025-09-14T10:00:00'),
+        lastSentAt: new Date('2025-09-14T15:00:00'),
+        adjustmentCount: 1,
+        notes: 'キャリアアップについて相談'
+      },
+      {
+        id: 'AWAIT-002',
+        staffId: 'OH-PT-2022-005',
+        staffName: '鈴木 花子',
+        department: 'リハビリテーション',
+        position: '理学療法士',
+        interviewType: 'regular',
+        subType: '年次面談',
+        preferredDates: [getThisWeekDate(3)],
+        urgency: 'low',
+        source: 'voicedrive',
+        status: 'awaiting',
+        receivedAt: new Date('2025-09-13T14:00:00'),
+        lastSentAt: new Date('2025-09-13T16:00:00'),
+        adjustmentCount: 2,
+        notes: '2回目の調整'
+      },
+
+      // confirmed（確定済み）
+      {
+        id: 'CONF-001',
+        staffId: 'OH-NS-2021-008',
+        staffName: '佐々木 美里',
+        department: '小児科',
+        position: '看護師長',
+        interviewType: 'regular',
+        subType: '管理職面談',
+        preferredDates: [getThisWeekDate(1)],
+        urgency: 'medium',
+        source: 'voicedrive',
+        status: 'confirmed',
+        receivedAt: new Date('2025-09-12T09:00:00'),
+        lastSentAt: new Date('2025-09-12T11:00:00'),
+        adjustmentCount: 1,
+        approvedProposal: 1,
         aiAnalysis: {
-          recommendedInterviewer: '看護部長',
-          recommendedTimeSlot: '10:00-11:00',
-          matchingScore: 95,
-          reasoning: '退職面談は部長対応が必要'
+          proposals: [
+            {
+              rank: 1,
+              interviewer: '看護部長',
+              timeSlot: '2025-09-18 14:00-15:00',
+              matchingScore: 92,
+              reasoning: '管理職同士の対話が最適'
+            },
+            {
+              rank: 2,
+              interviewer: '人事部長',
+              timeSlot: '2025-09-19 10:00-11:00',
+              matchingScore: 85,
+              reasoning: 'キャリア全般の相談に適する'
+            },
+            {
+              rank: 3,
+              interviewer: '総務課長',
+              timeSlot: '2025-09-20 15:00-16:00',
+              matchingScore: 78,
+              reasoning: '業務調整の観点から助言可能'
+            }
+          ],
+          recommendedChoice: 1
+        }
+      },
+      {
+        id: 'CONF-002',
+        staffId: 'OH-DR-2020-002',
+        staffName: '高橋 俊介',
+        department: '整形外科',
+        position: '医師',
+        interviewType: 'special',
+        subType: '昇進面談',
+        preferredDates: [getThisWeekDate(0)],
+        urgency: 'high',
+        source: 'manual',
+        status: 'confirmed',
+        receivedAt: new Date('2025-09-11T08:00:00'),
+        lastSentAt: new Date('2025-09-11T10:00:00'),
+        adjustmentCount: 1,
+        approvedProposal: 2,
+        aiAnalysis: {
+          proposals: [
+            {
+              rank: 1,
+              interviewer: '院長',
+              timeSlot: '2025-09-17 16:00-17:00',
+              matchingScore: 95,
+              reasoning: '昇進面談は院長が最適'
+            },
+            {
+              rank: 2,
+              interviewer: '副院長',
+              timeSlot: '2025-09-18 09:00-10:00',
+              matchingScore: 90,
+              reasoning: '医師の昇進に関する深い理解'
+            },
+            {
+              rank: 3,
+              interviewer: '医局長',
+              timeSlot: '2025-09-19 13:00-14:00',
+              matchingScore: 88,
+              reasoning: '専門科での実績評価が可能'
+            }
+          ],
+          recommendedChoice: 1
         }
       }
     ];
@@ -358,34 +497,105 @@ export default function ReservationManagement() {
   };
 
   const handleAIOptimization = async (reservation: ProvisionalReservation) => {
-    setSelectedReservation(reservation);
-    // AI最適化処理をシミュレート
-    const updatedReservation = {
-      ...reservation,
-      status: 'analyzing' as const,
-      aiAnalysis: {
-        recommendedInterviewer: '山田部長',
-        recommendedTimeSlot: '14:00-15:00',
-        matchingScore: Math.floor(Math.random() * 20) + 80,
-        reasoning: 'AI分析により最適な担当者とタイムスロットを推奨しました'
-      }
-    };
+    // ステータスを分析中に更新
+    const analyzingReservation = { ...reservation, status: 'analyzing' as const };
+    setSelectedReservation(analyzingReservation);
+    setProvisionalReservations(prev =>
+      prev.map(r => r.id === reservation.id ? analyzingReservation : r)
+    );
 
+    // AI分析をシミュレート（3案生成）
     setTimeout(() => {
+      const aiProposals: AIProposals = {
+        proposals: [
+          {
+            rank: 1,
+            interviewer: '山田部長（人事部）',
+            timeSlot: '2025-09-18 14:00-15:00',
+            matchingScore: Math.floor(Math.random() * 10) + 90,
+            reasoning: '専門分野が一致し、過去の面談実績も良好。最適な時間帯です。'
+          },
+          {
+            rank: 2,
+            interviewer: '佐藤師長（看護部）',
+            timeSlot: '2025-09-19 10:00-11:00',
+            matchingScore: Math.floor(Math.random() * 10) + 80,
+            reasoning: '職種の理解が深く、相談しやすい環境を提供できます。'
+          },
+          {
+            rank: 3,
+            interviewer: '田中課長（総務部）',
+            timeSlot: '2025-09-20 15:00-16:00',
+            matchingScore: Math.floor(Math.random() * 10) + 75,
+            reasoning: '管理職の視点から適切なアドバイスが可能です。'
+          }
+        ],
+        recommendedChoice: 1
+      };
+
+      const updatedReservation = {
+        ...reservation,
+        status: 'proposals' as const,
+        aiAnalysis: aiProposals
+      };
+
+      setSelectedReservation(updatedReservation);
       setProvisionalReservations(prev =>
-        prev.map(r => r.id === reservation.id ? { ...updatedReservation, status: 'proposed' } : r)
+        prev.map(r => r.id === reservation.id ? updatedReservation : r)
       );
     }, 2000);
   };
 
-  const handleSendProposal = (reservation: ProvisionalReservation) => {
+  const handleSendProposal = (reservation: ProvisionalReservation, selectedProposalIndex?: number) => {
+    const proposalIndex = selectedProposalIndex || (reservation.aiAnalysis?.recommendedChoice || 1) - 1;
+    const selectedProposal = reservation.aiAnalysis?.proposals[proposalIndex];
+
     // VoiceDriveへの提案送信処理
-    console.log('VoiceDriveへ提案を送信:', reservation);
-    alert(`${reservation.staffName}様へ面談提案を送信しました`);
+    console.log('VoiceDriveへ提案を送信:', {
+      reservation,
+      selectedProposal
+    });
+
+    // 承認待ちステータスに自動遷移
+    const awaitingReservation = {
+      ...reservation,
+      status: 'awaiting' as const,
+      lastSentAt: new Date(),
+      adjustmentCount: (reservation.adjustmentCount || 0) + 1
+    };
 
     setProvisionalReservations(prev =>
-      prev.map(r => r.id === reservation.id ? { ...r, status: 'confirmed' } : r)
+      prev.map(r => r.id === reservation.id ? awaitingReservation : r)
     );
+
+    alert(`${reservation.staffName}様へ面談提案を送信しました（承認待ちに移動）`);
+  };
+
+  // VoiceDriveからの承認応答をシミュレート
+  const simulateVoiceDriveResponse = (reservation: ProvisionalReservation, approved: boolean, approvedProposalRank?: number) => {
+    if (approved && approvedProposalRank) {
+      // 承認された場合は確定済みに移動
+      const confirmedReservation = {
+        ...reservation,
+        status: 'confirmed' as const,
+        approvedProposal: approvedProposalRank
+      };
+
+      setProvisionalReservations(prev =>
+        prev.map(r => r.id === reservation.id ? confirmedReservation : r)
+      );
+    } else {
+      // 再調整要求の場合は仮予約に戻す
+      const rejectedReservation = {
+        ...reservation,
+        status: 'pending' as const,
+        aiAnalysis: undefined // AI分析をリセット
+      };
+
+      setProvisionalReservations(prev =>
+        prev.map(r => r.id === reservation.id ? rejectedReservation : r)
+      );
+    }
   };
 
   const getStatusBadgeColor = (status: ProvisionalReservation['status']) => {
@@ -593,31 +803,43 @@ export default function ReservationManagement() {
               </Card>
             </div>
 
-            {/* 面談種別ごとのリスト表示（上部40%） */}
+            {/* 処理段階別リスト表示（上部40%） */}
             <div className="flex-none" style={{ height: '40%', minHeight: '300px' }}>
-              <h3 className="text-lg font-semibold mb-3">面談種別仮予約一覧</h3>
+              <h3 className="text-lg font-semibold mb-3">予約処理状況一覧</h3>
               <div className="grid grid-cols-3 gap-4 h-full">
-                {/* 定期面談カラム */}
+                {/* 仮予約カラム */}
                 <Card className="flex flex-col h-full">
                   <CardHeader className="pb-2 bg-blue-50">
                     <CardTitle className="text-sm font-medium flex items-center justify-between">
                       <span className="flex items-center gap-2">
-                        <span className="text-lg">📅</span>
-                        定期面談
+                        <span className="text-lg">📥</span>
+                        仮予約
                       </span>
-                      <Badge className="bg-blue-100 text-blue-800">5件</Badge>
+                      <Badge className="bg-blue-100 text-blue-800">
+                        {provisionalReservations.filter(r => r.status === 'pending').length}件
+                      </Badge>
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="flex-1 overflow-auto p-2">
                     <div className="space-y-2">
                       {provisionalReservations
-                        .filter(r => r.interviewType === 'regular')
+                        .filter(r => r.status === 'pending')
                         .map((reservation) => (
                           <div
                             key={reservation.id}
                             className="p-3 bg-white border rounded-lg hover:shadow-md transition-shadow"
                           >
-                            <div className="font-medium text-sm">{reservation.staffName}</div>
+                            <div className="flex justify-between items-start mb-2">
+                              <div className="font-medium text-sm">{reservation.staffName}</div>
+                              <Badge className={
+                                reservation.interviewType === 'regular' ? 'bg-blue-100 text-blue-800' :
+                                reservation.interviewType === 'support' ? 'bg-green-100 text-green-800' :
+                                'bg-red-100 text-red-800'
+                              } variant="outline">
+                                {reservation.interviewType === 'regular' ? '定期' :
+                                 reservation.interviewType === 'support' ? 'サポート' : '特別'}
+                              </Badge>
+                            </div>
                             <div className="text-xs text-gray-600">
                               {reservation.department} / {reservation.position}
                             </div>
@@ -644,7 +866,7 @@ export default function ReservationManagement() {
                             </div>
                           </div>
                         ))}
-                      {provisionalReservations.filter(r => r.interviewType === 'regular').length === 0 && (
+                      {provisionalReservations.filter(r => r.status === 'pending').length === 0 && (
                         <div className="text-center text-gray-500 text-sm py-4">
                           仮予約なし
                         </div>
@@ -653,106 +875,111 @@ export default function ReservationManagement() {
                   </CardContent>
                 </Card>
 
-                {/* サポート面談カラム */}
+                {/* 承認待ちカラム */}
                 <Card className="flex flex-col h-full">
-                  <CardHeader className="pb-2 bg-green-50">
+                  <CardHeader className="pb-2 bg-yellow-50">
                     <CardTitle className="text-sm font-medium flex items-center justify-between">
                       <span className="flex items-center gap-2">
-                        <span className="text-lg">💬</span>
-                        サポート面談
+                        <span className="text-lg">⏳</span>
+                        承認待ち
                       </span>
-                      <Badge className="bg-green-100 text-green-800">8件</Badge>
+                      <Badge className="bg-yellow-100 text-yellow-800">
+                        {provisionalReservations.filter(r => r.status === 'awaiting').length}件
+                      </Badge>
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="flex-1 overflow-auto p-2">
                     <div className="space-y-2">
                       {provisionalReservations
-                        .filter(r => r.interviewType === 'support')
-                        .map((reservation) => (
-                          <div
-                            key={reservation.id}
-                            className="p-3 bg-white border rounded-lg hover:shadow-md transition-shadow"
-                          >
-                            <div className="font-medium text-sm">{reservation.staffName}</div>
-                            <div className="text-xs text-gray-600">
-                              {reservation.department} / {reservation.position}
+                        .filter(r => r.status === 'awaiting')
+                        .map((reservation) => {
+                          const hoursSinceLastSent = reservation.lastSentAt ?
+                            Math.floor((Date.now() - reservation.lastSentAt.getTime()) / (1000 * 60 * 60)) : 0;
+
+                          return (
+                            <div
+                              key={reservation.id}
+                              className="p-3 bg-white border rounded-lg hover:shadow-sm transition-shadow cursor-pointer"
+                              onClick={() => {
+                                // 軽量確認モーダル（後で実装）
+                                alert(`${reservation.staffName}さんの承認待ち詳細`);
+                              }}
+                            >
+                              <div className="flex justify-between items-start mb-2">
+                                <div className="font-medium text-sm">{reservation.staffName}</div>
+                                <div className="text-xs text-gray-500">
+                                  {reservation.adjustmentCount || 1}回目
+                                </div>
+                              </div>
+                              <div className="text-xs text-gray-600">
+                                {reservation.department} / {reservation.position}
+                              </div>
+                              <div className="text-xs text-gray-500 mt-1">
+                                送信: {hoursSinceLastSent}時間前
+                              </div>
+                              {hoursSinceLastSent > 24 && (
+                                <Badge variant="outline" className="bg-orange-50 text-orange-600 mt-1">
+                                  要確認
+                                </Badge>
+                              )}
                             </div>
-                            <div className="text-xs text-gray-500 mt-1">
-                              {reservation.subType || 'キャリア相談'}
-                            </div>
-                            <div className="flex justify-between items-center mt-2">
-                              <Badge className={getUrgencyBadgeColor(reservation.urgency)} variant="outline">
-                                {reservation.urgency === 'urgent' ? '緊急' :
-                                 reservation.urgency === 'high' ? '高' :
-                                 reservation.urgency === 'medium' ? '中' : '低'}
-                              </Badge>
-                              <Button
-                                size="sm"
-                                className="h-6 text-xs"
-                                onClick={() => {
-                                  setSelectedReservation(reservation);
-                                  setShowProcessingModal(true);
-                                }}
-                              >
-                                <Settings className="w-3 h-3 mr-1" />
-                                詳細処理
-                              </Button>
-                            </div>
-                          </div>
-                        ))}
+                          );
+                        })}
+                      {provisionalReservations.filter(r => r.status === 'awaiting').length === 0 && (
+                        <div className="text-center text-gray-500 text-sm py-4">
+                          承認待ちなし
+                        </div>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
 
-                {/* 特別面談カラム */}
+                {/* 確定済みカラム */}
                 <Card className="flex flex-col h-full">
-                  <CardHeader className="pb-2 bg-orange-50">
+                  <CardHeader className="pb-2 bg-green-50">
                     <CardTitle className="text-sm font-medium flex items-center justify-between">
                       <span className="flex items-center gap-2">
-                        <span className="text-lg">⚠️</span>
-                        特別面談
+                        <span className="text-lg">✅</span>
+                        確定済み
                       </span>
-                      <Badge className="bg-orange-100 text-orange-800">2件</Badge>
+                      <Badge className="bg-green-100 text-green-800">
+                        {provisionalReservations.filter(r => r.status === 'confirmed').length}件
+                      </Badge>
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="flex-1 overflow-auto p-2">
                     <div className="space-y-2">
                       {provisionalReservations
-                        .filter(r => r.interviewType === 'special')
+                        .filter(r => r.status === 'confirmed')
                         .map((reservation) => (
                           <div
                             key={reservation.id}
-                            className="p-3 bg-white border border-orange-300 rounded-lg hover:shadow-md transition-shadow"
+                            className="p-3 bg-white border border-green-200 rounded-lg hover:shadow-sm transition-shadow cursor-pointer"
+                            onClick={() => {
+                              // 履歴確認モーダル（後で実装）
+                              alert(`${reservation.staffName}さんの確定済み詳細`);
+                            }}
                           >
-                            <div className="font-medium text-sm">{reservation.staffName}</div>
+                            <div className="flex justify-between items-start mb-2">
+                              <div className="font-medium text-sm">{reservation.staffName}</div>
+                              <Badge variant="outline" className="bg-green-50 text-green-600">
+                                完了
+                              </Badge>
+                            </div>
                             <div className="text-xs text-gray-600">
                               {reservation.department} / {reservation.position}
                             </div>
-                            <div className="text-xs font-semibold text-orange-700 mt-1">
-                              {reservation.subType || '復職面談'}
+                            <div className="text-xs text-gray-500 mt-1">
+                              {reservation.aiAnalysis?.proposals?.[reservation.approvedProposal! - 1]?.timeSlot || '時間未定'}
                             </div>
-                            <div className="flex justify-between items-center mt-2">
-                              <Badge className="bg-red-100 text-red-800" variant="outline">
-                                緊急対応
-                              </Badge>
-                              <Button
-                                size="sm"
-                                variant="destructive"
-                                className="h-6 text-xs"
-                                onClick={() => {
-                                  setSelectedReservation(reservation);
-                                  setShowProcessingModal(true);
-                                }}
-                              >
-                                <Zap className="w-3 h-3 mr-1" />
-                                緊急処理
-                              </Button>
+                            <div className="text-xs text-gray-500">
+                              担当: {reservation.aiAnalysis?.proposals?.[reservation.approvedProposal! - 1]?.interviewer || '未定'}
                             </div>
                           </div>
                         ))}
-                      {provisionalReservations.filter(r => r.interviewType === 'special').length === 0 && (
+                      {provisionalReservations.filter(r => r.status === 'confirmed').length === 0 && (
                         <div className="text-center text-gray-500 text-sm py-4">
-                          仮予約なし
+                          確定済みなし
                         </div>
                       )}
                     </div>
@@ -987,38 +1214,57 @@ export default function ReservationManagement() {
                   <div>
                     {/* AI分析結果表示 */}
                     <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
-                      <div className="flex items-center gap-2 mb-3">
+                      <div className="flex items-center gap-2 mb-4">
                         <Brain className="w-5 h-5 text-blue-600" />
-                        <span className="font-medium text-blue-900">AI分析完了</span>
+                        <span className="font-medium text-blue-900">AI最適化完了 - 3つの提案</span>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-4 mb-4">
-                        <div>
-                          <span className="text-sm text-blue-700">推奨担当者</span>
-                          <div className="font-semibold text-blue-900">{selectedReservation.aiAnalysis.recommendedInterviewer}</div>
-                        </div>
-                        <div>
-                          <span className="text-sm text-blue-700">推奨時間帯</span>
-                          <div className="font-semibold text-blue-900">{selectedReservation.aiAnalysis.recommendedTimeSlot}</div>
-                        </div>
-                      </div>
+                      {/* 3つの提案を表示 */}
+                      <div className="space-y-3 mb-6">
+                        {selectedReservation.aiAnalysis.proposals.map((proposal, index) => (
+                          <div
+                            key={index}
+                            className={`p-4 rounded-lg border-2 ${
+                              proposal.rank === selectedReservation.aiAnalysis?.recommendedChoice
+                                ? 'border-blue-400 bg-blue-50'
+                                : 'border-gray-200 bg-white'
+                            }`}
+                          >
+                            <div className="flex justify-between items-start mb-2">
+                              <div className="flex items-center gap-2">
+                                <Badge variant={proposal.rank === 1 ? 'default' : 'outline'}>
+                                  提案{proposal.rank}
+                                  {proposal.rank === selectedReservation.aiAnalysis?.recommendedChoice && ' (推奨)'}
+                                </Badge>
+                                <div className="flex items-center gap-1">
+                                  <span className="text-sm font-medium">{proposal.matchingScore}%</span>
+                                  <div className="w-16 bg-gray-200 rounded-full h-1.5">
+                                    <div
+                                      className="bg-blue-600 h-1.5 rounded-full"
+                                      style={{ width: `${proposal.matchingScore}%` }}
+                                    ></div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
 
-                      <div className="mb-4">
-                        <span className="text-sm text-blue-700">マッチング精度</span>
-                        <div className="flex items-center gap-2 mt-1">
-                          <div className="flex-1 bg-blue-200 rounded-full h-2">
-                            <div
-                              className="bg-blue-600 h-2 rounded-full"
-                              style={{ width: `${selectedReservation.aiAnalysis.matchingScore}%` }}
-                            ></div>
+                            <div className="grid grid-cols-2 gap-4 mb-2">
+                              <div>
+                                <span className="text-xs text-gray-600">担当者</span>
+                                <div className="font-medium text-sm">{proposal.interviewer}</div>
+                              </div>
+                              <div>
+                                <span className="text-xs text-gray-600">日時</span>
+                                <div className="font-medium text-sm">{proposal.timeSlot}</div>
+                              </div>
+                            </div>
+
+                            <div>
+                              <span className="text-xs text-gray-600">分析理由</span>
+                              <p className="text-sm text-gray-700 mt-1">{proposal.reasoning}</p>
+                            </div>
                           </div>
-                          <span className="font-bold text-blue-900">{selectedReservation.aiAnalysis.matchingScore}%</span>
-                        </div>
-                      </div>
-
-                      <div>
-                        <span className="text-sm text-blue-700">分析根拠</span>
-                        <p className="text-sm text-blue-800 mt-1">{selectedReservation.aiAnalysis.reasoning}</p>
+                        ))}
                       </div>
                     </div>
 
@@ -1030,14 +1276,16 @@ export default function ReservationManagement() {
                           handleSendProposal(selectedReservation);
                           setShowProcessingModal(false);
                         }}
-                        disabled={selectedReservation.status === 'confirmed'}
+                        disabled={selectedReservation.status === 'awaiting' || selectedReservation.status === 'confirmed'}
                       >
                         <Send className="w-4 h-4 mr-2" />
-                        {selectedReservation.status === 'confirmed' ? 'VoiceDriveへ送信済み' : 'VoiceDriveへ提案送信'}
+                        {selectedReservation.status === 'awaiting' ? '承認待ち中' :
+                         selectedReservation.status === 'confirmed' ? '確定済み' :
+                         '推奨提案をVoiceDriveに送信'}
                       </Button>
                       <Button variant="outline" className="flex-1">
                         <Edit className="w-4 h-4 mr-2" />
-                        提案内容を編集
+                        提案を編集
                       </Button>
                       <Button variant="outline" onClick={() => {
                         // AI分析をリセット
