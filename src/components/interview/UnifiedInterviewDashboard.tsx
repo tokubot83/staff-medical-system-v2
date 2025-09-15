@@ -543,40 +543,45 @@ export default function UnifiedInterviewDashboard() {
 
   const getTodayReservations = () => {
     const today = new Date();
-    // 既存の面談予約 + 確定済み予約を統合
+    // 既存の面談予約のみを取得（確定済み予約は含まない）
     const existingReservations = reservations.filter(r => {
       const rDate = new Date(r.scheduledDate);
       return rDate.toDateString() === today.toDateString();
     });
 
-    // 確定済み予約を面談予約形式に変換して追加
-    const confirmedReservations = provisionalReservations
-      .filter(r => r.status === 'confirmed')
+    // 🚀 NEW: VoiceDriveで承認済みの予約を面談予約形式に変換して追加
+    // 承認待ち状態から confirmed になったものを右側に表示
+    const voiceDriveApprovedReservations = provisionalReservations
+      .filter(r => r.status === 'confirmed') // VoiceDriveで承認済み
       .map(convertProvisionalToUnified);
 
-    return [...existingReservations, ...confirmedReservations];
+    return [...existingReservations, ...voiceDriveApprovedReservations];
   };
 
-  // 確定済み予約を面談予約形式に変換
+  // 🚀 VoiceDrive承認済み予約を面談予約形式に変換
   const convertProvisionalToUnified = (provisional: ProvisionalReservation): UnifiedInterviewReservation => {
+    // 本日の日付に設定（面談実施は承認当日〜近日中を想定）
+    const today = new Date();
+    const scheduledDate = provisional.preferredDates[0] || today;
+
     return {
-      id: provisional.id,
+      id: `VD-${provisional.id}`, // VoiceDrive由来であることを明示
       type: provisional.interviewType,
       staffId: provisional.staffId,
       staffName: provisional.staffName,
       department: provisional.department,
       position: provisional.position,
-      experienceYears: 0, // デフォルト値
-      scheduledDate: provisional.preferredDates[0] || new Date(),
-      scheduledTime: '14:00', // デフォルト値（実際はAI最適化で決定）
+      experienceYears: 0,
+      scheduledDate: scheduledDate,
+      scheduledTime: '14:00', // AI最適化で決定される時間
       duration: 45,
-      status: 'confirmed',
+      status: 'confirmed', // VoiceDrive承認済み = 確定
       urgency: provisional.urgency,
-      supportCategory: provisional.interviewType === 'support' ? 'general' : undefined,
-      supportTopic: provisional.notes || '',
-      notes: provisional.notes,
+      supportCategory: provisional.interviewType === 'support' ? 'career' : undefined,
+      supportTopic: provisional.notes || `${provisional.interviewType}面談`,
+      notes: `📱 VoiceDrive承認済み予約 (調整${provisional.adjustmentCount || 0}回)`,
       createdAt: provisional.receivedAt,
-      source: provisional.source
+      source: 'voicedrive' // VoiceDrive由来
     };
   };
 
@@ -1073,7 +1078,9 @@ export default function UnifiedInterviewDashboard() {
                 prev.map(r => r.id === reservation.id ? { ...r, status: newStatus } : r)
               );
               if (newStatus === 'confirmed') {
-                loadReservations(); // 確定済みになったら右側データ更新
+                // 🚀 NEW: 確定済みになったら承認待ちから削除し、右側に直接表示
+                console.log('VoiceDrive承認完了 → 右側面談実施セクションに表示:', reservation);
+                // 右側データは getTodayReservations() で自動取得される
               }
             }}
           />
@@ -1152,6 +1159,13 @@ function ReservationManagementSection({ provisionalReservations, onConfirmed, on
     // TODO: 実際のAI最適化処理を実装
   };
 
+  // 🚀 NEW: VoiceDrive承認シミュレーション
+  const handleVoiceDriveApproval = (reservation: ProvisionalReservation) => {
+    console.log('VoiceDrive承認シミュレーション:', reservation);
+    // 承認待ち → 確定済み（左側カラムは削除し、右側に直接表示）
+    onStatusChange(reservation, 'confirmed');
+  };
+
   const getStatusColor = (status: ReservationStatus) => {
     const colors = {
       pending: 'bg-blue-50 border-blue-200',
@@ -1189,7 +1203,7 @@ function ReservationManagementSection({ provisionalReservations, onConfirmed, on
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-4">
-        <div className="grid grid-cols-3 gap-4 h-full">
+        <div className="grid grid-cols-2 gap-6 h-full">
           {/* 仮予約カラム */}
           <div className="space-y-2">
             <h3 className="font-semibold text-blue-900 text-center">
@@ -1237,6 +1251,9 @@ function ReservationManagementSection({ provisionalReservations, onConfirmed, on
             <h3 className="font-semibold text-yellow-900 text-center">
               承認待ち ({provisionalReservations.filter(r => r.status === 'awaiting').length}件)
             </h3>
+            <p className="text-xs text-center text-gray-500 mb-2">
+              VoiceDrive承認後 → 右側面談実施セクションに表示
+            </p>
             <div className="space-y-2 max-h-96 overflow-y-auto">
               {provisionalReservations
                 .filter(r => r.status === 'awaiting')
@@ -1250,29 +1267,16 @@ function ReservationManagementSection({ provisionalReservations, onConfirmed, on
                     <div className="text-xs mt-1 text-yellow-700">
                       調整回数: {reservation.adjustmentCount || 0}回
                     </div>
-                  </div>
-                ))}
-            </div>
-          </div>
-
-          {/* 確定済みカラム */}
-          <div className="space-y-2">
-            <h3 className="font-semibold text-green-900 text-center">
-              確定済み ({provisionalReservations.filter(r => r.status === 'confirmed').length}件)
-            </h3>
-            <div className="space-y-2 max-h-96 overflow-y-auto">
-              {provisionalReservations
-                .filter(r => r.status === 'confirmed')
-                .map(reservation => (
-                  <div
-                    key={reservation.id}
-                    className={`p-3 rounded-lg border-2 ${getStatusColor(reservation.status)}`}
-                  >
-                    <div className="font-medium text-sm">{reservation.staffName}</div>
-                    <div className="text-xs text-gray-600">{reservation.department}</div>
-                    <div className="text-xs mt-1 text-green-700">
-                      ✓ 面談実施セクションに表示
+                    <div className="text-xs mt-2 bg-yellow-50 p-2 rounded text-yellow-800">
+                      💡 承認後は右側面談実施セクションに移動
                     </div>
+                    <Button
+                      size="sm"
+                      className="w-full mt-2 bg-green-600 hover:bg-green-700 text-white"
+                      onClick={() => handleVoiceDriveApproval(reservation)}
+                    >
+                      ✅ VoiceDrive承認完了
+                    </Button>
                   </div>
                 ))}
             </div>
@@ -1382,6 +1386,9 @@ function InterviewExecutionSection({ todayReservations, loading, onStartIntervie
             {todayReservations.length} 件
           </Badge>
         </CardTitle>
+        <div className="text-xs text-center text-gray-600 mt-1">
+          VoiceDrive承認済み予約 + 既存面談予定を表示
+        </div>
       </CardHeader>
       <CardContent className="pt-4">
         {loading ? (
