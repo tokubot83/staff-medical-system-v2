@@ -1268,6 +1268,16 @@ function ReservationManagementSection({ provisionalReservations, onConfirmed, on
                     {/* アクションボタン */}
                     <div className="flex gap-2">
                       <Button
+                        className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleProcessReservation(reservation);
+                        }}
+                      >
+                        📋 詳細処理
+                      </Button>
+                      <Button
                         className="flex-1 bg-purple-600 hover:bg-purple-700 text-white"
                         size="sm"
                         onClick={(e) => {
