@@ -20,13 +20,15 @@ import UnifiedInterviewDashboard from '@/components/interview/UnifiedInterviewDa
 import UnifiedInterviewBankSystem from '@/components/interview/UnifiedInterviewBankSystem'
 import InterviewManualSimulator from '@/components/interview/InterviewManualSimulator'
 import InterviewStatisticsChart from '@/components/charts/InterviewStatisticsChart'
+import ReservationManagement from '@/components/interview/ReservationManagement'
 
-// タブ順序を業務フローに合わせて修正
+// タブ順序を業務フローに合わせて修正（予約→実施→記録→分析）
 const tabs = [
+  { id: 'reservation', label: '予約管理', icon: '📅', badge: 'NEW', isNew: true },
   { id: 'station', label: '面談ステーション', icon: '🚉', badge: '', isNew: false },
   { id: 'bank-system', label: 'バンク', icon: '🏦', badge: '', isNew: false },
   { id: 'overview-guide', label: 'ガイド', icon: '📖', badge: '', isNew: false },
-  { id: 'simulator', label: 'シュミレーター', icon: '🎯', badge: '', isNew: false },
+  { id: 'simulator', label: 'シミュレーター', icon: '🎯', badge: '', isNew: false },
   { id: 'record', label: '結果記録', icon: '📝', badge: '', isNew: false },
   { id: 'analytics', label: '履歴・分析', icon: '📊', badge: '', isNew: false },
   { id: 'settings', label: '設定', icon: '⚙️', badge: '', isNew: false },
@@ -36,7 +38,7 @@ const tabs = [
 function InterviewsPageContent() {
   const searchParams = useSearchParams()
   const tabFromUrl = searchParams.get('tab')
-  const [activeTab, setActiveTab] = useState(tabFromUrl || 'station')
+  const [activeTab, setActiveTab] = useState(tabFromUrl || 'reservation')
   const [showGuideModal, setShowGuideModal] = useState(false)
   const [selectedInterview, setSelectedInterview] = useState<Interview | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
@@ -67,8 +69,8 @@ function InterviewsPageContent() {
       if (validTabIds.includes(tabParam)) {
         setActiveTab(tabParam)
       } else {
-        console.warn(`Invalid tab '${tabParam}' detected. Falling back to 'station'`)
-        setActiveTab('station') // 面談開始時の適切なフォールバック先
+        console.warn(`Invalid tab '${tabParam}' detected. Falling back to 'reservation'`)
+        setActiveTab('reservation') // 予約管理をデフォルトタブに設定
       }
     }
   }, [searchParams])
@@ -213,6 +215,7 @@ function InterviewsPageContent() {
         {/* 通常のタブコンテンツ */}
         {activeTab !== 'simulator' && (
           <div className={styles.tabContent}>
+            {activeTab === 'reservation' && <ReservationManagement />}
             {activeTab === 'station' && <UnifiedInterviewDashboard />}
             {activeTab === 'bank-system' && <UnifiedInterviewBankSystem />}
             {activeTab === 'record' && <RecordTab selectedInterview={selectedInterview} />}
