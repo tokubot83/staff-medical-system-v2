@@ -14,6 +14,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
+  RadioGroup,
+  RadioGroupItem,
+} from '@/components/ui/radio-group';
+import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -35,9 +39,22 @@ import {
   Play,
   AlertCircle,
   CheckCircle,
-  X
+  X,
+  CalendarDays,
+  MapPin,
+  Ban
 } from 'lucide-react';
 import { InterviewerProfile, TimeSlot } from '@/types/pattern-d-interview';
+
+// NG日・時間設定の型定義
+interface NGSchedule {
+  id: string;
+  date: string; // YYYY-MM-DD format
+  type: 'all-day' | 'time-limited';
+  startTime?: string; // HH:MM format
+  endTime?: string; // HH:MM format
+  reason?: string; // 休暇、出張、会議等
+}
 
 // 拡張された担当者プロファイル
 interface EnhancedInterviewerProfile extends InterviewerProfile {
@@ -59,6 +76,7 @@ interface EnhancedInterviewerProfile extends InterviewerProfile {
   };
   unavailableDates: string[];
   specialAvailableDates: string[];
+  ngSchedules: NGSchedule[]; // NG日・時間設定
   currentStatus: 'active' | 'on-leave' | 'inactive';
   workloadAnalysis: {
     currentWeekLoad: number;
@@ -163,6 +181,22 @@ export default function InterviewerManagement({ accessLevel }: InterviewerManage
         },
         unavailableDates: ['2024-03-20', '2024-03-25'],
         specialAvailableDates: ['2024-03-23'],
+        ngSchedules: [
+          {
+            id: 'NG-001',
+            date: '2025-09-22',
+            type: 'all-day',
+            reason: '年次休暇'
+          },
+          {
+            id: 'NG-002',
+            date: '2025-09-25',
+            type: 'time-limited',
+            startTime: '14:00',
+            endTime: '16:00',
+            reason: '部門会議'
+          }
+        ],
         currentStatus: 'active',
         workloadAnalysis: {
           currentWeekLoad: 8,
@@ -243,6 +277,16 @@ export default function InterviewerManagement({ accessLevel }: InterviewerManage
         },
         unavailableDates: ['2024-03-22'],
         specialAvailableDates: [],
+        ngSchedules: [
+          {
+            id: 'NG-003',
+            date: '2025-09-24',
+            type: 'time-limited',
+            startTime: '09:00',
+            endTime: '12:00',
+            reason: '研修講師'
+          }
+        ],
         currentStatus: 'active',
         workloadAnalysis: {
           currentWeekLoad: 5,
@@ -318,6 +362,7 @@ export default function InterviewerManagement({ accessLevel }: InterviewerManage
         },
         unavailableDates: ['2024-03-28', '2024-03-29'],
         specialAvailableDates: [],
+        ngSchedules: [], // 休止中のため空
         currentStatus: 'on-leave',
         workloadAnalysis: {
           currentWeekLoad: 0,
@@ -402,6 +447,7 @@ export default function InterviewerManagement({ accessLevel }: InterviewerManage
       },
       unavailableDates: [],
       specialAvailableDates: [],
+      ngSchedules: [],
       currentStatus: 'active',
       workloadAnalysis: {
         currentWeekLoad: 0,
@@ -608,6 +654,25 @@ export default function InterviewerManagement({ accessLevel }: InterviewerManage
               ))}
             </div>
           </div>
+
+          {/* 直近のNG日 */}
+          {interviewer.ngSchedules.length > 0 && (
+            <div className="bg-red-50 border border-red-200 rounded p-2">
+              <div className="flex items-center gap-2 mb-1">
+                <Ban className="h-3 w-3 text-red-500" />
+                <span className="text-xs font-medium text-red-700">直近のNG日</span>
+              </div>
+              {interviewer.ngSchedules
+                .filter(ng => new Date(ng.date) >= new Date())
+                .slice(0, 2)
+                .map((ng, index) => (
+                  <div key={ng.id} className="text-xs text-red-600">
+                    {new Date(ng.date).toLocaleDateString('ja-JP', { month: 'short', day: 'numeric' })}
+                    {ng.type === 'time-limited' ? ` (${ng.startTime}-${ng.endTime})` : ' (終日)'}
+                  </div>
+                ))}
+            </div>
+          )}
 
           {/* パフォーマンス */}
           <div className="grid grid-cols-2 gap-4 pt-2 border-t text-center">
@@ -834,6 +899,169 @@ export default function InterviewerManagement({ accessLevel }: InterviewerManage
       </Card>
     );
   }
+
+  // NG日追加フォームコンポーネント
+  const NGDateAddForm = ({ onAdd }: { onAdd: (ng: NGSchedule) => void }) => {
+    const [selectedDate, setSelectedDate] = useState<string>('');
+    const [ngType, setNgType] = useState<'all-day' | 'time-limited'>('all-day');
+    const [startTime, setStartTime] = useState<string>('09:00');
+    const [endTime, setEndTime] = useState<string>('17:00');
+    const [reason, setReason] = useState<string>('');
+    const [showForm, setShowForm] = useState(false);
+
+    const handleAdd = () => {
+      if (!selectedDate) {
+        alert('日付を選択してください。');
+        return;
+      }
+
+      if (ngType === 'time-limited' && startTime >= endTime) {
+        alert('終了時間は開始時間より後に設定してください。');
+        return;
+      }
+
+      const newNG: NGSchedule = {
+        id: `NG-${Date.now()}`,
+        date: selectedDate,
+        type: ngType,
+        startTime: ngType === 'time-limited' ? startTime : undefined,
+        endTime: ngType === 'time-limited' ? endTime : undefined,
+        reason: reason || undefined
+      };
+
+      onAdd(newNG);
+
+      // フォームリセット
+      setSelectedDate('');
+      setNgType('all-day');
+      setStartTime('09:00');
+      setEndTime('17:00');
+      setReason('');
+      setShowForm(false);
+    };
+
+    const today = new Date().toISOString().split('T')[0];
+
+    return (
+      <div className="space-y-3">
+        {!showForm ? (
+          <Button
+            variant="outline"
+            onClick={() => setShowForm(true)}
+            className="w-full border-dashed border-2"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            NG日を追加
+          </Button>
+        ) : (
+          <Card className="border-2 border-blue-200">
+            <CardContent className="p-4 space-y-4">
+              <div className="flex justify-between items-center">
+                <h4 className="font-medium">NG日・時間追加</h4>
+                <Button variant="ghost" size="sm" onClick={() => setShowForm(false)}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+
+              {/* 日付選択 */}
+              <div>
+                <label className="block text-sm font-medium mb-2">日付 <span className="text-red-500">*</span></label>
+                <input
+                  type="date"
+                  value={selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                  min={today}
+                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+
+              {/* タイプ選択 */}
+              <div>
+                <label className="block text-sm font-medium mb-2">タイプ</label>
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      value="all-day"
+                      checked={ngType === 'all-day'}
+                      onChange={(e) => setNgType(e.target.value as 'all-day')}
+                      className="text-blue-600"
+                    />
+                    <Ban className="h-4 w-4 text-red-500" />
+                    <span>終日NG</span>
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      value="time-limited"
+                      checked={ngType === 'time-limited'}
+                      onChange={(e) => setNgType(e.target.value as 'time-limited')}
+                      className="text-blue-600"
+                    />
+                    <Clock className="h-4 w-4 text-orange-500" />
+                    <span>時間限定NG</span>
+                  </label>
+                </div>
+              </div>
+
+              {/* 時間設定 */}
+              {ngType === 'time-limited' && (
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">開始時間</label>
+                    <input
+                      type="time"
+                      value={startTime}
+                      onChange={(e) => setStartTime(e.target.value)}
+                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">終了時間</label>
+                    <input
+                      type="time"
+                      value={endTime}
+                      onChange={(e) => setEndTime(e.target.value)}
+                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* 理由 */}
+              <div>
+                <label className="block text-sm font-medium mb-2">理由</label>
+                <select
+                  value={reason}
+                  onChange={(e) => setReason(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">選択してください</option>
+                  <option value="年次休暇">年次休暇</option>
+                  <option value="特別休暇">特別休暇</option>
+                  <option value="出張">出張</option>
+                  <option value="会議">会議</option>
+                  <option value="研修">研修</option>
+                  <option value="健康診断">健康診断</option>
+                  <option value="その他">その他</option>
+                </select>
+              </div>
+
+              {/* ボタン */}
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={() => setShowForm(false)} className="flex-1">
+                  キャンセル
+                </Button>
+                <Button onClick={handleAdd} className="flex-1 bg-red-600 hover:bg-red-700 text-white">
+                  追加
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="space-y-6">
@@ -1305,6 +1533,68 @@ export default function InterviewerManagement({ accessLevel }: InterviewerManage
                       />
                     </div>
                   </div>
+                </div>
+
+                {/* NG日・時間設定 */}
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-lg border-b pb-2">NG日・時間設定</h3>
+
+                  {/* 現在のNG日一覧 */}
+                  <div>
+                    <label className="block text-sm font-medium mb-2">登録済みNG日</label>
+                    {editingDetails.ngSchedules.length > 0 ? (
+                      <div className="space-y-2">
+                        {editingDetails.ngSchedules.map((ng, index) => (
+                          <div key={ng.id} className="flex items-center justify-between p-3 bg-red-50 border border-red-200 rounded-lg">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2">
+                                <CalendarDays className="h-4 w-4 text-red-600" />
+                                <span className="font-medium text-red-900">
+                                  {new Date(ng.date).toLocaleDateString('ja-JP', {
+                                    month: 'long', day: 'numeric', weekday: 'short'
+                                  })}
+                                </span>
+                                <Badge variant={ng.type === 'all-day' ? 'destructive' : 'outline'} className="text-xs">
+                                  {ng.type === 'all-day' ? '終日' : `${ng.startTime}-${ng.endTime}`}
+                                </Badge>
+                              </div>
+                              {ng.reason && (
+                                <p className="text-sm text-red-700 mt-1 ml-6">{ng.reason}</p>
+                              )}
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                const newNgSchedules = editingDetails.ngSchedules.filter((_, i) => i !== index);
+                                setEditingDetails({
+                                  ...editingDetails,
+                                  ngSchedules: newNgSchedules
+                                });
+                              }}
+                              className="text-red-600 hover:text-red-800"
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-gray-500 py-4 text-center border-2 border-dashed border-gray-200 rounded-lg">
+                        NG日が設定されていません
+                      </p>
+                    )}
+                  </div>
+
+                  {/* NG日追加フォーム */}
+                  <NGDateAddForm
+                    onAdd={(newNG) => {
+                      setEditingDetails({
+                        ...editingDetails,
+                        ngSchedules: [...editingDetails.ngSchedules, newNG]
+                      });
+                    }}
+                  />
                 </div>
 
                 {/* 稼働スケジュール編集ボタン */}

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Calendar, Clock, User, AlertTriangle, CheckCircle,
-  ChevronRight, Play, FileText, Users,
+  ChevronRight, Play, FileText, Users, MessageSquare,
   Filter, Search, RefreshCw, Bell, Plus, FilterX, ArrowLeft, CalendarDays,
   Settings, BarChart3, Brain, Zap, X
 } from 'lucide-react';
@@ -594,6 +594,22 @@ export default function UnifiedInterviewDashboard() {
     return [...existingReservations, ...voiceDriveApprovedReservations];
   };
 
+  // フィードバック未完了件数を取得
+  const getPendingFeedbackCount = () => {
+    // 面談実施済み（completed）だが、フィードバック未送信の件数をシミュレート
+    // 実際の実装では職員カルテシステムから取得
+    const completedInterviews = reservations.filter(r => r.status === 'completed');
+
+    // モックデータ：完了面談の約30%がフィードバック未完了と仮定
+    const pendingFeedbackCount = Math.ceil(completedInterviews.length * 0.3);
+
+    // Pattern D予約からの完了分も考慮
+    const patternDCompleted = patternDReservations.filter(r => r.status === 'completed');
+    const patternDPendingFeedback = Math.ceil(patternDCompleted.length * 0.2);
+
+    return pendingFeedbackCount + patternDPendingFeedback;
+  };
+
   // 🚀 VoiceDrive承認済み予約を面談予約形式に変換
   const convertProvisionalToUnified = (provisional: ProvisionalReservation): UnifiedInterviewReservation => {
     // 本日の日付に設定（面談実施は承認当日〜近日中を想定）
@@ -867,8 +883,27 @@ export default function UnifiedInterviewDashboard() {
               <p className="text-sm text-blue-700">確認・調整・承認</p>
             </div>
           </div>
-          <div className="text-2xl font-bold text-blue-600 text-center">
-            {reservations.filter(r => r.status === 'pending').length}件
+          <div className="text-2xl font-bold text-center">
+            <div className="group relative">
+              <span className={`${
+                provisionalReservations.filter(r => (r.status === 'pending' || r.status === 'awaiting') && r.urgency === 'urgent').length > 0
+                  ? 'text-red-600'
+                  : provisionalReservations.filter(r => (r.status === 'pending' || r.status === 'awaiting') && r.urgency === 'high').length > 0
+                  ? 'text-orange-600'
+                  : 'text-blue-600'
+              }`}>
+                {provisionalReservations.filter(r => r.status === 'pending' || r.status === 'awaiting').length}件
+              </span>
+              {/* ホバー時の詳細表示 */}
+              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                <div className="space-y-1">
+                  <div>仮予約: {provisionalReservations.filter(r => r.status === 'pending').length}件 | 承認待ち: {provisionalReservations.filter(r => r.status === 'awaiting').length}件</div>
+                  <div className="text-red-300">緊急: {provisionalReservations.filter(r => (r.status === 'pending' || r.status === 'awaiting') && r.urgency === 'urgent').length}件</div>
+                  <div className="text-orange-300">高: {provisionalReservations.filter(r => (r.status === 'pending' || r.status === 'awaiting') && r.urgency === 'high').length}件</div>
+                </div>
+                <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -890,15 +925,34 @@ export default function UnifiedInterviewDashboard() {
         <div className="bg-gradient-to-br from-purple-50 to-purple-100 border-2 border-purple-200 rounded-xl p-4 hover:shadow-lg transition-all">
           <div className="flex items-center gap-3 mb-3">
             <div className="bg-purple-500 text-white rounded-full p-3">
-              <FileText className="h-6 w-6" />
+              <MessageSquare className="h-6 w-6" />
             </div>
             <div>
-              <h3 className="font-bold text-purple-900">④ 記録・分析</h3>
-              <p className="text-sm text-purple-700">結果記録・統計</p>
+              <h3 className="font-bold text-purple-900">④ フィードバック</h3>
+              <p className="text-sm text-purple-700">職員通知・完了確認</p>
             </div>
           </div>
-          <div className="text-2xl font-bold text-purple-600 text-center">
-            {reservations.filter(r => r.status === 'completed').length}件完了
+          <div className="text-2xl font-bold text-center">
+            <div className="group relative">
+              <span className={`${
+                getPendingFeedbackCount() > 5
+                  ? 'text-red-600'
+                  : getPendingFeedbackCount() > 2
+                  ? 'text-orange-600'
+                  : 'text-purple-600'
+              }`}>
+                {getPendingFeedbackCount()}件未完了
+              </span>
+              {/* ホバー時の詳細表示 */}
+              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                <div className="space-y-1">
+                  <div>面談完了済み: {reservations.filter(r => r.status === 'completed').length}件</div>
+                  <div className="text-yellow-300">フィードバック対象: {getPendingFeedbackCount()}件</div>
+                  <div className="text-gray-300">職員カルテ → 面談・指導タブから送信可能</div>
+                </div>
+                <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
