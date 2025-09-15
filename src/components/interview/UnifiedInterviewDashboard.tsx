@@ -957,7 +957,89 @@ export default function UnifiedInterviewDashboard() {
         </div>
       </div>
 
-      {/* 検索・フィルター */}
+      {/* メインコンテンツエリア - 最優先表示 */}
+      {isSearchMode ? (
+        /* 検索結果表示 */
+        <SearchResults
+          results={searchResults}
+          filters={currentSearchFilters!}
+          isLoading={isSearching}
+          onResultClick={(reservation) => {
+            console.log('検索結果クリック:', reservation);
+          }}
+          onStartInterview={handleStartInterviewFromSearch}
+        />
+      ) : showCalendarView ? (
+        // カレンダービュー
+        <InterviewCalendar
+          interviews={reservations.map(r => ({
+            id: r.id,
+            date: r.scheduledDate.toISOString().split('T')[0],
+            time: r.scheduledTime,
+            staffName: r.staffName,
+            staffId: r.staffId,
+            department: r.department,
+            interviewer: r.createdBy || '人事部',
+            type: r.type === 'regular' ? 'regular' :
+                  r.type === 'special' ? 'emergency' : 'followup',
+            status: r.status === 'pending' ? 'scheduled' :
+                   r.status === 'confirmed' ? 'scheduled' :
+                   r.status === 'completed' ? 'completed' :
+                   r.status === 'cancelled' ? 'cancelled' : 'scheduled',
+            duration: r.duration || 30,
+            location: '人事部面談室',
+            notes: r.notes
+          }))}
+          onDateSelect={(date) => setSelectedDate(date)}
+          onEventClick={(event) => {
+            const reservation = reservations.find(r => r.id === event.id);
+            if (reservation) {
+              handleStartInterview(reservation);
+            }
+          }}
+        />
+      ) : (
+        /* 左右分割メインコンテンツ - 最優先業務エリア */
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* 👈 左側: 面談予約管理セクション */}
+          <ReservationManagementSection
+            provisionalReservations={provisionalReservations}
+            onShowInterviewerManagement={() => setShowInterviewerManagement(true)}
+            onShowPatternDAnalytics={() => setShowPatternDAnalytics(true)}
+            onConfirmed={(confirmed) => {
+              // 確定済み予約を右側に送信
+              console.log('確定済み予約:', confirmed);
+              // 予約管理データを更新
+              setProvisionalReservations(prev =>
+                prev.map(r =>
+                  confirmed.find(c => c.id === r.id) ? { ...r, status: 'confirmed' as const } : r
+                )
+              );
+              loadReservations(); // 右側データ更新
+            }}
+            onStatusChange={(reservation, newStatus) => {
+              // 予約ステータス変更処理
+              setProvisionalReservations(prev =>
+                prev.map(r => r.id === reservation.id ? { ...r, status: newStatus } : r)
+              );
+              if (newStatus === 'confirmed') {
+                // 🚀 NEW: 確定済みになったら承認待ちから削除し、右側に直接表示
+                console.log('VoiceDrive承認完了 → 右側面談実施セクションに表示:', reservation);
+                // 右側データは getTodayReservations() で自動取得される
+              }
+            }}
+          />
+
+          {/* 👉 右側: 面談実施管理セクション */}
+          <InterviewExecutionSection
+            todayReservations={todayReservations}
+            loading={loading}
+            onStartInterview={handleStartInterview}
+          />
+        </div>
+      )}
+
+      {/* 検索・フィルター - 必要に応じて使用 */}
       <Card className="border-2 border-gray-200">
         <CardHeader className="pb-3">
           <CardTitle className="text-lg flex items-center justify-between">
@@ -1048,7 +1130,7 @@ export default function UnifiedInterviewDashboard() {
         showInCalendarView={showCalendarView}
       />
 
-      {/* 表示切り替えタブ - メインコンテンツ直上 */}
+      {/* 表示切り替えタブ - 補助機能 */}
       {!isSearchMode && (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
           <div className="flex border-b border-gray-200">
@@ -1081,88 +1163,6 @@ export default function UnifiedInterviewDashboard() {
               </Badge>
             </button>
           </div>
-        </div>
-      )}
-
-      {/* メインコンテンツエリア */}
-      {isSearchMode ? (
-        /* 検索結果表示 */
-        <SearchResults
-          results={searchResults}
-          filters={currentSearchFilters!}
-          isLoading={isSearching}
-          onResultClick={(reservation) => {
-            console.log('検索結果クリック:', reservation);
-          }}
-          onStartInterview={handleStartInterviewFromSearch}
-        />
-      ) : showCalendarView ? (
-        // カレンダービュー
-        <InterviewCalendar 
-          interviews={reservations.map(r => ({
-            id: r.id,
-            date: r.scheduledDate.toISOString().split('T')[0],
-            time: r.scheduledTime,
-            staffName: r.staffName,
-            staffId: r.staffId,
-            department: r.department,
-            interviewer: r.createdBy || '人事部',
-            type: r.type === 'regular' ? 'regular' : 
-                  r.type === 'special' ? 'emergency' : 'followup',
-            status: r.status === 'pending' ? 'scheduled' :
-                   r.status === 'confirmed' ? 'scheduled' :
-                   r.status === 'completed' ? 'completed' :
-                   r.status === 'cancelled' ? 'cancelled' : 'scheduled',
-            duration: r.duration || 30,
-            location: '人事部面談室',
-            notes: r.notes
-          }))}
-          onDateSelect={(date) => setSelectedDate(date)}
-          onEventClick={(event) => {
-            const reservation = reservations.find(r => r.id === event.id);
-            if (reservation) {
-              handleStartInterview(reservation);
-            }
-          }}
-        />
-      ) : (
-        /* 左右分割メインコンテンツ */
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* 👈 左側: 面談予約管理セクション */}
-          <ReservationManagementSection
-            provisionalReservations={provisionalReservations}
-            onShowInterviewerManagement={() => setShowInterviewerManagement(true)}
-            onShowPatternDAnalytics={() => setShowPatternDAnalytics(true)}
-            onConfirmed={(confirmed) => {
-              // 確定済み予約を右側に送信
-              console.log('確定済み予約:', confirmed);
-              // 予約管理データを更新
-              setProvisionalReservations(prev =>
-                prev.map(r =>
-                  confirmed.find(c => c.id === r.id) ? { ...r, status: 'confirmed' as const } : r
-                )
-              );
-              loadReservations(); // 右側データ更新
-            }}
-            onStatusChange={(reservation, newStatus) => {
-              // 予約ステータス変更処理
-              setProvisionalReservations(prev =>
-                prev.map(r => r.id === reservation.id ? { ...r, status: newStatus } : r)
-              );
-              if (newStatus === 'confirmed') {
-                // 🚀 NEW: 確定済みになったら承認待ちから削除し、右側に直接表示
-                console.log('VoiceDrive承認完了 → 右側面談実施セクションに表示:', reservation);
-                // 右側データは getTodayReservations() で自動取得される
-              }
-            }}
-          />
-
-          {/* 👉 右側: 面談実施管理セクション */}
-          <InterviewExecutionSection
-            todayReservations={todayReservations}
-            loading={loading}
-            onStartInterview={handleStartInterview}
-          />
         </div>
       )}
 
