@@ -5,7 +5,7 @@ import {
   Calendar, Clock, User, AlertTriangle, CheckCircle,
   ChevronRight, Play, FileText, Users,
   Filter, Search, RefreshCw, Bell, Plus, FilterX, ArrowLeft, CalendarDays,
-  Settings, BarChart3, Brain, Zap
+  Settings, BarChart3, Brain, Zap, X
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -1268,7 +1268,7 @@ function ReservationManagementSection({ provisionalReservations, onConfirmed, on
                     {/* アクションボタン */}
                     <div className="flex gap-2">
                       <Button
-                        className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white"
                         size="sm"
                         onClick={(e) => {
                           e.stopPropagation();
@@ -1276,19 +1276,6 @@ function ReservationManagementSection({ provisionalReservations, onConfirmed, on
                         }}
                       >
                         📋 詳細処理
-                      </Button>
-                      <Button
-                        className="flex-1 bg-purple-600 hover:bg-purple-700 text-white"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleAIOptimization(reservation);
-                        }}
-                      >
-                        🤖 AI最適化分析
-                      </Button>
-                      <Button variant="outline" size="sm" className="px-3">
-                        ✏️
                       </Button>
                     </div>
                   </Card>
@@ -1301,9 +1288,6 @@ function ReservationManagementSection({ provisionalReservations, onConfirmed, on
             <h3 className="font-semibold text-yellow-900 text-center">
               承認待ち ({provisionalReservations.filter(r => r.status === 'awaiting').length}件)
             </h3>
-            <p className="text-xs text-center text-gray-500 mb-2">
-              VoiceDrive承認後 → 右側面談実施セクションに表示
-            </p>
             <div className="space-y-3 max-h-96 overflow-y-auto">
               {provisionalReservations
                 .filter(r => r.status === 'awaiting')
@@ -1580,7 +1564,7 @@ function InterviewExecutionSection({ todayReservations, loading, onStartIntervie
   );
 }
 
-// 簡易版処理モーダル
+// AI最適化処理モーダル - 3段階プロセス
 interface ReservationProcessingModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -1589,38 +1573,325 @@ interface ReservationProcessingModalProps {
 }
 
 function ReservationProcessingModal({ isOpen, onClose, reservation, onStatusChange }: ReservationProcessingModalProps) {
+  const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(1);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisProgress, setAnalysisProgress] = useState(0);
+  const [analysisStage, setAnalysisStage] = useState('');
+  const [aiProposals, setAiProposals] = useState<AIProposals | null>(null);
+  const [selectedProposal, setSelectedProposal] = useState<1 | 2 | 3>(1);
+  const [editedProposal, setEditedProposal] = useState<any>(null);
+  const [isSending, setIsSending] = useState(false);
+
   if (!isOpen || !reservation) return null;
 
-  const handleConfirm = () => {
-    onStatusChange(reservation, 'confirmed');
-    onClose();
+  // Step 1: AI分析実行
+  const executeAIAnalysis = async () => {
+    setIsAnalyzing(true);
+    setAnalysisProgress(0);
+
+    const stages = [
+      { stage: '職員データ分析中...', progress: 20 },
+      { stage: '面談履歴を確認中...', progress: 40 },
+      { stage: 'スケジュール最適化中...', progress: 60 },
+      { stage: 'AI推薦案生成中...', progress: 80 },
+      { stage: '最終調整中...', progress: 100 }
+    ];
+
+    for (const { stage, progress } of stages) {
+      setAnalysisStage(stage);
+      setAnalysisProgress(progress);
+      await new Promise(resolve => setTimeout(resolve, 800));
+    }
+
+    // モックAI分析結果生成
+    const mockProposals: AIProposals = {
+      proposals: [
+        {
+          rank: 1,
+          interviewer: '田中人事部長',
+          timeSlot: '2024年3月20日 14:00-15:00',
+          matchingScore: 92,
+          reasoning: '過去の面談履歴と職員の専門性を考慮し、同部署経験豊富な田中部長が最適。午後の時間帯は職員の集中力が高く、建設的な面談が期待できます。'
+        },
+        {
+          rank: 2,
+          interviewer: '佐藤課長',
+          timeSlot: '2024年3月21日 10:00-11:00',
+          matchingScore: 87,
+          reasoning: '職員との年齢が近く、親しみやすい雰囲気で面談を進められます。朝の時間帯は双方とも集中でき、効率的な面談が可能です。'
+        },
+        {
+          rank: 3,
+          interviewer: 'AI面談システム',
+          timeSlot: '2024年3月19日 16:00-17:00',
+          matchingScore: 78,
+          reasoning: 'AI面談システムによる客観的な評価。時間的制約がある場合の代替案として有効。データに基づいた公平な面談が実施できます。'
+        }
+      ],
+      recommendedChoice: 1
+    };
+
+    setAiProposals(mockProposals);
+    setSelectedProposal(mockProposals.recommendedChoice);
+    setIsAnalyzing(false);
+    setCurrentStep(2);
   };
+
+  // Step 2: 提案内容編集
+  const initializeEditedProposal = () => {
+    if (aiProposals && !editedProposal) {
+      const selected = aiProposals.proposals.find(p => p.rank === selectedProposal);
+      setEditedProposal({
+        interviewer: selected?.interviewer || '',
+        timeSlot: selected?.timeSlot || '',
+        reasoning: selected?.reasoning || ''
+      });
+    }
+  };
+
+  // Step 3: VoiceDrive送信
+  const sendToVoiceDrive = async () => {
+    setIsSending(true);
+
+    // 送信シミュレーション
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    // ステータス更新
+    onStatusChange(reservation, 'awaiting');
+    setIsSending(false);
+    onClose();
+
+    // 成功通知
+    alert('VoiceDriveに送信完了しました！職員からの返答をお待ちください。');
+  };
+
+  // ステップごとのレンダリング
+  const renderStep1 = () => (
+    <div className="space-y-6">
+      <div className="text-center">
+        <h3 className="text-xl font-bold mb-2">AI最適化分析</h3>
+        <p className="text-gray-600">職員情報とスケジュールを分析し、最適な面談提案を生成します</p>
+      </div>
+
+      <div className="bg-blue-50 p-4 rounded-lg">
+        <h4 className="font-semibold mb-2">分析対象</h4>
+        <div className="space-y-2">
+          <div><span className="font-medium">職員:</span> {reservation.staffName}</div>
+          <div><span className="font-medium">部署:</span> {reservation.department}</div>
+          <div><span className="font-medium">面談タイプ:</span> {
+            reservation.interviewType === 'regular' ? '定期面談' :
+            reservation.interviewType === 'special' ? '特別面談' : 'サポート面談'
+          }</div>
+          <div><span className="font-medium">希望日時:</span> {reservation.preferredDates.join(', ')}</div>
+        </div>
+      </div>
+
+      {!isAnalyzing ? (
+        <Button
+          onClick={executeAIAnalysis}
+          className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3"
+        >
+          🤖 AI分析を開始
+        </Button>
+      ) : (
+        <div className="space-y-4">
+          <div className="text-center">
+            <div className="inline-flex items-center gap-2 text-purple-600 mb-2">
+              <div className="animate-spin rounded-full h-4 w-4 border-2 border-purple-600 border-t-transparent"></div>
+              <span className="font-medium">{analysisStage}</span>
+            </div>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-3">
+            <div
+              className="bg-purple-600 h-3 rounded-full transition-all duration-500"
+              style={{ width: `${analysisProgress}%` }}
+            ></div>
+          </div>
+          <div className="text-center text-sm text-gray-600">
+            {analysisProgress}% 完了
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
+  const renderStep2 = () => {
+    initializeEditedProposal();
+
+    return (
+      <div className="space-y-6">
+        <div className="text-center">
+          <h3 className="text-xl font-bold mb-2">提案内容の確認・編集</h3>
+          <p className="text-gray-600">AI生成された提案を確認し、必要に応じて編集してください</p>
+        </div>
+
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">AI推薦案選択</label>
+            <div className="space-y-3">
+              {aiProposals?.proposals.map((proposal) => (
+                <div
+                  key={proposal.rank}
+                  className={`p-3 border rounded-lg cursor-pointer transition-all ${
+                    selectedProposal === proposal.rank
+                      ? 'border-blue-500 bg-blue-50'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                  onClick={() => setSelectedProposal(proposal.rank)}
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-medium">案{proposal.rank}: {proposal.interviewer}</span>
+                    <Badge variant={proposal.rank === 1 ? 'default' : 'secondary'}>
+                      適合度 {proposal.matchingScore}%
+                    </Badge>
+                  </div>
+                  <div className="text-sm text-gray-600 mb-1">{proposal.timeSlot}</div>
+                  <div className="text-xs text-gray-500">{proposal.reasoning}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {editedProposal && (
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">面談者</label>
+                <Input
+                  value={editedProposal.interviewer}
+                  onChange={(e) => setEditedProposal({...editedProposal, interviewer: e.target.value})}
+                  placeholder="面談者名を入力"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">日時</label>
+                <Input
+                  value={editedProposal.timeSlot}
+                  onChange={(e) => setEditedProposal({...editedProposal, timeSlot: e.target.value})}
+                  placeholder="日時を入力"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">面談理由・内容</label>
+                <textarea
+                  className="w-full p-3 border border-gray-300 rounded-md resize-none"
+                  rows={4}
+                  value={editedProposal.reasoning}
+                  onChange={(e) => setEditedProposal({...editedProposal, reasoning: e.target.value})}
+                  placeholder="面談の理由や期待する内容を入力"
+                />
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="flex gap-3">
+          <Button
+            variant="outline"
+            onClick={() => setCurrentStep(1)}
+            className="flex-1"
+          >
+            ← 戻る
+          </Button>
+          <Button
+            onClick={() => setCurrentStep(3)}
+            className="flex-1 bg-green-600 hover:bg-green-700"
+          >
+            VoiceDrive送信へ →
+          </Button>
+        </div>
+      </div>
+    );
+  };
+
+  const renderStep3 = () => (
+    <div className="space-y-6">
+      <div className="text-center">
+        <h3 className="text-xl font-bold mb-2">VoiceDrive送信</h3>
+        <p className="text-gray-600">面談提案をVoiceDriveで職員に送信します</p>
+      </div>
+
+      <div className="bg-green-50 p-4 rounded-lg">
+        <h4 className="font-semibold mb-3">送信内容プレビュー</h4>
+        <div className="space-y-2 text-sm">
+          <div><span className="font-medium">宛先:</span> {reservation.staffName}</div>
+          <div><span className="font-medium">面談者:</span> {editedProposal?.interviewer}</div>
+          <div><span className="font-medium">提案日時:</span> {editedProposal?.timeSlot}</div>
+          <div><span className="font-medium">面談内容:</span></div>
+          <div className="bg-white p-2 rounded border text-xs">
+            {editedProposal?.reasoning}
+          </div>
+        </div>
+      </div>
+
+      {!isSending ? (
+        <div className="flex gap-3">
+          <Button
+            variant="outline"
+            onClick={() => setCurrentStep(2)}
+            className="flex-1"
+          >
+            ← 編集に戻る
+          </Button>
+          <Button
+            onClick={sendToVoiceDrive}
+            className="flex-1 bg-blue-600 hover:bg-blue-700"
+          >
+            📤 VoiceDriveで送信
+          </Button>
+        </div>
+      ) : (
+        <div className="text-center">
+          <div className="inline-flex items-center gap-2 text-blue-600 mb-3">
+            <div className="animate-spin rounded-full h-5 w-5 border-2 border-blue-600 border-t-transparent"></div>
+            <span className="font-medium">VoiceDriveに送信中...</span>
+          </div>
+          <p className="text-sm text-gray-600">送信完了まで少々お待ちください</p>
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-bold">予約処理</h3>
+      <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-xl font-bold">AI最適化処理 - {reservation.staffName}</h2>
           <Button variant="ghost" size="sm" onClick={onClose}>
             <X className="h-4 w-4" />
           </Button>
         </div>
 
-        <div className="space-y-4">
-          <div>
-            <div className="font-medium">{reservation.staffName}</div>
-            <div className="text-sm text-gray-600">{reservation.department} / {reservation.position}</div>
-          </div>
-
-          <div className="flex gap-2">
-            <Button onClick={handleConfirm} className="flex-1 bg-green-600 hover:bg-green-700">
-              確定済みに移動
-            </Button>
-            <Button variant="outline" onClick={onClose} className="flex-1">
-              キャンセル
-            </Button>
-          </div>
+        {/* プロセス進捗表示 */}
+        <div className="flex items-center justify-center mb-8">
+          {[1, 2, 3].map((step) => (
+            <div key={step} className="flex items-center">
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                currentStep >= step ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'
+              }`}>
+                {step}
+              </div>
+              {step < 3 && (
+                <div className={`w-12 h-1 mx-2 ${
+                  currentStep > step ? 'bg-blue-600' : 'bg-gray-200'
+                }`} />
+              )}
+            </div>
+          ))}
         </div>
+
+        <div className="text-center text-sm text-gray-600 mb-6">
+          Step {currentStep}: {
+            currentStep === 1 ? 'AI分析実行' :
+            currentStep === 2 ? '提案内容編集' : 'VoiceDrive送信'
+          }
+        </div>
+
+        {/* ステップ別コンテンツ */}
+        {currentStep === 1 && renderStep1()}
+        {currentStep === 2 && renderStep2()}
+        {currentStep === 3 && renderStep3()}
       </div>
     </div>
   );
