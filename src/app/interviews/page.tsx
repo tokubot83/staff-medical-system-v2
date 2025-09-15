@@ -20,12 +20,11 @@ import UnifiedInterviewDashboard from '@/components/interview/UnifiedInterviewDa
 import UnifiedInterviewBankSystem from '@/components/interview/UnifiedInterviewBankSystem'
 import InterviewManualSimulator from '@/components/interview/InterviewManualSimulator'
 import InterviewStatisticsChart from '@/components/charts/InterviewStatisticsChart'
-import ReservationManagement from '@/components/interview/ReservationManagement'
+// import ReservationManagement from '@/components/interview/ReservationManagement' - 削除済み（面談ステーションに統合）
 
-// タブ順序を業務フローに合わせて修正（予約→実施→記録→分析）
+// タブ順序を業務フローに合わせて修正（統合面談ステーション→バンク→分析）
 const tabs = [
-  { id: 'reservation', label: '予約管理', icon: '📅', badge: 'NEW', isNew: true },
-  { id: 'station', label: '面談ステーション', icon: '🚉', badge: '', isNew: false },
+  { id: 'station', label: '面談ステーション', icon: '🚉', badge: 'UPDATED', isNew: true },
   { id: 'bank-system', label: 'バンク', icon: '🏦', badge: '', isNew: false },
   { id: 'overview-guide', label: 'ガイド', icon: '📖', badge: '', isNew: false },
   { id: 'simulator', label: 'シミュレーター', icon: '🎯', badge: '', isNew: false },
@@ -38,7 +37,7 @@ const tabs = [
 function InterviewsPageContent() {
   const searchParams = useSearchParams()
   const tabFromUrl = searchParams.get('tab')
-  const [activeTab, setActiveTab] = useState(tabFromUrl || 'reservation')
+  const [activeTab, setActiveTab] = useState(tabFromUrl || 'station')
   const [showGuideModal, setShowGuideModal] = useState(false)
   const [selectedInterview, setSelectedInterview] = useState<Interview | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
@@ -215,7 +214,7 @@ function InterviewsPageContent() {
         {/* 通常のタブコンテンツ */}
         {activeTab !== 'simulator' && (
           <div className={styles.tabContent}>
-            {activeTab === 'reservation' && <ReservationManagement />}
+            {/* 予約管理タブは削除（面談ステーションに統合済み） */}
             {activeTab === 'station' && <UnifiedInterviewDashboard />}
             {activeTab === 'bank-system' && <UnifiedInterviewBankSystem />}
             {activeTab === 'record' && <RecordTab selectedInterview={selectedInterview} />}

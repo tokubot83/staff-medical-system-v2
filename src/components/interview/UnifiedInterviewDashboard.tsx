@@ -14,6 +14,40 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { VoiceDriveIntegrationService } from '@/services/voicedriveIntegrationService';
+
+// 予約管理用インポート
+type ReservationStatus = 'pending' | 'analyzing' | 'proposals' | 'editing' | 'sent' | 'awaiting' | 'confirmed' | 'rejected';
+
+interface AIProposals {
+  proposals: Array<{
+    rank: 1 | 2 | 3;
+    interviewer: string;
+    timeSlot: string;
+    matchingScore: number;
+    reasoning: string;
+  }>;
+  recommendedChoice: 1 | 2 | 3;
+}
+
+interface ProvisionalReservation {
+  id: string;
+  staffId: string;
+  staffName: string;
+  department: string;
+  position: string;
+  interviewType: 'regular' | 'special' | 'support';
+  subType?: string;
+  preferredDates: Date[];
+  urgency: 'low' | 'medium' | 'high' | 'urgent';
+  source: 'voicedrive' | 'manual';
+  status: ReservationStatus;
+  receivedAt: Date;
+  notes?: string;
+  aiAnalysis?: AIProposals;
+  adjustmentCount?: number;
+  lastSentAt?: Date;
+  approvedProposal?: number;
+}
 import { useRouter, useSearchParams } from 'next/navigation';
 import { mockInterviews } from '@/data/mockInterviews';
 import ManualReservationModal from './ManualReservationModal';
@@ -104,10 +138,72 @@ export default function UnifiedInterviewDashboard() {
   const [patternDReservations, setPatternDReservations] = useState<EnhancedInterviewReservation[]>([]);
   const [timeSlotManager] = useState(new TimeSlotManager());
 
+  // 予約管理統合用状態
+  const [provisionalReservations, setProvisionalReservations] = useState<ProvisionalReservation[]>([]);
+  const [selectedReservation, setSelectedReservation] = useState<ProvisionalReservation | null>(null);
+  const [showProcessingModal, setShowProcessingModal] = useState(false);
+
   useEffect(() => {
     loadReservations();
     loadPatternDReservations();
+    loadProvisionalReservations();
   }, [selectedDate]);
+
+  // 予約管理データ読み込み
+  const loadProvisionalReservations = async () => {
+    try {
+      // Mockデータを生成
+      const mockData: ProvisionalReservation[] = [
+        {
+          id: 'PROV-001',
+          staffId: 'OH-NS-2021-001',
+          staffName: '田中 花子',
+          department: '内科',
+          position: '看護師',
+          interviewType: 'support',
+          preferredDates: [new Date('2025-09-20'), new Date('2025-09-21')],
+          urgency: 'medium',
+          source: 'voicedrive',
+          status: 'confirmed', // 確定済みとして右側に表示
+          receivedAt: new Date('2025-09-15'),
+          notes: 'キャリア相談を希望',
+          adjustmentCount: 1
+        },
+        {
+          id: 'PROV-002',
+          staffId: 'OH-DR-2020-003',
+          staffName: '山田 太郎',
+          department: '外科',
+          position: '医師',
+          interviewType: 'regular',
+          preferredDates: [new Date('2025-09-22')],
+          urgency: 'low',
+          source: 'voicedrive',
+          status: 'awaiting',
+          receivedAt: new Date('2025-09-14'),
+          adjustmentCount: 0
+        },
+        {
+          id: 'PROV-003',
+          staffId: 'OH-PT-2022-005',
+          staffName: '佐藤 美咲',
+          department: 'リハビリテーション科',
+          position: '理学療法士',
+          interviewType: 'support',
+          preferredDates: [new Date('2025-09-19')],
+          urgency: 'high',
+          source: 'voicedrive',
+          status: 'pending',
+          receivedAt: new Date('2025-09-15'),
+          notes: '職場環境についての相談'
+        }
+      ];
+
+      setProvisionalReservations(mockData);
+    } catch (error) {
+      console.error('予約管理データの読み込みエラー:', error);
+    }
+  };
 
   // Pattern D予約データ読み込み
   const loadPatternDReservations = async () => {
@@ -447,10 +543,41 @@ export default function UnifiedInterviewDashboard() {
 
   const getTodayReservations = () => {
     const today = new Date();
-    return reservations.filter(r => {
+    // 既存の面談予約 + 確定済み予約を統合
+    const existingReservations = reservations.filter(r => {
       const rDate = new Date(r.scheduledDate);
       return rDate.toDateString() === today.toDateString();
     });
+
+    // 確定済み予約を面談予約形式に変換して追加
+    const confirmedReservations = provisionalReservations
+      .filter(r => r.status === 'confirmed')
+      .map(convertProvisionalToUnified);
+
+    return [...existingReservations, ...confirmedReservations];
+  };
+
+  // 確定済み予約を面談予約形式に変換
+  const convertProvisionalToUnified = (provisional: ProvisionalReservation): UnifiedInterviewReservation => {
+    return {
+      id: provisional.id,
+      type: provisional.interviewType,
+      staffId: provisional.staffId,
+      staffName: provisional.staffName,
+      department: provisional.department,
+      position: provisional.position,
+      experienceYears: 0, // デフォルト値
+      scheduledDate: provisional.preferredDates[0] || new Date(),
+      scheduledTime: '14:00', // デフォルト値（実際はAI最適化で決定）
+      duration: 45,
+      status: 'confirmed',
+      urgency: provisional.urgency,
+      supportCategory: provisional.interviewType === 'support' ? 'general' : undefined,
+      supportTopic: provisional.notes || '',
+      notes: provisional.notes,
+      createdAt: provisional.receivedAt,
+      source: provisional.source
+    };
   };
 
   const getUpcomingReservations = () => {
@@ -924,81 +1051,39 @@ export default function UnifiedInterviewDashboard() {
           }}
         />
       ) : (
-        <div>
-        {/* 本日の面談予定 */}
-        <div>
-          <Card className="border-2 border-blue-200 shadow-lg">
-            <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100">
-              <CardTitle className="flex items-center justify-between">
-                <span className="flex items-center gap-2 text-xl">
-                  <Calendar className="h-6 w-6 text-blue-600" />
-                  <span className="text-blue-900">本日の面談予定</span>
-                </span>
-                <Badge variant="default" className="text-lg px-3 py-1 bg-blue-600">
-                  {todayReservations.length} 件
-                </Badge>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-4">
-          {loading ? (
-            <div className="text-center py-8 text-gray-500">読み込み中...</div>
-          ) : todayReservations.length === 0 ? (
-            <div className="text-center py-12 bg-gray-50 rounded-lg">
-              <Calendar className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500 text-lg">本日の面談予定はありません</p>
-            </div>
-          ) : (
-            <div className="space-y-3 max-h-[700px] overflow-y-auto">
-              {todayReservations.map(reservation => (
-                <div key={reservation.id} className="border-2 border-gray-200 rounded-lg p-4 hover:border-blue-400 hover:shadow-md transition-all bg-white">
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-start gap-4">
-                        {/* 時刻を大きく表示 */}
-                        <div className="bg-blue-100 rounded-lg px-3 py-2 text-center">
-                          <div className="text-2xl font-bold text-blue-700">{reservation.scheduledTime}</div>
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center gap-3 mb-2">
-                            <div className="font-bold text-lg">{reservation.staffName}</div>
-                            <Badge variant="outline">{getInterviewTypeLabel(reservation)}</Badge>
-                            {getUrgencyBadge(reservation.urgency)}
-                            {getStatusBadge(reservation.status)}
-                          </div>
-                          <div className="text-sm text-gray-600">
-                            {reservation.department} / {reservation.position}
-                          </div>
-                          {reservation.supportTopic && (
-                            <div className="mt-2 bg-gray-50 rounded p-2">
-                              <span className="font-medium text-sm">相談内容:</span>
-                              <p className="text-sm text-gray-700 mt-1">{reservation.supportTopic}</p>
-                            </div>
-                          )}
-                          {reservation.notes && (
-                            <div className="mt-2 text-sm text-gray-600 italic">
-                              📝 {reservation.notes}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    <Button 
-                      onClick={() => handleStartInterview(reservation)}
-                      disabled={reservation.status !== 'confirmed'}
-                      className="ml-4 bg-blue-600 hover:bg-blue-700 text-white"
-                      size="lg"
-                    >
-                      <Play className="h-5 w-5 mr-2" />
-                      面談開始
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+        /* 左右分割メインコンテンツ */
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* 👈 左側: 面談予約管理セクション */}
+          <ReservationManagementSection
+            provisionalReservations={provisionalReservations}
+            onConfirmed={(confirmed) => {
+              // 確定済み予約を右側に送信
+              console.log('確定済み予約:', confirmed);
+              // 予約管理データを更新
+              setProvisionalReservations(prev =>
+                prev.map(r =>
+                  confirmed.find(c => c.id === r.id) ? { ...r, status: 'confirmed' as const } : r
+                )
+              );
+              loadReservations(); // 右側データ更新
+            }}
+            onStatusChange={(reservation, newStatus) => {
+              // 予約ステータス変更処理
+              setProvisionalReservations(prev =>
+                prev.map(r => r.id === reservation.id ? { ...r, status: newStatus } : r)
+              );
+              if (newStatus === 'confirmed') {
+                loadReservations(); // 確定済みになったら右側データ更新
+              }
+            }}
+          />
+
+          {/* 👉 右側: 面談実施管理セクション */}
+          <InterviewExecutionSection
+            todayReservations={todayReservations}
+            loading={loading}
+            onStartInterview={handleStartInterview}
+          />
         </div>
       )}
         </TabsContent>
@@ -1041,6 +1126,367 @@ export default function UnifiedInterviewDashboard() {
           setShowTemplateManager(false);
         }}
       />
+    </div>
+  );
+}
+
+// 左側セクション: 予約管理
+interface ReservationManagementSectionProps {
+  provisionalReservations: ProvisionalReservation[];
+  onConfirmed: (confirmed: ProvisionalReservation[]) => void;
+  onStatusChange: (reservation: ProvisionalReservation, newStatus: ReservationStatus) => void;
+}
+
+function ReservationManagementSection({ provisionalReservations, onConfirmed, onStatusChange }: ReservationManagementSectionProps) {
+  const [showProcessingModal, setShowProcessingModal] = useState(false);
+  const [selectedReservation, setSelectedReservation] = useState<ProvisionalReservation | null>(null);
+
+  const handleProcessReservation = (reservation: ProvisionalReservation) => {
+    setSelectedReservation(reservation);
+    setShowProcessingModal(true);
+  };
+
+  const handleAIOptimization = async (reservation: ProvisionalReservation) => {
+    // AI最適化処理のシミュレーション
+    console.log('AI最適化開始:', reservation);
+    // TODO: 実際のAI最適化処理を実装
+  };
+
+  const getStatusColor = (status: ReservationStatus) => {
+    const colors = {
+      pending: 'bg-blue-50 border-blue-200',
+      analyzing: 'bg-yellow-50 border-yellow-200',
+      proposals: 'bg-purple-50 border-purple-200',
+      editing: 'bg-orange-50 border-orange-200',
+      sent: 'bg-indigo-50 border-indigo-200',
+      awaiting: 'bg-yellow-50 border-yellow-200',
+      confirmed: 'bg-green-50 border-green-200',
+      rejected: 'bg-red-50 border-red-200'
+    };
+    return colors[status] || 'bg-gray-50 border-gray-200';
+  };
+
+  const getStatusLabel = (status: ReservationStatus) => {
+    const labels = {
+      pending: '仮予約',
+      analyzing: 'AI分析中',
+      proposals: '3案提示中',
+      editing: '人事編集中',
+      sent: 'VD送信済み',
+      awaiting: '承認待ち',
+      confirmed: '確定済み',
+      rejected: '再調整要求'
+    };
+    return labels[status] || status;
+  };
+
+  return (
+    <Card className="border-2 border-blue-200 h-full">
+      <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100">
+        <CardTitle className="flex items-center gap-2">
+          <Calendar className="h-5 w-5 text-blue-600" />
+          🔄 面談予約管理 - VoiceDrive連携
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="pt-4">
+        <div className="grid grid-cols-3 gap-4 h-full">
+          {/* 仮予約カラム */}
+          <div className="space-y-2">
+            <h3 className="font-semibold text-blue-900 text-center">
+              仮予約 ({provisionalReservations.filter(r => r.status === 'pending').length}件)
+            </h3>
+            <div className="space-y-2 max-h-96 overflow-y-auto">
+              {provisionalReservations
+                .filter(r => r.status === 'pending')
+                .map(reservation => (
+                  <div
+                    key={reservation.id}
+                    className={`p-3 rounded-lg border-2 ${getStatusColor(reservation.status)} cursor-pointer hover:shadow-md transition-all`}
+                    onClick={() => handleProcessReservation(reservation)}
+                  >
+                    <div className="font-medium text-sm">{reservation.staffName}</div>
+                    <div className="text-xs text-gray-600">{reservation.department}</div>
+                    <div className="text-xs mt-1">
+                      <Badge variant="outline" className="text-xs">
+                        {reservation.interviewType === 'regular' ? '定期' :
+                         reservation.interviewType === 'special' ? '特別' : 'サポート'}
+                      </Badge>
+                      <span className="ml-2 text-gray-500">
+                        {reservation.urgency === 'urgent' ? '緊急' :
+                         reservation.urgency === 'high' ? '高' :
+                         reservation.urgency === 'medium' ? '中' : '低'}
+                      </span>
+                    </div>
+                    <Button
+                      size="sm"
+                      className="w-full mt-2 bg-blue-600 hover:bg-blue-700 text-white"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAIOptimization(reservation);
+                      }}
+                    >
+                      詳細処理
+                    </Button>
+                  </div>
+                ))}
+            </div>
+          </div>
+
+          {/* 承認待ちカラム */}
+          <div className="space-y-2">
+            <h3 className="font-semibold text-yellow-900 text-center">
+              承認待ち ({provisionalReservations.filter(r => r.status === 'awaiting').length}件)
+            </h3>
+            <div className="space-y-2 max-h-96 overflow-y-auto">
+              {provisionalReservations
+                .filter(r => r.status === 'awaiting')
+                .map(reservation => (
+                  <div
+                    key={reservation.id}
+                    className={`p-3 rounded-lg border-2 ${getStatusColor(reservation.status)}`}
+                  >
+                    <div className="font-medium text-sm">{reservation.staffName}</div>
+                    <div className="text-xs text-gray-600">{reservation.department}</div>
+                    <div className="text-xs mt-1 text-yellow-700">
+                      調整回数: {reservation.adjustmentCount || 0}回
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </div>
+
+          {/* 確定済みカラム */}
+          <div className="space-y-2">
+            <h3 className="font-semibold text-green-900 text-center">
+              確定済み ({provisionalReservations.filter(r => r.status === 'confirmed').length}件)
+            </h3>
+            <div className="space-y-2 max-h-96 overflow-y-auto">
+              {provisionalReservations
+                .filter(r => r.status === 'confirmed')
+                .map(reservation => (
+                  <div
+                    key={reservation.id}
+                    className={`p-3 rounded-lg border-2 ${getStatusColor(reservation.status)}`}
+                  >
+                    <div className="font-medium text-sm">{reservation.staffName}</div>
+                    <div className="text-xs text-gray-600">{reservation.department}</div>
+                    <div className="text-xs mt-1 text-green-700">
+                      ✓ 面談実施セクションに表示
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </div>
+        </div>
+      </CardContent>
+
+      {/* 処理モーダル */}
+      <ReservationProcessingModal
+        isOpen={showProcessingModal}
+        onClose={() => setShowProcessingModal(false)}
+        reservation={selectedReservation}
+        onStatusChange={(reservation, newStatus) => {
+          // 親コンポーネントに通知
+          console.log('ステータス変更:', reservation, newStatus);
+          setShowProcessingModal(false);
+          onStatusChange(reservation, newStatus);
+          if (newStatus === 'confirmed') {
+            onConfirmed([reservation]);
+          }
+        }}
+      />
+    </Card>
+  );
+}
+
+// 右側セクション: 面談実施
+interface InterviewExecutionSectionProps {
+  todayReservations: UnifiedInterviewReservation[];
+  loading: boolean;
+  onStartInterview: (reservation: UnifiedInterviewReservation) => void;
+}
+
+function InterviewExecutionSection({ todayReservations, loading, onStartInterview }: InterviewExecutionSectionProps) {
+  const getInterviewTypeLabel = (reservation: UnifiedInterviewReservation) => {
+    if (reservation.type === 'regular') {
+      switch (reservation.regularType) {
+        case 'new_employee': return '新入職員月次面談';
+        case 'annual': return '年次面談';
+        case 'management': return '管理職面談';
+        default: return '定期面談';
+      }
+    } else if (reservation.type === 'special') {
+      switch (reservation.specialType) {
+        case 'exit': return '退職面談';
+        case 'transfer': return '異動面談';
+        case 'return': return '復職面談';
+        case 'promotion': return '昇進面談';
+        case 'disciplinary': return '懲戒面談';
+        default: return '特別面談';
+      }
+    } else {
+      return `サポート面談 - ${reservation.supportCategory || ''}`;
+    }
+  };
+
+  const getStatusBadge = (status: string) => {
+    const variants: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
+      pending: 'secondary',
+      confirmed: 'default',
+      in_progress: 'destructive',
+      completed: 'outline',
+      cancelled: 'outline'
+    };
+
+    const labels: Record<string, string> = {
+      pending: '承認待ち',
+      confirmed: '確定',
+      in_progress: '実施中',
+      completed: '完了',
+      cancelled: 'キャンセル'
+    };
+
+    return (
+      <Badge variant={variants[status] || 'default'}>
+        {labels[status] || status}
+      </Badge>
+    );
+  };
+
+  const getUrgencyBadge = (urgency?: string) => {
+    if (!urgency) return null;
+
+    const colors: Record<string, string> = {
+      urgent: 'bg-red-500',
+      high: 'bg-orange-500',
+      medium: 'bg-yellow-500',
+      low: 'bg-green-500'
+    };
+
+    return (
+      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium text-white ${colors[urgency]}`}>
+        {urgency === 'urgent' ? '緊急' : urgency === 'high' ? '高' : urgency === 'medium' ? '中' : '低'}
+      </span>
+    );
+  };
+
+  return (
+    <Card className="border-2 border-green-200 h-full">
+      <CardHeader className="bg-gradient-to-r from-green-50 to-green-100">
+        <CardTitle className="flex items-center justify-between">
+          <span className="flex items-center gap-2">
+            <Play className="h-5 w-5 text-green-600" />
+            🎯 面談実施管理 - 本日の予定
+          </span>
+          <Badge variant="default" className="text-lg px-3 py-1 bg-green-600">
+            {todayReservations.length} 件
+          </Badge>
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="pt-4">
+        {loading ? (
+          <div className="text-center py-8 text-gray-500">読み込み中...</div>
+        ) : todayReservations.length === 0 ? (
+          <div className="text-center py-12 bg-gray-50 rounded-lg">
+            <Calendar className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+            <p className="text-gray-500 text-lg">本日の面談予定はありません</p>
+          </div>
+        ) : (
+          <div className="space-y-3 max-h-[500px] overflow-y-auto">
+            {todayReservations.map(reservation => (
+              <div key={reservation.id} className="border-2 border-gray-200 rounded-lg p-4 hover:border-green-400 hover:shadow-md transition-all bg-white">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-start gap-4">
+                      {/* 時刻を大きく表示 */}
+                      <div className="bg-green-100 rounded-lg px-3 py-2 text-center">
+                        <div className="text-2xl font-bold text-green-700">{reservation.scheduledTime}</div>
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="font-bold text-lg">{reservation.staffName}</div>
+                          <Badge variant="outline">{getInterviewTypeLabel(reservation)}</Badge>
+                          {getUrgencyBadge(reservation.urgency)}
+                          {getStatusBadge(reservation.status)}
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          {reservation.department} / {reservation.position}
+                        </div>
+                        {reservation.supportTopic && (
+                          <div className="mt-2 bg-gray-50 rounded p-2">
+                            <span className="font-medium text-sm">相談内容:</span>
+                            <p className="text-sm text-gray-700 mt-1">{reservation.supportTopic}</p>
+                          </div>
+                        )}
+                        {reservation.notes && (
+                          <div className="mt-2 text-sm text-gray-600 italic">
+                            📝 {reservation.notes}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <Button
+                    onClick={() => onStartInterview(reservation)}
+                    disabled={reservation.status !== 'confirmed'}
+                    className="ml-4 bg-green-600 hover:bg-green-700 text-white"
+                    size="lg"
+                  >
+                    <Play className="h-5 w-5 mr-2" />
+                    面談開始
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+// 簡易版処理モーダル
+interface ReservationProcessingModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  reservation: ProvisionalReservation | null;
+  onStatusChange: (reservation: ProvisionalReservation, newStatus: ReservationStatus) => void;
+}
+
+function ReservationProcessingModal({ isOpen, onClose, reservation, onStatusChange }: ReservationProcessingModalProps) {
+  if (!isOpen || !reservation) return null;
+
+  const handleConfirm = () => {
+    onStatusChange(reservation, 'confirmed');
+    onClose();
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-bold">予約処理</h3>
+          <Button variant="ghost" size="sm" onClick={onClose}>
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+
+        <div className="space-y-4">
+          <div>
+            <div className="font-medium">{reservation.staffName}</div>
+            <div className="text-sm text-gray-600">{reservation.department} / {reservation.position}</div>
+          </div>
+
+          <div className="flex gap-2">
+            <Button onClick={handleConfirm} className="flex-1 bg-green-600 hover:bg-green-700">
+              確定済みに移動
+            </Button>
+            <Button variant="outline" onClick={onClose} className="flex-1">
+              キャンセル
+            </Button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
