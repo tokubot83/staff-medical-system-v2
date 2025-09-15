@@ -755,7 +755,6 @@ export default function ReservationManagement() {
             {/* カレンダー表示（下部60%） */}
             <div className="flex-1" style={{ minHeight: '400px' }}>
               <h3 className="text-lg font-semibold mb-3">週間予約カレンダー</h3>
-              (
               <Card className="h-full">
                 <CardContent className="p-4 h-full">
                   <CalendarView reservations={provisionalReservations} />
@@ -764,57 +763,6 @@ export default function ReservationManagement() {
             </div>
           </div>
         </TabsContent>
-                      <div key={reservation.id} className="p-4 hover:bg-gray-50 transition-colors">
-                        <div className="flex items-center justify-between">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-3">
-                              <span className="font-medium">{reservation.staffName}</span>
-                              <Badge className={getStatusBadgeColor(reservation.status)}>
-                                {reservation.status === 'pending' && '受信済み'}
-                                {reservation.status === 'analyzing' && 'AI分析中'}
-                                {reservation.status === 'proposed' && '提案済み'}
-                                {reservation.status === 'confirmed' && '確定'}
-                              </Badge>
-                              <Badge className={getUrgencyBadgeColor(reservation.urgency)}>
-                                {reservation.urgency === 'urgent' && '緊急'}
-                                {reservation.urgency === 'high' && '高'}
-                                {reservation.urgency === 'medium' && '中'}
-                                {reservation.urgency === 'low' && '低'}
-                              </Badge>
-                            </div>
-                            <div className="flex items-center gap-4 mt-1 text-sm text-gray-600">
-                              <span>{reservation.department} / {reservation.position}</span>
-                              <span>{reservation.interviewType === 'regular' ? '定期面談' :
-                                     reservation.interviewType === 'special' ? '特別面談' : 'サポート面談'}</span>
-                              {reservation.subType && <span>({reservation.subType})</span>}
-                            </div>
-                            {reservation.aiAnalysis && (
-                              <div className="mt-2 p-2 bg-blue-50 rounded text-sm">
-                                <span className="font-medium">AI推奨:</span> {reservation.aiAnalysis.recommendedInterviewer} /
-                                {reservation.aiAnalysis.recommendedTimeSlot} (マッチ度: {reservation.aiAnalysis.matchingScore}%)
-                              </div>
-                            )}
-                          </div>
-                          <div className="flex gap-2">
-                            {reservation.status === 'pending' && (
-                              <Button size="sm" onClick={() => handleAIOptimization(reservation)}>
-                                <Brain className="w-4 h-4 mr-1" />
-                                AI分析
-                              </Button>
-                            )}
-                            {reservation.status === 'proposed' && (
-                              <Button size="sm" variant="default" onClick={() => handleSendProposal(reservation)}>
-                                <Send className="w-4 h-4 mr-1" />
-                                通知送信
-                              </Button>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
 
         {/* 仮予約処理タブ */}
         <TabsContent value="provisional" className="flex-1 overflow-auto">
