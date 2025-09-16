@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import styles from './StressCheckDistribution.module.css'
 import TargetingModal from './TargetingModal'
 import GroupAnalysis from './GroupAnalysis'
+import FollowUpManagement from './FollowUpManagement'
 import { mockCampaignData, mockDepartmentStats } from '../mockData'
 
 interface QuickAction {
@@ -276,6 +277,7 @@ export default function StressCheckDistribution() {
       </div>
 
       {selectedTab === 'group-analysis' && <GroupAnalysis />}
+      {selectedTab === 'followup' && <FollowUpManagement />}
 
       {showTargetingModal && (
         <TargetingModal onClose={() => setShowTargetingModal(false)} />

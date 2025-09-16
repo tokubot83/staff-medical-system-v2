@@ -1,0 +1,572 @@
+.container {
+  width: 100%;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: calc(100vh - 100px);
+}
+
+/* ヘッダー */
+.header {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.headerTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pageTitle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.titleIcon {
+  font-size: 28px;
+}
+
+.pageTitle h2 {
+  font-size: 24px;
+  color: #1f2937;
+  margin: 0;
+}
+
+.statusBadges {
+  display: flex;
+  gap: 12px;
+}
+
+.badge {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.badgeUrgent {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.badgePending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badgeScheduled {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+/* メイングリッド */
+.mainGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 1024px) {
+  .mainGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* カード */
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.cardTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.addBtn {
+  background: none;
+  border: none;
+  color: #7c3aed;
+  cursor: pointer;
+  font-weight: 500;
+  transition: opacity 0.3s;
+}
+
+.addBtn:hover {
+  opacity: 0.7;
+}
+
+/* クイックアクション */
+.quickActions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.actionBtn {
+  padding: 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: left;
+  position: relative;
+}
+
+.actionBtn:hover {
+  border-color: #7c3aed;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.15);
+}
+
+.actionBtnPrimary {
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  color: white;
+  border: none;
+}
+
+.actionBtnWarning {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+  border: none;
+}
+
+.actionBtnDanger {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  border: none;
+}
+
+.actionIcon {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.actionTitle {
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: inherit;
+}
+
+.actionDesc {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.targetCount {
+  font-weight: 600;
+}
+
+/* VoiceDrive連携ステータス */
+.voicedriveStatus {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 20px;
+  border: 2px solid #e5e7eb;
+}
+
+.statusHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  color: #1f2937;
+}
+
+.statusIcon {
+  font-size: 20px;
+}
+
+.statusContent {
+  font-size: 14px;
+}
+
+.statusIndicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  color: #6b7280;
+}
+
+.dotPending {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fbbf24;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.statusMessage {
+  color: #6b7280;
+  margin: 0;
+}
+
+/* フィルターボタン */
+.filterButtons {
+  display: flex;
+  gap: 8px;
+}
+
+.filterBtn {
+  padding: 6px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  background: white;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 14px;
+}
+
+.filterBtn:hover {
+  border-color: #7c3aed;
+  color: #7c3aed;
+}
+
+.filterBtn.active {
+  background: #7c3aed;
+  color: white;
+  border-color: #7c3aed;
+}
+
+/* スタッフリスト */
+.staffList {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.staffItem {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #f3f4f6;
+  transition: background 0.3s;
+}
+
+.staffItem:hover {
+  background: #f9fafb;
+}
+
+.checkbox {
+  margin-right: 16px;
+}
+
+.staffInfo {
+  flex: 1;
+}
+
+.staffName {
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 4px;
+}
+
+.staffDetails {
+  display: flex;
+  gap: 8px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.staffStatus {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.stressIndicator {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.statusBadge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.statusPending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.statusScheduled {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.statusCompleted {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.interviewDate {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* 一括アクション */
+.bulkActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+}
+
+.bulkBtn {
+  padding: 8px 16px;
+  border: 1px solid #7c3aed;
+  border-radius: 8px;
+  background: white;
+  color: #7c3aed;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 500;
+}
+
+.bulkBtn:hover {
+  background: #7c3aed;
+  color: white;
+}
+
+/* テンプレートグリッド */
+.templateGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.templateCard {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.3s;
+}
+
+.templateCard:hover {
+  border-color: #7c3aed;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.1);
+}
+
+.templateHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.templateName {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.templateCategory {
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: #e5e7eb;
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.templateSubject {
+  font-size: 14px;
+  color: #4b5563;
+  margin-bottom: 8px;
+}
+
+.templateContent {
+  font-size: 12px;
+  color: #6b7280;
+  line-height: 1.5;
+  margin-bottom: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.templateActions {
+  display: flex;
+  gap: 8px;
+}
+
+.templateBtn {
+  padding: 6px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: white;
+  color: #6b7280;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.templateBtn:hover {
+  border-color: #7c3aed;
+  color: #7c3aed;
+}
+
+/* AI提案 */
+.aiSuggestion {
+  background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%);
+  border-left: 4px solid #f59e0b;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.suggestionHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  color: #92400e;
+}
+
+.aiIcon {
+  font-size: 24px;
+}
+
+.suggestionContent {
+  margin-bottom: 16px;
+}
+
+.suggestionContent p {
+  color: #92400e;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.suggestionActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.suggestionBtn {
+  padding: 8px 16px;
+  background: white;
+  border: 1px solid #fbbf24;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 500;
+}
+
+.suggestionBtn:hover {
+  background: #fef3c7;
+  transform: translateY(-1px);
+}
+
+/* モーダル */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  min-width: 400px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.modal h3 {
+  margin-bottom: 16px;
+  color: #1f2937;
+}
+
+.modal p {
+  color: #6b7280;
+  margin-bottom: 24px;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.modalActions button {
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 500;
+}
+
+.modalActions button:first-child {
+  background: white;
+  border: 1px solid #e5e7eb;
+  color: #6b7280;
+}
+
+.modalActions button:first-child:hover {
+  background: #f9fafb;
+}
+
+.primaryBtn {
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  color: white;
+  border: none;
+}
+
+.primaryBtn:hover {
+  opacity: 0.9;
+}
