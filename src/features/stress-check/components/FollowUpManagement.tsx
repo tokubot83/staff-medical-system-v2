@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import styles from './FollowUpManagement.module.css'
 
 interface FollowUpStaff {
@@ -26,6 +26,18 @@ export default function FollowUpManagement() {
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'urgent' | 'pending'>('all')
   const [showDistributionModal, setShowDistributionModal] = useState(false)
   const [selectedStaff, setSelectedStaff] = useState<string[]>([])
+  const [selectedDepartment, setSelectedDepartment] = useState<string>('all')
+  const [timeRange, setTimeRange] = useState<'week' | 'month' | 'quarter'>('month')
+
+  // 部署データ
+  const departments = [
+    { id: 'all', name: '全部署' },
+    { id: 'sales', name: '営業部' },
+    { id: 'internal', name: '内科' },
+    { id: 'surgery', name: '外科' },
+    { id: 'admin', name: '総務部' },
+    { id: 'dev', name: '開発部' }
+  ]
 
   // サンプルデータ
   const followUpStaff: FollowUpStaff[] = [
@@ -55,6 +67,53 @@ export default function FollowUpManagement() {
       stressLevel: 'moderate',
       lastCheckDate: '2025-01-07',
       followUpStatus: 'pending',
+      priority: 'normal'
+    },
+    {
+      id: '4',
+      name: '田中美咲',
+      department: '営業部',
+      stressLevel: 'high',
+      lastCheckDate: '2025-01-08',
+      followUpStatus: 'pending',
+      priority: 'urgent'
+    },
+    {
+      id: '5',
+      name: '伊藤健太',
+      department: '開発部',
+      stressLevel: 'moderate',
+      lastCheckDate: '2025-01-09',
+      followUpStatus: 'scheduled',
+      interviewDate: '2025-01-22',
+      priority: 'normal'
+    },
+    {
+      id: '6',
+      name: '渡辺真理',
+      department: '外科',
+      stressLevel: 'high',
+      lastCheckDate: '2025-01-10',
+      followUpStatus: 'pending',
+      priority: 'urgent'
+    },
+    {
+      id: '7',
+      name: '小林裕子',
+      department: '内科',
+      stressLevel: 'moderate',
+      lastCheckDate: '2025-01-11',
+      followUpStatus: 'completed',
+      priority: 'low'
+    },
+    {
+      id: '8',
+      name: '加藤直樹',
+      department: '営業部',
+      stressLevel: 'high',
+      lastCheckDate: '2025-01-12',
+      followUpStatus: 'scheduled',
+      interviewDate: '2025-01-25',
       priority: 'normal'
     }
   ]
@@ -156,10 +215,52 @@ export default function FollowUpManagement() {
   }
 
   const filteredStaff = followUpStaff.filter(staff => {
-    if (selectedFilter === 'urgent') return staff.priority === 'urgent'
-    if (selectedFilter === 'pending') return staff.followUpStatus === 'pending'
-    return true
+    const filterMatch =
+      selectedFilter === 'all' ||
+      (selectedFilter === 'urgent' && staff.priority === 'urgent') ||
+      (selectedFilter === 'pending' && staff.followUpStatus === 'pending')
+
+    const deptMatch =
+      selectedDepartment === 'all' ||
+      staff.department === departments.find(d => d.id === selectedDepartment)?.name
+
+    return filterMatch && deptMatch
   })
+
+  // 統計データの計算
+  const statistics = useMemo(() => {
+    const total = followUpStaff.length
+    const urgent = followUpStaff.filter(s => s.priority === 'urgent').length
+    const pending = followUpStaff.filter(s => s.followUpStatus === 'pending').length
+    const scheduled = followUpStaff.filter(s => s.followUpStatus === 'scheduled').length
+    const highStress = followUpStaff.filter(s => s.stressLevel === 'high').length
+
+    return {
+      total,
+      urgent,
+      pending,
+      scheduled,
+      highStress,
+      responseRate: Math.round((scheduled / total) * 100)
+    }
+  }, [followUpStaff])
+
+  // チャートデータ
+  const chartData = useMemo(() => {
+    const deptStats = departments
+      .filter(d => d.id !== 'all')
+      .map(dept => {
+        const staffInDept = followUpStaff.filter(s => s.department === dept.name)
+        const highStressInDept = staffInDept.filter(s => s.stressLevel === 'high')
+        return {
+          name: dept.name,
+          total: staffInDept.length,
+          highStress: highStressInDept.length,
+          rate: staffInDept.length > 0 ? Math.round((highStressInDept.length / staffInDept.length) * 100) : 0
+        }
+      })
+    return deptStats
+  }, [followUpStaff])
 
   return (
     <div className={styles.container}>
@@ -172,14 +273,112 @@ export default function FollowUpManagement() {
           </div>
           <div className={styles.statusBadges}>
             <span className={`${styles.badge} ${styles.badgeUrgent}`}>
-              🚨 要緊急対応: 12名
+              🚨 要緊急対応: {statistics.urgent}名
             </span>
             <span className={`${styles.badge} ${styles.badgePending}`}>
-              ⏳ 対応待ち: 67名
+              ⏳ 対応待ち: {statistics.pending}名
             </span>
             <span className={`${styles.badge} ${styles.badgeScheduled}`}>
-              📅 面談予定: 45名
+              📅 面談予定: {statistics.scheduled}名
             </span>
+          </div>
+        </div>
+      </div>
+
+      {/* フィルターバー */}
+      <div className={styles.filterBar}>
+        <div className={styles.filterGroup}>
+          <label className={styles.filterLabel}>部署:</label>
+          <select
+            className={styles.filterSelect}
+            value={selectedDepartment}
+            onChange={(e) => setSelectedDepartment(e.target.value)}
+          >
+            {departments.map(dept => (
+              <option key={dept.id} value={dept.id}>{dept.name}</option>
+            ))}
+          </select>
+        </div>
+        <div className={styles.filterGroup}>
+          <label className={styles.filterLabel}>期間:</label>
+          <div className={styles.timeRangeButtons}>
+            <button
+              className={`${styles.timeBtn} ${timeRange === 'week' ? styles.active : ''}`}
+              onClick={() => setTimeRange('week')}
+            >
+              週間
+            </button>
+            <button
+              className={`${styles.timeBtn} ${timeRange === 'month' ? styles.active : ''}`}
+              onClick={() => setTimeRange('month')}
+            >
+              月間
+            </button>
+            <button
+              className={`${styles.timeBtn} ${timeRange === 'quarter' ? styles.active : ''}`}
+              onClick={() => setTimeRange('quarter')}
+            >
+              四半期
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* 統計カード */}
+      <div className={styles.statsGrid}>
+        <div className={styles.statCard}>
+          <div className={styles.statIcon}>📊</div>
+          <div className={styles.statValue}>{statistics.total}</div>
+          <div className={styles.statLabel}>フォロー対象者</div>
+        </div>
+        <div className={styles.statCard}>
+          <div className={styles.statIcon}>⚠️</div>
+          <div className={styles.statValue}>{statistics.highStress}</div>
+          <div className={styles.statLabel}>高ストレス者</div>
+        </div>
+        <div className={styles.statCard}>
+          <div className={styles.statIcon}>📈</div>
+          <div className={styles.statValue}>{statistics.responseRate}%</div>
+          <div className={styles.statLabel}>対応率</div>
+        </div>
+        <div className={styles.statCard}>
+          <div className={styles.statIcon}>⏰</div>
+          <div className={styles.statValue}>{statistics.urgent}</div>
+          <div className={styles.statLabel}>緊急対応必要</div>
+        </div>
+      </div>
+
+      {/* 部署別分析グラフ */}
+      <div className={styles.card}>
+        <div className={styles.cardHeader}>
+          <div className={styles.cardTitle}>
+            <span>📊</span>
+            <span>部署別高ストレス者分布</span>
+          </div>
+        </div>
+        <div className={styles.chartContainer}>
+          <div className={styles.barChart}>
+            {chartData.map(dept => (
+              <div key={dept.name} className={styles.barGroup}>
+                <div className={styles.barWrapper}>
+                  <div
+                    className={styles.bar}
+                    style={{
+                      height: `${dept.rate}%`,
+                      background: dept.rate > 20 ?
+                        'linear-gradient(180deg, #ef4444, #dc2626)' :
+                        dept.rate > 10 ?
+                        'linear-gradient(180deg, #f59e0b, #d97706)' :
+                        'linear-gradient(180deg, #10b981, #059669)'
+                    }}
+                  >
+                    <span className={styles.barValue}>{dept.rate}%</span>
+                  </div>
+                </div>
+                <div className={styles.barLabel}>{dept.name}</div>
+                <div className={styles.barCount}>({dept.highStress}/{dept.total}名)</div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

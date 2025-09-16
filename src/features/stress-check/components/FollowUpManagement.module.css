@@ -1,13 +1,13 @@
 .container {
   width: 100%;
-  padding: 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 0;
+  background: transparent;
   min-height: calc(100vh - 100px);
 }
 
 /* ヘッダー */
 .header {
-  background: rgba(255, 255, 255, 0.95);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: 16px;
   padding: 24px;
   margin-bottom: 24px;
@@ -28,12 +28,14 @@
 
 .titleIcon {
   font-size: 28px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .pageTitle h2 {
   font-size: 24px;
-  color: #1f2937;
+  color: white;
   margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .statusBadges {
@@ -49,18 +51,205 @@
 }
 
 .badgeUrgent {
-  background: #fee2e2;
+  background: rgba(254, 226, 226, 0.95);
   color: #dc2626;
+  backdrop-filter: blur(10px);
 }
 
 .badgePending {
-  background: #fef3c7;
+  background: rgba(254, 243, 199, 0.95);
   color: #92400e;
+  backdrop-filter: blur(10px);
 }
 
 .badgeScheduled {
-  background: #dbeafe;
+  background: rgba(219, 234, 254, 0.95);
   color: #1e40af;
+  backdrop-filter: blur(10px);
+}
+
+/* フィルターバー */
+.filterBar {
+  background: white;
+  border-radius: 12px;
+  padding: 16px 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+
+.filterGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.filterLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.filterSelect {
+  padding: 8px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1f2937;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.filterSelect:hover {
+  border-color: #7c3aed;
+}
+
+.filterSelect:focus {
+  outline: none;
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+}
+
+.timeRangeButtons {
+  display: flex;
+  gap: 4px;
+  background: #f3f4f6;
+  padding: 4px;
+  border-radius: 8px;
+}
+
+.timeBtn {
+  padding: 6px 16px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.timeBtn:hover {
+  color: #4b5563;
+}
+
+.timeBtn.active {
+  background: white;
+  color: #7c3aed;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* 統計カード */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.statCard {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.statCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.statIcon {
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.statValue {
+  font-size: 36px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+.statLabel {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* バーチャート */
+.chartContainer {
+  padding: 24px;
+  background: #fafafa;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.barChart {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  height: 200px;
+  gap: 16px;
+}
+
+.barGroup {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.barWrapper {
+  width: 100%;
+  height: 160px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.bar {
+  width: 60%;
+  min-height: 20px;
+  border-radius: 8px 8px 0 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 8px;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.bar:hover {
+  opacity: 0.9;
+  transform: scaleY(1.05);
+}
+
+.barValue {
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.barLabel {
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #4b5563;
+  text-align: center;
+}
+
+.barCount {
+  font-size: 11px;
+  color: #9ca3af;
+  margin-top: 4px;
 }
 
 /* メイングリッド */
@@ -75,6 +264,16 @@
   .mainGrid {
     grid-template-columns: 1fr;
   }
+
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .filterBar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
 }
 
 /* カード */
@@ -82,7 +281,12 @@
   background: white;
   border-radius: 16px;
   padding: 24px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s;
+}
+
+.card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
 .cardHeader {
