@@ -5,12 +5,14 @@ import CommonHeader from '@/components/CommonHeader'
 import DashboardButton from '@/components/DashboardButton'
 import Link from 'next/link'
 import { staffDatabase } from '../data/staffData.js'
+import StressCheckDistribution from '@/features/stress-check/components/StressCheckDistribution'
+import HRAnnouncementsDistribution from '@/features/hr-announcements/components/HRAnnouncementsDistribution'
 import styles from './Health.module.css'
 
 const tabs = [
   { id: 'overview', label: '健康状態', icon: '💊' },
   { id: 'checkup', label: '健康診断', icon: '🏥' },
-  { id: 'stress', label: 'ストレスチェック', icon: '🧠' },
+  { id: 'stress', label: 'ストレスチェック管理', icon: '🧠' },
   { id: 'mental', label: 'メンタルヘルス', icon: '💬' },
   { id: 'analytics', label: '分析・予測', icon: '📊' },
 ]
@@ -143,12 +145,12 @@ export default function HealthPage() {
             />
           )}
           {activeTab === 'checkup' && (
-            <CheckupTab 
+            <CheckupTab
               records={healthRecords.filter(r => r.type === 'checkup')}
               selectedStaff={selectedStaff}
             />
           )}
-          {activeTab === 'stress' && <StressTab records={healthRecords.filter(r => r.type === 'stress')} />}
+          {activeTab === 'stress' && <StressCheckDistribution />}
           {activeTab === 'mental' && <MentalTab records={healthRecords.filter(r => r.type === 'mental')} />}
           {activeTab === 'analytics' && <AnalyticsTab />}
         </div>
@@ -349,50 +351,6 @@ function CheckupTab({ records, selectedStaff }: CheckupTabProps) {
   )
 }
 
-interface StressTabProps {
-  records: HealthRecord[]
-}
-
-function StressTab({ records }: StressTabProps) {
-  return (
-    <div className={styles.stressContainer}>
-      <div className={styles.listHeader}>
-        <h2>ストレスチェック結果</h2>
-        <button className={styles.addButton}>
-          + 新規チェックを実施
-        </button>
-      </div>
-
-      <div className={styles.recordsList}>
-        {records.map((record) => (
-          <div key={record.id} className={styles.stressItem}>
-            <div className={styles.stressHeader}>
-              <div className={styles.stressInfo}>
-                <h3>{record.staffName}</h3>
-                <p className={styles.recordDate}>{new Date(record.date).toLocaleDateString('ja-JP')}</p>
-              </div>
-              <div className={styles.stressScore}>
-                <span>ストレス指数</span>
-                <span className={styles.stressNumber} style={{ color: record.stressIndex! > 60 ? '#ef4444' : '#10b981' }}>
-                  {record.stressIndex}
-                </span>
-              </div>
-            </div>
-            <div className={styles.stressDetails}>
-              <p className={styles.mentalStatus}>
-                <span>メンタル状態:</span>
-                <span className={styles.statusValue}>{record.mentalHealthStatus}</span>
-              </p>
-              {record.consultationNotes && (
-                <p className={styles.consultationNotes}>{record.consultationNotes}</p>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
 
 interface MentalTabProps {
   records: HealthRecord[]

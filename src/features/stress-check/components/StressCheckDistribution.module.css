@@ -1,0 +1,394 @@
+.container {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+.statusBar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+.statusBadges {
+  display: flex;
+  gap: 12px;
+}
+
+.badge {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.badgeActive {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.badgeWarning {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.subTabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.subTab {
+  padding: 10px 20px;
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-weight: 500;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.tabIcon {
+  font-size: 14px;
+}
+
+.subTab:hover {
+  color: #4b5563;
+}
+
+.subTab.active {
+  color: #7c3aed;
+}
+
+.subTab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #7c3aed;
+}
+
+.mainGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 1024px) {
+  .mainGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.cardTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.refreshBtn, .addBtn {
+  background: none;
+  border: none;
+  color: #7c3aed;
+  cursor: pointer;
+  font-weight: 500;
+  transition: opacity 0.3s;
+}
+
+.refreshBtn:hover, .addBtn:hover {
+  opacity: 0.7;
+}
+
+.quickActions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.actionBtn {
+  padding: 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: left;
+}
+
+.actionBtn:hover {
+  border-color: #7c3aed;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.15);
+}
+
+.actionBtnPrimary {
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  color: white;
+  border: none;
+}
+
+.actionBtnWarning {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+  border: none;
+}
+
+.actionBtnDanger {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  border: none;
+}
+
+.actionIcon {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.actionTitle {
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: inherit;
+}
+
+.actionDesc {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.aiSuggestion {
+  background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%);
+  border-left: 4px solid #f59e0b;
+  padding: 16px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.suggestionHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  color: #92400e;
+}
+
+.aiIcon {
+  font-size: 18px;
+}
+
+.suggestionText {
+  color: #92400e;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.suggestionActions {
+  display: flex;
+  gap: 8px;
+}
+
+.suggestionBtn {
+  padding: 6px 12px;
+  background: white;
+  border: 1px solid #fbbf24;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.suggestionBtn:hover {
+  background: #fef3c7;
+}
+
+.progressGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.progressItem {
+  text-align: center;
+}
+
+.progressCircle {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 12px;
+  position: relative;
+}
+
+.progressRing {
+  transform: rotate(-90deg);
+}
+
+.progressValue {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.progressNumber {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.progressLabel {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.departmentSection {
+  margin-top: 24px;
+}
+
+.sectionTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #4b5563;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.departmentList {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.departmentItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border-bottom: 1px solid #f3f4f6;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.departmentItem:hover {
+  background: #f9fafb;
+}
+
+.departmentInfo {
+  flex: 1;
+}
+
+.departmentName {
+  font-weight: 500;
+  color: #1f2937;
+  margin-bottom: 4px;
+}
+
+.departmentStats {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.departmentProgress {
+  width: 120px;
+}
+
+.progressBar {
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.progressFill {
+  height: 100%;
+  transition: width 0.5s;
+}
+
+.progressText {
+  font-size: 11px;
+  text-align: right;
+  color: #6b7280;
+}
+
+.scheduleGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.scheduleItem {
+  background: #f9fafb;
+  padding: 16px;
+  border-radius: 8px;
+  border-left: 4px solid #10b981;
+}
+
+.scheduleHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.scheduleTitle {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.scheduleStatus {
+  font-size: 12px;
+}
+
+.statusCompleted {
+  color: #10b981;
+}
+
+.statusScheduled {
+  color: #f59e0b;
+}
+
+.statusDraft {
+  color: #6b7280;
+}
+
+.scheduleDate {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+.scheduleTarget {
+  font-size: 12px;
+  color: #6b7280;
+}
