@@ -1302,13 +1302,52 @@ function ReservationManagementSection({ provisionalReservations, onConfirmed, on
         </div>
       </CardHeader>
       <CardContent className="pt-4">
+        {/* VoiceDrive連携ステーション ヘッダー */}
+        <div className="mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-200">
+          <div className="flex items-center justify-center mb-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center">
+                <span className="text-white text-lg font-bold">📋</span>
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-blue-900">VoiceDrive連携ステーション</h2>
+                <p className="text-sm text-blue-700">医療職員面談予約の自動処理システム</p>
+              </div>
+            </div>
+          </div>
+
+          {/* フロー表示 */}
+          <div className="flex items-center justify-center gap-4 text-sm">
+            <div className="flex items-center gap-2 px-3 py-1 bg-yellow-100 rounded-full border border-yellow-300">
+              <span className="text-lg">🟡</span>
+              <span className="font-medium text-yellow-800">初回受付</span>
+            </div>
+            <div className="text-gray-400">→</div>
+            <div className="flex items-center gap-2 px-3 py-1 bg-blue-100 rounded-full border border-blue-300">
+              <span className="text-lg">🔵</span>
+              <span className="font-medium text-blue-800">承認・確認処理</span>
+            </div>
+            <div className="text-gray-400">→</div>
+            <div className="flex items-center gap-2 px-3 py-1 bg-green-100 rounded-full border border-green-300">
+              <span className="text-lg">✅</span>
+              <span className="font-medium text-green-800">面談実行</span>
+            </div>
+          </div>
+        </div>
+
         <div className="grid grid-cols-2 gap-6 h-full">
           {/* 仮予約カラム - 初回受付のみ */}
           <div className="space-y-2">
-            <h3 className="font-semibold text-blue-900 text-center">
-              🟡 仮予約 ({getInitialReservations().length}件)
-            </h3>
-            <p className="text-xs text-gray-600 text-center mb-3">VoiceDriveからの初回受付</p>
+            <div className="bg-gradient-to-r from-yellow-100 to-amber-100 rounded-lg p-4 border-2 border-yellow-200 mb-4">
+              <h3 className="font-bold text-lg text-yellow-900 text-center flex items-center justify-center gap-2">
+                <span className="text-2xl">🟡</span>
+                <span>初回受付待ち ({getInitialReservations().length}件)</span>
+              </h3>
+              <p className="text-sm text-yellow-700 text-center mt-1 font-medium">VoiceDriveからの新規面談申込</p>
+              <div className="mt-2 bg-yellow-50 rounded px-3 py-1">
+                <p className="text-xs text-yellow-600 text-center">→ AI最適化処理 → 担当者提案 → 承認待ちへ</p>
+              </div>
+            </div>
             <div className="space-y-3 max-h-96 overflow-y-auto">
               {getInitialReservations()
                 .map(reservation => (
@@ -1384,10 +1423,31 @@ function ReservationManagementSection({ provisionalReservations, onConfirmed, on
 
           {/* 承認待ちカラム - VoiceDrive承認済み・確認待ち */}
           <div className="space-y-2">
-            <h3 className="font-semibold text-yellow-900 text-center">
-              🔵 承認待ち ({getAwaitingApprovalReservations().length}件)
-            </h3>
-            <p className="text-xs text-gray-600 text-center mb-3">VoiceDrive承認済み・人事確認待ち</p>
+            <div className="bg-gradient-to-r from-blue-100 to-cyan-100 rounded-lg p-4 border-2 border-blue-200 mb-4">
+              <h3 className="font-bold text-lg text-blue-900 text-center flex items-center justify-center gap-2">
+                <span className="text-2xl">🔵</span>
+                <span>承認・確認処理中 ({getAwaitingApprovalReservations().length}件)</span>
+              </h3>
+              <p className="text-sm text-blue-700 text-center mt-1 font-medium">VoiceDrive承認済み・人事部最終確認</p>
+              <div className="mt-2 bg-blue-50 rounded px-3 py-1">
+                <p className="text-xs text-blue-600 text-center">→ 担当者調整 → 日程確定 → 面談実行</p>
+              </div>
+
+              {/* プログレスインジケーター */}
+              <div className="mt-3 flex items-center justify-between text-xs">
+                <div className="flex items-center gap-1">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span className="text-green-600">VoiceDrive承認済み</span>
+                </div>
+                <div className="flex-1 mx-2 h-0.5 bg-blue-200 relative">
+                  <div className="h-full bg-blue-500 w-2/3"></div>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="w-2 h-2 bg-blue-300 rounded-full animate-pulse"></div>
+                  <span className="text-blue-600">人事確認中</span>
+                </div>
+              </div>
+            </div>
             <div className="space-y-3 max-h-96 overflow-y-auto">
               {getAwaitingApprovalReservations()
                 .map(reservation => {
