@@ -654,7 +654,7 @@
   color: #7c3aed;
 }
 
-/* AI提案 */
+/* AI提案（ローカルLLM対応） */
 .aiSuggestion {
   background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%);
   border-left: 4px solid #f59e0b;
@@ -662,6 +662,7 @@
   padding: 20px;
   margin-top: 24px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
 .suggestionHeader {
@@ -670,6 +671,209 @@
   gap: 8px;
   margin-bottom: 12px;
   color: #92400e;
+  position: relative;
+}
+
+.refreshAIBtn {
+  margin-left: auto;
+  padding: 6px 12px;
+  background: white;
+  border: 1px solid #fbbf24;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.refreshAIBtn:hover:not(:disabled) {
+  background: #fef3c7;
+}
+
+.refreshAIBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 法的要件表示 */
+.legalNotice {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #fbbf24;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legalIcon {
+  font-size: 18px;
+}
+
+.legalNotice p {
+  margin: 0;
+  font-size: 12px;
+  color: #92400e;
+  font-weight: 500;
+}
+
+/* AI読み込み中 */
+.aiLoading {
+  text-align: center;
+  padding: 32px;
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #fbbf24;
+  border-top: 4px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 16px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.aiLoading p {
+  color: #92400e;
+  margin-bottom: 8px;
+}
+
+.aiLoading small {
+  color: #b45309;
+  font-size: 11px;
+}
+
+/* AIアドバイスセクション */
+.aiAdviceSection {
+  margin-bottom: 20px;
+}
+
+.aiAdviceSection h4 {
+  font-size: 14px;
+  color: #92400e;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.adviceText {
+  background: rgba(255, 255, 255, 0.6);
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.adviceText p {
+  color: #78350f;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 6px;
+}
+
+/* 推奨アクション */
+.aiRecommendations {
+  margin-bottom: 20px;
+}
+
+.aiRecommendations h4 {
+  font-size: 14px;
+  color: #92400e;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.recommendationsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.recommendationItem {
+  background: rgba(255, 255, 255, 0.7);
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+.recHeader {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  align-items: center;
+}
+
+.priorityBadge {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.priorityurgent {
+  background: #dc2626;
+  color: white;
+}
+
+.priorityhigh {
+  background: #f59e0b;
+  color: white;
+}
+
+.prioritynormal {
+  background: #10b981;
+  color: white;
+}
+
+.prioritylow {
+  background: #6b7280;
+  color: white;
+}
+
+.targetRole {
+  padding: 2px 8px;
+  background: rgba(146, 64, 14, 0.1);
+  border-radius: 4px;
+  font-size: 11px;
+  color: #78350f;
+}
+
+.recAction {
+  font-size: 13px;
+  color: #78350f;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.legalNote {
+  display: block;
+  margin-top: 6px;
+  font-size: 11px;
+  color: #b45309;
+  font-style: italic;
+}
+
+/* AIメタデータ */
+.aiMetadata {
+  padding-top: 12px;
+  border-top: 1px solid rgba(251, 191, 36, 0.3);
+  margin-top: 16px;
+}
+
+.aiMetadata small {
+  color: #92400e;
+  font-size: 11px;
+}
+
+.reviewRequired {
+  background: #dc2626;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 8px;
+  font-weight: 600;
 }
 
 .aiIcon {
@@ -680,17 +884,11 @@
   margin-bottom: 16px;
 }
 
-.suggestionContent p {
-  color: #92400e;
-  font-size: 14px;
-  line-height: 1.6;
-  margin-bottom: 8px;
-}
-
 .suggestionActions {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+  margin-bottom: 16px;
 }
 
 .suggestionBtn {
@@ -707,6 +905,93 @@
 .suggestionBtn:hover {
   background: #fef3c7;
   transform: translateY(-1px);
+}
+
+/* 免責事項 */
+.disclaimer {
+  background: rgba(255, 255, 255, 0.5);
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-top: 12px;
+}
+
+.disclaimer small {
+  color: #92400e;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+/* AIなしの状態 */
+.noAdvice {
+  text-align: center;
+  padding: 32px;
+}
+
+.noAdvice p {
+  color: #92400e;
+  font-size: 14px;
+}
+
+/* AI詳細モーダル */
+.aiDetailModal {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  min-width: 600px;
+  max-width: 800px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.detailSection {
+  margin-bottom: 24px;
+}
+
+.detailSection h4 {
+  font-size: 16px;
+  color: #1f2937;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.adviceFullText {
+  background: #f9fafb;
+  padding: 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  color: #4b5563;
+  font-family: monospace;
+}
+
+.detailSection ul {
+  list-style: disc;
+  margin-left: 24px;
+}
+
+.detailSection li {
+  color: #6b7280;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.closeBtn {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 500;
+  display: block;
+  margin: 0 auto;
+}
+
+.closeBtn:hover {
+  opacity: 0.9;
 }
 
 /* モーダル */

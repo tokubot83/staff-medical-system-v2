@@ -1,7 +1,9 @@
 'use client'
 
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import styles from './FollowUpManagement.module.css'
+import { voiceDriveService } from '@/services/voicedrive/voicedriveService'
+import type { AIAdviceResponse } from '@/services/voicedrive/types'
 
 interface FollowUpStaff {
   id: string
@@ -28,6 +30,9 @@ export default function FollowUpManagement() {
   const [selectedStaff, setSelectedStaff] = useState<string[]>([])
   const [selectedDepartment, setSelectedDepartment] = useState<string>('all')
   const [timeRange, setTimeRange] = useState<'week' | 'month' | 'quarter'>('month')
+  const [aiAdvice, setAiAdvice] = useState<AIAdviceResponse | null>(null)
+  const [aiLoading, setAiLoading] = useState(false)
+  const [showAIDetails, setShowAIDetails] = useState(false)
 
   // 部署データ
   const departments = [
@@ -193,6 +198,60 @@ export default function FollowUpManagement() {
         break
       default:
         console.log(`Action: ${actionId}`)
+    }
+  }
+
+  // AI提案生成（ローカルLLM対応設計）
+  const generateAIAdvice = async () => {
+    setAiLoading(true)
+    try {
+      const highStressStaff = filteredStaff.filter(s => s.stressLevel === 'high')
+      const response = await voiceDriveService.generateAIAdvice({
+        context: 'stress_followup',
+        staffData: {
+          id: 'batch-analysis',
+          stressLevel: highStressStaff.length > 3 ? 'high' : 'moderate',
+          departmentInfo: {
+            id: selectedDepartment,
+            name: departments.find(d => d.id === selectedDepartment)?.name || '全部署',
+            averageStressLevel: statistics.highStress / statistics.total
+          }
+        },
+        requestType: selectedStaff.length > 0 ? 'individual' : 'group',
+        legalCompliance: {
+          requiresHealthProfessional: true,
+          dataPrivacyLevel: 'high',
+          auditLog: true
+        }
+      })
+      setAiAdvice(response)
+    } catch (error) {
+      console.error('AI提案の生成に失敗:', error)
+    } finally {
+      setAiLoading(false)
+    }
+  }
+
+  // 初回レンダリング時にAI提案を生成
+  useEffect(() => {
+    generateAIAdvice()
+  }, [selectedDepartment, timeRange])
+
+  // AI提案アクションの実行
+  const handleAIAction = (action: string) => {
+    switch(action) {
+      case 'details':
+        setShowAIDetails(true)
+        break
+      case 'plan':
+        console.log('対策プラン作成')
+        break
+      case 'report':
+        console.log('レポート送信')
+        break
+      case 'refresh':
+        generateAIAdvice()
+        break
     }
   }
 
@@ -551,21 +610,149 @@ export default function FollowUpManagement() {
         </div>
       </div>
 
-      {/* AI提案 */}
+      {/* AI提案（ローカルLLM対応） */}
       <div className={styles.aiSuggestion}>
         <div className={styles.suggestionHeader}>
           <span className={styles.aiIcon}>🤖</span>
-          <strong>AIからの提案</strong>
+          <strong>保健師向けAI支援アドバイス</strong>
+          <button
+            className={styles.refreshAIBtn}
+            onClick={() => handleAIAction('refresh')}
+            disabled={aiLoading}
+          >
+            {aiLoading ? '生成中...' : '🔄 再生成'}
+          </button>
         </div>
-        <div className={styles.suggestionContent}>
-          <p>営業部で高ストレス判定者が前回より20%増加しています。</p>
-          <p>部門長との連携を含めた組織的なアプローチを推奨します。</p>
+
+        {/* 法的要件・プライバシー配慮の表示 */}
+        <div className={styles.legalNotice}>
+          <span className={styles.legalIcon}>⚖️</span>
+          <p>
+            保健師の専門的判断を支援するための参考情報です（労働安全衛生法第66条の10準拠）
+          </p>
         </div>
-        <div className={styles.suggestionActions}>
-          <button className={styles.suggestionBtn}>詳細分析を見る</button>
-          <button className={styles.suggestionBtn}>対策プランを作成</button>
-          <button className={styles.suggestionBtn}>部門長にレポート送信</button>
-        </div>
+
+        {aiLoading ? (
+          <div className={styles.aiLoading}>
+            <div className={styles.loadingSpinner}></div>
+            <p>ローカルLLMで分析中...</p>
+            <small>個人情報は外部送信されません</small>
+          </div>
+        ) : aiAdvice ? (
+          <>
+            <div className={styles.suggestionContent}>
+              <div className={styles.aiAdviceSection}>
+                <h4>📊 現状分析</h4>
+                <div className={styles.adviceText}>
+                  {aiAdvice.advice.split('\n').filter(line => line.includes('1.')).map((line, i) => (
+                    <p key={i}>{line}</p>
+                  ))}
+                </div>
+              </div>
+
+              {aiAdvice.recommendations && aiAdvice.recommendations.length > 0 && (
+                <div className={styles.aiRecommendations}>
+                  <h4>🎯 推奨アクション</h4>
+                  <div className={styles.recommendationsList}>
+                    {aiAdvice.recommendations.map((rec: any) => (
+                      <div key={rec.id} className={styles.recommendationItem}>
+                        <div className={styles.recHeader}>
+                          <span className={`${styles.priorityBadge} ${styles[`priority${rec.priority}`]}`}>
+                            {rec.priority === 'urgent' ? '緊急' :
+                             rec.priority === 'high' ? '高' :
+                             rec.priority === 'normal' ? '通常' : '低'}
+                          </span>
+                          <span className={styles.targetRole}>
+                            {rec.targetRole === 'health_nurse' ? '保健師' :
+                             rec.targetRole === 'hr_staff' ? '人事部' :
+                             rec.targetRole === 'manager' ? '管理職' : '職員'}
+                          </span>
+                        </div>
+                        <p className={styles.recAction}>{rec.action}</p>
+                        {rec.legalConsiderations && (
+                          <small className={styles.legalNote}>
+                            ※ {rec.legalConsiderations}
+                          </small>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* AI生成情報 */}
+              <div className={styles.aiMetadata}>
+                <small>
+                  生成方式: {aiAdvice.generatedBy === 'local_llm' ? 'ローカルLLM' :
+                           aiAdvice.generatedBy === 'cloud_llm' ? 'クラウドLLM' : 'ルールベース'} |
+                  信頼度: {Math.round((aiAdvice.supportingData?.confidence || 0.85) * 100)}% |
+                  {aiAdvice.reviewRequired && <span className={styles.reviewRequired}>要専門職確認</span>}
+                </small>
+              </div>
+            </div>
+
+            <div className={styles.suggestionActions}>
+              <button
+                className={styles.suggestionBtn}
+                onClick={() => handleAIAction('details')}
+              >
+                詳細分析を見る
+              </button>
+              <button
+                className={styles.suggestionBtn}
+                onClick={() => handleAIAction('plan')}
+              >
+                対策プランを作成
+              </button>
+              <button
+                className={styles.suggestionBtn}
+                onClick={() => handleAIAction('report')}
+              >
+                専門職にレポート送信
+              </button>
+            </div>
+
+            {/* 免責事項 */}
+            <div className={styles.disclaimer}>
+              <small>
+                {aiAdvice.supportingData?.disclaimer ||
+                 '本アドバイスは支援ツールによる提案です。最終的な判断は専門職が行ってください。'}
+              </small>
+            </div>
+          </>
+        ) : (
+          <div className={styles.noAdvice}>
+            <p>AI分析を開始するには「再生成」をクリックしてください</p>
+          </div>
+        )}
+
+        {/* 詳細モーダル */}
+        {showAIDetails && (
+          <div className={styles.modalOverlay} onClick={() => setShowAIDetails(false)}>
+            <div className={styles.aiDetailModal} onClick={(e) => e.stopPropagation()}>
+              <h3>AI分析詳細</h3>
+              {aiAdvice && (
+                <>
+                  <div className={styles.detailSection}>
+                    <h4>完全な分析結果</h4>
+                    <pre className={styles.adviceFullText}>{aiAdvice.advice}</pre>
+                  </div>
+                  <div className={styles.detailSection}>
+                    <h4>参考文献</h4>
+                    <ul>
+                      {aiAdvice.supportingData?.references?.map((ref: string, i: number) => (
+                        <li key={i}>{ref}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </>
+              )}
+              <button onClick={() => setShowAIDetails(false)} className={styles.closeBtn}>
+                閉じる
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* 配信モーダル（仮実装） */}

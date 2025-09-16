@@ -180,6 +180,7 @@ class VoiceDriveService {
 
   /**
    * モックアドバイス生成（ルールベース）
+   * 保健師の専門的判断を支援する実践的アドバイス
    */
   private generateMockAdvice(request: AIAdviceRequest): {
     advice: string
@@ -190,45 +191,54 @@ class VoiceDriveService {
 
     if (request.context === 'stress_followup' && request.staffData.stressLevel === 'high') {
       advice = `
-高ストレス判定の職員へのフォローアップアプローチ：
+【保健師向け面談支援ガイダンス】
 
-1. 初期対応
-- 産業医面談の案内を速やかに送付
-- 本人の希望を確認し、柔軟な日程調整を実施
-- プライバシーに配慮した個別連絡を心がける
+1. 初回面談でのアプローチポイント
+- 傾聴を重視し、職員が安心して話せる環境づくり
+- 「最近の体調はいかがですか」などの開放的質問から開始
+- ストレスチェック結果を押し付けず、本人の認識を確認
+- 睡眠・食欲・疲労感の具体的な状況を丁寧に聞き取り
 
-2. 組織的対応
-- 所属部署の管理職との連携（本人同意のもと）
-- 職場環境改善の必要性を評価
-- 同部署の他職員のストレス状況も確認
+2. アセスメントの視点
+- 業務負荷の客観的評価（残業時間、タスク量の変化）
+- 職場の人間関係（上司・同僚との関係性の詳細確認）
+- プライベートのストレス要因の有無
+- 過去のメンタル不調歴や対処法の確認
 
-3. 継続的支援
-- 定期的なフォローアップ面談の設定
-- セルフケア資料の提供
-- 必要に応じた業務調整の検討
+3. 支援計画の立案
+- 本人の希望と専門的判断のバランスを重視
+- 段階的な改善目標の設定（短期・中期・長期）
+- 利用可能な社内外リソースの提示と説明
+- フォローアップ頻度の個別調整（2週間〜1ヶ月）
+
+4. 連携のポイント
+- 産業医への情報提供内容の整理
+- 管理職への伝達事項の選別（守秘義務の範囲内）
+- 必要に応じた外部EAPサービスの活用検討
       `.trim()
 
       recommendations.push(
         {
           id: '1',
-          action: '産業医面談の日程調整を優先的に実施',
+          action: '初回面談を2週間以内に実施（30分程度の傾聴中心の面談）',
           priority: 'urgent',
           targetRole: 'health_nurse',
           estimatedImpact: 'high',
-          legalConsiderations: '労働安全衛生法第66条の10に基づく面接指導'
+          legalConsiderations: '労働安全衛生法第66条の10に基づく面接指導の準備'
         },
         {
           id: '2',
-          action: '職場環境改善のための部署ヒアリング実施',
+          action: '産業医との情報共有と医学的見解の確認',
           priority: 'high',
-          targetRole: 'hr_staff',
-          estimatedImpact: 'moderate'
+          targetRole: 'health_nurse',
+          estimatedImpact: 'high',
+          legalConsiderations: '医師による面接指導の必要性判断'
         },
         {
           id: '3',
-          action: 'セルフケア研修の案内送付',
+          action: '管理職向けラインケア研修の提案（部署全体の予防的介入）',
           priority: 'normal',
-          targetRole: 'health_nurse',
+          targetRole: 'hr_staff',
           estimatedImpact: 'moderate'
         }
       )
