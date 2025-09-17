@@ -429,13 +429,6 @@ export default function RecruitmentPage() {
     })
   }
 
-  // タブカウント取得
-  const tabCounts = {
-    dashboard: talents.length,
-    visitors: talents.filter(t => t.currentStage === 'visitor').length,
-    applicants: applicants.length,
-    interviews: interviewSchedules.filter(s => s.status === 'scheduled').length
-  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -475,15 +468,6 @@ export default function RecruitmentPage() {
               >
                 <BarChart3 className="h-5 w-5" />
                 <span>ダッシュボード</span>
-                {tabCounts.dashboard > 0 && (
-                  <Badge className={`${
-                    activeTab === 'dashboard'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-200 text-gray-700'
-                  } ml-2`}>
-                    {tabCounts.dashboard}
-                  </Badge>
-                )}
               </button>
 
               <button
@@ -496,15 +480,6 @@ export default function RecruitmentPage() {
               >
                 <Eye className="h-5 w-5" />
                 <span>見学者</span>
-                {tabCounts.visitors > 0 && (
-                  <Badge className={`${
-                    activeTab === 'visitors'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-200 text-gray-700'
-                  } ml-2`}>
-                    {tabCounts.visitors}
-                  </Badge>
-                )}
               </button>
 
               <button
@@ -517,15 +492,6 @@ export default function RecruitmentPage() {
               >
                 <UserCheck className="h-5 w-5" />
                 <span>応募者</span>
-                {(tabCounts.applicants + tabCounts.interviews) > 0 && (
-                  <Badge className={`${
-                    activeTab === 'applicants'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-200 text-gray-700'
-                  } ml-2`}>
-                    {tabCounts.applicants + tabCounts.interviews}
-                  </Badge>
-                )}
               </button>
 
               <button
