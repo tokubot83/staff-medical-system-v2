@@ -477,11 +477,11 @@ export default function ApplicantManagementNew({
           </CardContent>
         </Card>
 
-        {/* 面接中 */}
+        {/* 面接 */}
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-base flex items-center justify-between">
-              <span>面接中</span>
+              <span>面接</span>
               <div className="flex items-center gap-2">
                 <Badge variant="outline">{interviewApplicants.length}</Badge>
                 <Button size="sm" onClick={() => setShowDirectInterviewForm(true)}>
@@ -653,7 +653,7 @@ export default function ApplicantManagementNew({
                   <Alert className="border-blue-200 bg-blue-50">
                     <AlertCircle className="h-4 w-4 text-blue-600" />
                     <div className="text-sm">
-                      登録完了後、面接中カラムに表示されます。
+                      登録完了後、面接カラムに表示されます。
                       {directInterviewData.resumeOption === 'later' && '履歴書は面接日に持参してください。'}
                     </div>
                   </Alert>
@@ -667,7 +667,7 @@ export default function ApplicantManagementNew({
                       setDirectInterviewStep(1)
                     }}>
                       <CheckCircle className="h-4 w-4 mr-2" />
-                      登録して面接中へ
+                      登録して面接へ
                     </Button>
                   </div>
                 </>
