@@ -495,7 +495,7 @@ export default function RecruitmentPage() {
                 }`}
               >
                 <Eye className="h-5 w-5" />
-                <span>見学者管理</span>
+                <span>見学者</span>
                 {tabCounts.visitors > 0 && (
                   <Badge className={`${
                     activeTab === 'visitors'
@@ -516,7 +516,7 @@ export default function RecruitmentPage() {
                 }`}
               >
                 <UserCheck className="h-5 w-5" />
-                <span>応募者・面接管理</span>
+                <span>応募者</span>
                 {(tabCounts.applicants + tabCounts.interviews) > 0 && (
                   <Badge className={`${
                     activeTab === 'applicants'
