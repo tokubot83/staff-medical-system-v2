@@ -15,7 +15,8 @@ import {
   ChevronDown,
   ChevronUp,
   X,
-  AlertTriangle
+  AlertTriangle,
+  Move
 } from 'lucide-react'
 
 interface SuggestedAction {
@@ -55,6 +56,57 @@ export const SmartSuggest: React.FC<SmartSuggestProps> = ({
   const [isVisible, setIsVisible] = useState(true)
   const [isGenerating, setIsGenerating] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'next' | 'pending' | 'recommended'>('all')
+  const [position, setPosition] = useState({ x: typeof window !== 'undefined' ? window.innerWidth - 340 : 0, y: 80 })
+  const [isDragging, setIsDragging] = useState(false)
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
+
+  // ドラッグ処理
+  const handleMouseDown = (e: React.MouseEvent) => {
+    // ボタンやインタラクティブ要素のクリックは無視
+    const target = e.target as HTMLElement
+    if (target.closest('button') || target.closest('a')) {
+      return
+    }
+
+    setIsDragging(true)
+    setDragStart({
+      x: e.clientX - position.x,
+      y: e.clientY - position.y
+    })
+  }
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!isDragging) return
+
+    const newX = e.clientX - dragStart.x
+    const newY = e.clientY - dragStart.y
+
+    // 画面内に収まるように制限
+    const maxX = window.innerWidth - 320
+    const maxY = window.innerHeight - 100
+
+    setPosition({
+      x: Math.max(0, Math.min(newX, maxX)),
+      y: Math.max(0, Math.min(newY, maxY))
+    })
+  }
+
+  const handleMouseUp = () => {
+    setIsDragging(false)
+  }
+
+  // ドラッグイベントのリスナー設定
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove)
+      document.addEventListener('mouseup', handleMouseUp)
+
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove)
+        document.removeEventListener('mouseup', handleMouseUp)
+      }
+    }
+  }, [isDragging, dragStart])
 
   // AI予測ロジック（ローカルLLM実装想定）
   useEffect(() => {
@@ -326,14 +378,27 @@ export const SmartSuggest: React.FC<SmartSuggestProps> = ({
   if (!isVisible) return null
 
   return (
-    <div className="fixed right-4 top-20 w-80 z-50">
+    <div
+      className="fixed w-80 z-50 transition-shadow"
+      style={{
+        left: `${position.x}px`,
+        top: `${position.y}px`,
+        userSelect: isDragging ? 'none' : 'auto',
+        boxShadow: isDragging ? '0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' : ''
+      }}
+    >
       <div className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
         {/* ヘッダー */}
-        <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-3">
+        <div
+          className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-3"
+          onMouseDown={handleMouseDown}
+          style={{ cursor: isDragging ? 'grabbing' : 'move' }}
+        >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Brain className="w-5 h-5" />
               <span className="font-medium">AI スマートサジェスト</span>
+              <Move className="w-3 h-3 opacity-60" title="ドラッグして移動" />
             </div>
             <div className="flex items-center gap-1">
               <button
