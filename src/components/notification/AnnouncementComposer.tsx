@@ -268,34 +268,6 @@ function SortableQuestion({
                   </div>
                 </div>
               )}
-                    />
-                  </div>
-                  <div>
-                    <Label>最大値</Label>
-                    <Input
-                      type="number"
-                      value={question.scaleMax || 5}
-                      onChange={(e) => onUpdate(question.id, { scaleMax: parseInt(e.target.value) })}
-                    />
-                  </div>
-                  <div>
-                    <Label>最小ラベル</Label>
-                    <Input
-                      value={question.scaleMinLabel || ''}
-                      onChange={(e) => onUpdate(question.id, { scaleMinLabel: e.target.value })}
-                      placeholder="例: 全く満足していない"
-                    />
-                  </div>
-                  <div>
-                    <Label>最大ラベル</Label>
-                    <Input
-                      value={question.scaleMaxLabel || ''}
-                      onChange={(e) => onUpdate(question.id, { scaleMaxLabel: e.target.value })}
-                      placeholder="例: 非常に満足している"
-                    />
-                  </div>
-                </div>
-              )}
 
               <div className="flex items-center space-x-2">
                 <Switch
