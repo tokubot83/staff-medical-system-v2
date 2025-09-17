@@ -6,7 +6,7 @@ import styles from './HRAnnouncementsDistribution.module.css'
 interface Announcement {
   id: string
   title: string
-  category: 'policy' | 'event' | 'training' | 'benefit' | 'other'
+  category: 'policy' | 'event' | 'training' | 'benefit' | 'survey' | 'other'
   status: 'draft' | 'scheduled' | 'sent' | 'archived'
   scheduledDate?: string
   sentDate?: string
@@ -63,6 +63,7 @@ export default function HRAnnouncementsDistribution() {
     { id: 'policy', label: '制度・規定', icon: '📋', color: '#7c3aed' },
     { id: 'event', label: 'イベント', icon: '🎉', color: '#f59e0b' },
     { id: 'training', label: '研修・教育', icon: '📚', color: '#3b82f6' },
+    { id: 'survey', label: 'アンケート', icon: '📊', color: '#ec4899' },
     { id: 'benefit', label: '福利厚生', icon: '💝', color: '#10b981' },
     { id: 'other', label: 'その他', icon: '📢', color: '#6b7280' }
   ]
