@@ -471,7 +471,7 @@ export default function Home() {
       <div className="max-w-7xl mx-auto px-4">
        <div className="flex items-center h-12">
         <div className="flex space-x-1">
-         <Link href="/announcement-delivery" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-purple-400">
+         <Link href="/notifications" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-purple-400">
           お知らせ配信
          </Link>
          <Link href="/staff-cards" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">

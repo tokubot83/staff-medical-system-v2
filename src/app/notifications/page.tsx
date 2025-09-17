@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
+import CommonHeader from '@/components/CommonHeader'
 import AnnouncementComposer from '@/components/notification/AnnouncementComposer'
 import DeliveryHistory from '@/components/notification/DeliveryHistory'
 import TemplateManager from '@/components/notification/TemplateManager'
@@ -13,37 +14,7 @@ export default function NotificationsPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="bg-gray-700 text-white p-5 border-b">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center text-2xl">
-              🏥
-            </div>
-            <div>
-              <h1 className="text-2xl font-light">職員カルテシステム</h1>
-              <p className="text-sm opacity-90">医療法人厚生会</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="職員名・ID・部署で検索..."
-                className="w-80 px-4 py-2 rounded-full text-gray-700 pr-20 bg-white"
-              />
-              <button className="absolute right-1 top-1 bg-gray-700 text-white px-4 py-1 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors">
-                検索
-              </button>
-            </div>
-            <div className="flex items-center gap-2 bg-white text-gray-700 border-2 border-gray-300 px-4 py-2 rounded-full cursor-pointer hover:bg-gray-100 transition-colors">
-              <span>人事部 田中さん</span>
-              <div className="w-8 h-8 bg-gray-200 border border-gray-400 rounded-full flex items-center justify-center font-bold text-gray-700">
-                田
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+      <CommonHeader title="お知らせ配信" />
 
       {/* Navigation */}
       <nav className="bg-gray-800 text-white shadow-md">
