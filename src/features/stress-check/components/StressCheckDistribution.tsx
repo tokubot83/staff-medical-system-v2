@@ -5,6 +5,7 @@ import styles from './StressCheckDistribution.module.css'
 import TargetingModal from './TargetingModal'
 import GroupAnalysis from './GroupAnalysis'
 import FollowUpManagement from './FollowUpManagement'
+import IndividualAnalysis from './IndividualAnalysis'
 import { mockCampaignData, mockDepartmentStats } from '../mockData'
 
 interface QuickAction {
@@ -276,6 +277,7 @@ export default function StressCheckDistribution() {
         </div>
       </div>
 
+      {selectedTab === 'analysis' && <IndividualAnalysis />}
       {selectedTab === 'group-analysis' && <GroupAnalysis />}
       {selectedTab === 'followup' && <FollowUpManagement />}
 

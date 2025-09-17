@@ -1,7 +1,7 @@
 // 通知・アラート管理サービス
 // 研修期限、評価期限、承認待ちなどの通知を管理
 
-export type NotificationType = 'training' | 'evaluation' | 'approval' | 'reminder' | 'system'
+export type NotificationType = 'training' | 'evaluation' | 'approval' | 'reminder' | 'system' | 'survey'
 export type NotificationPriority = 'high' | 'medium' | 'low' | 'info'
 export type NotificationStatus = 'unread' | 'read' | 'archived'
 

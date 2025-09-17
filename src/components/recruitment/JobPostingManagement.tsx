@@ -113,8 +113,10 @@ export default function JobPostingManagement({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">全施設</SelectItem>
-                <SelectItem value="obara-hospital">桜新町アーバンクリニック</SelectItem>
+                <SelectItem value="obara-hospital">小原病院</SelectItem>
                 <SelectItem value="tachigami-hospital">立神リハビリテーション温泉病院</SelectItem>
+                <SelectItem value="espoir-tachigami">エスポワール立神</SelectItem>
+                <SelectItem value="hojuan">宝寿庵</SelectItem>
               </SelectContent>
             </Select>
 
@@ -151,7 +153,9 @@ export default function JobPostingManagement({
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm text-gray-600">
                       <div className="flex items-center gap-1">
                         <MapPin className="h-4 w-4" />
-                        {posting.facility === 'obara-hospital' ? '桜新町アーバンクリニック' : '立神リハビリテーション温泉病院'}
+                        {posting.facility === 'obara-hospital' ? '小原病院' :
+                         posting.facility === 'tachigami-hospital' ? '立神リハビリテーション温泉病院' :
+                         posting.facility === 'espoir-tachigami' ? 'エスポワール立神' : '宝寿庵'}
                       </div>
                       <div className="flex items-center gap-1">
                         <Briefcase className="h-4 w-4" />

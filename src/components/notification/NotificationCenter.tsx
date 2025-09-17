@@ -38,9 +38,14 @@ import {
   Users,
   RefreshCw,
   ExternalLink,
-  Calendar
+  Calendar,
+  MessageSquare,
+  Plus,
+  BarChart3
 } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { Progress } from '@/components/ui/progress'
 import {
   notificationService,
   Notification,
@@ -50,6 +55,7 @@ import {
 } from '@/services/notificationService'
 
 export default function NotificationCenter() {
+  const router = useRouter()
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [filteredNotifications, setFilteredNotifications] = useState<Notification[]>([])
   const [stats, setStats] = useState<NotificationStats | null>(null)
@@ -214,6 +220,67 @@ export default function NotificationCenter() {
           </Link>
         </div>
       </div>
+
+      {/* アンケート管理セクション */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2">
+              <MessageSquare className="w-5 h-5" />
+              アンケート
+            </CardTitle>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => router.push('/hr-survey/create')}
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                新規作成
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => router.push('/hr-survey/dashboard')}
+              >
+                <BarChart3 className="w-4 h-4 mr-2" />
+                管理画面
+              </Button>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Card className="border">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium">実施中</span>
+                  <Badge>3件</Badge>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">職員満足度調査</span>
+                    <span className="text-sm text-muted-foreground">回答率 68%</span>
+                  </div>
+                  <Progress value={68} className="h-2" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium">今週の回答</span>
+                  <span className="text-2xl font-bold">523</span>
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  763名中523名が回答済み
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* 統計カード */}
       {stats && (

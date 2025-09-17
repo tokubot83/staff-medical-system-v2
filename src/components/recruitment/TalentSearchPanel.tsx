@@ -180,17 +180,17 @@ export default function TalentSearchPanel({
             <div className="flex flex-wrap gap-2">
               {/* ステータスフィルター */}
               <Select
-                value={searchQuery.statuses?.[0] || ''}
+                value={searchQuery.statuses?.[0] || 'all'}
                 onValueChange={(value) => setSearchQuery({
                   ...searchQuery,
-                  statuses: value ? [value as TalentStatus] : []
+                  statuses: value === 'all' ? [] : [value as TalentStatus]
                 })}
               >
                 <SelectTrigger className="w-40">
                   <SelectValue placeholder="ステータス" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">全て</SelectItem>
+                  <SelectItem value="all">全て</SelectItem>
                   {statusOptions.map(option => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label}
@@ -201,17 +201,17 @@ export default function TalentSearchPanel({
 
               {/* ステージフィルター */}
               <Select
-                value={searchQuery.stages?.[0] || ''}
+                value={searchQuery.stages?.[0] || 'all'}
                 onValueChange={(value) => setSearchQuery({
                   ...searchQuery,
-                  stages: value ? [value as any] : []
+                  stages: value === 'all' ? [] : [value as any]
                 })}
               >
                 <SelectTrigger className="w-32">
                   <SelectValue placeholder="ステージ" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">全て</SelectItem>
+                  <SelectItem value="all">全て</SelectItem>
                   <SelectItem value="visitor">見学者</SelectItem>
                   <SelectItem value="applicant">応募者</SelectItem>
                   <SelectItem value="offer-holder">内定者</SelectItem>

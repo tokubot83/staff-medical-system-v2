@@ -2,7 +2,7 @@ export interface JobPosting {
   id: string;
   title: string;
   department: string;
-  facility: 'obara-hospital' | 'tachigami-hospital';
+  facility: 'obara-hospital' | 'tachigami-hospital' | 'espoir-tachigami' | 'hojuan';
   employmentType: '正社員' | '契約社員' | 'パート' | 'アルバイト';
   requiredQualifications: string[];
   desiredQualifications: string[];

@@ -67,7 +67,7 @@ export default function ApplicantManagement({
 
   const getAverageRating = (evaluations: ApplicationEvaluation[]) => {
     if (evaluations.length === 0) return 0
-    const sum = evaluations.reduce((acc, eval) => acc + eval.rating, 0)
+    const sum = evaluations.reduce((acc, evaluation) => acc + evaluation.rating, 0)
     return (sum / evaluations.length).toFixed(1)
   }
 
@@ -302,31 +302,31 @@ export default function ApplicantManagement({
 
               <TabsContent value="evaluation" className="space-y-4">
                 {selectedApplicant.evaluations.length > 0 ? (
-                  selectedApplicant.evaluations.map((eval) => (
-                    <Card key={eval.id}>
+                  selectedApplicant.evaluations.map((evaluation) => (
+                    <Card key={evaluation.id}>
                       <CardHeader className="pb-3">
                         <div className="flex items-center justify-between">
                           <div>
-                            <div className="font-medium">{eval.evaluatorName}</div>
-                            <div className="text-sm text-gray-500">{eval.date} - {eval.stage}</div>
+                            <div className="font-medium">{evaluation.evaluatorName}</div>
+                            <div className="text-sm text-gray-500">{evaluation.date} - {evaluation.stage}</div>
                           </div>
                           <div className="flex items-center gap-2">
                             <div className="flex">
                               {[...Array(5)].map((_, i) => (
                                 <Star
                                   key={i}
-                                  className={`h-4 w-4 ${i < eval.rating ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300'}`}
+                                  className={`h-4 w-4 ${i < evaluation.rating ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300'}`}
                                 />
                               ))}
                             </div>
                             <Badge variant={
-                              eval.recommendation === 'strongly-recommend' ? 'default' :
-                              eval.recommendation === 'recommend' ? 'secondary' :
-                              eval.recommendation === 'neutral' ? 'outline' : 'destructive'
+                              evaluation.recommendation === 'strongly-recommend' ? 'default' :
+                              evaluation.recommendation === 'recommend' ? 'secondary' :
+                              evaluation.recommendation === 'neutral' ? 'outline' : 'destructive'
                             }>
-                              {eval.recommendation === 'strongly-recommend' ? '強く推薦' :
-                               eval.recommendation === 'recommend' ? '推薦' :
-                               eval.recommendation === 'neutral' ? '中立' : '非推奨'}
+                              {evaluation.recommendation === 'strongly-recommend' ? '強く推薦' :
+                               evaluation.recommendation === 'recommend' ? '推薦' :
+                               evaluation.recommendation === 'neutral' ? '中立' : '非推奨'}
                             </Badge>
                           </div>
                         </div>
@@ -336,7 +336,7 @@ export default function ApplicantManagement({
                           <div>
                             <div className="text-sm font-medium text-green-600">強み:</div>
                             <ul className="text-sm list-disc list-inside">
-                              {eval.strengths.map((strength, i) => (
+                              {evaluation.strengths.map((strength, i) => (
                                 <li key={i}>{strength}</li>
                               ))}
                             </ul>
@@ -344,14 +344,14 @@ export default function ApplicantManagement({
                           <div>
                             <div className="text-sm font-medium text-orange-600">懸念点:</div>
                             <ul className="text-sm list-disc list-inside">
-                              {eval.concerns.map((concern, i) => (
+                              {evaluation.concerns.map((concern, i) => (
                                 <li key={i}>{concern}</li>
                               ))}
                             </ul>
                           </div>
                           <div>
                             <div className="text-sm font-medium">コメント:</div>
-                            <p className="text-sm text-gray-700">{eval.comments}</p>
+                            <p className="text-sm text-gray-700">{evaluation.comments}</p>
                           </div>
                         </div>
                       </CardContent>
