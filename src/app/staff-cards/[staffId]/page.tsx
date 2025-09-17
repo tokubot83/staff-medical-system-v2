@@ -743,6 +743,18 @@ function AttendanceTab({ selectedStaff }: { selectedStaff: any }): React.ReactEl
   
   return (
     <div className={styles.tabContentSection}>
+      {/* 開発ステータス警告バナー */}
+      <div className={styles.developmentBanner}>
+        <div className={styles.bannerIcon}>⚠️</div>
+        <div className={styles.bannerContent}>
+          <h3 className={styles.bannerTitle}>デモデータ表示中</h3>
+          <p className={styles.bannerDescription}>
+            このタブのデータは全て<strong>サンプルデータ</strong>です。
+            実際の勤怠データは各施設の総務部門で管理されています。
+          </p>
+        </div>
+      </div>
+
       <div className={styles.sectionHeader}>
         <h2>⏰ 勤務状況</h2>
         <div className={styles.sectionActions}>
@@ -755,7 +767,7 @@ function AttendanceTab({ selectedStaff }: { selectedStaff: any }): React.ReactEl
         <div className={styles.summaryMainCard}>
           <div className={styles.summaryCardHeader}>
             <span className={styles.summaryIcon}>📊</span>
-            <h3>勤務実績サマリー</h3>
+            <h3>勤務実績サマリー <span className={styles.sampleBadge}>サンプル</span></h3>
           </div>
           <div className={styles.summaryMainMetrics}>
             <div className={styles.workPatternSection}>
@@ -880,29 +892,29 @@ function AttendanceTab({ selectedStaff }: { selectedStaff: any }): React.ReactEl
 
       <div className={styles.metricsGrid}>
         <div className={styles.metricCard}>
-          <h3>遅刻回数</h3>
+          <h3>遅刻回数 <span className={styles.demoBadge}>デモ</span></h3>
           <div className={styles.metricValue}>0回</div>
           <p className={styles.metricLabel}>過去1年間</p>
         </div>
         <div className={styles.metricCard}>
-          <h3>早退回数</h3>
+          <h3>早退回数 <span className={styles.demoBadge}>デモ</span></h3>
           <div className={styles.metricValue}>2回</div>
           <p className={styles.metricLabel}>過去1年間</p>
         </div>
         <div className={styles.metricCard}>
-          <h3>欠勤日数</h3>
+          <h3>欠勤日数 <span className={styles.demoBadge}>デモ</span></h3>
           <div className={styles.metricValue}>3日</div>
           <p className={styles.metricLabel}>過去1年間</p>
         </div>
         <div className={styles.metricCard}>
-          <h3>休日出勤</h3>
+          <h3>休日出勤 <span className={styles.demoBadge}>デモ</span></h3>
           <div className={styles.metricValue}>5日</div>
           <p className={styles.metricLabel}>過去1年間</p>
         </div>
       </div>
 
       <div className={styles.sectionCard}>
-        <h3>月別勤務状況</h3>
+        <h3>月別勤務状況 <span className={styles.sampleBadge}>サンプルデータ</span></h3>
         <div className={styles.monthlyAttendance}>
           <table className={styles.attendanceTable}>
             <thead>
@@ -938,7 +950,7 @@ function AttendanceTab({ selectedStaff }: { selectedStaff: any }): React.ReactEl
       </div>
 
       <div className={styles.sectionCard}>
-        <h3>業務出張履歴</h3>
+        <h3>業務出張履歴 <span className={styles.sampleBadge}>サンプルデータ</span></h3>
         <div className={styles.timelineList}>
           <div className={styles.timelineItem}>
             <span className={styles.timelineDate}>2024年2月</span>

@@ -81,11 +81,31 @@ function AttendanceManagementContent() {
 
   return (
     <div>
-      <CommonHeader 
-        title="勤怠管理" 
+      <CommonHeader
+        title="勤怠管理"
       />
-      
+
       <div className={styles.container}>
+        {/* 開発ステータスの警告バナー */}
+        <div className={styles.developmentBanner}>
+          <div className={styles.bannerIcon}>⚠️</div>
+          <div className={styles.bannerContent}>
+            <h3 className={styles.bannerTitle}>開発中のプレビュー版</h3>
+            <p className={styles.bannerDescription}>
+              このページは現在開発中です。表示されているデータは全て<strong>サンプルデータ</strong>です。
+            </p>
+            <div className={styles.statusInfo}>
+              <div className={styles.statusItem}>
+                <span className={styles.statusLabel}>現在：</span>
+                <span>各施設の総務部門で個別管理中</span>
+              </div>
+              <div className={styles.statusItem}>
+                <span className={styles.statusLabel}>将来：</span>
+                <span>法人人事部による一元管理予定</span>
+              </div>
+            </div>
+          </div>
+        </div>
         <div className={styles.tabNavigation}>
           {tabs.map((tab) => (
             <button
@@ -193,8 +213,11 @@ function DailyTab({
       </div>
 
       <div className={styles.listHeader}>
-        <h2>日次勤怠記録 ({records.length}件)</h2>
-        <button className={styles.addButton}>
+        <h2>
+          日次勤怠記録 ({records.length}件)
+          <span className={styles.sampleBadge}>サンプルデータ</span>
+        </h2>
+        <button className={styles.addButton} disabled title="開発中">
           + 新規記録
         </button>
       </div>
@@ -283,7 +306,10 @@ function MonthlyTab({
       </div>
 
       <div className={styles.listHeader}>
-        <h2>月次勤怠集計</h2>
+        <h2>
+          月次勤怠集計
+          <span className={styles.sampleBadge}>サンプルデータ</span>
+        </h2>
       </div>
 
       <div className={styles.recordsList}>
@@ -339,8 +365,12 @@ function MonthlyTab({
 function OvertimeTab() {
   return (
     <div className={styles.overtimeContainer}>
-      <h2>残業管理</h2>
+      <h2>
+        残業管理
+        <span className={styles.developingBadge}>開発中</span>
+      </h2>
       <div className={styles.comingSoon}>
+        <div className={styles.developIcon}>🚧</div>
         <p>残業時間の分析と管理機能は現在開発中です</p>
       </div>
     </div>
@@ -350,8 +380,12 @@ function OvertimeTab() {
 function LeaveTab() {
   return (
     <div className={styles.leaveContainer}>
-      <h2>休暇管理</h2>
+      <h2>
+        休暇管理
+        <span className={styles.developingBadge}>開発中</span>
+      </h2>
       <div className={styles.comingSoon}>
+        <div className={styles.developIcon}>🚧</div>
         <p>休暇申請と承認機能は現在開発中です</p>
       </div>
     </div>
@@ -431,7 +465,13 @@ function SettingsTab() {
 
   return (
     <div className={styles.settingsContainer}>
-      <h2>勤怠設定</h2>
+      <h2>
+        勤怠設定
+        <span className={styles.demoOnlyBadge}>デモ用</span>
+      </h2>
+      <div className={styles.demoNotice}>
+        <p>⚠️ この設定画面はデモンストレーション用です。実際の設定変更は反映されません。</p>
+      </div>
       
       <div className={styles.settingsSection}>
         <h3>通知設定</h3>
@@ -701,8 +741,8 @@ function SettingsTab() {
       </div>
 
       <div className={styles.settingsActions}>
-        <button className={styles.saveButton}>設定を保存</button>
-        <button className={styles.cancelButton}>キャンセル</button>
+        <button className={styles.saveButton} disabled title="開発中のため保存できません">設定を保存（開発中）</button>
+        <button className={styles.cancelButton} disabled>キャンセル</button>
       </div>
     </div>
   )
