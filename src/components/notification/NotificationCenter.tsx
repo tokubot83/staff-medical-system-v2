@@ -233,7 +233,7 @@ export default function NotificationCenter() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => router.push('/hr-survey/create')}
+                onClick={() => router.push('/notifications')}
               >
                 <Plus className="w-4 h-4 mr-2" />
                 新規作成
@@ -241,7 +241,7 @@ export default function NotificationCenter() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => router.push('/hr-survey/dashboard')}
+                onClick={() => router.push('/notifications')}
               >
                 <BarChart3 className="w-4 h-4 mr-2" />
                 管理画面

@@ -43,6 +43,328 @@ export default function VisitorManagementNew({
   const [showConversionDialog, setShowConversionDialog] = useState<string | null>(null)
   const [conversionReason, setConversionReason] = useState('')
 
+  // デモデータ
+  const demoVisitors: TalentProfile[] = [
+    // 本日の見学予定
+    {
+      id: 'demo-v1',
+      basicInfo: {
+        lastName: '高橋',
+        firstName: '美咲',
+        lastNameKana: 'タカハシ',
+        firstNameKana: 'ミサキ',
+        email: 'takahashi@example.com',
+        phone: '090-1111-2222',
+        birthDate: '1995-03-20',
+        gender: '女性',
+        firstContactDate: '2024-01-25',
+        lastContactDate: '2024-01-28',
+        source: '病院ホームページ'
+      },
+      currentStatus: 'visitor-scheduled',
+      currentStage: 'visitor',
+      tags: ['新卒', '看護師希望'],
+      visitorInfo: {
+        scheduledVisitDate: new Date().toISOString().split('T')[0],
+        interestedDepartments: ['看護部', '内科'],
+        interestedPositions: ['看護師'],
+        visitPurpose: '就職・転職検討'
+      },
+      contactHistory: [],
+      flags: {
+        isDuplicate: false,
+        hasMultipleFacilityApplications: false,
+        isPreviousEmployee: false,
+        isBlacklisted: false
+      },
+      metadata: {
+        createdAt: '2024-01-25',
+        createdBy: 'admin',
+        updatedAt: '2024-01-28',
+        updatedBy: 'admin',
+        viewCount: 3
+      }
+    },
+    // 今後の見学予定
+    {
+      id: 'demo-v2',
+      basicInfo: {
+        lastName: '伊藤',
+        firstName: '健太',
+        lastNameKana: 'イトウ',
+        firstNameKana: 'ケンタ',
+        email: 'ito@example.com',
+        phone: '090-3333-4444',
+        birthDate: '1988-07-15',
+        gender: '男性',
+        firstContactDate: '2024-01-20',
+        lastContactDate: '2024-01-26',
+        source: '転職サイト'
+      },
+      currentStatus: 'visitor-scheduled',
+      currentStage: 'visitor',
+      tags: ['経験者', '理学療法士'],
+      visitorInfo: {
+        scheduledVisitDate: '2024-02-05',
+        interestedDepartments: ['リハビリテーション科'],
+        interestedPositions: ['理学療法士'],
+        visitPurpose: '就職・転職検討'
+      },
+      contactHistory: [],
+      flags: {
+        isDuplicate: false,
+        hasMultipleFacilityApplications: false,
+        isPreviousEmployee: false,
+        isBlacklisted: false
+      },
+      metadata: {
+        createdAt: '2024-01-20',
+        createdBy: 'admin',
+        updatedAt: '2024-01-26',
+        updatedBy: 'admin',
+        viewCount: 5
+      }
+    },
+    {
+      id: 'demo-v3',
+      basicInfo: {
+        lastName: '中村',
+        firstName: '裕子',
+        lastNameKana: 'ナカムラ',
+        firstNameKana: 'ユウコ',
+        email: 'nakamura@example.com',
+        phone: '090-5555-6666',
+        birthDate: '1992-11-30',
+        gender: '女性',
+        firstContactDate: '2024-01-22',
+        lastContactDate: '2024-01-27',
+        source: '紹介'
+      },
+      currentStatus: 'visitor-scheduled',
+      currentStage: 'visitor',
+      tags: ['介護福祉士', '第二新卒'],
+      visitorInfo: {
+        scheduledVisitDate: '2024-02-10',
+        interestedDepartments: ['介護部'],
+        interestedPositions: ['介護職員'],
+        visitPurpose: '施設見学のみ'
+      },
+      contactHistory: [],
+      flags: {
+        isDuplicate: false,
+        hasMultipleFacilityApplications: false,
+        isPreviousEmployee: false,
+        isBlacklisted: false
+      },
+      metadata: {
+        createdAt: '2024-01-22',
+        createdBy: 'admin',
+        updatedAt: '2024-01-27',
+        updatedBy: 'admin',
+        viewCount: 2
+      }
+    },
+    // 見学済み（興味度高）
+    {
+      id: 'demo-v4',
+      basicInfo: {
+        lastName: '木村',
+        firstName: '大輔',
+        lastNameKana: 'キムラ',
+        firstNameKana: 'ダイスケ',
+        email: 'kimura@example.com',
+        phone: '090-7777-8888',
+        birthDate: '1986-05-10',
+        gender: '男性',
+        firstContactDate: '2024-01-10',
+        lastContactDate: '2024-01-20',
+        source: 'ハローワーク'
+      },
+      currentStatus: 'visitor-completed',
+      currentStage: 'visitor',
+      tags: ['看護師', '即戦力', '高評価'],
+      visitorInfo: {
+        scheduledVisitDate: '2024-01-20',
+        actualVisitDate: '2024-01-20',
+        interestedDepartments: ['看護部', '救急'],
+        interestedPositions: ['看護師'],
+        visitPurpose: '就職・転職検討',
+        visitFeedback: {
+          satisfaction: 5,
+          interestLevel: 'high',
+          concerns: [],
+          positivePoints: ['職場の雰囲気が良い', '設備が充実', 'スタッフが親切'],
+          followUpRequired: true,
+          notes: '非常に意欲的。早期の応募が期待できる。'
+        }
+      },
+      contactHistory: [],
+      flags: {
+        isDuplicate: false,
+        hasMultipleFacilityApplications: false,
+        isPreviousEmployee: false,
+        isBlacklisted: false
+      },
+      metadata: {
+        createdAt: '2024-01-10',
+        createdBy: 'admin',
+        updatedAt: '2024-01-20',
+        updatedBy: 'admin',
+        viewCount: 8
+      }
+    },
+    // 見学済み（興味度中）
+    {
+      id: 'demo-v5',
+      basicInfo: {
+        lastName: '小林',
+        firstName: '恵子',
+        lastNameKana: 'コバヤシ',
+        firstNameKana: 'ケイコ',
+        email: 'kobayashi@example.com',
+        phone: '090-9999-0000',
+        birthDate: '1990-09-25',
+        gender: '女性',
+        firstContactDate: '2024-01-05',
+        lastContactDate: '2024-01-15',
+        source: '求人サイト'
+      },
+      currentStatus: 'visitor-completed',
+      currentStage: 'visitor',
+      tags: ['薬剤師', '経験者'],
+      visitorInfo: {
+        scheduledVisitDate: '2024-01-15',
+        actualVisitDate: '2024-01-15',
+        interestedDepartments: ['薬剤部'],
+        interestedPositions: ['薬剤師'],
+        visitPurpose: '情報収集',
+        visitFeedback: {
+          satisfaction: 3,
+          interestLevel: 'medium',
+          concerns: ['通勤距離が遠い', '給与面で検討中'],
+          positivePoints: ['キャリアパスが明確'],
+          followUpRequired: true,
+          notes: '他院と比較検討中。定期的なフォローが必要。'
+        }
+      },
+      contactHistory: [],
+      flags: {
+        isDuplicate: false,
+        hasMultipleFacilityApplications: false,
+        isPreviousEmployee: false,
+        isBlacklisted: false
+      },
+      metadata: {
+        createdAt: '2024-01-05',
+        createdBy: 'admin',
+        updatedAt: '2024-01-15',
+        updatedBy: 'admin',
+        viewCount: 6
+      }
+    },
+    // 見学済み（興味度低）
+    {
+      id: 'demo-v6',
+      basicInfo: {
+        lastName: '斎藤',
+        firstName: '智也',
+        lastNameKana: 'サイトウ',
+        firstNameKana: 'トモヤ',
+        email: 'saito@example.com',
+        phone: '090-1122-3344',
+        birthDate: '1998-12-05',
+        gender: '男性',
+        firstContactDate: '2023-12-20',
+        lastContactDate: '2024-01-10',
+        source: '学校推薦'
+      },
+      currentStatus: 'visitor-completed',
+      currentStage: 'visitor',
+      tags: ['新卒', '栄養士'],
+      visitorInfo: {
+        scheduledVisitDate: '2024-01-10',
+        actualVisitDate: '2024-01-10',
+        interestedDepartments: ['栄養課'],
+        interestedPositions: ['管理栄養士'],
+        visitPurpose: '情報収集',
+        visitFeedback: {
+          satisfaction: 2,
+          interestLevel: 'low',
+          concerns: ['希望と業務内容が異なる', '勤務条件が合わない'],
+          positivePoints: [],
+          followUpRequired: false,
+          notes: '他業界も検討しているとのこと。'
+        }
+      },
+      contactHistory: [],
+      flags: {
+        isDuplicate: false,
+        hasMultipleFacilityApplications: false,
+        isPreviousEmployee: false,
+        isBlacklisted: false
+      },
+      metadata: {
+        createdAt: '2023-12-20',
+        createdBy: 'admin',
+        updatedAt: '2024-01-10',
+        updatedBy: 'admin',
+        viewCount: 4
+      }
+    },
+    // 1年前の見学済み（表示期間テスト用）
+    {
+      id: 'demo-v7',
+      basicInfo: {
+        lastName: '渡部',
+        firstName: '香織',
+        lastNameKana: 'ワタナベ',
+        firstNameKana: 'カオリ',
+        email: 'watanabe.old@example.com',
+        phone: '090-5544-3322',
+        birthDate: '1985-06-15',
+        gender: '女性',
+        firstContactDate: '2023-01-10',
+        lastContactDate: '2023-01-20',
+        source: '直接応募'
+      },
+      currentStatus: 'visitor-completed',
+      currentStage: 'visitor',
+      tags: ['看護師', '経験者'],
+      visitorInfo: {
+        scheduledVisitDate: '2023-01-20',
+        actualVisitDate: '2023-01-20',
+        interestedDepartments: ['看護部'],
+        interestedPositions: ['看護師'],
+        visitPurpose: '就職・転職検討',
+        visitFeedback: {
+          satisfaction: 4,
+          interestLevel: 'high',
+          concerns: [],
+          positivePoints: ['職場環境が良い'],
+          followUpRequired: false,
+          notes: '1年前の見学者。再度アプローチの可能性あり。'
+        }
+      },
+      contactHistory: [],
+      flags: {
+        isDuplicate: false,
+        hasMultipleFacilityApplications: false,
+        isPreviousEmployee: false,
+        isBlacklisted: false
+      },
+      metadata: {
+        createdAt: '2023-01-10',
+        createdBy: 'admin',
+        updatedAt: '2023-01-20',
+        updatedBy: 'admin',
+        viewCount: 10
+      }
+    }
+  ]
+
+  // デモデータと実際のデータを統合
+  const allVisitors = [...demoVisitors, ...visitors]
+
   // 新規見学者フォーム
   const [newVisitor, setNewVisitor] = useState({
     lastName: '',
@@ -59,21 +381,29 @@ export default function VisitorManagementNew({
     memo: ''
   })
 
-  // 今日の見学予定
-  const today = new Date().toISOString().split('T')[0]
-  const todayVisitors = visitors.filter(v =>
-    v.visitorInfo?.scheduledVisitDate === today
-  )
+  // 本日の見学者
+  const todayVisitors = allVisitors.filter(v => {
+    const visitDate = v.visitorInfo?.scheduledVisitDate || v.visitorInfo?.actualVisitDate
+    if (!visitDate) return false
+    const today = new Date().toISOString().split('T')[0]
+    return visitDate.startsWith(today) && v.currentStatus === 'visitor-scheduled'
+  })
 
-  // 今後の見学予定（今日以降）
-  const upcomingVisitors = visitors.filter(v => {
+  // 今後の見学予定
+  const upcomingVisitors = allVisitors.filter(v => {
     const visitDate = v.visitorInfo?.scheduledVisitDate
-    return visitDate && visitDate > today && v.currentStatus === 'visitor-scheduled'
+    if (!visitDate) return false
+    const today = new Date().toISOString().split('T')[0]
+    return visitDate > today && v.currentStatus === 'visitor-scheduled'
+  }).sort((a, b) => {
+    const dateA = new Date(a.visitorInfo?.scheduledVisitDate || '')
+    const dateB = new Date(b.visitorInfo?.scheduledVisitDate || '')
+    return dateA.getTime() - dateB.getTime()
   })
 
   // 見学済み（表示期間でフィルタリング & 最新順ソート）
   const getFilteredCompletedVisitors = () => {
-    const completed = visitors.filter(v => v.currentStatus === 'visitor-completed')
+    const completed = allVisitors.filter(v => v.currentStatus === 'visitor-completed')
 
     // 表示期間でフィルタリング
     const now = new Date()
@@ -95,7 +425,7 @@ export default function VisitorManagementNew({
   }
 
   const completedVisitors = getFilteredCompletedVisitors()
-  const totalCompletedCount = visitors.filter(v => v.currentStatus === 'visitor-completed').length
+  const totalCompletedCount = allVisitors.filter(v => v.currentStatus === 'visitor-completed').length
 
   const handleNewVisitorSubmit = () => {
     // 新規見学者登録処理
@@ -560,7 +890,7 @@ export default function VisitorManagementNew({
             </DialogHeader>
             <div className="space-y-4">
               {(() => {
-                const visitor = visitors.find(v => v.id === showConversionDialog)
+                const visitor = allVisitors.find(v => v.id === showConversionDialog)
                 const interestLevel = visitor?.visitorInfo?.visitFeedback?.interestLevel
                 return (
                   <>

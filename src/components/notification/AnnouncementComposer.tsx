@@ -49,26 +49,6 @@ import {
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
-type QuestionType = 'single' | 'multiple' | 'text' | 'scale' | 'date' | 'matrix' | 'number'
-
-interface Question {
-  id: string
-  type: QuestionType
-  title: string
-  description?: string
-  required: boolean
-  options?: string[]
-  scaleMin?: number
-  scaleMax?: number
-  scaleMinLabel?: string
-  scaleMaxLabel?: string
-  matrixRows?: string[]
-  matrixColumns?: string[]
-  conditionalLogic?: {
-    showIf: string
-    answer: string
-  }
-}
 
 interface AnnouncementForm {
   category: string
@@ -80,25 +60,18 @@ interface AnnouncementForm {
   targetPositions: string[]
   priority: 'high' | 'medium' | 'low'
   scheduledDate?: string
-  // アンケート固有
-  surveyQuestions: Question[]
-  surveyEndDate?: string
-  surveyAnonymous: boolean
-  surveyAllowMultipleResponses: boolean
   // 研修固有
   trainingEnableRegistration: boolean
   trainingCapacity?: number
   trainingRegistrationDeadline?: string
   trainingLocation?: string
   trainingDuration?: string
-  trainingRequiredQuestions: Question[]
 }
 
 const categories = [
   { id: 'urgent', label: '緊急', icon: '🚨', color: 'border-red-500' },
   { id: 'interview', label: '面談', icon: '👥', color: 'border-blue-500' },
   { id: 'training', label: '研修', icon: '📚', color: 'border-purple-500' },
-  { id: 'survey', label: 'アンケート', icon: '📝', color: 'border-green-500' },
   { id: 'health', label: '健康管理', icon: '🏥', color: 'border-orange-500' },
   { id: 'other', label: 'その他', icon: '📢', color: 'border-gray-500' }
 ]
@@ -111,6 +84,18 @@ const departments = [
 const positions = [
   '主任', '師長', '副師長', '科長', '係長', '部長', '課長', '管理職'
 ]
+
+// 研修用質問タイプ
+type QuestionType = 'single' | 'multiple' | 'text' | 'number' | 'date'
+
+interface Question {
+  id: string
+  type: QuestionType
+  title: string
+  description?: string
+  required: boolean
+  options?: string[]
+}
 
 // ソート可能な質問コンポーネント
 function SortableQuestion({
@@ -148,10 +133,8 @@ function SortableQuestion({
       case 'single': return <Circle className="w-4 h-4" />
       case 'multiple': return <Square className="w-4 h-4" />
       case 'text': return <Type className="w-4 h-4" />
-      case 'scale': return <Star className="w-4 h-4" />
       case 'number': return <Hash className="w-4 h-4" />
       case 'date': return <Calendar className="w-4 h-4" />
-      case 'matrix': return <Grid3X3 className="w-4 h-4" />
       default: return <FileText className="w-4 h-4" />
     }
   }
@@ -161,10 +144,8 @@ function SortableQuestion({
       case 'single': return '単一選択'
       case 'multiple': return '複数選択'
       case 'text': return 'テキスト'
-      case 'scale': return '尺度'
       case 'number': return '数値'
       case 'date': return '日付'
-      case 'matrix': return 'マトリクス'
       default: return '不明'
     }
   }
@@ -287,16 +268,6 @@ function SortableQuestion({
                   </div>
                 </div>
               )}
-
-              {/* 尺度の設定 */}
-              {question.type === 'scale' && (
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <Label>最小値</Label>
-                    <Input
-                      type="number"
-                      value={question.scaleMin || 1}
-                      onChange={(e) => onUpdate(question.id, { scaleMin: parseInt(e.target.value) })}
                     />
                   </div>
                   <div>
@@ -351,9 +322,6 @@ export default function AnnouncementComposer() {
     targetIndividuals: [],
     targetPositions: [],
     priority: 'medium',
-    surveyQuestions: [],
-    surveyAnonymous: true,
-    surveyAllowMultipleResponses: false,
     trainingEnableRegistration: false,
     trainingRequiredQuestions: []
   })
@@ -397,9 +365,7 @@ export default function AnnouncementComposer() {
       type,
       title: '',
       required: false,
-      options: type === 'single' || type === 'multiple' ? [''] : undefined,
-      scaleMin: type === 'scale' ? 1 : undefined,
-      scaleMax: type === 'scale' ? 5 : undefined
+      options: type === 'single' || type === 'multiple' ? [''] : undefined
     }
     setForm(prev => ({
       ...prev,
@@ -444,9 +410,7 @@ export default function AnnouncementComposer() {
       type,
       title: '',
       required: false,
-      options: type === 'single' || type === 'multiple' ? [''] : undefined,
-      scaleMin: type === 'scale' ? 1 : undefined,
-      scaleMax: type === 'scale' ? 5 : undefined
+      options: type === 'single' || type === 'multiple' ? [''] : undefined
     }
     setForm(prev => ({
       ...prev,
@@ -503,31 +467,21 @@ export default function AnnouncementComposer() {
       case 'satisfaction':
         setForm(prev => ({
           ...prev,
-          title: '職員満足度調査',
-          content: '職場環境と業務に関する満足度を調査します',
-          surveyQuestions: [
+          title: '研修申込み用アンケート',
+          content: '研修参加に関する事前調査',
+          trainingRequiredQuestions: [
             {
               id: 'q1',
-              type: 'scale',
-              title: '現在の職場環境に満足していますか？',
+              type: 'single',
+              title: '研修参加目的を教えてください',
               required: true,
-              scaleMin: 1,
-              scaleMax: 5,
-              scaleMinLabel: '非常に不満',
-              scaleMaxLabel: '非常に満足'
+              options: ['スキルアップ', '資格取得', '業務改善', '管理能力向上', 'その他']
             },
             {
               id: 'q2',
-              type: 'multiple',
-              title: '職場環境で改善してほしい点を選んでください（複数選択可）',
-              required: false,
-              options: ['労働時間', '人間関係', '設備・環境', '評価制度', '研修制度', 'その他']
-            },
-            {
-              id: 'q3',
               type: 'text',
-              title: 'その他ご意見があればお聞かせください',
-              required: false
+              title: '研修で学びたい内容',
+              required: true
             }
           ]
         }))
@@ -535,30 +489,20 @@ export default function AnnouncementComposer() {
       case 'training':
         setForm(prev => ({
           ...prev,
-          title: '研修効果測定アンケート',
-          content: '研修の効果と改善点を調査します',
-          surveyQuestions: [
+          title: '研修効果測定',
+          content: '研修後のフォローアップ',
+          trainingRequiredQuestions: [
             {
               id: 'q1',
               type: 'single',
-              title: '研修の内容は業務に役立ちましたか？',
+              title: '研修内容は役立ちましたか？',
               required: true,
-              options: ['非常に役立った', '役立った', 'どちらともいえない', 'あまり役立たなかった', '全く役立たなかった']
+              options: ['非常に役立った', '役立った', '普通', 'あまり役立たなかった', '全く役立たなかった']
             },
             {
               id: 'q2',
-              type: 'scale',
-              title: '研修の難易度はどうでしたか？',
-              required: true,
-              scaleMin: 1,
-              scaleMax: 5,
-              scaleMinLabel: '簡単すぎた',
-              scaleMaxLabel: '難しすぎた'
-            },
-            {
-              id: 'q3',
               type: 'text',
-              title: '今後受けたい研修テーマがあれば教えてください',
+              title: '今後受けたい研修テーマ',
               required: false
             }
           ]
@@ -569,11 +513,6 @@ export default function AnnouncementComposer() {
 
   const handleSubmit = async (action: 'draft' | 'schedule' | 'send') => {
     console.log('Submit:', action, form)
-
-    if (form.category === 'survey' && form.surveyQuestions.length > 0) {
-      // アンケート統合配信
-      console.log('アンケート配信準備完了')
-    }
 
     // 通知配信処理
     alert(`${action === 'draft' ? '下書き保存' : action === 'schedule' ? '配信予約' : '配信'}が完了しました`)
@@ -639,8 +578,8 @@ export default function AnnouncementComposer() {
               />
             </div>
 
-            {/* アンケート質問（アンケートカテゴリ選択時のみ表示） */}
-            {form.category === 'survey' && (
+            {/* 削除予定のアンケートセクション */}
+            {false && (
               <Card className="border-green-200 bg-green-50">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -1228,17 +1167,6 @@ export default function AnnouncementComposer() {
                 </div>
               </div>
 
-              {form.category === 'survey' && (
-                <div className="flex gap-3">
-                  <span className="text-xl">📊</span>
-                  <div>
-                    <div className="font-semibold text-sm">アンケート設計</div>
-                    <div className="text-sm text-gray-600">
-                      質問数は5-10問程度に抑えると回答率が向上します。
-                    </div>
-                  </div>
-                </div>
-              )}
 
               {form.category === 'interview' && (
                 <div className="flex gap-3">
