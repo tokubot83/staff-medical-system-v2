@@ -551,8 +551,8 @@ export default function AnnouncementComposer() {
               />
             </div>
 
-            {/* 削除予定のアンケートセクション */}
-            {false && (
+            {/* アンケートセクション */}
+            {form.category === 'survey' && (
               <Card className="border-green-200 bg-green-50">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
