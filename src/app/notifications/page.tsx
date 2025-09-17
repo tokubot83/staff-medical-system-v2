@@ -95,7 +95,7 @@ export default function NotificationsPage() {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto p-5 bg-gradient-to-b from-gray-50 to-white min-h-screen">
+      <div className="container mx-auto py-8 px-4 bg-gradient-to-b from-gray-50 to-white min-h-screen">
         {/* タブナビゲーション */}
         <div className="flex bg-white rounded-2xl shadow-lg mb-6 overflow-hidden border border-gray-100">
           <button

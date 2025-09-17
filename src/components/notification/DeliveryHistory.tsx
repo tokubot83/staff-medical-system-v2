@@ -29,7 +29,11 @@ import {
   Clock,
   CheckCircle,
   AlertCircle,
-  Loader2
+  Loader2,
+  UserCheck,
+  Download,
+  Mail,
+  X
 } from 'lucide-react'
 
 type DeliveryStatus = 'draft' | 'scheduled' | 'sending' | 'delivered' | 'failed'
@@ -52,6 +56,24 @@ interface DeliveryRecord {
   clickRate?: number
   responseRate?: number
   errorMessage?: string
+  // 研修関連
+  registrationEnabled?: boolean
+  registrationCount?: number
+  registrationCapacity?: number
+  registrations?: {
+    id: string
+    name: string
+    department: string
+    position: string
+    registeredAt: string
+    status: 'registered' | 'attended' | 'absent'
+  }[]
+}
+
+interface ParticipationModalProps {
+  record: DeliveryRecord
+  isOpen: boolean
+  onClose: () => void
 }
 
 const statusConfig = {
@@ -120,7 +142,36 @@ const mockDeliveryData: DeliveryRecord[] = [
     sentAt: '2025-01-14 09:00',
     priority: 'high',
     openRate: 94,
-    clickRate: 78
+    clickRate: 78,
+    registrationEnabled: true,
+    registrationCount: 38,
+    registrationCapacity: 50,
+    registrations: [
+      {
+        id: '1',
+        name: '田中花子',
+        department: '看護部',
+        position: '主任',
+        registeredAt: '2025-01-14 10:30',
+        status: 'registered'
+      },
+      {
+        id: '2',
+        name: '佐藤太郎',
+        department: '医師',
+        position: '医長',
+        registeredAt: '2025-01-14 14:20',
+        status: 'registered'
+      },
+      {
+        id: '3',
+        name: '山田次郎',
+        department: '薬剤科',
+        position: '係長',
+        registeredAt: '2025-01-15 09:15',
+        status: 'registered'
+      }
+    ]
   },
   {
     id: '4',
@@ -180,6 +231,143 @@ const mockDeliveryData: DeliveryRecord[] = [
   }
 ]
 
+// 参加状況モーダルコンポーネント
+function ParticipationModal({ record, isOpen, onClose }: ParticipationModalProps) {
+  if (!isOpen || !record.registrationEnabled) return null
+
+  const registrationRate = record.registrationCapacity
+    ? Math.round((record.registrationCount || 0) / record.registrationCapacity * 100)
+    : 0
+
+  const handleExportParticipants = () => {
+    console.log('参加者リストをExcelでエクスポート')
+    alert('参加者リストをExcelファイルでエクスポートしました')
+  }
+
+  const handleSendReminder = (participantId?: string) => {
+    if (participantId) {
+      console.log(`個別リマインダー送信: ${participantId}`)
+      alert('個別リマインダーを送信しました')
+    } else {
+      console.log('未申込者全員にリマインダー送信')
+      alert('未申込者全員にリマインダーを送信しました')
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-hidden">
+        <div className="flex items-center justify-between p-6 border-b">
+          <div>
+            <h2 className="text-xl font-bold">{record.title}</h2>
+            <p className="text-sm text-gray-500 mt-1">研修参加状況</p>
+          </div>
+          <Button variant="ghost" onClick={onClose}>
+            <X className="w-5 h-5" />
+          </Button>
+        </div>
+
+        <div className="p-6">
+          {/* サマリー */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <Card>
+              <CardContent className="p-4 text-center">
+                <div className="text-2xl font-bold text-blue-600">{record.registrationCount || 0}</div>
+                <div className="text-sm text-gray-500">申込者数</div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4 text-center">
+                <div className="text-2xl font-bold text-green-600">{registrationRate}%</div>
+                <div className="text-sm text-gray-500">申込率</div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4 text-center">
+                <div className="text-2xl font-bold text-purple-600">{record.registrationCapacity || '無制限'}</div>
+                <div className="text-sm text-gray-500">定員</div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4 text-center">
+                <div className="text-2xl font-bold text-orange-600">{(record.targetCount || 0) - (record.registrationCount || 0)}</div>
+                <div className="text-sm text-gray-500">未申込者</div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* アクションボタン */}
+          <div className="flex gap-2 mb-4">
+            <Button onClick={handleExportParticipants} variant="outline">
+              <Download className="w-4 h-4 mr-2" />
+              参加者リスト出力
+            </Button>
+            <Button onClick={() => handleSendReminder()} variant="outline">
+              <Mail className="w-4 h-4 mr-2" />
+              未申込者にリマインダー
+            </Button>
+          </div>
+
+          {/* 参加者リスト */}
+          <div className="border rounded-lg overflow-hidden">
+            <div className="bg-gray-50 px-4 py-3 border-b">
+              <h3 className="font-semibold">申込者一覧</h3>
+            </div>
+            <div className="max-h-96 overflow-y-auto">
+              {record.registrations && record.registrations.length > 0 ? (
+                <table className="w-full">
+                  <thead className="bg-gray-50 sticky top-0">
+                    <tr>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">氏名</th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">部署</th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">役職</th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">申込日時</th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">ステータス</th>
+                      <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">アクション</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {record.registrations.map((participant, index) => (
+                      <tr key={participant.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                        <td className="px-4 py-3 text-sm font-medium">{participant.name}</td>
+                        <td className="px-4 py-3 text-sm">{participant.department}</td>
+                        <td className="px-4 py-3 text-sm">{participant.position}</td>
+                        <td className="px-4 py-3 text-sm">{participant.registeredAt}</td>
+                        <td className="px-4 py-3">
+                          <Badge
+                            variant={participant.status === 'registered' ? 'default' :
+                                   participant.status === 'attended' ? 'default' : 'destructive'}
+                          >
+                            {participant.status === 'registered' ? '申込済み' :
+                             participant.status === 'attended' ? '参加済み' : '欠席'}
+                          </Badge>
+                        </td>
+                        <td className="px-4 py-3">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleSendReminder(participant.id)}
+                          >
+                            <Mail className="w-3 h-3" />
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <div className="p-8 text-center text-gray-500">
+                  まだ申込みがありません
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function DeliveryHistory() {
   const [deliveryData] = useState<DeliveryRecord[]>(mockDeliveryData)
   const [selectedRecords, setSelectedRecords] = useState<string[]>([])
@@ -187,6 +375,7 @@ export default function DeliveryHistory() {
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [categoryFilter, setCategoryFilter] = useState<string>('all')
   const [showDetailModal, setShowDetailModal] = useState<string | null>(null)
+  const [showParticipationModal, setShowParticipationModal] = useState<string | null>(null)
 
   const filteredData = deliveryData.filter(record => {
     const matchesSearch = record.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -455,6 +644,24 @@ export default function DeliveryHistory() {
                         )}
                       </div>
 
+                      {/* 研修参加状況 */}
+                      {record.category === 'training' && record.registrationEnabled && (
+                        <div className="flex items-center gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => setShowParticipationModal(record.id)}
+                            className="flex items-center gap-2"
+                          >
+                            <UserCheck className="w-4 h-4" />
+                            参加状況を見る
+                          </Button>
+                          <span className="text-sm text-purple-600">
+                            申込: {record.registrationCount || 0}/{record.registrationCapacity || '無制限'}名
+                          </span>
+                        </div>
+                      )}
+
                       {/* 配信統計 */}
                       {record.status === 'delivered' && (
                         <div className="flex items-center gap-4 text-xs">
@@ -495,6 +702,15 @@ export default function DeliveryHistory() {
           </Card>
         )}
       </div>
+
+      {/* 参加状況モーダル */}
+      {showParticipationModal && (
+        <ParticipationModal
+          record={deliveryData.find(r => r.id === showParticipationModal)!}
+          isOpen={!!showParticipationModal}
+          onClose={() => setShowParticipationModal(null)}
+        />
+      )}
     </div>
   )
 }
