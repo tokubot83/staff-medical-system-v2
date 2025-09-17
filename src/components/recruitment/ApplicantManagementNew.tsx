@@ -431,52 +431,21 @@ export default function ApplicantManagementNew({
 
   return (
     <div className="space-y-6">
-      {/* 統計カード */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle>採用パイプライン</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex gap-4">
-            <div className="flex-1 text-center">
-              <div className="text-2xl font-bold">{newApplicants.length}</div>
-              <div className="text-sm text-gray-600">新規応募</div>
-            </div>
-            <div className="flex-1 text-center">
-              <div className="text-2xl font-bold">{screeningApplicants.length}</div>
-              <div className="text-sm text-gray-600">書類選考</div>
-            </div>
-            <div className="flex-1 text-center">
-              <div className="text-2xl font-bold">{interviewApplicants.filter(a => !a.interviewResult).length}</div>
-              <div className="text-sm text-gray-600">面接中</div>
-            </div>
-            <div className="flex-1 text-center">
-              <div className="text-2xl font-bold">{offerApplicants.length}</div>
-              <div className="text-sm text-gray-600">内定</div>
-            </div>
-          </div>
-          <div className="mt-4 flex gap-2">
-            <Button onClick={() => setShowNewApplicantForm(true)}>
-              <UserPlus className="h-4 w-4 mr-2" />
-              新規応募者追加
-            </Button>
-            <Button variant="outline">
-              <Upload className="h-4 w-4 mr-2" />
-              CSVインポート
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
       {/* ステータス別カンバン */}
       <div className="grid grid-cols-4 gap-4">
         {/* 新規応募 */}
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-base flex items-center justify-between">
-              <span>新規応募</span>
-              <Badge variant="outline">{newApplicants.length}</Badge>
-            </CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-base flex items-center gap-2">
+                <span>新規応募</span>
+                <Badge variant="outline">{newApplicants.length}</Badge>
+              </CardTitle>
+              <Button size="sm" onClick={() => setShowNewApplicantForm(true)}>
+                <UserPlus className="h-3 w-3 mr-1" />
+                追加
+              </Button>
+            </div>
           </CardHeader>
           <CardContent className="space-y-3">
             {newApplicants.length === 0 ? (
