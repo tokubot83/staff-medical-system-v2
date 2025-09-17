@@ -60,6 +60,11 @@ interface AnnouncementForm {
   targetPositions: string[]
   priority: 'high' | 'medium' | 'low'
   scheduledDate?: string
+  // アンケート固有
+  surveyQuestions: Question[]
+  surveyEndDate?: string
+  surveyAnonymous: boolean
+  surveyAllowMultipleResponses: boolean
   // 研修固有
   trainingEnableRegistration: boolean
   trainingCapacity?: number
@@ -86,8 +91,8 @@ const positions = [
   '主任', '師長', '副師長', '科長', '係長', '部長', '課長', '管理職'
 ]
 
-// 研修用質問タイプ
-type QuestionType = 'single' | 'multiple' | 'text' | 'number' | 'date'
+// 質問タイプ
+type QuestionType = 'single' | 'multiple' | 'text' | 'number' | 'date' | 'scale' | 'matrix'
 
 interface Question {
   id: string
@@ -96,6 +101,12 @@ interface Question {
   description?: string
   required: boolean
   options?: string[]
+  scaleMin?: number
+  scaleMax?: number
+  scaleMinLabel?: string
+  scaleMaxLabel?: string
+  matrixRows?: string[]
+  matrixColumns?: string[]
 }
 
 // ソート可能な質問コンポーネント
@@ -295,6 +306,9 @@ export default function AnnouncementComposer() {
     targetIndividuals: [],
     targetPositions: [],
     priority: 'medium',
+    surveyQuestions: [],
+    surveyAnonymous: true,
+    surveyAllowMultipleResponses: false,
     trainingEnableRegistration: false,
     trainingRequiredQuestions: []
   })
