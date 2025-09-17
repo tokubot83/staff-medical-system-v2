@@ -15,7 +15,8 @@ import { Applicant } from '@/types/recruitment'
 import {
   User, Mail, Phone, Calendar, FileText, Star, MessageSquare,
   ChevronRight, Search, Filter, UserPlus, Eye, Clock, CheckCircle,
-  XCircle, Send, AlertCircle, TrendingUp, ArrowRight, Upload, Briefcase
+  XCircle, Send, AlertCircle, TrendingUp, ArrowRight, Upload, Briefcase,
+  Plus
 } from 'lucide-react'
 
 interface ApplicantManagementNewProps {
@@ -434,18 +435,21 @@ export default function ApplicantManagementNew({
       {/* ステータス別カンバン */}
       <div className="grid grid-cols-4 gap-4">
         {/* 新規応募 */}
-        <Card>
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-base flex items-center gap-2">
-                <span>新規応募</span>
-                <Badge variant="outline">{newApplicants.length}</Badge>
-              </CardTitle>
-              <Button size="sm" onClick={() => setShowNewApplicantForm(true)}>
-                <UserPlus className="h-3 w-3 mr-1" />
-                追加
-              </Button>
-            </div>
+        <Card className="shadow-lg">
+          <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100 border-b">
+            <CardTitle className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <UserPlus className="h-5 w-5 text-blue-600" />
+                新規応募
+              </div>
+              <div className="flex items-center gap-2">
+                <Badge className="bg-blue-600 text-white">{newApplicants.length}</Badge>
+                <Button size="sm" onClick={() => setShowNewApplicantForm(true)} className="bg-blue-600 hover:bg-blue-700">
+                  <Plus className="h-3 w-3 mr-1" />
+                  追加
+                </Button>
+              </div>
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             {newApplicants.length === 0 ? (
@@ -459,11 +463,14 @@ export default function ApplicantManagementNew({
         </Card>
 
         {/* 書類選考 */}
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base flex items-center justify-between">
-              <span>書類選考</span>
-              <Badge variant="outline">{screeningApplicants.length}</Badge>
+        <Card className="shadow-lg">
+          <CardHeader className="bg-gradient-to-r from-yellow-50 to-yellow-100 border-b">
+            <CardTitle className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <FileText className="h-5 w-5 text-yellow-600" />
+                書類選考
+              </div>
+              <Badge className="bg-yellow-600 text-white">{screeningApplicants.length}</Badge>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -478,13 +485,16 @@ export default function ApplicantManagementNew({
         </Card>
 
         {/* 面接 */}
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base flex items-center justify-between">
-              <span>面接</span>
+        <Card className="shadow-lg">
+          <CardHeader className="bg-gradient-to-r from-purple-50 to-purple-100 border-b">
+            <CardTitle className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Badge variant="outline">{interviewApplicants.length}</Badge>
-                <Button size="sm" onClick={() => setShowDirectInterviewForm(true)}>
+                <Calendar className="h-5 w-5 text-purple-600" />
+                面接
+              </div>
+              <div className="flex items-center gap-2">
+                <Badge className="bg-purple-600 text-white">{interviewApplicants.length}</Badge>
+                <Button size="sm" onClick={() => setShowDirectInterviewForm(true)} className="bg-purple-600 hover:bg-purple-700">
                   <UserPlus className="h-3 w-3 mr-1" />
                   面接から開始
                 </Button>
@@ -503,11 +513,14 @@ export default function ApplicantManagementNew({
         </Card>
 
         {/* 内定 */}
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base flex items-center justify-between">
-              <span>内定</span>
-              <Badge variant="outline">{offerApplicants.length}</Badge>
+        <Card className="shadow-lg">
+          <CardHeader className="bg-gradient-to-r from-green-50 to-green-100 border-b">
+            <CardTitle className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-5 w-5 text-green-600" />
+                内定
+              </div>
+              <Badge className="bg-green-600 text-white">{offerApplicants.length}</Badge>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
