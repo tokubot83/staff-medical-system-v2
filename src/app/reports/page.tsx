@@ -4,6 +4,7 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import FacilitySelector from '@/components/reports/FacilitySelector';
 import CommonHeader from '@/components/CommonHeader';
+import BreadcrumbBar from '@/components/navigation/BreadcrumbBar';
 import DashboardButton from '@/components/DashboardButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 
@@ -126,7 +127,8 @@ function ReportsPageContent() {
   return (
     <div className="min-h-screen bg-gray-50">
       <CommonHeader title="レポートセンター" />
-      
+      <BreadcrumbBar />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* ヘッダー */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">

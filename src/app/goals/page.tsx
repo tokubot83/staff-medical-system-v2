@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import CommonHeader from '@/components/CommonHeader'
+import BreadcrumbBar from '@/components/navigation/BreadcrumbBar'
 import DashboardButton from '@/components/DashboardButton'
 import Link from 'next/link'
 import { staffDatabase } from '../data/staffData.js'
@@ -114,7 +115,8 @@ export default function GoalsPage() {
   return (
     <div>
       <CommonHeader title="目標管理" />
-      
+      <BreadcrumbBar />
+
       <div className={styles.container}>
         <div className={styles.tabNavigation}>
           {tabs.map((tab) => (

@@ -1,10 +1,23 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
+  swcMinify: false,
   // Removed output: 'export' to support dynamic routes with client components
   images: {
     unoptimized: true,
+  },
+  webpack: (config, { isServer }) => {
+    // Canvas関連の設定
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        canvas: false,
+        fs: false,
+        path: false,
+        buffer: require.resolve('buffer/'),
+      };
+    }
+    return config;
   },
   eslint: {
     // Warning: This allows production builds to successfully complete even if

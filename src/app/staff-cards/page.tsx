@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import CommonHeader from '@/components/CommonHeader'
-import DashboardButton from '@/components/DashboardButton'
+import BreadcrumbBar from '@/components/navigation/BreadcrumbBar'
 import Link from 'next/link'
 import { staffDatabase } from '../data/staffData.js'
 import styles from './StaffCards.module.css'
@@ -60,7 +60,8 @@ export default function StaffCardsPage() {
   return (
     <div>
       <CommonHeader title="職員カルテ" />
-      
+      <BreadcrumbBar />
+
       <div className={styles.container}>
         <div className={styles.searchSection}>
           <div className={styles.searchBar}>
@@ -166,7 +167,6 @@ export default function StaffCardsPage() {
           ))}
         </div>
       </div>
-      <DashboardButton />
     </div>
   )
 }

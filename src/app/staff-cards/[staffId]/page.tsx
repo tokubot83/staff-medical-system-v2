@@ -3,13 +3,11 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import CommonHeader from '@/components/CommonHeader'
+import BreadcrumbBar from '@/components/navigation/BreadcrumbBar'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { staffDatabase } from '../../data/staffData.js'
 import styles from '../StaffCards.module.css'
-import DashboardButton from '@/components/DashboardButton'
-import ScrollToTopButton from '@/components/ScrollToTopButton'
-import BackToStaffCardsButton from '@/components/BackToStaffCardsButton'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { 
@@ -113,13 +111,14 @@ export default function StaffDetailPage() {
     type: string
     subtype?: string
   } | null>(null)
-  
+
   const selectedStaff = staffDatabase[staffId]
 
   if (!selectedStaff) {
     return (
       <div>
         <CommonHeader title="職員カルテ" />
+        <BreadcrumbBar />
         <div className={styles.container}>
           <div className={styles.noSelection}>
             <p>職員が見つかりません</p>
@@ -135,7 +134,8 @@ export default function StaffDetailPage() {
   return (
     <div>
       <CommonHeader title={`${selectedStaff.name} - 職員カルテ`} />
-      
+      <BreadcrumbBar />
+
       <div className={styles.container}>
         <div className={styles.tabNavigation}>
           {tabs.map((tab) => (
@@ -185,9 +185,6 @@ export default function StaffDetailPage() {
           {activeTab === 'education' && <EducationTab selectedStaff={selectedStaff} />}
         </div>
       </div>
-      <ScrollToTopButton />
-      <BackToStaffCardsButton />
-      <DashboardButton />
       
       {/* NotebookLMモーダル（全タブ共通） */}
       {showNotebookLinkModal && (

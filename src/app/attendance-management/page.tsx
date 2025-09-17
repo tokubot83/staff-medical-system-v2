@@ -3,6 +3,7 @@
 import React, { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import CommonHeader from '@/components/CommonHeader'
+import BreadcrumbBar from '@/components/navigation/BreadcrumbBar'
 import DashboardButton from '@/components/DashboardButton'
 import styles from './Attendance.module.css'
 import { staffDatabase } from '../data/staffData.js'
@@ -84,6 +85,7 @@ function AttendanceManagementContent() {
       <CommonHeader
         title="勤怠管理"
       />
+      <BreadcrumbBar />
 
       <div className={styles.container}>
         {/* 開発ステータスの警告バナー */}

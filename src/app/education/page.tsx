@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useReducer } from 'react';
 import CommonHeader from '@/components/CommonHeader';
+import BreadcrumbBar from '@/components/navigation/BreadcrumbBar';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -732,10 +733,11 @@ export default function EducationPage() {
 
   return (
     <div>
-      <CommonHeader 
+      <CommonHeader
         title="教育・研修管理システム"
         subtitle="教育師長管理画面 - 研修プログラムと評価項目の連携"
       />
+      <BreadcrumbBar />
       <div className={styles.container}>
         <div className={styles.tabNavigation}>
           <button 
