@@ -3,6 +3,7 @@
 export type TalentStatus =
   | 'visitor-scheduled' // 見学予定
   | 'visitor-completed' // 見学済み
+  | 'visitor-converted' // 応募者へ移行済み
   | 'applicant-new' // 新規応募
   | 'applicant-screening' // 書類選考中
   | 'applicant-interview' // 面接中
@@ -76,6 +77,13 @@ export interface TalentProfile {
       followUpRequired: boolean
       notes: string
     }
+    // 応募者への移行情報
+    conversionInfo?: {
+      convertedAt: string
+      convertedBy: string
+      conversionReason?: string
+      applicantId?: string // 移行先の応募者ID
+    }
   }
 
   // 応募者情報
@@ -88,6 +96,19 @@ export interface TalentProfile {
     availableStartDate: string
     currentEmployment: string
     noticePeriod?: string // 退職までの期間
+
+    // 見学者からの移行情報
+    previousVisitorId?: string // 元見学者ID
+    visitorHistory?: {
+      visitDate: string
+      visitFeedback?: {
+        satisfaction: number
+        interestLevel: 'high' | 'medium' | 'low'
+        notes: string
+      }
+      conversionDate: string
+      conversionReason?: string
+    }
 
     // 応募書類
     documents: {

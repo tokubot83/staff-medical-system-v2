@@ -9,7 +9,7 @@ import DashboardButton from '@/components/DashboardButton'
 // コンポーネントのインポート
 import TalentPipelineDashboard from '@/components/recruitment/TalentPipelineDashboard'
 import VisitorManagementNew from '@/components/recruitment/VisitorManagementNew'
-import ApplicantInterviewManagement from '@/components/recruitment/ApplicantInterviewManagement'
+import ApplicantManagementNew from '@/components/recruitment/ApplicantManagementNew'
 import TalentSearchPanel from '@/components/recruitment/TalentSearchPanel'
 
 // 型定義のインポート
@@ -566,9 +566,8 @@ export default function RecruitmentPage() {
 
           {activeTab === 'applicants' && (
             <div className="animate-fadeIn">
-              <ApplicantInterviewManagement
+              <ApplicantManagementNew
                 applicants={applicants}
-                interviews={interviewSchedules}
               />
             </div>
           )}

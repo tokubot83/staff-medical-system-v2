@@ -39,6 +39,9 @@ export default function VisitorManagementNew({
   const [showNewVisitorForm, setShowNewVisitorForm] = useState(false)
   const [selectedVisitor, setSelectedVisitor] = useState<TalentProfile | null>(null)
   const [activeView, setActiveView] = useState<'today' | 'upcoming' | 'completed'>('today')
+  const [displayPeriod, setDisplayPeriod] = useState<'3m' | '6m' | '1y' | 'all'>('6m')
+  const [showConversionDialog, setShowConversionDialog] = useState<string | null>(null)
+  const [conversionReason, setConversionReason] = useState('')
 
   // 新規見学者フォーム
   const [newVisitor, setNewVisitor] = useState({
@@ -68,10 +71,31 @@ export default function VisitorManagementNew({
     return visitDate && visitDate > today && v.currentStatus === 'visitor-scheduled'
   })
 
-  // 見学済み
-  const completedVisitors = visitors.filter(v =>
-    v.currentStatus === 'visitor-completed'
-  )
+  // 見学済み（表示期間でフィルタリング & 最新順ソート）
+  const getFilteredCompletedVisitors = () => {
+    const completed = visitors.filter(v => v.currentStatus === 'visitor-completed')
+
+    // 表示期間でフィルタリング
+    const now = new Date()
+    const filtered = completed.filter(v => {
+      if (displayPeriod === 'all') return true
+      const visitDate = new Date(v.visitorInfo?.actualVisitDate || v.visitorInfo?.scheduledVisitDate || '')
+      const monthsAgo = displayPeriod === '3m' ? 3 : displayPeriod === '6m' ? 6 : 12
+      const cutoffDate = new Date()
+      cutoffDate.setMonth(cutoffDate.getMonth() - monthsAgo)
+      return visitDate >= cutoffDate
+    })
+
+    // 最新順でソート
+    return filtered.sort((a, b) => {
+      const dateA = new Date(a.visitorInfo?.actualVisitDate || a.visitorInfo?.scheduledVisitDate || '')
+      const dateB = new Date(b.visitorInfo?.actualVisitDate || b.visitorInfo?.scheduledVisitDate || '')
+      return dateB.getTime() - dateA.getTime()
+    })
+  }
+
+  const completedVisitors = getFilteredCompletedVisitors()
+  const totalCompletedCount = visitors.filter(v => v.currentStatus === 'visitor-completed').length
 
   const handleNewVisitorSubmit = () => {
     // 新規見学者登録処理
@@ -435,7 +459,23 @@ export default function VisitorManagementNew({
                 <CheckCircle2 className="h-5 w-5 text-gray-600" />
                 見学済み
               </div>
-              <Badge className="bg-gray-600 text-white">{completedVisitors.length}</Badge>
+              <div className="flex items-center gap-2">
+                <Select value={displayPeriod} onValueChange={(value: '3m' | '6m' | '1y' | 'all') => setDisplayPeriod(value)}>
+                  <SelectTrigger className="w-28 h-7 text-xs">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="3m">3ヶ月</SelectItem>
+                    <SelectItem value="6m">6ヶ月</SelectItem>
+                    <SelectItem value="1y">1年</SelectItem>
+                    <SelectItem value="all">すべて</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Badge className="bg-gray-600 text-white">
+                  {completedVisitors.length}
+                  {totalCompletedCount > completedVisitors.length && ` / ${totalCompletedCount}`}
+                </Badge>
+              </div>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -443,7 +483,7 @@ export default function VisitorManagementNew({
               <p className="text-gray-500 text-center py-4">見学済みの方はいません</p>
             ) : (
               <div className="space-y-3">
-                {completedVisitors.slice(0, 5).map(visitor => {
+                {completedVisitors.slice(0, 10).map(visitor => {
                   const interestLevel = visitor.visitorInfo?.visitFeedback?.interestLevel
                   return (
                     <div
@@ -464,34 +504,116 @@ export default function VisitorManagementNew({
                       </div>
                       <div className="text-xs text-gray-600 mb-2">
                         見学日: {visitor.visitorInfo?.actualVisitDate}
+                        {visitor.visitorInfo?.actualVisitDate && (
+                          <span className="ml-2 text-gray-400">
+                            ({Math.floor((new Date().getTime() - new Date(visitor.visitorInfo.actualVisitDate).getTime()) / (1000 * 60 * 60 * 24))}日前)
+                          </span>
+                        )}
                       </div>
-                      {interestLevel === 'high' && (
+                      <div className="flex gap-2">
                         <Button
                           size="sm"
-                          className="w-full"
+                          variant={interestLevel === 'high' ? 'default' : 'outline'}
+                          className="flex-1"
                           onClick={(e) => {
                             e.stopPropagation()
-                            onConvertToApplicant?.(visitor.id)
+                            setShowConversionDialog(visitor.id)
                           }}
                         >
                           <ArrowRight className="h-3 w-3 mr-1" />
                           応募へ移行
                         </Button>
-                      )}
-                      {interestLevel === 'medium' && (
-                        <Button size="sm" variant="outline" className="w-full">
+                        <Button size="sm" variant="outline" className="flex-1">
                           <MessageSquare className="h-3 w-3 mr-1" />
-                          フォローアップ
+                          フォロー
                         </Button>
+                      </div>
+                      {interestLevel === 'high' && (
+                        <div className="mt-1 text-xs text-green-600 flex items-center gap-1">
+                          <TrendingUp className="h-3 w-3" />
+                          移行推奨
+                        </div>
                       )}
                     </div>
                   )
                 })}
+                {completedVisitors.length > 10 && (
+                  <Button variant="outline" className="w-full mt-2" size="sm">
+                    さらに表示（残り{completedVisitors.length - 10}件）
+                  </Button>
+                )}
               </div>
             )}
           </CardContent>
         </Card>
       </div>
+
+      {/* 応募者への移行確認ダイアログ */}
+      {showConversionDialog && (
+        <Dialog open={!!showConversionDialog} onOpenChange={() => {
+          setShowConversionDialog(null)
+          setConversionReason('')
+        }}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>応募者への移行確認</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              {(() => {
+                const visitor = visitors.find(v => v.id === showConversionDialog)
+                const interestLevel = visitor?.visitorInfo?.visitFeedback?.interestLevel
+                return (
+                  <>
+                    {interestLevel === 'low' && (
+                      <Alert className="border-yellow-200 bg-yellow-50">
+                        <AlertCircle className="h-4 w-4 text-yellow-600" />
+                        <AlertDescription>
+                          この見学者の興味度は「低」と評価されています。
+                          移行理由をメモに記録することを推奨します。
+                        </AlertDescription>
+                      </Alert>
+                    )}
+                    <div className="space-y-2">
+                      <div className="text-sm font-medium">
+                        {visitor?.basicInfo.lastName} {visitor?.basicInfo.firstName}さんを応募者として登録します。
+                      </div>
+                      <div className="text-xs text-gray-600">
+                        見学日: {visitor?.visitorInfo?.actualVisitDate}
+                      </div>
+                    </div>
+                    <div>
+                      <Label htmlFor="reason">移行理由・メモ（任意）</Label>
+                      <Textarea
+                        id="reason"
+                        value={conversionReason}
+                        onChange={(e) => setConversionReason(e.target.value)}
+                        placeholder="例：後日連絡があり応募意思を示した、人事部からの推薦など"
+                        rows={3}
+                      />
+                    </div>
+                  </>
+                )
+              })()}
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => {
+                  setShowConversionDialog(null)
+                  setConversionReason('')
+                }}>
+                  キャンセル
+                </Button>
+                <Button onClick={() => {
+                  onConvertToApplicant?.(showConversionDialog)
+                  setShowConversionDialog(null)
+                  setConversionReason('')
+                }}>
+                  <CheckCircle className="h-4 w-4 mr-2" />
+                  移行する
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
 
       {/* 詳細表示モーダル */}
       {selectedVisitor && (
