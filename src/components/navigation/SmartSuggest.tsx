@@ -387,13 +387,12 @@ export const SmartSuggest: React.FC<SmartSuggestProps> = ({
       ref={elementRef}
       className="fixed w-80 z-50"
       style={{
-        left: 0,
-        top: 0,
-        transform: `translate(${Math.round(position.x)}px, ${Math.round(position.y)}px)`,
+        left: `${Math.round(position.x)}px`,
+        top: `${Math.round(position.y)}px`,
         userSelect: isDragging ? 'none' : 'auto'
       }}
     >
-      <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden" style={{ boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)' }}>
         {/* ヘッダー */}
         <div
           className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-3"
