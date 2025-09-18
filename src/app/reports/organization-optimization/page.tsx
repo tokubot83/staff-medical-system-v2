@@ -3,6 +3,7 @@
 import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ReportLayout from '@/components/reports/ReportLayout';
+import BreadcrumbBar from '@/components/navigation/BreadcrumbBar';
 import { facilities } from '@/app/data/facilityData';
 import { exportToPDF } from '@/utils/pdfExport';
 import { DataCommentList, MetricWithComment } from '@/components/DataComment';
@@ -20,8 +21,7 @@ function OrganizationOptimizationReportContent() {
     }
   }, [facilityId]);
 
-  const generateReportData = () => {
-    return {
+  const reportData = {
       overview: {
         totalDepartments: 15,
         avgStaffPerDept: 33,
@@ -140,9 +140,6 @@ function OrganizationOptimizationReportContent() {
         }
       ]
     };
-  };
-
-  const reportData = generateReportData();
 
   return (
     <div>

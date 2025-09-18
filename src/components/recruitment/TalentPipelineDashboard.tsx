@@ -53,6 +53,150 @@ export default function TalentPipelineDashboard({
     inactive: talents.filter(t => t.currentStage === 'inactive').length
   }
 
+  // TO-DOリストの生成
+  const generateTodos = () => {
+    const todos = []
+
+    // 本日の見学予定
+    const todayVisitors = talents.filter(t =>
+      t.currentStage === 'visitor' &&
+      t.visitorInfo?.scheduledVisitDate === today
+    )
+    todayVisitors.forEach(visitor => {
+      todos.push({
+        id: `visit-${visitor.id}`,
+        type: 'visit',
+        priority: 'high',
+        title: `${visitor.basicInfo.lastName} ${visitor.basicInfo.firstName}様の見学対応`,
+        description: `本日14:00〜 ${visitor.visitorInfo?.interestedDepartments?.join('、')}`,
+        icon: Eye,
+        color: 'blue'
+      })
+    })
+
+    // 面接予定（仮想データ）
+    const interviewCount = talents.filter(t => t.currentStatus === 'applicant-interview').length
+    if (interviewCount > 0) {
+      todos.push({
+        id: 'interview-1',
+        type: 'interview',
+        priority: 'high',
+        title: `面接実施（${interviewCount}名）`,
+        description: '本日午前中に2名、午後に1名の面接予定',
+        icon: Users,
+        color: 'purple'
+      })
+    }
+
+    // 書類選考待ち
+    const screeningCount = talents.filter(t => t.currentStatus === 'applicant-screening').length
+    if (screeningCount > 0) {
+      todos.push({
+        id: 'screening-1',
+        type: 'screening',
+        priority: 'medium',
+        title: `書類選考（${screeningCount}件）`,
+        description: '選考期限が近い応募書類があります',
+        icon: FileWarning,
+        color: 'orange'
+      })
+    }
+
+    // フォローアップ必要
+    const followUpCount = talents.filter(t => {
+      const lastContact = new Date(t.basicInfo.lastContactDate)
+      const daysSince = Math.floor((new Date().getTime() - lastContact.getTime()) / (1000 * 60 * 60 * 24))
+      return daysSince > 7 && t.currentStage === 'applicant'
+    }).length
+
+    if (followUpCount > 0) {
+      todos.push({
+        id: 'followup-1',
+        type: 'followup',
+        priority: 'low',
+        title: `フォローアップ連絡（${followUpCount}名）`,
+        description: '1週間以上連絡していない応募者',
+        icon: Phone,
+        color: 'gray'
+      })
+    }
+
+    return todos
+  }
+
+  // 緊急アラートの生成
+  const generateAlerts = () => {
+    const alerts = []
+
+    // 重複応募アラート
+    const duplicates = talents.filter(t => t.flags.isDuplicate)
+    if (duplicates.length > 0) {
+      alerts.push({
+        id: 'duplicate-alert',
+        type: 'warning',
+        severity: 'high',
+        title: '重複応募の確認が必要',
+        description: `${duplicates.length}件の重複応募の可能性があります`,
+        action: '確認する'
+      })
+    }
+
+    // 内定期限切れ間近
+    const offerPending = talents.filter(t => t.currentStatus === 'offer-pending')
+    if (offerPending.length > 0) {
+      alerts.push({
+        id: 'offer-deadline',
+        type: 'urgent',
+        severity: 'high',
+        title: '内定回答期限が近づいています',
+        description: `${offerPending.length}名の内定者の回答待ち`,
+        action: '詳細を見る'
+      })
+    }
+
+    // 見学キャンセル
+    const canceledVisits = talents.filter(t =>
+      t.currentStage === 'visitor' &&
+      t.visitorInfo?.visitStatus === 'canceled'
+    )
+    if (canceledVisits.length > 0) {
+      alerts.push({
+        id: 'visit-cancel',
+        type: 'info',
+        severity: 'medium',
+        title: '見学キャンセルあり',
+        description: `${canceledVisits.length}件のキャンセル。リスケジュール対応が必要`,
+        action: '対応する'
+      })
+    }
+
+    // 高評価人材の長期未接触
+    const highValueTalents = talents.filter(t =>
+      t.tags.includes('高評価') &&
+      t.currentStatus === 'talent-pool'
+    )
+    if (highValueTalents.length > 0) {
+      alerts.push({
+        id: 'talent-pool-contact',
+        type: 'info',
+        severity: 'low',
+        title: 'タレントプール人材への接触推奨',
+        description: `${highValueTalents.length}名の優秀人材に定期接触が必要`,
+        action: '連絡する'
+      })
+    }
+
+    return alerts
+  }
+
+  const todos = generateTodos()
+  const alerts = generateAlerts()
+
+  // TODOの完了処理
+  const handleTodoComplete = (todoId: string) => {
+    setTodoCompleted(prev => [...prev, todoId])
+  }
+
   // フィルタリング
   const filteredTalents = talents.filter(talent => {
     const matchesSearch = searchQuery === '' ||
@@ -161,6 +305,132 @@ export default function TalentPipelineDashboard({
 
   return (
     <div className="space-y-6">
+      {/* TO-DOリストと緊急アラート */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* 今日のTO-DO */}
+        <Card className="border-blue-200">
+          <CardHeader className="bg-blue-50">
+            <CardTitle className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <ListTodo className="h-5 w-5 text-blue-600" />
+                <span className="text-blue-900">今日のTO-DO</span>
+              </div>
+              <Badge className="bg-blue-100 text-blue-800">
+                {todos.filter(t => !todoCompleted.includes(t.id)).length} 件
+              </Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-4">
+            <div className="space-y-3">
+              {todos.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  <CheckCircle2 className="h-12 w-12 mx-auto mb-2 text-green-500" />
+                  <p>本日のタスクはすべて完了しています</p>
+                </div>
+              ) : (
+                todos.map(todo => {
+                  const Icon = todo.icon
+                  const isCompleted = todoCompleted.includes(todo.id)
+                  return (
+                    <div
+                      key={todo.id}
+                      className={`flex items-start gap-3 p-3 rounded-lg border transition-all ${
+                        isCompleted
+                          ? 'bg-gray-50 border-gray-200 opacity-60'
+                          : 'bg-white border-gray-300 hover:shadow-md'
+                      }`}
+                    >
+                      <div className={`p-2 rounded-lg bg-${todo.color}-100`}>
+                        <Icon className={`h-5 w-5 text-${todo.color}-600`} />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <p className={`font-semibold ${isCompleted ? 'line-through text-gray-500' : ''}`}>
+                            {todo.title}
+                          </p>
+                          {todo.priority === 'high' && !isCompleted && (
+                            <Badge className="bg-red-100 text-red-800 text-xs">重要</Badge>
+                          )}
+                        </div>
+                        <p className="text-sm text-gray-600 mt-1">{todo.description}</p>
+                      </div>
+                      <Button
+                        size="sm"
+                        variant={isCompleted ? "outline" : "ghost"}
+                        onClick={() => handleTodoComplete(todo.id)}
+                        disabled={isCompleted}
+                      >
+                        {isCompleted ? (
+                          <CheckSquare className="h-4 w-4 text-green-600" />
+                        ) : (
+                          <CheckSquare className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
+                  )
+                })
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 緊急対応アラート */}
+        <Card className="border-red-200">
+          <CardHeader className="bg-red-50">
+            <CardTitle className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Bell className="h-5 w-5 text-red-600" />
+                <span className="text-red-900">緊急対応が必要な項目</span>
+              </div>
+              {alerts.filter(a => a.severity === 'high').length > 0 && (
+                <Badge className="bg-red-100 text-red-800 animate-pulse">
+                  {alerts.filter(a => a.severity === 'high').length} 件
+                </Badge>
+              )}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-4">
+            <div className="space-y-3">
+              {alerts.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  <CheckCircle2 className="h-12 w-12 mx-auto mb-2 text-green-500" />
+                  <p>現在、緊急対応が必要な項目はありません</p>
+                </div>
+              ) : (
+                alerts.map(alert => (
+                  <Alert
+                    key={alert.id}
+                    className={`border-l-4 ${
+                      alert.severity === 'high'
+                        ? 'border-l-red-500 bg-red-50'
+                        : alert.severity === 'medium'
+                        ? 'border-l-yellow-500 bg-yellow-50'
+                        : 'border-l-blue-500 bg-blue-50'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <AlertCircle className={`h-4 w-4 ${
+                            alert.severity === 'high' ? 'text-red-600' :
+                            alert.severity === 'medium' ? 'text-yellow-600' : 'text-blue-600'
+                          }`} />
+                          <span className="font-semibold">{alert.title}</span>
+                        </div>
+                        <p className="text-sm text-gray-600 mt-1">{alert.description}</p>
+                      </div>
+                      <Button size="sm" variant="outline" className="ml-4">
+                        {alert.action}
+                      </Button>
+                    </div>
+                  </Alert>
+                ))
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
       {/* 統合ダッシュボードヘッダー */}
       <Card>
         <CardHeader>

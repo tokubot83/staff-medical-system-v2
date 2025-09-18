@@ -22,10 +22,9 @@ function SkillQualificationReportContent() {
     }
   }, [facilityId]);
 
-  const generateReportData = () => {
-    const staff = Object.values(staffDatabase);
-    
-    return {
+  const staff = Object.values(staffDatabase);
+
+  const reportData = {
       overview: {
         totalStaff: staff.length,
         certifiedStaff: Math.floor(staff.length * 0.42),
@@ -151,9 +150,6 @@ function SkillQualificationReportContent() {
         }
       ]
     };
-  };
-
-  const reportData = generateReportData();
 
   return (
     <div>

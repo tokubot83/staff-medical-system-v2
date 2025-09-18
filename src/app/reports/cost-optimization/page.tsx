@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, Suspense } from 'react';
+import React, { useEffect, useState, Suspense, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ReportLayout from '@/components/reports/ReportLayout';
 import BreadcrumbBar from '@/components/navigation/BreadcrumbBar';
@@ -15,7 +15,7 @@ function CostOptimizationReportContent() {
   const searchParams = useSearchParams();
   const facilityId = searchParams.get('facility');
   const [facility, setFacility] = useState<any>(null);
-  
+
   useEffect(() => {
     if (facilityId) {
       const selected = facilities.find(f => f.id === facilityId);
@@ -23,10 +23,10 @@ function CostOptimizationReportContent() {
     }
   }, [facilityId]);
 
-  const generateReportData = () => {
+  const reportData = useMemo(() => {
     // 施設に応じてデータを調整
     const isRehabilitation = facilityId === 'tachigami-hospital';
-    
+
     return {
       overview: {
         totalCost: 2450000000,
@@ -188,9 +188,7 @@ function CostOptimizationReportContent() {
         year3: { cost: 2289150000, ratio: 44.2 }
       }
     };
-  };
-
-  const reportData = generateReportData();
+  }, [facilityId]);
 
   return (
     <div>

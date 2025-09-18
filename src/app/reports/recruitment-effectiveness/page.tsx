@@ -9,6 +9,7 @@ import { DataCommentList, MetricWithComment } from '@/components/DataComment';
 import { generateRecruitmentComments } from '@/utils/reportComments';
 import { organizationData, getDepartmentsByType } from '@/app/data/organizationData';
 import { tachigamiOrganizationData } from '@/app/data/tachigamiOrganizationData';
+import BreadcrumbBar from '@/components/navigation/BreadcrumbBar';
 
 function RecruitmentEffectivenessReportContent() {
   const searchParams = useSearchParams();
@@ -23,10 +24,9 @@ function RecruitmentEffectivenessReportContent() {
   }, [facilityId]);
 
   // レポートデータの生成
-  const generateReportData = () => {
-    const isRehabilitation = facilityId === 'tachigami-hospital';
-    
-    return {
+  const isRehabilitation = facilityId === 'tachigami-hospital';
+
+  const reportData = {
       overview: {
         totalHires: 68,
         targetHires: 75,
@@ -111,9 +111,6 @@ function RecruitmentEffectivenessReportContent() {
         }
       ]
     };
-  };
-
-  const reportData = generateReportData();
 
   return (
     <div>
