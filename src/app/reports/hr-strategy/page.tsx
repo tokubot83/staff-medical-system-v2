@@ -3,6 +3,7 @@
 import React, { useEffect, useState, Suspense, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ReportLayout from '@/components/reports/ReportLayout';
+import BreadcrumbBar from '@/components/navigation/BreadcrumbBar';
 import { facilities } from '@/app/data/facilityData';
 import { staffDatabase } from '@/app/data/staffData';
 import { exportToPDF } from '@/utils/pdfExport';
@@ -147,6 +148,7 @@ function HRStrategyReportContent() {
       categoryPath="/reports/strategic-analysis"
       categoryName="戦略分析"
     >
+      <BreadcrumbBar />
       <div id="report-content" className="p-8">
         {/* 概要セクション */}
         <section className="mb-8">

@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import BreadcrumbBar from '@/components/navigation/BreadcrumbBar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
@@ -43,6 +44,7 @@ export default function RealTimeDashboard() {
 
   return (
     <div className="p-6 space-y-6">
+      <BreadcrumbBar />
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">リアルタイムダッシュボード</h1>
         <div className="flex items-center gap-2">

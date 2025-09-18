@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import BreadcrumbBar from '@/components/navigation/BreadcrumbBar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
@@ -412,6 +413,7 @@ export default function IntegratedAssessment() {
 
   return (
     <div className="p-6 space-y-6">
+      <BreadcrumbBar />
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">統合的指標アセスメント</h1>
         <div className="flex items-center gap-2">

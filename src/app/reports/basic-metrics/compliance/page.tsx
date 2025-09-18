@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import BreadcrumbBar from '@/components/navigation/BreadcrumbBar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -106,6 +107,7 @@ export default function ComplianceMetrics() {
 
   return (
     <div className="p-6 space-y-6">
+      <BreadcrumbBar />
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">コンプライアンス指標</h1>
         <div className="flex items-center gap-2">
