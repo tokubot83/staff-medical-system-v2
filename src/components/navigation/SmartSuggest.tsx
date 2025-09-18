@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   ArrowRight,
@@ -43,7 +43,7 @@ interface SmartSuggestProps {
   onSuggestionClick?: (action: SuggestedAction) => void
 }
 
-export const SmartSuggest: React.FC<SmartSuggestProps> = ({
+export const SmartSuggest: React.FC<SmartSuggestProps> = React.memo(({
   staffId,
   currentContext = { page: '', tab: '', lastAction: '' },
   evaluationStatus,
@@ -56,55 +56,62 @@ export const SmartSuggest: React.FC<SmartSuggestProps> = ({
   const [isVisible, setIsVisible] = useState(true)
   const [isGenerating, setIsGenerating] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'next' | 'pending' | 'recommended'>('all')
-  const [position, setPosition] = useState({ x: 0, y: 0 })
-  const [isDragging, setIsDragging] = useState(false)
-  const elementRef = React.useRef<HTMLDivElement>(null)
+
+  // 位置管理をuseRefで行い、描画用のstateは最小限に
+  const positionRef = useRef({ x: 0, y: 0 })
+  const [renderPosition, setRenderPosition] = useState({ x: 0, y: 0 })
+  const elementRef = useRef<HTMLDivElement>(null)
+  const isDraggingRef = useRef(false)
 
   // クライアントサイドで初期位置を設定
-  React.useEffect(() => {
-    // 初回マウント時のみ実行
-    setPosition({
-      x: Math.round(window.innerWidth - 340),
-      y: Math.round(window.innerHeight - 400)
-    })
-  }, []) // 空の依存配列で初回のみ実行
+  useEffect(() => {
+    const initialX = Math.floor(window.innerWidth - 340)
+    const initialY = Math.floor(window.innerHeight - 400)
+    positionRef.current = { x: initialX, y: initialY }
+    setRenderPosition({ x: initialX, y: initialY })
+  }, [])
 
-  // ドラッグ処理（シンプルな実装に変更）
+  // ドラッグ処理を完全に書き直し
   const handleMouseDown = (e: React.MouseEvent) => {
-    // ボタンやインタラクティブ要素のクリックは無視
     const target = e.target as HTMLElement
     if (target.closest('button') || target.closest('a')) {
       return
     }
 
     e.preventDefault()
+    e.stopPropagation()
 
-    const startX = e.clientX - position.x
-    const startY = e.clientY - position.y
+    isDraggingRef.current = true
+    const startX = e.clientX - positionRef.current.x
+    const startY = e.clientY - positionRef.current.y
 
     const handleMouseMove = (e: MouseEvent) => {
+      if (!isDraggingRef.current) return
+
       e.preventDefault()
+      e.stopPropagation()
 
-      const newX = e.clientX - startX
-      const newY = e.clientY - startY
+      const newX = Math.floor(e.clientX - startX)
+      const newY = Math.floor(e.clientY - startY)
 
-      // 画面内に収まるように制限
-      const maxX = window.innerWidth - 320
-      const maxY = window.innerHeight - 100
+      // 画面内に制限
+      const boundedX = Math.max(0, Math.min(newX, window.innerWidth - 320))
+      const boundedY = Math.max(0, Math.min(newY, window.innerHeight - 100))
 
-      setPosition({
-        x: Math.round(Math.max(0, Math.min(newX, maxX))),
-        y: Math.round(Math.max(0, Math.min(newY, maxY)))
+      positionRef.current = { x: boundedX, y: boundedY }
+
+      // requestAnimationFrameで描画を最適化
+      requestAnimationFrame(() => {
+        setRenderPosition({ x: boundedX, y: boundedY })
       })
     }
 
     const handleMouseUp = () => {
+      isDraggingRef.current = false
       document.removeEventListener('mousemove', handleMouseMove)
       document.removeEventListener('mouseup', handleMouseUp)
-      setIsDragging(false)
     }
 
-    setIsDragging(true)
     document.addEventListener('mousemove', handleMouseMove)
     document.addEventListener('mouseup', handleMouseUp)
   }
@@ -387,9 +394,10 @@ export const SmartSuggest: React.FC<SmartSuggestProps> = ({
       ref={elementRef}
       className="fixed w-80 z-50"
       style={{
-        left: `${Math.round(position.x)}px`,
-        top: `${Math.round(position.y)}px`,
-        userSelect: isDragging ? 'none' : 'auto'
+        left: `${renderPosition.x}px`,
+        top: `${renderPosition.y}px`,
+        userSelect: 'none',
+        WebkitUserSelect: 'none'
       }}
     >
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden" style={{ boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)' }}>
@@ -562,4 +570,4 @@ export const useSmartSuggest = () => {
   }
 
   return { context, updateContext }
-}
+})
