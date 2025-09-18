@@ -570,4 +570,4 @@ export const useSmartSuggest = () => {
   }
 
   return { context, updateContext }
-})
+}
