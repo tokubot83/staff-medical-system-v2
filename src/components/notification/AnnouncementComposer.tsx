@@ -317,7 +317,83 @@ export default function AnnouncementComposer() {
   const [individualSearchTerm, setIndividualSearchTerm] = useState('')
 
   const handleCategorySelect = (categoryId: string) => {
-    setForm(prev => ({ ...prev, category: categoryId }))
+    // カテゴリに応じたテンプレートを自動挿入
+    let templateTitle = ''
+    let templateContent = ''
+
+    if (categoryId === 'interview') {
+      // 面談カテゴリ選択時のテンプレート
+      templateTitle = '【重要】定期面談のご案内'
+      templateContent = `お疲れ様です。人事部よりご連絡いたします。
+
+下記の通り、定期面談を実施させていただきたく、ご案内申し上げます。
+
+【面談概要】
+■目的：今期の振り返りと来期目標設定
+■実施期間：${new Date().getFullYear()}年${new Date().getMonth() + 1}月${new Date().getDate()}日～${new Date().getMonth() + 2}月${new Date().getDate()}日
+■所要時間：30分～1時間程度
+■実施方法：対面またはオンライン（ご希望に応じて調整）
+
+【面談内容】
+1. 現在の業務状況の確認
+2. 今期の成果と課題の振り返り
+3. 来期の目標設定
+4. キャリアに関する相談
+5. その他、ご要望・ご相談事項
+
+【予約方法】
+下記リンクより、ご都合の良い日時を3つ選択してください。
+調整の上、確定した日時を改めてご連絡いたします。
+
+※予約システムURL：[予約システムへのリンク]
+※予約期限：${new Date().getFullYear()}年${new Date().getMonth() + 1}月${new Date().getDate() + 7}日（金）17:00まで
+
+ご不明な点がございましたら、人事部までお気軽にお問い合わせください。
+
+よろしくお願いいたします。
+
+人事部
+内線：1234
+メール：jinji@example.com`
+    } else if (categoryId === 'training') {
+      templateTitle = '【研修案内】'
+      templateContent = `お疲れ様です。
+
+下記の研修を実施いたしますので、ご案内申し上げます。
+
+【研修概要】
+■研修名：
+■日時：
+■場所：
+■対象者：
+■定員：
+
+【申込方法】
+
+【申込期限】
+
+ご不明な点は人事部までお問い合わせください。`
+    } else if (categoryId === 'health') {
+      templateTitle = '【健康診断のお知らせ】'
+      templateContent = `お疲れ様です。
+
+年次健康診断の実施についてご案内いたします。
+
+【実施概要】
+■期間：
+■場所：
+■対象者：全職員
+
+詳細は追ってご連絡いたします。`
+    }
+
+    setForm(prev => ({
+      ...prev,
+      category: categoryId,
+      // テンプレートがある場合のみ、タイトルと内容を更新
+      ...(templateTitle && { title: templateTitle }),
+      ...(templateContent && { content: templateContent })
+    }))
   }
 
   const handleTargetTypeChange = (type: string) => {
