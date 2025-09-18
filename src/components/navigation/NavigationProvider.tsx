@@ -2,8 +2,12 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
+import dynamic from 'next/dynamic'
 import { Breadcrumb, BreadcrumbItem } from './Breadcrumb'
-import { SmartSuggest } from './SmartSuggest'
+
+const SmartSuggest = dynamic(() => import('./SmartSuggest').then(mod => mod.SmartSuggest), {
+  ssr: false
+})
 
 interface NavigationContextType {
   pathname: string
