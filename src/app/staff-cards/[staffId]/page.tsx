@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
-import CommonHeader from '@/components/CommonHeader'
 import BreadcrumbBar from '@/components/navigation/BreadcrumbBar'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -117,7 +116,6 @@ export default function StaffDetailPage() {
   if (!selectedStaff) {
     return (
       <div>
-        <CommonHeader title="職員カルテ" />
         <BreadcrumbBar />
         <div className={styles.container}>
           <div className={styles.noSelection}>
@@ -133,7 +131,6 @@ export default function StaffDetailPage() {
 
   return (
     <div>
-      <CommonHeader title={`${selectedStaff.name} - 職員カルテ`} />
       <BreadcrumbBar />
 
       <div className={styles.container}>

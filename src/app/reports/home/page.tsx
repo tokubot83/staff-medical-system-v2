@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import CommonHeader from '@/components/CommonHeader';
 import FacilitySelector from '@/components/reports/FacilitySelector';
 import styles from '../Reports.module.css';
 import homeStyles from './ReportsHome.module.css';
@@ -155,8 +154,6 @@ export default function ReportsHomePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="レポートセンター" />
-      
       <div className={homeStyles.container}>
         {/* 施設選択 */}
         <div className={homeStyles.facilitySection}>

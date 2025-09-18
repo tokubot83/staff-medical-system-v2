@@ -2,7 +2,6 @@
 
 import React, { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import CommonHeader from '@/components/CommonHeader';
 import { exportToPDF } from '@/utils/pdfExport';
 
 function HazardCoxRegressionContent() {
@@ -11,8 +10,6 @@ function HazardCoxRegressionContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="退職リスク要因分析" />
-      
       <div id="report-content" className="container mx-auto px-4 py-8">
         <div className="bg-white rounded-lg shadow p-6 mb-6">
           <div className="flex items-center justify-between mb-4">

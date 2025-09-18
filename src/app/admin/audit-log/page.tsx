@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import CommonHeader from '@/components/CommonHeader';
 import { 
   FileText, Download, Filter, Calendar, 
   User, Activity, RefreshCw, Trash2,
@@ -110,7 +109,6 @@ export default function AuditLogPage() {
   return (
     <div>
       <div className="print:hidden">
-        <CommonHeader title="監査ログ" />
       </div>
       
       <div className="min-h-screen bg-gray-50">

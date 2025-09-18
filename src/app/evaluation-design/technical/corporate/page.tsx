@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Save, Info, Settings, Award, Shield, Users, ListChecks, BarChart3, CheckCircle, BookOpen, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
-import CommonHeader from '@/components/CommonHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -195,7 +194,6 @@ export default function CorporateTechnicalPage() {
 
   return (
     <div>
-      <CommonHeader title="法人統一項目設計" />
       <div className="container mx-auto px-4 py-6 max-w-6xl">
         <div className="mb-6">
           <Link href="/evaluation-design">

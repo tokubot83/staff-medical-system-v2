@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import CommonHeader from '@/components/CommonHeader';
 import EvaluationReviewTab from '@/components/evaluation/EvaluationReviewTab';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,8 +20,6 @@ export default function EvaluationReviewPage() {
 
   return (
     <div>
-      <CommonHeader title="評価確認（Review）" />
-      
       <div className="max-w-7xl mx-auto p-6">
         {/* ヘッダー部分 */}
         <div className="mb-6">

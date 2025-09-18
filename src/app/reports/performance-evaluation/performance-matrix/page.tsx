@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useState, useMemo } from 'react'
-import CommonHeader from '@/components/CommonHeader'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { staffDatabase } from '@/app/data/staffData'
@@ -97,8 +96,6 @@ export default function PerformanceMatrixPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="位置づけマトリクス" />
-      
       <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
           {/* ヘッダー */}

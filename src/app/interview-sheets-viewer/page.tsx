@@ -3,8 +3,6 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import CommonHeader from '@/components/CommonHeader';
-
 interface Sheet {
   label: string;
   paths: {
@@ -321,7 +319,6 @@ function InterviewSheetsViewerContent() {
 
   return (
     <>
-      <CommonHeader title="面談シート一覧" />
       <div className="container mx-auto p-6">
         <div className="mb-6 flex justify-between items-center">
           <div className="flex gap-4">

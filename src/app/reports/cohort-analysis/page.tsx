@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import FacilitySelector from '@/components/reports/FacilitySelector';
-import CommonHeader from '@/components/CommonHeader';
 import CategoryReportCard from '@/components/reports/CategoryReportCard';
 export default function CohortAnalysisCategoryPage() {
   const router = useRouter();
@@ -164,8 +163,6 @@ export default function CohortAnalysisCategoryPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="コホート分析" />
-      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* カテゴリー説明 */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">

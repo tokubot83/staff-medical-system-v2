@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import CommonHeader from '@/components/CommonHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -524,8 +523,6 @@ export default function EvaluationDesignPage() {
 
   return (
     <div>
-      <CommonHeader title="評価制度管理ダッシュボード" />
-      
       <div className="max-w-7xl mx-auto p-6">
         {/* ヘッダー情報 */}
         <div className="mb-6 flex items-center justify-between">

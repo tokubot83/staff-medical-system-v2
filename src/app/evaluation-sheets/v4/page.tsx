@@ -3,8 +3,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import CommonHeader from '@/components/CommonHeader';
-
 export default function EvaluationSheetsV4Page() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('acute');
@@ -299,7 +297,6 @@ export default function EvaluationSheetsV4Page() {
 
   return (
     <>
-      <CommonHeader title="評価シート v4" />
       <div className="container mx-auto p-6">
         <div className="mb-6 flex justify-between items-center">
           <div className="flex gap-4">

@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import CommonHeader from '@/components/CommonHeader';
 import SheetPreviewModal from '@/components/SheetPreviewModal';
 import InterviewSheetModal from '@/components/InterviewSheetModal';
 import TrainingContent from './TrainingContent';
@@ -155,9 +154,6 @@ export default function HRSystemGuidePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="人事制度ガイド" />
-
-      {/* メインコンテンツ */}
       <div className="max-w-7xl mx-auto p-6">
         {/* ページヘッダー */}
         <div className="bg-white rounded-xl shadow-lg p-6 mb-6">

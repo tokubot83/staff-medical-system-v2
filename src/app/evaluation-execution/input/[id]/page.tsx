@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import CommonHeader from '@/components/CommonHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -37,7 +36,6 @@ export default function EvaluationInputPage() {
 
   return (
     <div>
-      <CommonHeader title="評価入力" />
       <div className="container mx-auto px-4 py-6">
         <div className="mb-6">
           <Link href="/evaluation-execution">

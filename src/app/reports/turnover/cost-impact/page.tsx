@@ -2,7 +2,6 @@
 
 import React, { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import CommonHeader from '@/components/CommonHeader';
 import FacilitySelector from '@/components/reports/FacilitySelector';
 import CategoryBackButton from '@/components/reports/CategoryBackButton';
 import DataComment from '@/components/DataComment';
@@ -166,8 +165,6 @@ function CostImpactContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="離職コスト影響分析" />
-      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <div className="flex items-center gap-3 mb-4">

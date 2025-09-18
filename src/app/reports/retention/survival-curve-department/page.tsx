@@ -2,7 +2,6 @@
 
 import React, { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import CommonHeader from '@/components/CommonHeader';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { exportToPDF } from '@/utils/pdfExport';
 
@@ -12,8 +11,6 @@ function SurvivalCurveDepartmentContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="部署別定着パターン比較" />
-      
       <div id="report-content" className="container mx-auto px-4 py-8">
         <div className="bg-white rounded-lg shadow p-6 mb-6">
           <div className="flex items-center justify-between mb-4">

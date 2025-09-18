@@ -3,7 +3,6 @@
 import React, { useState, useMemo } from 'react';
 import { ArrowLeft, Save, Search, Plus, Trash2, Info, Filter, Award, Heart, Brain, Shield, Users, Briefcase, Building, Sparkles, Target, CheckCircle, BarChart3, Settings, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
-import CommonHeader from '@/components/CommonHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -154,7 +153,6 @@ export default function FacilitySpecificPage() {
 
   return (
     <div>
-      <CommonHeader title="施設特化項目設計" />
       <div className="container mx-auto px-4 py-6 max-w-7xl">
         <div className="mb-6">
           <Link href="/evaluation-design">

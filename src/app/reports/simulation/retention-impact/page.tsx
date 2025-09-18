@@ -3,7 +3,6 @@
 import React, { Suspense, useState, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import CommonHeader from '@/components/CommonHeader';
 import { exportToPDF } from '@/utils/pdfExport';
 import { staffDatabase } from '@/app/data/staffData';
 import {
@@ -237,8 +236,6 @@ function Content() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="リテンション施策効果予測" />
-      
       <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
           {/* ヘッダー */}

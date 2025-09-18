@@ -3,7 +3,6 @@
 import React from 'react';
 import Link from 'next/link';
 import { Facility } from '@/app/data/facilityData';
-import CommonHeader from '@/components/CommonHeader';
 interface ReportLayoutProps {
   title: string;
   description: string;
@@ -29,7 +28,6 @@ export default function ReportLayout({
 }: ReportLayoutProps) {
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title={title} />
       <div className="py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           {/* レポート説明 */}

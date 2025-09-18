@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import CommonHeader from '@/components/CommonHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -323,7 +322,6 @@ export default function NursingEvaluationDesignPage() {
 
   return (
     <div>
-      <CommonHeader title="看護部門評価設計" />
       <div className="container mx-auto p-6">
         {/* ヘッダー */}
         <div className="mb-6 flex items-center justify-between">

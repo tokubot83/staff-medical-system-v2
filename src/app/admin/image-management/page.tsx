@@ -12,7 +12,6 @@ import { imageStorage, ImageMetadata, StoredImage } from '@/lib/image/imageStora
 import { formatFileSize } from '@/lib/image/imageUtils';
 import { ProfileImage, StaffAvatarList } from '@/components/image/ProfileImage';
 import { ImageUploader } from '@/components/image/ImageUploader';
-import CommonHeader from '@/components/CommonHeader';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 interface StorageStats {
@@ -168,7 +167,6 @@ export default function ImageManagementPage() {
   if (loading) {
     return (
       <div>
-        <CommonHeader title="画像管理" />
         <div className="container mx-auto px-4 py-8">
           <div className="flex items-center justify-center h-64">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
@@ -181,7 +179,6 @@ export default function ImageManagementPage() {
 
   return (
     <div>
-      <CommonHeader title="画像管理" />
       
       <div className="container mx-auto px-4 py-8 space-y-6">
         {/* ストレージ使用量 */}

@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Link from 'next/link';
-import CommonHeader from '@/components/CommonHeader';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -13,7 +12,6 @@ export default function MainLayout({ children }: MainLayoutProps) {
     <div className="min-h-screen bg-white">
       {/* Header - 固定表示 */}
       <div className="sticky top-0 z-50">
-        <CommonHeader title="職員カルテシステム" />
 
         {/* Navigation - 1列構成 */}
         <nav className="bg-gray-800 text-white shadow-md">

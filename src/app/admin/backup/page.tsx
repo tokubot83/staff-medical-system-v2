@@ -6,7 +6,6 @@
 'use client';
 
 import React from 'react';
-import CommonHeader from '@/components/CommonHeader';
 import BackupRestore from '@/components/data-management/BackupRestore';
 
 export default function BackupPage() {
@@ -17,7 +16,6 @@ export default function BackupPage() {
 
   return (
     <div>
-      <CommonHeader title="バックアップ・復元" />
       
       <div className="container mx-auto px-4 py-8 space-y-6">
         {/* バックアップ・復元インターフェース */}

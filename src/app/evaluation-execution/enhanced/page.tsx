@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import CommonHeader from '@/components/CommonHeader';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -85,8 +84,6 @@ export default function EnhancedEvaluationExecutionPage() {
 
   return (
     <div>
-      <CommonHeader title="個人評価実行（V3連携強化版）" />
-      
       <div className="max-w-7xl mx-auto p-6">
         {/* V3システム検証ガード */}
         <V3ValidationGuard

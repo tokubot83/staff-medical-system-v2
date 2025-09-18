@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import CommonHeader from '@/components/CommonHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -448,7 +447,6 @@ export default function EvaluationExecutionPage() {
 
   return (
     <div>
-      <CommonHeader title="個人評価管理" />
       <div className={styles.container}>
         {/* V3評価システム表示 */}
         <div className="mb-4 flex justify-end">

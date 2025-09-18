@@ -4,7 +4,6 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { CategoryMetrics, DataAnalysis } from '@/types/metrics';
-import CommonHeader from '@/components/CommonHeader';
 import { getCategoryInfo } from '@/utils/reportCategories';
 import { ReportCategory } from '@/types/reports';
 
@@ -55,7 +54,6 @@ export default function MetricsLayout({ metrics, aiAnalysis, onExportPDF }: Metr
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title={categoryInfo.name} />
       
       {/* ページ説明 */}
       <div className="bg-white border-b border-gray-200">

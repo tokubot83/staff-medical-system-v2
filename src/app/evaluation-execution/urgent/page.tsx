@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import CommonHeader from '@/components/CommonHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -207,7 +206,6 @@ export default function UrgentEvaluationPage() {
 
   return (
     <div>
-      <CommonHeader title="緊急評価対応" />
       <div className="container mx-auto p-6">
         {/* 緊急対応ヘッダー */}
         <Card className="mb-6 border-2 border-red-200 bg-gradient-to-r from-red-50 to-orange-50">

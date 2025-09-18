@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import CommonHeader from '@/components/CommonHeader';
 import EvaluationTemplateManager from '@/components/EvaluationTemplateManager';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -12,8 +11,6 @@ import Link from 'next/link';
 export default function EvaluationTemplatesPage() {
   return (
     <div>
-      <CommonHeader title="評価テンプレート管理" />
-      
       <div className="max-w-7xl mx-auto p-6">
         {/* ヘッダー部分 */}
         <div className="mb-6">

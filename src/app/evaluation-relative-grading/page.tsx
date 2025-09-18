@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import CommonHeader from '@/components/CommonHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -266,7 +265,6 @@ export default function RelativeGradingPage() {
 
   return (
     <div>
-      <CommonHeader title="最終判定" />
       <div className="container mx-auto p-6">
         
         {/* ヘッダー情報 */}

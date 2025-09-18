@@ -2,7 +2,6 @@
 
 import React, { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import CommonHeader from '@/components/CommonHeader';
 import { exportToPDF } from '@/utils/pdfExport';
 import {
   BarChart,
@@ -61,8 +60,6 @@ function SegmentRecruitmentTypeContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="新卒・中途別定着分析" />
-      
       <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white shadow rounded-lg p-6 mb-6">
           <div className="flex items-center justify-between mb-4">

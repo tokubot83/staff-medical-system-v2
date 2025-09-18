@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useState } from 'react'
-import CommonHeader from '@/components/CommonHeader'
 import Link from 'next/link'
 import { staffDatabase } from '../../data/staffData.js'
 import styles from '../StaffCards.module.css'
@@ -30,8 +29,6 @@ export default function ManagementPage() {
 
   return (
     <div>
-      <CommonHeader title="職員カルテ管理" />
-      
       <div className={styles.container}>
         <div className={styles.managementContainer}>
           <div className={styles.managementHeader}>

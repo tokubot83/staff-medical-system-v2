@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import CommonHeader from '@/components/CommonHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -148,7 +147,6 @@ export default function AnnualIntegrationSummaryPage() {
   if (!summaryData) {
     return (
       <div>
-        <CommonHeader title="年間連携サマリー" />
         <div className="max-w-7xl mx-auto p-6">
           <div className="text-center py-12">
             <RefreshCw className="h-12 w-12 mx-auto mb-4 text-gray-300 animate-spin" />
@@ -162,8 +160,6 @@ export default function AnnualIntegrationSummaryPage() {
 
   return (
     <div>
-      <CommonHeader title="年間連携サマリー" subtitle="評価システムと教育研修システムの統合管理" />
-      
       <div className="max-w-7xl mx-auto p-6">
         {/* ヘッダー情報 */}
         <div className="mb-6 flex items-center justify-between">
