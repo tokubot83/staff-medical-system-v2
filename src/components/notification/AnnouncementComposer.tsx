@@ -72,6 +72,10 @@ interface AnnouncementForm {
   trainingRegistrationDeadline?: string
   trainingLocation?: string
   trainingDuration?: string
+  // アクションボタン用
+  hasActionButton?: boolean
+  actionButtonType?: 'interview_reservation' | 'survey_response' | 'health_check' | 'training_apply'
+  actionButtonLabel?: string
 }
 
 const categories = [
@@ -321,41 +325,20 @@ export default function AnnouncementComposer() {
     // カテゴリに応じたテンプレートを自動挿入
     let templateTitle = ''
     let templateContent = ''
+    let hasActionButton = false
+    let actionButtonType: string | undefined = undefined
+    let actionButtonLabel = ''
 
     if (categoryId === 'interview') {
-      // 面談カテゴリ選択時のテンプレート
-      templateTitle = '【重要】定期面談のご案内'
-      templateContent = `お疲れ様です。人事部よりご連絡いたします。
-
-下記の通り、定期面談を実施させていただきたく、ご案内申し上げます。
-
-【面談概要】
-■目的：今期の振り返りと来期目標設定
-■実施期間：${new Date().getFullYear()}年${new Date().getMonth() + 1}月${new Date().getDate()}日～${new Date().getMonth() + 2}月${new Date().getDate()}日
-■所要時間：30分～1時間程度
-■実施方法：対面またはオンライン（ご希望に応じて調整）
-
-【面談内容】
-1. 現在の業務状況の確認
-2. 今期の成果と課題の振り返り
-3. 来期の目標設定
-4. キャリアに関する相談
-5. その他、ご要望・ご相談事項
-
-【予約方法】
-下記リンクより、ご都合の良い日時を3つ選択してください。
-調整の上、確定した日時を改めてご連絡いたします。
-
-※予約システムURL：[予約システムへのリンク]
-※予約期限：${new Date().getFullYear()}年${new Date().getMonth() + 1}月${new Date().getDate() + 7}日（金）17:00まで
-
-ご不明な点がございましたら、人事部までお気軽にお問い合わせください。
-
-よろしくお願いいたします。
-
-人事部
-内線：1234
-メール：jinji@example.com`
+      // 面談カテゴリ選択時のテンプレート（シンプル版）
+      templateTitle = '定期面談のご案内'
+      templateContent = `今期の定期面談を実施いたします。
+実施期間：${new Date().getMonth() + 1}月15日（水）～ ${new Date().getMonth() + 1}月31日（金）
+所要時間：30分程度`
+      // アクションボタン設定
+      hasActionButton = true
+      actionButtonType = 'interview_reservation'
+      actionButtonLabel = '面談予約する'
     } else if (categoryId === 'training') {
       templateTitle = '【研修案内】'
       templateContent = `お疲れ様です。
@@ -374,6 +357,10 @@ export default function AnnouncementComposer() {
 【申込期限】
 
 ご不明な点は人事部までお問い合わせください。`
+      // 研修用アクションボタン
+      hasActionButton = true
+      actionButtonType = 'training_apply'
+      actionButtonLabel = '研修に申し込む'
     } else if (categoryId === 'health') {
       templateTitle = '【健康診断のお知らせ】'
       templateContent = `お疲れ様です。
@@ -386,6 +373,11 @@ export default function AnnouncementComposer() {
 ■対象者：全職員
 
 詳細は追ってご連絡いたします。`
+    } else if (categoryId === 'survey') {
+      // アンケート用アクションボタン
+      hasActionButton = true
+      actionButtonType = 'survey_response'
+      actionButtonLabel = 'アンケートに回答する'
     }
 
     setForm(prev => ({
@@ -393,7 +385,11 @@ export default function AnnouncementComposer() {
       category: categoryId,
       // テンプレートがある場合のみ、タイトルと内容を更新
       ...(templateTitle && { title: templateTitle }),
-      ...(templateContent && { content: templateContent })
+      ...(templateContent && { content: templateContent }),
+      // アクションボタン設定
+      hasActionButton,
+      actionButtonType: actionButtonType as any,
+      actionButtonLabel
     }))
   }
 
@@ -636,7 +632,7 @@ export default function AnnouncementComposer() {
               <Label htmlFor="content" className="text-base font-semibold">本文</Label>
               <Textarea
                 id="content"
-                rows={6}
+                rows={22}
                 placeholder="お知らせの内容を入力"
                 value={form.content}
                 onChange={(e) => setForm(prev => ({ ...prev, content: e.target.value }))}
