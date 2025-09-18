@@ -5,62 +5,60 @@ import { useSearchParams } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
 import FacilitySelector from '@/components/reports/FacilitySelector';
 import Link from 'next/link';
-import ScrollToTopButton from '@/components/ScrollToTopButton';
-
 const reports = [
   {
     id: 'hr-strategy',
-    title: '人事管理戦略分析',
+    title: '人事管琁E��略刁E��',
     path: '/reports/hr-strategy',
-    description: '組織の人事管理戦略を総合的に分析し、改善提案を提供します',
+    description: '絁E���E人事管琁E��略を総合皁E��刁E��し、改喁E��案を提供しまぁE,
     icon: '📊',
     bgColor: 'bg-blue-500'
   },
   {
     id: 'work-life-balance',
-    title: 'ワークライフバランス分析',
+    title: 'ワークライフバランス刁E��',
     path: '/reports/work-life-balance',
-    description: '職員の労働時間、休暇取得状況、ストレス指標を分析します',
-    icon: '⚖️',
+    description: '職員の労働時間、休暇取得状況、ストレス持E��を刁E��しまぁE,
+    icon: '⚖︁E,
     bgColor: 'bg-green-500'
   },
   {
     id: 'talent-development',
     title: '職種別人材育成戦略',
     path: '/reports/talent-development',
-    description: '職種ごとの育成計画とキャリアパス分析を行います',
+    description: '職種ごとの育成計画とキャリアパス刁E��を行いまぁE,
     icon: '🎯',
     bgColor: 'bg-purple-500'
   },
   {
     id: 'organization-optimization',
-    title: '組織構造最適化分析',
+    title: '絁E��構造最適化�E极E,
     path: '/reports/organization-optimization',
-    description: '部門別の人員配置と組織効率を分析します',
+    description: '部門別の人員配置と絁E��効玁E��刁E��しまぁE,
     icon: '🏢',
     bgColor: 'bg-indigo-500'
   },
   {
     id: 'work-environment',
-    title: '労働環境改善戦略',
+    title: '労働環墁E��喁E��略',
     path: '/reports/work-environment',
-    description: '職場環境の課題を特定し、改善策を提案します',
+    description: '職場環墁E�E課題を特定し、改喁E��を提案しまぁE,
     icon: '🌟',
     bgColor: 'bg-yellow-500'
   },
   {
     id: 'cost-optimization',
-    title: '人件費最適化分析',
+    title: '人件費最適化�E极E,
     path: '/reports/cost-optimization',
-    description: '人件費の詳細分析と最適化提案を行います',
+    description: '人件費の詳細刁E��と最適化提案を行いまぁE,
     icon: '💰',
     bgColor: 'bg-red-500'
   },
   {
     id: 'recruitment-effectiveness',
-    title: '採用効果分析',
+    title: '採用効果�E极E,
     path: '/reports/recruitment-effectiveness',
-    description: '採用活動の効果測定と改善提案を提供します',
+    description: '採用活動�E効果測定と改喁E��案を提供しまぁE,
     icon: '🎯',
     bgColor: 'bg-teal-500'
   },
@@ -68,15 +66,15 @@ const reports = [
     id: 'turnover-risk',
     title: '離職リスク予測',
     path: '/reports/turnover-risk',
-    description: 'データ分析による離職リスクの予測と対策を提案します',
-    icon: '⚠️',
+    description: 'チE�Eタ刁E��による離職リスクの予測と対策を提案しまぁE,
+    icon: '⚠�E�E,
     bgColor: 'bg-orange-500'
   },
   {
     id: 'skill-qualification',
-    title: 'スキル・資格管理分析',
+    title: 'スキル・賁E��管琁E�E极E,
     path: '/reports/skill-qualification',
-    description: '職員のスキルと資格の現状分析と育成計画を策定します',
+    description: '職員のスキルと賁E��の現状刁E��と育成計画を策定しまぁE,
     icon: '📜',
     bgColor: 'bg-pink-500'
   }
@@ -88,10 +86,10 @@ function StrategicAnalysisPageContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="戦略分析" />
+      <CommonHeader title="戦略刁E��" />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* 施設選択 */}
+        {/* 施設選抁E*/}
         <div className="mb-8">
           <FacilitySelector
             selectedFacility={selectedFacility}
@@ -99,7 +97,7 @@ function StrategicAnalysisPageContent() {
           />
         </div>
 
-        {/* レポート一覧 */}
+        {/* レポ�Eト一覧 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {reports.map((report) => {
             const url = selectedFacility 
@@ -117,7 +115,7 @@ function StrategicAnalysisPageContent() {
                   </div>
                   <p className="text-gray-600 text-sm mb-4">{report.description}</p>
                   <div className="mt-auto flex items-center text-blue-600">
-                    <span className="text-sm">レポートを見る</span>
+                    <span className="text-sm">レポ�Eトを見る</span>
                     <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
@@ -131,31 +129,29 @@ function StrategicAnalysisPageContent() {
         {/* アセスメントパターン */}
         <div className="mt-12 bg-blue-50 border border-blue-200 rounded-lg p-6">
           <h3 className="text-xl font-bold text-blue-900 mb-6">
-            戦略的人材分析アセスメント
+            戦略皁E��材�E析アセスメンチE
           </h3>
           
           <div className="bg-white rounded-lg p-4 border border-blue-100">
             <div className="text-blue-800 mb-3">
-              <span className="font-medium">推奨フロー：</span>
-              人事管理戦略 → スキル・資格管理 → 採用効果分析 → 組織構造最適化
+              <span className="font-medium">推奨フロー�E�E/span>
+              人事管琁E��略 ↁEスキル・賁E��管琁EↁE採用効果�E极EↁE絁E��構造最適匁E
             </div>
             <ul className="list-disc list-inside text-blue-700 space-y-1">
-              <li>中長期的な人材戦略の立案とKPI設定</li>
-              <li>組織の競争力強化に必要な施策特定</li>
-              <li>人材投資の優先順位付けとROI評価</li>
-              <li>経営戦略と人材戦略の整合性確保</li>
+              <li>中長期的な人材戦略の立案とKPI設宁E/li>
+              <li>絁E���E競争力強化に忁E��な施策特宁E/li>
+              <li>人材投賁E�E優先頁E��付けとROI評価</li>
+              <li>経営戦略と人材戦略の整合性確俁E/li>
             </ul>
           </div>
 
           <div className="mt-4 text-blue-800 text-sm">
             <p className="font-medium">
-              戦略分析により、データに基づく人材マネジメントと持続的な組織成長を実現できます。
+              戦略刁E��により、データに基づく人材�Eネジメントと持続的な絁E���E長を実現できます、E
             </p>
           </div>
         </div>
-      </div>
-      <ScrollToTopButton />
-    </div>
+      </div></div>
   );
 }
 

@@ -4,7 +4,6 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import CommonHeader from '@/components/CommonHeader';
-import DashboardButton from '@/components/DashboardButton';
 
 interface Sheet {
   label: string;
@@ -423,7 +422,6 @@ function InterviewSheetsViewerContent() {
           </>
         )}
         </div>
-        <DashboardButton />
       </div>
     </>
   );

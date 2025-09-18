@@ -4,10 +4,7 @@ import React, { Suspense, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import CommonHeader from '@/components/CommonHeader';
-import DashboardButton from '@/components/DashboardButton';
-import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { CategoryTopButton } from '@/components/CategoryTopButton';
-import { BackToReportsButton } from '@/components/BackToReportsButton';
 import { exportToPDF } from '@/utils/pdfExport';
 import {
   Chart as ChartJS,
@@ -43,7 +40,7 @@ function Content() {
   const searchParams = useSearchParams();
   const facilityParam = searchParams.get('facility') || '';
   
-  // データの読み込みとフィルタリング
+  // チE�Eタの読み込みとフィルタリング
   const { individual, aggregates, trends, individualWithAge } = useMemo(() => {
     const data = loadWellbeingData();
     const filtered = filterByFacility(data.individual, facilityParam);
@@ -56,7 +53,7 @@ function Content() {
     };
   }, [facilityParam]);
   
-  // ワークライフバランス5要素の平均値
+  // ワークライフバランス5要素の平坁E��
   const balanceAverages = useMemo(() => {
     const totals = individual.reduce((acc, person) => {
       acc.workTime += person.workLifeBalance.workTime;
@@ -82,7 +79,7 @@ function Content() {
   
   // 5要素の棒グラフデータ
   const elementsData = useMemo(() => ({
-    labels: ['労働時間満足度', 'プライベート時間', '柔軟性', '家族との時間', 'セルフケア'],
+    labels: ['労働時間満足度', 'プライベ�Eト時閁E, '柔軟性', '家族との時間', 'セルフケア'],
     datasets: [{
       label: 'スコア',
       data: [
@@ -112,7 +109,7 @@ function Content() {
   
   // 職種別のレーダーチャートデータ
   const positionRadarData = useMemo(() => {
-    const positions = ['看護師', '理学療法士', '作業療法士'];
+    const positions = ['看護師', '琁E��療法士', '作業療法士'];
     const datasets = positions.map((position, index) => {
       const positionData = individual.filter(p => p.position === position);
       const count = positionData.length || 1;
@@ -148,7 +145,7 @@ function Content() {
     });
     
     return {
-      labels: ['労働時間満足度', 'プライベート時間', '柔軟性', '家族との時間', 'セルフケア'],
+      labels: ['労働時間満足度', 'プライベ�Eト時閁E, '柔軟性', '家族との時間', 'セルフケア'],
       datasets
     };
   }, [individual]);
@@ -156,7 +153,7 @@ function Content() {
   // トレンドデータ
   const trendData = useMemo(() => {
     const facilityTrend = trends.find(t => 
-      t.category === 'facility' && (facilityParam ? t.name === facilityParam : t.name === '小原病院')
+      t.category === 'facility' && (facilityParam ? t.name === facilityParam : t.name === '小原痁E��')
     );
     
     if (!facilityTrend) return null;
@@ -173,13 +170,13 @@ function Content() {
     };
   }, [trends, facilityParam]);
   
-  // 世代別分析
+  // 世代別刁E��
   const generationData = useMemo(() => {
     const generations = [
-      { name: 'Z世代（～27歳）', min: 0, max: 27 },
-      { name: 'ミレニアル世代（28-43歳）', min: 28, max: 43 },
-      { name: 'X世代（44-59歳）', min: 44, max: 59 },
-      { name: 'ベビーブーマー世代（60歳～）', min: 60, max: 100 }
+      { name: 'Z世代�E�ａE7歳�E�E, min: 0, max: 27 },
+      { name: 'ミレニアル世代�E�E8-43歳�E�E, min: 28, max: 43 },
+      { name: 'X世代�E�E4-59歳�E�E, min: 44, max: 59 },
+      { name: 'ベビーブ�Eマ�E世代�E�E0歳�E�！E, min: 60, max: 100 }
     ];
     
     const data = generations.map(gen => {
@@ -212,14 +209,14 @@ function Content() {
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-bold">ワークライフバランス評価</h1>
-                <p className="text-gray-600 mt-2">仕事と生活の調和を多面的に評価し、働きやすい環境づくりを支援</p>
+                <p className="text-gray-600 mt-2">仕事と生活の調和を多面皁E��評価し、働きやすい環墁E��くりを支援</p>
                 {facilityParam && (
                   <p className="text-sm text-gray-500 mt-1">対象施設: {facilityParam}</p>
                 )}
               </div>
               <button
                 onClick={() => exportToPDF({
-                  title: 'ワークライフバランス評価レポート',
+                  title: 'ワークライフバランス評価レポ�EチE,
                   facility: facilityParam || '全施設',
                   reportType: 'work-life-balance',
                   elementId: 'report-content',
@@ -227,12 +224,11 @@ function Content() {
                 })}
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm pdf-exclude"
               >
-                PDFダウンロード
-              </button>
+                PDFダウンローチE              </button>
             </div>
           </div>
 
-          {/* サマリーカード */}
+          {/* サマリーカーチE*/}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card>
               <CardHeader className="pb-3">
@@ -242,13 +238,13 @@ function Content() {
                 <p className="text-2xl font-bold text-blue-600">
                   {balanceAverages.overall.toFixed(1)}
                 </p>
-                <p className="text-xs text-gray-500 mt-1">全体平均</p>
+                <p className="text-xs text-gray-500 mt-1">全体平坁E/p>
               </CardContent>
             </Card>
             
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-gray-500">最高評価項目</CardTitle>
+                <CardTitle className="text-sm font-medium text-gray-500">最高評価頁E��</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold text-green-600">
@@ -260,12 +256,11 @@ function Content() {
             
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-gray-500">改善必要項目</CardTitle>
+                <CardTitle className="text-sm font-medium text-gray-500">改喁E��E��E��E��</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold text-orange-600">
-                  プライベート時間
-                </p>
+                  プライベ�Eト時閁E                </p>
                 <p className="text-xs text-gray-500 mt-1">{balanceAverages.privateTime.toFixed(1)}点</p>
               </CardContent>
             </Card>
@@ -311,10 +306,10 @@ function Content() {
           </Card>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* 職種別比較 */}
+            {/* 職種別比輁E*/}
             <Card>
               <CardHeader>
-                <CardTitle>職種別ワークライフバランス比較</CardTitle>
+                <CardTitle>職種別ワークライフバランス比輁E/CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-64">
@@ -349,7 +344,7 @@ function Content() {
               </CardContent>
             </Card>
             
-            {/* 世代別分析 */}
+            {/* 世代別刁E�� */}
             <Card>
               <CardHeader>
                 <CardTitle>世代別バランススコア</CardTitle>
@@ -382,7 +377,7 @@ function Content() {
             </Card>
           </div>
           
-          {/* トレンドグラフ */}
+          {/* トレンドグラチE*/}
           {trendData && (
             <Card>
               <CardHeader>
@@ -416,7 +411,7 @@ function Content() {
             </Card>
           )}
           
-          {/* 詳細テーブル */}
+          {/* 詳細チE�Eブル */}
           <Card>
             <CardHeader>
               <CardTitle>部署別ワークライフバランス詳細</CardTitle>
@@ -436,11 +431,9 @@ function Content() {
                         総合スコア
                       </th>
                       <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        労働時間
-                      </th>
+                        労働時閁E                      </th>
                       <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        プライベート
-                      </th>
+                        プライベ�EチE                      </th>
                       <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                         柔軟性
                       </th>
@@ -497,13 +490,7 @@ function Content() {
           </Card>
 
         </div>
-      </div>
-      
-      <ScrollToTopButton />
-      <CategoryTopButton categoryPath="/reports/wellbeing" categoryName="ウェルビーイング" />
-      <BackToReportsButton />
-      <DashboardButton />
-    </div>
+      </div><CategoryTopButton categoryPath="/reports/wellbeing" categoryName="ウェルビ�Eイング" /></div>
   );
 }
 

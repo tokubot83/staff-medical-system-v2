@@ -3,8 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
-import DashboardButton from '@/components/DashboardButton';
-import ScrollToTopButton from '@/components/ScrollToTopButton';
 import FacilitySelector from '@/components/reports/FacilitySelector';
 import styles from '../Reports.module.css';
 import homeStyles from './ReportsHome.module.css';
@@ -273,8 +271,6 @@ export default function ReportsHomePage() {
           </div>
         )}
       </div>
-      <ScrollToTopButton />
-      <DashboardButton />
     </div>
   );
 }

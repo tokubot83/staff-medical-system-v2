@@ -2,10 +2,7 @@
 
 import React, { useState, useMemo } from 'react'
 import CommonHeader from '@/components/CommonHeader'
-import DashboardButton from '@/components/DashboardButton'
-import ScrollToTopButton from '@/components/ScrollToTopButton'
 import { CategoryTopButton } from '@/components/CategoryTopButton'
-import { BackToReportsButton } from '@/components/BackToReportsButton'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
@@ -18,10 +15,10 @@ export default function EvaluationTrendPage() {
   const [selectedDepartment, setSelectedDepartment] = useState('all')
   const [viewMode, setViewMode] = useState<'individual' | 'department' | 'overview'>('individual')
 
-  // スタッフリストを配列に変換
+  // スタチE��リストを配�Eに変換
   const staffList = Object.values(staffDatabase)
 
-  // 部署リストを生成
+  // 部署リストを生�E
   const departments = Array.from(new Set(staffList.map(s => s.department).filter(Boolean)))
 
   // フィルタリング
@@ -33,11 +30,11 @@ export default function EvaluationTrendPage() {
     return matchesSearch && matchesDepartment
   })
 
-  // 評価推移データを生成（実際の実装では履歴データから取得）
+  // 評価推移チE�Eタを生成（実際の実裁E��は履歴チE�Eタから取得！E
   const generateTrendData = (staffId: string) => {
     const quarters = ['2023-Q1', '2023-Q2', '2023-Q3', '2023-Q4', '2024-Q1', '2024-Q2']
     return quarters.map(quarter => {
-      // ランダムだが前の値から大きく変わらないように
+      // ランダムだが前の値から大きく変わらなぁE��ぁE��
       const baseRank = 40 + Math.random() * 30
       const facilityRank = Math.max(1, Math.min(100, baseRank + (Math.random() - 0.5) * 10))
       const corporateRank = Math.max(1, Math.min(100, baseRank + (Math.random() - 0.5) * 15))
@@ -71,13 +68,13 @@ export default function EvaluationTrendPage() {
     }
   }
 
-  // 選択された職員の推移データ
+  // 選択された職員の推移チE�Eタ
   const selectedStaffTrend = useMemo(() => {
     if (!selectedEmployeeId) return null
     return generateTrendData(selectedEmployeeId)
   }, [selectedEmployeeId])
 
-  // トレンド分析
+  // トレンド�E极E
   const analyzeTrend = (data: any[]) => {
     if (!data || data.length < 2) return null
     
@@ -93,7 +90,7 @@ export default function EvaluationTrendPage() {
     }
   }
 
-  // 部門全体の推移データ
+  // 部門全体�E推移チE�Eタ
   const departmentTrendData = useMemo(() => {
     if (viewMode !== 'department' || selectedDepartment === 'all') return []
     
@@ -129,43 +126,43 @@ export default function EvaluationTrendPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="位置づけ推移分析" />
+      <CommonHeader title="位置づけ推移刁E��" />
       
       <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
           {/* ヘッダー */}
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h1 className="text-2xl font-bold">位置づけ推移分析</h1>
-            <p className="text-gray-600 mt-2">職員の位置づけの時系列変化を追跡・分析</p>
+            <h1 className="text-2xl font-bold">位置づけ推移刁E��</h1>
+            <p className="text-gray-600 mt-2">職員の位置づけ�E時系列変化を追跡・刁E��</p>
           </div>
 
           <div className="space-y-6">
-          {/* ビューモード選択 */}
+          {/* ビューモード選抁E*/}
           <Card className="p-6">
-            <h3 className="text-lg font-bold mb-4">分析モード</h3>
+            <h3 className="text-lg font-bold mb-4">刁E��モーチE/h3>
             <div className="flex gap-2">
               <button
                 className={`px-4 py-2 rounded ${viewMode === 'individual' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
                 onClick={() => setViewMode('individual')}
               >
-                個人分析
+                個人刁E��
               </button>
               <button
                 className={`px-4 py-2 rounded ${viewMode === 'department' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
                 onClick={() => setViewMode('department')}
               >
-                部門分析
+                部門刁E��
               </button>
               <button
                 className={`px-4 py-2 rounded ${viewMode === 'overview' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
                 onClick={() => setViewMode('overview')}
               >
-                全体概況
+                全体概況E
               </button>
             </div>
           </Card>
 
-          {/* 個人分析モード */}
+          {/* 個人刁E��モーチE*/}
           {viewMode === 'individual' && (
             <>
               <Card className="p-6">
@@ -175,7 +172,7 @@ export default function EvaluationTrendPage() {
                     <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                     <input
                       type="text"
-                      placeholder="職員名・職員IDで検索"
+                      placeholder="職員名�E職員IDで検索"
                       className="w-full pl-10 pr-3 py-2 border rounded-lg"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
@@ -201,14 +198,14 @@ export default function EvaluationTrendPage() {
                   </button>
                 </div>
 
-                {/* 職員リスト */}
+                {/* 職員リスチE*/}
                 <div className="mt-6 max-h-64 overflow-y-auto">
                   <table className="w-full">
                     <thead className="bg-gray-50 sticky top-0">
                       <tr>
-                        <th className="px-4 py-2 text-left">職員名</th>
+                        <th className="px-4 py-2 text-left">職員吁E/th>
                         <th className="px-4 py-2 text-left">部署</th>
-                        <th className="px-4 py-2 text-left">職位</th>
+                        <th className="px-4 py-2 text-left">職佁E/th>
                         <th className="px-4 py-2"></th>
                       </tr>
                     </thead>
@@ -232,7 +229,7 @@ export default function EvaluationTrendPage() {
                                 setSelectedEmployeeId(staff.id)
                               }}
                             >
-                              選択
+                              選抁E
                             </button>
                           </td>
                         </tr>
@@ -242,7 +239,7 @@ export default function EvaluationTrendPage() {
                 </div>
               </Card>
 
-              {/* 個人の推移グラフ */}
+              {/* 個人の推移グラチE*/}
               {selectedEmployeeId && selectedStaffTrend && (
                 <Card className="p-6">
                   <div className="flex items-center justify-between mb-4">
@@ -254,7 +251,7 @@ export default function EvaluationTrendPage() {
                       return trend && (
                         <div className="flex gap-4">
                           <div className="flex items-center gap-2">
-                            <span className="text-sm">施設内:</span>
+                            <span className="text-sm">施設冁E</span>
                             {trend.facilityTrend === 'up' ? (
                               <TrendingUp className="h-5 w-5 text-green-600" />
                             ) : trend.facilityTrend === 'down' ? (
@@ -267,7 +264,7 @@ export default function EvaluationTrendPage() {
                             </span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <span className="text-sm">法人内:</span>
+                            <span className="text-sm">法人冁E</span>
                             {trend.corporateTrend === 'up' ? (
                               <TrendingUp className="h-5 w-5 text-green-600" />
                             ) : trend.corporateTrend === 'down' ? (
@@ -290,21 +287,21 @@ export default function EvaluationTrendPage() {
                       <XAxis dataKey="quarter" />
                       <YAxis domain={[0, 100]} ticks={[0, 20, 40, 60, 80, 100]} />
                       <Tooltip 
-                        formatter={(value: any) => `上位${value}%`}
+                        formatter={(value: any) => `上佁E{value}%`}
                         labelFormatter={(label) => `評価期間: ${label}`}
                       />
                       <Legend />
                       <Line 
                         type="monotone" 
                         dataKey="facilityRank" 
-                        name="施設内順位" 
+                        name="施設冁E��E��E 
                         stroke="#2196f3" 
                         strokeWidth={2}
                       />
                       <Line 
                         type="monotone" 
                         dataKey="corporateRank" 
-                        name="法人内順位" 
+                        name="法人冁E��E��E 
                         stroke="#4caf50" 
                         strokeWidth={2}
                       />
@@ -316,7 +313,7 @@ export default function EvaluationTrendPage() {
                     <h4 className="font-semibold mb-3">グレード推移</h4>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <p className="text-sm text-gray-600 mb-2">施設内評価</p>
+                        <p className="text-sm text-gray-600 mb-2">施設冁E��価</p>
                         <div className="flex gap-2">
                           {selectedStaffTrend.map((data, index) => (
                             <div key={index} className="text-center">
@@ -329,7 +326,7 @@ export default function EvaluationTrendPage() {
                         </div>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-600 mb-2">法人内評価</p>
+                        <p className="text-sm text-gray-600 mb-2">法人冁E��価</p>
                         <div className="flex gap-2">
                           {selectedStaffTrend.map((data, index) => (
                             <div key={index} className="text-center">
@@ -348,11 +345,11 @@ export default function EvaluationTrendPage() {
             </>
           )}
 
-          {/* 部門分析モード */}
+          {/* 部門刁E��モーチE*/}
           {viewMode === 'department' && (
             <>
               <Card className="p-6">
-                <h3 className="text-lg font-bold mb-4">部門選択</h3>
+                <h3 className="text-lg font-bold mb-4">部門選抁E/h3>
                 <select
                   className="w-full px-3 py-2 border rounded-lg"
                   value={selectedDepartment}
@@ -367,7 +364,7 @@ export default function EvaluationTrendPage() {
 
               {selectedDepartment !== 'all' && departmentTrendData.length > 0 && (
                 <Card className="p-6">
-                  <h3 className="text-lg font-bold mb-4">{selectedDepartment} - 位置づけ分布推移</h3>
+                  <h3 className="text-lg font-bold mb-4">{selectedDepartment} - 位置づけ�E币E��移</h3>
                   <ResponsiveContainer width="100%" height={400}>
                     <LineChart data={departmentTrendData}>
                       <CartesianGrid strokeDasharray="3 3" />
@@ -387,11 +384,11 @@ export default function EvaluationTrendPage() {
             </>
           )}
 
-          {/* 全体概況モード */}
+          {/* 全体概況モーチE*/}
           {viewMode === 'overview' && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card className="p-6">
-                <h3 className="text-lg font-bold mb-4">位置づけ向上者</h3>
+                <h3 className="text-lg font-bold mb-4">位置づけ向上老E/h3>
                 <div className="space-y-3">
                   {filteredStaff.slice(0, 5).map(staff => (
                     <div key={staff.id} className="flex items-center justify-between p-3 bg-green-50 rounded">
@@ -411,7 +408,7 @@ export default function EvaluationTrendPage() {
               </Card>
 
               <Card className="p-6">
-                <h3 className="text-lg font-bold mb-4">要注意（位置づけ低下）</h3>
+                <h3 className="text-lg font-bold mb-4">要注意（位置づけ低下！E/h3>
                 <div className="space-y-3">
                   {filteredStaff.slice(5, 10).map(staff => (
                     <div key={staff.id} className="flex items-center justify-between p-3 bg-red-50 rounded">
@@ -433,12 +430,6 @@ export default function EvaluationTrendPage() {
           )}
           </div>
         </div>
-      </div>
-      
-      <ScrollToTopButton />
-      <CategoryTopButton categoryPath="/reports/performance-evaluation" categoryName="人事評価分析" />
-      <BackToReportsButton />
-      <DashboardButton />
-    </div>
+      </div><CategoryTopButton categoryPath="/reports/performance-evaluation" categoryName="人事評価刁E��" /></div>
   )
 }

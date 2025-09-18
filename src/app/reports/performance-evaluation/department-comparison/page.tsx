@@ -2,10 +2,7 @@
 
 import React, { useState, useMemo } from 'react'
 import CommonHeader from '@/components/CommonHeader'
-import DashboardButton from '@/components/DashboardButton'
-import ScrollToTopButton from '@/components/ScrollToTopButton'
 import { CategoryTopButton } from '@/components/CategoryTopButton'
-import { BackToReportsButton } from '@/components/BackToReportsButton'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
@@ -16,13 +13,13 @@ export default function DepartmentComparisonPage() {
   const [selectedFacility, setSelectedFacility] = useState('all')
   const [viewMode, setViewMode] = useState<'distribution' | 'average' | 'detail'>('distribution')
 
-  // スタッフリストを配列に変換
+  // スタチE��リストを配�Eに変換
   const staffList = Object.values(staffDatabase)
 
-  // 施設リストを生成
+  // 施設リストを生�E
   const facilities = Array.from(new Set(staffList.map(s => s.facility).filter(Boolean)))
 
-  // 部門ごとの位置づけデータを計算
+  // 部門ごとの位置づけデータを計箁E
   const departmentData = useMemo(() => {
     const deptMap: Record<string, any> = {}
     
@@ -41,7 +38,7 @@ export default function DepartmentComparisonPage() {
         }
       }
       
-      // ランダムな位置づけを生成（実際はデータベースから取得）
+      // ランダムな位置づけを生�E�E�実際はチE�Eタベ�Eスから取得！E
       const facilityRank = Math.floor(Math.random() * 100) + 1
       const corporateRank = Math.floor(Math.random() * 100) + 1
       
@@ -68,7 +65,7 @@ export default function DepartmentComparisonPage() {
       deptMap[staff.department].gradeDistribution.corporate[corporateGrade]++
     })
     
-    // 各部門の統計を計算
+    // 吁E��門の統計を計箁E
     Object.values(deptMap).forEach((dept: any) => {
       dept.totalStaff = dept.staff.length
       dept.topPerformers = dept.staff.filter((s: any) => s.facilityGrade === 'S' || s.corporateGrade === 'S').length
@@ -78,7 +75,7 @@ export default function DepartmentComparisonPage() {
       dept.averageFacilityRank = dept.staff.reduce((sum: number, s: any) => sum + s.facilityRank, 0) / dept.totalStaff
       dept.averageCorporateRank = dept.staff.reduce((sum: number, s: any) => sum + s.corporateRank, 0) / dept.totalStaff
       
-      // 位置づけバランススコア（S,Aが多くC,Dが少ないほど高い）
+      // 位置づけバランススコア�E�E,Aが多くC,Dが少なぁE��ど高い�E�E
       const facilityScore = (dept.gradeDistribution.facility.S * 3 + dept.gradeDistribution.facility.A * 2 + dept.gradeDistribution.facility.B) / dept.totalStaff
       const corporateScore = (dept.gradeDistribution.corporate.S * 3 + dept.gradeDistribution.corporate.A * 2 + dept.gradeDistribution.corporate.B) / dept.totalStaff
       dept.balanceScore = ((facilityScore + corporateScore) / 2).toFixed(2)
@@ -98,7 +95,7 @@ export default function DepartmentComparisonPage() {
     }
   }
 
-  // グラフ用データの準備
+  // グラフ用チE�Eタの準備
   const chartData = departmentData.map(dept => ({
     name: dept.name,
     トップ層: parseFloat(dept.topPerformerRatio),
@@ -109,14 +106,14 @@ export default function DepartmentComparisonPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="部門別位置づけ分析" />
+      <CommonHeader title="部門別位置づけ�E极E />
       
       <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
           {/* ヘッダー */}
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h1 className="text-2xl font-bold">部門別位置づけ分析</h1>
-            <p className="text-gray-600 mt-2">部門ごとの職員の位置づけ分布を比較・分析</p>
+            <h1 className="text-2xl font-bold">部門別位置づけ�E极E/h1>
+            <p className="text-gray-600 mt-2">部門ごとの職員の位置づけ�E币E��比輁E�E刁E��</p>
           </div>
 
           <div className="space-y-6">
@@ -138,19 +135,19 @@ export default function DepartmentComparisonPage() {
               </div>
               
               <div className="flex-1">
-                <h3 className="text-lg font-bold mb-4">表示モード</h3>
+                <h3 className="text-lg font-bold mb-4">表示モーチE/h3>
                 <div className="flex gap-2">
                   <button
                     className={`px-4 py-2 rounded ${viewMode === 'distribution' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
                     onClick={() => setViewMode('distribution')}
                   >
-                    分布
+                    刁E��E
                   </button>
                   <button
                     className={`px-4 py-2 rounded ${viewMode === 'average' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
                     onClick={() => setViewMode('average')}
                   >
-                    平均
+                    平坁E
                   </button>
                   <button
                     className={`px-4 py-2 rounded ${viewMode === 'detail' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
@@ -163,12 +160,12 @@ export default function DepartmentComparisonPage() {
             </div>
           </Card>
 
-          {/* サマリーカード */}
+          {/* サマリーカーチE*/}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">分析対象部門数</p>
+                  <p className="text-sm text-gray-600">刁E��対象部門数</p>
                   <p className="text-2xl font-bold">{departmentData.length}</p>
                 </div>
                 <Building2 className="h-8 w-8 text-blue-600" />
@@ -197,7 +194,7 @@ export default function DepartmentComparisonPage() {
                   <p className="text-2xl font-bold">
                     {departmentData.filter(d => parseFloat(d.needSupportRatio) > 20).length}
                   </p>
-                  <p className="text-xs text-gray-500">20%以上</p>
+                  <p className="text-xs text-gray-500">20%以丁E/p>
                 </div>
                 <AlertCircle className="h-8 w-8 text-orange-600" />
               </div>
@@ -207,7 +204,7 @@ export default function DepartmentComparisonPage() {
           {/* メインビュー */}
           {viewMode === 'distribution' && (
             <Card className="p-6">
-              <h3 className="text-lg font-bold mb-4">部門別位置づけ分布</h3>
+              <h3 className="text-lg font-bold mb-4">部門別位置づけ�E币E/h3>
               <ResponsiveContainer width="100%" height={400}>
                 <BarChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -226,7 +223,7 @@ export default function DepartmentComparisonPage() {
           {viewMode === 'average' && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card className="p-6">
-                <h3 className="text-lg font-bold mb-4">平均位置づけ（施設内）</h3>
+                <h3 className="text-lg font-bold mb-4">平坁E��置づけ（施設冁E��E/h3>
                 <div className="space-y-3">
                   {departmentData
                     .sort((a, b) => a.averageFacilityRank - b.averageFacilityRank)
@@ -251,7 +248,7 @@ export default function DepartmentComparisonPage() {
               </Card>
 
               <Card className="p-6">
-                <h3 className="text-lg font-bold mb-4">平均位置づけ（法人内）</h3>
+                <h3 className="text-lg font-bold mb-4">平坁E��置づけ（法人冁E��E/h3>
                 <div className="space-y-3">
                   {departmentData
                     .sort((a, b) => a.averageCorporateRank - b.averageCorporateRank)
@@ -288,7 +285,7 @@ export default function DepartmentComparisonPage() {
                         <h3 className="font-bold text-lg">{dept.name}</h3>
                         <p className="text-sm text-gray-600 mt-1">
                           <Users className="inline h-4 w-4 mr-1" />
-                          {dept.totalStaff}名 | バランススコア: {dept.balanceScore}
+                          {dept.totalStaff}吁E| バランススコア: {dept.balanceScore}
                         </p>
                       </div>
                       <Badge className="bg-purple-600 text-white">
@@ -298,7 +295,7 @@ export default function DepartmentComparisonPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <p className="text-sm font-semibold mb-2">施設内評価分布</p>
+                        <p className="text-sm font-semibold mb-2">施設冁E��価刁E��E/p>
                         <div className="flex gap-1">
                           {(['S', 'A', 'B', 'C', 'D'] as const).map(grade => (
                             <div key={grade} className="flex-1 text-center">
@@ -320,7 +317,7 @@ export default function DepartmentComparisonPage() {
                       </div>
 
                       <div>
-                        <p className="text-sm font-semibold mb-2">法人内評価分布</p>
+                        <p className="text-sm font-semibold mb-2">法人冁E��価刁E��E/p>
                         <div className="flex gap-1">
                           {(['S', 'A', 'B', 'C', 'D'] as const).map(grade => (
                             <div key={grade} className="flex-1 text-center">
@@ -362,12 +359,6 @@ export default function DepartmentComparisonPage() {
           )}
           </div>
         </div>
-      </div>
-      
-      <ScrollToTopButton />
-      <CategoryTopButton categoryPath="/reports/performance-evaluation" categoryName="人事評価分析" />
-      <BackToReportsButton />
-      <DashboardButton />
-    </div>
+      </div><CategoryTopButton categoryPath="/reports/performance-evaluation" categoryName="人事評価刁E��" /></div>
   )
 }

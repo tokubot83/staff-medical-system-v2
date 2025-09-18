@@ -4,10 +4,7 @@ import React, { Suspense, useState, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import CommonHeader from '@/components/CommonHeader';
-import DashboardButton from '@/components/DashboardButton';
-import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { CategoryTopButton } from '@/components/CategoryTopButton';
-import { BackToReportsButton } from '@/components/BackToReportsButton';
 import { exportToPDF } from '@/utils/pdfExport';
 import { staffDatabase } from '@/app/data/staffData';
 import {
@@ -31,10 +28,10 @@ import {
   Cell
 } from 'recharts';
 
-// リテンション施策の定義
+// リチE��ション施策�E定義
 const retentionStrategies = {
   workLifeBalance: {
-    name: 'ワークライフバランス改善',
+    name: 'ワークライフバランス改喁E,
     cost: 5000000,
     impact: {
       overtime: -20,
@@ -74,7 +71,7 @@ const retentionStrategies = {
     }
   },
   recognition: {
-    name: '表彰・評価制度強化',
+    name: '表彰・評価制度強匁E,
     cost: 2000000,
     impact: {
       engagement: 12,
@@ -93,7 +90,7 @@ function Content() {
   const [selectedStrategies, setSelectedStrategies] = useState(['workLifeBalance', 'careerDevelopment']);
   const [implementationPeriod, setImplementationPeriod] = useState(12); // months
 
-  // 現在の離職リスク分析
+  // 現在の離職リスク刁E��
   const currentTurnoverRisk = useMemo(() => {
     const staffList = Object.values(staffDatabase).filter(staff => {
       if (selectedFacility !== '全施設' && staff.facility !== selectedFacility) return false;
@@ -101,7 +98,7 @@ function Content() {
       return true;
     });
 
-    // リスクレベル別に分類
+    // リスクレベル別に刁E��E
     const riskLevels = { high: 0, medium: 0, low: 0 };
     const departmentRisks: { [key: string]: { total: number; risk: number } } = {};
 
@@ -133,7 +130,7 @@ function Content() {
     };
   }, [selectedFacility, selectedDepartment]);
 
-  // 施策実施後の効果予測
+  // 施策実施後�E効果予測
   const impactPrediction = useMemo(() => {
     const baseline = {
       turnoverRate: 12, // %
@@ -150,7 +147,7 @@ function Content() {
       const strategy = retentionStrategies[strategyKey as keyof typeof retentionStrategies];
       totalCost += strategy.cost;
       
-      // 各施策の影響を計算
+      // 吁E��策�E影響を計箁E
       if (strategy.impact.engagement) {
         predictedMetrics.engagement += strategy.impact.engagement;
       }
@@ -165,7 +162,7 @@ function Content() {
       }
     });
 
-    // 離職率の改善を計算
+    // 離職玁E�E改喁E��計箁E
     const improvementFactor = (predictedMetrics.engagement - baseline.engagement) * 0.02 +
                             (baseline.stressIndex - predictedMetrics.stressIndex) * 0.01 +
                             (baseline.overtime - predictedMetrics.overtime) * 0.005 +
@@ -189,26 +186,26 @@ function Content() {
     
     for (let i = 0; i <= implementationPeriod; i++) {
       const progress = i / implementationPeriod;
-      const easeProgress = 1 - Math.pow(1 - progress, 2); // イージング効果
+      const easeProgress = 1 - Math.pow(1 - progress, 2); // イージング効极E
       
       months.push({
-        month: `${i}ヶ月`,
-        離職率: baseline - (baseline - target) * easeProgress,
-        エンゲージメント: 75 + (impactPrediction.predicted.engagement - 75) * easeProgress,
-        ストレス指数: 45 + (impactPrediction.predicted.stressIndex - 45) * easeProgress
+        month: `${i}ヶ朁E,
+        離職玁E baseline - (baseline - target) * easeProgress,
+        エンゲージメンチE 75 + (impactPrediction.predicted.engagement - 75) * easeProgress,
+        ストレス持E��: 45 + (impactPrediction.predicted.stressIndex - 45) * easeProgress
       });
     }
     
     return months;
   }, [implementationPeriod, impactPrediction]);
 
-  // 施策組み合わせの効果比較
+  // 施策絁E��合わせ�E効果比輁E
   const strategyComparison = useMemo(() => {
     return Object.entries(retentionStrategies).map(([key, strategy]) => {
       const isSelected = selectedStrategies.includes(key);
       const costPerEmployee = currentTurnoverRisk.total > 0 ? strategy.cost / currentTurnoverRisk.total : 0;
       
-      // 各施策の効果スコアを計算
+      // 吁E��策�E効果スコアを計箁E
       let effectScore = 0;
       Object.values(strategy.impact).forEach(value => {
         effectScore += Math.abs(value);
@@ -217,15 +214,15 @@ function Content() {
       const costInMillion = strategy.cost / 1000000;
       return {
         name: strategy.name,
-        cost: costInMillion, // 百万円単位
+        cost: costInMillion, // 百丁E�E単佁E
         効果スコア: effectScore,
-        コスト効率: costInMillion > 0 ? effectScore / costInMillion : 0,
+        コスト効玁E costInMillion > 0 ? effectScore / costInMillion : 0,
         selected: isSelected
       };
     });
   }, [selectedStrategies, currentTurnoverRisk.total]);
 
-  // フィルター用のリスト
+  // フィルター用のリスチE
   const facilities = useMemo(() => {
     const facilitySet = new Set(Object.values(staffDatabase).map(s => s.facility));
     return ['全施設', ...Array.from(facilitySet)];
@@ -241,14 +238,14 @@ function Content() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="リテンション施策効果予測" />
+      <CommonHeader title="リチE��ション施策効果予測" />
       
       <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
           {/* ヘッダー */}
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h1 className="text-2xl font-bold">リテンション施策効果予測</h1>
-            <p className="text-gray-600 mt-2">施策別の効果予測とコスト対効果の分析</p>
+            <h1 className="text-2xl font-bold">リチE��ション施策効果予測</h1>
+            <p className="text-gray-600 mt-2">施策別の効果予測とコスト対効果�E刁E��</p>
             {facilityParam && (
               <p className="text-sm text-gray-500 mt-1">対象施設: {facilityParam}</p>
             )}
@@ -290,16 +287,16 @@ function Content() {
                   onChange={(e) => setImplementationPeriod(Number(e.target.value))}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value={6}>6ヶ月</option>
-                  <option value={12}>12ヶ月</option>
-                  <option value={18}>18ヶ月</option>
-                  <option value={24}>24ヶ月</option>
+                  <option value={6}>6ヶ朁E/option>
+                  <option value={12}>12ヶ朁E/option>
+                  <option value={18}>18ヶ朁E/option>
+                  <option value={24}>24ヶ朁E/option>
                 </select>
               </div>
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">実施施策の選択</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">実施施策�E選抁E/label>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {Object.entries(retentionStrategies).map(([key, strategy]) => (
                   <label key={key} className="flex items-center space-x-2 cursor-pointer">
@@ -322,7 +319,7 @@ function Content() {
             </div>
           </div>
 
-          {/* 現在の離職リスク状況 */}
+          {/* 現在の離職リスク状況E*/}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Card>
               <CardHeader>
@@ -330,47 +327,47 @@ function Content() {
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-bold text-red-600">
-                  {currentTurnoverRisk.riskLevels.high}名
+                  {currentTurnoverRisk.riskLevels.high}吁E
                 </div>
                 <p className="text-sm text-gray-600 mt-2">
-                  全体の{((currentTurnoverRisk.riskLevels.high / currentTurnoverRisk.total) * 100).toFixed(1)}%
+                  全体�E{((currentTurnoverRisk.riskLevels.high / currentTurnoverRisk.total) * 100).toFixed(1)}%
                 </p>
               </CardContent>
             </Card>
             
             <Card>
               <CardHeader>
-                <CardTitle>予測離職率</CardTitle>
+                <CardTitle>予測離職玁E/CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-bold text-amber-600">
                   {impactPrediction.baseline.turnoverRate}%
                 </div>
                 <p className="text-sm text-gray-600 mt-2">
-                  現在の状況を維持した場合
+                  現在の状況を維持した場吁E
                 </p>
               </CardContent>
             </Card>
             
             <Card>
               <CardHeader>
-                <CardTitle>施策実施後の離職率</CardTitle>
+                <CardTitle>施策実施後�E離職玁E/CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-bold text-green-600">
                   {impactPrediction.predicted.turnoverRate.toFixed(1)}%
                 </div>
                 <p className="text-sm text-gray-600 mt-2">
-                  {(impactPrediction.baseline.turnoverRate - impactPrediction.predicted.turnoverRate).toFixed(1)}%改善
+                  {(impactPrediction.baseline.turnoverRate - impactPrediction.predicted.turnoverRate).toFixed(1)}%改喁E
                 </p>
               </CardContent>
             </Card>
           </div>
 
-          {/* 施策効果の時系列推移 */}
+          {/* 施策効果�E時系列推移 */}
           <Card>
             <CardHeader>
-              <CardTitle>施策効果の時系列推移</CardTitle>
+              <CardTitle>施策効果�E時系列推移</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-80">
@@ -394,27 +391,27 @@ function Content() {
                     <Line 
                       yAxisId="left"
                       type="monotone" 
-                      dataKey="離職率" 
+                      dataKey="離職玁E 
                       stroke="#EF4444" 
                       strokeWidth={2}
-                      name="離職率 (%)"
+                      name="離職玁E(%)"
                     />
                     <Line 
                       yAxisId="right"
                       type="monotone" 
-                      dataKey="エンゲージメント" 
+                      dataKey="エンゲージメンチE 
                       stroke="#10B981" 
                       strokeWidth={2}
-                      name="エンゲージメント"
+                      name="エンゲージメンチE
                     />
                     <Line 
                       yAxisId="right"
                       type="monotone" 
-                      dataKey="ストレス指数" 
+                      dataKey="ストレス持E��" 
                       stroke="#F59E0B" 
                       strokeWidth={2}
                       strokeDasharray="5 5"
-                      name="ストレス指数"
+                      name="ストレス持E��"
                     />
                   </LineChart>
                 </ResponsiveContainer>
@@ -422,7 +419,7 @@ function Content() {
             </CardContent>
           </Card>
 
-          {/* 施策別コスト効率分析 */}
+          {/* 施策別コスト効玁E�E极E*/}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
@@ -432,7 +429,7 @@ function Content() {
                 <div className="h-80">
                   {strategyComparison.length === 0 ? (
                     <div className="flex items-center justify-center h-full text-gray-500">
-                      データがありません
+                      チE�Eタがありません
                     </div>
                   ) : (
                   <ResponsiveContainer width="100%" height="100%">
@@ -457,7 +454,7 @@ function Content() {
                       />
                       <Legend />
                       <Bar dataKey="効果スコア" fill="#3B82F6" isAnimationActive={false} />
-                      <Bar dataKey="コスト効率" fill="#10B981" isAnimationActive={false} />
+                      <Bar dataKey="コスト効玁E fill="#10B981" isAnimationActive={false} />
                     </BarChart>
                   </ResponsiveContainer>
                   )}
@@ -475,7 +472,7 @@ function Content() {
                     <thead className="bg-gray-50 sticky top-0">
                       <tr>
                         <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">部署</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">リスク率</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">リスク玁E/th>
                         <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">人数</th>
                       </tr>
                     </thead>
@@ -494,7 +491,7 @@ function Content() {
                               <span className="text-xs">{dept.riskRate.toFixed(1)}%</span>
                             </div>
                           </td>
-                          <td className="px-4 py-2 text-sm text-gray-500">{dept.count}名</td>
+                          <td className="px-4 py-2 text-sm text-gray-500">{dept.count}吁E/td>
                         </tr>
                       ))}
                     </tbody>
@@ -504,31 +501,31 @@ function Content() {
             </Card>
           </div>
 
-          {/* ROI分析と推奨事項 */}
+          {/* ROI刁E��と推奨事頁E*/}
           <Card>
             <CardHeader>
-              <CardTitle>投資対効果（ROI）分析</CardTitle>
+              <CardTitle>投賁E��効果！EOI�E��E极E/CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div className="bg-gray-50 p-4 rounded-lg">
-                    <h4 className="font-semibold text-gray-900 mb-2">施策投資額</h4>
+                    <h4 className="font-semibold text-gray-900 mb-2">施策投賁E��E/h4>
                     <p className="text-2xl font-bold text-blue-600">
                       ¥{(impactPrediction.totalCost ?? 0).toLocaleString()}
                     </p>
                     <p className="text-sm text-gray-600 mt-1">
-                      選択した{selectedStrategies.length}つの施策の合計
+                      選択した{selectedStrategies.length}つの施策�E合訁E
                     </p>
                   </div>
                   
                   <div className="bg-gray-50 p-4 rounded-lg">
-                    <h4 className="font-semibold text-gray-900 mb-2">予想削減コスト</h4>
+                    <h4 className="font-semibold text-gray-900 mb-2">予想削減コスチE/h4>
                     <p className="text-2xl font-bold text-green-600">
                       ¥{Math.round(((impactPrediction.baseline?.turnoverRate ?? 0) - (impactPrediction.predicted?.turnoverRate ?? 0)) * (currentTurnoverRisk?.total ?? 0) * 500000).toLocaleString()}
                     </p>
                     <p className="text-sm text-gray-600 mt-1">
-                      離職率改善による採用・研修コスト削減
+                      離職玁E��喁E��よる採用・研修コスト削渁E
                     </p>
                   </div>
                   
@@ -538,34 +535,34 @@ function Content() {
                       {impactPrediction.roi.toFixed(1)}%
                     </p>
                     <p className="text-sm text-blue-800 mt-1">
-                      {implementationPeriod}ヶ月での投資回収率
+                      {implementationPeriod}ヶ月での投賁E��収率
                     </p>
                   </div>
                 </div>
                 
                 <div className="space-y-4">
                   <div className="bg-amber-50 p-4 rounded-lg">
-                    <h4 className="font-semibold text-amber-900 mb-2">優先実施推奨施策</h4>
+                    <h4 className="font-semibold text-amber-900 mb-2">優先実施推奨施筁E/h4>
                     <ul className="list-disc list-inside text-sm text-amber-800 space-y-1">
                       {strategyComparison
                         .filter(s => s.selected)
-                        .sort((a, b) => b.コスト効率 - a.コスト効率)
+                        .sort((a, b) => b.コスト効玁E- a.コスト効玁E
                         .slice(0, 3)
                         .map(strategy => (
                           <li key={strategy.name}>
-                            {strategy.name}（コスト効率: {strategy.コスト効率.toFixed(1)}）
+                            {strategy.name}�E�コスト効玁E {strategy.コスト効玁EtoFixed(1)}�E�E
                           </li>
                         ))}
                     </ul>
                   </div>
                   
                   <div className="bg-green-50 p-4 rounded-lg">
-                    <h4 className="font-semibold text-green-900 mb-2">実施上の推奨事項</h4>
+                    <h4 className="font-semibold text-green-900 mb-2">実施上�E推奨事頁E/h4>
                     <ul className="list-disc list-inside text-sm text-green-800 space-y-1">
-                      <li>段階的な導入により効果を検証</li>
+                      <li>段階的な導�Eにより効果を検証</li>
                       <li>高リスク部署から優先的に実施</li>
-                      <li>定期的な効果測定とフィードバック</li>
-                      <li>職員の声を反映した施策の調整</li>
+                      <li>定期皁E��効果測定とフィードバチE��</li>
+                      <li>職員の声を反映した施策�E調整</li>
                     </ul>
                   </div>
                 </div>
@@ -577,26 +574,20 @@ function Content() {
           <div className="flex gap-4">
             <button 
               onClick={() => exportToPDF({
-                title: 'リテンション施策効果予測レポート',
+                title: 'リチE��ション施策効果予測レポ�EチE,
                 facility: selectedFacility,
                 reportType: 'retention-impact',
                 elementId: 'report-content',
-                dateRange: `実施期間: ${implementationPeriod}ヶ月`
+                dateRange: `実施期間: ${implementationPeriod}ヶ朁E
               })}
               className="pdf-exclude bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
             >
-              PDFダウンロード
+              PDFダウンローチE
             </button>
           </div>
 
         </div>
-      </div>
-      
-      <ScrollToTopButton />
-      <CategoryTopButton categoryPath="/reports/simulation" categoryName="シミュレーション" />
-      <BackToReportsButton />
-      <DashboardButton />
-    </div>
+      </div><CategoryTopButton categoryPath="/reports/simulation" categoryName="シミュレーション" /></div>
   );
 }
 

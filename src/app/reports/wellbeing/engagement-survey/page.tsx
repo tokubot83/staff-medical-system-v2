@@ -4,10 +4,7 @@ import React, { Suspense, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import CommonHeader from '@/components/CommonHeader';
-import DashboardButton from '@/components/DashboardButton';
-import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { CategoryTopButton } from '@/components/CategoryTopButton';
-import { BackToReportsButton } from '@/components/BackToReportsButton';
 import { exportToPDF } from '@/utils/pdfExport';
 import {
   Chart as ChartJS,
@@ -45,7 +42,7 @@ function Content() {
   const searchParams = useSearchParams();
   const facilityParam = searchParams.get('facility') || '';
   
-  // データの読み込みとフィルタリング
+  // チE�Eタの読み込みとフィルタリング
   const { individual, aggregates, trends } = useMemo(() => {
     const data = loadWellbeingData();
     return {
@@ -55,7 +52,7 @@ function Content() {
     };
   }, [facilityParam]);
   
-  // エンゲージメント3要素の平均値
+  // エンゲージメンチE要素の平坁E��
   const engagementAverages = useMemo(() => {
     const totals = individual.reduce((acc, person) => {
       acc.vigor += person.engagementScore.vigor;
@@ -75,8 +72,7 @@ function Content() {
     };
   }, [individual]);
   
-  // トレンド分析
-  const trendAnalysis = useMemo(() => {
+  // トレンド�E极E  const trendAnalysis = useMemo(() => {
     const trends = { up: 0, stable: 0, down: 0 };
     individual.forEach(person => {
       trends[person.engagementScore.trend]++;
@@ -86,7 +82,7 @@ function Content() {
   
   // 3要素のレーダーチャートデータ
   const radarData = useMemo(() => ({
-    labels: ['活力', '熱意', '没頭'],
+    labels: ['活劁E, '熱愁E, '没頭'],
     datasets: [{
       label: 'エンゲージメントスコア',
       data: [
@@ -104,9 +100,9 @@ function Content() {
     }]
   }), [engagementAverages]);
   
-  // トレンド円グラフデータ
+  // トレンド�Eグラフデータ
   const trendDoughnutData = useMemo(() => ({
-    labels: ['上昇傾向', '安定', '下降傾向'],
+    labels: ['上�E傾吁E, '安宁E, '下降傾吁E],
     datasets: [{
       data: [trendAnalysis.up, trendAnalysis.stable, trendAnalysis.down],
       backgroundColor: [
@@ -152,7 +148,7 @@ function Content() {
   // 時系列トレンドデータ
   const timeSeriesData = useMemo(() => {
     const facilityTrend = trends.find(t => 
-      t.category === 'facility' && (facilityParam ? t.name === facilityParam : t.name === '小原病院')
+      t.category === 'facility' && (facilityParam ? t.name === facilityParam : t.name === '小原痁E��')
     );
     
     if (!facilityTrend) return null;
@@ -160,7 +156,7 @@ function Content() {
     return {
       labels: facilityTrend.data.map(d => d.period),
       datasets: [{
-        label: 'エンゲージメント',
+        label: 'エンゲージメンチE,
         data: facilityTrend.data.map(d => d.engagement),
         borderColor: 'rgba(34, 197, 94, 1)',
         backgroundColor: 'rgba(34, 197, 94, 0.1)',
@@ -169,7 +165,7 @@ function Content() {
     };
   }, [trends, facilityParam]);
   
-  // 職種別比較データ
+  // 職種別比輁E��ータ
   const positionComparisonData = useMemo(() => {
     const positionData = aggregates.byPosition
       .filter(pos => !facilityParam || individual.some(i => i.position === pos.name))
@@ -179,7 +175,7 @@ function Content() {
       labels: positionData.map(p => p.name),
       datasets: [
         {
-          label: '活力',
+          label: '活劁E,
           data: positionData.map(p => {
             const posIndividuals = individual.filter(i => i.position === p.name);
             return posIndividuals.reduce((sum, i) => sum + i.engagementScore.vigor, 0) / posIndividuals.length || 0;
@@ -187,7 +183,7 @@ function Content() {
           backgroundColor: 'rgba(59, 130, 246, 0.6)'
         },
         {
-          label: '熱意',
+          label: '熱愁E,
           data: positionData.map(p => {
             const posIndividuals = individual.filter(i => i.position === p.name);
             return posIndividuals.reduce((sum, i) => sum + i.engagementScore.dedication, 0) / posIndividuals.length || 0;
@@ -217,14 +213,14 @@ function Content() {
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-bold">エンゲージメント調査</h1>
-                <p className="text-gray-600 mt-2">仕事への活力・熱意・没頭度を測定し、組織の活性度を評価</p>
+                <p className="text-gray-600 mt-2">仕事への活力�E熱意�E没頭度を測定し、絁E���E活性度を評価</p>
                 {facilityParam && (
                   <p className="text-sm text-gray-500 mt-1">対象施設: {facilityParam}</p>
                 )}
               </div>
               <button
                 onClick={() => exportToPDF({
-                  title: 'エンゲージメント調査レポート',
+                  title: 'エンゲージメント調査レポ�EチE,
                   facility: facilityParam || '全施設',
                   reportType: 'engagement-survey',
                   elementId: 'report-content',
@@ -232,12 +228,11 @@ function Content() {
                 })}
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm pdf-exclude"
               >
-                PDFダウンロード
-              </button>
+                PDFダウンローチE              </button>
             </div>
           </div>
 
-          {/* サマリーカード */}
+          {/* サマリーカーチE*/}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card>
               <CardHeader className="pb-3">
@@ -247,13 +242,13 @@ function Content() {
                 <p className="text-2xl font-bold text-green-600">
                   {engagementAverages.overall.toFixed(1)}
                 </p>
-                <p className="text-xs text-gray-500 mt-1">全体平均</p>
+                <p className="text-xs text-gray-500 mt-1">全体平坁E/p>
               </CardContent>
             </Card>
             
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-gray-500">活力</CardTitle>
+                <CardTitle className="text-sm font-medium text-gray-500">活劁E/CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold text-blue-600">
@@ -265,13 +260,13 @@ function Content() {
             
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-gray-500">熱意</CardTitle>
+                <CardTitle className="text-sm font-medium text-gray-500">熱愁E/CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold text-purple-600">
                   {engagementAverages.dedication.toFixed(1)}
                 </p>
-                <p className="text-xs text-gray-500 mt-1">仕事への情熱</p>
+                <p className="text-xs text-gray-500 mt-1">仕事への惁E�E</p>
               </CardContent>
             </Card>
             
@@ -283,16 +278,16 @@ function Content() {
                 <p className="text-2xl font-bold text-pink-600">
                   {engagementAverages.absorption.toFixed(1)}
                 </p>
-                <p className="text-xs text-gray-500 mt-1">集中度</p>
+                <p className="text-xs text-gray-500 mt-1">雁E��度</p>
               </CardContent>
             </Card>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* エンゲージメント3要素 */}
+            {/* エンゲージメンチE要素 */}
             <Card>
               <CardHeader>
-                <CardTitle>エンゲージメント3要素分析</CardTitle>
+                <CardTitle>エンゲージメンチE要素刁E��</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-64 flex items-center justify-center">
@@ -321,10 +316,10 @@ function Content() {
               </CardContent>
             </Card>
             
-            {/* トレンド分布 */}
+            {/* トレンド�E币E*/}
             <Card>
               <CardHeader>
-                <CardTitle>エンゲージメントトレンド</CardTitle>
+                <CardTitle>エンゲージメントトレンチE/CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-64 flex items-center justify-center">
@@ -348,7 +343,7 @@ function Content() {
                             label: (context) => {
                               const total = individual.length;
                               const percentage = ((context.parsed / total) * 100).toFixed(1);
-                              return `${context.label}: ${context.parsed}名 (${percentage}%)`;
+                              return `${context.label}: ${context.parsed}吁E(${percentage}%)`;
                             }
                           }
                         }
@@ -360,7 +355,7 @@ function Content() {
             </Card>
           </div>
           
-          {/* 部署別エンゲージメント */}
+          {/* 部署別エンゲージメンチE*/}
           <Card>
             <CardHeader>
               <CardTitle>部署別エンゲージメントスコア</CardTitle>
@@ -397,7 +392,7 @@ function Content() {
           {timeSeriesData && (
             <Card>
               <CardHeader>
-                <CardTitle>エンゲージメントの推移</CardTitle>
+                <CardTitle>エンゲージメント�E推移</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-64">
@@ -427,10 +422,10 @@ function Content() {
             </Card>
           )}
           
-          {/* 職種別3要素比較 */}
+          {/* 職種別3要素比輁E*/}
           <Card>
             <CardHeader>
-              <CardTitle>職種別エンゲージメント要素比較</CardTitle>
+              <CardTitle>職種別エンゲージメント要素比輁E/CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-96">
@@ -468,7 +463,7 @@ function Content() {
             </CardContent>
           </Card>
           
-          {/* 詳細テーブル */}
+          {/* 詳細チE�Eブル */}
           <Card>
             <CardHeader>
               <CardTitle>職種別エンゲージメント詳細</CardTitle>
@@ -488,17 +483,14 @@ function Content() {
                         総合スコア
                       </th>
                       <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        活力
-                      </th>
+                        活劁E                      </th>
                       <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        熱意
-                      </th>
+                        熱愁E                      </th>
                       <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                         没頭
                       </th>
                       <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        上昇傾向
-                      </th>
+                        上�E傾吁E                      </th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
@@ -558,13 +550,7 @@ function Content() {
           </Card>
 
         </div>
-      </div>
-      
-      <ScrollToTopButton />
-      <CategoryTopButton categoryPath="/reports/wellbeing" categoryName="ウェルビーイング" />
-      <BackToReportsButton />
-      <DashboardButton />
-    </div>
+      </div><CategoryTopButton categoryPath="/reports/wellbeing" categoryName="ウェルビ�Eイング" /></div>
   );
 }
 

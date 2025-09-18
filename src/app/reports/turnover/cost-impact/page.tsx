@@ -3,12 +3,9 @@
 import React, { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
-import DashboardButton from '@/components/DashboardButton';
 import FacilitySelector from '@/components/reports/FacilitySelector';
 import CategoryBackButton from '@/components/reports/CategoryBackButton';
-import ScrollToTopButton from '@/components/ScrollToTopButton';
 import DataComment from '@/components/DataComment';
-import { BackToReportsButton } from '@/components/BackToReportsButton';
 import { Bar, Doughnut, Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -35,16 +32,16 @@ ChartJS.register(
   Legend
 );
 
-// デモデータ生成
+// チE��チE�Eタ生�E
 const generateCostData = () => {
   const departments = ['看護部', '医療技術部', 'リハビリ部', '事務部', '薬剤部'];
-  const positions = ['新人', '中堅', '主任', '師長', '部長'];
+  const positions = ['新人', '中堁E, '主任', '師長', '部長'];
   
   return {
     totalCost: {
-      direct: 125000000, // 1.25億円
-      indirect: 87500000, // 0.875億円
-      opportunity: 62500000 // 0.625億円
+      direct: 125000000, // 1.25儁E�E
+      indirect: 87500000, // 0.875儁E�E
+      opportunity: 62500000 // 0.625儁E�E
     },
     byDepartment: departments.map(dept => ({
       department: dept,
@@ -61,11 +58,11 @@ const generateCostData = () => {
       productivityLoss: Math.floor(20 + Math.random() * 40)
     })),
     costBreakdown: {
-      '採用コスト': 35,
-      '研修コスト': 25,
-      '生産性低下': 20,
-      '既存スタッフ負担': 12,
-      'その他': 8
+      '採用コスチE: 35,
+      '研修コスチE: 25,
+      '生産性低丁E: 20,
+      '既存スタチE��負拁E: 12,
+      'そ�E仁E: 8
     },
     monthlyTrend: Array.from({length: 12}, (_, i) => ({
       month: `2024/${i + 1}`,
@@ -87,9 +84,9 @@ function CostImpactContent() {
   const [costData] = useState(generateCostData());
   const [selectedView, setSelectedView] = useState('overview');
 
-  // 総コスト構成チャート
+  // 総コスト構�EチャーチE
   const totalCostChart = {
-    labels: ['直接コスト', '間接コスト', '機会損失'],
+    labels: ['直接コスチE, '間接コスチE, '機会損失'],
     datasets: [{
       data: [
         costData.totalCost.direct,
@@ -110,17 +107,17 @@ function CostImpactContent() {
     }]
   };
 
-  // 部署別コストチャート
+  // 部署別コストチャーチE
   const departmentCostChart = {
     labels: costData.byDepartment.map(d => d.department),
     datasets: [
       {
-        label: '直接コスト',
+        label: '直接コスチE,
         data: costData.byDepartment.map(d => d.directCost),
         backgroundColor: 'rgba(239, 68, 68, 0.8)'
       },
       {
-        label: '間接コスト',
+        label: '間接コスチE,
         data: costData.byDepartment.map(d => d.indirectCost),
         backgroundColor: 'rgba(245, 158, 11, 0.8)'
       },
@@ -132,7 +129,7 @@ function CostImpactContent() {
     ]
   };
 
-  // コスト内訳チャート
+  // コスト�E訳チャーチE
   const costBreakdownChart = {
     labels: Object.keys(costData.costBreakdown),
     datasets: [{
@@ -147,11 +144,11 @@ function CostImpactContent() {
     }]
   };
 
-  // 月次トレンドチャート
+  // 月次トレンドチャーチE
   const monthlyTrendChart = {
     labels: costData.monthlyTrend.map(d => d.month),
     datasets: [{
-      label: '離職コスト（円）',
+      label: '離職コスト（�E�E�E,
       data: costData.monthlyTrend.map(d => d.cost),
       borderColor: 'rgb(239, 68, 68)',
       backgroundColor: 'rgba(239, 68, 68, 0.1)',
@@ -169,16 +166,16 @@ function CostImpactContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="離職コスト影響分析" />
+      <CommonHeader title="離職コスト影響刁E��" />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <div className="flex items-center gap-3 mb-4">
             <span className="text-3xl">💰</span>
-            <h1 className="text-2xl font-bold text-gray-900">離職コスト影響分析</h1>
+            <h1 className="text-2xl font-bold text-gray-900">離職コスト影響刁E��</h1>
           </div>
           <p className="text-gray-600">
-            離職による財務的影響を定量化し、投資対効果の高い改善施策を特定します。
+            離職による財務的影響を定量化し、投賁E��効果�E高い改喁E��策を特定します、E
           </p>
         </div>
 
@@ -189,29 +186,29 @@ function CostImpactContent() {
           />
         </div>
 
-        {/* サマリーカード */}
+        {/* サマリーカーチE*/}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-red-50 p-6 rounded-lg">
-            <p className="text-sm text-gray-600">年間総離職コスト</p>
+            <p className="text-sm text-gray-600">年間総離職コスチE/p>
             <p className="text-2xl font-bold text-red-600">
               {formatCurrency(costData.totalCost.direct + costData.totalCost.indirect + costData.totalCost.opportunity)}
             </p>
-            <p className="text-xs text-gray-500">売上高の約3.2%</p>
+            <p className="text-xs text-gray-500">売上高�E紁E.2%</p>
           </div>
           <div className="bg-orange-50 p-6 rounded-lg">
-            <p className="text-sm text-gray-600">1人あたり平均コスト</p>
+            <p className="text-sm text-gray-600">1人あたり平坁E��スチE/p>
             <p className="text-2xl font-bold text-orange-600">
               {formatCurrency(2750000)}
             </p>
-            <p className="text-xs text-gray-500">年収の約1.5倍</p>
+            <p className="text-xs text-gray-500">年収�E紁E.5倁E/p>
           </div>
           <div className="bg-blue-50 p-6 rounded-lg">
             <p className="text-sm text-gray-600">採用・研修期間</p>
             <p className="text-2xl font-bold text-blue-600">92日</p>
-            <p className="text-xs text-gray-500">生産性50%低下</p>
+            <p className="text-xs text-gray-500">生産性50%低丁E/p>
           </div>
           <div className="bg-green-50 p-6 rounded-lg">
-            <p className="text-sm text-gray-600">削減可能コスト</p>
+            <p className="text-sm text-gray-600">削減可能コスチE/p>
             <p className="text-2xl font-bold text-green-600">
               {formatCurrency(82500000)}
             </p>
@@ -219,14 +216,14 @@ function CostImpactContent() {
           </div>
         </div>
 
-        {/* ビュー選択タブ */}
+        {/* ビュー選択タチE*/}
         <div className="bg-white rounded-lg shadow-md p-4 mb-8">
           <div className="flex space-x-4">
             {[
-              { id: 'overview', label: '概要' },
-              { id: 'department', label: '部署別分析' },
-              { id: 'position', label: '職位別分析' },
-              { id: 'roi', label: 'ROI分析' }
+              { id: 'overview', label: '概要E },
+              { id: 'department', label: '部署別刁E��' },
+              { id: 'position', label: '職位別刁E��' },
+              { id: 'roi', label: 'ROI刁E��' }
             ].map(view => (
               <button
                 key={view.id}
@@ -243,16 +240,16 @@ function CostImpactContent() {
           </div>
         </div>
 
-        {/* メインコンテンツ */}
+        {/* メインコンチE��チE*/}
         {selectedView === 'overview' && (
           <div className="space-y-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div className="bg-white rounded-lg shadow-md p-6">
-                <h3 className="text-lg font-semibold mb-4">総コスト構成</h3>
+                <h3 className="text-lg font-semibold mb-4">総コスト構�E</h3>
                 <Doughnut data={totalCostChart} />
               </div>
               <div className="bg-white rounded-lg shadow-md p-6">
-                <h3 className="text-lg font-semibold mb-4">コスト内訳</h3>
+                <h3 className="text-lg font-semibold mb-4">コスト�E訳</h3>
                 <Doughnut data={costBreakdownChart} />
               </div>
             </div>
@@ -266,7 +263,7 @@ function CostImpactContent() {
         {selectedView === 'department' && (
           <div className="space-y-8">
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold mb-4">部署別離職コスト</h3>
+              <h3 className="text-lg font-semibold mb-4">部署別離職コスチE/h3>
               <Bar data={departmentCostChart} options={{ scales: { x: { stacked: true }, y: { stacked: true } } }} />
             </div>
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -274,10 +271,10 @@ function CostImpactContent() {
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">部署</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">離職率</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">離職玁E/th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">人数</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">総コスト</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">1人あたり</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">総コスチE/th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">1人あためE/th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -285,7 +282,7 @@ function CostImpactContent() {
                     <tr key={i}>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{dept.department}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{dept.turnoverRate.toFixed(1)}%</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{dept.headcount}名</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{dept.headcount}吁E/td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {formatCurrency(dept.directCost + dept.indirectCost + dept.opportunityCost)}
                       </td>
@@ -305,9 +302,9 @@ function CostImpactContent() {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">職位</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">平均コスト</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">補充期間</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">職佁E/th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">平坁E��スチE/th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">補�E期間</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">生産性損失</th>
                 </tr>
               </thead>
@@ -328,26 +325,26 @@ function CostImpactContent() {
         {selectedView === 'roi' && (
           <div className="space-y-8">
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold mb-6">投資対効果シミュレーション</h3>
+              <h3 className="text-lg font-semibold mb-6">投賁E��効果シミュレーション</h3>
               <div className="space-y-6">
                 <div className="border-l-4 border-red-500 pl-4">
-                  <p className="text-sm text-gray-600">現在の年間離職コスト</p>
+                  <p className="text-sm text-gray-600">現在の年間離職コスチE/p>
                   <p className="text-3xl font-bold text-red-600">{formatCurrency(costData.roi.currentCost)}</p>
                 </div>
                 <div className="border-l-4 border-blue-500 pl-4">
-                  <p className="text-sm text-gray-600">改善施策への投資額</p>
+                  <p className="text-sm text-gray-600">改喁E��策への投賁E��E/p>
                   <p className="text-3xl font-bold text-blue-600">{formatCurrency(costData.roi.investment)}</p>
                 </div>
                 <div className="border-l-4 border-green-500 pl-4">
-                  <p className="text-sm text-gray-600">予測される離職コスト（施策後）</p>
+                  <p className="text-sm text-gray-600">予測される離職コスト（施策後！E/p>
                   <p className="text-3xl font-bold text-green-600">{formatCurrency(costData.roi.projectedCost)}</p>
                 </div>
                 <div className="bg-green-50 p-6 rounded-lg">
-                  <p className="text-sm text-gray-600">年間削減効果</p>
+                  <p className="text-sm text-gray-600">年間削減効极E/p>
                   <p className="text-3xl font-bold text-green-600">
                     {formatCurrency(costData.roi.currentCost - costData.roi.projectedCost)}
                   </p>
-                  <p className="text-sm text-gray-600 mt-2">投資回収期間：{costData.roi.paybackPeriod}ヶ月</p>
+                  <p className="text-sm text-gray-600 mt-2">投賁E��収期間：{costData.roi.paybackPeriod}ヶ朁E/p>
                 </div>
               </div>
             </div>
@@ -355,19 +352,14 @@ function CostImpactContent() {
         )}
 
         <DataComment
-          comment="離職コストの30%は予防可能です。特に看護部での改善効果が大きいと予測されます。"
+          comment="離職コスト�E30%は予防可能です。特に看護部での改喁E��果が大きいと予測されます、E
           details={[
-            '採用・研修コストが全体の60%を占めている',
-            '管理職クラスの離職は一般職の3倍以上のコストがかかる',
-            '定着率を10%改善することで年間8,250万円の削減が可能'
+            '採用・研修コストが全体�E60%を占めてぁE��',
+            '管琁E�Eクラスの離職は一般職の3倍以上�EコストがかかめE,
+            '定着玁E��10%改喁E��ることで年閁E,250丁E�Eの削減が可能'
           ]}
         />
-      </div>
-      <ScrollToTopButton />
-      <CategoryBackButton />
-      <BackToReportsButton />
-      <DashboardButton />
-    </div>
+      </div><CategoryBackButton /></div>
   );
 }
 

@@ -4,10 +4,7 @@ import React, { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import CommonHeader from '@/components/CommonHeader';
-import DashboardButton from '@/components/DashboardButton';
-import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { CategoryTopButton } from '@/components/CategoryTopButton';
-import { BackToReportsButton } from '@/components/BackToReportsButton';
 import { exportToPDF } from '@/utils/pdfExport';
 import { DepartmentFlowChart } from '@/components/flow-analysis/DepartmentFlowChart';
 import { DepartmentFlowStats } from '@/components/flow-analysis/DepartmentFlowStats';
@@ -28,14 +25,14 @@ function DepartmentFlowContent() {
             <div className="flex justify-between items-start">
               <div>
                 <h1 className="text-2xl font-bold">部署間異動フロー</h1>
-                <p className="text-gray-600 mt-2">部署間の人材移動パターンを可視化し、組織内の人材流動性を分析</p>
+                <p className="text-gray-600 mt-2">部署間�E人材移動パターンを可視化し、絁E���Eの人材流動性を�E极E/p>
                 {facilityParam && (
                   <p className="text-sm text-gray-500 mt-1">対象施設: {facilityParam}</p>
                 )}
               </div>
               <button
                 onClick={() => exportToPDF({
-                  title: '部署間異動フローレポート',
+                  title: '部署間異動フローレポ�EチE,
                   facility: facilityParam,
                   reportType: 'department-flow',
                   elementId: 'report-content',
@@ -43,12 +40,11 @@ function DepartmentFlowContent() {
                 })}
                 className="pdf-exclude bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm"
               >
-                PDFダウンロード
-              </button>
+                PDFダウンローチE              </button>
             </div>
           </div>
 
-          {/* 部署間異動フロー統計 */}
+          {/* 部署間異動フロー統訁E*/}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <Card className="lg:col-span-2">
               <CardHeader>
@@ -69,10 +65,10 @@ function DepartmentFlowContent() {
             </Card>
           </div>
 
-          {/* 部署別統計 */}
+          {/* 部署別統訁E*/}
           <Card>
             <CardHeader>
-              <CardTitle>部署別異動統計</CardTitle>
+              <CardTitle>部署別異動統訁E/CardTitle>
             </CardHeader>
             <CardContent>
               <DepartmentStats facility={facilityParam} />
@@ -80,13 +76,7 @@ function DepartmentFlowContent() {
           </Card>
 
         </div>
-      </div>
-      
-      <ScrollToTopButton />
-      <CategoryTopButton categoryPath="/reports/flow-analysis" categoryName="人材フロー" />
-      <BackToReportsButton />
-      <DashboardButton />
-    </div>
+      </div><CategoryTopButton categoryPath="/reports/flow-analysis" categoryName="人材フロー" /></div>
   );
 }
 

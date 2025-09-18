@@ -4,10 +4,7 @@ import React, { Suspense, useState, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import CommonHeader from '@/components/CommonHeader';
-import DashboardButton from '@/components/DashboardButton';
-import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { CategoryTopButton } from '@/components/CategoryTopButton';
-import { BackToReportsButton } from '@/components/BackToReportsButton';
 import { exportToPDF } from '@/utils/pdfExport';
 import { staffDatabase } from '@/app/data/staffData';
 import {
@@ -50,9 +47,9 @@ function PerformanceCohortContent() {
   const [selectedTimeFrame, setSelectedTimeFrame] = useState('current');
 
   // パフォーマンスレベルの定義
-  const performanceLevels = ['トップパフォーマー', 'ハイパフォーマー', 'スタンダード', 'ニーズ改善'];
+  const performanceLevels = ['トップパフォーマ�E', 'ハイパフォーマ�E', 'スタンダーチE, 'ニ�Eズ改喁E];
 
-  // スタッフデータからパフォーマンスコホートを生成
+  // スタチE��チE�Eタからパフォーマンスコホ�Eトを生�E
   const performanceCohorts = useMemo(() => {
     const staffList = Object.values(staffDatabase).filter(staff => {
       if (selectedFacility !== '全施設' && staff.facility !== selectedFacility) return false;
@@ -65,10 +62,10 @@ function PerformanceCohortContent() {
       let cohortStaff = staffList.filter(staff => {
         const rating = staff.evaluationData?.rating || staff.evaluationHistory?.[0]?.performance || 3.5;
         switch (level) {
-          case 'トップパフォーマー': return rating >= 4.5;
-          case 'ハイパフォーマー': return rating >= 3.8 && rating < 4.5;
-          case 'スタンダード': return rating >= 3.0 && rating < 3.8;
-          case 'ニーズ改善': return rating < 3.0;
+          case 'トップパフォーマ�E': return rating >= 4.5;
+          case 'ハイパフォーマ�E': return rating >= 3.8 && rating < 4.5;
+          case 'スタンダーチE: return rating >= 3.0 && rating < 3.8;
+          case 'ニ�Eズ改喁E: return rating < 3.0;
           default: return false;
         }
       });
@@ -76,14 +73,14 @@ function PerformanceCohortContent() {
       const count = cohortStaff.length;
       if (count === 0) return null;
 
-      // 各指標の計算
+      // 吁E��標�E計箁E
       const avgRetention = cohortStaff.filter(s => !s.assignmentHistory?.some(h => h.reason === '退職')).length / count * 100;
-      const promotionRate = cohortStaff.filter(s => s.assignmentHistory?.some(h => h.reason === '昇進')).length / count * 100;
+      const promotionRate = cohortStaff.filter(s => s.assignmentHistory?.some(h => h.reason === '昁E��')).length / count * 100;
       const avgEngagement = cohortStaff.reduce((sum, s) => sum + s.engagement, 0) / count;
       // Salary is calculated based on performance level (simulation)
-      const avgSalary = level === 'トップパフォーマー' ? 500 : 
-                       level === 'ハイパフォーマー' ? 450 : 
-                       level === 'スタンダード' ? 400 : 350;
+      const avgSalary = level === 'トップパフォーマ�E' ? 500 : 
+                       level === 'ハイパフォーマ�E' ? 450 : 
+                       level === 'スタンダーチE ? 400 : 350;
       const turnoverRate = 100 - avgRetention;
       const skillDevelopment = cohortStaff.reduce((sum, s) => {
         const skills = s.skills?.length || 0;
@@ -105,37 +102,37 @@ function PerformanceCohortContent() {
     return cohortGroups;
   }, [selectedFacility, selectedDepartment]);
 
-  // 成長軌跡データ（時系列でのパフォーマンス変化）
+  // 成長軌跡チE�Eタ�E�時系列でのパフォーマンス変化�E�E
   const growthTrajectoryData = useMemo(() => {
     const years = ['1年目', '2年目', '3年目', '5年目', '10年目'];
     return years.map((year, index) => ({
       year,
-      'トップパフォーマー': 4.5 + index * 0.1,
-      'ハイパフォーマー': 3.8 + index * 0.15,
-      'スタンダード': 3.0 + index * 0.1,
-      'ニーズ改善': 2.5 + index * 0.2
+      'トップパフォーマ�E': 4.5 + index * 0.1,
+      'ハイパフォーマ�E': 3.8 + index * 0.15,
+      'スタンダーチE: 3.0 + index * 0.1,
+      'ニ�Eズ改喁E: 2.5 + index * 0.2
     }));
   }, []);
 
-  // レーダーチャート用データ（パフォーマンスレベル別特性）
+  // レーダーチャート用チE�Eタ�E�パフォーマンスレベル別特性�E�E
   const radarData = useMemo(() => {
-    const metrics = ['定着率', '昇進率', 'エンゲージメント', 'スキル開発', '給与水準'];
+    const metrics = ['定着玁E, '昁E��玁E, 'エンゲージメンチE, 'スキル開発', '給与水溁E];
     return metrics.map(metric => {
       const dataPoint: any = { metric };
       performanceCohorts.forEach(cohort => {
         switch (metric) {
-          case '定着率': dataPoint[cohort.level] = cohort.avgRetention; break;
-          case '昇進率': dataPoint[cohort.level] = cohort.promotionRate; break;
-          case 'エンゲージメント': dataPoint[cohort.level] = cohort.avgEngagement; break;
+          case '定着玁E: dataPoint[cohort.level] = cohort.avgRetention; break;
+          case '昁E��玁E: dataPoint[cohort.level] = cohort.promotionRate; break;
+          case 'エンゲージメンチE: dataPoint[cohort.level] = cohort.avgEngagement; break;
           case 'スキル開発': dataPoint[cohort.level] = cohort.skillDevelopment; break;
-          case '給与水準': dataPoint[cohort.level] = cohort.avgSalary / 5; break;
+          case '給与水溁E: dataPoint[cohort.level] = cohort.avgSalary / 5; break;
         }
       });
       return dataPoint;
     });
   }, [performanceCohorts]);
 
-  // 散布図用データ（パフォーマンスとエンゲージメントの相関）
+  // 散币E��用チE�Eタ�E�パフォーマンスとエンゲージメント�E相関�E�E
   const scatterData = useMemo(() => {
     return Object.values(staffDatabase).map(staff => {
       const performance = staff.evaluationData?.rating || staff.evaluationHistory?.[0]?.performance || 3.5;
@@ -148,7 +145,7 @@ function PerformanceCohortContent() {
     });
   }, []);
 
-  // 施設リストを取得
+  // 施設リストを取征E
   const facilities = useMemo(() => {
     const facilitySet = new Set<string>();
     Object.values(staffDatabase).forEach(staff => {
@@ -157,7 +154,7 @@ function PerformanceCohortContent() {
     return ['全施設', ...Array.from(facilitySet).sort()];
   }, []);
 
-  // 部署リストを取得
+  // 部署リストを取征E
   const departments = useMemo(() => {
     const departmentSet = new Set<string>();
     Object.values(staffDatabase).forEach(staff => {
@@ -170,15 +167,15 @@ function PerformanceCohortContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="パフォーマンスコホート分析" />
+      <CommonHeader title="パフォーマンスコホ�Eト�E极E />
       
       <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
           {/* ヘッダー */}
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h1 className="text-2xl font-bold">パフォーマンスコホート分析</h1>
+            <h1 className="text-2xl font-bold">パフォーマンスコホ�Eト�E极E/h1>
             <p className="text-gray-600 mt-2">
-              パフォーマンスレベル別に職員を分類し、各群の特性・成長軌跡・定着率を分析
+              パフォーマンスレベル別に職員を�E類し、各群の特性・成長軌跡・定着玁E��刁E��
             </p>
             {facilityParam && (
               <p className="text-sm text-gray-500 mt-1">対象施設: {facilityParam}</p>
@@ -229,13 +226,13 @@ function PerformanceCohortContent() {
                 >
                   <option value="current">現在</option>
                   <option value="yearly">年次推移</option>
-                  <option value="historical">過去比較</option>
+                  <option value="historical">過去比輁E/option>
                 </select>
               </div>
             </div>
           </div>
 
-          {/* パフォーマンスレベル別統計 */}
+          {/* パフォーマンスレベル別統訁E*/}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {performanceCohorts.map((cohort, index) => (
               <Card key={cohort.level}>
@@ -246,16 +243,16 @@ function PerformanceCohortContent() {
                   <div className="space-y-2">
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-gray-600">人数</span>
-                      <span className="text-lg font-semibold">{cohort.count}名</span>
+                      <span className="text-lg font-semibold">{cohort.count}吁E/span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">定着率</span>
+                      <span className="text-sm text-gray-600">定着玁E/span>
                       <span className={`text-lg font-semibold ${cohort.avgRetention >= 80 ? 'text-green-600' : 'text-amber-600'}`}>
                         {cohort.avgRetention}%
                       </span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">昇進率</span>
+                      <span className="text-sm text-gray-600">昁E��玁E/span>
                       <span className="text-lg font-semibold text-blue-600">{cohort.promotionRate}%</span>
                     </div>
                   </div>
@@ -264,10 +261,10 @@ function PerformanceCohortContent() {
             ))}
           </div>
 
-          {/* パフォーマンスレベル別比較 */}
+          {/* パフォーマンスレベル別比輁E*/}
           <Card>
             <CardHeader>
-              <CardTitle>パフォーマンスレベル別指標比較</CardTitle>
+              <CardTitle>パフォーマンスレベル別持E��比輁E/CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-96">
@@ -278,16 +275,16 @@ function PerformanceCohortContent() {
                     <YAxis />
                     <Tooltip />
                     <Legend />
-                    <Bar dataKey="avgRetention" name="定着率(%)" fill="#3B82F6" />
-                    <Bar dataKey="avgEngagement" name="エンゲージメント(%)" fill="#10B981" />
-                    <Bar dataKey="promotionRate" name="昇進率(%)" fill="#F59E0B" />
+                    <Bar dataKey="avgRetention" name="定着玁E%)" fill="#3B82F6" />
+                    <Bar dataKey="avgEngagement" name="エンゲージメンチE%)" fill="#10B981" />
+                    <Bar dataKey="promotionRate" name="昁E��玁E%)" fill="#F59E0B" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
             </CardContent>
           </Card>
 
-          {/* 成長軌跡分析 */}
+          {/* 成長軌跡刁E�� */}
           <Card>
             <CardHeader>
               <CardTitle>パフォーマンスレベル別成長軌跡</CardTitle>
@@ -317,7 +314,7 @@ function PerformanceCohortContent() {
             </CardContent>
           </Card>
 
-          {/* レーダーチャート */}
+          {/* レーダーチャーチE*/}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
@@ -347,10 +344,10 @@ function PerformanceCohortContent() {
               </CardContent>
             </Card>
 
-            {/* 散布図 */}
+            {/* 散币E�� */}
             <Card>
               <CardHeader>
-                <CardTitle>パフォーマンス vs エンゲージメント</CardTitle>
+                <CardTitle>パフォーマンス vs エンゲージメンチE/CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-80">
@@ -365,7 +362,7 @@ function PerformanceCohortContent() {
                       <YAxis 
                         dataKey="y" 
                         domain={[0, 100]}
-                        label={{ value: 'エンゲージメント', angle: -90, position: 'insideLeft' }}
+                        label={{ value: 'エンゲージメンチE, angle: -90, position: 'insideLeft' }}
                       />
                       <Tooltip cursor={{ strokeDasharray: '3 3' }} />
                       <Scatter name="職員" data={scatterData} fill="#3B82F6">
@@ -383,20 +380,20 @@ function PerformanceCohortContent() {
             </Card>
           </div>
 
-          {/* インサイト */}
+          {/* インサイチE*/}
           <Card>
             <CardHeader>
-              <CardTitle>主要インサイト</CardTitle>
+              <CardTitle>主要インサイチE/CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
                   <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
                   <div>
-                    <p className="font-semibold">トップパフォーマーの特徴</p>
+                    <p className="font-semibold">トップパフォーマ�Eの特徴</p>
                     <p className="text-sm text-gray-600">
-                      定着率が平均より20%高く、エンゲージメントも高水準を維持。
-                      継続的なスキル開発と昇進機会の提供が重要。
+                      定着玁E��平坁E��めE0%高く、エンゲージメントも高水準を維持、E
+                      継続的なスキル開発と昁E��機会�E提供が重要、E
                     </p>
                   </div>
                 </div>
@@ -405,18 +402,18 @@ function PerformanceCohortContent() {
                   <div>
                     <p className="font-semibold">成長可能性の高い層</p>
                     <p className="text-sm text-gray-600">
-                      スタンダードパフォーマーの30%は、適切な支援により
-                      ハイパフォーマーへの成長が期待できる。
+                      スタンダードパフォーマ�Eの30%は、E��刁E��支援により
+                      ハイパフォーマ�Eへの成長が期征E��きる、E
                     </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <div className="w-2 h-2 bg-red-500 rounded-full mt-2"></div>
                   <div>
-                    <p className="font-semibold">改善が必要な領域</p>
+                    <p className="font-semibold">改喁E��忁E��な領域</p>
                     <p className="text-sm text-gray-600">
-                      ニーズ改善群の離職率が高く、早期の介入と個別支援プログラムの
-                      実施が推奨される。
+                      ニ�Eズ改喁E��の離職玁E��高く、早期�E介�Eと個別支援プログラムの
+                      実施が推奨される、E
                     </p>
                   </div>
                 </div>
@@ -428,7 +425,7 @@ function PerformanceCohortContent() {
           <div className="flex gap-4">
             <button 
               onClick={() => exportToPDF({
-                title: 'パフォーマンスコホート分析レポート',
+                title: 'パフォーマンスコホ�Eト�E析レポ�EチE,
                 facility: selectedFacility,
                 reportType: 'performance-cohort',
                 elementId: 'report-content',
@@ -436,18 +433,12 @@ function PerformanceCohortContent() {
               })}
               className="pdf-exclude bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
             >
-              PDFダウンロード
+              PDFダウンローチE
             </button>
           </div>
 
         </div>
-      </div>
-      
-      <ScrollToTopButton />
-      <CategoryTopButton categoryPath="/reports/cohort-analysis" categoryName="コホート分析" />
-      <BackToReportsButton />
-      <DashboardButton />
-    </div>
+      </div><CategoryTopButton categoryPath="/reports/cohort-analysis" categoryName="コホ�Eト�E极E /></div>
   );
 }
 

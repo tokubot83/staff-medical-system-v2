@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import CommonHeader from '@/components/CommonHeader';
-import DashboardButton from '@/components/DashboardButton';
 
 export default function EvaluationSheetsV4Page() {
   const router = useRouter();
@@ -427,7 +426,6 @@ export default function EvaluationSheetsV4Page() {
           </div>
         </div>
         
-        <DashboardButton />
       </div>
     </>
   );

@@ -10,10 +10,7 @@ import { Users, Star, TrendingUp, AlertCircle, Target, Award } from 'lucide-reac
 import { obaraStaffDatabase, tachigamiStaffDatabase } from '@/app/data/staffData';
 import { StaffDetail } from "@/types/staff";
 import CommonHeader from '@/components/CommonHeader';
-import DashboardButton from '@/components/DashboardButton';
-import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { CategoryTopButton } from '@/components/CategoryTopButton';
-import { BackToReportsButton } from '@/components/BackToReportsButton';
 import { exportToPDF } from '@/utils/pdfExport';
 
 function TalentGridContent() {
@@ -23,48 +20,45 @@ function TalentGridContent() {
   const [selectedDepartment, setSelectedDepartment] = useState('all');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
-  // 施設に応じたスタッフデータを取得
-  const staffData = useMemo(() => {
-    if (facilityParam === '小原病院') {
+  // 施設に応じたスタチE��チE�Eタを取征E  const staffData = useMemo(() => {
+    if (facilityParam === '小原痁E��') {
       return Object.values(obaraStaffDatabase);
-    } else if (facilityParam === '立神リハビリテーション温泉病院') {
+    } else if (facilityParam === '立神リハビリチE�Eション温泉病院') {
       return Object.values(tachigamiStaffDatabase);
     } else {
       return [...Object.values(obaraStaffDatabase), ...Object.values(tachigamiStaffDatabase)];
     }
   }, [facilityParam]);
 
-  // 部署一覧を取得
-  const departments = useMemo(() => {
+  // 部署一覧を取征E  const departments = useMemo(() => {
     const deptSet = new Set(staffData.map(staff => staff.department));
     return Array.from(deptSet).sort();
   }, [staffData]);
 
-  // フィルタリングされたスタッフ
+  // フィルタリングされたスタチE��
   const filteredStaff = useMemo(() => {
     return staffData.filter(staff => 
       selectedDepartment === 'all' || staff.department === selectedDepartment
     );
   }, [staffData, selectedDepartment]);
 
-  // 9ボックスグリッドの分類
-  const categorizeStaff = (staff: StaffDetail) => {
+  // 9ボックスグリチE��の刁E��E  const categorizeStaff = (staff: StaffDetail) => {
     const lastEval = staff.evaluationHistory?.[0] || { performance: 3, growth: 3 };
     const performance = lastEval.performance;
     const potential = lastEval.growth;
 
-    if (performance >= 4.5 && potential >= 4.5) return { box: 1, label: 'スター人材', color: 'bg-yellow-500' };
-    if (performance >= 4.5 && potential >= 3.5) return { box: 2, label: 'ハイパフォーマー', color: 'bg-green-500' };
+    if (performance >= 4.5 && potential >= 4.5) return { box: 1, label: 'スター人杁E, color: 'bg-yellow-500' };
+    if (performance >= 4.5 && potential >= 3.5) return { box: 2, label: 'ハイパフォーマ�E', color: 'bg-green-500' };
     if (performance >= 4.5 && potential < 3.5) return { box: 3, label: '専門家', color: 'bg-blue-500' };
-    if (performance >= 3.5 && potential >= 4.5) return { box: 4, label: '高ポテンシャル', color: 'bg-purple-500' };
-    if (performance >= 3.5 && potential >= 3.5) return { box: 5, label: '中核人材', color: 'bg-indigo-500' };
-    if (performance >= 3.5 && potential < 3.5) return { box: 6, label: '堅実型', color: 'bg-gray-500' };
-    if (performance < 3.5 && potential >= 4.5) return { box: 7, label: '要育成（高潜在）', color: 'bg-orange-500' };
-    if (performance < 3.5 && potential >= 3.5) return { box: 8, label: '要育成', color: 'bg-red-400' };
-    return { box: 9, label: '要改善', color: 'bg-red-600' };
+    if (performance >= 3.5 && potential >= 4.5) return { box: 4, label: '高�EチE��シャル', color: 'bg-purple-500' };
+    if (performance >= 3.5 && potential >= 3.5) return { box: 5, label: '中核人杁E, color: 'bg-indigo-500' };
+    if (performance >= 3.5 && potential < 3.5) return { box: 6, label: '堁E��型', color: 'bg-gray-500' };
+    if (performance < 3.5 && potential >= 4.5) return { box: 7, label: '要育成（高潜在�E�E, color: 'bg-orange-500' };
+    if (performance < 3.5 && potential >= 3.5) return { box: 8, label: '要育戁E, color: 'bg-red-400' };
+    return { box: 9, label: '要改喁E, color: 'bg-red-600' };
   };
 
-  // 9ボックスグリッドのデータ準備
+  // 9ボックスグリチE��のチE�Eタ準備
   const gridData = useMemo(() => {
     const grid: Record<number, StaffDetail[]> = {};
     for (let i = 1; i <= 9; i++) {
@@ -93,7 +87,7 @@ function TalentGridContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="9ボックスグリッド分析" />
+      <CommonHeader title="9ボックスグリチE��刁E��" />
       
       <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
@@ -101,8 +95,8 @@ function TalentGridContent() {
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex justify-between items-center">
               <div>
-                <h1 className="text-2xl font-bold">9ボックスグリッド分析</h1>
-                <p className="text-gray-600 mt-2">パフォーマンス×ポテンシャルによる人材の可視化</p>
+                <h1 className="text-2xl font-bold">9ボックスグリチE��刁E��</h1>
+                <p className="text-gray-600 mt-2">パフォーマンス×�EチE��シャルによる人材�E可視化</p>
                 {facilityParam && (
                   <p className="text-sm text-gray-500 mt-1">対象施設: {facilityParam}</p>
                 )}
@@ -113,7 +107,7 @@ function TalentGridContent() {
                   onClick={() => setViewMode('grid')}
                   size="sm"
                 >
-                  グリッド表示
+                  グリチE��表示
                 </Button>
                 <Button
                   variant={viewMode === 'list' ? 'default' : 'outline'}
@@ -124,7 +118,7 @@ function TalentGridContent() {
                 </Button>
                 <button
                   onClick={() => exportToPDF({
-                    title: '9ボックスグリッド分析レポート',
+                    title: '9ボックスグリチE��刁E��レポ�EチE,
                     facility: facilityParam,
                     reportType: 'talent-grid',
                     elementId: 'report-content',
@@ -132,8 +126,7 @@ function TalentGridContent() {
                   })}
                   className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm pdf-exclude"
                 >
-                  PDFダウンロード
-                </button>
+                  PDFダウンローチE                </button>
               </div>
             </div>
           </div>
@@ -141,7 +134,7 @@ function TalentGridContent() {
           {/* フィルター */}
           <Card>
             <CardHeader>
-              <CardTitle>フィルター設定</CardTitle>
+              <CardTitle>フィルター設宁E/CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 gap-4">
@@ -180,7 +173,7 @@ function TalentGridContent() {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600">スター人材</p>
+                    <p className="text-sm text-gray-600">スター人杁E/p>
                     <p className="text-2xl font-bold">{statistics.starTalent}</p>
                   </div>
                   <Star className="h-8 w-8 text-yellow-500" />
@@ -191,7 +184,7 @@ function TalentGridContent() {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600">ハイパフォーマー</p>
+                    <p className="text-sm text-gray-600">ハイパフォーマ�E</p>
                     <p className="text-2xl font-bold">{statistics.highPerformer}</p>
                   </div>
                   <Award className="h-8 w-8 text-green-500" />
@@ -202,7 +195,7 @@ function TalentGridContent() {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600">高ポテンシャル</p>
+                    <p className="text-sm text-gray-600">高�EチE��シャル</p>
                     <p className="text-2xl font-bold">{statistics.highPotential}</p>
                   </div>
                   <TrendingUp className="h-8 w-8 text-purple-500" />
@@ -213,7 +206,7 @@ function TalentGridContent() {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600">要育成・改善</p>
+                    <p className="text-sm text-gray-600">要育成�E改喁E/p>
                     <p className="text-2xl font-bold">{statistics.needDevelopment}</p>
                   </div>
                   <AlertCircle className="h-8 w-8 text-orange-500" />
@@ -222,38 +215,35 @@ function TalentGridContent() {
             </Card>
           </div>
 
-          {/* 9ボックスグリッド表示 */}
+          {/* 9ボックスグリチE��表示 */}
           {viewMode === 'grid' && (
             <Card>
               <CardHeader>
-                <CardTitle>9ボックスグリッド</CardTitle>
+                <CardTitle>9ボックスグリチE��</CardTitle>
                 <CardDescription>
-                  縦軸：ポテンシャル（成長性）、横軸：パフォーマンス（現在の実績）
-                </CardDescription>
+                  縦軸�E��EチE��シャル�E��E長性�E�、横軸�E�パフォーマンス�E�現在の実績�E�E                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="relative">
                   {/* 軸ラベル */}
                   <div className="absolute -left-16 top-1/2 -translate-y-1/2 -rotate-90 text-sm font-medium">
-                    ポテンシャル →
-                  </div>
+                    ポテンシャル ↁE                  </div>
                   <div className="absolute bottom-[-2rem] left-1/2 -translate-x-1/2 text-sm font-medium">
-                    パフォーマンス →
-                  </div>
+                    パフォーマンス ↁE                  </div>
 
-                  {/* グリッド */}
+                  {/* グリチE�� */}
                   <div className="grid grid-cols-3 gap-2">
                     {[7, 4, 1, 8, 5, 2, 9, 6, 3].map((boxNum) => {
                       const boxDef = {
-                        1: { label: 'スター人材', color: 'bg-yellow-100 border-yellow-500' },
-                        2: { label: 'ハイパフォーマー', color: 'bg-green-100 border-green-500' },
+                        1: { label: 'スター人杁E, color: 'bg-yellow-100 border-yellow-500' },
+                        2: { label: 'ハイパフォーマ�E', color: 'bg-green-100 border-green-500' },
                         3: { label: '専門家', color: 'bg-blue-100 border-blue-500' },
-                        4: { label: '高ポテンシャル', color: 'bg-purple-100 border-purple-500' },
-                        5: { label: '中核人材', color: 'bg-indigo-100 border-indigo-500' },
-                        6: { label: '堅実型', color: 'bg-gray-100 border-gray-500' },
-                        7: { label: '要育成（高潜在）', color: 'bg-orange-100 border-orange-500' },
-                        8: { label: '要育成', color: 'bg-red-100 border-red-400' },
-                        9: { label: '要改善', color: 'bg-red-200 border-red-600' }
+                        4: { label: '高�EチE��シャル', color: 'bg-purple-100 border-purple-500' },
+                        5: { label: '中核人杁E, color: 'bg-indigo-100 border-indigo-500' },
+                        6: { label: '堁E��型', color: 'bg-gray-100 border-gray-500' },
+                        7: { label: '要育成（高潜在�E�E, color: 'bg-orange-100 border-orange-500' },
+                        8: { label: '要育戁E, color: 'bg-red-100 border-red-400' },
+                        9: { label: '要改喁E, color: 'bg-red-200 border-red-600' }
                       }[boxNum];
 
                       const staffInBox = gridData[boxNum] || [];
@@ -264,7 +254,7 @@ function TalentGridContent() {
                           className={`border-2 rounded-lg p-4 min-h-[150px] ${boxDef?.color}`}
                         >
                           <div className="font-semibold text-sm mb-2">{boxDef?.label}</div>
-                          <div className="text-2xl font-bold mb-2">{staffInBox.length}名</div>
+                          <div className="text-2xl font-bold mb-2">{staffInBox.length}吁E/div>
                           <div className="text-xs text-gray-600">
                             {((staffInBox.length / statistics.total) * 100).toFixed(1)}%
                           </div>
@@ -281,7 +271,7 @@ function TalentGridContent() {
           {viewMode === 'list' && (
             <Card>
               <CardHeader>
-                <CardTitle>人材リスト</CardTitle>
+                <CardTitle>人材リスチE/CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -289,22 +279,22 @@ function TalentGridContent() {
                     if (staffList.length === 0) return null;
 
                     const boxDef = {
-                      '1': { label: 'スター人材', color: 'bg-yellow-500' },
-                      '2': { label: 'ハイパフォーマー', color: 'bg-green-500' },
+                      '1': { label: 'スター人杁E, color: 'bg-yellow-500' },
+                      '2': { label: 'ハイパフォーマ�E', color: 'bg-green-500' },
                       '3': { label: '専門家', color: 'bg-blue-500' },
-                      '4': { label: '高ポテンシャル', color: 'bg-purple-500' },
-                      '5': { label: '中核人材', color: 'bg-indigo-500' },
-                      '6': { label: '堅実型', color: 'bg-gray-500' },
-                      '7': { label: '要育成（高潜在）', color: 'bg-orange-500' },
-                      '8': { label: '要育成', color: 'bg-red-400' },
-                      '9': { label: '要改善', color: 'bg-red-600' }
+                      '4': { label: '高�EチE��シャル', color: 'bg-purple-500' },
+                      '5': { label: '中核人杁E, color: 'bg-indigo-500' },
+                      '6': { label: '堁E��型', color: 'bg-gray-500' },
+                      '7': { label: '要育成（高潜在�E�E, color: 'bg-orange-500' },
+                      '8': { label: '要育戁E, color: 'bg-red-400' },
+                      '9': { label: '要改喁E, color: 'bg-red-600' }
                     }[boxNum];
 
                     return (
                       <div key={boxNum}>
                         <h3 className="font-semibold text-lg mb-2 flex items-center gap-2">
                           <Badge className={boxDef?.color}>{boxDef?.label}</Badge>
-                          <span className="text-gray-500">({staffList.length}名)</span>
+                          <span className="text-gray-500">({staffList.length}吁E</span>
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                           {staffList.map(staff => (
@@ -330,7 +320,7 @@ function TalentGridContent() {
             </Card>
           )}
 
-          {/* アクション提案 */}
+          {/* アクション提桁E*/}
           <Card>
             <CardHeader>
               <CardTitle>推奨アクション</CardTitle>
@@ -341,11 +331,9 @@ function TalentGridContent() {
                   <div className="flex items-start gap-3">
                     <Target className="h-5 w-5 text-yellow-500 mt-0.5" />
                     <div>
-                      <p className="font-medium">スター人材の活用</p>
+                      <p className="font-medium">スター人材�E活用</p>
                       <p className="text-sm text-gray-600">
-                        {statistics.starTalent}名のスター人材を組織変革のリーダーとして活用し、
-                        後継者育成プログラムへの参画を検討してください。
-                      </p>
+                        {statistics.starTalent}名�Eスター人材を絁E��変革のリーダーとして活用し、E                        後継老E��成�Eログラムへの参画を検討してください、E                      </p>
                     </div>
                   </div>
                 )}
@@ -353,11 +341,9 @@ function TalentGridContent() {
                   <div className="flex items-start gap-3">
                     <TrendingUp className="h-5 w-5 text-purple-500 mt-0.5" />
                     <div>
-                      <p className="font-medium">高ポテンシャル人材の育成</p>
+                      <p className="font-medium">高�EチE��シャル人材�E育戁E/p>
                       <p className="text-sm text-gray-600">
-                        {statistics.highPotential}名の高ポテンシャル人材に対して、
-                        ストレッチアサインメントやメンタリングプログラムの提供を推奨します。
-                      </p>
+                        {statistics.highPotential}名�E高�EチE��シャル人材に対して、E                        ストレチE��アサインメントやメンタリングプログラムの提供を推奨します、E                      </p>
                     </div>
                   </div>
                 )}
@@ -365,11 +351,9 @@ function TalentGridContent() {
                   <div className="flex items-start gap-3">
                     <AlertCircle className="h-5 w-5 text-orange-500 mt-0.5" />
                     <div>
-                      <p className="font-medium">要育成・改善人材へのサポート</p>
+                      <p className="font-medium">要育成�E改喁E��材へのサポ�EチE/p>
                       <p className="text-sm text-gray-600">
-                        {statistics.needDevelopment}名の要育成・改善人材に対して、
-                        個別の育成計画策定と定期的なフィードバックの実施が必要です。
-                      </p>
+                        {statistics.needDevelopment}名�E要育成�E改喁E��材に対して、E                        個別の育成計画策定と定期皁E��フィードバチE��の実施が忁E��です、E                      </p>
                     </div>
                   </div>
                 )}
@@ -378,13 +362,7 @@ function TalentGridContent() {
           </Card>
 
         </div>
-      </div>
-      
-      <ScrollToTopButton />
-      <CategoryTopButton categoryPath="/reports/talent-mapping" categoryName="タレントマッピング" />
-      <BackToReportsButton />
-      <DashboardButton />
-    </div>
+      </div><CategoryTopButton categoryPath="/reports/talent-mapping" categoryName="タレント�EチE��ング" /></div>
   );
 }
 

@@ -2,10 +2,7 @@
 
 import React, { useState, useMemo } from 'react'
 import CommonHeader from '@/components/CommonHeader'
-import DashboardButton from '@/components/DashboardButton'
-import ScrollToTopButton from '@/components/ScrollToTopButton'
 import { CategoryTopButton } from '@/components/CategoryTopButton'
-import { BackToReportsButton } from '@/components/BackToReportsButton'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { staffDatabase } from '@/app/data/staffData'
@@ -15,7 +12,7 @@ export default function PerformanceMatrixPage() {
   const [selectedFacility, setSelectedFacility] = useState('all')
   const [selectedPosition, setSelectedPosition] = useState('all')
 
-  // スタッフリストを配列に変換
+  // スタチE��リストを配�Eに変換
   const staffList = Object.values(staffDatabase)
 
   // フィルタリング
@@ -27,19 +24,19 @@ export default function PerformanceMatrixPage() {
     return matchesDepartment && matchesFacility && matchesPosition
   })
 
-  // 部署・施設・職位リストを生成
+  // 部署・施設・職位リストを生�E
   const departments = Array.from(new Set(staffList.map(s => s.department).filter(Boolean)))
   const facilities = Array.from(new Set(staffList.map(s => s.facility).filter(Boolean)))
   const positions = Array.from(new Set(staffList.map(s => s.position).filter(Boolean)))
 
-  // 位置づけデータを計算（実際の実装では評価データから計算）
+  // 位置づけデータを計算（実際の実裁E��は評価チE�Eタから計算！E
   const positioningData = useMemo(() => {
     return filteredStaff.map(staff => {
-      // ランダムな位置づけを生成（実際はデータベースから取得）
+      // ランダムな位置づけを生�E�E�実際はチE�Eタベ�Eスから取得！E
       const facilityRank = Math.floor(Math.random() * 100) + 1
       const corporateRank = Math.floor(Math.random() * 100) + 1
       
-      // グレード判定
+      // グレード判宁E
       const getGrade = (rank: number) => {
         if (rank <= 10) return 'S'
         if (rank <= 30) return 'A'
@@ -58,7 +55,7 @@ export default function PerformanceMatrixPage() {
     })
   }, [filteredStaff])
 
-  // マトリクスデータを生成
+  // マトリクスチE�Eタを生戁E
   const matrixData = useMemo(() => {
     const matrix: Record<string, Record<string, typeof positioningData>> = {
       S: { S: [], A: [], B: [], C: [], D: [] },
@@ -87,13 +84,13 @@ export default function PerformanceMatrixPage() {
   }
 
   const getCellColor = (facilityGrade: string, corporateGrade: string) => {
-    // 両方Sなら最も良い
+    // 両方Sなら最も良ぁE
     if (facilityGrade === 'S' && corporateGrade === 'S') return 'bg-red-100'
-    // どちらかがSなら良い
+    // どちらかがSなら良ぁE
     if (facilityGrade === 'S' || corporateGrade === 'S') return 'bg-orange-50'
-    // 両方AかBなら標準
+    // 両方AかBなら標溁E
     if ((facilityGrade === 'A' || facilityGrade === 'B') && (corporateGrade === 'A' || corporateGrade === 'B')) return 'bg-green-50'
-    // どちらかがCなら要注意
+    // どちらかがCなら要注愁E
     if (facilityGrade === 'C' || corporateGrade === 'C') return 'bg-blue-50'
     // どちらかがDなら要支援
     return 'bg-gray-100'
@@ -101,14 +98,14 @@ export default function PerformanceMatrixPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="位置づけマトリクス" />
+      <CommonHeader title="位置づけ�Eトリクス" />
       
       <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
           {/* ヘッダー */}
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h1 className="text-2xl font-bold">位置づけマトリクス</h1>
-            <p className="text-gray-600 mt-2">施設内評価と法人内評価による職員の位置づけを可視化</p>
+            <h1 className="text-2xl font-bold">位置づけ�Eトリクス</h1>
+            <p className="text-gray-600 mt-2">施設冁E��価と法人冁E��価による職員の位置づけを可視化</p>
           </div>
 
           <div className="space-y-6">
@@ -143,7 +140,7 @@ export default function PerformanceMatrixPage() {
                 value={selectedPosition}
                 onChange={(e) => setSelectedPosition(e.target.value)}
               >
-                <option value="all">全職位</option>
+                <option value="all">全職佁E/option>
                 {positions.map(position => (
                   <option key={position} value={position}>{position}</option>
                 ))}
@@ -151,18 +148,18 @@ export default function PerformanceMatrixPage() {
             </div>
           </Card>
 
-          {/* 位置づけマトリクス */}
+          {/* 位置づけ�Eトリクス */}
           <Card className="p-6">
-            <h3 className="text-lg font-bold mb-4">位置づけマトリクス</h3>
+            <h3 className="text-lg font-bold mb-4">位置づけ�Eトリクス</h3>
             <div className="overflow-x-auto">
               <table className="w-full border-collapse">
                 <thead>
                   <tr>
                     <th className="border p-2 bg-gray-50" rowSpan={2}>
-                      施設内評価
+                      施設冁E��価
                     </th>
                     <th className="border p-2 bg-gray-50" colSpan={5}>
-                      法人内評価
+                      法人冁E��価
                     </th>
                   </tr>
                   <tr>
@@ -190,7 +187,7 @@ export default function PerformanceMatrixPage() {
                         >
                           <div className="min-h-[60px]">
                             <div className="font-bold text-lg">
-                              {matrixData[facilityGrade][corporateGrade].length}名
+                              {matrixData[facilityGrade][corporateGrade].length}吁E
                             </div>
                             {matrixData[facilityGrade][corporateGrade].length > 0 && (
                               <div className="text-xs text-gray-600 mt-1">
@@ -206,20 +203,20 @@ export default function PerformanceMatrixPage() {
               </table>
             </div>
 
-            {/* 凡例 */}
+            {/* 凡侁E*/}
             <div className="mt-6 p-4 bg-gray-50 rounded">
-              <h4 className="font-semibold mb-2">位置づけの解釈</h4>
+              <h4 className="font-semibold mb-2">位置づけ�E解釁E/h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
                 <div className="flex items-start gap-2">
                   <div className="w-4 h-4 bg-red-100 rounded mt-0.5"></div>
                   <div>
-                    <span className="font-semibold">S×S:</span> 施設・法人両方でトップ層（次期リーダー候補）
+                    <span className="font-semibold">S×S:</span> 施設・法人両方でトップ層�E�次期リーダー候補！E
                   </div>
                 </div>
                 <div className="flex items-start gap-2">
                   <div className="w-4 h-4 bg-orange-50 rounded mt-0.5"></div>
                   <div>
-                    <span className="font-semibold">S×A-D, A-D×S:</span> どちらかでトップ層（ポテンシャル人材）
+                    <span className="font-semibold">S×A-D, A-D×S:</span> どちらかでトップ層�E��EチE��シャル人材！E
                   </div>
                 </div>
                 <div className="flex items-start gap-2">
@@ -238,19 +235,19 @@ export default function PerformanceMatrixPage() {
             </div>
           </Card>
 
-          {/* 詳細リスト */}
+          {/* 詳細リスチE*/}
           <Card className="p-6">
             <h3 className="text-lg font-bold mb-4">職員詳細</h3>
             <div className="overflow-x-auto max-h-96">
               <table className="w-full">
                 <thead className="bg-gray-50 sticky top-0">
                   <tr>
-                    <th className="px-4 py-2 text-left">職員名</th>
+                    <th className="px-4 py-2 text-left">職員吁E/th>
                     <th className="px-4 py-2 text-left">部署</th>
-                    <th className="px-4 py-2 text-left">職位</th>
+                    <th className="px-4 py-2 text-left">職佁E/th>
                     <th className="px-4 py-2 text-left">施設</th>
-                    <th className="px-4 py-2 text-center">施設内評価</th>
-                    <th className="px-4 py-2 text-center">法人内評価</th>
+                    <th className="px-4 py-2 text-center">施設冁E��価</th>
+                    <th className="px-4 py-2 text-center">法人冁E��価</th>
                     <th className="px-4 py-2 text-center">総合評価</th>
                   </tr>
                 </thead>
@@ -290,12 +287,6 @@ export default function PerformanceMatrixPage() {
           </Card>
           </div>
         </div>
-      </div>
-      
-      <ScrollToTopButton />
-      <CategoryTopButton categoryPath="/reports/performance-evaluation" categoryName="人事評価分析" />
-      <BackToReportsButton />
-      <DashboardButton />
-    </div>
+      </div><CategoryTopButton categoryPath="/reports/performance-evaluation" categoryName="人事評価刁E��" /></div>
   )
 }

@@ -4,10 +4,7 @@ import React, { Suspense, useState, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import CommonHeader from '@/components/CommonHeader';
-import DashboardButton from '@/components/DashboardButton';
-import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { CategoryTopButton } from '@/components/CategoryTopButton';
-import { BackToReportsButton } from '@/components/BackToReportsButton';
 import { exportToPDF } from '@/utils/pdfExport';
 import { staffDatabase } from '@/app/data/staffData';
 import { StaffDetail } from "@/types/staff";
@@ -29,15 +26,15 @@ function SuccessionPlanningContent() {
     { title: '看護部長', candidates: ['師長'] },
     { title: '師長', candidates: ['主任看護師'] },
     { title: '主任看護師', candidates: ['看護師'] },
-    { title: 'リハビリ科長', candidates: ['主任理学療法士', '主任作業療法士'] },
-    { title: '主任理学療法士', candidates: ['理学療法士'] },
+    { title: 'リハビリ科長', candidates: ['主任琁E��療法士', '主任作業療法士'] },
+    { title: '主任琁E��療法士', candidates: ['琁E��療法士'] },
     { title: '主任作業療法士', candidates: ['作業療法士'] },
     { title: '主任介護福祉士', candidates: ['介護福祉士'] },
     { title: '介護主任', candidates: ['介護士'] },
-    { title: '主任看護補助者', candidates: ['看護補助者'] }
+    { title: '主任看護補助老E, candidates: ['看護補助老E] }
   ];
   
-  // スタッフをフィルタリング
+  // スタチE��をフィルタリング
   const filteredStaff = useMemo(() => {
     return Object.values(staffDatabase).filter(staff => {
       if (selectedFacility === 'all') return true;
@@ -45,54 +42,48 @@ function SuccessionPlanningContent() {
     });
   }, [selectedFacility]);
   
-  // 現任者を取得
-  const getCurrentHolders = (positionTitle: string) => {
+  // 現任老E��取征E  const getCurrentHolders = (positionTitle: string) => {
     return filteredStaff.filter(staff => 
       staff.position.includes(positionTitle)
     );
   };
   
-  // 後継者候補を取得
-  const getSuccessionCandidates = (candidatePositions: string[]): SuccessionCandidate[] => {
+  // 後継老E��補を取征E  const getSuccessionCandidates = (candidatePositions: string[]): SuccessionCandidate[] => {
     return filteredStaff.filter(staff => {
-      // 現在の職位が候補職位に含まれている
+      // 現在の職位が候補�E位に含まれてぁE��
       const isCandidate = candidatePositions.some(pos => staff.position.includes(pos));
       
-      // 評価がA以上
-      const hasGoodEvaluation = ['S', 'A'].includes(staff.evaluation);
+      // 評価がA以丁E      const hasGoodEvaluation = ['S', 'A'].includes(staff.evaluation);
       
       return isCandidate && hasGoodEvaluation;
     }).map(staff => {
-      // 経験年数を取得
-      const tenure = parseInt(staff.tenure.match(/(\d+)年/)?.[1] || '0');
+      // 経験年数を取征E      const tenure = parseInt(staff.tenure.match(/(\d+)年/)?.[1] || '0');
       const evaluationScore = staff.evaluation === 'S' ? 5 : staff.evaluation === 'A' ? 4 : 3;
       const skillAverage = staff.skills.reduce((sum, skill) => sum + skill.level, 0) / staff.skills.length;
       
-      // 準備度を計算
-      let readiness = 'Ready 3+ Years';
+      // 準備度を計箁E      let readiness = 'Ready 3+ Years';
       const developmentNeeds: string[] = [];
       
       if (tenure >= 8 && evaluationScore >= 4 && skillAverage >= 85) {
         readiness = 'Ready Now';
       } else if (tenure >= 5 && evaluationScore >= 4 && skillAverage >= 75) {
         readiness = 'Ready 1-2 Years';
-        if (tenure < 8) developmentNeeds.push('経験年数の蓄積');
-        if (skillAverage < 85) developmentNeeds.push('スキルレベルの向上');
+        if (tenure < 8) developmentNeeds.push('経験年数の蓁E��E);
+        if (skillAverage < 85) developmentNeeds.push('スキルレベルの向丁E);
       } else {
-        if (tenure < 5) developmentNeeds.push('経験年数の蓄積');
-        if (evaluationScore < 4) developmentNeeds.push('パフォーマンスの改善');
-        if (skillAverage < 75) developmentNeeds.push('スキルレベルの向上');
+        if (tenure < 5) developmentNeeds.push('経験年数の蓁E��E);
+        if (evaluationScore < 4) developmentNeeds.push('パフォーマンスの改喁E);
+        if (skillAverage < 75) developmentNeeds.push('スキルレベルの向丁E);
       }
       
-      // リーダーシップスキルが不足している場合
-      const hasLeadershipSkill = staff.skills.some(skill => 
-        skill.name.includes('リーダーシップ') || 
-        skill.name.includes('チームマネジメント') ||
-        skill.name.includes('新人指導') ||
+      // リーダーシチE�Eスキルが不足してぁE��場吁E      const hasLeadershipSkill = staff.skills.some(skill => 
+        skill.name.includes('リーダーシチE�E') || 
+        skill.name.includes('チ�EムマネジメンチE) ||
+        skill.name.includes('新人持E��E) ||
         skill.name.includes('新人教育')
       );
       if (!hasLeadershipSkill) {
-        developmentNeeds.push('リーダーシップスキルの習得');
+        developmentNeeds.push('リーダーシチE�Eスキルの習征E);
       }
       
       const readinessScore = (tenure / 20 + evaluationScore / 5 + skillAverage / 100) / 3 * 100;
@@ -106,7 +97,7 @@ function SuccessionPlanningContent() {
     }).sort((a, b) => b.readinessScore - a.readinessScore);
   };
   
-  // 選択されたポジションの情報
+  // 選択されたポジションの惁E��
   const selectedPositionData = useMemo(() => {
     if (!selectedPosition) return null;
     const position = keyPositions.find(p => p.title === selectedPosition);
@@ -150,7 +141,7 @@ function SuccessionPlanningContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="後継者計画" />
+      <CommonHeader title="後継老E��画" />
       
       <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
@@ -158,15 +149,15 @@ function SuccessionPlanningContent() {
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl font-bold">後継者計画</h1>
-                <p className="text-gray-600 mt-2">キーポジションの後継者候補を特定し、計画的な人材育成を支援</p>
+                <h1 className="text-2xl font-bold">後継老E��画</h1>
+                <p className="text-gray-600 mt-2">キーポジションの後継老E��補を特定し、計画皁E��人材育成を支援</p>
                 {facilityParam && (
                   <p className="text-sm text-gray-500 mt-1">対象施設: {facilityParam}</p>
                 )}
               </div>
               <button
                 onClick={() => exportToPDF({
-                  title: '後継者計画レポート',
+                  title: '後継老E��画レポ�EチE,
                   facility: facilityParam,
                   reportType: 'succession-planning',
                   elementId: 'report-content',
@@ -174,8 +165,7 @@ function SuccessionPlanningContent() {
                 })}
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm pdf-exclude"
               >
-                PDFダウンロード
-              </button>
+                PDFダウンローチE              </button>
             </div>
           </div>
 
@@ -190,13 +180,13 @@ function SuccessionPlanningContent() {
             <Card>
               <CardContent className="p-6">
                 <div className="text-2xl font-bold text-green-600">{statistics.readyNowCandidates}</div>
-                <p className="text-sm text-gray-600 mt-1">即戦力候補者</p>
+                <p className="text-sm text-gray-600 mt-1">即戦力候補老E/p>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-6">
                 <div className="text-2xl font-bold text-yellow-600">{statistics.ready1to2Years}</div>
-                <p className="text-sm text-gray-600 mt-1">1-2年内候補者</p>
+                <p className="text-sm text-gray-600 mt-1">1-2年冁E��補老E/p>
               </CardContent>
             </Card>
             <Card>
@@ -204,7 +194,7 @@ function SuccessionPlanningContent() {
                 <div className="text-2xl font-bold text-purple-600">
                   {Math.round((statistics.positionsWithSuccessors / statistics.totalKeyPositions) * 100) || 0}%
                 </div>
-                <p className="text-sm text-gray-600 mt-1">後継者カバー率</p>
+                <p className="text-sm text-gray-600 mt-1">後継老E��バ�E玁E/p>
               </CardContent>
             </Card>
           </div>
@@ -226,8 +216,8 @@ function SuccessionPlanningContent() {
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   >
                     <option value="all">全施設</option>
-                    <option value="小原病院">小原病院</option>
-                    <option value="立神リハビリテーション温泉病院">立神リハビリテーション温泉病院</option>
+                    <option value="小原痁E��">小原痁E��</option>
+                    <option value="立神リハビリチE�Eション温泉病院">立神リハビリチE�Eション温泉病院</option>
                   </select>
                 </div>
                 <div>
@@ -263,20 +253,16 @@ function SuccessionPlanningContent() {
                         ポジション
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        現任者数
+                        現任老E��
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        即戦力候補
-                      </th>
+                        即戦力候裁E                      </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        1-2年内候補
-                      </th>
+                        1-2年冁E��裁E                      </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        3年以上候補
-                      </th>
+                        3年以上候裁E                      </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        状態
-                      </th>
+                        状慁E                      </th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
@@ -310,7 +296,7 @@ function SuccessionPlanningContent() {
                               readyNow + ready1to2 >= holders.length ? 'bg-yellow-100 text-yellow-800' :
                               'bg-red-100 text-red-800'
                             }`}>
-                              {readyNow >= holders.length ? '充十' :
+                              {readyNow >= holders.length ? '允E��' :
                                readyNow + ready1to2 >= holders.length ? '準備中' :
                                '不足'}
                             </span>
@@ -328,13 +314,13 @@ function SuccessionPlanningContent() {
           {selectedPositionData && (
             <Card>
               <CardHeader>
-                <CardTitle>{selectedPosition}の後継者計画</CardTitle>
+                <CardTitle>{selectedPosition}の後継老E��画</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
-                  {/* 現任者 */}
+                  {/* 現任老E*/}
                   <div>
-                    <h4 className="text-sm font-medium text-gray-700 mb-3">現任者</h4>
+                    <h4 className="text-sm font-medium text-gray-700 mb-3">現任老E/h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {selectedPositionData.currentHolders.map((holder, index) => (
                         <div key={index} className="bg-gray-50 rounded-lg p-4">
@@ -352,9 +338,9 @@ function SuccessionPlanningContent() {
                     </div>
                   </div>
                   
-                  {/* 後継者候補 */}
+                  {/* 後継老E��裁E*/}
                   <div>
-                    <h4 className="text-sm font-medium text-gray-700 mb-3">後継者候補</h4>
+                    <h4 className="text-sm font-medium text-gray-700 mb-3">後継老E��裁E/h4>
                     <div className="space-y-4">
                       {selectedPositionData.candidates.map((candidate, index) => (
                         <div key={index} className="border rounded-lg p-4">
@@ -374,9 +360,9 @@ function SuccessionPlanningContent() {
                                     candidate.readiness === 'Ready 1-2 Years' ? 'bg-yellow-100 text-yellow-800' :
                                     'bg-gray-100 text-gray-800'
                                   }`}>
-                                    {candidate.readiness === 'Ready Now' ? '即戦力' :
-                                     candidate.readiness === 'Ready 1-2 Years' ? '1-2年後' :
-                                     '3年以上'}
+                                    {candidate.readiness === 'Ready Now' ? '即戦劁E :
+                                     candidate.readiness === 'Ready 1-2 Years' ? '1-2年征E :
+                                     '3年以丁E}
                                   </span>
                                   <span className="text-xs text-gray-500">
                                     評価: {candidate.evaluation}
@@ -392,10 +378,10 @@ function SuccessionPlanningContent() {
                             </div>
                           </div>
                           
-                          {/* 開発ニーズ */}
+                          {/* 開発ニ�Eズ */}
                           {candidate.developmentNeeds.length > 0 && (
                             <div className="mt-3 pt-3 border-t">
-                              <p className="text-xs font-medium text-gray-700 mb-1">開発ニーズ</p>
+                              <p className="text-xs font-medium text-gray-700 mb-1">開発ニ�Eズ</p>
                               <div className="flex flex-wrap gap-1">
                                 {candidate.developmentNeeds.map((need, idx) => (
                                   <span key={idx} className="px-2 py-1 text-xs bg-red-50 text-red-700 rounded">
@@ -436,13 +422,7 @@ function SuccessionPlanningContent() {
           )}
 
         </div>
-      </div>
-      
-      <ScrollToTopButton />
-      <CategoryTopButton categoryPath="/reports/talent-mapping" categoryName="タレントマッピング" />
-      <BackToReportsButton />
-      <DashboardButton />
-    </div>
+      </div><CategoryTopButton categoryPath="/reports/talent-mapping" categoryName="タレント�EチE��ング" /></div>
   );
 }
 

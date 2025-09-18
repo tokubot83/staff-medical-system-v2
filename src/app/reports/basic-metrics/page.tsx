@@ -5,126 +5,124 @@ import { useSearchParams } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
 import FacilitySelector from '@/components/reports/FacilitySelector';
 import Link from 'next/link';
-import ScrollToTopButton from '@/components/ScrollToTopButton';
-
 const reports = [
   {
     id: 'real-time-dashboard',
-    title: 'リアルタイムダッシュボード',
+    title: 'リアルタイムダチE��ュボ�EチE,
     path: '/reports/basic-metrics/real-time-dashboard',
-    description: '出勤状況、シフト充足率、緊急対応力をリアルタイムで監視します',
+    description: '出勤状況、シフト允E��玁E��緊急対応力をリアルタイムで監視しまぁE,
     icon: '📡',
     bgColor: 'bg-green-500'
   },
   {
     id: 'predictive-analytics',
-    title: '予測的人員分析',
+    title: '予測皁E��員刁E��',
     path: '/reports/basic-metrics/predictive-analytics',
-    description: 'AI活用による需要予測、欠勤予測、採用必要数を分析します',
+    description: 'AI活用による需要予測、欠勤予測、採用忁E��数を�E析しまぁE,
     icon: '🔮',
     bgColor: 'bg-purple-500'
   },
   {
     id: 'diversity-inclusion',
-    title: 'ダイバーシティ＆インクルージョン',
+    title: 'ダイバ�EシチE���E�E��ンクルージョン',
     path: '/reports/basic-metrics/diversity-inclusion',
-    description: '性別、年齢、国籍の多様性と障がい者雇用状況を確認します',
+    description: '性別、年齢、国籍�E多様性と障がぁE��E��用状況を確認しまぁE,
     icon: '🌈',
     bgColor: 'bg-indigo-500'
   },
   {
     id: 'compliance',
-    title: 'コンプライアンス指標',
+    title: 'コンプライアンス持E��E,
     path: '/reports/basic-metrics/compliance',
-    description: '労働法規、資格要件、安全衛生の遵守状況を管理します',
-    icon: '⚖️',
+    description: '労働法規、賁E��要件、安�E衛生の遵守状況を管琁E��まぁE,
+    icon: '⚖︁E,
     bgColor: 'bg-blue-500'
   },
   {
     id: 'productivity',
-    title: '生産性指標',
+    title: '生産性持E��E,
     path: '/reports/basic-metrics/productivity',
-    description: '一人当たり売上、付加価値分析、イノベーション指標を確認します',
+    description: '一人当たり売上、付加価値刁E��、イノ�Eーション持E��を確認しまぁE,
     icon: '⚡',
     bgColor: 'bg-yellow-500'
   },
   {
     id: 'engagement',
-    title: 'エンゲージメント指標',
+    title: 'エンゲージメント指樁E,
     path: '/reports/basic-metrics/engagement',
-    description: '従業員満足度、eNPS、定着意向、モチベーションを測定します',
+    description: '従業員満足度、eNPS、定着意向、モチ�Eーションを測定しまぁE,
     icon: '💗',
     bgColor: 'bg-pink-500'
   },
   {
     id: 'cost-analysis',
-    title: 'コスト分析指標',
+    title: 'コスト�E析指樁E,
     path: '/reports/basic-metrics/cost-analysis',
-    description: '人件費率、採用コスト、教育投資ROI、離職コストを分析します',
+    description: '人件費玁E��採用コスト、教育投資ROI、E��職コストを刁E��しまぁE,
     icon: '💰',
     bgColor: 'bg-orange-500'
   },
   {
     id: 'benchmark',
-    title: 'ベンチマーク指標',
+    title: 'ベンチ�Eーク持E��E,
     path: '/reports/basic-metrics/benchmark',
-    description: '業界比較、地域比較、ベストプラクティス分析を行います',
+    description: '業界比輁E��地域比輁E���Eスト�EラクチE��ス刁E��を行いまぁE,
     icon: '🏆',
     bgColor: 'bg-cyan-500'
   },
   {
     id: 'integrated-assessment',
-    title: '統合的指標アセスメント',
+    title: '統合的持E��アセスメンチE,
     path: '/reports/basic-metrics/integrated-assessment',
-    description: 'KPI統合管理、予測アラート、バランススコアカードを提供します',
+    description: 'KPI統合管琁E��予測アラート、バランススコアカードを提供しまぁE,
     icon: '🎯',
     bgColor: 'bg-red-500'
   },
   {
     id: 'two-axis-evaluation',
-    title: '2軸評価分析',
+    title: '2軸評価刁E��',
     path: '/reports/two-axis-evaluation',
-    description: '施設内評価と法人内評価による多角的な人事評価分析を行います',
+    description: '施設冁E��価と法人冁E��価による多角的な人事評価刁E��を行いまぁE,
     icon: '📐',
     bgColor: 'bg-purple-600'
   },
   {
     id: 'basic',
-    title: '基本統計',
+    title: '基本統訁E,
     path: '/reports/basic-metrics/basic-statistics',
-    description: '総職員数、部門別人員構成など基本的な統計データを確認します',
+    description: '総�E員数、E��門別人員構�Eなど基本皁E��統計データを確認しまぁE,
     icon: '📊',
     bgColor: 'bg-gray-500'
   },
   {
     id: 'quality',
-    title: '人材の質',
+    title: '人材�E質',
     path: '/reports/basic-metrics/talent-quality',
-    description: '職員満足度、スキル評価、資格保有状況を分析します',
-    icon: '⭐',
+    description: '職員満足度、スキル評価、賁E��保有状況を刁E��しまぁE,
+    icon: '⭁E,
     bgColor: 'bg-gray-500'
   },
   {
     id: 'growth',
-    title: '人材の成長',
+    title: '人材�E成長',
     path: '/reports/basic-metrics/talent-growth',
-    description: '研修受講率、スキル向上度、キャリア開発状況を確認します',
+    description: '研修受講率、スキル向上度、キャリア開発状況を確認しまぁE,
     icon: '📈',
     bgColor: 'bg-gray-500'
   },
   {
     id: 'risk',
-    title: 'リスク管理',
+    title: 'リスク管琁E,
     path: '/reports/basic-metrics/risk-management',
-    description: '離職リスク、コンプライアンス、要注意職員の状況を管理します',
-    icon: '⚠️',
+    description: '離職リスク、コンプライアンス、要注意�E員の状況を管琁E��まぁE,
+    icon: '⚠�E�E,
     bgColor: 'bg-gray-500'
   },
   {
     id: 'efficiency',
-    title: '組織効率',
+    title: '絁E��効玁E,
     path: '/reports/basic-metrics/organizational-efficiency',
-    description: '労働生産性、業務効率、緊急対応事項を確認します',
+    description: '労働生産性、業務効玁E��緊急対応事頁E��確認しまぁE,
     icon: '🚀',
     bgColor: 'bg-gray-500'
   }
@@ -136,10 +134,10 @@ function BasicMetricsPageContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="基本指標" />
+      <CommonHeader title="基本持E��E />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* 施設選択 */}
+        {/* 施設選抁E*/}
         <div className="mb-8">
           <FacilitySelector
             selectedFacility={selectedFacility}
@@ -147,7 +145,7 @@ function BasicMetricsPageContent() {
           />
         </div>
 
-        {/* レポート一覧 */}
+        {/* レポ�Eト一覧 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {reports.map((report) => {
             const url = selectedFacility 
@@ -165,7 +163,7 @@ function BasicMetricsPageContent() {
                   </div>
                   <p className="text-gray-600 text-sm mb-4">{report.description}</p>
                   <div className="mt-auto flex items-center text-blue-600">
-                    <span className="text-sm">レポートを見る</span>
+                    <span className="text-sm">レポ�Eトを見る</span>
                     <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
@@ -179,31 +177,29 @@ function BasicMetricsPageContent() {
         {/* アセスメントパターン */}
         <div className="mt-12 bg-blue-50 border border-blue-200 rounded-lg p-6">
           <h3 className="text-xl font-bold text-blue-900 mb-6">
-            基本指標モニタリングアセスメント
+            基本持E��モニタリングアセスメンチE
           </h3>
           
           <div className="bg-white rounded-lg p-4 border border-blue-100">
             <div className="text-blue-800 mb-3">
-              <span className="font-medium">推奨フロー：</span>
-              リアルタイムダッシュボード → 基本統計 → エンゲージメント指標 → 統合的指標アセスメント
+              <span className="font-medium">推奨フロー�E�E/span>
+              リアルタイムダチE��ュボ�EチEↁE基本統訁EↁEエンゲージメント指樁EↁE統合的持E��アセスメンチE
             </div>
             <ul className="list-disc list-inside text-blue-700 space-y-1">
-              <li>組織の現状を数値で定期的にモニタリング</li>
-              <li>前年同期比や他施設との比較分析</li>
-              <li>経営判断の基礎となるデータ提供</li>
-              <li>採用計画や人員配置の最適化支援</li>
+              <li>絁E���E現状を数値で定期皁E��モニタリング</li>
+              <li>前年同期比や他施設との比輁E�E极E/li>
+              <li>経営判断の基礎となるデータ提侁E/li>
+              <li>採用計画めE��員配置の最適化支援</li>
             </ul>
           </div>
 
           <div className="mt-4 text-blue-800 text-sm">
             <p className="font-medium">
-              基本指標の継続的なモニタリングにより、組織の健全性を把握し、戦略的な経営判断を支援できます。
+              基本持E���E継続的なモニタリングにより、絁E���E健全性を把握し、戦略皁E��経営判断を支援できます、E
             </p>
           </div>
         </div>
-      </div>
-      <ScrollToTopButton />
-    </div>
+      </div></div>
   );
 }
 

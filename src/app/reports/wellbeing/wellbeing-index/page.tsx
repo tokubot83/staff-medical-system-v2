@@ -4,10 +4,7 @@ import React, { Suspense, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import CommonHeader from '@/components/CommonHeader';
-import DashboardButton from '@/components/DashboardButton';
-import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { CategoryTopButton } from '@/components/CategoryTopButton';
-import { BackToReportsButton } from '@/components/BackToReportsButton';
 import { exportToPDF } from '@/utils/pdfExport';
 import {
   Chart as ChartJS,
@@ -43,7 +40,7 @@ function Content() {
   const searchParams = useSearchParams();
   const facilityParam = searchParams.get('facility') || '';
   
-  // データの読み込みとフィルタリング
+  // チE�Eタの読み込みとフィルタリング
   const { individual, aggregates } = useMemo(() => {
     const data = loadWellbeingData();
     return {
@@ -52,8 +49,7 @@ function Content() {
     };
   }, [facilityParam]);
   
-  // 5要素の平均値計算
-  const averageScores = useMemo(() => {
+  // 5要素の平坁E��計箁E  const averageScores = useMemo(() => {
     const totals = individual.reduce((acc, person) => {
       acc.physical += person.wellbeingIndex.physical;
       acc.mental += person.wellbeingIndex.mental;
@@ -76,11 +72,11 @@ function Content() {
     };
   }, [individual]);
   
-  // レーダーチャートのデータ
+  // レーダーチャート�EチE�Eタ
   const radarData = useMemo(() => ({
-    labels: ['身体的健康', '精神的健康', '社会的健康', '目的意識', '成長実感'],
+    labels: ['身体的健康', '精神的健康', '社会的健康', '目皁E��譁E, '成長実感'],
     datasets: [{
-      label: '全体平均',
+      label: '全体平坁E,
       data: [
         averageScores.physical,
         averageScores.mental,
@@ -98,11 +94,11 @@ function Content() {
     }]
   }), [averageScores]);
   
-  // 分布データ
+  // 刁E��E��ータ
   const distribution = useMemo(() => calculateDistribution(individual), [individual]);
   
   const distributionData = useMemo(() => ({
-    labels: ['優良(80点以上)', '良好(60-79点)', '要観察(40-59点)', '要改善(40点未満)'],
+    labels: ['優良(80点以丁E', '良好(60-79点)', '要観寁E40-59点)', '要改喁E40点未満)'],
     datasets: [{
       label: '人数',
       data: [
@@ -127,7 +123,7 @@ function Content() {
     }]
   }), [distribution]);
   
-  // 職種別データ
+  // 職種別チE�Eタ
   const positionData = useMemo(() => {
     const positions = aggregates.byPosition
       .filter(pos => !facilityParam || individual.some(i => i.position === pos.name))
@@ -136,7 +132,7 @@ function Content() {
     return {
       labels: positions.map(p => p.name),
       datasets: [{
-        label: 'ウェルビーイング指標',
+        label: 'ウェルビ�Eイング持E��E,
         data: positions.map(p => p.averageScores.wellbeingIndex),
         backgroundColor: 'rgba(139, 92, 246, 0.6)',
         borderColor: 'rgba(139, 92, 246, 1)',
@@ -145,7 +141,7 @@ function Content() {
     };
   }, [aggregates.byPosition, facilityParam, individual]);
   
-  // 部署別データ
+  // 部署別チE�Eタ
   const departmentData = useMemo(() => {
     const departments = aggregates.byDepartment
       .filter(dept => !facilityParam || individual.some(i => i.department === dept.name))
@@ -154,7 +150,7 @@ function Content() {
     return {
       labels: departments.map(d => d.name),
       datasets: [{
-        label: 'ウェルビーイング指標',
+        label: 'ウェルビ�Eイング持E��E,
         data: departments.map(d => d.averageScores.wellbeingIndex),
         backgroundColor: departments.map(d => 
           d.averageScores.wellbeingIndex >= 70 ? 'rgba(34, 197, 94, 0.6)' :
@@ -168,7 +164,7 @@ function Content() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="ウェルビーイング総合指標" />
+      <CommonHeader title="ウェルビ�Eイング総合持E��E />
       
       <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
@@ -176,15 +172,15 @@ function Content() {
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl font-bold">ウェルビーイング総合指標</h1>
-                <p className="text-gray-600 mt-2">身体的・精神的・社会的健康を総合的に評価し、組織の健康度を可視化</p>
+                <h1 className="text-2xl font-bold">ウェルビ�Eイング総合持E��E/h1>
+                <p className="text-gray-600 mt-2">身体的・精神的・社会的健康を総合皁E��評価し、絁E���E健康度を可視化</p>
                 {facilityParam && (
                   <p className="text-sm text-gray-500 mt-1">対象施設: {facilityParam}</p>
                 )}
               </div>
               <button
                 onClick={() => exportToPDF({
-                  title: 'ウェルビーイング総合指標レポート',
+                  title: 'ウェルビ�Eイング総合持E��レポ�EチE,
                   facility: facilityParam || '全施設',
                   reportType: 'wellbeing-index',
                   elementId: 'report-content',
@@ -192,12 +188,11 @@ function Content() {
                 })}
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm pdf-exclude"
               >
-                PDFダウンロード
-              </button>
+                PDFダウンローチE              </button>
             </div>
           </div>
 
-          {/* サマリーカード */}
+          {/* サマリーカーチE*/}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card>
               <CardHeader className="pb-3">
@@ -207,7 +202,7 @@ function Content() {
                 <p className="text-2xl font-bold text-blue-600">
                   {averageScores.overall.toFixed(1)}
                 </p>
-                <p className="text-xs text-gray-500 mt-1">全体平均</p>
+                <p className="text-xs text-gray-500 mt-1">全体平坁E/p>
               </CardContent>
             </Card>
             
@@ -219,28 +214,27 @@ function Content() {
                 <p className="text-2xl font-bold text-green-600">
                   {((distribution.excellent / individual.length) * 100).toFixed(1)}%
                 </p>
-                <p className="text-xs text-gray-500 mt-1">80点以上</p>
+                <p className="text-xs text-gray-500 mt-1">80点以丁E/p>
               </CardContent>
             </Card>
             
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-gray-500">要改善者数</CardTitle>
+                <CardTitle className="text-sm font-medium text-gray-500">要改喁E��E��</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold text-orange-600">
-                  {distribution.poor}名
-                </p>
+                  {distribution.poor}吁E                </p>
                 <p className="text-xs text-gray-500 mt-1">40点未満</p>
               </CardContent>
             </Card>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* 5要素レーダーチャート */}
+            {/* 5要素レーダーチャーチE*/}
             <Card>
               <CardHeader>
-                <CardTitle>ウェルビーイング5要素分析</CardTitle>
+                <CardTitle>ウェルビ�Eイング5要素刁E��</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-64 flex items-center justify-center">
@@ -269,10 +263,10 @@ function Content() {
               </CardContent>
             </Card>
             
-            {/* 分布グラフ */}
+            {/* 刁E��E��ラチE*/}
             <Card>
               <CardHeader>
-                <CardTitle>スコア分布</CardTitle>
+                <CardTitle>スコア刁E��E/CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-64">
@@ -297,7 +291,7 @@ function Content() {
                           callbacks: {
                             label: (context) => {
                               const percentage = ((context.parsed.y / individual.length) * 100).toFixed(1);
-                              return `${context.parsed.y}名 (${percentage}%)`;
+                              return `${context.parsed.y}吁E(${percentage}%)`;
                             }
                           }
                         }
@@ -309,10 +303,10 @@ function Content() {
             </Card>
           </div>
           
-          {/* 職種別比較 */}
+          {/* 職種別比輁E*/}
           <Card>
             <CardHeader>
-              <CardTitle>職種別ウェルビーイング指標</CardTitle>
+              <CardTitle>職種別ウェルビ�Eイング持E��E/CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-64">
@@ -341,10 +335,10 @@ function Content() {
             </CardContent>
           </Card>
           
-          {/* 部署別比較 */}
+          {/* 部署別比輁E*/}
           <Card>
             <CardHeader>
-              <CardTitle>部署別ウェルビーイング指標</CardTitle>
+              <CardTitle>部署別ウェルビ�Eイング持E��E/CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-96">
@@ -381,10 +375,10 @@ function Content() {
             </CardContent>
           </Card>
           
-          {/* 詳細テーブル */}
+          {/* 詳細チE�Eブル */}
           <Card>
             <CardHeader>
-              <CardTitle>職種別ウェルビーイング詳細</CardTitle>
+              <CardTitle>職種別ウェルビ�Eイング詳細</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
@@ -410,8 +404,7 @@ function Content() {
                         社会的
                       </th>
                       <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        目的意識
-                      </th>
+                        目皁E��譁E                      </th>
                       <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                         成長実感
                       </th>
@@ -476,13 +469,7 @@ function Content() {
           </Card>
 
         </div>
-      </div>
-      
-      <ScrollToTopButton />
-      <CategoryTopButton categoryPath="/reports/wellbeing" categoryName="ウェルビーイング" />
-      <BackToReportsButton />
-      <DashboardButton />
-    </div>
+      </div><CategoryTopButton categoryPath="/reports/wellbeing" categoryName="ウェルビ�Eイング" /></div>
   );
 }
 

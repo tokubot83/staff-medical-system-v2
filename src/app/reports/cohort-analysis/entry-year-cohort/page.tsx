@@ -4,10 +4,7 @@ import React, { Suspense, useState, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import CommonHeader from '@/components/CommonHeader';
-import DashboardButton from '@/components/DashboardButton';
-import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { CategoryTopButton } from '@/components/CategoryTopButton';
-import { BackToReportsButton } from '@/components/BackToReportsButton';
 import { exportToPDF } from '@/utils/pdfExport';
 import { staffDatabase } from '@/app/data/staffData';
 import {
@@ -44,8 +41,7 @@ function EntryYearCohortContent() {
   const [selectedPosition, setSelectedPosition] = useState('全職種');
   const [selectedTimeRange, setSelectedTimeRange] = useState('all');
 
-  // スタッフデータから入社年次別コホートデータを生成
-  const cohortData = useMemo(() => {
+  // スタチE��チE�Eタから入社年次別コホ�Eトデータを生戁E  const cohortData = useMemo(() => {
     const staffList = Object.values(staffDatabase).filter(staff => {
       if (selectedFacility !== '全施設' && staff.facility !== selectedFacility) return false;
       if (selectedPosition !== '全職種') {
@@ -57,7 +53,7 @@ function EntryYearCohortContent() {
 
     // 入社年別にグループ化
     const yearGroups = staffList.reduce((acc, staff) => {
-      const joinYear = staff.joinDate.match(/(\d{4})年/)?.[1] || '不明';
+      const joinYear = staff.joinDate.match(/(\d{4})年/)?.[1] || '不�E';
       if (!acc[joinYear]) {
         acc[joinYear] = [];
       }
@@ -65,25 +61,21 @@ function EntryYearCohortContent() {
       return acc;
     }, {} as Record<string, typeof staffList>);
 
-    // 各年次のコホートデータを計算
-    const cohortData: CohortData[] = Object.entries(yearGroups)
-      .filter(([year]) => year !== '不明')
+    // 吁E��次のコホ�Eトデータを計箁E    const cohortData: CohortData[] = Object.entries(yearGroups)
+      .filter(([year]) => year !== '不�E')
       .map(([year, staffGroup]) => {
         const totalCount = staffGroup.length;
-        // 現在も在籍している職員（離職していない）
-        const currentCount = staffGroup.filter(s => !s.assignmentHistory?.some(h => h.reason === '退職')).length;
+        // 現在も在籍してぁE��職員�E�離職してぁE��ぁE��E        const currentCount = staffGroup.filter(s => !s.assignmentHistory?.some(h => h.reason === '退職')).length;
         const retentionRate = Math.round((currentCount / totalCount) * 100);
         
-        // パフォーマンスとエンゲージメントの平均
-        const avgPerformance = staffGroup.reduce((sum, s) => {
+        // パフォーマンスとエンゲージメント�E平坁E        const avgPerformance = staffGroup.reduce((sum, s) => {
           const rating = s.evaluationData?.rating || s.evaluationHistory?.[0]?.performance || 3.5;
           return sum + rating;
         }, 0) / totalCount;
         
         const avgEngagement = staffGroup.reduce((sum, s) => sum + s.engagement, 0) / totalCount;
         
-        // 離職リスクスコア（ストレス指数、残業時間、有給取得率から計算）
-        const riskScore = staffGroup.reduce((sum, s) => {
+        // 離職リスクスコア�E�ストレス持E��、残業時間、有給取得率から計算！E        const riskScore = staffGroup.reduce((sum, s) => {
           const stress = s.stressIndex / 100;
           const overtime = Math.min(s.overtime / 50, 1);
           const paidLeave = 1 - (s.paidLeaveRate / 100);
@@ -103,7 +95,7 @@ function EntryYearCohortContent() {
       })
       .sort((a, b) => Number(a.year) - Number(b.year));
 
-    // 時間範囲でフィルタリング
+    // 時間篁E��でフィルタリング
     if (selectedTimeRange === 'recent5') {
       const currentYear = new Date().getFullYear();
       return cohortData.filter(d => Number(d.year) >= currentYear - 5);
@@ -115,10 +107,9 @@ function EntryYearCohortContent() {
     return cohortData;
   }, [selectedFacility, selectedPosition, selectedTimeRange]);
 
-  // 累積定着率データ（時系列で各年次コホートの定着率推移を表示）
-  const retentionTrendData = useMemo(() => {
+  // 累積定着玁E��ータ�E�時系列で吁E��次コホ�Eト�E定着玁E��移を表示�E�E  const retentionTrendData = useMemo(() => {
     const currentYear = new Date().getFullYear();
-    const years = [1, 2, 3, 5, 10]; // 入社後の経過年数
+    const years = [1, 2, 3, 5, 10]; // 入社後�E経過年数
     
     return years.map(elapsed => {
       const dataPoint: any = { year: `${elapsed}年後` };
@@ -126,10 +117,8 @@ function EntryYearCohortContent() {
       cohortData.forEach(cohort => {
         const cohortYear = Number(cohort.year);
         if (currentYear - cohortYear >= elapsed) {
-          // 簡易的な定着率減衰モデル（実際はより複雑な計算が必要）
-          const baseRetention = cohort.retentionRate;
-          const decayRate = 0.05; // 年間5%の減少
-          const retention = baseRetention * Math.pow(1 - decayRate, elapsed);
+          // 簡易的な定着玁E��衰モチE���E�実際はより褁E��な計算が忁E��E��E          const baseRetention = cohort.retentionRate;
+          const decayRate = 0.05; // 年閁E%の減封E          const retention = baseRetention * Math.pow(1 - decayRate, elapsed);
           dataPoint[cohort.year] = Math.round(retention);
         }
       });
@@ -138,8 +127,7 @@ function EntryYearCohortContent() {
     });
   }, [cohortData]);
 
-  // 職種リストを取得
-  const positions = useMemo(() => {
+  // 職種リストを取征E  const positions = useMemo(() => {
     const positionSet = new Set<string>();
     Object.values(staffDatabase).forEach(staff => {
       const basePosition = staff.position.replace(/主任|師長|部長|科長/, '').trim();
@@ -148,8 +136,7 @@ function EntryYearCohortContent() {
     return ['全職種', ...Array.from(positionSet).sort()];
   }, []);
 
-  // 施設リストを取得
-  const facilities = useMemo(() => {
+  // 施設リストを取征E  const facilities = useMemo(() => {
     const facilitySet = new Set<string>();
     Object.values(staffDatabase).forEach(staff => {
       facilitySet.add(staff.facility);
@@ -157,19 +144,18 @@ function EntryYearCohortContent() {
     return ['全施設', ...Array.from(facilitySet).sort()];
   }, []);
 
-  // グラフの色設定
-  const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899'];
+  // グラフ�E色設宁E  const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899'];
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="入社年次別コホート追跡" />
+      <CommonHeader title="入社年次別コホ�Eト追跡" />
       
       <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
           {/* ヘッダー */}
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h1 className="text-2xl font-bold">入社年次別コホート追跡</h1>
-            <p className="text-gray-600 mt-2">入社年次別に職員の定着率・成長・キャリア形成を長期的に追跡分析</p>
+            <h1 className="text-2xl font-bold">入社年次別コホ�Eト追跡</h1>
+            <p className="text-gray-600 mt-2">入社年次別に職員の定着玁E�E成長・キャリア形成を長期的に追跡刁E��</p>
             {facilityParam && (
               <p className="text-sm text-gray-500 mt-1">対象施設: {facilityParam}</p>
             )}
@@ -218,17 +204,17 @@ function EntryYearCohortContent() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="all">全期間</option>
-                  <option value="recent5">直近5年</option>
-                  <option value="recent3">直近3年</option>
+                  <option value="recent5">直迁E年</option>
+                  <option value="recent3">直迁E年</option>
                 </select>
               </div>
             </div>
           </div>
 
-          {/* 定着率推移グラフ */}
+          {/* 定着玁E��移グラチE*/}
           <Card>
             <CardHeader>
-              <CardTitle>入社年次別定着率推移</CardTitle>
+              <CardTitle>入社年次別定着玁E��移</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-96">
@@ -244,7 +230,7 @@ function EntryYearCohortContent() {
                       dataKey="retentionRate" 
                       stroke="#3B82F6" 
                       strokeWidth={2}
-                      name="定着率"
+                      name="定着玁E
                       dot={{ fill: '#3B82F6', r: 6 }}
                     />
                   </LineChart>
@@ -253,7 +239,7 @@ function EntryYearCohortContent() {
             </CardContent>
           </Card>
 
-          {/* パフォーマンスとエンゲージメント */}
+          {/* パフォーマンスとエンゲージメンチE*/}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
@@ -271,7 +257,7 @@ function EntryYearCohortContent() {
                       <Bar 
                         dataKey="avgPerformance" 
                         fill="#10B981" 
-                        name="平均評価"
+                        name="平坁E��価"
                         radius={[8, 8, 0, 0]}
                       />
                     </BarChart>
@@ -282,7 +268,7 @@ function EntryYearCohortContent() {
 
             <Card>
               <CardHeader>
-                <CardTitle>年次別エンゲージメント</CardTitle>
+                <CardTitle>年次別エンゲージメンチE/CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-80">
@@ -296,7 +282,7 @@ function EntryYearCohortContent() {
                       <Bar 
                         dataKey="avgEngagement" 
                         fill="#F59E0B" 
-                        name="エンゲージメント"
+                        name="エンゲージメンチE
                         radius={[8, 8, 0, 0]}
                       />
                     </BarChart>
@@ -306,7 +292,7 @@ function EntryYearCohortContent() {
             </Card>
           </div>
 
-          {/* 離職リスク分析 */}
+          {/* 離職リスク刁E�� */}
           <Card>
             <CardHeader>
               <CardTitle>年次別離職リスクスコア</CardTitle>
@@ -334,24 +320,24 @@ function EntryYearCohortContent() {
               <div className="mt-4 flex items-center justify-center gap-4 text-sm">
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 bg-green-500 rounded"></div>
-                  <span>低リスク（0-40%）</span>
+                  <span>低リスク�E�E-40%�E�E/span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 bg-amber-500 rounded"></div>
-                  <span>中リスク（40-60%）</span>
+                  <span>中リスク�E�E0-60%�E�E/span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 bg-red-500 rounded"></div>
-                  <span>高リスク（60%以上）</span>
+                  <span>高リスク�E�E0%以上！E/span>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* 累積定着率推移 */}
+          {/* 累積定着玁E��移 */}
           <Card>
             <CardHeader>
-              <CardTitle>経過年数別定着率推移</CardTitle>
+              <CardTitle>経過年数別定着玁E��移</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-96">
@@ -378,11 +364,11 @@ function EntryYearCohortContent() {
             </CardContent>
           </Card>
 
-          {/* サマリー統計 */}
+          {/* サマリー統訁E*/}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle>全体定着率</CardTitle>
+                <CardTitle>全体定着玁E/CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-bold text-blue-600">
@@ -391,36 +377,33 @@ function EntryYearCohortContent() {
                     : 0}%
                 </div>
                 <p className="text-sm text-gray-600 mt-2">
-                  全コホートの平均定着率
-                </p>
+                  全コホ�Eト�E平坁E��着玁E                </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader>
-                <CardTitle>総離職者数</CardTitle>
+                <CardTitle>総離職老E��</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-bold text-red-600">
-                  {cohortData.reduce((sum, d) => sum + d.turnoverCount, 0)}名
-                </div>
+                  {cohortData.reduce((sum, d) => sum + d.turnoverCount, 0)}吁E                </div>
                 <p className="text-sm text-gray-600 mt-2">
-                  全期間の累計離職者数
+                  全期間の累計離職老E��
                 </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader>
-                <CardTitle>高リスクコホート</CardTitle>
+                <CardTitle>高リスクコホ�EチE/CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-bold text-amber-600">
                   {cohortData.filter(d => d.riskScore > 60).length}件
                 </div>
                 <p className="text-sm text-gray-600 mt-2">
-                  リスクスコア60%以上
-                </p>
+                  リスクスコア60%以丁E                </p>
               </CardContent>
             </Card>
           </div>
@@ -429,7 +412,7 @@ function EntryYearCohortContent() {
           <div className="flex gap-4">
             <button 
               onClick={() => exportToPDF({
-                title: '入社年次別コホート追跡レポート',
+                title: '入社年次別コホ�Eト追跡レポ�EチE,
                 facility: selectedFacility,
                 reportType: 'entry-year-cohort',
                 elementId: 'report-content',
@@ -437,18 +420,11 @@ function EntryYearCohortContent() {
               })}
               className="pdf-exclude bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
             >
-              PDFダウンロード
-            </button>
+              PDFダウンローチE            </button>
           </div>
 
         </div>
-      </div>
-      
-      <ScrollToTopButton />
-      <CategoryTopButton categoryPath="/reports/cohort-analysis" categoryName="コホート分析" />
-      <BackToReportsButton />
-      <DashboardButton />
-    </div>
+      </div><CategoryTopButton categoryPath="/reports/cohort-analysis" categoryName="コホ�Eト�E极E /></div>
   );
 }
 

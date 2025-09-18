@@ -4,10 +4,7 @@ import React, { Suspense, useState, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import CommonHeader from '@/components/CommonHeader';
-import DashboardButton from '@/components/DashboardButton';
-import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { CategoryTopButton } from '@/components/CategoryTopButton';
-import { BackToReportsButton } from '@/components/BackToReportsButton';
 import { exportToPDF } from '@/utils/pdfExport';
 import { staffDatabase } from '@/app/data/staffData';
 import {
@@ -49,17 +46,17 @@ function LearningCohortContent() {
 
   // 学習パターンの定義
   const learningPatterns = [
-    '積極的学習者',
-    '消極的学習者',
-    '資格取得重視型',
+    '積極皁E��習老E,
+    '消極皁E��習老E,
+    '賁E��取得重視型',
     'OJT重視型',
-    '外部研修活用型',
-    'メンター活用型',
+    '外部研修活用垁E,
+    'メンター活用垁E,
     '自己学習型',
-    '無関心型'
+    '無関忁E��'
   ];
 
-  // 学習コホートデータの生成
+  // 学習コホ�Eトデータの生�E
   const learningCohorts = useMemo(() => {
     const staffList = Object.values(staffDatabase).filter(staff => {
       if (selectedFacility !== '全施設' && staff.facility !== selectedFacility) return false;
@@ -73,9 +70,9 @@ function LearningCohortContent() {
       return true;
     });
 
-    // 学習パターン別にコホートを生成
+    // 学習パターン別にコホ�Eトを生�E
     const cohorts: LearningCohort[] = learningPatterns.map(pattern => {
-      // パターンに基づいてスタッフを分類（シミュレーション）
+      // パターンに基づぁE��スタチE��を�E類（シミュレーション�E�E
       let patternProbability = 0;
       let avgPerformanceGrowth = 0;
       let careerAdvancement = 0;
@@ -84,29 +81,29 @@ function LearningCohortContent() {
       let characteristics: string[] = [];
 
       switch (pattern) {
-        case '積極的学習者':
+        case '積極皁E��習老E:
           patternProbability = 0.15;
           avgPerformanceGrowth = 25;
           careerAdvancement = 80;
           retentionRate = 92;
           engagementScore = 85;
-          characteristics = ['研修参加率100%', '資格取得年1件以上', 'メンター制度利用'];
+          characteristics = ['研修参加玁E00%', '賁E��取得年1件以丁E, 'メンター制度利用'];
           break;
-        case '消極的学習者':
+        case '消極皁E��習老E:
           patternProbability = 0.20;
           avgPerformanceGrowth = 5;
           careerAdvancement = 20;
           retentionRate = 65;
           engagementScore = 45;
-          characteristics = ['研修参加率20%以下', '資格取得なし', '学習意欲低'];
+          characteristics = ['研修参加玁E0%以丁E, '賁E��取得なぁE, '学習意欲佁E];
           break;
-        case '資格取得重視型':
+        case '賁E��取得重視型':
           patternProbability = 0.12;
           avgPerformanceGrowth = 20;
           careerAdvancement = 70;
           retentionRate = 88;
           engagementScore = 78;
-          characteristics = ['専門資格複数保有', '資格手当受給', 'キャリアアップ志向'];
+          characteristics = ['専門賁E��褁E��保有', '賁E��手当受給', 'キャリアアチE�E志向'];
           break;
         case 'OJT重視型':
           patternProbability = 0.18;
@@ -114,23 +111,23 @@ function LearningCohortContent() {
           careerAdvancement = 50;
           retentionRate = 82;
           engagementScore = 72;
-          characteristics = ['実務経験重視', '現場学習志向', 'チーム学習参加'];
+          characteristics = ['実務経験重要E, '現場学習志向', 'チ�Eム学習参加'];
           break;
-        case '外部研修活用型':
+        case '外部研修活用垁E:
           patternProbability = 0.10;
           avgPerformanceGrowth = 18;
           careerAdvancement = 60;
           retentionRate = 85;
           engagementScore = 75;
-          characteristics = ['外部セミナー参加', 'ネットワーク形成', '最新知識習得'];
+          characteristics = ['外部セミナー参加', 'ネットワーク形戁E, '最新知識習征E];
           break;
-        case 'メンター活用型':
+        case 'メンター活用垁E:
           patternProbability = 0.08;
           avgPerformanceGrowth = 22;
           careerAdvancement = 65;
           retentionRate = 90;
           engagementScore = 82;
-          characteristics = ['メンター制度活用', '1on1実施', 'フィードバック重視'];
+          characteristics = ['メンター制度活用', '1on1実施', 'フィードバチE��重要E];
           break;
         case '自己学習型':
           patternProbability = 0.12;
@@ -138,15 +135,15 @@ function LearningCohortContent() {
           careerAdvancement = 55;
           retentionRate = 80;
           engagementScore = 70;
-          characteristics = ['自主的学習', 'オンライン学習活用', '読書習慣'];
+          characteristics = ['自主皁E��翁E, 'オンライン学習活用', '読書習�E'];
           break;
-        case '無関心型':
+        case '無関忁E��':
           patternProbability = 0.05;
           avgPerformanceGrowth = 0;
           careerAdvancement = 10;
           retentionRate = 55;
           engagementScore = 35;
-          characteristics = ['学習機会回避', '現状維持志向', '成長意欲なし'];
+          characteristics = ['学習機会回避', '現状維持志向', '成長意欲なぁE];
           break;
       }
 
@@ -173,18 +170,18 @@ function LearningCohortContent() {
     return cohorts;
   }, [selectedFacility, selectedLearningType, selectedCareerStage]);
 
-  // 研修参加パターンデータ
+  // 研修参加パターンチE�Eタ
   const trainingParticipationData = useMemo(() => {
-    const months = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+    const months = ['1朁E, '2朁E, '3朁E, '4朁E, '5朁E, '6朁E, '7朁E, '8朁E, '9朁E, '10朁E, '11朁E, '12朁E];
     return months.map(month => ({
       month,
-      '積極的学習者': 85 + Math.random() * 10,
-      '標準的学習者': 50 + Math.random() * 15,
-      '消極的学習者': 15 + Math.random() * 10
+      '積極皁E��習老E: 85 + Math.random() * 10,
+      '標準的学習老E: 50 + Math.random() * 15,
+      '消極皁E��習老E: 15 + Math.random() * 10
     }));
   }, []);
 
-  // 資格取得とキャリア進展の相関データ
+  // 賁E��取得とキャリア進展�E相関チE�Eタ
   const qualificationCareerData = useMemo(() => {
     return [
       { qualifications: 0, promotion: 10, count: 120 },
@@ -196,17 +193,17 @@ function LearningCohortContent() {
     ];
   }, []);
 
-  // レーダーチャート用データ
+  // レーダーチャート用チE�Eタ
   const radarData = useMemo(() => {
-    const metrics = ['成長率', 'キャリア進展', '定着率', 'エンゲージメント', '学習投資ROI'];
+    const metrics = ['成長玁E, 'キャリア進屁E, '定着玁E, 'エンゲージメンチE, '学習投資ROI'];
     return metrics.map(metric => {
       const dataPoint: any = { metric };
       learningCohorts.forEach(cohort => {
         switch (metric) {
-          case '成長率': dataPoint[cohort.pattern] = cohort.avgPerformanceGrowth * 4; break;
-          case 'キャリア進展': dataPoint[cohort.pattern] = cohort.careerAdvancement; break;
-          case '定着率': dataPoint[cohort.pattern] = cohort.retentionRate; break;
-          case 'エンゲージメント': dataPoint[cohort.pattern] = cohort.engagementScore; break;
+          case '成長玁E: dataPoint[cohort.pattern] = cohort.avgPerformanceGrowth * 4; break;
+          case 'キャリア進屁E: dataPoint[cohort.pattern] = cohort.careerAdvancement; break;
+          case '定着玁E: dataPoint[cohort.pattern] = cohort.retentionRate; break;
+          case 'エンゲージメンチE: dataPoint[cohort.pattern] = cohort.engagementScore; break;
           case '学習投資ROI': dataPoint[cohort.pattern] = (cohort.avgPerformanceGrowth * 3); break;
         }
       });
@@ -214,21 +211,21 @@ function LearningCohortContent() {
     });
   }, [learningCohorts]);
 
-  // ツリーマップ用データ（学習活動の分布）
+  // チE��ーマップ用チE�Eタ�E�学習活動�E刁E��E��E
   const treemapData = useMemo(() => {
     return [
-      { name: '必須研修', size: 3500, category: 'formal' },
+      { name: '忁E��研修', size: 3500, category: 'formal' },
       { name: '選択研修', size: 2800, category: 'formal' },
-      { name: '資格取得', size: 2200, category: 'certification' },
+      { name: '賁E��取征E, size: 2200, category: 'certification' },
       { name: 'OJT', size: 4000, category: 'informal' },
       { name: 'メンタリング', size: 1800, category: 'informal' },
-      { name: '自主学習', size: 1500, category: 'self' },
+      { name: '自主学翁E, size: 1500, category: 'self' },
       { name: '外部セミナー', size: 1200, category: 'external' },
       { name: 'eラーニング', size: 2000, category: 'digital' }
     ];
   }, []);
 
-  // 施設リストを取得
+  // 施設リストを取征E
   const facilities = useMemo(() => {
     const facilitySet = new Set<string>();
     Object.values(staffDatabase).forEach(staff => {
@@ -249,15 +246,15 @@ function LearningCohortContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="学習・成長コホート分析" />
+      <CommonHeader title="学習�E成長コホ�Eト�E极E />
       
       <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
           {/* ヘッダー */}
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h1 className="text-2xl font-bold">学習・成長コホート分析</h1>
+            <h1 className="text-2xl font-bold">学習�E成長コホ�Eト�E极E/h1>
             <p className="text-gray-600 mt-2">
-              研修参加パターン、資格取得、メンター制度利用など学習行動別の成長軌跡を分析
+              研修参加パターン、賁E��取得、メンター制度利用など学習行動別の成長軌跡を�E极E
             </p>
             {facilityParam && (
               <p className="text-sm text-gray-500 mt-1">対象施設: {facilityParam}</p>
@@ -300,22 +297,22 @@ function LearningCohortContent() {
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  キャリアステージ
+                  キャリアスチE�Eジ
                 </label>
                 <select
                   value={selectedCareerStage}
                   onChange={(e) => setSelectedCareerStage(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="all">全ステージ</option>
-                  <option value="early">初期（〜3年）</option>
-                  <option value="mid">中期（3〜10年）</option>
+                  <option value="all">全スチE�Eジ</option>
+                  <option value="early">初期�E�、E年�E�E/option>
+                  <option value="mid">中期！E、E0年�E�E/option>
                 </select>
               </div>
             </div>
           </div>
 
-          {/* 学習パターン別統計 */}
+          {/* 学習パターン別統訁E*/}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {learningCohorts.slice(0, 4).map((cohort, index) => (
               <Card key={cohort.pattern}>
@@ -326,16 +323,16 @@ function LearningCohortContent() {
                   <div className="space-y-2">
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-gray-600">人数</span>
-                      <span className="text-lg font-semibold">{cohort.count}名</span>
+                      <span className="text-lg font-semibold">{cohort.count}吁E/span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">成長率</span>
+                      <span className="text-sm text-gray-600">成長玁E/span>
                       <span className={`text-lg font-semibold ${cohort.avgPerformanceGrowth >= 20 ? 'text-green-600' : 'text-amber-600'}`}>
                         +{cohort.avgPerformanceGrowth}%
                       </span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">定着率</span>
+                      <span className="text-sm text-gray-600">定着玁E/span>
                       <span className="text-lg font-semibold text-blue-600">{cohort.retentionRate}%</span>
                     </div>
                   </div>
@@ -344,10 +341,10 @@ function LearningCohortContent() {
             ))}
           </div>
 
-          {/* 学習パターン別成果比較 */}
+          {/* 学習パターン別成果比輁E*/}
           <Card>
             <CardHeader>
-              <CardTitle>学習パターン別成果指標</CardTitle>
+              <CardTitle>学習パターン別成果持E��E/CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-96">
@@ -358,20 +355,20 @@ function LearningCohortContent() {
                     <YAxis dataKey="pattern" type="category" width={120} />
                     <Tooltip />
                     <Legend />
-                    <Bar dataKey="avgPerformanceGrowth" name="成長率(%)" fill="#3B82F6" />
-                    <Bar dataKey="careerAdvancement" name="昇進率(%)" fill="#10B981" />
-                    <Bar dataKey="retentionRate" name="定着率(%)" fill="#F59E0B" />
+                    <Bar dataKey="avgPerformanceGrowth" name="成長玁E%)" fill="#3B82F6" />
+                    <Bar dataKey="careerAdvancement" name="昁E��玁E%)" fill="#10B981" />
+                    <Bar dataKey="retentionRate" name="定着玁E%)" fill="#F59E0B" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
             </CardContent>
           </Card>
 
-          {/* 研修参加トレンド */}
+          {/* 研修参加トレンチE*/}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle>月別研修参加率推移</CardTitle>
+                <CardTitle>月別研修参加玁E��移</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-80">
@@ -382,9 +379,9 @@ function LearningCohortContent() {
                       <YAxis domain={[0, 100]} tickFormatter={(value) => `${value}%`} />
                       <Tooltip formatter={(value: any) => `${value}%`} />
                       <Legend />
-                      <Line type="monotone" dataKey="積極的学習者" stroke="#3B82F6" strokeWidth={2} />
-                      <Line type="monotone" dataKey="標準的学習者" stroke="#10B981" strokeWidth={2} />
-                      <Line type="monotone" dataKey="消極的学習者" stroke="#EF4444" strokeWidth={2} />
+                      <Line type="monotone" dataKey="積極皁E��習老E stroke="#3B82F6" strokeWidth={2} />
+                      <Line type="monotone" dataKey="標準的学習老E stroke="#10B981" strokeWidth={2} />
+                      <Line type="monotone" dataKey="消極皁E��習老E stroke="#EF4444" strokeWidth={2} />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
@@ -393,17 +390,17 @@ function LearningCohortContent() {
 
             <Card>
               <CardHeader>
-                <CardTitle>資格取得と昇進率の相関</CardTitle>
+                <CardTitle>賁E��取得と昁E��玁E�E相関</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-80">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={qualificationCareerData}>
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="qualifications" label={{ value: '保有資格数', position: 'insideBottom', offset: -5 }} />
+                      <XAxis dataKey="qualifications" label={{ value: '保有賁E��数', position: 'insideBottom', offset: -5 }} />
                       <YAxis tickFormatter={(value) => `${value}%`} />
                       <Tooltip formatter={(value: any) => `${value}%`} />
-                      <Bar dataKey="promotion" name="昇進率" fill="#10B981" />
+                      <Bar dataKey="promotion" name="昁E��玁E fill="#10B981" />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -411,7 +408,7 @@ function LearningCohortContent() {
             </Card>
           </div>
 
-          {/* レーダーチャート */}
+          {/* レーダーチャーチE*/}
           <Card>
             <CardHeader>
               <CardTitle>学習パターン別総合評価</CardTitle>
@@ -440,10 +437,10 @@ function LearningCohortContent() {
             </CardContent>
           </Card>
 
-          {/* 学習活動の分布 */}
+          {/* 学習活動�E刁E��E*/}
           <Card>
             <CardHeader>
-              <CardTitle>学習活動の分布（時間ベース）</CardTitle>
+              <CardTitle>学習活動�E刁E��E��時間�Eース�E�E/CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-96">
@@ -499,7 +496,7 @@ function LearningCohortContent() {
           <div className="flex gap-4">
             <button 
               onClick={() => exportToPDF({
-                title: '学習・成長コホート分析レポート',
+                title: '学習�E成長コホ�Eト�E析レポ�EチE,
                 facility: selectedFacility,
                 reportType: 'learning-cohort',
                 elementId: 'report-content',
@@ -507,18 +504,12 @@ function LearningCohortContent() {
               })}
               className="pdf-exclude bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
             >
-              PDFダウンロード
+              PDFダウンローチE
             </button>
           </div>
 
         </div>
-      </div>
-      
-      <ScrollToTopButton />
-      <CategoryTopButton categoryPath="/reports/cohort-analysis" categoryName="コホート分析" />
-      <BackToReportsButton />
-      <DashboardButton />
-    </div>
+      </div><CategoryTopButton categoryPath="/reports/cohort-analysis" categoryName="コホ�Eト�E极E /></div>
   );
 }
 

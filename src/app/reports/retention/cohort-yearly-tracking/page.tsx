@@ -3,9 +3,6 @@
 import React, { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
-import DashboardButton from '@/components/DashboardButton';
-import ScrollToTopButton from '@/components/ScrollToTopButton';
-import { BackToReportsButton } from '@/components/BackToReportsButton';
 import { CategoryTopButton } from '@/components/CategoryTopButton';
 import { exportToPDF } from '@/utils/pdfExport';
 import {
@@ -32,10 +29,10 @@ const cohortData = [
 ];
 
 const improvementData = [
-  { metric: 'オンボーディング改善', '2020年': 0, '2021年': 15, '2022年': 25, '2023年': 35, '2024年': 45 },
-  { metric: 'メンター制度導入', '2020年': 0, '2021年': 0, '2022年': 20, '2023年': 30, '2024年': 40 },
-  { metric: '福利厚生充実', '2020年': 0, '2021年': 10, '2022年': 15, '2023年': 25, '2024年': 30 },
-  { metric: 'キャリア支援強化', '2020年': 0, '2021年': 5, '2022年': 15, '2023年': 20, '2024年': 35 },
+  { metric: 'オンボ�EチE��ング改喁E, '2020年': 0, '2021年': 15, '2022年': 25, '2023年': 35, '2024年': 45 },
+  { metric: 'メンター制度導�E', '2020年': 0, '2021年': 0, '2022年': 20, '2023年': 30, '2024年': 40 },
+  { metric: '福利厚生允E��E, '2020年': 0, '2021年': 10, '2022年': 15, '2023年': 25, '2024年': 30 },
+  { metric: 'キャリア支援強匁E, '2020年': 0, '2021年': 5, '2022年': 15, '2023年': 20, '2024年': 35 },
 ];
 
 const departmentCohortData: Record<string, Array<{ year: string; value: number }>> = {
@@ -70,11 +67,11 @@ const departmentCohortData: Record<string, Array<{ year: string; value: number }
 };
 
 const retentionMilestones = [
-  { cohort: '2020年入社', '3ヶ月': 92, '6ヶ月': 88, '1年': 85, '2年': 78, '3年': 72 },
-  { cohort: '2021年入社', '3ヶ月': 94, '6ヶ月': 90, '1年': 88, '2年': 82, '3年': 76 },
-  { cohort: '2022年入社', '3ヶ月': 96, '6ヶ月': 93, '1年': 90, '2年': 85, '3年': null },
-  { cohort: '2023年入社', '3ヶ月': 97, '6ヶ月': 95, '1年': 92, '2年': null, '3年': null },
-  { cohort: '2024年入社', '3ヶ月': 98, '6ヶ月': 96, '1年': null, '2年': null, '3年': null },
+  { cohort: '2020年入社', '3ヶ朁E: 92, '6ヶ朁E: 88, '1年': 85, '2年': 78, '3年': 72 },
+  { cohort: '2021年入社', '3ヶ朁E: 94, '6ヶ朁E: 90, '1年': 88, '2年': 82, '3年': 76 },
+  { cohort: '2022年入社', '3ヶ朁E: 96, '6ヶ朁E: 93, '1年': 90, '2年': 85, '3年': null },
+  { cohort: '2023年入社', '3ヶ朁E: 97, '6ヶ朁E: 95, '1年': 92, '2年': null, '3年': null },
+  { cohort: '2024年入社', '3ヶ朁E: 98, '6ヶ朁E: 96, '1年': null, '2年': null, '3年': null },
 ];
 
 function CohortYearlyTrackingContent() {
@@ -84,33 +81,32 @@ function CohortYearlyTrackingContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="入社年度別コホート追跡" />
+      <CommonHeader title="入社年度別コホ�Eト追跡" />
       
       <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white shadow rounded-lg p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-gray-800">
-              各採用年次の定着状況長期追跡分析
+              吁E��用年次の定着状況E��期追跡刁E��
             </h2>
             <span className="text-sm text-gray-500">
               対象施設: {facility}
             </span>
           </div>
           <p className="text-gray-600">
-            各採用年次のコホートを長期的に追跡し、施策の効果や定着率の改善傾向を可視化します。
-          </p>
+            吁E��用年次のコホ�Eトを長期的に追跡し、施策�E効果や定着玁E�E改喁E��向を可視化します、E          </p>
         </div>
 
         <div className="bg-white shadow rounded-lg p-6 mb-6">
           <h3 className="text-lg font-semibold text-gray-800 mb-4">
-            入社年度別定着率推移
+            入社年度別定着玁E��移
           </h3>
           <ResponsiveContainer width="100%" height={400}>
             <LineChart data={cohortData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="year" />
               <YAxis domain={[60, 100]} />
-              <Tooltip formatter={(value) => value !== null ? `${value}%` : 'データなし'} />
+              <Tooltip formatter={(value) => value !== null ? `${value}%` : 'チE�EタなぁE} />
               <Legend />
               <Line 
                 type="monotone" 
@@ -151,25 +147,22 @@ function CohortYearlyTrackingContent() {
           </ResponsiveContainer>
           <div className="mt-4 p-4 bg-blue-50 rounded">
             <p className="text-sm text-blue-800">
-              <strong>分析結果：</strong>2021年以降の入社コホートで定着率の改善が顕著に見られます。
-              特に2年目の定着率が2020年入社の85%から2023年入社の92%へと7ポイント改善しています。
-            </p>
+              <strong>刁E��結果�E�E/strong>2021年以降�E入社コホ�Eトで定着玁E�E改喁E��顕著に見られます、E              特に2年目の定着玁E��2020年入社の85%から2023年入社の92%へと7ポイント改喁E��てぁE��す、E            </p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           <div className="bg-white shadow rounded-lg p-6">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">
-              重要マイルストーン定着率
-            </h3>
+              重要�Eイルスト�Eン定着玁E            </h3>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={retentionMilestones}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="cohort" angle={-45} textAnchor="end" height={80} />
                 <YAxis domain={[60, 100]} />
-                <Tooltip formatter={(value) => value !== null ? `${value}%` : 'データなし'} />
+                <Tooltip formatter={(value) => value !== null ? `${value}%` : 'チE�EタなぁE} />
                 <Legend />
-                <Bar dataKey="3ヶ月" fill="#3B82F6" />
+                <Bar dataKey="3ヶ朁E fill="#3B82F6" />
                 <Bar dataKey="1年" fill="#10B981" />
                 <Bar dataKey="3年" fill="#F59E0B" />
               </BarChart>
@@ -178,7 +171,7 @@ function CohortYearlyTrackingContent() {
 
           <div className="bg-white shadow rounded-lg p-6">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">
-              施策導入効果の推移
+              施策導�E効果�E推移
             </h3>
             <ResponsiveContainer width="100%" height={300}>
               <AreaChart data={improvementData}>
@@ -199,8 +192,7 @@ function CohortYearlyTrackingContent() {
         <div className="bg-white shadow rounded-lg p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-gray-800">
-              部署別コホート分析
-            </h3>
+              部署別コホ�Eト�E极E            </h3>
             <select
               value={selectedDepartment}
               onChange={(e) => setSelectedDepartment(e.target.value)}
@@ -231,48 +223,47 @@ function CohortYearlyTrackingContent() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-white shadow rounded-lg p-6">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">
-              コホート別の特徴分析
+              コホ�Eト別の特徴刁E��
             </h3>
             <div className="space-y-3">
               <div className="border-l-4 border-purple-400 pl-4">
                 <h4 className="font-semibold text-gray-700">2020-2021年入社</h4>
-                <p className="text-sm text-gray-600">COVID-19影響下での採用。リモートオンボーディングの課題が定着率に影響</p>
+                <p className="text-sm text-gray-600">COVID-19影響下での採用。リモートオンボ�EチE��ングの課題が定着玁E��影響</p>
               </div>
               <div className="border-l-4 border-blue-400 pl-4">
                 <h4 className="font-semibold text-gray-700">2022年入社</h4>
-                <p className="text-sm text-gray-600">メンター制度導入により、初期定着率が大幅改善</p>
+                <p className="text-sm text-gray-600">メンター制度導�Eにより、�E期定着玁E��大幁E��喁E/p>
               </div>
               <div className="border-l-4 border-green-400 pl-4">
                 <h4 className="font-semibold text-gray-700">2023-2024年入社</h4>
-                <p className="text-sm text-gray-600">包括的な定着支援プログラムにより、過去最高の定着率を記録</p>
+                <p className="text-sm text-gray-600">匁E��皁E��定着支援プログラムにより、E��去最高�E定着玁E��記録</p>
               </div>
             </div>
           </div>
 
           <div className="bg-white shadow rounded-lg p-6">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">
-              今後の改善提案
-            </h3>
+              今後�E改喁E��桁E            </h3>
             <div className="space-y-3">
               <div className="bg-blue-50 p-3 rounded">
-                <h4 className="font-semibold text-blue-800 text-sm">短期（3ヶ月以内）</h4>
+                <h4 className="font-semibold text-blue-800 text-sm">短期！Eヶ月以冁E��E/h4>
                 <ul className="list-disc list-inside text-blue-700 text-sm mt-1 space-y-1">
-                  <li>新入社員向けバディ制度の導入</li>
-                  <li>週次チェックインミーティングの標準化</li>
+                  <li>新入社員向けバディ制度の導�E</li>
+                  <li>週次チェチE��インミ�EチE��ングの標準化</li>
                 </ul>
               </div>
               <div className="bg-green-50 p-3 rounded">
-                <h4 className="font-semibold text-green-800 text-sm">中期（6ヶ月以内）</h4>
+                <h4 className="font-semibold text-green-800 text-sm">中期！Eヶ月以冁E��E/h4>
                 <ul className="list-disc list-inside text-green-700 text-sm mt-1 space-y-1">
-                  <li>キャリアパス面談の定期化</li>
-                  <li>部署横断的な交流機会の創出</li>
+                  <li>キャリアパス面諁E�E定期匁E/li>
+                  <li>部署横断皁E��交流機会�E創出</li>
                 </ul>
               </div>
               <div className="bg-purple-50 p-3 rounded">
-                <h4 className="font-semibold text-purple-800 text-sm">長期（1年以内）</h4>
+                <h4 className="font-semibold text-purple-800 text-sm">長期！E年以冁E��E/h4>
                 <ul className="list-disc list-inside text-purple-700 text-sm mt-1 space-y-1">
-                  <li>アルムナイネットワークの構築</li>
-                  <li>長期インセンティブ制度の設計</li>
+                  <li>アルムナイネットワークの構篁E/li>
+                  <li>長期インセンチE��ブ制度の設訁E/li>
                 </ul>
               </div>
             </div>
@@ -283,7 +274,7 @@ function CohortYearlyTrackingContent() {
         <div className="flex gap-4 mt-8">
           <button 
             onClick={() => exportToPDF({
-              title: 'コホート分析（年度別追跡）レポート',
+              title: 'コホ�Eト�E析（年度別追跡�E�レポ�EチE,
               facility: facility,
               reportType: 'cohort-yearly-tracking',
               elementId: 'report-content',
@@ -291,18 +282,11 @@ function CohortYearlyTrackingContent() {
             })}
             className="pdf-exclude bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
           >
-            PDFダウンロード
-          </button>
+            PDFダウンローチE          </button>
           <button className="pdf-exclude bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition">
-            Excelエクスポート
-          </button>
+            Excelエクスポ�EチE          </button>
         </div>
-      </div>
-      <BackToReportsButton />
-      <CategoryTopButton categoryPath="/reports?tab=retention" categoryName="定着分析" />
-      <ScrollToTopButton />
-      <DashboardButton />
-    </div>
+      </div><CategoryTopButton categoryPath="/reports?tab=retention" categoryName="定着刁E��" /></div>
   );
 }
 

@@ -4,10 +4,7 @@ import React, { Suspense, useState, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import CommonHeader from '@/components/CommonHeader';
-import DashboardButton from '@/components/DashboardButton';
-import ScrollToTopButton from '@/components/ScrollToTopButton';
 import { CategoryTopButton } from '@/components/CategoryTopButton';
-import { BackToReportsButton } from '@/components/BackToReportsButton';
 import { exportToPDF } from '@/utils/pdfExport';
 import { staffDatabase } from '@/app/data/staffData';
 import {
@@ -51,19 +48,19 @@ function WellbeingCohortContent() {
   const [selectedWellbeingType, setSelectedWellbeingType] = useState('all');
   const [selectedRiskLevel, setSelectedRiskLevel] = useState('all');
 
-  // ウェルビーイングタイプの定義
+  // ウェルビ�Eイングタイプ�E定義
   const wellbeingTypes = [
     '健康優良群',
     '健康リスク群',
     'メンタルヘルス良好群',
     'メンタルヘルス要注意群',
-    'ワークライフバランス充実群',
-    '燃え尽き症候群リスク群',
+    'ワークライフバランス允E��群',
+    '燁E��尽き症候群リスク群',
     'レジリエンス高群',
-    '総合的要支援群'
+    '総合皁E��支援群'
   ];
 
-  // ウェルビーイングコホートデータの生成
+  // ウェルビ�Eイングコホ�Eトデータの生�E
   const wellbeingCohorts = useMemo(() => {
     const staffList = Object.values(staffDatabase).filter(staff => {
       if (selectedFacility !== '全施設' && staff.facility !== selectedFacility) return false;
@@ -78,7 +75,7 @@ function WellbeingCohortContent() {
       return true;
     });
 
-    // ウェルビーイングタイプ別にコホートを生成
+    // ウェルビ�Eイングタイプ別にコホ�Eトを生�E
     const cohorts: WellbeingCohort[] = wellbeingTypes.map(type => {
       let healthScore = 0;
       let mentalHealthScore = 0;
@@ -96,7 +93,7 @@ function WellbeingCohortContent() {
           stressLevel = 20;
           retentionRate = 95;
           productivityScore = 88;
-          riskFactors = ['特になし'];
+          riskFactors = ['特になぁE];
           break;
         case '健康リスク群':
           healthScore = 45;
@@ -105,7 +102,7 @@ function WellbeingCohortContent() {
           stressLevel = 65;
           retentionRate = 70;
           productivityScore = 65;
-          riskFactors = ['生活習慣病リスク', '運動不足', '食生活の乱れ'];
+          riskFactors = ['生活習�E痁E��スク', '運動不足', '食生活の乱めE];
           break;
         case 'メンタルヘルス良好群':
           healthScore = 75;
@@ -123,25 +120,25 @@ function WellbeingCohortContent() {
           stressLevel = 75;
           retentionRate = 60;
           productivityScore = 55;
-          riskFactors = ['高ストレス', '睡眠不足', '不安傾向'];
+          riskFactors = ['高ストレス', '睡眠不足', '不安傾吁E];
           break;
-        case 'ワークライフバランス充実群':
+        case 'ワークライフバランス允E��群':
           healthScore = 80;
           mentalHealthScore = 82;
           workLifeBalance = 92;
           stressLevel = 30;
           retentionRate = 90;
           productivityScore = 82;
-          riskFactors = ['特になし'];
+          riskFactors = ['特になぁE];
           break;
-        case '燃え尽き症候群リスク群':
+        case '燁E��尽き症候群リスク群':
           healthScore = 55;
           mentalHealthScore = 35;
           workLifeBalance = 30;
           stressLevel = 85;
           retentionRate = 45;
           productivityScore = 40;
-          riskFactors = ['慢性疲労', '意欲低下', '感情的消耗'];
+          riskFactors = ['慢性疲労', '意欲低丁E, '感情皁E��老E];
           break;
         case 'レジリエンス高群':
           healthScore = 78;
@@ -152,18 +149,18 @@ function WellbeingCohortContent() {
           productivityScore = 90;
           riskFactors = ['一時的ストレス'];
           break;
-        case '総合的要支援群':
+        case '総合皁E��支援群':
           healthScore = 50;
           mentalHealthScore = 45;
           workLifeBalance = 40;
           stressLevel = 70;
           retentionRate = 55;
           productivityScore = 50;
-          riskFactors = ['複合的健康リスク', '支援体制不足', '孤立傾向'];
+          riskFactors = ['褁E��皁E��康リスク', '支援体制不足', '孤立傾吁E];
           break;
       }
 
-      // シミュレーションでスタッフを分類
+      // シミュレーションでスタチE��を�E顁E
       const cohortStaff = staffList.filter(staff => {
         const stress = staff.stressIndex;
         const workLife = 100 - staff.overtime * 2;
@@ -172,10 +169,10 @@ function WellbeingCohortContent() {
           case '健康リスク群': return stress > 50 && workLife < 50;
           case 'メンタルヘルス良好群': return stress < 25;
           case 'メンタルヘルス要注意群': return stress > 70;
-          case 'ワークライフバランス充実群': return workLife > 80;
-          case '燃え尽き症候群リスク群': return stress > 80 && workLife < 30;
+          case 'ワークライフバランス允E��群': return workLife > 80;
+          case '燁E��尽き症候群リスク群': return stress > 80 && workLife < 30;
           case 'レジリエンス高群': return stress < 40 && Math.random() < 0.2;
-          case '総合的要支援群': return stress > 60 && workLife < 40;
+          case '総合皁E��支援群': return stress > 60 && workLife < 40;
           default: return false;
         }
       });
@@ -204,31 +201,31 @@ function WellbeingCohortContent() {
     return cohorts;
   }, [selectedFacility, selectedWellbeingType, selectedRiskLevel]);
 
-  // ストレスレベルの推移データ
+  // ストレスレベルの推移チE�Eタ
   const stressTrendData = useMemo(() => {
-    const months = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+    const months = ['1朁E, '2朁E, '3朁E, '4朁E, '5朁E, '6朁E, '7朁E, '8朁E, '9朁E, '10朁E, '11朁E, '12朁E];
     return months.map((month, index) => ({
       month,
-      '全体平均': 45 + Math.sin(index * 0.5) * 10,
+      '全体平坁E: 45 + Math.sin(index * 0.5) * 10,
       '健康優良群': 20 + Math.sin(index * 0.3) * 5,
       'リスク群': 70 + Math.sin(index * 0.7) * 15,
       '要支援群': 80 + Math.sin(index * 0.4) * 10
     }));
   }, []);
 
-  // 健康指標の相関データ
+  // 健康持E���E相関チE�Eタ
   const healthCorrelationData = useMemo(() => {
     return [
       { indicator: '睡眠時間', wellbeing: 85, performance: 82, retention: 90 },
-      { indicator: '運動習慣', wellbeing: 78, performance: 75, retention: 85 },
+      { indicator: '運動習�E', wellbeing: 78, performance: 75, retention: 85 },
       { indicator: '食生活', wellbeing: 72, performance: 70, retention: 80 },
-      { indicator: '休暇取得', wellbeing: 88, performance: 85, retention: 92 },
-      { indicator: '人間関係', wellbeing: 90, performance: 88, retention: 95 },
-      { indicator: 'ストレス管理', wellbeing: 82, performance: 80, retention: 88 }
+      { indicator: '休暇取征E, wellbeing: 88, performance: 85, retention: 92 },
+      { indicator: '人間関俁E, wellbeing: 90, performance: 88, retention: 95 },
+      { indicator: 'ストレス管琁E, wellbeing: 82, performance: 80, retention: 88 }
     ];
   }, []);
 
-  // レーダーチャート用データ
+  // レーダーチャート用チE�Eタ
   const radarData = useMemo(() => {
     const metrics = ['健康度', 'メンタルヘルス', 'WLB', '低ストレス', '生産性'];
     return metrics.map(metric => {
@@ -246,19 +243,19 @@ function WellbeingCohortContent() {
     });
   }, [wellbeingCohorts]);
 
-  // 介入プログラムの効果データ
+  // 介�Eプログラムの効果データ
   const interventionEffectData = useMemo(() => {
     return [
-      { program: 'ストレス管理研修', before: 65, after: 45, improvement: 20 },
-      { program: 'フレックスタイム導入', before: 55, after: 35, improvement: 20 },
+      { program: 'ストレス管琁E��修', before: 65, after: 45, improvement: 20 },
+      { program: 'フレチE��スタイム導�E', before: 55, after: 35, improvement: 20 },
       { program: '健康増進プログラム', before: 60, after: 42, improvement: 18 },
-      { program: 'メンタルヘルス相談', before: 70, after: 50, improvement: 20 },
-      { program: 'チームビルディング', before: 58, after: 40, improvement: 18 },
-      { program: '在宅勤務制度', before: 62, after: 38, improvement: 24 }
+      { program: 'メンタルヘルス相諁E, before: 70, after: 50, improvement: 20 },
+      { program: 'チ�EムビルチE��ング', before: 58, after: 40, improvement: 18 },
+      { program: '在宁E��務制度', before: 62, after: 38, improvement: 24 }
     ];
   }, []);
 
-  // 施設リストを取得
+  // 施設リストを取征E
   const facilities = useMemo(() => {
     const facilitySet = new Set<string>();
     Object.values(staffDatabase).forEach(staff => {
@@ -271,15 +268,15 @@ function WellbeingCohortContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="ウェルビーイングコホート分析" />
+      <CommonHeader title="ウェルビ�Eイングコホ�Eト�E极E />
       
       <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
           {/* ヘッダー */}
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h1 className="text-2xl font-bold">ウェルビーイングコホート分析</h1>
+            <h1 className="text-2xl font-bold">ウェルビ�Eイングコホ�Eト�E极E/h1>
             <p className="text-gray-600 mt-2">
-              健康状態・メンタルヘルス・ワークライフバランスに基づく職員の分類と分析
+              健康状態�Eメンタルヘルス・ワークライフバランスに基づく�E員の刁E��と刁E��
             </p>
             {facilityParam && (
               <p className="text-sm text-gray-500 mt-1">対象施設: {facilityParam}</p>
@@ -306,14 +303,14 @@ function WellbeingCohortContent() {
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  ウェルビーイングタイプ
+                  ウェルビ�EイングタイチE
                 </label>
                 <select
                   value={selectedWellbeingType}
                   onChange={(e) => setSelectedWellbeingType(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="all">全タイプ</option>
+                  <option value="all">全タイチE/option>
                   {wellbeingTypes.map(type => (
                     <option key={type} value={type}>{type}</option>
                   ))}
@@ -338,7 +335,7 @@ function WellbeingCohortContent() {
             </div>
           </div>
 
-          {/* ウェルビーイングコホート概要 */}
+          {/* ウェルビ�Eイングコホ�Eト概要E*/}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {wellbeingCohorts.slice(0, 4).map((cohort, index) => (
               <Card key={cohort.type}>
@@ -349,7 +346,7 @@ function WellbeingCohortContent() {
                   <div className="space-y-2">
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-gray-600">人数</span>
-                      <span className="text-lg font-semibold">{cohort.count}名</span>
+                      <span className="text-lg font-semibold">{cohort.count}吁E/span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-gray-600">健康スコア</span>
@@ -369,10 +366,10 @@ function WellbeingCohortContent() {
             ))}
           </div>
 
-          {/* ウェルビーイング指標比較 */}
+          {/* ウェルビ�Eイング持E��比輁E*/}
           <Card>
             <CardHeader>
-              <CardTitle>ウェルビーイングタイプ別指標比較</CardTitle>
+              <CardTitle>ウェルビ�Eイングタイプ別持E��比輁E/CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-96">
@@ -409,7 +406,7 @@ function WellbeingCohortContent() {
                       <Legend />
                       <Area type="monotone" dataKey="要支援群" stackId="1" stroke="#EF4444" fill="#EF4444" fillOpacity={0.6} />
                       <Area type="monotone" dataKey="リスク群" stackId="1" stroke="#F59E0B" fill="#F59E0B" fillOpacity={0.6} />
-                      <Area type="monotone" dataKey="全体平均" stackId="1" stroke="#3B82F6" fill="#3B82F6" fillOpacity={0.6} />
+                      <Area type="monotone" dataKey="全体平坁E stackId="1" stroke="#3B82F6" fill="#3B82F6" fillOpacity={0.6} />
                       <Area type="monotone" dataKey="健康優良群" stackId="1" stroke="#10B981" fill="#10B981" fillOpacity={0.6} />
                     </AreaChart>
                   </ResponsiveContainer>
@@ -419,7 +416,7 @@ function WellbeingCohortContent() {
 
             <Card>
               <CardHeader>
-                <CardTitle>ウェルビーイング総合評価</CardTitle>
+                <CardTitle>ウェルビ�Eイング総合評価</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-80">
@@ -446,10 +443,10 @@ function WellbeingCohortContent() {
             </Card>
           </div>
 
-          {/* 健康指標と成果の相関 */}
+          {/* 健康持E��と成果の相関 */}
           <Card>
             <CardHeader>
-              <CardTitle>健康関連指標とビジネス成果の相関</CardTitle>
+              <CardTitle>健康関連持E��とビジネス成果の相関</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-96">
@@ -460,19 +457,19 @@ function WellbeingCohortContent() {
                     <YAxis domain={[0, 100]} tickFormatter={(value) => `${value}%`} />
                     <Tooltip formatter={(value: any) => `${value}%`} />
                     <Legend />
-                    <Bar dataKey="wellbeing" name="ウェルビーイング" fill="#10B981" />
+                    <Bar dataKey="wellbeing" name="ウェルビ�Eイング" fill="#10B981" />
                     <Line type="monotone" dataKey="performance" name="パフォーマンス" stroke="#3B82F6" strokeWidth={2} />
-                    <Line type="monotone" dataKey="retention" name="定着率" stroke="#F59E0B" strokeWidth={2} />
+                    <Line type="monotone" dataKey="retention" name="定着玁E stroke="#F59E0B" strokeWidth={2} />
                   </ComposedChart>
                 </ResponsiveContainer>
               </div>
             </CardContent>
           </Card>
 
-          {/* 介入プログラム効果 */}
+          {/* 介�Eプログラム効极E*/}
           <Card>
             <CardHeader>
-              <CardTitle>ウェルビーイング改善プログラムの効果</CardTitle>
+              <CardTitle>ウェルビ�Eイング改喁E�Eログラムの効极E/CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-96">
@@ -494,7 +491,7 @@ function WellbeingCohortContent() {
           {/* リスク要因一覧 */}
           <Card>
             <CardHeader>
-              <CardTitle>ウェルビーイングコホート別リスク要因と対策</CardTitle>
+              <CardTitle>ウェルビ�Eイングコホ�Eト別リスク要因と対筁E/CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -504,11 +501,11 @@ function WellbeingCohortContent() {
                       <div>
                         <h4 className="font-semibold">{cohort.type}</h4>
                         <div className="mt-2">
-                          <span className="text-sm font-medium">リスク要因：</span>
+                          <span className="text-sm font-medium">リスク要因�E�E/span>
                           <div className="flex flex-wrap gap-2 mt-1">
                             {cohort.riskFactors.map((risk, index) => (
                               <span key={index} className={`text-xs px-2 py-1 rounded ${
-                                risk === '特になし' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                                risk === '特になぁE ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                               }`}>
                                 {risk}
                               </span>
@@ -516,15 +513,15 @@ function WellbeingCohortContent() {
                           </div>
                         </div>
                         <p className="text-sm text-gray-600 mt-2">
-                          {cohort.type === '健康優良群' && '現状維持と他職員への好影響波及を促進。'}
-                          {cohort.type === '健康リスク群' && '生活習慣改善プログラムと健康相談の実施。'}
-                          {cohort.type === 'メンタルヘルス要注意群' && '専門カウンセリングと業務負荷の調整。'}
-                          {cohort.type === '燃え尽き症候群リスク群' && '長期休暇取得と役割の見直し、キャリア相談。'}
-                          {cohort.type === '総合的要支援群' && '包括的支援プログラムと個別フォローアップ。'}
+                          {cohort.type === '健康優良群' && '現状維持と他�E員への好影響波及を俁E��、E}
+                          {cohort.type === '健康リスク群' && '生活習�E改喁E�Eログラムと健康相諁E�E実施、E}
+                          {cohort.type === 'メンタルヘルス要注意群' && '専門カウンセリングと業務負荷の調整、E}
+                          {cohort.type === '燁E��尽き症候群リスク群' && '長期休暇取得と役割の見直し、キャリア相諁E��E}
+                          {cohort.type === '総合皁E��支援群' && '匁E��皁E��援プログラムと個別フォローアチE�E、E}
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm font-medium">定着率: {cohort.retentionRate}%</p>
+                        <p className="text-sm font-medium">定着玁E {cohort.retentionRate}%</p>
                         <p className="text-xs text-gray-500">生産性: {cohort.productivityScore}点</p>
                       </div>
                     </div>
@@ -534,29 +531,29 @@ function WellbeingCohortContent() {
             </CardContent>
           </Card>
 
-          {/* サマリー統計 */}
+          {/* サマリー統訁E*/}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-base">健康優良職員率</CardTitle>
+                <CardTitle className="text-base">健康優良職員玁E/CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold text-green-600">
                   {Math.round(wellbeingCohorts.filter(c => c.healthScore >= 80).reduce((sum, c) => sum + c.count, 0) / wellbeingCohorts.reduce((sum, c) => sum + c.count, 0) * 100)}%
                 </p>
-                <p className="text-sm text-gray-600 mt-1">健康スコア80以上</p>
+                <p className="text-sm text-gray-600 mt-1">健康スコア80以丁E/p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-base">高ストレス者</CardTitle>
+                <CardTitle className="text-base">高ストレス老E/CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold text-red-600">
-                  {wellbeingCohorts.filter(c => c.stressLevel >= 70).reduce((sum, c) => sum + c.count, 0)}名
+                  {wellbeingCohorts.filter(c => c.stressLevel >= 70).reduce((sum, c) => sum + c.count, 0)}吁E
                 </p>
-                <p className="text-sm text-gray-600 mt-1">要介入対象</p>
+                <p className="text-sm text-gray-600 mt-1">要介�E対象</p>
               </CardContent>
             </Card>
 
@@ -574,11 +571,11 @@ function WellbeingCohortContent() {
 
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-base">改善可能性</CardTitle>
+                <CardTitle className="text-base">改喁E��能性</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold text-purple-600">68%</p>
-                <p className="text-sm text-gray-600 mt-1">介入による改善見込み</p>
+                <p className="text-sm text-gray-600 mt-1">介�Eによる改喁E��込み</p>
               </CardContent>
             </Card>
           </div>
@@ -587,7 +584,7 @@ function WellbeingCohortContent() {
           <div className="flex gap-4">
             <button 
               onClick={() => exportToPDF({
-                title: 'ウェルビーイングコホート分析レポート',
+                title: 'ウェルビ�Eイングコホ�Eト�E析レポ�EチE,
                 facility: selectedFacility,
                 reportType: 'wellbeing-cohort',
                 elementId: 'report-content',
@@ -595,18 +592,12 @@ function WellbeingCohortContent() {
               })}
               className="pdf-exclude bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
             >
-              PDFダウンロード
+              PDFダウンローチE
             </button>
           </div>
 
         </div>
-      </div>
-      
-      <ScrollToTopButton />
-      <CategoryTopButton categoryPath="/reports/cohort-analysis" categoryName="コホート分析" />
-      <BackToReportsButton />
-      <DashboardButton />
-    </div>
+      </div><CategoryTopButton categoryPath="/reports/cohort-analysis" categoryName="コホ�Eト�E极E /></div>
   );
 }
 
