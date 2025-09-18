@@ -142,7 +142,7 @@ function OrganizationOptimizationReportContent() {
     };
 
   return (
-    <div>
+    <>
       <BreadcrumbBar />
       <ReportLayout
         title="組織構造最適化分析"
@@ -482,6 +482,7 @@ function OrganizationOptimizationReportContent() {
 
       </div>
     </ReportLayout>
+    </>
   );
 }
 

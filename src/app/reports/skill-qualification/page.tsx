@@ -152,7 +152,7 @@ function SkillQualificationReportContent() {
     };
 
   return (
-    <div>
+    <>
       <BreadcrumbBar />
       <ReportLayout
         title="スキル・資格管理分析"
@@ -495,6 +495,7 @@ function SkillQualificationReportContent() {
         </section>
       </div>
     </ReportLayout>
+    </>
   );
 }
 

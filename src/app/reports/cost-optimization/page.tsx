@@ -191,7 +191,7 @@ function CostOptimizationReportContent() {
   }, [facilityId]);
 
   return (
-    <div>
+    <>
       <BreadcrumbBar />
       <ReportLayout
         title="人件費最適化分析"
@@ -497,6 +497,7 @@ function CostOptimizationReportContent() {
         </section>
       </div>
     </ReportLayout>
+    </>
   );
 }
 

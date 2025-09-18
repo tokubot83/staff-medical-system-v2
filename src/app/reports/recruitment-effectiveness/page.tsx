@@ -113,7 +113,7 @@ function RecruitmentEffectivenessReportContent() {
     };
 
   return (
-    <div>
+    <>
       <BreadcrumbBar />
       <ReportLayout
         title="採用効果分析"
@@ -425,6 +425,7 @@ function RecruitmentEffectivenessReportContent() {
 
       </div>
     </ReportLayout>
+    </>
   );
 }
 
