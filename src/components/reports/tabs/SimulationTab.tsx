@@ -10,7 +10,6 @@ import { Slider } from '@/components/ui/slider';
 import { Calculator, TrendingUp, Users, DollarSign, AlertTriangle, Settings } from 'lucide-react';
 import { obaraStaffDatabase, tachigamiStaffDatabase } from '@/app/data/staffData';
 import { StaffDetail } from "@/types/staff";
-import ScrollToTopButton from '@/components/ScrollToTopButton';
 
 interface SimulationTabProps {
   selectedFacility: string;
@@ -550,7 +549,6 @@ export default function SimulationTab({ selectedFacility }: SimulationTabProps) 
           </div>
         </CardContent>
       </Card>
-      <ScrollToTopButton />
     </div>
   );
 }

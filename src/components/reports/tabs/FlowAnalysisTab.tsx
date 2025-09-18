@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight, Users, TrendingUp, TrendingDown, GitBranch, Activity } from 'lucide-react';
 import { obaraStaffDatabase, tachigamiStaffDatabase } from '@/app/data/staffData';
 import { StaffDetail } from "@/types/staff";
-import ScrollToTopButton from '@/components/ScrollToTopButton';
 
 interface FlowAnalysisTabProps {
   selectedFacility: string;
@@ -414,7 +413,6 @@ export default function FlowAnalysisTab({ selectedFacility }: FlowAnalysisTabPro
           </div>
         </CardContent>
       </Card>
-      <ScrollToTopButton />
     </div>
   );
 }

@@ -9,7 +9,6 @@ import { Progress } from '@/components/ui/progress';
 import { Heart, Brain, Activity, AlertCircle, TrendingUp, Shield, Smile, Users } from 'lucide-react';
 import { obaraStaffDatabase, tachigamiStaffDatabase } from '@/app/data/staffData';
 import { StaffDetail } from "@/types/staff";
-import ScrollToTopButton from '@/components/ScrollToTopButton';
 
 interface WellbeingTabProps {
   selectedFacility: string;
@@ -562,7 +561,6 @@ export default function WellbeingTab({ selectedFacility }: WellbeingTabProps) {
           </CardContent>
         </Card>
       )}
-      <ScrollToTopButton />
     </div>
   );
 }

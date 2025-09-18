@@ -4,9 +4,6 @@ import React from 'react';
 import Link from 'next/link';
 import { Facility } from '@/app/data/facilityData';
 import CommonHeader from '@/components/CommonHeader';
-import DashboardButton from '@/components/DashboardButton';
-import ScrollToTopButton from '@/components/ScrollToTopButton';
-import { BackToReportsButton } from '@/components/BackToReportsButton';
 import { CategoryTopButton } from '@/components/CategoryTopButton';
 
 interface ReportLayoutProps {
@@ -93,12 +90,9 @@ export default function ReportLayout({
           </div>
         </div>
       </div>
-      <ScrollToTopButton />
       {categoryPath && categoryName && (
         <CategoryTopButton categoryPath={categoryPath} categoryName={categoryName} />
       )}
-      <BackToReportsButton />
-      <DashboardButton />
     </div>
   );
 }
