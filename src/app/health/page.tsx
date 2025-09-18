@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react'
 import BreadcrumbBar from '@/components/navigation/BreadcrumbBar'
-import DashboardButton from '@/components/DashboardButton'
 import Link from 'next/link'
 import { staffDatabase } from '../data/staffData.js'
 import StressCheckDistribution from '@/features/stress-check/components/StressCheckDistribution'
@@ -155,7 +154,6 @@ export default function HealthPage() {
           {activeTab === 'analytics' && <AnalyticsTab />}
         </div>
       </div>
-      <DashboardButton />
     </div>
   )
 }

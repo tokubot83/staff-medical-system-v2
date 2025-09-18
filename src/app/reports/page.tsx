@@ -4,7 +4,6 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import FacilitySelector from '@/components/reports/FacilitySelector';
 import BreadcrumbBar from '@/components/navigation/BreadcrumbBar';
-import DashboardButton from '@/components/DashboardButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 
 const categories = [
@@ -178,7 +177,6 @@ function ReportsPageContent() {
         </div>
       </div>
             <ScrollToTopButton />
-      <DashboardButton />
     </div>
   );
 }

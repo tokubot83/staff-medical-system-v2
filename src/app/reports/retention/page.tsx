@@ -3,10 +3,8 @@
 import React, { Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
-import DashboardButton from '@/components/DashboardButton';
 import FacilitySelector from '@/components/reports/FacilitySelector';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
-import { BackToReportsButton } from '@/components/BackToReportsButton';
 
 const reports = [
   {
@@ -125,19 +123,6 @@ function RetentionPageContent() {
       <CommonHeader title="定着分析" />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* カテゴリヘッダー */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <span className="text-3xl">🎯</span>
-            <h1 className="text-2xl font-bold text-gray-900">定着分析</h1>
-          </div>
-          <p className="text-gray-600">
-            職員の定着率向上に向けた詳細な分析とアクションプランを提示します。
-            生存曲線分析、コホート分析、早期離職予防など、多角的なアプローチで
-            職員が長く働き続けられる組織づくりを支援します。
-          </p>
-        </div>
-
         {/* 施設選択 */}
         <div className="mb-8">
           <FacilitySelector
@@ -369,8 +354,6 @@ function RetentionPageContent() {
         </div>
       </div>
       <ScrollToTopButton />
-      <BackToReportsButton />
-      <DashboardButton />
     </div>
   );
 }

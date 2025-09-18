@@ -3,7 +3,6 @@
 import React, { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import BreadcrumbBar from '@/components/navigation/BreadcrumbBar'
-import DashboardButton from '@/components/DashboardButton'
 import Link from 'next/link'
 import { staffDatabase } from '../data/staffData.js'
 import styles from './Interviews.module.css'
@@ -254,7 +253,6 @@ function InterviewsPageContent() {
         }
         roles={getRoleOptions(selectedInterviewType)}
       />
-      <DashboardButton />
     </div>
   )
 }

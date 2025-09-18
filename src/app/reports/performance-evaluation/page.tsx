@@ -4,10 +4,8 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import FacilitySelector from '@/components/reports/FacilitySelector';
 import CommonHeader from '@/components/CommonHeader';
-import DashboardButton from '@/components/DashboardButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 import CategoryReportCard from '@/components/reports/CategoryReportCard';
-import { BackToReportsButton } from '@/components/BackToReportsButton';
 
 export default function PerformanceEvaluationCategoryPage() {
   const router = useRouter();
@@ -130,9 +128,6 @@ export default function PerformanceEvaluationCategoryPage() {
       <CommonHeader title="人事評価分析" />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-6">
-          <BackToReportsButton />
-        </div>
 
         <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
           <div className="mb-6">
@@ -173,7 +168,6 @@ export default function PerformanceEvaluationCategoryPage() {
       </div>
 
       <ScrollToTopButton />
-      <DashboardButton />
     </div>
   );
 }

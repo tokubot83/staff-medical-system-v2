@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import CommonHeader from '@/components/CommonHeader';
-import DashboardButton from '@/components/DashboardButton';
 import SheetPreviewModal from '@/components/SheetPreviewModal';
 import InterviewSheetModal from '@/components/InterviewSheetModal';
 import TrainingContent from './TrainingContent';
@@ -2338,7 +2337,6 @@ export default function HRSystemGuidePage() {
         )
       )}
       
-      <DashboardButton />
     </div>
   );
 }

@@ -4,7 +4,6 @@ import React, { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import BreadcrumbBar from '@/components/navigation/BreadcrumbBar'
-import DashboardButton from '@/components/DashboardButton'
 
 // コンポーネントのインポート
 import TalentPipelineDashboard from '@/components/recruitment/TalentPipelineDashboard'
@@ -550,7 +549,6 @@ export default function RecruitmentPage() {
         </div>
       </div>
 
-      <DashboardButton />
     </div>
   )
 }

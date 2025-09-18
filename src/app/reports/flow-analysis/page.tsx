@@ -4,10 +4,8 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import FacilitySelector from '@/components/reports/FacilitySelector';
 import CommonHeader from '@/components/CommonHeader';
-import DashboardButton from '@/components/DashboardButton';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
 import CategoryReportCard from '@/components/reports/CategoryReportCard';
-import { BackToReportsButton } from '@/components/BackToReportsButton';
 
 export default function FlowAnalysisCategoryPage() {
   const router = useRouter();
@@ -127,8 +125,6 @@ export default function FlowAnalysisCategoryPage() {
       </div>
       
       <ScrollToTopButton />
-      <BackToReportsButton />
-      <DashboardButton />
     </div>
   );
 }

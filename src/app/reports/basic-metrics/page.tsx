@@ -3,11 +3,9 @@
 import React, { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
-import DashboardButton from '@/components/DashboardButton';
 import FacilitySelector from '@/components/reports/FacilitySelector';
 import Link from 'next/link';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
-import { BackToReportsButton } from '@/components/BackToReportsButton';
 
 const reports = [
   {
@@ -141,18 +139,6 @@ function BasicMetricsPageContent() {
       <CommonHeader title="基本指標" />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* カテゴリヘッダー */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <span className="text-3xl">📊</span>
-            <h1 className="text-2xl font-bold text-gray-900">基本指標</h1>
-          </div>
-          <p className="text-gray-600">
-            職員数、構成比、採用・離職などの基本的な人事指標を確認します。
-            組織の現状を数値で把握し、経営判断の基礎となるデータを提供します。
-          </p>
-        </div>
-
         {/* 施設選択 */}
         <div className="mb-8">
           <FacilitySelector
@@ -217,8 +203,6 @@ function BasicMetricsPageContent() {
         </div>
       </div>
       <ScrollToTopButton />
-      <BackToReportsButton />
-      <DashboardButton />
     </div>
   );
 }
