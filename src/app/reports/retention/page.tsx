@@ -3,6 +3,7 @@
 import React, { Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import FacilitySelector from '@/components/reports/FacilitySelector';
+import BreadcrumbBar from '@/components/navigation/BreadcrumbBar';
 const reports = [
   {
     id: 'survival-curve-overall',
@@ -117,6 +118,7 @@ function RetentionPageContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <BreadcrumbBar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* カテゴリヘッダー */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">

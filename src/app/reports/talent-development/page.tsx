@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import BreadcrumbBar from '@/components/navigation/BreadcrumbBar';
 import ReportLayout from '@/components/reports/ReportLayout';
 import { facilities } from '@/app/data/facilityData';
 import { staffDatabase } from '@/app/data/staffData';
@@ -170,7 +171,9 @@ function TalentDevelopmentReportContent() {
   const reportData = generateReportData();
 
   return (
-    <ReportLayout
+    <div>
+      <BreadcrumbBar />
+      <ReportLayout
       title="職種別人材育成戦略"
       description="職種ごとの育成計画とキャリアパス分析を行います"
       icon="🎯"
@@ -410,6 +413,7 @@ function TalentDevelopmentReportContent() {
 
       </div>
     </ReportLayout>
+    </div>
   );
 }
 

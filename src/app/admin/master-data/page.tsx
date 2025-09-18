@@ -84,88 +84,53 @@ export default function MasterDataPage() {
     return colors[color] || colors.blue;
   };
 
+  const getActiveTabColorClasses = (color: string) => {
+    const colors: Record<string, string> = {
+      blue: 'border-blue-500 text-blue-600',
+      green: 'border-green-500 text-green-600',
+      purple: 'border-purple-500 text-purple-600',
+      orange: 'border-orange-500 text-orange-600',
+      indigo: 'border-indigo-500 text-indigo-600',
+      pink: 'border-pink-500 text-pink-600',
+    };
+    return colors[color] || colors.blue;
+  };
+
   return (
-    <div>
-      
-      <div className="min-h-screen bg-gray-50">
-
+    <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="grid grid-cols-12 gap-6">
-          <div className="col-span-3">
-            <div className="bg-white rounded-lg border p-4">
-              <h2 className="text-sm font-semibold text-gray-700 mb-3 flex items-center">
-                <Settings className="h-4 w-4 mr-2" />
-                マスターデータ選択
-              </h2>
-              <div className="space-y-2">
-                {masterTypes.map(master => {
-                  const Icon = master.icon;
-                  const isSelected = selectedMaster === master.key;
-                  
-                  return (
-                    <button
-                      key={master.key}
-                      onClick={() => setSelectedMaster(master.key)}
-                      className={`
-                        w-full text-left p-3 rounded-lg border transition-all
-                        ${isSelected 
-                          ? getColorClasses(master.color) + ' border-2'
-                          : 'bg-white hover:bg-gray-50 border-gray-200'
-                        }
-                      `}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                          <Icon className={`h-5 w-5 ${
-                            isSelected ? getIconColorClasses(master.color) : 'text-gray-500'
-                          }`} />
-                          <div>
-                            <div className="font-medium text-sm">
-                              {master.label}
-                            </div>
-                            <div className="text-xs text-gray-500 mt-0.5">
-                              {master.description}
-                            </div>
-                          </div>
-                        </div>
-                        {isSelected && (
-                          <ChevronRight className={`h-4 w-4 ${getIconColorClasses(master.color)}`} />
-                        )}
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
+        {/* タブメニュー */}
+        <div className="bg-white rounded-lg border mb-6">
+          <div className="border-b">
+            <nav className="flex space-x-8 px-6" aria-label="Tabs">
+              {masterTypes.map(master => {
+                const Icon = master.icon;
+                const isSelected = selectedMaster === master.key;
 
-              <div className="mt-6 pt-6 border-t">
-                <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
-                  クイックアクション
-                </h3>
-                <div className="space-y-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="w-full justify-start text-xs"
-                    onClick={() => window.location.href = '/admin/backup'}
+                return (
+                  <button
+                    key={master.key}
+                    onClick={() => setSelectedMaster(master.key)}
+                    className={`
+                      flex items-center py-4 px-1 border-b-2 font-medium text-sm transition-colors
+                      ${isSelected
+                        ? getActiveTabColorClasses(master.color)
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      }
+                    `}
                   >
-                    <Database className="h-3 w-3 mr-2" />
-                    バックアップ管理
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="w-full justify-start text-xs"
-                    onClick={() => window.location.href = '/admin/audit-log'}
-                  >
-                    <ClipboardCheck className="h-3 w-3 mr-2" />
-                    監査ログ
-                  </Button>
-                </div>
-              </div>
-            </div>
+                    <Icon className="h-5 w-5 mr-2" />
+                    {master.label}
+                  </button>
+                );
+              })}
+            </nav>
           </div>
+        </div>
 
-          <div className="col-span-9">
+        {/* メインコンテンツ */}
+        <div className="grid grid-cols-12 gap-6">
+          <div className="col-span-12">
             <div className="bg-white rounded-lg border">
               <div className="p-6">
                 <div className="mb-6">
@@ -215,53 +180,84 @@ export default function MasterDataPage() {
                 ) : null}
               </div>
             </div>
+          </div>
 
-            {selectedMaster === 'developmentMemo' ? (
-              <div className="mt-4 bg-indigo-50 border border-indigo-200 rounded-lg p-4">
-                <div className="flex">
-                  <div className="flex-shrink-0">
-                    <BookOpen className="h-5 w-5 text-indigo-600" />
-                  </div>
-                  <div className="ml-3">
-                    <h3 className="text-sm font-medium text-indigo-800">
-                      開発メモについて
-                    </h3>
-                    <div className="mt-2 text-sm text-indigo-700">
-                      <ul className="list-disc list-inside space-y-1">
-                        <li>システム内の開発メモ、TODO、実装指示書を集約表示しています</li>
-                        <li>ファイルパスをクリックすると、該当ファイルの場所が確認できます</li>
-                        <li>優先度「Critical」の項目は早急な対応が必要です</li>
-                        <li>最新の実装指示書: /docs/implementation-resume-guide-v3-20250813.md</li>
-                      </ul>
+          {/* クイックアクション&情報 */}
+          <div className="col-span-12 mt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* クイックアクション */}
+              <div className="bg-white rounded-lg border p-4">
+                <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center">
+                  <Settings className="h-4 w-4 mr-2" />
+                  クイックアクション
+                </h3>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => window.location.href = '/admin/backup'}
+                  >
+                    <Database className="h-3 w-3 mr-2" />
+                    バックアップ管理
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => window.location.href = '/admin/audit-log'}
+                  >
+                    <ClipboardCheck className="h-3 w-3 mr-2" />
+                    監査ログ
+                  </Button>
+                </div>
+              </div>
+
+              {/* 情報パネル */}
+              {selectedMaster === 'developmentMemo' ? (
+                <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4">
+                  <div className="flex">
+                    <div className="flex-shrink-0">
+                      <BookOpen className="h-5 w-5 text-indigo-600" />
+                    </div>
+                    <div className="ml-3">
+                      <h3 className="text-sm font-medium text-indigo-800">
+                        開発メモについて
+                      </h3>
+                      <div className="mt-2 text-sm text-indigo-700">
+                        <ul className="list-disc list-inside space-y-1">
+                          <li>システム内の開発メモ、TODO、実装指示書を集約表示しています</li>
+                          <li>ファイルパスをクリックすると、該当ファイルの場所が確認できます</li>
+                          <li>優先度「Critical」の項目は早急な対応が必要です</li>
+                          <li>最新の実装指示書: /docs/implementation-resume-guide-v3-20250813.md</li>
+                        </ul>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ) : (
-              <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <div className="flex">
-                  <div className="flex-shrink-0">
-                    <Shield className="h-5 w-5 text-blue-600" />
-                  </div>
-                  <div className="ml-3">
-                    <h3 className="text-sm font-medium text-blue-800">
-                      データ管理に関する注意事項
-                    </h3>
-                    <div className="mt-2 text-sm text-blue-700">
-                      <ul className="list-disc list-inside space-y-1">
-                        <li>マスターデータの変更は、システム全体に影響を与える可能性があります</li>
-                        <li>削除したデータは復元できません。必要に応じてバックアップを取得してください</li>
-                        <li>インポート時は、データ形式が正しいことを確認してください</li>
-                        <li>変更履歴は自動的に記録されます</li>
-                      </ul>
+              ) : (
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <div className="flex">
+                    <div className="flex-shrink-0">
+                      <Shield className="h-5 w-5 text-blue-600" />
+                    </div>
+                    <div className="ml-3">
+                      <h3 className="text-sm font-medium text-blue-800">
+                        データ管理に関する注意事項
+                      </h3>
+                      <div className="mt-2 text-sm text-blue-700">
+                        <ul className="list-disc list-inside space-y-1">
+                          <li>マスターデータの変更は、システム全体に影響を与える可能性があります</li>
+                          <li>削除したデータは復元できません。必要に応じてバックアップを取得してください</li>
+                          <li>インポート時は、データ形式が正しいことを確認してください</li>
+                          <li>変更履歴は自動的に記録されます</li>
+                        </ul>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
-      </div>
       </div>
     </div>
   );
