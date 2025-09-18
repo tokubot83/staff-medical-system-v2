@@ -3,10 +3,11 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { 
+import {
   Database, Download, Link2, History, Calendar,
-  Shield, ChevronRight, Home, Settings
+  Shield, Settings
 } from 'lucide-react';
+import BreadcrumbBar from '@/components/navigation/BreadcrumbBar';
 
 const adminMenuItems = [
   { 
@@ -50,19 +51,14 @@ export default function AdminLayout({
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <BreadcrumbBar />
+
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-4">
-              <Link href="/" className="flex items-center space-x-2 text-gray-700 hover:text-gray-900">
-                <Home className="h-5 w-5" />
-                <span>ホーム</span>
-              </Link>
-              <ChevronRight className="h-4 w-4 text-gray-400" />
-              <div className="flex items-center space-x-2">
-                <Settings className="h-5 w-5 text-gray-700" />
-                <span className="font-semibold text-gray-900">管理者設定</span>
-              </div>
+            <div className="flex items-center space-x-2">
+              <Settings className="h-5 w-5 text-gray-700" />
+              <span className="font-semibold text-gray-900">管理者設定</span>
             </div>
             <div className="flex items-center space-x-2">
               <Shield className="h-5 w-5 text-amber-600" />

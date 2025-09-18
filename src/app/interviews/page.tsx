@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
-import CommonHeader from '@/components/CommonHeader'
 import BreadcrumbBar from '@/components/navigation/BreadcrumbBar'
 import DashboardButton from '@/components/DashboardButton'
 import Link from 'next/link'
@@ -193,7 +192,6 @@ function InterviewsPageContent() {
 
   return (
     <div>
-      <CommonHeader title="面談管理" />
       <BreadcrumbBar />
       <div className={styles.container}>
         <div className={styles.tabNavigation}>

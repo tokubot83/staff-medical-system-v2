@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import CommonHeader from '@/components/CommonHeader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -81,7 +80,6 @@ export default function DashboardPage() {
 
   return (
     <div>
-      <CommonHeader title="評価管理ダッシュボード" />
       <div className={styles.container}>
         <div className={styles.tabNavigation}>
           {[
