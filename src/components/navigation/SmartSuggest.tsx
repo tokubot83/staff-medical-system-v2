@@ -64,10 +64,13 @@ export const SmartSuggest: React.FC<SmartSuggestProps> = ({
   // クライアントサイドで初期位置を設定
   React.useEffect(() => {
     // 初回マウント時のみ実行
+    const initialX = Math.round(window.innerWidth - 340)
+    const initialY = Math.round(window.innerHeight - 400)
     setPosition({
-      x: window.innerWidth - 340,
-      y: window.innerHeight - 400  // 500から400に変更（より下に配置）
+      x: initialX,
+      y: initialY
     })
+    positionRef.current = { x: initialX, y: initialY }
   }, []) // 空の依存配列で初回のみ実行
 
   // positionの更新を追跡
@@ -404,13 +407,10 @@ export const SmartSuggest: React.FC<SmartSuggestProps> = ({
       style={{
         left: `${Math.round(position.x)}px`,
         top: `${Math.round(position.y)}px`,
-        userSelect: isDragging ? 'none' : 'auto',
-        transform: 'translate3d(0, 0, 0)', // より強力なGPU加速
-        backfaceVisibility: 'hidden', // レンダリング最適化
-        willChange: 'auto' // willChangeは常時設定しない（パフォーマンス改善）
+        userSelect: isDragging ? 'none' : 'auto'
       }}
     >
-      <div className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
         {/* ヘッダー */}
         <div
           className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-3"
