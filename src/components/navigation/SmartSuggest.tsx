@@ -101,9 +101,10 @@ export const SmartSuggest: React.FC<SmartSuggestProps> = ({
     const maxX = window.innerWidth - 320
     const maxY = window.innerHeight - 100
 
+    // 整数値に丸めることでサブピクセルレンダリングを防ぐ
     setPosition({
-      x: Math.max(0, Math.min(newX, maxX)),
-      y: Math.max(0, Math.min(newY, maxY))
+      x: Math.round(Math.max(0, Math.min(newX, maxX))),
+      y: Math.round(Math.max(0, Math.min(newY, maxY)))
     })
   }, [])
 
@@ -401,11 +402,12 @@ export const SmartSuggest: React.FC<SmartSuggestProps> = ({
     <div
       className="fixed w-80 z-50"
       style={{
-        left: `${position.x}px`,
-        top: `${position.y}px`,
+        left: `${Math.round(position.x)}px`,
+        top: `${Math.round(position.y)}px`,
         userSelect: isDragging ? 'none' : 'auto',
-        transform: 'translateZ(0)', // GPU加速を有効化してにじみを防ぐ
-        willChange: isDragging ? 'left, top' : 'auto'
+        transform: 'translate3d(0, 0, 0)', // より強力なGPU加速
+        backfaceVisibility: 'hidden', // レンダリング最適化
+        willChange: 'auto' // willChangeは常時設定しない（パフォーマンス改善）
       }}
     >
       <div className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
