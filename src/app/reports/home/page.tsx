@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import BreadcrumbBar from '@/components/navigation/BreadcrumbBar';
 import FacilitySelector from '@/components/reports/FacilitySelector';
 import styles from '../Reports.module.css';
 import homeStyles from './ReportsHome.module.css';
