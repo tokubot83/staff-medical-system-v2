@@ -555,7 +555,7 @@ export const SmartSuggest: React.FC<SmartSuggestProps> = React.memo(({
       </div>
     </div>
   )
-}
+})
 
 // カスタムフック
 export const useSmartSuggest = () => {
