@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
-import CommonHeader from '@/components/CommonHeader'
 import AnnouncementComposer from '@/components/notification/AnnouncementComposer'
 import DeliveryHistory from '@/components/notification/DeliveryHistory'
 import TemplateManager from '@/components/notification/TemplateManager'
@@ -14,7 +13,6 @@ export default function NotificationsPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <CommonHeader title="お知らせ配信" />
 
       <div className="container mx-auto py-8 px-4 bg-gradient-to-b from-gray-50 to-white min-h-screen">
         {/* タブナビゲーション */}

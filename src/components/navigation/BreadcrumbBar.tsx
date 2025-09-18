@@ -27,7 +27,15 @@ export default function BreadcrumbBar() {
       'stress-check': 'ストレスチェック',
       'goals': '目標管理',
       'notifications': 'お知らせ',
-      'dashboard': 'ダッシュボード'
+      'dashboard': 'ダッシュボード',
+      'admin': '管理者設定',
+      'master-data': 'マスターデータ管理',
+      'backup': 'バックアップ・リストア',
+      'integration': '外部システム連携',
+      'audit-log': '監査ログ',
+      'scheduler': 'スケジューラー',
+      'interview-bank': '面談バンク管理',
+      'image-management': '画像管理'
     }
 
     if (segments.length === 0) {

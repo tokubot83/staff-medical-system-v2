@@ -1,11 +1,11 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { 
-  AlertCircle, 
-  CheckCircle2, 
-  Clock, 
-  Users, 
+import {
+  AlertCircle,
+  CheckCircle2,
+  Clock,
+  Users,
   FileText,
   TrendingUp,
   Calendar,
@@ -19,6 +19,7 @@ import {
   BarChart3
 } from 'lucide-react'
 import Link from 'next/link'
+import BreadcrumbBar from '@/components/navigation/BreadcrumbBar'
 
 // モックデータ（実際はAPIから取得）
 const mockDashboardData = {
@@ -174,9 +175,11 @@ export default function EvaluationIntegratedDashboard() {
   }
 
   return (
-    <div className="evaluationDashboard">
-      {/* ヘッダー */}
-      <div className="dashboardHeader">
+    <>
+      <BreadcrumbBar />
+      <div className="evaluationDashboard">
+        {/* ヘッダー */}
+        <div className="dashboardHeader">
         <div className="headerContent">
           <h2>評価統合ダッシュボード</h2>
           <p className="description">
@@ -914,5 +917,6 @@ export default function EvaluationIntegratedDashboard() {
         }
       `}</style>
     </div>
+    </>
   )
 }

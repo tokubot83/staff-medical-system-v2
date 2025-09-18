@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useState } from 'react'
-import CommonHeader from '@/components/CommonHeader'
 import BreadcrumbBar from '@/components/navigation/BreadcrumbBar'
 import Link from 'next/link'
 import { staffDatabase } from '../data/staffData.js'
@@ -59,7 +58,6 @@ export default function StaffCardsPage() {
 
   return (
     <div>
-      <CommonHeader title="職員カルテ" />
       <BreadcrumbBar />
 
       <div className={styles.container}>

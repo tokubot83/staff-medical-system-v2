@@ -3,7 +3,6 @@
 import React, { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import CommonHeader from '@/components/CommonHeader'
 import BreadcrumbBar from '@/components/navigation/BreadcrumbBar'
 import DashboardButton from '@/components/DashboardButton'
 
@@ -433,7 +432,6 @@ export default function RecruitmentPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="採用管理システム" />
       <BreadcrumbBar />
 
       <div className="container mx-auto py-8 px-4">

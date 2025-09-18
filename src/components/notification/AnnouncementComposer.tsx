@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import BreadcrumbBar from '@/components/navigation/BreadcrumbBar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -506,7 +507,9 @@ export default function AnnouncementComposer() {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <>
+      <BreadcrumbBar />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
       {/* メイン作成フォーム */}
       <div className="lg:col-span-2">
         <Card className="shadow-lg">
@@ -1171,5 +1174,6 @@ export default function AnnouncementComposer() {
         </Card>
       </div>
     </div>
+    </>
   )
 }
