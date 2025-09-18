@@ -56,6 +56,7 @@ export const SmartSuggest: React.FC<SmartSuggestProps> = React.memo(({
   const [isVisible, setIsVisible] = useState(true)
   const [isGenerating, setIsGenerating] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'next' | 'pending' | 'recommended'>('all')
+  const [isMounted, setIsMounted] = useState(false)
 
   // 位置管理をuseRefで行い、描画用のstateは最小限に
   const positionRef = useRef({ x: 0, y: 0 })
@@ -65,6 +66,7 @@ export const SmartSuggest: React.FC<SmartSuggestProps> = React.memo(({
 
   // クライアントサイドで初期位置を設定
   useEffect(() => {
+    setIsMounted(true)
     const initialX = Math.floor(window.innerWidth - 340)
     const initialY = Math.floor(window.innerHeight - 400)
     positionRef.current = { x: initialX, y: initialY }
@@ -387,7 +389,7 @@ export const SmartSuggest: React.FC<SmartSuggestProps> = React.memo(({
     return priorityOrder[a.priority] - priorityOrder[b.priority]
   })
 
-  if (!isVisible) return null
+  if (!isVisible || !isMounted) return null
 
   return (
     <div
@@ -405,7 +407,7 @@ export const SmartSuggest: React.FC<SmartSuggestProps> = React.memo(({
         <div
           className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-3"
           onMouseDown={handleMouseDown}
-          style={{ cursor: isDragging ? 'grabbing' : 'move' }}
+          style={{ cursor: 'move' }}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
