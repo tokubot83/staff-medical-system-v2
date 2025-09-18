@@ -14,6 +14,11 @@ interface Announcement {
   targetDepartments: string[]
   priority: 'high' | 'medium' | 'low'
   readRate?: number
+  // アクションボタン用の新しいフィールド
+  hasActionButton?: boolean
+  actionButtonType?: 'interview_reservation' | 'survey_response' | 'health_check' | 'training_apply'
+  actionButtonLabel?: string
+  actionButtonUrl?: string
 }
 
 interface Template {
@@ -31,6 +36,9 @@ export default function HRAnnouncementsDistribution() {
   const [selectedSubcategory, setSelectedSubcategory] = useState<string>('')
   const [title, setTitle] = useState<string>('')
   const [content, setContent] = useState<string>('')
+  const [hasActionButton, setHasActionButton] = useState<boolean>(false)
+  const [actionButtonType, setActionButtonType] = useState<string>('')
+  const [actionButtonLabel, setActionButtonLabel] = useState<string>('')
 
   const mockAnnouncements: Announcement[] = [
     {
@@ -96,74 +104,10 @@ export default function HRAnnouncementsDistribution() {
       id: 'interview-reservation-regular',
       category: 'interview',
       subcategory: 'reservation',
-      title: '【重要】定期面談の予約開始のお知らせ',
-      content: `職員の皆様へ
-
-${new Date().getFullYear()}年度の定期面談の予約を開始いたします。
-
-■面談期間
-${new Date().getMonth() + 2}月1日（月）～${new Date().getMonth() + 2}月28日（金）
-
-■予約受付期間
-本日より${new Date().getMonth() + 1}月20日（金）まで
-
-■予約方法
-1. 職員ポータルサイトにログイン
-2. 「面談予約」メニューを選択
-3. ご都合の良い日時を選択
-4. 予約内容を確認し、「予約確定」をクリック
-
-■注意事項
-・面談時間は1人あたり30分を予定しています
-・予約後の変更は、面談日の3営業日前まで可能です
-・体調不良等でキャンセルする場合は、早めにご連絡ください
-
-■お問い合わせ
-人事部 面談担当
-内線：1234
-メール：interview@company.com
-
-ご不明な点がございましたら、お気軽にお問い合わせください。
-
-人事部`
-    },
-    {
-      id: 'interview-reservation-evaluation',
-      category: 'interview',
-      subcategory: 'reservation',
-      title: '【要対応】評価面談の実施について',
-      content: `職員の皆様へ
-
-${new Date().getFullYear()}年度上期の評価面談を実施いたします。
-
-■面談の目的
-・上期の振り返りと評価のフィードバック
-・下期の目標設定
-・キャリア開発に関する相談
-
-■対象者
-全正社員
-
-■実施期間
-${new Date().getMonth() + 1}月15日（月）～${new Date().getMonth() + 2}月15日（金）
-
-■予約方法
-上長より個別に日程調整のご連絡をいたします。
-提示された日程でご都合が悪い場合は、速やかに上長へご相談ください。
-
-■準備事項
-面談前に以下をご準備ください：
-1. 上期の業務実績の整理
-2. 自己評価シートの作成
-3. 下期の目標案
-
-■その他
-・面談は原則対面で実施しますが、リモート勤務者はオンラインでの実施も可能です
-・面談時間は約45分を予定しています
-
-ご協力のほどよろしくお願いいたします。
-
-人事部`
+      title: '定期面談のご案内',
+      content: `今期の定期面談を実施いたします。
+実施期間：${new Date().getMonth() + 1}月15日（水）～ ${new Date().getMonth() + 1}月31日（金）
+所要時間：30分程度`
     }
   ]
 
@@ -182,6 +126,37 @@ ${new Date().getMonth() + 1}月15日（月）～${new Date().getMonth() + 2}月1
   const handleCategorySelect = (categoryId: string) => {
     setSelectedCategory(categoryId)
     setSelectedSubcategory('')
+
+    // カテゴリに応じてアクションボタンを自動設定
+    switch(categoryId) {
+      case 'interview':
+        setHasActionButton(true)
+        setActionButtonType('interview_reservation')
+        setActionButtonLabel('面談予約する')
+        break
+      case 'survey':
+        setHasActionButton(true)
+        setActionButtonType('survey_response')
+        setActionButtonLabel('アンケートに回答する')
+        break
+      case 'benefit':
+        if (title.includes('ストレスチェック')) {
+          setHasActionButton(true)
+          setActionButtonType('health_check')
+          setActionButtonLabel('ストレスチェックを開始する')
+        }
+        break
+      case 'training':
+        setHasActionButton(true)
+        setActionButtonType('training_apply')
+        setActionButtonLabel('研修に申し込む')
+        break
+      default:
+        setHasActionButton(false)
+        setActionButtonType('')
+        setActionButtonLabel('')
+    }
+
     // カテゴリが面談以外の場合はサブカテゴリをリセット
     if (categoryId !== 'interview') {
       setTitle('')
@@ -192,12 +167,9 @@ ${new Date().getMonth() + 1}月15日（月）～${new Date().getMonth() + 2}月1
   const handleSubcategorySelect = (subcategoryId: string) => {
     setSelectedSubcategory(subcategoryId)
 
-    // 予約案内を選択した場合、テンプレートを自動挿入
+    // 予約案内を選択した場合、定期面談のテンプレートを自動挿入
     if (selectedCategory === 'interview' && subcategoryId === 'reservation') {
-      // デフォルトで定期面談のテンプレートを使用
-      const template = templates.find(
-        t => t.id === 'interview-reservation-regular'
-      )
+      const template = templates.find(t => t.id === 'interview-reservation-regular')
       if (template) {
         setTitle(template.title)
         setContent(template.content)
@@ -289,16 +261,10 @@ ${new Date().getMonth() + 1}月15日（月）～${new Date().getMonth() + 2}月1
                   </div>
 
                   {selectedSubcategory === 'reservation' && (
-                    <div className={styles.templateSelector}>
-                      <label className={styles.formLabel}>テンプレート選択</label>
-                      <select
-                        className={styles.formSelect}
-                        onChange={(e) => handleTemplateSelect(e.target.value)}
-                        defaultValue="interview-reservation-regular"
-                      >
-                        <option value="interview-reservation-regular">定期面談の予約案内</option>
-                        <option value="interview-reservation-evaluation">評価面談の予約案内</option>
-                      </select>
+                    <div className={styles.templateInfo}>
+                      <div className={styles.formLabel}>
+                        <span>📝</span> 定期面談のテンプレートが自動挿入されました
+                      </div>
                     </div>
                   )}
                 </div>
@@ -319,7 +285,7 @@ ${new Date().getMonth() + 1}月15日（月）～${new Date().getMonth() + 2}月1
                 <label className={styles.formLabel}>本文</label>
                 <textarea
                   className={styles.formTextarea}
-                  rows={12}
+                  rows={22}
                   placeholder="お知らせの内容を入力"
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
@@ -434,15 +400,40 @@ ${new Date().getMonth() + 1}月15日（月）～${new Date().getMonth() + 2}月1
                         <span className={styles.notificationTime}>今</span>
                       </div>
                       <div className={styles.notificationTitle}>
-                        【重要】2025年度健康診断実施のお知らせ
+                        {title || '【重要】2025年度健康診断実施のお知らせ'}
                       </div>
                       <div className={styles.notificationBody}>
-                        本年度の健康診断を以下の日程で実施いたします...
+                        {content ? content.substring(0, 100) + '...' : '本年度の健康診断を以下の日程で実施いたします...'}
                       </div>
+                      {hasActionButton && (
+                        <button className={styles.notificationActionButton}>
+                          {actionButtonLabel}
+                        </button>
+                      )}
                       <div className={styles.notificationAction}>
                         詳細を確認する →
                       </div>
                     </div>
+                  </div>
+
+                  {/* 配信データプレビュー（開発用） */}
+                  <div className={styles.previewDataSection}>
+                    <div className={styles.previewDataHeader}>
+                      <span>📊 配信データ構造（VoiceDrive連携用）</span>
+                    </div>
+                    <pre className={styles.previewDataContent}>
+{JSON.stringify({
+  title,
+  content,
+  category: selectedCategory,
+  subcategory: selectedSubcategory,
+  hasActionButton,
+  actionButtonType,
+  actionButtonLabel,
+  targetDepartments: [],
+  priority: 'medium'
+}, null, 2)}
+                    </pre>
                   </div>
                 </div>
               )}
