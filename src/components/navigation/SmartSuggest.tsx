@@ -58,27 +58,18 @@ export const SmartSuggest: React.FC<SmartSuggestProps> = ({
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'next' | 'pending' | 'recommended'>('all')
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const [isDragging, setIsDragging] = useState(false)
-  const dragStartRef = React.useRef({ x: 0, y: 0 })
-  const positionRef = React.useRef(position)
+  const elementRef = React.useRef<HTMLDivElement>(null)
 
   // クライアントサイドで初期位置を設定
   React.useEffect(() => {
     // 初回マウント時のみ実行
-    const initialX = Math.round(window.innerWidth - 340)
-    const initialY = Math.round(window.innerHeight - 400)
     setPosition({
-      x: initialX,
-      y: initialY
+      x: Math.round(window.innerWidth - 340),
+      y: Math.round(window.innerHeight - 400)
     })
-    positionRef.current = { x: initialX, y: initialY }
   }, []) // 空の依存配列で初回のみ実行
 
-  // positionの更新を追跡
-  React.useEffect(() => {
-    positionRef.current = position
-  }, [position])
-
-  // ドラッグ処理
+  // ドラッグ処理（シンプルな実装に変更）
   const handleMouseDown = (e: React.MouseEvent) => {
     // ボタンやインタラクティブ要素のクリックは無視
     const target = e.target as HTMLElement
@@ -87,46 +78,36 @@ export const SmartSuggest: React.FC<SmartSuggestProps> = ({
     }
 
     e.preventDefault()
+
+    const startX = e.clientX - position.x
+    const startY = e.clientY - position.y
+
+    const handleMouseMove = (e: MouseEvent) => {
+      e.preventDefault()
+
+      const newX = e.clientX - startX
+      const newY = e.clientY - startY
+
+      // 画面内に収まるように制限
+      const maxX = window.innerWidth - 320
+      const maxY = window.innerHeight - 100
+
+      setPosition({
+        x: Math.round(Math.max(0, Math.min(newX, maxX))),
+        y: Math.round(Math.max(0, Math.min(newY, maxY)))
+      })
+    }
+
+    const handleMouseUp = () => {
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+      setIsDragging(false)
+    }
+
     setIsDragging(true)
-    dragStartRef.current = {
-      x: e.clientX - positionRef.current.x,
-      y: e.clientY - positionRef.current.y
-    }
+    document.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('mouseup', handleMouseUp)
   }
-
-  const handleMouseMove = React.useCallback((e: MouseEvent) => {
-    e.preventDefault()
-
-    const newX = e.clientX - dragStartRef.current.x
-    const newY = e.clientY - dragStartRef.current.y
-
-    // 画面内に収まるように制限
-    const maxX = window.innerWidth - 320
-    const maxY = window.innerHeight - 100
-
-    // 整数値に丸めることでサブピクセルレンダリングを防ぐ
-    setPosition({
-      x: Math.round(Math.max(0, Math.min(newX, maxX))),
-      y: Math.round(Math.max(0, Math.min(newY, maxY)))
-    })
-  }, [])
-
-  const handleMouseUp = React.useCallback(() => {
-    setIsDragging(false)
-  }, [])
-
-  // ドラッグイベントのリスナー設定
-  useEffect(() => {
-    if (isDragging) {
-      document.addEventListener('mousemove', handleMouseMove)
-      document.addEventListener('mouseup', handleMouseUp)
-
-      return () => {
-        document.removeEventListener('mousemove', handleMouseMove)
-        document.removeEventListener('mouseup', handleMouseUp)
-      }
-    }
-  }, [isDragging, handleMouseMove, handleMouseUp])
 
   // AI予測ロジック（現在はシミュレーション実装）
   // 注意: 現在はローカルLLMへの実際の接続は行っていません
@@ -403,14 +384,18 @@ export const SmartSuggest: React.FC<SmartSuggestProps> = ({
 
   return (
     <div
+      ref={elementRef}
       className="fixed w-80 z-50"
       style={{
-        left: `${Math.round(position.x)}px`,
-        top: `${Math.round(position.y)}px`,
-        userSelect: isDragging ? 'none' : 'auto'
+        transform: `translate(${Math.round(position.x)}px, ${Math.round(position.y)}px)`,
+        userSelect: isDragging ? 'none' : 'auto',
+        pointerEvents: isDragging ? 'none' : 'auto'
       }}
     >
-      <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
+      <div
+        className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden"
+        style={{ pointerEvents: 'auto' }}
+      >
         {/* ヘッダー */}
         <div
           className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-3"
