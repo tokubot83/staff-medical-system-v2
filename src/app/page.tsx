@@ -7,7 +7,6 @@ import { StaffDetail } from '@/types/staff';
 import TalentFlowSection from '../components/talent-flow/TalentFlowSection';
 import HRDashboardSection from '../components/hr-dashboard/HRDashboardSection';
 import { OfflineIndicator } from '@/components/offline/OfflineIndicator';
-import CommonHeader from '@/components/CommonHeader';
 
 // 型定義
 interface Staff {
@@ -459,62 +458,8 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-     {/* Offline Banner */}
-     {/* <OfflineBanner /> */}
-
-     {/* Header - 固定表示 */}
-     <div className="sticky top-0 z-50">
-      <CommonHeader title="職員カルテシステム" />
-
-      {/* Navigation - 1列構成 */}
-      <nav className="bg-gray-800 text-white shadow-md">
-       <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-center h-12 lg:h-12 md:h-auto md:flex-wrap">
-        <div className="flex space-x-1">
-         <Link href="/notifications" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-purple-400">
-          お知らせ配信
-         </Link>
-         <Link href="/staff-cards" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
-          カルテ
-         </Link>
-         <Link href="/recruitment" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
-          採用
-         </Link>
-         <Link href="/interviews" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
-          面談
-         </Link>
-         <Link href="/education" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
-          教育・研修
-         </Link>
-         <Link href="/goals" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
-          目標
-         </Link>
-         <Link href="/health" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
-          健康
-         </Link>
-         <Link href="/attendance-management" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
-          勤怠
-         </Link>
-         <Link href="/dashboard" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-purple-400">
-          評価
-         </Link>
-         <Link href="/reports" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
-          レポート
-         </Link>
-         <Link href="/hr-system-guide" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
-          ガイド
-         </Link>
-         <Link href="/admin/master-data" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-amber-400">
-          管理者設定
-         </Link>
-        </div>
-       </div>
-      </div>
-     </nav>
-     </div>
-
-     {/* メインコンテンツエリア - ヘッダー分のパディング追加 */}
+    <div>
+     {/* メインコンテンツエリア */}
      <div className="bg-white">
       <div className="max-w-7xl mx-auto p-5">
        <div className="mb-12">
