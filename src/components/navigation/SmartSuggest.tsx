@@ -56,7 +56,10 @@ export const SmartSuggest: React.FC<SmartSuggestProps> = ({
   const [isVisible, setIsVisible] = useState(true)
   const [isGenerating, setIsGenerating] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'next' | 'pending' | 'recommended'>('all')
-  const [position, setPosition] = useState({ x: typeof window !== 'undefined' ? window.innerWidth - 340 : 0, y: 80 })
+  const [position, setPosition] = useState({
+    x: typeof window !== 'undefined' ? window.innerWidth - 340 : 0,
+    y: typeof window !== 'undefined' ? window.innerHeight - 500 : 0
+  })
   const [isDragging, setIsDragging] = useState(false)
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
 
