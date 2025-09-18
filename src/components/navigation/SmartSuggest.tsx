@@ -61,7 +61,13 @@ export const SmartSuggest: React.FC<SmartSuggestProps> = ({
     y: typeof window !== 'undefined' ? window.innerHeight - 500 : 0
   })
   const [isDragging, setIsDragging] = useState(false)
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
+  const dragStartRef = React.useRef({ x: 0, y: 0 })
+  const positionRef = React.useRef(position)
+
+  // positionの更新を追跡
+  React.useEffect(() => {
+    positionRef.current = position
+  }, [position])
 
   // ドラッグ処理
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -71,18 +77,19 @@ export const SmartSuggest: React.FC<SmartSuggestProps> = ({
       return
     }
 
+    e.preventDefault()
     setIsDragging(true)
-    setDragStart({
-      x: e.clientX - position.x,
-      y: e.clientY - position.y
-    })
+    dragStartRef.current = {
+      x: e.clientX - positionRef.current.x,
+      y: e.clientY - positionRef.current.y
+    }
   }
 
-  const handleMouseMove = (e: MouseEvent) => {
-    if (!isDragging) return
+  const handleMouseMove = React.useCallback((e: MouseEvent) => {
+    e.preventDefault()
 
-    const newX = e.clientX - dragStart.x
-    const newY = e.clientY - dragStart.y
+    const newX = e.clientX - dragStartRef.current.x
+    const newY = e.clientY - dragStartRef.current.y
 
     // 画面内に収まるように制限
     const maxX = window.innerWidth - 320
@@ -92,11 +99,11 @@ export const SmartSuggest: React.FC<SmartSuggestProps> = ({
       x: Math.max(0, Math.min(newX, maxX)),
       y: Math.max(0, Math.min(newY, maxY))
     })
-  }
+  }, [])
 
-  const handleMouseUp = () => {
+  const handleMouseUp = React.useCallback(() => {
     setIsDragging(false)
-  }
+  }, [])
 
   // ドラッグイベントのリスナー設定
   useEffect(() => {
@@ -109,14 +116,18 @@ export const SmartSuggest: React.FC<SmartSuggestProps> = ({
         document.removeEventListener('mouseup', handleMouseUp)
       }
     }
-  }, [isDragging, dragStart])
+  }, [isDragging, handleMouseMove, handleMouseUp])
 
-  // AI予測ロジック（ローカルLLM実装想定）
+  // AI予測ロジック（現在はシミュレーション実装）
+  // 注意: 現在はローカルLLMへの実際の接続は行っていません
+  // 将来的にOllama APIなどと連携する際に実装予定
   useEffect(() => {
     const generateSuggestions = async () => {
       setIsGenerating(true)
 
       // ローカルLLM呼び出しシミュレーション
+      // TODO: 実際のOllama API接続実装（例: http://localhost:11434/api/generate）
+      // 現在は静的なルールベースでサジェストを生成
       await new Promise(resolve => setTimeout(resolve, 500))
 
       const newSuggestions: SuggestedAction[] = []
@@ -382,12 +393,13 @@ export const SmartSuggest: React.FC<SmartSuggestProps> = ({
 
   return (
     <div
-      className="fixed w-80 z-50 transition-shadow"
+      className="fixed w-80 z-50"
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,
         userSelect: isDragging ? 'none' : 'auto',
-        boxShadow: isDragging ? '0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' : ''
+        transform: 'translateZ(0)', // GPU加速を有効化してにじみを防ぐ
+        willChange: isDragging ? 'left, top' : 'auto'
       }}
     >
       <div className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
@@ -420,7 +432,7 @@ export const SmartSuggest: React.FC<SmartSuggestProps> = ({
           </div>
           {isExpanded && (
             <div className="text-xs mt-1 opacity-90">
-              ローカルLLMによる業務予測
+              業務コンテキストに基づく提案
             </div>
           )}
         </div>
@@ -537,7 +549,7 @@ export const SmartSuggest: React.FC<SmartSuggestProps> = ({
             {/* フッター */}
             <div className="border-t border-gray-200 p-2 bg-gray-50">
               <div className="text-xs text-center text-gray-500">
-                Powered by Local LLM (Ollama + Llama 3.2)
+                AI予測シミュレーション (ローカルLLM未接続)
               </div>
             </div>
           </>
