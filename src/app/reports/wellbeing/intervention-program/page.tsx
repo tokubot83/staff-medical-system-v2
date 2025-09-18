@@ -4,7 +4,6 @@ import React, { Suspense, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import CommonHeader from '@/components/CommonHeader';
-import { CategoryTopButton } from '@/components/CategoryTopButton';
 import { exportToPDF } from '@/utils/pdfExport';
 import {
   Chart as ChartJS,
@@ -525,7 +524,7 @@ function Content() {
           </div>
 
         </div>
-      </div><CategoryTopButton categoryPath="/reports/wellbeing" categoryName="ウェルビーイング" /></div>
+      </div></div>
   );
 }
 

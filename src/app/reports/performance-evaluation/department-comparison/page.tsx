@@ -2,7 +2,6 @@
 
 import React, { useState, useMemo } from 'react'
 import CommonHeader from '@/components/CommonHeader'
-import { CategoryTopButton } from '@/components/CategoryTopButton'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
@@ -359,6 +358,6 @@ export default function DepartmentComparisonPage() {
           )}
           </div>
         </div>
-      </div><CategoryTopButton categoryPath="/reports/performance-evaluation" categoryName="人事評価分析" /></div>
+      </div></div>
   )
 }

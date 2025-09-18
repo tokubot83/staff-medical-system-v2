@@ -3,7 +3,6 @@
 import React, { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
-import { CategoryTopButton } from '@/components/CategoryTopButton';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { exportToPDF } from '@/utils/pdfExport';
 
@@ -230,7 +229,7 @@ function SurvivalCurveDepartmentContent() {
             </button>
           </div>
         </div>
-      </div><CategoryTopButton categoryPath="/reports?tab=retention" categoryName="定着分析" /></div>
+      </div></div>
   );
 }
 

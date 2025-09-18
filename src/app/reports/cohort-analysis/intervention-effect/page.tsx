@@ -7,7 +7,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import CommonHeader from '@/components/CommonHeader';
-import { CategoryTopButton } from '@/components/CategoryTopButton';
 import { exportToPDF } from '@/utils/pdfExport';
 import { LineChart, Line, BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from 'recharts';
 import { TrendingUp, TrendingDown, Activity, CheckCircle, XCircle, AlertCircle, Calendar, Users, DollarSign } from 'lucide-react';
@@ -552,7 +551,7 @@ function Content() {
           </div>
 
         </div>
-      </div><CategoryTopButton categoryPath="/reports/cohort-analysis" categoryName="コホート分析" /></div>
+      </div></div>
   );
 }
 

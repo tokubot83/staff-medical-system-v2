@@ -2,7 +2,6 @@
 
 import React, { useState, useMemo } from 'react'
 import CommonHeader from '@/components/CommonHeader'
-import { CategoryTopButton } from '@/components/CategoryTopButton'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ArrowRight, Users, Shuffle, Target, AlertTriangle } from 'lucide-react'
@@ -366,6 +365,6 @@ export default function OrganizationOptimizationPage() {
           </Card>
           </div>
         </div>
-      </div><CategoryTopButton categoryPath="/reports/performance-evaluation" categoryName="人事評価分析" /></div>
+      </div></div>
   )
 }

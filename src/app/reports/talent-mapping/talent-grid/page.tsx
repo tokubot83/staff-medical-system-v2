@@ -10,7 +10,6 @@ import { Users, Star, TrendingUp, AlertCircle, Target, Award } from 'lucide-reac
 import { obaraStaffDatabase, tachigamiStaffDatabase } from '@/app/data/staffData';
 import { StaffDetail } from "@/types/staff";
 import CommonHeader from '@/components/CommonHeader';
-import { CategoryTopButton } from '@/components/CategoryTopButton';
 import { exportToPDF } from '@/utils/pdfExport';
 
 function TalentGridContent() {
@@ -375,7 +374,7 @@ function TalentGridContent() {
           </Card>
 
         </div>
-      </div><CategoryTopButton categoryPath="/reports/talent-mapping" categoryName="タレントマッピング" /></div>
+      </div></div>
   );
 }
 

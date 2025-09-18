@@ -4,7 +4,6 @@ import React, { Suspense, useState, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import CommonHeader from '@/components/CommonHeader';
-import { CategoryTopButton } from '@/components/CategoryTopButton';
 import { exportToPDF } from '@/utils/pdfExport';
 import { staffDatabase } from '@/app/data/staffData';
 import { Bar, Radar } from 'react-chartjs-2';
@@ -397,7 +396,7 @@ function SkillMatrixContent() {
           </Card>
 
         </div>
-      </div><CategoryTopButton categoryPath="/reports/talent-mapping" categoryName="タレントマッピング" /></div>
+      </div></div>
   );
 }
 

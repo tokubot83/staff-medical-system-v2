@@ -2,7 +2,6 @@
 
 import React, { useState, useMemo } from 'react'
 import CommonHeader from '@/components/CommonHeader'
-import { CategoryTopButton } from '@/components/CategoryTopButton'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts'
@@ -384,6 +383,6 @@ export default function ClusterAnalysisPage() {
           )}
           </div>
         </div>
-      </div><CategoryTopButton categoryPath="/reports/performance-evaluation" categoryName="人事評価分析" /></div>
+      </div></div>
   )
 }

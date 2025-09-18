@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { ArrowLeft, AlertTriangle, TrendingUp, Users } from 'lucide-react'
-import { CategoryTopButton } from '@/components/CategoryTopButton'
 import { exportToPDF } from '@/utils/pdfExport'
 
 // サンプルデータ
@@ -192,6 +191,6 @@ export default function RiskPredictionPage() {
             </CardContent>
           </Card>
         </div>
-      </div><CategoryTopButton categoryPath="/reports?tab=turnover" categoryName="離職要因分析" /></div>
+      </div></div>
   )
 }

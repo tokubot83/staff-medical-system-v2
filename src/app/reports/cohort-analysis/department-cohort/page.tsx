@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import CommonHeader from '@/components/CommonHeader';
-import { CategoryTopButton } from '@/components/CategoryTopButton';
 import { exportToPDF } from '@/utils/pdfExport';
 import { BarChart, Bar, RadarChart, Radar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from 'recharts';
 import { Users, TrendingUp, Award, AlertCircle, Activity, Heart } from 'lucide-react';
@@ -634,7 +633,7 @@ function Content() {
           </div>
 
         </div>
-      </div><CategoryTopButton categoryPath="/reports/cohort-analysis" categoryName="コホート分析" /></div>
+      </div></div>
   );
 }
 

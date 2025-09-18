@@ -3,7 +3,6 @@
 import React, { Suspense, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
-import { CategoryTopButton } from '@/components/CategoryTopButton';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Slider } from '@/components/ui/slider';
@@ -329,7 +328,7 @@ function WhatIfSimulationContent() {
             </button>
           </div>
         </div>
-      </div><CategoryTopButton categoryPath="/reports?tab=turnover" categoryName="離職要因分析" /></div>
+      </div></div>
   );
 }
 

@@ -3,7 +3,6 @@
 import React, { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
-import { CategoryTopButton } from '@/components/CategoryTopButton';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -372,7 +371,7 @@ function ImprovementSuggestionsContent() {
             </button>
           </div>
         </div>
-      </div><CategoryTopButton categoryPath="/reports?tab=turnover" categoryName="離職要因分析" /></div>
+      </div></div>
   );
 }
 

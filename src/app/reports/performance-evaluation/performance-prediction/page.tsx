@@ -3,7 +3,6 @@
 import React, { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
-import { CategoryTopButton } from '@/components/CategoryTopButton';
 import FacilitySelector from '@/components/reports/FacilitySelector';
 
 interface PredictionData {
@@ -256,7 +255,7 @@ function PerformancePredictionContent() {
             <li>• 組織全体のパフォーマンス向上に向けた戦略的人材投資の実現</li>
           </ul>
         </div>
-      </div><CategoryTopButton categoryPath="/reports/performance-evaluation" categoryName="人事評価分析" /></div>
+      </div></div>
   );
 }
 

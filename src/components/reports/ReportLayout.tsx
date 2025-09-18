@@ -4,8 +4,6 @@ import React from 'react';
 import Link from 'next/link';
 import { Facility } from '@/app/data/facilityData';
 import CommonHeader from '@/components/CommonHeader';
-import { CategoryTopButton } from '@/components/CategoryTopButton';
-
 interface ReportLayoutProps {
   title: string;
   description: string;
@@ -90,9 +88,6 @@ export default function ReportLayout({
           </div>
         </div>
       </div>
-      {categoryPath && categoryName && (
-        <CategoryTopButton categoryPath={categoryPath} categoryName={categoryName} />
-      )}
     </div>
   );
 }

@@ -3,7 +3,6 @@
 import React, { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
-import { CategoryTopButton } from '@/components/CategoryTopButton';
 import { exportToPDF } from '@/utils/pdfExport';
 
 function FactorRankingContent() {
@@ -220,7 +219,7 @@ function FactorRankingContent() {
             </button>
           </div>
         </div>
-      </div><CategoryTopButton categoryPath="/reports?tab=turnover" categoryName="離職要因分析" /></div>
+      </div></div>
   );
 }
 

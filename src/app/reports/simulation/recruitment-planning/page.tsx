@@ -4,7 +4,6 @@ import React, { Suspense, useState, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import CommonHeader from '@/components/CommonHeader';
-import { CategoryTopButton } from '@/components/CategoryTopButton';
 import { exportToPDF } from '@/utils/pdfExport';
 import { staffDatabase } from '@/app/data/staffData';
 import {
@@ -498,7 +497,7 @@ function Content() {
           </div>
 
         </div>
-      </div><CategoryTopButton categoryPath="/reports/simulation" categoryName="シミュレーション" /></div>
+      </div></div>
   );
 }
 

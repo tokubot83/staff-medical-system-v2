@@ -3,7 +3,6 @@
 import React, { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import CommonHeader from '@/components/CommonHeader';
-import { CategoryTopButton } from '@/components/CategoryTopButton';
 import { exportToPDF } from '@/utils/pdfExport';
 import {
   LineChart,
@@ -360,7 +359,7 @@ function CohortInterventionEffectContent() {
             Excelエクスポート
           </button>
         </div>
-      </div><CategoryTopButton categoryPath="/reports?tab=retention" categoryName="定着分析" /></div>
+      </div></div>
   );
 }
 

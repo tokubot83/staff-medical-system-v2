@@ -4,7 +4,6 @@ import React, { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import CommonHeader from '@/components/CommonHeader';
-import { CategoryTopButton } from '@/components/CategoryTopButton';
 import { exportToPDF } from '@/utils/pdfExport';
 import { DepartmentFlowChart } from '@/components/flow-analysis/DepartmentFlowChart';
 import { DepartmentFlowStats } from '@/components/flow-analysis/DepartmentFlowStats';
@@ -77,7 +76,7 @@ function DepartmentFlowContent() {
           </Card>
 
         </div>
-      </div><CategoryTopButton categoryPath="/reports/flow-analysis" categoryName="人材フロー" /></div>
+      </div></div>
   );
 }
 

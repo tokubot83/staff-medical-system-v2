@@ -4,7 +4,6 @@ import React, { Suspense, useState, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import CommonHeader from '@/components/CommonHeader';
-import { CategoryTopButton } from '@/components/CategoryTopButton';
 import { exportToPDF } from '@/utils/pdfExport';
 import { staffDatabase } from '@/app/data/staffData';
 import {
@@ -597,7 +596,7 @@ function WellbeingCohortContent() {
           </div>
 
         </div>
-      </div><CategoryTopButton categoryPath="/reports/cohort-analysis" categoryName="コホート分析" /></div>
+      </div></div>
   );
 }
 

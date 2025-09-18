@@ -4,7 +4,6 @@ import React, { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import CommonHeader from '@/components/CommonHeader';
-import { CategoryTopButton } from '@/components/CategoryTopButton';
 import { exportToPDF } from '@/utils/pdfExport';
 import { CareerPathAnalysis } from '@/components/flow-analysis/CareerPathAnalysis';
 import { CareerProgressStats } from '@/components/flow-analysis/CareerProgressStats';
@@ -66,7 +65,7 @@ function Content() {
           </div>
 
         </div>
-      </div><CategoryTopButton categoryPath="/reports/flow-analysis" categoryName="人材フロー" /></div>
+      </div></div>
   );
 }
 
