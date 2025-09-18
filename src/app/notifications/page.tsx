@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
+import BreadcrumbBar from '@/components/navigation/BreadcrumbBar'
 import AnnouncementComposer from '@/components/notification/AnnouncementComposer'
 import DeliveryHistory from '@/components/notification/DeliveryHistory'
 import TemplateManager from '@/components/notification/TemplateManager'
@@ -11,10 +12,11 @@ import NotificationSettings from '@/components/notification/NotificationSettings
 export default function NotificationsPage() {
   const [activeTab, setActiveTab] = useState<'create' | 'history' | 'templates' | 'analytics' | 'settings'>('create')
   return (
-    <div className="min-h-screen bg-white">
-      {/* Header */}
+    <div>
+      <BreadcrumbBar />
 
-      <div className="container mx-auto py-8 px-4 bg-gradient-to-b from-gray-50 to-white min-h-screen">
+      <div className="min-h-screen bg-white">
+        <div className="container mx-auto py-8 px-4 bg-gradient-to-b from-gray-50 to-white min-h-screen">
         {/* タブナビゲーション */}
         <div className="flex bg-white rounded-2xl shadow-lg mb-6 overflow-hidden border border-gray-100">
           <button
@@ -83,6 +85,7 @@ export default function NotificationsPage() {
             {activeTab === 'analytics' && <DeliveryAnalytics />}
             {activeTab === 'settings' && <NotificationSettings />}
           </div>
+        </div>
         </div>
       </div>
     </div>
