@@ -503,3 +503,68 @@
   background: #f9fafb;
   border-color: #7c3aed;
 }
+
+/* 追加スタイル for 面談機能強化 */
+.categoryCard.selected {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.subcategoryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.subcategoryBtn {
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #4b5563;
+}
+
+.subcategoryBtn:hover {
+  background: #f9fafb;
+  border-color: #8b5cf6;
+  transform: translateY(-2px);
+}
+
+.subcategoryBtn.selected {
+  background: linear-gradient(to bottom, #f3e8ff, #ede9fe);
+  border-color: #8b5cf6;
+  color: #7c3aed;
+  font-weight: 600;
+}
+
+.templateSelector {
+  margin-top: 16px;
+  padding: 16px;
+  background: #faf5ff;
+  border-radius: 8px;
+  border: 1px solid #e9d5ff;
+}
+
+.formSelect {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+
+.formSelect:focus {
+  outline: none;
+  border-color: #8b5cf6;
+}

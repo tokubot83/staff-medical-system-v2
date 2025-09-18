@@ -6,7 +6,8 @@ import styles from './HRAnnouncementsDistribution.module.css'
 interface Announcement {
   id: string
   title: string
-  category: 'policy' | 'event' | 'training' | 'benefit' | 'survey' | 'other'
+  category: 'policy' | 'event' | 'training' | 'benefit' | 'survey' | 'interview' | 'other'
+  subcategory?: 'reservation' | 'result' | 'reminder' | 'other'
   status: 'draft' | 'scheduled' | 'sent' | 'archived'
   scheduledDate?: string
   sentDate?: string
@@ -15,9 +16,21 @@ interface Announcement {
   readRate?: number
 }
 
+interface Template {
+  id: string
+  category: string
+  subcategory?: string
+  title: string
+  content: string
+}
+
 export default function HRAnnouncementsDistribution() {
   const [selectedTab, setSelectedTab] = useState('compose')
   const [showPreview, setShowPreview] = useState(false)
+  const [selectedCategory, setSelectedCategory] = useState<string>('')
+  const [selectedSubcategory, setSelectedSubcategory] = useState<string>('')
+  const [title, setTitle] = useState<string>('')
+  const [content, setContent] = useState<string>('')
 
   const mockAnnouncements: Announcement[] = [
     {
@@ -65,7 +78,93 @@ export default function HRAnnouncementsDistribution() {
     { id: 'training', label: '研修・教育', icon: '📚', color: '#3b82f6' },
     { id: 'survey', label: 'アンケート', icon: '📊', color: '#ec4899' },
     { id: 'benefit', label: '福利厚生', icon: '💝', color: '#10b981' },
+    { id: 'interview', label: '面談', icon: '👥', color: '#8b5cf6' },
     { id: 'other', label: 'その他', icon: '📢', color: '#6b7280' }
+  ]
+
+  const subcategories = {
+    interview: [
+      { id: 'reservation', label: '予約案内', icon: '📅' },
+      { id: 'result', label: '結果通知', icon: '📝' },
+      { id: 'reminder', label: 'リマインダー', icon: '🔔' },
+      { id: 'other', label: 'その他', icon: '📌' }
+    ]
+  }
+
+  const templates: Template[] = [
+    {
+      id: 'interview-reservation-regular',
+      category: 'interview',
+      subcategory: 'reservation',
+      title: '【重要】定期面談の予約開始のお知らせ',
+      content: `職員の皆様へ
+
+${new Date().getFullYear()}年度の定期面談の予約を開始いたします。
+
+■面談期間
+${new Date().getMonth() + 2}月1日（月）～${new Date().getMonth() + 2}月28日（金）
+
+■予約受付期間
+本日より${new Date().getMonth() + 1}月20日（金）まで
+
+■予約方法
+1. 職員ポータルサイトにログイン
+2. 「面談予約」メニューを選択
+3. ご都合の良い日時を選択
+4. 予約内容を確認し、「予約確定」をクリック
+
+■注意事項
+・面談時間は1人あたり30分を予定しています
+・予約後の変更は、面談日の3営業日前まで可能です
+・体調不良等でキャンセルする場合は、早めにご連絡ください
+
+■お問い合わせ
+人事部 面談担当
+内線：1234
+メール：interview@company.com
+
+ご不明な点がございましたら、お気軽にお問い合わせください。
+
+人事部`
+    },
+    {
+      id: 'interview-reservation-evaluation',
+      category: 'interview',
+      subcategory: 'reservation',
+      title: '【要対応】評価面談の実施について',
+      content: `職員の皆様へ
+
+${new Date().getFullYear()}年度上期の評価面談を実施いたします。
+
+■面談の目的
+・上期の振り返りと評価のフィードバック
+・下期の目標設定
+・キャリア開発に関する相談
+
+■対象者
+全正社員
+
+■実施期間
+${new Date().getMonth() + 1}月15日（月）～${new Date().getMonth() + 2}月15日（金）
+
+■予約方法
+上長より個別に日程調整のご連絡をいたします。
+提示された日程でご都合が悪い場合は、速やかに上長へご相談ください。
+
+■準備事項
+面談前に以下をご準備ください：
+1. 上期の業務実績の整理
+2. 自己評価シートの作成
+3. 下期の目標案
+
+■その他
+・面談は原則対面で実施しますが、リモート勤務者はオンラインでの実施も可能です
+・面談時間は約45分を予定しています
+
+ご協力のほどよろしくお願いいたします。
+
+人事部`
+    }
   ]
 
   const tabs = [
@@ -78,6 +177,44 @@ export default function HRAnnouncementsDistribution() {
 
   const getCategoryInfo = (categoryId: string) => {
     return categories.find(c => c.id === categoryId) || categories[4]
+  }
+
+  const handleCategorySelect = (categoryId: string) => {
+    setSelectedCategory(categoryId)
+    setSelectedSubcategory('')
+    // カテゴリが面談以外の場合はサブカテゴリをリセット
+    if (categoryId !== 'interview') {
+      setTitle('')
+      setContent('')
+    }
+  }
+
+  const handleSubcategorySelect = (subcategoryId: string) => {
+    setSelectedSubcategory(subcategoryId)
+
+    // 予約案内を選択した場合、テンプレートを自動挿入
+    if (selectedCategory === 'interview' && subcategoryId === 'reservation') {
+      // デフォルトで定期面談のテンプレートを使用
+      const template = templates.find(
+        t => t.id === 'interview-reservation-regular'
+      )
+      if (template) {
+        setTitle(template.title)
+        setContent(template.content)
+      }
+    } else {
+      // その他のサブカテゴリの場合はクリア
+      setTitle('')
+      setContent('')
+    }
+  }
+
+  const handleTemplateSelect = (templateId: string) => {
+    const template = templates.find(t => t.id === templateId)
+    if (template) {
+      setTitle(template.title)
+      setContent(template.content)
+    }
   }
 
   const getPriorityColor = (priority: string) => {
@@ -121,8 +258,12 @@ export default function HRAnnouncementsDistribution() {
                   {categories.map(cat => (
                     <div
                       key={cat.id}
-                      className={styles.categoryCard}
-                      style={{ borderColor: cat.color }}
+                      className={`${styles.categoryCard} ${selectedCategory === cat.id ? styles.selected : ''}`}
+                      style={{
+                        borderColor: selectedCategory === cat.id ? cat.color : '#e5e7eb',
+                        backgroundColor: selectedCategory === cat.id ? `${cat.color}10` : 'transparent'
+                      }}
+                      onClick={() => handleCategorySelect(cat.id)}
                     >
                       <span className={styles.categoryIcon}>{cat.icon}</span>
                       <span className={styles.categoryLabel}>{cat.label}</span>
@@ -131,12 +272,46 @@ export default function HRAnnouncementsDistribution() {
                 </div>
               </div>
 
+              {selectedCategory === 'interview' && (
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel}>サブカテゴリー</label>
+                  <div className={styles.subcategoryGrid}>
+                    {subcategories.interview.map(subcat => (
+                      <button
+                        key={subcat.id}
+                        className={`${styles.subcategoryBtn} ${selectedSubcategory === subcat.id ? styles.selected : ''}`}
+                        onClick={() => handleSubcategorySelect(subcat.id)}
+                      >
+                        <span>{subcat.icon}</span>
+                        <span>{subcat.label}</span>
+                      </button>
+                    ))}
+                  </div>
+
+                  {selectedSubcategory === 'reservation' && (
+                    <div className={styles.templateSelector}>
+                      <label className={styles.formLabel}>テンプレート選択</label>
+                      <select
+                        className={styles.formSelect}
+                        onChange={(e) => handleTemplateSelect(e.target.value)}
+                        defaultValue="interview-reservation-regular"
+                      >
+                        <option value="interview-reservation-regular">定期面談の予約案内</option>
+                        <option value="interview-reservation-evaluation">評価面談の予約案内</option>
+                      </select>
+                    </div>
+                  )}
+                </div>
+              )}
+
               <div className={styles.formGroup}>
                 <label className={styles.formLabel}>件名</label>
                 <input
                   type="text"
                   className={styles.formInput}
                   placeholder="お知らせのタイトルを入力"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
                 />
               </div>
 
@@ -144,8 +319,10 @@ export default function HRAnnouncementsDistribution() {
                 <label className={styles.formLabel}>本文</label>
                 <textarea
                   className={styles.formTextarea}
-                  rows={8}
+                  rows={12}
                   placeholder="お知らせの内容を入力"
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
                 />
               </div>
 
