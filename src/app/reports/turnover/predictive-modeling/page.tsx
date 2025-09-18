@@ -16,19 +16,19 @@ function PredictiveModelingContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="予測モチE��ング" />
+      <CommonHeader title="予測モデリング" />
       
       <div id="report-content" className="container mx-auto px-4 py-8">
         <div className="bg-white rounded-lg shadow p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-gray-800">機械学習による離職予測モチE��</h2>
+            <h2 className="text-xl font-bold text-gray-800">機械学習による離職予測モデル</h2>
             <div className="flex items-center gap-2">
               <span className="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
                 対象施設: {facility}
               </span>
               <button
                 onClick={() => exportToPDF({
-                  title: '予測モチE��ングレポ�EチE,
+                  title: '予測モデリングレポート',
                   facility: facility,
                   reportType: 'predictive-modeling',
                   elementId: 'report-content',
@@ -36,21 +36,24 @@ function PredictiveModelingContent() {
                 })}
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm pdf-exclude"
               >
-                PDFダウンローチE              </button>
+                PDFダウンロード
+              </button>
             </div>
           </div>
           
           <div className="mb-6">
             <p className="text-gray-600">
-              褁E��の機械学習アルゴリズムを使用して離職予測モチE��を構築し、精度評価と特徴量�E重要度刁E��を行います、E            </p>
+              複数の機械学習アルゴリズムを使用して離職予測モデルを構築し、精度評価と特徴量の重要度分析を行います。
+            </p>
           </div>
 
-          {/* モチE��性能持E��E*/}
+          {/* モデル性能指標 */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
-                  予測精度�E�EUC�E�E                </CardTitle>
+                  予測精度（AUC）
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-green-600">0.92</div>
@@ -63,12 +66,13 @@ function PredictiveModelingContent() {
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
-                  適合率�E�Erecision�E�E                </CardTitle>
+                  適合率（Precision）
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">88.5%</div>
                 <p className="text-xs text-muted-foreground mt-1">
-                  誤検知玁E 11.5%
+                  誤検知率: 11.5%
                 </p>
               </CardContent>
             </Card>
@@ -76,12 +80,13 @@ function PredictiveModelingContent() {
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
-                  再現玁E��Eecall�E�E                </CardTitle>
+                  再現率（Recall）
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">85.2%</div>
                 <p className="text-xs text-muted-foreground mt-1">
-                  見送E��玁E 14.8%
+                  見逃し率: 14.8%
                 </p>
               </CardContent>
             </Card>
@@ -101,12 +106,13 @@ function PredictiveModelingContent() {
             </Card>
           </div>
 
-          {/* モチE��比輁E*/}
+          {/* モデル比較 */}
           <Card className="mb-6">
             <CardHeader>
-              <CardTitle>アルゴリズム別性能比輁E/CardTitle>
+              <CardTitle>アルゴリズム別性能比較</CardTitle>
               <CardDescription>
-                3つの主要な機械学習アルゴリズムの性能を比輁E              </CardDescription>
+                3つの主要な機械学習アルゴリズムの性能を比較
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -121,7 +127,7 @@ function PredictiveModelingContent() {
                   </div>
                   <Progress value={92} className="h-2" />
                   <p className="text-xs text-gray-600 mt-1">
-                    勾配ブースチE��ング決定木による高精度な予測
+                    勾配ブースティング決定木による高精度な予測
                   </p>
                 </div>
 
@@ -135,7 +141,7 @@ function PredictiveModelingContent() {
                   </div>
                   <Progress value={89} className="h-2" />
                   <p className="text-xs text-gray-600 mt-1">
-                    褁E��の決定木を絁E��合わせた安定した予測
+                    複数の決定木を組み合わせた安定した予測
                   </p>
                 </div>
 
@@ -149,25 +155,26 @@ function PredictiveModelingContent() {
                   </div>
                   <Progress value={91} className="h-2" />
                   <p className="text-xs text-gray-600 mt-1">
-                    高速で効玁E��な勾配ブースチE��ング
+                    高速で効率的な勾配ブースティング
                   </p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* 特徴量�E重要度 */}
+          {/* 特徴量の重要度 */}
           <Card className="mb-6">
             <CardHeader>
               <CardTitle>特徴量重要度 TOP 10</CardTitle>
               <CardDescription>
-                モチE��が重視してぁE��予測因子�E頁E��E              </CardDescription>
+                モデルが重視している予測因子の順位
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
                 {[
-                  { name: '面諁E��度', value: 0.182, change: 'up' },
-                  { name: 'ストレスチェチE��スコア', value: 0.156, change: 'same' },
+                  { name: '面談頻度', value: 0.182, change: 'up' },
+                  { name: 'ストレスチェックスコア', value: 0.156, change: 'same' },
                   { name: 'エンゲージメントスコア', value: 0.134, change: 'up' },
                   { name: '月間残業時間', value: 0.098, change: 'down' },
                   { name: '夜勤回数', value: 0.087, change: 'same' },
@@ -195,12 +202,13 @@ function PredictiveModelingContent() {
             </CardContent>
           </Card>
 
-          {/* モチE��の検証 */}
+          {/* モデルの検証 */}
           <Card className="mb-6">
             <CardHeader>
               <CardTitle>交差検証結果</CardTitle>
               <CardDescription>
-                5刁E��交差検証による安定性の確誁E              </CardDescription>
+                5分割交差検証による安定性の確認
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
@@ -214,7 +222,8 @@ function PredictiveModelingContent() {
               </div>
               <div className="mt-4 p-3 bg-green-50 rounded-lg border border-green-200">
                 <p className="text-sm text-green-800">
-                  <strong>検証結果�E�E/strong>すべてのFoldで0.90以上�EAUCを達成。モチE��の安定性が確認されました、E                </p>
+                  <strong>検証結果：</strong>すべてのFoldで0.90以上のAUCを達成。モデルの安定性が確認されました。
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -222,30 +231,31 @@ function PredictiveModelingContent() {
           {/* 予測の説明可能性 */}
           <Card className="mb-6">
             <CardHeader>
-              <CardTitle>SHAP値による予測の説昁E/CardTitle>
+              <CardTitle>SHAP値による予測の説明</CardTitle>
               <CardDescription>
-                個別の予測に対する吁E��徴量�E寁E��度
+                個別の予測に対する各特徴量の寄与度
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="p-4 bg-gray-50 rounded-lg">
                 <p className="text-sm text-gray-700 mb-3">
-                  例：山田太郎さん（離職リスク: 85%�E��E場吁E                </p>
+                  例：山田太郎さん（離職リスク: 85%）の場合
+                </p>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
-                    <span>面諁E��し！Eヶ月！E/span>
+                    <span>面談なし（3ヶ月）</span>
                     <span className="text-red-600 font-medium">+25%</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span>高ストレス�E�スコア: 85�E�E/span>
+                    <span>高ストレス（スコア: 85）</span>
                     <span className="text-red-600 font-medium">+18%</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span>残業時間�E�E5時間/月！E/span>
+                    <span>残業時間（65時間/月）</span>
                     <span className="text-red-600 font-medium">+12%</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span>勤続年数�E�E年3ヶ月！E/span>
+                    <span>勤続年数（2年3ヶ月）</span>
                     <span className="text-green-600 font-medium">-5%</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
@@ -260,14 +270,17 @@ function PredictiveModelingContent() {
           {/* アクションボタン */}
           <div className="flex gap-4">
             <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
-              モチE��詳細レポ�EチE            </button>
+              モデル詳細レポート
+            </button>
             <button className="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition">
-              予測結果ダウンローチE            </button>
+              予測結果ダウンロード
+            </button>
             <button className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition">
-              モチE��再学翁E            </button>
+              モデル再学習
+            </button>
           </div>
         </div>
-      </div><CategoryTopButton categoryPath="/reports?tab=turnover" categoryName="離職要因刁E��" /></div>
+      </div><CategoryTopButton categoryPath="/reports?tab=turnover" categoryName="離職要因分析" /></div>
   );
 }
 

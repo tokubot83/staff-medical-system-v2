@@ -34,7 +34,7 @@ function Content() {
   const [targetYear, setTargetYear] = useState(2025);
   const [recruitmentStrategy, setRecruitmentStrategy] = useState('balanced');
 
-  // スタチE��チE�Eタから退職予測を計箁E
+  // スタッフデータから退職予測を計算
   const retirementPrediction = useMemo(() => {
     const staffList = Object.values(staffDatabase).filter(staff => {
       if (selectedFacility !== '全施設' && staff.facility !== selectedFacility) return false;
@@ -53,55 +53,55 @@ function Content() {
         定年退職: 0,
         自己都合退職: 0,
         早期退職: 0,
-        忁E��採用数: 0
+        必要採用数: 0
       };
 
       staffList.forEach(staff => {
         const futureAge = staff.age + (year - currentYear);
         
-        // 定年退職�E�E5歳�E�E
+        // 定年退職（65歳）
         if (futureAge >= 65 && futureAge < 66) {
           yearData.定年退職++;
         }
         
-        // 自己都合退職予測�E�年齢・ストレス・エンゲージメントから算�E�E�E
+        // 自己都合退職予測（年齢・ストレス・エンゲージメントから算出）
         const turnoverRisk = (staff.stressIndex / 100) * 0.3 + 
                            (1 - staff.engagement / 100) * 0.4 +
                            (staff.overtime > 30 ? 0.3 : 0);
-        if (Math.random() < turnoverRisk * 0.1) { // 年閁E0%の確玁E��高リスク老E��退職
+        if (Math.random() < turnoverRisk * 0.1) { // 年間10%の確率で高リスク者が退職
           yearData.自己都合退職++;
         }
         
-        // 早期退職�E�E5歳以上！E
+        // 早期退職（55歳以上）
         if (futureAge >= 55 && futureAge < 65 && Math.random() < 0.02) {
           yearData.早期退職++;
         }
       });
       
-      yearData.忁E��採用数 = yearData.定年退職 + yearData.自己都合退職 + yearData.早期退職;
+      yearData.必要採用数 = yearData.定年退職 + yearData.自己都合退職 + yearData.早期退職;
       predictions.push(yearData);
     }
     
     return predictions;
   }, [selectedFacility, selectedDepartment, selectedPosition, targetYear]);
 
-  // 採用コスト計箁E
+  // 採用コスト計算
   const recruitmentCost = useMemo(() => {
     const costPerHire = {
-      新十E { 採用費: 300000, 研修費: 500000, 初年度人件費: 3000000 },
-      中送E { 採用費: 800000, 研修費: 200000, 初年度人件費: 4000000 },
-      パ�EチE { 採用費: 100000, 研修費: 50000, 初年度人件費: 2000000 }
+      新卒: { 採用費: 300000, 研修費: 500000, 初年度人件費: 3000000 },
+      中途: { 採用費: 800000, 研修費: 200000, 初年度人件費: 4000000 },
+      パート: { 採用費: 100000, 研修費: 50000, 初年度人件費: 2000000 }
     };
 
     const strategies = {
-      balanced: { 新十E 0.4, 中送E 0.4, パ�EチE 0.2 },
-      experienced: { 新十E 0.2, 中送E 0.6, パ�EチE 0.2 },
-      newgrad: { 新十E 0.7, 中送E 0.2, パ�EチE 0.1 },
-      flexible: { 新十E 0.2, 中送E 0.3, パ�EチE 0.5 }
+      balanced: { 新卒: 0.4, 中途: 0.4, パート: 0.2 },
+      experienced: { 新卒: 0.2, 中途: 0.6, パート: 0.2 },
+      newgrad: { 新卒: 0.7, 中途: 0.2, パート: 0.1 },
+      flexible: { 新卒: 0.2, 中途: 0.3, パート: 0.5 }
     };
 
     const strategy = strategies[recruitmentStrategy as keyof typeof strategies];
-    const totalRecruits = retirementPrediction.reduce((sum, year) => sum + year.忁E��採用数, 0);
+    const totalRecruits = retirementPrediction.reduce((sum, year) => sum + year.必要採用数, 0);
 
     return Object.entries(strategy).map(([type, ratio]) => {
       const count = Math.round(totalRecruits * ratio);
@@ -112,12 +112,12 @@ function Content() {
         採用費: cost.採用費 * count,
         研修費: cost.研修費 * count,
         人件費: cost.初年度人件費 * count,
-        合訁E (cost.採用費 + cost.研修費 + cost.初年度人件費) * count
+        合計: (cost.採用費 + cost.研修費 + cost.初年度人件費) * count
       };
     });
   }, [retirementPrediction, recruitmentStrategy]);
 
-  // 部署別忁E��人員
+  // 部署別必要人員
   const departmentNeeds = useMemo(() => {
     const needs = {};
     const staffList = Object.values(staffDatabase).filter(staff => {
@@ -125,7 +125,7 @@ function Content() {
       return true;
     });
 
-    // 部署別の現在人数と琁E��人数を計箁E
+    // 部署別の現在人数と理想人数を計算
     const departments = [...new Set(staffList.map(s => s.department))];
     return departments.map(dept => {
       const currentStaff = staffList.filter(s => s.department === dept);
@@ -135,14 +135,14 @@ function Content() {
       return {
         department: dept,
         現在人数: currentStaff.length,
-        平坁E��齢: Math.round(avgAge),
+        平均年齢: Math.round(avgAge),
         退職リスク人数: retirementRisk,
         推奨採用数: Math.ceil(retirementRisk * 1.2) // 20%の余裕を持たせる
       };
     }).sort((a, b) => b.退職リスク人数 - a.退職リスク人数);
   }, [selectedFacility]);
 
-  // フィルター用のリスト取征E
+  // フィルター用のリスト取得
   const facilities = useMemo(() => {
     const facilitySet = new Set(Object.values(staffDatabase).map(s => s.facility));
     return ['全施設', ...Array.from(facilitySet)];
@@ -156,7 +156,7 @@ function Content() {
     return ['全部署', ...Array.from(deptSet)];
   }, [selectedFacility]);
 
-  const positions = ['全職種', '看護師', '看護補助老E, '介護士', '介護福祉士', '琁E��療法士', '作業療法士', '医師', '薬剤師'];
+  const positions = ['全職種', '看護師', '看護補助者', '介護士', '介護福祉士', '理学療法士', '作業療法士', '医師', '薬剤師'];
 
   const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444'];
 
@@ -169,7 +169,7 @@ function Content() {
           {/* ヘッダー */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <h1 className="text-2xl font-bold">採用計画シミュレーション</h1>
-            <p className="text-gray-600 mt-2">退職予測に基づく忁E��人員算�Eと採用コスト�E最適匁E/p>
+            <p className="text-gray-600 mt-2">退職予測に基づく必要人員算出と採用コストの最適化</p>
             {facilityParam && (
               <p className="text-sm text-gray-500 mt-1">対象施設: {facilityParam}</p>
             )}
@@ -240,16 +240,16 @@ function Content() {
                   onChange={(e) => setRecruitmentStrategy(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="balanced">バランス垁E/option>
-                  <option value="experienced">経験老E��要E/option>
-                  <option value="newgrad">新卒重要E/option>
-                  <option value="flexible">柔軟雇用重要E/option>
+                  <option value="balanced">バランス型</option>
+                  <option value="experienced">経験者重視</option>
+                  <option value="newgrad">新卒重視</option>
+                  <option value="flexible">柔軟雇用重視</option>
                 </select>
               </div>
             </div>
           </div>
 
-          {/* 退職予測グラチE*/}
+          {/* 退職予測グラフ */}
           <Card>
             <CardHeader>
               <CardTitle>退職予測推移</CardTitle>
@@ -282,32 +282,32 @@ function Content() {
               </div>
               <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="bg-blue-50 p-4 rounded-lg">
-                  <p className="text-sm text-gray-600">累計定年退職老E��</p>
+                  <p className="text-sm text-gray-600">累計定年退職者数</p>
                   <p className="text-2xl font-bold text-blue-600">
-                    {retirementPrediction.reduce((sum, y) => sum + y.定年退職, 0)}吁E
+                    {retirementPrediction.reduce((sum, y) => sum + y.定年退職, 0)}名
                   </p>
                 </div>
                 <div className="bg-amber-50 p-4 rounded-lg">
-                  <p className="text-sm text-gray-600">累計�E己都合退職老E��</p>
+                  <p className="text-sm text-gray-600">累計自己都合退職者数</p>
                   <p className="text-2xl font-bold text-amber-600">
-                    {retirementPrediction.reduce((sum, y) => sum + y.自己都合退職, 0)}吁E
+                    {retirementPrediction.reduce((sum, y) => sum + y.自己都合退職, 0)}名
                   </p>
                 </div>
                 <div className="bg-green-50 p-4 rounded-lg">
-                  <p className="text-sm text-gray-600">累計忁E��採用数</p>
+                  <p className="text-sm text-gray-600">累計必要採用数</p>
                   <p className="text-2xl font-bold text-green-600">
-                    {retirementPrediction.reduce((sum, y) => sum + y.忁E��採用数, 0)}吁E
+                    {retirementPrediction.reduce((sum, y) => sum + y.必要採用数, 0)}名
                   </p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* 採用コスト�E极E*/}
+          {/* 採用コスト分析 */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle>採用戦略別コスト�E极E/CardTitle>
+                <CardTitle>採用戦略別コスト分析</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-80">
@@ -342,7 +342,7 @@ function Content() {
 
             <Card>
               <CardHeader>
-                <CardTitle>採用構�E毁E/CardTitle>
+                <CardTitle>採用構成比</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-80">
@@ -377,19 +377,19 @@ function Content() {
                   </ResponsiveContainer>
                 </div>
                 <div className="mt-4">
-                  <p className="text-sm text-gray-600">総採用コスチE/p>
+                  <p className="text-sm text-gray-600">総採用コスト</p>
                   <p className="text-3xl font-bold text-blue-600">
-                    ¥{(recruitmentCost.reduce((sum, c) => sum + (c.合訁E?? 0), 0) ?? 0).toLocaleString()}
+                    ¥{(recruitmentCost.reduce((sum, c) => sum + (c.合計 ?? 0), 0) ?? 0).toLocaleString()}
                   </p>
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* 部署別忁E��人員 */}
+          {/* 部署別必要人員 */}
           <Card>
             <CardHeader>
-              <CardTitle>部署別採用忁E��人員</CardTitle>
+              <CardTitle>部署別採用必要人員</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
@@ -403,7 +403,7 @@ function Content() {
                         現在人数
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        平坁E��齢
+                        平均年齢
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         退職リスク人数
@@ -420,18 +420,18 @@ function Content() {
                           {dept.department}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {dept.現在人数}吁E
+                          {dept.現在人数}名
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {dept.平坁E��齢}歳
+                          {dept.平均年齢}歳
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           <span className={dept.退職リスク人数 > 2 ? 'text-red-600 font-semibold' : ''}>
-                            {dept.退職リスク人数}吁E
+                            {dept.退職リスク人数}名
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          <span className="text-blue-600 font-semibold">{dept.推奨採用数}吁E/span>
+                          <span className="text-blue-600 font-semibold">{dept.推奨採用数}名</span>
                         </td>
                       </tr>
                     ))}
@@ -453,28 +453,28 @@ function Content() {
                   <ul className="list-disc list-inside text-sm text-blue-800 space-y-1">
                     {departmentNeeds.slice(0, 3).map(dept => (
                       <li key={dept.department}>
-                        {dept.department}: {dept.推奨採用数}名�E採用を推奨�E�退職リスク{dept.退職リスク人数}名！E
+                        {dept.department}: {dept.推奨採用数}名の採用を推奨（退職リスク{dept.退職リスク人数}名）
                       </li>
                     ))}
                   </ul>
                 </div>
                 
                 <div className="bg-amber-50 p-4 rounded-lg">
-                  <h4 className="font-semibold text-amber-900 mb-2">採用時期の提桁E/h4>
+                  <h4 className="font-semibold text-amber-900 mb-2">採用時期の提案</h4>
                   <p className="text-sm text-amber-800">
-                    定年退職老E�E多い3-4月に向けて、前年10月から採用活動を開始することを推奨します、E
-                    特に看護師・介護士の採用は競争が激しいため、早期�E活動開始が重要です、E
+                    定年退職者の多い3-4月に向けて、前年10月から採用活動を開始することを推奨します。
+                    特に看護師・介護士の採用は競争が激しいため、早期の活動開始が重要です。
                   </p>
                 </div>
                 
                 <div className="bg-green-50 p-4 rounded-lg">
-                  <h4 className="font-semibold text-green-900 mb-2">コスト最適化�E提桁E/h4>
+                  <h4 className="font-semibold text-green-900 mb-2">コスト最適化の提案</h4>
                   <p className="text-sm text-green-800">
-                    現在の「{recruitmentStrategy === 'balanced' ? 'バランス垁E : 
-                            recruitmentStrategy === 'experienced' ? '経験老E��要E :
-                            recruitmentStrategy === 'newgrad' ? '新卒重要E : '柔軟雇用重要E}、E
-                    戦略での総コスト�E¥{(recruitmentCost.reduce((sum, c) => sum + (c.合訁E?? 0), 0) ?? 0).toLocaleString()}です、E
-                    {recruitmentStrategy !== 'flexible' && '柔軟雇用重視戦略に変更することで、コストを20-30%削減できる可能性があります、E}
+                    現在の「{recruitmentStrategy === 'balanced' ? 'バランス型' : 
+                            recruitmentStrategy === 'experienced' ? '経験者重視' :
+                            recruitmentStrategy === 'newgrad' ? '新卒重視' : '柔軟雇用重視'}」
+                    戦略での総コストは¥{(recruitmentCost.reduce((sum, c) => sum + (c.合計 ?? 0), 0) ?? 0).toLocaleString()}です。
+                    {recruitmentStrategy !== 'flexible' && '柔軟雇用重視戦略に変更することで、コストを20-30%削減できる可能性があります。'}
                   </p>
                 </div>
               </div>
@@ -485,7 +485,7 @@ function Content() {
           <div className="flex gap-4">
             <button 
               onClick={() => exportToPDF({
-                title: '採用計画シミュレーションレポ�EチE,
+                title: '採用計画シミュレーションレポート',
                 facility: selectedFacility,
                 reportType: 'recruitment-planning',
                 elementId: 'report-content',
@@ -493,7 +493,7 @@ function Content() {
               })}
               className="pdf-exclude bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
             >
-              PDFダウンローチE
+              PDFダウンロード
             </button>
           </div>
 

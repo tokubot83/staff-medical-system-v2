@@ -15,7 +15,7 @@ function Content() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="キャリアパス刁E��" />
+      <CommonHeader title="キャリアパス分析" />
       
       <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
@@ -23,15 +23,15 @@ function Content() {
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex justify-between items-start">
               <div>
-                <h1 className="text-2xl font-bold">キャリアパス刁E��</h1>
-                <p className="text-gray-600 mt-2">職員のキャリア形成パターンを�E析し、効果的なキャリア開発を支援</p>
+                <h1 className="text-2xl font-bold">キャリアパス分析</h1>
+                <p className="text-gray-600 mt-2">職員のキャリア形成パターンを分析し、効果的なキャリア開発を支援</p>
                 {facilityParam && (
                   <p className="text-sm text-gray-500 mt-1">対象施設: {facilityParam}</p>
                 )}
               </div>
               <button
                 onClick={() => exportToPDF({
-                  title: 'キャリアパス刁E��レポ�EチE,
+                  title: 'キャリアパス分析レポート',
                   facility: facilityParam,
                   reportType: 'career-path',
                   elementId: 'report-content',
@@ -39,15 +39,16 @@ function Content() {
                 })}
                 className="pdf-exclude bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm"
               >
-                PDFダウンローチE              </button>
+                PDFダウンロード
+              </button>
             </div>
           </div>
 
-          {/* キャリアパス刁E�� */}
+          {/* キャリアパス分析 */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <Card className="lg:col-span-2">
               <CardHeader>
-                <CardTitle>職種別キャリアパス刁E��</CardTitle>
+                <CardTitle>職種別キャリアパス分析</CardTitle>
               </CardHeader>
               <CardContent>
                 <CareerPathAnalysis facility={facilityParam} />
@@ -56,7 +57,7 @@ function Content() {
             
             <Card>
               <CardHeader>
-                <CardTitle>キャリア進捗統訁E/CardTitle>
+                <CardTitle>キャリア進捗統計</CardTitle>
               </CardHeader>
               <CardContent>
                 <CareerProgressStats facility={facilityParam} />

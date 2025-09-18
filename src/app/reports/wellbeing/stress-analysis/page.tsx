@@ -36,7 +36,7 @@ function Content() {
   const searchParams = useSearchParams();
   const facilityParam = searchParams.get('facility') || '';
   
-  // チE�Eタの読み込みとフィルタリング
+  // データの読み込みとフィルタリング
   const { individual, aggregates } = useMemo(() => {
     const data = loadWellbeingData();
     return {
@@ -45,7 +45,7 @@ function Content() {
     };
   }, [facilityParam]);
   
-  // ストレス要因の平坁E��
+  // ストレス要因の平均値
   const stressAverages = useMemo(() => {
     const totals = individual.reduce((acc, person) => {
       acc.workload += person.stressFactors.workload;
@@ -71,7 +71,7 @@ function Content() {
     };
   }, [individual]);
   
-  // 高ストレス老E�E抜�E
+  // 高ストレス者の抜出
   const highStressCount = useMemo(() => {
     return individual.filter(person => {
       const avgStress = Object.values(person.stressFactors).reduce((a, b) => a + b, 0) / 6;
@@ -79,9 +79,9 @@ function Content() {
     }).length;
   }, [individual]);
   
-  // ストレス要因別チE�Eタ
+  // ストレス要因別データ
   const stressFactorsData = useMemo(() => ({
-    labels: ['業務量', '人間関俁E, '裁E��権', '報酬', '作業環墁E, '変化'],
+    labels: ['業務量', '人間関係', '裁量権', '報酬', '作業環境', '変化'],
     datasets: [{
       label: 'ストレスレベル',
       data: [
@@ -110,7 +110,7 @@ function Content() {
     }]
   }), [stressAverages]);
   
-  // 部署別ストレスチE�Eタ
+  // 部署別ストレスデータ
   const departmentStressData = useMemo(() => {
     const deptData = aggregates.byDepartment
       .filter(dept => !facilityParam || individual.some(i => i.department === dept.name))
@@ -119,7 +119,7 @@ function Content() {
     return {
       labels: deptData.map(d => d.name),
       datasets: [{
-        label: '平坁E��トレスレベル',
+        label: '平均ストレスレベル',
         data: deptData.map(d => d.averageScores.stressLevel),
         backgroundColor: deptData.map(d => 
           d.averageScores.stressLevel >= 70 ? 'rgba(239, 68, 68, 0.6)' :
@@ -133,7 +133,7 @@ function Content() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="ストレス要因刁E��" />
+      <CommonHeader title="ストレス要因分析" />
       
       <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
@@ -141,7 +141,7 @@ function Content() {
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl font-bold">ストレス要因刁E��</h1>
+                <h1 className="text-2xl font-bold">ストレス要因分析</h1>
                 <p className="text-gray-600 mt-2">職場のストレス要因を特定し、メンタルヘルス対策を支援</p>
                 {facilityParam && (
                   <p className="text-sm text-gray-500 mt-1">対象施設: {facilityParam}</p>
@@ -149,7 +149,7 @@ function Content() {
               </div>
               <button
                 onClick={() => exportToPDF({
-                  title: 'ストレス要因刁E��レポ�EチE,
+                  title: 'ストレス要因分析レポート',
                   facility: facilityParam || '全施設',
                   reportType: 'stress-analysis',
                   elementId: 'report-content',
@@ -157,33 +157,35 @@ function Content() {
                 })}
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm pdf-exclude"
               >
-                PDFダウンローチE              </button>
+                PDFダウンロード
+              </button>
             </div>
           </div>
 
-          {/* サマリーカーチE*/}
+          {/* サマリーカード */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-gray-500">平坁E��トレスレベル</CardTitle>
+                <CardTitle className="text-sm font-medium text-gray-500">平均ストレスレベル</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold text-orange-600">
                   {stressAverages.overall.toFixed(1)}
                 </p>
-                <p className="text-xs text-gray-500 mt-1">全体平坁E/p>
+                <p className="text-xs text-gray-500 mt-1">全体平均</p>
               </CardContent>
             </Card>
             
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-gray-500">高ストレス老E/CardTitle>
+                <CardTitle className="text-sm font-medium text-gray-500">高ストレス者</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold text-red-600">
-                  {highStressCount}吁E                </p>
+                  {highStressCount}名
+                </p>
                 <p className="text-xs text-gray-500 mt-1">
-                  全体�E{((highStressCount / individual.length) * 100).toFixed(1)}%
+                  全体の{((highStressCount / individual.length) * 100).toFixed(1)}%
                 </p>
               </CardContent>
             </Card>
@@ -201,10 +203,10 @@ function Content() {
             </Card>
           </div>
           
-          {/* ストレス要因刁E�� */}
+          {/* ストレス要因分析 */}
           <Card>
             <CardHeader>
-              <CardTitle>ストレス要因別刁E��</CardTitle>
+              <CardTitle>ストレス要因別分析</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-64">
@@ -230,8 +232,8 @@ function Content() {
                         callbacks: {
                           label: (context) => {
                             const value = context.parsed.y;
-                            let level = '佁E;
-                            if (value >= 70) level = '髁E;
+                            let level = '低';
+                            if (value >= 70) level = '高';
                             else if (value >= 50) level = '中';
                             return `${value.toFixed(1)}点 (ストレス: ${level})`;
                           }
@@ -277,10 +279,10 @@ function Content() {
             </CardContent>
           </Card>
           
-          {/* ストレス要因ヒ�Eト�EチE�E */}
+          {/* ストレス要因ヒートマップ */}
           <Card>
             <CardHeader>
-              <CardTitle>職種別ストレス要因ヒ�Eト�EチE�E</CardTitle>
+              <CardTitle>職種別ストレス要因ヒートマップ</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
@@ -289,10 +291,10 @@ function Content() {
                     <tr>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">職種</th>
                       <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase">業務量</th>
-                      <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase">人間関俁E/th>
-                      <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase">裁E��権</th>
+                      <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase">人間関係</th>
+                      <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase">裁量権</th>
                       <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase">報酬</th>
-                      <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase">作業環墁E/th>
+                      <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase">作業環境</th>
                       <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase">変化</th>
                     </tr>
                   </thead>
@@ -387,7 +389,7 @@ function Content() {
           </Card>
 
         </div>
-      </div><CategoryTopButton categoryPath="/reports/wellbeing" categoryName="ウェルビ�Eイング" /></div>
+      </div><CategoryTopButton categoryPath="/reports/wellbeing" categoryName="ウェルビーイング" /></div>
   );
 }
 

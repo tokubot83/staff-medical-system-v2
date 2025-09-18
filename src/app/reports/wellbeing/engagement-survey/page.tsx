@@ -42,7 +42,7 @@ function Content() {
   const searchParams = useSearchParams();
   const facilityParam = searchParams.get('facility') || '';
   
-  // チE�Eタの読み込みとフィルタリング
+  // データの読み込みとフィルタリング
   const { individual, aggregates, trends } = useMemo(() => {
     const data = loadWellbeingData();
     return {
@@ -52,7 +52,7 @@ function Content() {
     };
   }, [facilityParam]);
   
-  // エンゲージメンチE要素の平坁E��
+  // エンゲージメント3要素の平均値
   const engagementAverages = useMemo(() => {
     const totals = individual.reduce((acc, person) => {
       acc.vigor += person.engagementScore.vigor;
@@ -72,7 +72,8 @@ function Content() {
     };
   }, [individual]);
   
-  // トレンド�E极E  const trendAnalysis = useMemo(() => {
+  // トレンド分析
+  const trendAnalysis = useMemo(() => {
     const trends = { up: 0, stable: 0, down: 0 };
     individual.forEach(person => {
       trends[person.engagementScore.trend]++;
@@ -82,7 +83,7 @@ function Content() {
   
   // 3要素のレーダーチャートデータ
   const radarData = useMemo(() => ({
-    labels: ['活劁E, '熱愁E, '没頭'],
+    labels: ['活力', '熱意', '没頭'],
     datasets: [{
       label: 'エンゲージメントスコア',
       data: [
@@ -100,9 +101,9 @@ function Content() {
     }]
   }), [engagementAverages]);
   
-  // トレンド�Eグラフデータ
+  // トレンド円グラフデータ
   const trendDoughnutData = useMemo(() => ({
-    labels: ['上�E傾吁E, '安宁E, '下降傾吁E],
+    labels: ['上昇傾向', '安定', '下降傾向'],
     datasets: [{
       data: [trendAnalysis.up, trendAnalysis.stable, trendAnalysis.down],
       backgroundColor: [
@@ -148,7 +149,7 @@ function Content() {
   // 時系列トレンドデータ
   const timeSeriesData = useMemo(() => {
     const facilityTrend = trends.find(t => 
-      t.category === 'facility' && (facilityParam ? t.name === facilityParam : t.name === '小原痁E��')
+      t.category === 'facility' && (facilityParam ? t.name === facilityParam : t.name === '小原病院')
     );
     
     if (!facilityTrend) return null;
@@ -156,7 +157,7 @@ function Content() {
     return {
       labels: facilityTrend.data.map(d => d.period),
       datasets: [{
-        label: 'エンゲージメンチE,
+        label: 'エンゲージメント',
         data: facilityTrend.data.map(d => d.engagement),
         borderColor: 'rgba(34, 197, 94, 1)',
         backgroundColor: 'rgba(34, 197, 94, 0.1)',
@@ -165,7 +166,7 @@ function Content() {
     };
   }, [trends, facilityParam]);
   
-  // 職種別比輁E��ータ
+  // 職種別比較データ
   const positionComparisonData = useMemo(() => {
     const positionData = aggregates.byPosition
       .filter(pos => !facilityParam || individual.some(i => i.position === pos.name))
@@ -175,7 +176,7 @@ function Content() {
       labels: positionData.map(p => p.name),
       datasets: [
         {
-          label: '活劁E,
+          label: '活力',
           data: positionData.map(p => {
             const posIndividuals = individual.filter(i => i.position === p.name);
             return posIndividuals.reduce((sum, i) => sum + i.engagementScore.vigor, 0) / posIndividuals.length || 0;
@@ -183,7 +184,7 @@ function Content() {
           backgroundColor: 'rgba(59, 130, 246, 0.6)'
         },
         {
-          label: '熱愁E,
+          label: '熱意',
           data: positionData.map(p => {
             const posIndividuals = individual.filter(i => i.position === p.name);
             return posIndividuals.reduce((sum, i) => sum + i.engagementScore.dedication, 0) / posIndividuals.length || 0;
@@ -213,14 +214,14 @@ function Content() {
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-bold">エンゲージメント調査</h1>
-                <p className="text-gray-600 mt-2">仕事への活力�E熱意�E没頭度を測定し、絁E���E活性度を評価</p>
+                <p className="text-gray-600 mt-2">仕事への活力・熱意・没頭度を測定し、組織の活性度を評価</p>
                 {facilityParam && (
                   <p className="text-sm text-gray-500 mt-1">対象施設: {facilityParam}</p>
                 )}
               </div>
               <button
                 onClick={() => exportToPDF({
-                  title: 'エンゲージメント調査レポ�EチE,
+                  title: 'エンゲージメント調査レポート',
                   facility: facilityParam || '全施設',
                   reportType: 'engagement-survey',
                   elementId: 'report-content',
@@ -228,11 +229,12 @@ function Content() {
                 })}
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm pdf-exclude"
               >
-                PDFダウンローチE              </button>
+                PDFダウンロード
+              </button>
             </div>
           </div>
 
-          {/* サマリーカーチE*/}
+          {/* サマリーカード */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card>
               <CardHeader className="pb-3">
@@ -242,13 +244,13 @@ function Content() {
                 <p className="text-2xl font-bold text-green-600">
                   {engagementAverages.overall.toFixed(1)}
                 </p>
-                <p className="text-xs text-gray-500 mt-1">全体平坁E/p>
+                <p className="text-xs text-gray-500 mt-1">全体平均</p>
               </CardContent>
             </Card>
             
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-gray-500">活劁E/CardTitle>
+                <CardTitle className="text-sm font-medium text-gray-500">活力</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold text-blue-600">
@@ -260,13 +262,13 @@ function Content() {
             
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-gray-500">熱愁E/CardTitle>
+                <CardTitle className="text-sm font-medium text-gray-500">熱意</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold text-purple-600">
                   {engagementAverages.dedication.toFixed(1)}
                 </p>
-                <p className="text-xs text-gray-500 mt-1">仕事への惁E�E</p>
+                <p className="text-xs text-gray-500 mt-1">仕事への情熱</p>
               </CardContent>
             </Card>
             
@@ -278,16 +280,16 @@ function Content() {
                 <p className="text-2xl font-bold text-pink-600">
                   {engagementAverages.absorption.toFixed(1)}
                 </p>
-                <p className="text-xs text-gray-500 mt-1">雁E��度</p>
+                <p className="text-xs text-gray-500 mt-1">集中度</p>
               </CardContent>
             </Card>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* エンゲージメンチE要素 */}
+            {/* エンゲージメント3要素 */}
             <Card>
               <CardHeader>
-                <CardTitle>エンゲージメンチE要素刁E��</CardTitle>
+                <CardTitle>エンゲージメント3要素分析</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-64 flex items-center justify-center">
@@ -316,10 +318,10 @@ function Content() {
               </CardContent>
             </Card>
             
-            {/* トレンド�E币E*/}
+            {/* トレンド分布 */}
             <Card>
               <CardHeader>
-                <CardTitle>エンゲージメントトレンチE/CardTitle>
+                <CardTitle>エンゲージメントトレンド</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-64 flex items-center justify-center">
@@ -343,7 +345,7 @@ function Content() {
                             label: (context) => {
                               const total = individual.length;
                               const percentage = ((context.parsed / total) * 100).toFixed(1);
-                              return `${context.label}: ${context.parsed}吁E(${percentage}%)`;
+                              return `${context.label}: ${context.parsed}名 (${percentage}%)`;
                             }
                           }
                         }
@@ -355,7 +357,7 @@ function Content() {
             </Card>
           </div>
           
-          {/* 部署別エンゲージメンチE*/}
+          {/* 部署別エンゲージメント */}
           <Card>
             <CardHeader>
               <CardTitle>部署別エンゲージメントスコア</CardTitle>
@@ -392,7 +394,7 @@ function Content() {
           {timeSeriesData && (
             <Card>
               <CardHeader>
-                <CardTitle>エンゲージメント�E推移</CardTitle>
+                <CardTitle>エンゲージメントの推移</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-64">
@@ -422,10 +424,10 @@ function Content() {
             </Card>
           )}
           
-          {/* 職種別3要素比輁E*/}
+          {/* 職種別3要素比較 */}
           <Card>
             <CardHeader>
-              <CardTitle>職種別エンゲージメント要素比輁E/CardTitle>
+              <CardTitle>職種別エンゲージメント要素比較</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-96">
@@ -463,7 +465,7 @@ function Content() {
             </CardContent>
           </Card>
           
-          {/* 詳細チE�Eブル */}
+          {/* 詳細テーブル */}
           <Card>
             <CardHeader>
               <CardTitle>職種別エンゲージメント詳細</CardTitle>
@@ -483,14 +485,17 @@ function Content() {
                         総合スコア
                       </th>
                       <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        活劁E                      </th>
+                        活力
+                      </th>
                       <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        熱愁E                      </th>
+                        熱意
+                      </th>
                       <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                         没頭
                       </th>
                       <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        上�E傾吁E                      </th>
+                        上昇傾向
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
@@ -550,7 +555,7 @@ function Content() {
           </Card>
 
         </div>
-      </div><CategoryTopButton categoryPath="/reports/wellbeing" categoryName="ウェルビ�Eイング" /></div>
+      </div><CategoryTopButton categoryPath="/reports/wellbeing" categoryName="ウェルビーイング" /></div>
   );
 }
 

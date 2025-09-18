@@ -270,7 +270,6 @@ export default function ReportsHomePage() {
             </div>
           </div>
         )}
-      </div>
-    </div>
+      </div></div>
   );
 }

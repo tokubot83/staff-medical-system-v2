@@ -32,7 +32,7 @@ ChartJS.register(
   Filler
 );
 
-// チE��チE�Eタ生�E
+// デモデータ生成
 const generateTrendData = () => {
   const months = ['2023/01', '2023/02', '2023/03', '2023/04', '2023/05', '2023/06', 
                   '2023/07', '2023/08', '2023/09', '2023/10', '2023/11', '2023/12',
@@ -52,9 +52,9 @@ const generateTrendData = () => {
       'リハビリ部': months.map((_, i) => 8.0 + Math.sin(i * 0.5) * 2.0 + Math.random())
     },
     seasonality: {
-      '1朁E: 10.2, '2朁E: 9.8, '3朁E: 12.5, '4朁E: 11.0,
-      '5朁E: 8.5, '6朁E: 7.8, '7朁E: 8.2, '8朁E: 9.0,
-      '9朁E: 9.5, '10朁E: 8.0, '11朁E: 7.5, '12朁E: 10.5
+      '1月': 10.2, '2月': 9.8, '3月': 12.5, '4月': 11.0,
+      '5月': 8.5, '6月': 7.8, '7月': 8.2, '8月': 9.0,
+      '9月': 9.5, '10月': 8.0, '11月': 7.5, '12月': 10.5
     },
     prediction: months.slice(-6).concat(['2024/07', '2024/08', '2024/09', '2024/10', '2024/11', '2024/12'])
       .map((month, i) => ({
@@ -73,13 +73,13 @@ function TimeSeriesTrendContent() {
   const [trendData] = useState(generateTrendData());
   const [selectedView, setSelectedView] = useState('overall');
 
-  // 全体トレンドチャート（混合チャート用�E�E
+  // 全体トレンドチャート（混合チャート用）
   const overallTrendChart = {
     labels: trendData.overall.map(d => d.month),
     datasets: [
       {
         type: 'line' as const,
-        label: '離職玁E(%)',
+        label: '離職率 (%)',
         data: trendData.overall.map(d => d.rate),
         borderColor: 'rgb(239, 68, 68)',
         backgroundColor: 'rgba(239, 68, 68, 0.1)',
@@ -88,7 +88,7 @@ function TimeSeriesTrendContent() {
       },
       {
         type: 'bar' as const,
-        label: '離職老E��',
+        label: '離職者数',
         data: trendData.overall.map(d => d.count),
         backgroundColor: 'rgba(59, 130, 246, 0.5)',
         yAxisID: 'y1'
@@ -96,7 +96,7 @@ function TimeSeriesTrendContent() {
     ]
   };
 
-  // 部署別トレンドチャーチE
+  // 部署別トレンドチャート
   const departmentTrendChart = {
     labels: trendData.overall.map(d => d.month),
     datasets: Object.entries(trendData.byDepartment).map(([dept, data], i) => ({
@@ -118,11 +118,11 @@ function TimeSeriesTrendContent() {
     }))
   };
 
-  // 季節性刁E��チャーチE
+  // 季節性分析チャート
   const seasonalityChart = {
     labels: Object.keys(trendData.seasonality),
     datasets: [{
-      label: '平坁E��職玁E(%)',
+      label: '平均離職率 (%)',
       data: Object.values(trendData.seasonality),
       backgroundColor: 'rgba(239, 68, 68, 0.6)',
       borderColor: 'rgb(239, 68, 68)',
@@ -130,7 +130,7 @@ function TimeSeriesTrendContent() {
     }]
   };
 
-  // 予測チャーチE
+  // 予測チャート
   const predictionChart = {
     labels: trendData.prediction.map(d => d.month),
     datasets: [
@@ -186,7 +186,7 @@ function TimeSeriesTrendContent() {
         position: 'left' as const,
         title: {
           display: true,
-          text: '離職玁E(%)'
+          text: '離職率 (%)'
         }
       },
       y1: {
@@ -195,7 +195,7 @@ function TimeSeriesTrendContent() {
         position: 'right' as const,
         title: {
           display: true,
-          text: '離職老E��'
+          text: '離職者数'
         },
         grid: {
           drawOnChartArea: false,
@@ -206,16 +206,16 @@ function TimeSeriesTrendContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="時系列トレンド�E极E />
+      <CommonHeader title="時系列トレンド分析" />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <div className="flex items-center gap-3 mb-4">
             <span className="text-3xl">📈</span>
-            <h1 className="text-2xl font-bold text-gray-900">時系列トレンド�E极E/h1>
+            <h1 className="text-2xl font-bold text-gray-900">時系列トレンド分析</h1>
           </div>
           <p className="text-gray-600">
-            離職玁E�E時系列変化を�E析し、トレンド、季節性、封E��予測を可視化します、E
+            離職率の時系列変化を分析し、トレンド、季節性、将来予測を可視化します。
           </p>
         </div>
 
@@ -226,14 +226,14 @@ function TimeSeriesTrendContent() {
           />
         </div>
 
-        {/* ビュー選択タチE*/}
+        {/* ビュー選択タブ */}
         <div className="bg-white rounded-lg shadow-md p-4 mb-8">
           <div className="flex space-x-4">
             {[
-              { id: 'overall', label: '全体トレンチE },
-              { id: 'department', label: '部署別比輁E },
-              { id: 'seasonality', label: '季節性刁E��' },
-              { id: 'prediction', label: '封E��予測' }
+              { id: 'overall', label: '全体トレンド' },
+              { id: 'department', label: '部署別比較' },
+              { id: 'seasonality', label: '季節性分析' },
+              { id: 'prediction', label: '将来予測' }
             ].map(view => (
               <button
                 key={view.id}
@@ -254,51 +254,51 @@ function TimeSeriesTrendContent() {
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           {selectedView === 'overall' && (
             <div>
-              <h3 className="text-lg font-semibold mb-4">離職玁E��離職老E��の推移</h3>
+              <h3 className="text-lg font-semibold mb-4">離職率と離職者数の推移</h3>
               <Chart type='bar' data={overallTrendChart} options={chartOptions} />
             </div>
           )}
           
           {selectedView === 'department' && (
             <div>
-              <h3 className="text-lg font-semibold mb-4">部署別離職玁E��レンチE/h3>
+              <h3 className="text-lg font-semibold mb-4">部署別離職率トレンド</h3>
               <Line data={departmentTrendChart} options={{ ...chartOptions, scales: { y: chartOptions.scales.y } }} />
             </div>
           )}
           
           {selectedView === 'seasonality' && (
             <div>
-              <h3 className="text-lg font-semibold mb-4">月別平坁E��職玁E��過去3年間！E/h3>
+              <h3 className="text-lg font-semibold mb-4">月別平均離職率（過去3年間）</h3>
               <Bar data={seasonalityChart} options={{ ...chartOptions, scales: { y: chartOptions.scales.y } }} />
             </div>
           )}
           
           {selectedView === 'prediction' && (
             <div>
-              <h3 className="text-lg font-semibold mb-4">離職玁E��測�E�Eヶ月�E�E�E/h3>
+              <h3 className="text-lg font-semibold mb-4">離職率予測（6ヶ月先）</h3>
               <Line data={predictionChart} options={{ ...chartOptions, scales: { y: chartOptions.scales.y } }} />
             </div>
           )}
         </div>
 
-        {/* 刁E��サマリー */}
+        {/* 分析サマリー */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h3 className="text-lg font-semibold mb-4">トレンド�E析サマリー</h3>
+          <h3 className="text-lg font-semibold mb-4">トレンド分析サマリー</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="bg-red-50 p-4 rounded-lg">
-              <p className="text-sm text-gray-600">現在の離職玁E/p>
+              <p className="text-sm text-gray-600">現在の離職率</p>
               <p className="text-2xl font-bold text-red-600">8.7%</p>
-              <p className="text-xs text-gray-500">前月毁E+0.3%</p>
+              <p className="text-xs text-gray-500">前月比 +0.3%</p>
             </div>
             <div className="bg-blue-50 p-4 rounded-lg">
-              <p className="text-sm text-gray-600">年間トレンチE/p>
-              <p className="text-2xl font-bold text-blue-600">ↁE上�E</p>
+              <p className="text-sm text-gray-600">年間トレンド</p>
+              <p className="text-2xl font-bold text-blue-600">↑ 上昇</p>
               <p className="text-xs text-gray-500">+1.2% / 年</p>
             </div>
             <div className="bg-green-50 p-4 rounded-lg">
-              <p className="text-sm text-gray-600">季節性ピ�Eク</p>
-              <p className="text-2xl font-bold text-green-600">3朁E/p>
-              <p className="text-xs text-gray-500">平坁E12.5%</p>
+              <p className="text-sm text-gray-600">季節性ピーク</p>
+              <p className="text-2xl font-bold text-green-600">3月</p>
+              <p className="text-xs text-gray-500">平均 12.5%</p>
             </div>
             <div className="bg-purple-50 p-4 rounded-lg">
               <p className="text-sm text-gray-600">6ヶ月後予測</p>
@@ -309,11 +309,11 @@ function TimeSeriesTrendContent() {
         </div>
 
         <DataComment
-          comment="3月�E離職玁E���Eは年度末の影響と老E��られます。早期�E対策実施が推奨されます、E
+          comment="3月の離職率上昇は年度末の影響と考えられます。早期の対策実施が推奨されます。"
           details={[
-            '過去3年間で3月�E離職玁E�E平坁E2.5%と最も高い',
-            '看護部の離職玁E��特に上�E傾向にある',
-            '予測モチE��では今征Eヶ月で離職玁E��9%台に上�Eする可能性'
+            '過去3年間で3月の離職率は平均12.5%と最も高い',
+            '看護部の離職率が特に上昇傾向にある',
+            '予測モデルでは今後6ヶ月で離職率が9%台に上昇する可能性'
           ]}
         />
       </div><CategoryBackButton /></div>

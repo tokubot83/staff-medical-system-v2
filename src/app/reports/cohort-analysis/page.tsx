@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import FacilitySelector from '@/components/reports/FacilitySelector';
 import CommonHeader from '@/components/CommonHeader';
 import CategoryReportCard from '@/components/reports/CategoryReportCard';
-
 export default function CohortAnalysisCategoryPage() {
   const router = useRouter();
   const [selectedFacility, setSelectedFacility] = useState('');
@@ -226,8 +225,6 @@ export default function CohortAnalysisCategoryPage() {
             </p>
           </div>
         </div>
-      </div>
-      
-    </div>
+      </div></div>
   );
 }

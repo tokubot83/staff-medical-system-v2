@@ -13,10 +13,10 @@ export default function ClusterAnalysisPage() {
   const [selectedCluster, setSelectedCluster] = useState<string | null>(null)
   const [viewMode, setViewMode] = useState<'scatter' | 'list'>('scatter')
 
-  // スタチE��リストを配�Eに変換
+  // スタッフリストを配列に変換
   const staffList = Object.values(staffDatabase)
 
-  // 吁E�E員に位置づけデータを追加
+  // 各職員に位置づけデータを追加
   const staffWithPositioning = useMemo(() => {
     return staffList.map(staff => {
       const facilityRank = Math.floor(Math.random() * 100) + 1
@@ -30,25 +30,25 @@ export default function ClusterAnalysisPage() {
         return 'D'
       }
       
-      // クラスター判宁E
+      // クラスター判定
       let cluster = ''
       const facilityGrade = getGrade(facilityRank)
       const corporateGrade = getGrade(corporateRank)
       
       if (facilityGrade === 'S' && corporateGrade === 'S') {
-        cluster = 'スーパ�Eスター'
+        cluster = 'スーパースター'
       } else if ((facilityGrade === 'S' || facilityGrade === 'A') && (corporateGrade === 'S' || corporateGrade === 'A')) {
-        cluster = 'ハイパフォーマ�E'
+        cluster = 'ハイパフォーマー'
       } else if (facilityGrade === 'B' && corporateGrade === 'B') {
         cluster = '安定層'
       } else if ((facilityGrade === 'S' || facilityGrade === 'A') && (corporateGrade === 'C' || corporateGrade === 'D')) {
         cluster = '施設特化型'
       } else if ((facilityGrade === 'C' || facilityGrade === 'D') && (corporateGrade === 'S' || corporateGrade === 'A')) {
-        cluster = '庁E��活躍型'
+        cluster = '広域活躍型'
       } else if ((facilityGrade === 'C' || facilityGrade === 'D') && (corporateGrade === 'C' || corporateGrade === 'D')) {
         cluster = '要育成層'
       } else {
-        cluster = 'ミックス垁E
+        cluster = 'ミックス型'
       }
       
       return {
@@ -58,13 +58,13 @@ export default function ClusterAnalysisPage() {
         facilityGrade,
         corporateGrade,
         cluster,
-        x: 100 - corporateRank, // X軸は法人冁E��価�E�右が高評価�E�E
-        y: 100 - facilityRank   // Y軸は施設冁E��価�E�上が高評価�E�E
+        x: 100 - corporateRank, // X軸は法人内評価（右が高評価）
+        y: 100 - facilityRank   // Y軸は施設内評価（上が高評価）
       }
     })
   }, [staffList])
 
-  // クラスター別の統訁E
+  // クラスター別の統計
   const clusterStats = useMemo(() => {
     const stats: Record<string, any> = {}
     
@@ -89,7 +89,7 @@ export default function ClusterAnalysisPage() {
       }
     })
     
-    // 平坁E��を計箁E
+    // 平均値を計算
     Object.values(stats).forEach((cluster: any) => {
       cluster.avgFacilityRank = (cluster.avgFacilityRank / cluster.count).toFixed(1)
       cluster.avgCorporateRank = (cluster.avgCorporateRank / cluster.count).toFixed(1)
@@ -100,16 +100,16 @@ export default function ClusterAnalysisPage() {
     return stats
   }, [staffWithPositioning])
 
-  // クラスターの色を取征E
+  // クラスターの色を取得
   const getClusterColor = (cluster: string) => {
     switch (cluster) {
-      case 'スーパ�Eスター': return '#ff5722'
-      case 'ハイパフォーマ�E': return '#ffc107'
+      case 'スーパースター': return '#ff5722'
+      case 'ハイパフォーマー': return '#ffc107'
       case '安定層': return '#4caf50'
       case '施設特化型': return '#2196f3'
-      case '庁E��活躍型': return '#9c27b0'
+      case '広域活躍型': return '#9c27b0'
       case '要育成層': return '#9e9e9e'
-      case 'ミックス垁E: return '#00bcd4'
+      case 'ミックス型': return '#00bcd4'
       default: return '#607d8b'
     }
   }
@@ -117,47 +117,47 @@ export default function ClusterAnalysisPage() {
   // クラスターの特徴と推奨アクション
   const getClusterCharacteristics = (cluster: string) => {
     switch (cluster) {
-      case 'スーパ�Eスター':
+      case 'スーパースター':
         return {
-          description: '施設冁E�E法人冁E��もに最上位層',
-          characteristics: ['次世代リーダー候裁E, '絁E���E中核人杁E, '高い専門性と実績'],
-          actions: ['後継老E��成�Eログラムへの参加', '重要�Eロジェクト�EリーチE, '他部門への影響力拡大']
+          description: '施設内・法人内ともに最上位層',
+          characteristics: ['次世代リーダー候補', '組織の中核人材', '高い専門性と実績'],
+          actions: ['後継者育成プログラムへの参加', '重要プロジェクトのリード', '他部門への影響力拡大']
         }
-      case 'ハイパフォーマ�E':
+      case 'ハイパフォーマー':
         return {
           description: '両軸で高評価の優秀層',
-          characteristics: ['安定した高パフォーマンス', 'チ�Eムの主劁E, '信頼性が高い'],
-          actions: ['リーダーシチE�E研修', '専門性の更なる向丁E, 'メンター役の付丁E]
+          characteristics: ['安定した高パフォーマンス', 'チームの主力', '信頼性が高い'],
+          actions: ['リーダーシップ研修', '専門性の更なる向上', 'メンター役の付与']
         }
       case '安定層':
         return {
-          description: '絁E���E中核を担ぁE��準層',
-          characteristics: ['安定した業務遂衁E, '絁E��文化�E体現老E, 'チ�Eムの安定剤'],
-          actions: ['スキルアチE�E研修', '新しい役割への挑戦', '後輩育成�E機会提侁E]
+          description: '組織の中核を担う標準層',
+          characteristics: ['安定した業務遂行', '組織文化の体現者', 'チームの安定剤'],
+          actions: ['スキルアップ研修', '新しい役割への挑戦', '後輩育成の機会提供']
         }
       case '施設特化型':
         return {
-          description: '施設冁E��高評価だが法人冁E��は標溁E,
-          characteristics: ['施設固有�E強み', '現場での信頼が厚ぁE, '地域特性の琁E��'],
-          actions: ['法人全体での活躍機会創出', '他施設との交流俁E��', '全社皁E��視点の育戁E]
+          description: '施設内で高評価だが法人内では標準',
+          characteristics: ['施設固有の強み', '現場での信頼が厚い', '地域特性の理解'],
+          actions: ['法人全体での活躍機会創出', '他施設との交流促進', '全社的な視点の育成']
         }
-      case '庁E��活躍型':
+      case '広域活躍型':
         return {
-          description: '法人冁E��高評価だが施設冁E��は標溁E,
-          characteristics: ['庁E��視野', '他施設での成功体騁E, '変革の推進劁E],
-          actions: ['現施設での役割明確匁E, 'チ�Eム冁E��の信頼構篁E, '施設特性の琁E��深匁E]
+          description: '法人内で高評価だが施設内では標準',
+          characteristics: ['広い視野', '他施設での成功体験', '変革の推進力'],
+          actions: ['現施設での役割明確化', 'チーム内での信頼構築', '施設特性の理解深化']
         }
       case '要育成層':
         return {
-          description: '両軸で改喁E��忁E��な層',
-          characteristics: ['成長の余地が大きい', '適性の見極めが忁E��E, 'サポ�Eトが忁E��E],
-          actions: ['個別育成計画の策宁E, '適性に合った�E置転揁E, 'メンター制度の活用']
+          description: '両軸で改善が必要な層',
+          characteristics: ['成長の余地が大きい', '適性の見極めが必要', 'サポートが必要'],
+          actions: ['個別育成計画の策定', '適性に合った配置転換', 'メンター制度の活用']
         }
-      case 'ミックス垁E:
+      case 'ミックス型':
         return {
-          description: '評価が混在してぁE��層',
-          characteristics: ['特定�E野での強み', '成長過程にある', '潜在能力あめE],
-          actions: ['強みの明確匁E, '弱点の補強', 'キャリアパスの検訁E]
+          description: '評価が混在している層',
+          characteristics: ['特定分野での強み', '成長過程にある', '潜在能力あり'],
+          actions: ['強みの明確化', '弱点の補強', 'キャリアパスの検討']
         }
       default:
         return {
@@ -168,7 +168,7 @@ export default function ClusterAnalysisPage() {
     }
   }
 
-  // カスタムチE�EルチッチE
+  // カスタムツールチップ
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload
@@ -176,8 +176,8 @@ export default function ClusterAnalysisPage() {
         <div className="bg-white p-3 border rounded shadow-lg">
           <p className="font-semibold">{data.name}</p>
           <p className="text-sm">{data.department}</p>
-          <p className="text-sm">施設冁E 上位{data.facilityRank}%</p>
-          <p className="text-sm">法人冁E 上位{data.corporateRank}%</p>
+          <p className="text-sm">施設内: 上位{data.facilityRank}%</p>
+          <p className="text-sm">法人内: 上位{data.corporateRank}%</p>
           <Badge style={{ backgroundColor: getClusterColor(data.cluster), color: 'white' }}>
             {data.cluster}
           </Badge>
@@ -189,39 +189,39 @@ export default function ClusterAnalysisPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="位置づけクラスター刁E��" />
+      <CommonHeader title="位置づけクラスター分析" />
       
       <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
           {/* ヘッダー */}
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h1 className="text-2xl font-bold">位置づけクラスター刁E��</h1>
-            <p className="text-gray-600 mt-2">位置づけパターンに基づく�E員のグループ�E极E/p>
+            <h1 className="text-2xl font-bold">位置づけクラスター分析</h1>
+            <p className="text-gray-600 mt-2">位置づけパターンに基づく職員のグループ分析</p>
           </div>
 
           <div className="space-y-6">
-          {/* ビューモード�E替 */}
+          {/* ビューモード切替 */}
           <Card className="p-6">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-bold">表示モーチE/h3>
+              <h3 className="text-lg font-bold">表示モード</h3>
               <div className="flex gap-2">
                 <button
                   className={`px-4 py-2 rounded ${viewMode === 'scatter' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
                   onClick={() => setViewMode('scatter')}
                 >
-                  散币E��
+                  散布図
                 </button>
                 <button
                   className={`px-4 py-2 rounded ${viewMode === 'list' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
                   onClick={() => setViewMode('list')}
                 >
-                  リスチE
+                  リスト
                 </button>
               </div>
             </div>
           </Card>
 
-          {/* クラスター概要E*/}
+          {/* クラスター概要 */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {Object.values(clusterStats).map((cluster: any) => (
               <Card 
@@ -238,30 +238,30 @@ export default function ClusterAnalysisPage() {
                   />
                   <h4 className="font-semibold text-sm">{cluster.name}</h4>
                 </div>
-                <p className="text-2xl font-bold">{cluster.count}吁E/p>
+                <p className="text-2xl font-bold">{cluster.count}名</p>
                 <p className="text-xs text-gray-600">{cluster.percentage}%</p>
               </Card>
             ))}
           </div>
 
-          {/* 散币E��表示 */}
+          {/* 散布図表示 */}
           {viewMode === 'scatter' && (
             <Card className="p-6">
-              <h3 className="text-lg font-bold mb-4">位置づけ�E币E��</h3>
+              <h3 className="text-lg font-bold mb-4">位置づけ分布図</h3>
               <ResponsiveContainer width="100%" height={500}>
                 <ScatterChart margin={{ top: 20, right: 20, bottom: 60, left: 60 }}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis 
                     dataKey="x" 
-                    name="法人冁E��価" 
+                    name="法人内評価" 
                     domain={[0, 100]}
-                    label={{ value: '法人冁E��価 ↁE, position: 'insideBottom', offset: -10 }}
+                    label={{ value: '法人内評価 →', position: 'insideBottom', offset: -10 }}
                   />
                   <YAxis 
                     dataKey="y" 
-                    name="施設冁E��価" 
+                    name="施設内評価" 
                     domain={[0, 100]}
-                    label={{ value: '施設冁E��価 ↁE, position: 'insideLeft', angle: -90 }}
+                    label={{ value: '施設内評価 →', position: 'insideLeft', angle: -90 }}
                   />
                   <Tooltip content={<CustomTooltip />} />
                   <Scatter 
@@ -282,23 +282,23 @@ export default function ClusterAnalysisPage() {
                 </ScatterChart>
               </ResponsiveContainer>
 
-              {/* 象限�E説昁E*/}
+              {/* 象限の説明 */}
               <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
                 <div className="text-right pr-4">
-                  <p className="font-semibold">右丁E 両軸高評価</p>
-                  <p className="text-gray-600">絁E���E中核人杁E/p>
+                  <p className="font-semibold">右上: 両軸高評価</p>
+                  <p className="text-gray-600">組織の中核人材</p>
                 </div>
                 <div>
-                  <p className="font-semibold">左丁E 施設冁E��評価</p>
-                  <p className="text-gray-600">施設特化型人杁E/p>
+                  <p className="font-semibold">左上: 施設内高評価</p>
+                  <p className="text-gray-600">施設特化型人材</p>
                 </div>
                 <div className="text-right pr-4">
-                  <p className="font-semibold">右丁E 法人冁E��評価</p>
-                  <p className="text-gray-600">庁E��活躍型人杁E/p>
+                  <p className="font-semibold">右下: 法人内高評価</p>
+                  <p className="text-gray-600">広域活躍型人材</p>
                 </div>
                 <div>
-                  <p className="font-semibold">左丁E 両軸要改喁E/p>
-                  <p className="text-gray-600">育成対象人杁E/p>
+                  <p className="font-semibold">左下: 両軸要改善</p>
+                  <p className="text-gray-600">育成対象人材</p>
                 </div>
               </div>
             </Card>
@@ -323,7 +323,7 @@ export default function ClusterAnalysisPage() {
                         <p className="text-sm text-gray-600 mt-1">{characteristics.description}</p>
                       </div>
                       <Badge className="bg-gray-600 text-white">
-                        {cluster.count}吁E({cluster.percentage}%)
+                        {cluster.count}名 ({cluster.percentage}%)
                       </Badge>
                     </div>
 
@@ -346,15 +346,15 @@ export default function ClusterAnalysisPage() {
                       </div>
                       <div>
                         <h4 className="font-semibold text-sm mb-2">統計情報</h4>
-                        <p className="text-sm">平坁E��設冁E��E��E 上位{cluster.avgFacilityRank}%</p>
-                        <p className="text-sm">平坁E��人冁E��E��E 上位{cluster.avgCorporateRank}%</p>
+                        <p className="text-sm">平均施設内順位: 上位{cluster.avgFacilityRank}%</p>
+                        <p className="text-sm">平均法人内順位: 上位{cluster.avgCorporateRank}%</p>
                         <p className="text-sm">所属部署数: {cluster.departmentCount}</p>
                       </div>
                     </div>
 
-                    {/* メンバ�Eリスト（最初�E5名！E*/}
+                    {/* メンバーリスト（最初の5名） */}
                     <div className="border-t pt-4">
-                      <h4 className="font-semibold text-sm mb-2">代表皁E��メンバ�E</h4>
+                      <h4 className="font-semibold text-sm mb-2">代表的なメンバー</h4>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                         {cluster.members.slice(0, 4).map((member: any) => (
                           <div key={member.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
@@ -374,7 +374,7 @@ export default function ClusterAnalysisPage() {
                         ))}
                       </div>
                       {cluster.members.length > 4 && (
-                        <p className="text-sm text-gray-500 mt-2">仁E{cluster.members.length - 4}吁E/p>
+                        <p className="text-sm text-gray-500 mt-2">他 {cluster.members.length - 4}名</p>
                       )}
                     </div>
                   </Card>
@@ -384,6 +384,6 @@ export default function ClusterAnalysisPage() {
           )}
           </div>
         </div>
-      </div><CategoryTopButton categoryPath="/reports/performance-evaluation" categoryName="人事評価刁E��" /></div>
+      </div><CategoryTopButton categoryPath="/reports/performance-evaluation" categoryName="人事評価分析" /></div>
   )
 }

@@ -38,7 +38,7 @@ function Content() {
   const searchParams = useSearchParams();
   const facilityParam = searchParams.get('facility') || '';
   
-  // チE�Eタの読み込みとフィルタリング
+  // データの読み込みとフィルタリング
   const { individual, interventionPrograms } = useMemo(() => {
     const data = loadWellbeingData();
     return {
@@ -47,7 +47,8 @@ function Content() {
     };
   }, [facilityParam]);
   
-  // プログラム参加状況�E雁E��E  const participationAnalysis = useMemo(() => {
+  // プログラム参加状況の集計
+  const participationAnalysis = useMemo(() => {
     const programParticipation: Record<string, { count: number; improvements: number[] }> = {};
     let totalParticipants = 0;
     
@@ -71,7 +72,8 @@ function Content() {
     };
   }, [individual]);
   
-  // プログラム別効果�E极E  const programEffectiveness = useMemo(() => {
+  // プログラム別効果分析
+  const programEffectiveness = useMemo(() => {
     const effects: Record<string, { avgImprovement: number; minImprovement: number; maxImprovement: number }> = {};
     
     Object.entries(participationAnalysis.programParticipation).forEach(([programId, data]) => {
@@ -87,9 +89,9 @@ function Content() {
     return effects;
   }, [participationAnalysis]);
   
-  // プログラム参加玁E�E冁E��ラフデータ
+  // プログラム参加率の円グラフデータ
   const participationDoughnutData = useMemo(() => ({
-    labels: ['参加老E, '未参加老E],
+    labels: ['参加者', '未参加者'],
     datasets: [{
       data: [
         participationAnalysis.totalParticipants,
@@ -107,7 +109,7 @@ function Content() {
     }]
   }), [participationAnalysis, individual.length]);
   
-  // プログラム別参加老E��のグラフデータ
+  // プログラム別参加者数のグラフデータ
   const programParticipationData = useMemo(() => {
     const programData = interventionPrograms.map(program => {
       const participation = participationAnalysis.programParticipation[program.id];
@@ -121,7 +123,7 @@ function Content() {
     return {
       labels: programData.map(p => p.name),
       datasets: [{
-        label: '参加老E��',
+        label: '参加者数',
         data: programData.map(p => p.count),
         backgroundColor: programData.map(p => {
           const colors = {
@@ -138,16 +140,16 @@ function Content() {
     };
   }, [interventionPrograms, participationAnalysis]);
   
-  // 効果測定�E前後比輁E��ータ
+  // 効果測定の前後比較データ
   const beforeAfterData = useMemo(() => {
     const allEffects = individual.flatMap(p => p.interventionEffects || []);
     const avgBefore = allEffects.reduce((sum, e) => sum + e.preScore, 0) / allEffects.length || 0;
     const avgAfter = allEffects.reduce((sum, e) => sum + e.postScore, 0) / allEffects.length || 0;
     
     return {
-      labels: ['実施剁E, '実施征E],
+      labels: ['実施前', '実施後'],
       datasets: [{
-        label: '平坁E��コア',
+        label: '平均スコア',
         data: [avgBefore, avgAfter],
         backgroundColor: [
           'rgba(239, 68, 68, 0.6)',
@@ -162,7 +164,7 @@ function Content() {
     };
   }, [individual]);
   
-  // プログラム別改喁E��チE�Eタ
+  // プログラム別改善率データ
   const improvementRateData = useMemo(() => {
     const programImprovements = interventionPrograms.map(program => {
       const effect = programEffectiveness[program.id];
@@ -175,7 +177,7 @@ function Content() {
     return {
       labels: programImprovements.map(p => p.name),
       datasets: [{
-        label: '平坁E��喁E�� (%)',
+        label: '平均改善率 (%)',
         data: programImprovements.map(p => p.improvement),
         backgroundColor: 'rgba(34, 197, 94, 0.6)',
         borderColor: 'rgba(34, 197, 94, 1)',
@@ -186,7 +188,7 @@ function Content() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="介�Eプログラム効果測宁E />
+      <CommonHeader title="介入プログラム効果測定" />
       
       <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
@@ -194,15 +196,15 @@ function Content() {
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl font-bold">介�Eプログラム効果測宁E/h1>
-                <p className="text-gray-600 mt-2">吁E��介�Eプログラムの実施効果を定量皁E��評価・刁E��</p>
+                <h1 className="text-2xl font-bold">介入プログラム効果測定</h1>
+                <p className="text-gray-600 mt-2">各種介入プログラムの実施効果を定量的に評価・分析</p>
                 {facilityParam && (
                   <p className="text-sm text-gray-500 mt-1">対象施設: {facilityParam}</p>
                 )}
               </div>
               <button
                 onClick={() => exportToPDF({
-                  title: '介�Eプログラム効果測定レポ�EチE,
+                  title: '介入プログラム効果測定レポート',
                   facility: facilityParam || '全施設',
                   reportType: 'intervention-program',
                   elementId: 'report-content',
@@ -210,28 +212,30 @@ function Content() {
                 })}
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm pdf-exclude"
               >
-                PDFダウンローチE              </button>
+                PDFダウンロード
+              </button>
             </div>
           </div>
 
-          {/* サマリーカーチE*/}
+          {/* サマリーカード */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-gray-500">プログラム参加玁E/CardTitle>
+                <CardTitle className="text-sm font-medium text-gray-500">プログラム参加率</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold text-green-600">
                   {participationAnalysis.participationRate.toFixed(1)}%
                 </p>
                 <p className="text-xs text-gray-500 mt-1">
-                  {participationAnalysis.totalParticipants}吁E/ {individual.length}吁E                </p>
+                  {participationAnalysis.totalParticipants}名 / {individual.length}名
+                </p>
               </CardContent>
             </Card>
             
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-gray-500">平坁E��喁E��</CardTitle>
+                <CardTitle className="text-sm font-medium text-gray-500">平均改善率</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold text-blue-600">
@@ -243,7 +247,7 @@ function Content() {
                       : '0.0';
                   })()}%
                 </p>
-                <p className="text-xs text-gray-500 mt-1">全プログラム平坁E/p>
+                <p className="text-xs text-gray-500 mt-1">全プログラム平均</p>
               </CardContent>
             </Card>
             
@@ -255,16 +259,16 @@ function Content() {
                 <p className="text-2xl font-bold text-purple-600">
                   {interventionPrograms.length}
                 </p>
-                <p className="text-xs text-gray-500 mt-1">種顁E/p>
+                <p className="text-xs text-gray-500 mt-1">種類</p>
               </CardContent>
             </Card>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* 参加玁E�EグラチE*/}
+            {/* 参加率円グラフ */}
             <Card>
               <CardHeader>
-                <CardTitle>プログラム参加状況E/CardTitle>
+                <CardTitle>プログラム参加状況</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-64 flex items-center justify-center">
@@ -287,7 +291,7 @@ function Content() {
                           callbacks: {
                             label: (context) => {
                               const percentage = ((context.parsed / individual.length) * 100).toFixed(1);
-                              return `${context.label}: ${context.parsed}吁E(${percentage}%)`;
+                              return `${context.label}: ${context.parsed}名 (${percentage}%)`;
                             }
                           }
                         }
@@ -298,10 +302,10 @@ function Content() {
               </CardContent>
             </Card>
             
-            {/* 前後比輁E*/}
+            {/* 前後比較 */}
             <Card>
               <CardHeader>
-                <CardTitle>プログラム実施前後�E変化</CardTitle>
+                <CardTitle>プログラム実施前後の変化</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-64">
@@ -331,10 +335,10 @@ function Content() {
             </Card>
           </div>
           
-          {/* プログラム別参加老E�� */}
+          {/* プログラム別参加者数 */}
           <Card>
             <CardHeader>
-              <CardTitle>プログラム別参加老E��</CardTitle>
+              <CardTitle>プログラム別参加者数</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-64">
@@ -362,10 +366,10 @@ function Content() {
             </CardContent>
           </Card>
           
-          {/* プログラム別改喁E�� */}
+          {/* プログラム別改善率 */}
           <Card>
             <CardHeader>
-              <CardTitle>プログラム別平坁E��喁E��</CardTitle>
+              <CardTitle>プログラム別平均改善率</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-64">
@@ -392,7 +396,7 @@ function Content() {
                       tooltip: {
                         callbacks: {
                           label: (context) => {
-                            return `改喁E��: ${context.parsed.x.toFixed(1)}%`;
+                            return `改善率: ${context.parsed.x.toFixed(1)}%`;
                           }
                         }
                       }
@@ -403,10 +407,10 @@ function Content() {
             </CardContent>
           </Card>
           
-          {/* プログラム詳細チE�Eブル */}
+          {/* プログラム詳細テーブル */}
           <Card>
             <CardHeader>
-              <CardTitle>介�Eプログラム詳細</CardTitle>
+              <CardTitle>介入プログラム詳細</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
@@ -414,21 +418,22 @@ function Content() {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        プログラム吁E                      </th>
+                        プログラム名
+                      </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         種別
                       </th>
                       <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        参加老E��
+                        参加者数
                       </th>
                       <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        平坁E��喁E��
+                        平均改善率
                       </th>
                       <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        最大改喁E��
+                        最大改善率
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        期征E��れる成果
+                        期待される成果
                       </th>
                     </tr>
                   </thead>
@@ -441,8 +446,8 @@ function Content() {
                         mental: 'メンタル',
                         physical: 'フィジカル',
                         skill: 'スキル開発',
-                        team: 'チ�Eム',
-                        other: 'そ�E仁E
+                        team: 'チーム',
+                        other: 'その他'
                       };
                       
                       const typeColors = {
@@ -498,7 +503,7 @@ function Content() {
             </CardContent>
           </Card>
           
-          {/* プログラム概要カーチE*/}
+          {/* プログラム概要カード */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {interventionPrograms.map((program) => (
               <Card key={program.id}>
@@ -520,7 +525,7 @@ function Content() {
           </div>
 
         </div>
-      </div><CategoryTopButton categoryPath="/reports/wellbeing" categoryName="ウェルビ�Eイング" /></div>
+      </div><CategoryTopButton categoryPath="/reports/wellbeing" categoryName="ウェルビーイング" /></div>
   );
 }
 

@@ -41,7 +41,7 @@ function SkillMatrixContent() {
   const [selectedPosition, setSelectedPosition] = useState('all');
   const [selectedDepartment, setSelectedDepartment] = useState('all');
   
-  // スタチE��チE�Eタをフィルタリング
+  // スタッフデータをフィルタリング
   const filteredStaff = useMemo(() => {
     return Object.values(staffDatabase).filter(staff => {
       const facilityMatch = !facilityParam || staff.facility === facilityParam;
@@ -51,21 +51,21 @@ function SkillMatrixContent() {
     });
   }, [facilityParam, selectedPosition, selectedDepartment]);
   
-  // 職種リストを取征E
+  // 職種リストを取得
   const positions = useMemo(() => {
     const posSet = new Set<string>();
     Object.values(staffDatabase).forEach(staff => {
       if (!facilityParam || staff.facility === facilityParam) {
         if (staff.position.includes('看護師') && !staff.position.includes('主任') && !staff.position.includes('師長') && !staff.position.includes('部長')) {
           posSet.add('看護師');
-        } else if (staff.position.includes('看護補助老E) && !staff.position.includes('主任')) {
-          posSet.add('看護補助老E);
+        } else if (staff.position.includes('看護補助者') && !staff.position.includes('主任')) {
+          posSet.add('看護補助者');
         } else if (staff.position.includes('介護士') && !staff.position.includes('主任')) {
           posSet.add('介護士');
         } else if (staff.position.includes('介護福祉士') && !staff.position.includes('主任')) {
           posSet.add('介護福祉士');
-        } else if (staff.position.includes('琁E��療法士') && !staff.position.includes('主任') && !staff.position.includes('科長')) {
-          posSet.add('琁E��療法士');
+        } else if (staff.position.includes('理学療法士') && !staff.position.includes('主任') && !staff.position.includes('科長')) {
+          posSet.add('理学療法士');
         } else if (staff.position.includes('作業療法士') && !staff.position.includes('主任')) {
           posSet.add('作業療法士');
         }
@@ -74,7 +74,7 @@ function SkillMatrixContent() {
     return Array.from(posSet).sort();
   }, [facilityParam]);
   
-  // 部署リストを取征E
+  // 部署リストを取得
   const departments = useMemo(() => {
     const deptSet = new Set<string>();
     Object.values(staffDatabase).forEach(staff => {
@@ -85,7 +85,7 @@ function SkillMatrixContent() {
     return Array.from(deptSet).sort();
   }, [facilityParam]);
   
-  // スキル雁E��データ
+  // スキル集計データ
   const skillSummary = useMemo(() => {
     const skillData: Record<string, { total: number, count: number, staffIds: string[] }> = {};
     
@@ -110,7 +110,7 @@ function SkillMatrixContent() {
       .sort((a, b) => b.averageLevel - a.averageLevel);
   }, [filteredStaff]);
   
-  // スキルレベル刁E��E��ータ
+  // スキルレベル分布データ
   const skillLevelDistribution = useMemo(() => {
     const distribution: Record<string, number[]> = {};
     const levels = [1, 2, 3, 4, 5];
@@ -126,7 +126,7 @@ function SkillMatrixContent() {
     return distribution;
   }, [filteredStaff, skillSummary]);
   
-  // 研修受講状況E
+  // 研修受講状況
   const trainingStats = useMemo(() => {
     const stats: Record<string, { count: number, totalHours: number, certificates: number }> = {};
     
@@ -157,7 +157,7 @@ function SkillMatrixContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="スキルマトリチE��ス" />
+      <CommonHeader title="スキルマトリックス" />
       
       <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
@@ -165,15 +165,15 @@ function SkillMatrixContent() {
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl font-bold">スキルマトリチE��ス</h1>
-                <p className="text-gray-600 mt-2">職員のスキル・賁E��・経験を多角的に評価し、絁E���E強みと改喁E��を可視化</p>
+                <h1 className="text-2xl font-bold">スキルマトリックス</h1>
+                <p className="text-gray-600 mt-2">職員のスキル・資格・経験を多角的に評価し、組織の強みと改善点を可視化</p>
                 {facilityParam && (
                   <p className="text-sm text-gray-500 mt-1">対象施設: {facilityParam}</p>
                 )}
               </div>
               <button
                 onClick={() => exportToPDF({
-                  title: 'スキルマトリチE��スレポ�EチE,
+                  title: 'スキルマトリックスレポート',
                   facility: facilityParam,
                   reportType: 'skill-matrix',
                   elementId: 'report-content',
@@ -181,7 +181,7 @@ function SkillMatrixContent() {
                 })}
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm pdf-exclude"
               >
-                PDFダウンローチE
+                PDFダウンロード
               </button>
             </div>
           </div>
@@ -238,7 +238,7 @@ function SkillMatrixContent() {
             <Card>
               <CardContent className="p-6">
                 <div className="text-2xl font-bold text-green-600">{skillSummary.length}</div>
-                <p className="text-sm text-gray-600 mt-1">評価スキル頁E��</p>
+                <p className="text-sm text-gray-600 mt-1">評価スキル項目</p>
               </CardContent>
             </Card>
             <Card>
@@ -246,15 +246,15 @@ function SkillMatrixContent() {
                 <div className="text-2xl font-bold text-purple-600">
                   {Math.round(skillSummary.reduce((sum, s) => sum + s.averageLevel, 0) / skillSummary.length || 0)}
                 </div>
-                <p className="text-sm text-gray-600 mt-1">平坁E��キルレベル</p>
+                <p className="text-sm text-gray-600 mt-1">平均スキルレベル</p>
               </CardContent>
             </Card>
           </div>
           
-          {/* スキル評価マトリチE��ス */}
+          {/* スキル評価マトリックス */}
           <Card>
             <CardHeader>
-              <CardTitle>スキル評価マトリチE��ス</CardTitle>
+              <CardTitle>スキル評価マトリックス</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
@@ -262,16 +262,16 @@ function SkillMatrixContent() {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        スキル吁E
+                        スキル名
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        対象老E��
+                        対象者数
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        平坁E��ベル
+                        平均レベル
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        レベル刁E��E
+                        レベル分布
                       </th>
                     </tr>
                   </thead>
@@ -328,10 +328,10 @@ function SkillMatrixContent() {
             </CardContent>
           </Card>
           
-          {/* 研修受講状況E*/}
+          {/* 研修受講状況 */}
           <Card>
             <CardHeader>
-              <CardTitle>研修受講状況E/CardTitle>
+              <CardTitle>研修受講状況</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -340,15 +340,15 @@ function SkillMatrixContent() {
                     <h4 className="font-medium text-gray-900">{stat.category}</h4>
                     <div className="mt-2 space-y-1">
                       <div className="flex justify-between text-sm">
-                        <span className="text-gray-600">受講老E��</span>
+                        <span className="text-gray-600">受講者数</span>
                         <span className="font-medium">{stat.count}人</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-gray-600">平坁E��講時閁E/span>
+                        <span className="text-gray-600">平均受講時間</span>
                         <span className="font-medium">{stat.averageHours}時間</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-gray-600">賁E��取得率</span>
+                        <span className="text-gray-600">資格取得率</span>
                         <span className="font-medium">{stat.certificateRate}%</span>
                       </div>
                     </div>
@@ -358,15 +358,15 @@ function SkillMatrixContent() {
             </CardContent>
           </Card>
           
-          {/* スキルギャチE�E刁E�� */}
+          {/* スキルギャップ分析 */}
           <Card>
             <CardHeader>
-              <CardTitle>スキルギャチE�E刁E��</CardTitle>
+              <CardTitle>スキルギャップ分析</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <p className="text-sm text-gray-600">
-                  目標レベル4以上に対する達�E状況E
+                  目標レベル4以上に対する達成状況
                 </p>
                 {skillSummary.slice(0, 8).map((skill, index) => {
                   const gap = 4 - skill.averageLevel;
@@ -378,7 +378,7 @@ function SkillMatrixContent() {
                           {skill.skillName}
                         </span>
                         <span className="text-sm text-gray-500">
-                          {gap > 0 ? `ギャチE�E: -${gap.toFixed(1)}` : '達�E'}
+                          {gap > 0 ? `ギャップ: -${gap.toFixed(1)}` : '達成'}
                         </span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
@@ -397,7 +397,7 @@ function SkillMatrixContent() {
           </Card>
 
         </div>
-      </div><CategoryTopButton categoryPath="/reports/talent-mapping" categoryName="タレント�EチE��ング" /></div>
+      </div><CategoryTopButton categoryPath="/reports/talent-mapping" categoryName="タレントマッピング" /></div>
   );
 }
 

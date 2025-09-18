@@ -12,14 +12,14 @@ export default function TeamAnalysisPage() {
   const [selectedFacility, setSelectedFacility] = useState('all')
   const [selectedDepartment, setSelectedDepartment] = useState('all')
 
-  // スタチE��リストを配�Eに変換
+  // スタッフリストを配列に変換
   const staffList = Object.values(staffDatabase)
 
-  // 施設・部署リストを生�E
+  // 施設・部署リストを生成
   const facilities = Array.from(new Set(staffList.map(s => s.facility).filter(Boolean)))
   const departments = Array.from(new Set(staffList.map(s => s.department).filter(Boolean)))
 
-  // チ�Eム�E�部署�E�ごとにグループ化
+  // チーム（部署）ごとにグループ化
   const teamData = useMemo(() => {
     const teams: Record<string, any[]> = {}
     
@@ -32,7 +32,7 @@ export default function TeamAnalysisPage() {
         teams[staff.department] = []
       }
       
-      // ランダムな位置づけを生�E�E�実際はチE�Eタベ�Eスから取得！E
+      // ランダムな位置づけを生成（実際はデータベースから取得）
       const facilityRank = Math.floor(Math.random() * 100) + 1
       const corporateRank = Math.floor(Math.random() * 100) + 1
       
@@ -56,10 +56,10 @@ export default function TeamAnalysisPage() {
     return teams
   }, [staffList, selectedFacility, selectedDepartment])
 
-  // チ�Eム刁E��チE�Eタを計箁E
+  // チーム分析データを計算
   const teamAnalysis = useMemo(() => {
     return Object.entries(teamData).map(([teamName, members]) => {
-      // グレード�E币E��計箁E
+      // グレード分布を計算
       const gradeDistribution = {
         facility: { S: 0, A: 0, B: 0, C: 0, D: 0 },
         corporate: { S: 0, A: 0, B: 0, C: 0, D: 0 }
@@ -70,7 +70,7 @@ export default function TeamAnalysisPage() {
         gradeDistribution.corporate[member.corporateGrade as keyof typeof gradeDistribution.corporate]++
       })
       
-      // チ�Eム冁E��の位置づけ頁E��を計箁E
+      // チーム内での位置づけ順位を計算
       const sortedByFacility = [...members].sort((a, b) => a.facilityRank - b.facilityRank)
       const sortedByCorporate = [...members].sort((a, b) => a.corporateRank - b.corporateRank)
       
@@ -82,7 +82,7 @@ export default function TeamAnalysisPage() {
         member.teamCorporateRank = index + 1
       })
       
-      // チ�Eム特性を判宁E
+      // チーム特性を判定
       const topPerformers = members.filter(m => m.facilityGrade === 'S' || m.corporateGrade === 'S').length
       const needSupport = members.filter(m => m.facilityGrade === 'D' || m.corporateGrade === 'D').length
       
@@ -114,14 +114,14 @@ export default function TeamAnalysisPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="チ�Eム位置づけ�E极E />
+      <CommonHeader title="チーム位置づけ分析" />
       
       <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
           {/* ヘッダー */}
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h1 className="text-2xl font-bold">チ�Eム位置づけ�E极E/h1>
-            <p className="text-gray-600 mt-2">チ�Eム冁E��の吁E��ンバ�Eの相対皁E��位置づけを刁E��</p>
+            <h1 className="text-2xl font-bold">チーム位置づけ分析</h1>
+            <p className="text-gray-600 mt-2">チーム内での各メンバーの相対的な位置づけを分析</p>
           </div>
 
           <div className="space-y-6">
@@ -153,7 +153,7 @@ export default function TeamAnalysisPage() {
             </div>
           </Card>
 
-          {/* チ�Eム概要E*/}
+          {/* チーム概要 */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {teamAnalysis.map(team => (
               <Card key={team.teamName} className="p-6">
@@ -162,15 +162,15 @@ export default function TeamAnalysisPage() {
                     <h3 className="font-bold text-lg">{team.teamName}</h3>
                     <p className="text-sm text-gray-600 mt-1">
                       <Users className="inline h-4 w-4 mr-1" />
-                      {team.memberCount}吁E
+                      {team.memberCount}名
                     </p>
                   </div>
                 </div>
 
-                {/* グレード�E币E*/}
+                {/* グレード分布 */}
                 <div className="space-y-3">
                   <div>
-                    <p className="text-sm font-semibold mb-2">施設冁E��価刁E��E/p>
+                    <p className="text-sm font-semibold mb-2">施設内評価分布</p>
                     <div className="flex gap-1">
                       {(['S', 'A', 'B', 'C', 'D'] as const).map(grade => (
                         <div
@@ -196,7 +196,7 @@ export default function TeamAnalysisPage() {
                   </div>
 
                   <div>
-                    <p className="text-sm font-semibold mb-2">法人冁E��価刁E��E/p>
+                    <p className="text-sm font-semibold mb-2">法人内評価分布</p>
                     <div className="flex gap-1">
                       {(['S', 'A', 'B', 'C', 'D'] as const).map(grade => (
                         <div
@@ -222,41 +222,41 @@ export default function TeamAnalysisPage() {
                   </div>
                 </div>
 
-                {/* チ�Eム特性 */}
+                {/* チーム特性 */}
                 <div className="mt-4 pt-4 border-t space-y-2">
                   <div className="flex items-center justify-between text-sm">
                     <span className="flex items-center gap-1">
                       <TrendingUp className="h-4 w-4 text-green-600" />
                       トップ層
                     </span>
-                    <span className="font-semibold">{team.topPerformers}吁E({team.topPerformerRatio}%)</span>
+                    <span className="font-semibold">{team.topPerformers}名 ({team.topPerformerRatio}%)</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="flex items-center gap-1">
                       <AlertCircle className="h-4 w-4 text-orange-600" />
                       要支援層
                     </span>
-                    <span className="font-semibold">{team.needSupport}吁E({team.needSupportRatio}%)</span>
+                    <span className="font-semibold">{team.needSupport}名 ({team.needSupportRatio}%)</span>
                   </div>
                 </div>
               </Card>
             ))}
           </div>
 
-          {/* 詳細刁E�� */}
+          {/* 詳細分析 */}
           {teamAnalysis.map(team => (
             <Card key={team.teamName} className="p-6">
-              <h3 className="text-lg font-bold mb-4">{team.teamName} - メンバ�E詳細</h3>
+              <h3 className="text-lg font-bold mb-4">{team.teamName} - メンバー詳細</h3>
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-4 py-2 text-left">職員吁E/th>
-                      <th className="px-4 py-2 text-left">職佁E/th>
-                      <th className="px-4 py-2 text-center">施設冁E��価</th>
-                      <th className="px-4 py-2 text-center">チ�Eム冁E��E��E/th>
-                      <th className="px-4 py-2 text-center">法人冁E��価</th>
-                      <th className="px-4 py-2 text-center">チ�Eム冁E��E��E/th>
+                      <th className="px-4 py-2 text-left">職員名</th>
+                      <th className="px-4 py-2 text-left">職位</th>
+                      <th className="px-4 py-2 text-center">施設内評価</th>
+                      <th className="px-4 py-2 text-center">チーム内順位</th>
+                      <th className="px-4 py-2 text-center">法人内評価</th>
+                      <th className="px-4 py-2 text-center">チーム内順位</th>
                       <th className="px-4 py-2 text-center">特性</th>
                     </tr>
                   </thead>
@@ -273,7 +273,7 @@ export default function TeamAnalysisPage() {
                             </Badge>
                           </td>
                           <td className="px-4 py-2 text-center">
-                            {member.teamFacilityRank}/{team.memberCount}佁E
+                            {member.teamFacilityRank}/{team.memberCount}位
                           </td>
                           <td className="px-4 py-2 text-center">
                             <Badge style={{ backgroundColor: getGradeColor(member.corporateGrade), color: 'white' }}>
@@ -281,7 +281,7 @@ export default function TeamAnalysisPage() {
                             </Badge>
                           </td>
                           <td className="px-4 py-2 text-center">
-                            {member.teamCorporateRank}/{team.memberCount}佁E
+                            {member.teamCorporateRank}/{team.memberCount}位
                           </td>
                           <td className="px-4 py-2 text-center">
                             {member.facilityGrade === 'S' || member.corporateGrade === 'S' ? (
@@ -289,9 +289,9 @@ export default function TeamAnalysisPage() {
                             ) : member.facilityGrade === 'D' || member.corporateGrade === 'D' ? (
                               <Badge className="bg-orange-600 text-white">要支援</Badge>
                             ) : member.teamFacilityRank <= 3 ? (
-                              <Badge className="bg-blue-600 text-white">チ�Eム上佁E/Badge>
+                              <Badge className="bg-blue-600 text-white">チーム上位</Badge>
                             ) : (
-                              <Badge className="bg-gray-400 text-white">標溁E/Badge>
+                              <Badge className="bg-gray-400 text-white">標準</Badge>
                             )}
                           </td>
                         </tr>
@@ -303,6 +303,6 @@ export default function TeamAnalysisPage() {
           ))}
           </div>
         </div>
-      </div><CategoryTopButton categoryPath="/reports/performance-evaluation" categoryName="人事評価刁E��" /></div>
+      </div><CategoryTopButton categoryPath="/reports/performance-evaluation" categoryName="人事評価分析" /></div>
   )
 }

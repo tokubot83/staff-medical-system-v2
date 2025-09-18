@@ -30,15 +30,15 @@ ChartJS.register(
   Legend
 );
 
-// チE��チE�Eタ生�E
+// デモデータ生成
 const generateContagionData = () => {
   return {
     networkData: {
       nodes: [
         { id: 1, name: '田中看護師', role: 'リーダー', risk: 85, influence: 90, status: 'left' },
-        { id: 2, name: '佐藤看護師', role: 'スタチE��', risk: 70, influence: 60, status: 'at-risk' },
-        { id: 3, name: '鈴木看護師', role: 'スタチE��', risk: 65, influence: 55, status: 'at-risk' },
-        { id: 4, name: '高橋看護師', role: 'スタチE��', risk: 45, influence: 50, status: 'stable' },
+        { id: 2, name: '佐藤看護師', role: 'スタッフ', risk: 70, influence: 60, status: 'at-risk' },
+        { id: 3, name: '鈴木看護師', role: 'スタッフ', risk: 65, influence: 55, status: 'at-risk' },
+        { id: 4, name: '高橋看護師', role: 'スタッフ', risk: 45, influence: 50, status: 'stable' },
         { id: 5, name: '山田看護師', role: 'リーダー', risk: 30, influence: 85, status: 'stable' }
       ],
       connections: [
@@ -50,7 +50,7 @@ const generateContagionData = () => {
     },
     contagionPatterns: [
       {
-        department: '看護部A痁E��E,
+        department: '看護部A病棟',
         initialTurnover: 1,
         contagionEffect: 3,
         timeline: [
@@ -73,17 +73,17 @@ const generateContagionData = () => {
       }
     ],
     riskFactors: [
-      { factor: 'キーパ�Eソンの離職', impact: 85, cases: 12 },
-      { factor: 'チ�Eム冁E�E不満拡散', impact: 72, cases: 18 },
-      { factor: '部署冁E�E業務負荷増加', impact: 68, cases: 15 },
-      { factor: '競合他社の雁E��採用', impact: 60, cases: 8 },
-      { factor: '絁E��変更への不宁E, impact: 55, cases: 10 }
+      { factor: 'キーパーソンの離職', impact: 85, cases: 12 },
+      { factor: 'チーム内の不満拡散', impact: 72, cases: 18 },
+      { factor: '部署内の業務負荷増加', impact: 68, cases: 15 },
+      { factor: '競合他社の集団採用', impact: 60, cases: 8 },
+      { factor: '組織変更への不安', impact: 55, cases: 10 }
     ],
     preventionStrategies: [
-      { strategy: '早期面諁E��施', effectiveness: 75, timing: '離職意向検知征E週間以冁E },
-      { strategy: 'チ�Eム再編戁E, effectiveness: 60, timing: 'キーパ�Eソン離職後即座' },
+      { strategy: '早期面談実施', effectiveness: 75, timing: '離職意向検知後1週間以内' },
+      { strategy: 'チーム再編成', effectiveness: 60, timing: 'キーパーソン離職後即座' },
       { strategy: '業務負荷調整', effectiveness: 65, timing: '離職発生時' },
-      { strategy: 'インセンチE��ブ提侁E, effectiveness: 55, timing: 'リスク上�E晁E }
+      { strategy: 'インセンティブ提供', effectiveness: 55, timing: 'リスク上昇時' }
     ]
   };
 };
@@ -95,7 +95,7 @@ function TurnoverContagionContent() {
   const [selectedView, setSelectedView] = useState('network');
   const [selectedDepartment, setSelectedDepartment] = useState(0);
 
-  // ネットワーク可視化チE�Eタ
+  // ネットワーク可視化データ
   const networkChartData = {
     datasets: [{
       label: '職員ネットワーク',
@@ -115,20 +115,20 @@ function TurnoverContagionContent() {
     }]
   };
 
-  // 連鎖パターンチャーチE
+  // 連鎖パターンチャート
   const pattern = contagionData.contagionPatterns[selectedDepartment];
   const contagionTimelineChart = {
     labels: pattern.timeline.map(t => `${t.month}ヶ月後`),
     datasets: [
       {
-        label: '離職老E���E�累計！E,
+        label: '離職者数（累計）',
         data: pattern.timeline.map(t => t.turnover),
         borderColor: 'rgb(239, 68, 68)',
         backgroundColor: 'rgba(239, 68, 68, 0.1)',
         tension: 0.3
       },
       {
-        label: 'リスク老E��',
+        label: 'リスク者数',
         data: pattern.timeline.map(t => t.atRisk),
         borderColor: 'rgb(245, 158, 11)',
         backgroundColor: 'rgba(245, 158, 11, 0.1)',
@@ -137,7 +137,7 @@ function TurnoverContagionContent() {
     ]
   };
 
-  // リスク要因チャーチE
+  // リスク要因チャート
   const riskFactorsChart = {
     labels: contagionData.riskFactors.map(f => f.factor),
     datasets: [{
@@ -154,9 +154,9 @@ function TurnoverContagionContent() {
       stable: 'bg-green-100 text-green-800'
     };
     const labels = {
-      left: '離職渁E,
-      'at-risk': 'リスク髁E,
-      stable: '安宁E
+      left: '離職済',
+      'at-risk': 'リスク高',
+      stable: '安定'
     };
     return (
       <span className={`px-2 py-1 rounded-full text-xs font-medium ${styles[status as keyof typeof styles]}`}>
@@ -167,16 +167,16 @@ function TurnoverContagionContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="離職連鎖�E极E />
+      <CommonHeader title="離職連鎖分析" />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <div className="flex items-center gap-3 mb-4">
             <span className="text-3xl">🔗</span>
-            <h1 className="text-2xl font-bold text-gray-900">離職連鎖�E极E/h1>
+            <h1 className="text-2xl font-bold text-gray-900">離職連鎖分析</h1>
           </div>
           <p className="text-gray-600">
-            一人の離職が周囲に与える影響を�E析し、E��鎖的な離職を防止します、E
+            一人の離職が周囲に与える影響を分析し、連鎖的な離職を防止します。
           </p>
         </div>
 
@@ -187,11 +187,11 @@ function TurnoverContagionContent() {
           />
         </div>
 
-        {/* ビュー選択タチE*/}
+        {/* ビュー選択タブ */}
         <div className="bg-white rounded-lg shadow-md p-4 mb-8">
           <div className="flex space-x-4">
             {[
-              { id: 'network', label: 'ネットワーク刁E��' },
+              { id: 'network', label: 'ネットワーク分析' },
               { id: 'timeline', label: '連鎖タイムライン' },
               { id: 'factors', label: 'リスク要因' },
               { id: 'prevention', label: '予防戦略' }
@@ -211,20 +211,20 @@ function TurnoverContagionContent() {
           </div>
         </div>
 
-        {/* メインコンチE��チE*/}
+        {/* メインコンテンツ */}
         {selectedView === 'network' && (
           <div className="space-y-8">
             <div className="bg-white rounded-lg shadow-md p-6">
               <h3 className="text-lg font-semibold mb-4">職員ネットワークと離職リスク</h3>
               <div className="mb-4">
                 <p className="text-sm text-gray-600">
-                  横軸�E�影響力（他�E員への影響度�E�E| 縦軸�E�離職リスク
+                  横軸：影響力（他職員への影響度） | 縦軸：離職リスク
                 </p>
               </div>
               <Scatter data={networkChartData} options={{
                 scales: {
                   x: {
-                    title: { display: true, text: '影響劁E },
+                    title: { display: true, text: '影響力' },
                     min: 0,
                     max: 100
                   },
@@ -239,7 +239,7 @@ function TurnoverContagionContent() {
                     callbacks: {
                       label: (context) => {
                         const point = context.raw as any;
-                        return `${point.label}: 影響劁E{point.x}, リスク${point.y}`;
+                        return `${point.label}: 影響力${point.x}, リスク${point.y}`;
                       }
                     }
                   }
@@ -253,9 +253,9 @@ function TurnoverContagionContent() {
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">氏名</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">役割</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状慁E/th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状態</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">離職リスク</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">影響劁E/th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">影響力</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -290,7 +290,7 @@ function TurnoverContagionContent() {
           <div className="space-y-8">
             <div className="bg-white rounded-lg shadow-md p-6">
               <div className="mb-4">
-                <label className="text-sm font-medium text-gray-700">部署選抁E/label>
+                <label className="text-sm font-medium text-gray-700">部署選択</label>
                 <select
                   value={selectedDepartment}
                   onChange={(e) => setSelectedDepartment(Number(e.target.value))}
@@ -307,8 +307,8 @@ function TurnoverContagionContent() {
               
               <div className="mt-4 bg-red-50 p-4 rounded-lg">
                 <p className="text-sm text-red-800">
-                  <span className="font-semibold">連鎖効果！E/span>
-                  初期離職老E名から{pattern.contagionEffect}名が影響を受けて離職
+                  <span className="font-semibold">連鎖効果：</span>
+                  初期離職者1名から{pattern.contagionEffect}名が影響を受けて離職
                 </p>
               </div>
             </div>
@@ -318,15 +318,15 @@ function TurnoverContagionContent() {
               <ul className="space-y-2">
                 <li className="flex items-start gap-2">
                   <span className="text-red-500">•</span>
-                  <span>キーパ�Eソンの離職征E-2ヶ月で連鎖が加送E/span>
+                  <span>キーパーソンの離職後1-2ヶ月で連鎖が加速</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-red-500">•</span>
-                  <span>同じチ�Eム冁E��の影響が最も大きい</span>
+                  <span>同じチーム内での影響が最も大きい</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-red-500">•</span>
-                  <span>3ヶ月を過ぎると連鎖�E収束傾吁E/span>
+                  <span>3ヶ月を過ぎると連鎖は収束傾向</span>
                 </li>
               </ul>
             </div>
@@ -335,7 +335,7 @@ function TurnoverContagionContent() {
 
         {selectedView === 'factors' && (
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold mb-4">離職連鎖�Eリスク要因</h3>
+            <h3 className="text-lg font-semibold mb-4">離職連鎖のリスク要因</h3>
             <Bar data={riskFactorsChart} options={{
               indexAxis: 'y',
               scales: {
@@ -351,7 +351,7 @@ function TurnoverContagionContent() {
                 <div key={i} className="border rounded-lg p-4">
                   <div className="flex justify-between items-start mb-2">
                     <h4 className="font-medium">{factor.factor}</h4>
-                    <span className="text-sm text-gray-500">過去事侁E {factor.cases}件</span>
+                    <span className="text-sm text-gray-500">過去事例: {factor.cases}件</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div 
@@ -375,40 +375,40 @@ function TurnoverContagionContent() {
                     <p className="text-sm text-gray-600 mt-1">実施タイミング: {strategy.timing}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm text-gray-500">効极E/p>
+                    <p className="text-sm text-gray-500">効果</p>
                     <p className="text-2xl font-bold text-green-600">{strategy.effectiveness}%</p>
                   </div>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-lg">
-                  <h5 className="font-medium mb-2">実施手頁E/h5>
+                  <h5 className="font-medium mb-2">実施手順</h5>
                   <ol className="list-decimal list-inside text-sm text-gray-700 space-y-1">
-                    <li>リスクの高い職員を特宁E/li>
-                    <li>直属上司による面諁E��施</li>
-                    <li>具体的な改喁E���E提示</li>
-                    <li>定期皁E��フォローアチE�E</li>
+                    <li>リスクの高い職員を特定</li>
+                    <li>直属上司による面談実施</li>
+                    <li>具体的な改善策の提示</li>
+                    <li>定期的なフォローアップ</li>
                   </ol>
                 </div>
               </div>
             ))}
             
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-              <h4 className="font-semibold text-blue-900 mb-2">予防のポインチE/h4>
+              <h4 className="font-semibold text-blue-900 mb-2">予防のポイント</h4>
               <ul className="list-disc list-inside text-blue-800 space-y-1">
-                <li>キーパ�Eソンの離職允E��を早期に察知</li>
-                <li>チ�Eム冁E�Eコミュニケーション強匁E/li>
-                <li>負荷刁E��と業務�E見直ぁE/li>
-                <li>定期皁E��1on1面諁E�E実施</li>
+                <li>キーパーソンの離職兆候を早期に察知</li>
+                <li>チーム内のコミュニケーション強化</li>
+                <li>負荷分散と業務の見直し</li>
+                <li>定期的な1on1面談の実施</li>
               </ul>
             </div>
           </div>
         )}
 
         <DataComment
-          comment="キーパ�Eソンの離職は平坁E名�E連鎖離職を引き起こします。早期介�Eにより70%は防止可能です、E
+          comment="キーパーソンの離職は平均3名の連鎖離職を引き起こします。早期介入により70%は防止可能です。"
           details={[
-            '影響力�E高い職員の定着が絁E��安定�E鍵',
-            '離職発生征E2時間以冁E�E対応が重要E,
-            'チ�Eム再編成により連鎖を最小限に抑制可能'
+            '影響力の高い職員の定着が組織安定の鍵',
+            '離職発生後72時間以内の対応が重要',
+            'チーム再編成により連鎖を最小限に抑制可能'
           ]}
         />
       </div><CategoryBackButton /></div>

@@ -46,24 +46,24 @@ function NetworkCohortContent() {
   const [selectedNetworkType, setSelectedNetworkType] = useState('all');
   const [selectedAnalysisView, setSelectedAnalysisView] = useState('overview');
 
-  // ネットワークタイプ�E定義
+  // ネットワークタイプの定義
   const networkTypes = [
-    'コネクター�E�つなぎ役�E�E,
-    'インフルエンサー�E�影響力大�E�E,
-    'エキスパ�Eト（知識�E源！E,
-    '孤立型�E�つながり少！E,
-    'チ�Eム冁E��結型',
-    'クロスファンクショナル垁E
+    'コネクター（つなぎ役）',
+    'インフルエンサー（影響力大）',
+    'エキスパート（知識の源）',
+    '孤立型（つながり少）',
+    'チーム内完結型',
+    'クロスファンクショナル型'
   ];
 
-  // ネットワークコホ�Eトデータの生�E
+  // ネットワークコホートデータの生成
   const networkCohorts = useMemo(() => {
     const staffList = Object.values(staffDatabase).filter(staff => {
       if (selectedFacility !== '全施設' && staff.facility !== selectedFacility) return false;
       return true;
     });
 
-    // ネットワークタイプ別にコホ�Eトを生�E
+    // ネットワークタイプ別にコホートを生成
     const cohorts: NetworkCohort[] = networkTypes.map(type => {
       let avgConnections = 0;
       let influenceScore = 0;
@@ -73,57 +73,57 @@ function NetworkCohortContent() {
       let characteristics: string[] = [];
 
       switch (type) {
-        case 'コネクター�E�つなぎ役�E�E:
+        case 'コネクター（つなぎ役）':
           avgConnections = 45;
           influenceScore = 85;
           collaborationLevel = 90;
           retentionRate = 92;
           performanceImpact = 88;
-          characteristics = ['部署間橋渡ぁE, '惁E��ハブ', 'チ�Eム統合俁E��'];
+          characteristics = ['部署間橋渡し', '情報ハブ', 'チーム統合促進'];
           break;
-        case 'インフルエンサー�E�影響力大�E�E:
+        case 'インフルエンサー（影響力大）':
           avgConnections = 35;
           influenceScore = 92;
           collaborationLevel = 82;
           retentionRate = 88;
           performanceImpact = 85;
-          characteristics = ['意見リーダー', '変革推進老E, 'モチ�Eーター'];
+          characteristics = ['意見リーダー', '変革推進者', 'モチベーター'];
           break;
-        case 'エキスパ�Eト（知識�E源！E:
+        case 'エキスパート（知識の源）':
           avgConnections = 25;
           influenceScore = 78;
           collaborationLevel = 75;
           retentionRate = 85;
           performanceImpact = 82;
-          characteristics = ['専門知識保有', '相諁E��扁E, 'メンター役'];
+          characteristics = ['専門知識保有', '相談相手', 'メンター役'];
           break;
-        case '孤立型�E�つながり少！E:
+        case '孤立型（つながり少）':
           avgConnections = 8;
           influenceScore = 25;
           collaborationLevel = 35;
           retentionRate = 65;
           performanceImpact = 55;
-          characteristics = ['単独作業志向', '交流回避', '支援忁E��E];
+          characteristics = ['単独作業志向', '交流回避', '支援必要'];
           break;
-        case 'チ�Eム冁E��結型':
+        case 'チーム内完結型':
           avgConnections = 15;
           influenceScore = 55;
           collaborationLevel = 68;
           retentionRate = 78;
           performanceImpact = 70;
-          characteristics = ['チ�Eム冁E��劁E, '部署冁E��絁E, '外部交流封E];
+          characteristics = ['チーム内協力', '部署内完結', '外部交流少'];
           break;
-        case 'クロスファンクショナル垁E:
+        case 'クロスファンクショナル型':
           avgConnections = 30;
           influenceScore = 75;
           collaborationLevel = 85;
           retentionRate = 90;
           performanceImpact = 80;
-          characteristics = ['部門横断活勁E, '多様な人脁E, 'イノ�Eーション俁E��'];
+          characteristics = ['部門横断活動', '多様な人脈', 'イノベーション促進'];
           break;
       }
 
-      // シミュレーションでスタチE��を�E顁E
+      // シミュレーションでスタッフを分類
       const cohortStaff = staffList.filter(() => Math.random() < 0.17);
       const count = cohortStaff.length;
 
@@ -148,7 +148,7 @@ function NetworkCohortContent() {
     return cohorts;
   }, [selectedFacility, selectedNetworkType]);
 
-  // ネットワーク寁E��刁E��チE�Eタ
+  // ネットワーク密度分析データ
   const networkDensityData = useMemo(() => {
     return [
       { department: '看護部', density: 78, avgConnections: 32 },
@@ -171,18 +171,18 @@ function NetworkCohortContent() {
     ];
   }, []);
 
-  // レーダーチャート用チE�Eタ
+  // レーダーチャート用データ
   const radarData = useMemo(() => {
-    const metrics = ['つながり数', '影響劁E, '協働レベル', '定着玁E, 'パフォーマンス'];
+    const metrics = ['つながり数', '影響力', '協働レベル', '定着率', 'パフォーマンス'];
     return metrics.map(metric => {
       const dataPoint: any = { metric };
       networkCohorts.forEach(cohort => {
         let value = 0;
         switch (metric) {
           case 'つながり数': value = (cohort.avgConnections / 50) * 100; break;
-          case '影響劁E: value = cohort.influenceScore; break;
+          case '影響力': value = cohort.influenceScore; break;
           case '協働レベル': value = cohort.collaborationLevel; break;
-          case '定着玁E: value = cohort.retentionRate; break;
+          case '定着率': value = cohort.retentionRate; break;
           case 'パフォーマンス': value = cohort.performanceImpact; break;
         }
         dataPoint[cohort.type] = value;
@@ -191,7 +191,7 @@ function NetworkCohortContent() {
     });
   }, [networkCohorts]);
 
-  // 散币E��用チE�Eタ�E�ネチE��ワークサイズと影響力�E相関�E�E
+  // 散布図用データ（ネットワークサイズと影響力の相関）
   const scatterData = useMemo(() => {
     return Array.from({ length: 100 }, (_, i) => {
       const connections = Math.random() * 50;
@@ -205,7 +205,7 @@ function NetworkCohortContent() {
     });
   }, []);
 
-  // 施設リストを取征E
+  // 施設リストを取得
   const facilities = useMemo(() => {
     const facilitySet = new Set<string>();
     Object.values(staffDatabase).forEach(staff => {
@@ -218,15 +218,15 @@ function NetworkCohortContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="ネットワークコホ�Eト�E极E />
+      <CommonHeader title="ネットワークコホート分析" />
       
       <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
           {/* ヘッダー */}
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h1 className="text-2xl font-bold">ネットワークコホ�Eト�E极E/h1>
+            <h1 className="text-2xl font-bold">ネットワークコホート分析</h1>
             <p className="text-gray-600 mt-2">
-              絁E���Eネットワークの中忁E��・つながりの数・影響力別に職員を�E极E
+              組織内ネットワークの中心性・つながりの数・影響力別に職員を分析
             </p>
             {facilityParam && (
               <p className="text-sm text-gray-500 mt-1">対象施設: {facilityParam}</p>
@@ -253,14 +253,14 @@ function NetworkCohortContent() {
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  ネットワークタイチE
+                  ネットワークタイプ
                 </label>
                 <select
                   value={selectedNetworkType}
                   onChange={(e) => setSelectedNetworkType(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="all">全タイチE/option>
+                  <option value="all">全タイプ</option>
                   {networkTypes.map(type => (
                     <option key={type} value={type}>{type}</option>
                   ))}
@@ -269,22 +269,22 @@ function NetworkCohortContent() {
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  刁E��視点
+                  分析視点
                 </label>
                 <select
                   value={selectedAnalysisView}
                   onChange={(e) => setSelectedAnalysisView(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="overview">概要E/option>
-                  <option value="influence">影響力�E极E/option>
-                  <option value="collaboration">協働刁E��</option>
+                  <option value="overview">概要</option>
+                  <option value="influence">影響力分析</option>
+                  <option value="collaboration">協働分析</option>
                 </select>
               </div>
             </div>
           </div>
 
-          {/* ネットワークタイプ別統訁E*/}
+          {/* ネットワークタイプ別統計 */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {networkCohorts.map((cohort, index) => (
               <Card key={cohort.type}>
@@ -295,10 +295,10 @@ function NetworkCohortContent() {
                   <div className="space-y-2">
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-gray-600">人数</span>
-                      <span className="text-lg font-semibold">{cohort.count}吁E/span>
+                      <span className="text-lg font-semibold">{cohort.count}名</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">平坁E��ながり数</span>
+                      <span className="text-sm text-gray-600">平均つながり数</span>
                       <span className="text-lg font-semibold text-blue-600">{cohort.avgConnections}</span>
                     </div>
                     <div className="flex justify-between items-center">
@@ -313,10 +313,10 @@ function NetworkCohortContent() {
             ))}
           </div>
 
-          {/* ネットワークタイプ別比輁E*/}
+          {/* ネットワークタイプ別比較 */}
           <Card>
             <CardHeader>
-              <CardTitle>ネットワークタイプ別パフォーマンス持E��E/CardTitle>
+              <CardTitle>ネットワークタイプ別パフォーマンス指標</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-96">
@@ -327,16 +327,16 @@ function NetworkCohortContent() {
                     <YAxis domain={[0, 100]} />
                     <Tooltip />
                     <Legend />
-                    <Bar dataKey="influenceScore" name="影響劁E fill="#3B82F6" />
+                    <Bar dataKey="influenceScore" name="影響力" fill="#3B82F6" />
                     <Bar dataKey="collaborationLevel" name="協働レベル" fill="#10B981" />
-                    <Bar dataKey="retentionRate" name="定着玁E fill="#F59E0B" />
+                    <Bar dataKey="retentionRate" name="定着率" fill="#F59E0B" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
             </CardContent>
           </Card>
 
-          {/* レーダーチャーチE*/}
+          {/* レーダーチャート */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
@@ -368,7 +368,7 @@ function NetworkCohortContent() {
 
             <Card>
               <CardHeader>
-                <CardTitle>部署別ネットワーク寁E��</CardTitle>
+                <CardTitle>部署別ネットワーク密度</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-80">
@@ -379,8 +379,8 @@ function NetworkCohortContent() {
                       <YAxis />
                       <Tooltip />
                       <Legend />
-                      <Bar dataKey="density" name="寁E��(%)" fill="#3B82F6" />
-                      <Bar dataKey="avgConnections" name="平坁E��ながり数" fill="#10B981" />
+                      <Bar dataKey="density" name="密度(%)" fill="#3B82F6" />
+                      <Bar dataKey="avgConnections" name="平均つながり数" fill="#10B981" />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -388,10 +388,10 @@ function NetworkCohortContent() {
             </Card>
           </div>
 
-          {/* コラボレーション効极E*/}
+          {/* コラボレーション効果 */}
           <Card>
             <CardHeader>
-              <CardTitle>つながり数とパフォーマンス・イノ�Eーションの関俁E/CardTitle>
+              <CardTitle>つながり数とパフォーマンス・イノベーションの関係</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-96">
@@ -403,17 +403,17 @@ function NetworkCohortContent() {
                     <Tooltip formatter={(value: any) => `${value}%`} />
                     <Legend />
                     <Bar dataKey="performance" name="パフォーマンス" fill="#3B82F6" />
-                    <Bar dataKey="innovation" name="イノ�Eーション" fill="#10B981" />
+                    <Bar dataKey="innovation" name="イノベーション" fill="#10B981" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
             </CardContent>
           </Card>
 
-          {/* 散币E�� */}
+          {/* 散布図 */}
           <Card>
             <CardHeader>
-              <CardTitle>ネットワークサイズと影響力�E相関</CardTitle>
+              <CardTitle>ネットワークサイズと影響力の相関</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-96">
@@ -445,7 +445,7 @@ function NetworkCohortContent() {
           {/* 特性一覧 */}
           <Card>
             <CardHeader>
-              <CardTitle>ネットワークタイプ別特性と推奨施筁E/CardTitle>
+              <CardTitle>ネットワークタイプ別特性と推奨施策</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -462,17 +462,17 @@ function NetworkCohortContent() {
                           ))}
                         </div>
                         <p className="text-sm text-gray-600 mt-2">
-                          {cohort.type === 'コネクター�E�つなぎ役�E�E && '絁E���E惁E��流E���E要。適刁E��評価と権限委譲が重要、E}
-                          {cohort.type === 'インフルエンサー�E�影響力大�E�E && '変革推進の中忁E��物。意思決定への参画機会を提供、E}
-                          {cohort.type === 'エキスパ�Eト（知識�E源！E && '知識�E有�E仕絁E��化とメンター制度での活用を推進、E}
-                          {cohort.type === '孤立型�E�つながり少！E && 'チ�Eム活動への参加俁E��と忁E��皁E���E性の確保が忁E��、E}
-                          {cohort.type === 'チ�Eム冁E��結型' && '他部署との交流機会を意図皁E��創出、E}
-                          {cohort.type === 'クロスファンクショナル垁E && 'イノ�Eーションプロジェクトへの積極皁E��登用、E}
+                          {cohort.type === 'コネクター（つなぎ役）' && '組織の情報流通の要。適切な評価と権限委譲が重要。'}
+                          {cohort.type === 'インフルエンサー（影響力大）' && '変革推進の中心人物。意思決定への参画機会を提供。'}
+                          {cohort.type === 'エキスパート（知識の源）' && '知識共有の仕組み化とメンター制度での活用を推進。'}
+                          {cohort.type === '孤立型（つながり少）' && 'チーム活動への参加促進と心理的安全性の確保が必要。'}
+                          {cohort.type === 'チーム内完結型' && '他部署との交流機会を意図的に創出。'}
+                          {cohort.type === 'クロスファンクショナル型' && 'イノベーションプロジェクトへの積極的な登用。'}
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm font-medium">定着玁E {cohort.retentionRate}%</p>
-                        <p className="text-xs text-gray-500">影響劁E {cohort.influenceScore}点</p>
+                        <p className="text-sm font-medium">定着率: {cohort.retentionRate}%</p>
+                        <p className="text-xs text-gray-500">影響力: {cohort.influenceScore}点</p>
                       </div>
                     </div>
                   </div>
@@ -485,7 +485,7 @@ function NetworkCohortContent() {
           <div className="flex gap-4">
             <button 
               onClick={() => exportToPDF({
-                title: 'ネットワークコホ�Eト�E析レポ�EチE,
+                title: 'ネットワークコホート分析レポート',
                 facility: selectedFacility,
                 reportType: 'network-cohort',
                 elementId: 'report-content',
@@ -493,12 +493,12 @@ function NetworkCohortContent() {
               })}
               className="pdf-exclude bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
             >
-              PDFダウンローチE
+              PDFダウンロード
             </button>
           </div>
 
         </div>
-      </div><CategoryTopButton categoryPath="/reports/cohort-analysis" categoryName="コホ�Eト�E极E /></div>
+      </div><CategoryTopButton categoryPath="/reports/cohort-analysis" categoryName="コホート分析" /></div>
   );
 }
 

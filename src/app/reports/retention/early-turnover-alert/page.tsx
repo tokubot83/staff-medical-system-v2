@@ -12,12 +12,12 @@ function EarlyTurnoverAlertContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="早期離職アラートシスチE��" />
+      <CommonHeader title="早期離職アラートシステム" />
       
       <div id="report-content" className="container mx-auto px-4 py-8">
         <div className="bg-white rounded-lg shadow p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-gray-800">AI予測による高リスク従業員検�E</h2>
+            <h2 className="text-xl font-bold text-gray-800">AI予測による高リスク従業員検出</h2>
             <span className="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
               対象施設: {facility}
             </span>
@@ -25,7 +25,8 @@ function EarlyTurnoverAlertContent() {
           
           <div className="mb-6">
             <p className="text-gray-600">
-              機械学習モチE��により、E��職リスクの高い従業員をリアルタイムで検�Eし、早期介�Eを可能にします、E            </p>
+              機械学習モデルにより、退職リスクの高い従業員をリアルタイムで検出し、早期介入を可能にします。
+            </p>
           </div>
 
           {/* アラートサマリー */}
@@ -39,8 +40,8 @@ function EarlyTurnoverAlertContent() {
                 </span>
                 <span className="text-2xl font-bold text-red-700">12</span>
               </div>
-              <p className="text-sm text-red-600 font-medium">緊急対忁E/p>
-              <p className="text-xs text-gray-600">90%以上�E確玁E/p>
+              <p className="text-sm text-red-600 font-medium">緊急対応</p>
+              <p className="text-xs text-gray-600">90%以上の確率</p>
             </div>
 
             <div className="bg-orange-50 rounded-lg p-4 border border-orange-200">
@@ -52,8 +53,8 @@ function EarlyTurnoverAlertContent() {
                 </span>
                 <span className="text-2xl font-bold text-orange-700">28</span>
               </div>
-              <p className="text-sm text-orange-600 font-medium">要注愁E/p>
-              <p className="text-xs text-gray-600">70-89%の確玁E/p>
+              <p className="text-sm text-orange-600 font-medium">要注意</p>
+              <p className="text-xs text-gray-600">70-89%の確率</p>
             </div>
 
             <div className="bg-yellow-50 rounded-lg p-4 border border-yellow-200">
@@ -65,8 +66,8 @@ function EarlyTurnoverAlertContent() {
                 </span>
                 <span className="text-2xl font-bold text-yellow-700">45</span>
               </div>
-              <p className="text-sm text-yellow-600 font-medium">要観寁E/p>
-              <p className="text-xs text-gray-600">50-69%の確玁E/p>
+              <p className="text-sm text-yellow-600 font-medium">要観察</p>
+              <p className="text-xs text-gray-600">50-69%の確率</p>
             </div>
 
             <div className="bg-green-50 rounded-lg p-4 border border-green-200">
@@ -83,9 +84,9 @@ function EarlyTurnoverAlertContent() {
             </div>
           </div>
 
-          {/* 高リスク従業員リスチE*/}
+          {/* 高リスク従業員リスト */}
           <div className="mb-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">緊急対応が忁E��な従業員</h3>
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">緊急対応が必要な従業員</h3>
             <div className="overflow-x-auto">
               <table className="min-w-full bg-white border border-gray-200">
                 <thead className="bg-gray-50">
@@ -93,7 +94,7 @@ function EarlyTurnoverAlertContent() {
                     <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">社員ID</th>
                     <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">氏名</th>
                     <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">部署</th>
-                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">勤綁E/th>
+                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">勤続</th>
                     <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">リスクスコア</th>
                     <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">主要因</th>
                     <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">推奨アクション</th>
@@ -102,41 +103,41 @@ function EarlyTurnoverAlertContent() {
                 <tbody className="divide-y divide-gray-200">
                   <tr className="bg-red-50">
                     <td className="px-4 py-2 text-sm text-gray-900">N-2451</td>
-                    <td className="px-4 py-2 text-sm text-gray-900">山田 太郁E/td>
+                    <td className="px-4 py-2 text-sm text-gray-900">山田 太郎</td>
                     <td className="px-4 py-2 text-sm text-gray-900">医事課</td>
-                    <td className="px-4 py-2 text-sm text-gray-900">8ヶ朁E/td>
+                    <td className="px-4 py-2 text-sm text-gray-900">8ヶ月</td>
                     <td className="px-4 py-2">
                       <span className="text-red-600 font-bold">95%</span>
                     </td>
-                    <td className="px-4 py-2 text-sm text-gray-900">過重労働�E人間関俁E/td>
+                    <td className="px-4 py-2 text-sm text-gray-900">過重労働・人間関係</td>
                     <td className="px-4 py-2 text-sm">
-                      <button className="text-blue-600 hover:text-blue-800">面諁E��施</button>
+                      <button className="text-blue-600 hover:text-blue-800">面談実施</button>
                     </td>
                   </tr>
                   <tr className="bg-red-50">
                     <td className="px-4 py-2 text-sm text-gray-900">N-3892</td>
-                    <td className="px-4 py-2 text-sm text-gray-900">佐藤 花孁E/td>
-                    <td className="px-4 py-2 text-sm text-gray-900">栁E��部</td>
-                    <td className="px-4 py-2 text-sm text-gray-900">6ヶ朁E/td>
+                    <td className="px-4 py-2 text-sm text-gray-900">佐藤 花子</td>
+                    <td className="px-4 py-2 text-sm text-gray-900">栄養部</td>
+                    <td className="px-4 py-2 text-sm text-gray-900">6ヶ月</td>
                     <td className="px-4 py-2">
                       <span className="text-red-600 font-bold">93%</span>
                     </td>
                     <td className="px-4 py-2 text-sm text-gray-900">給与不満・キャリア</td>
                     <td className="px-4 py-2 text-sm">
-                      <button className="text-blue-600 hover:text-blue-800">面諁E��施</button>
+                      <button className="text-blue-600 hover:text-blue-800">面談実施</button>
                     </td>
                   </tr>
                   <tr className="bg-red-50">
                     <td className="px-4 py-2 text-sm text-gray-900">R-1234</td>
-                    <td className="px-4 py-2 text-sm text-gray-900">鈴木 一郁E/td>
+                    <td className="px-4 py-2 text-sm text-gray-900">鈴木 一郎</td>
                     <td className="px-4 py-2 text-sm text-gray-900">リハビリ部</td>
-                    <td className="px-4 py-2 text-sm text-gray-900">11ヶ朁E/td>
+                    <td className="px-4 py-2 text-sm text-gray-900">11ヶ月</td>
                     <td className="px-4 py-2">
                       <span className="text-red-600 font-bold">91%</span>
                     </td>
-                    <td className="px-4 py-2 text-sm text-gray-900">上司関係�E業務量</td>
+                    <td className="px-4 py-2 text-sm text-gray-900">上司関係・業務量</td>
                     <td className="px-4 py-2 text-sm">
-                      <button className="text-blue-600 hover:text-blue-800">面諁E��施</button>
+                      <button className="text-blue-600 hover:text-blue-800">面談実施</button>
                     </td>
                   </tr>
                 </tbody>
@@ -144,13 +145,13 @@ function EarlyTurnoverAlertContent() {
             </div>
           </div>
 
-          {/* リスク要因の冁E�� */}
+          {/* リスク要因の内訳 */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div className="bg-gray-50 rounded-lg p-4">
-              <h4 className="font-semibold text-gray-800 mb-3">リスク要因の刁E��E/h4>
+              <h4 className="font-semibold text-gray-800 mb-3">リスク要因の分布</h4>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">過重労僁E/span>
+                  <span className="text-sm text-gray-600">過重労働</span>
                   <div className="flex items-center gap-2">
                     <div className="w-32 bg-gray-200 rounded-full h-2">
                       <div className="bg-red-500 h-2 rounded-full" style={{width: '45%'}}></div>
@@ -159,7 +160,7 @@ function EarlyTurnoverAlertContent() {
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">人間関俁E/span>
+                  <span className="text-sm text-gray-600">人間関係</span>
                   <div className="flex items-center gap-2">
                     <div className="w-32 bg-gray-200 rounded-full h-2">
                       <div className="bg-orange-500 h-2 rounded-full" style={{width: '32%'}}></div>
@@ -168,7 +169,7 @@ function EarlyTurnoverAlertContent() {
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">給与�E征E��</span>
+                  <span className="text-sm text-gray-600">給与・待遇</span>
                   <div className="flex items-center gap-2">
                     <div className="w-32 bg-gray-200 rounded-full h-2">
                       <div className="bg-yellow-500 h-2 rounded-full" style={{width: '28%'}}></div>
@@ -177,7 +178,7 @@ function EarlyTurnoverAlertContent() {
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">キャリア不宁E/span>
+                  <span className="text-sm text-gray-600">キャリア不安</span>
                   <div className="flex items-center gap-2">
                     <div className="w-32 bg-gray-200 rounded-full h-2">
                       <div className="bg-blue-500 h-2 rounded-full" style={{width: '25%'}}></div>
@@ -189,14 +190,14 @@ function EarlyTurnoverAlertContent() {
             </div>
 
             <div className="bg-gray-50 rounded-lg p-4">
-              <h4 className="font-semibold text-gray-800 mb-3">予測モチE��の精度</h4>
+              <h4 className="font-semibold text-gray-800 mb-3">予測モデルの精度</h4>
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">適合率�E�Erecision�E�E/span>
+                  <span className="text-gray-600">適合率（Precision）</span>
                   <span className="font-medium">87.3%</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">再現玁E��Eecall�E�E/span>
+                  <span className="text-gray-600">再現率（Recall）</span>
                   <span className="font-medium">91.2%</span>
                 </div>
                 <div className="flex justify-between text-sm">
@@ -215,7 +216,7 @@ function EarlyTurnoverAlertContent() {
           <div className="flex gap-4 mt-8">
             <button 
               onClick={() => exportToPDF({
-                title: '早期離職アラートレポ�EチE,
+                title: '早期離職アラートレポート',
                 facility: facility,
                 reportType: 'early-turnover-alert',
                 elementId: 'report-content',
@@ -223,15 +224,17 @@ function EarlyTurnoverAlertContent() {
               })}
               className="pdf-exclude bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
             >
-              PDFダウンローチE            </button>
+              PDFダウンロード
+            </button>
             <button className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition">
               アラート一括送信
             </button>
             <button className="pdf-exclude bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition">
-              CSVエクスポ�EチE            </button>
+              CSVエクスポート
+            </button>
           </div>
         </div>
-      </div><CategoryTopButton categoryPath="/reports?tab=retention" categoryName="定着刁E��" /></div>
+      </div><CategoryTopButton categoryPath="/reports?tab=retention" categoryName="定着分析" /></div>
   );
 }
 

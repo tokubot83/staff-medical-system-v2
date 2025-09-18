@@ -10,16 +10,16 @@ function TalentQualityPageContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="人材�E質" />
+      <CommonHeader title="人材の質" />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <div className="flex items-center gap-3 mb-4">
-            <span className="text-3xl">⭁E/span>
-            <h1 className="text-2xl font-bold text-gray-900">人材�E質</h1>
+            <span className="text-3xl">⭐</span>
+            <h1 className="text-2xl font-bold text-gray-900">人材の質</h1>
           </div>
           <p className="text-gray-600">
-            職員満足度、スキル評価、賁E��保有状況を刁E��します、E
+            職員満足度、スキル評価、資格保有状況を分析します。
           </p>
         </div>
 
@@ -34,23 +34,23 @@ function TalentQualityPageContent() {
           <div className="bg-white rounded-lg shadow-md p-6">
             <h3 className="text-lg font-semibold mb-2">職員満足度</h3>
             <p className="text-3xl font-bold text-green-600">4.2/5.0</p>
-            <p className="text-sm text-gray-600 mt-2">前回調査毁E +0.3pt</p>
+            <p className="text-sm text-gray-600 mt-2">前回調査比: +0.3pt</p>
           </div>
 
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold mb-2">平坁E��キル評価</h3>
+            <h3 className="text-lg font-semibold mb-2">平均スキル評価</h3>
             <p className="text-3xl font-bold text-blue-600">3.8/5.0</p>
-            <p className="text-sm text-gray-600 mt-2">前年同期毁E +0.2pt</p>
+            <p className="text-sm text-gray-600 mt-2">前年同期比: +0.2pt</p>
           </div>
 
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold mb-2">専門賁E��保有玁E/h3>
+            <h3 className="text-lg font-semibold mb-2">専門資格保有率</h3>
             <p className="text-3xl font-bold text-purple-600">82.5%</p>
-            <p className="text-sm text-gray-600 mt-2">前年同期毁E +3.2pt</p>
+            <p className="text-sm text-gray-600 mt-2">前年同期比: +3.2pt</p>
           </div>
 
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold mb-2">研修参加玁E/h3>
+            <h3 className="text-lg font-semibold mb-2">研修参加率</h3>
             <p className="text-3xl font-bold text-indigo-600">91.3%</p>
             <p className="text-sm text-gray-600 mt-2">目標達成率: 101.4%</p>
           </div>
@@ -58,7 +58,7 @@ function TalentQualityPageContent() {
           <div className="bg-white rounded-lg shadow-md p-6">
             <h3 className="text-lg font-semibold mb-2">推奨意向度(eNPS)</h3>
             <p className="text-3xl font-bold text-orange-600">+15</p>
-            <p className="text-sm text-gray-600 mt-2">業界平坁E +10</p>
+            <p className="text-sm text-gray-600 mt-2">業界平均: +10</p>
           </div>
 
           <div className="bg-white rounded-lg shadow-md p-6">
@@ -69,10 +69,10 @@ function TalentQualityPageContent() {
         </div>
 
         <div className="mt-8 bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold mb-4">賁E��保有状況E/h3>
+          <h3 className="text-lg font-semibold mb-4">資格保有状況</h3>
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span>看護師賁E��</span>
+              <span>看護師資格</span>
               <div className="flex items-center gap-2">
                 <div className="w-32 bg-gray-200 rounded-full h-2">
                   <div className="bg-blue-600 h-2 rounded-full" style={{ width: '95%' }}></div>
@@ -99,7 +99,7 @@ function TalentQualityPageContent() {
               </div>
             </div>
             <div className="flex items-center justify-between">
-              <span>管琁E�E研修修亁E/span>
+              <span>管理職研修修了</span>
               <div className="flex items-center gap-2">
                 <div className="w-32 bg-gray-200 rounded-full h-2">
                   <div className="bg-orange-600 h-2 rounded-full" style={{ width: '68%' }}></div>
@@ -111,14 +111,14 @@ function TalentQualityPageContent() {
         </div>
 
         <div className="mt-8 bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold mb-4">満足度の冁E��</h3>
+          <h3 className="text-lg font-semibold mb-4">満足度の内訳</h3>
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span>職場環墁E/span>
+              <span>職場環境</span>
               <span className="font-semibold text-green-600">4.3/5.0</span>
             </div>
             <div className="flex items-center justify-between">
-              <span>給与�E福利厚生</span>
+              <span>給与・福利厚生</span>
               <span className="font-semibold text-yellow-600">3.8/5.0</span>
             </div>
             <div className="flex items-center justify-between">
@@ -126,11 +126,11 @@ function TalentQualityPageContent() {
               <span className="font-semibold text-green-600">4.1/5.0</span>
             </div>
             <div className="flex items-center justify-between">
-              <span>上司との関俁E/span>
+              <span>上司との関係</span>
               <span className="font-semibold text-green-600">4.4/5.0</span>
             </div>
             <div className="flex items-center justify-between">
-              <span>仕事�EめE��がい</span>
+              <span>仕事のやりがい</span>
               <span className="font-semibold text-green-600">4.5/5.0</span>
             </div>
           </div>

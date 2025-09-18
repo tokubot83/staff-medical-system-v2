@@ -24,7 +24,7 @@ function FactorRankingContent() {
               </span>
               <button
                 onClick={() => exportToPDF({
-                  title: '離職要因ランキングレポ�EチE,
+                  title: '離職要因ランキングレポート',
                   facility: facility,
                   reportType: 'turnover-factor-ranking',
                   elementId: 'report-content',
@@ -32,13 +32,15 @@ function FactorRankingContent() {
                 })}
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm pdf-exclude"
               >
-                PDFダウンローチE              </button>
+                PDFダウンロード
+              </button>
             </div>
           </div>
           
           <div className="mb-6">
             <p className="text-gray-600">
-              機械学習モチE��による特徴量重要度刁E��に基づき、E��職に最も影響を与える要因をランキング形式で表示します、E            </p>
+              機械学習モデルによる特徴量重要度分析に基づき、離職に最も影響を与える要因をランキング形式で表示します。
+            </p>
           </div>
 
           {/* 要因ランキング */}
@@ -49,8 +51,8 @@ function FactorRankingContent() {
                 <div className="flex items-center gap-3">
                   <span className="text-2xl font-bold text-red-600">1</span>
                   <div>
-                    <h4 className="font-medium text-gray-800">面諁E��度の不足</h4>
-                    <p className="text-sm text-gray-600">定期皁E��1on1面諁E�E実施頻度が月1回未満</p>
+                    <h4 className="font-medium text-gray-800">面談頻度の不足</h4>
+                    <p className="text-sm text-gray-600">定期的な1on1面談の実施頻度が月1回未満</p>
                   </div>
                 </div>
                 <div className="text-right">
@@ -63,8 +65,8 @@ function FactorRankingContent() {
                 <div className="flex items-center gap-3">
                   <span className="text-2xl font-bold text-orange-600">2</span>
                   <div>
-                    <h4 className="font-medium text-gray-800">高ストレス状慁E/h4>
-                    <p className="text-sm text-gray-600">ストレスチェチE��のスコアぁE0点以丁E/p>
+                    <h4 className="font-medium text-gray-800">高ストレス状態</h4>
+                    <p className="text-sm text-gray-600">ストレスチェックのスコアが70点以上</p>
                   </div>
                 </div>
                 <div className="text-right">
@@ -77,8 +79,8 @@ function FactorRankingContent() {
                 <div className="flex items-center gap-3">
                   <span className="text-2xl font-bold text-yellow-600">3</span>
                   <div>
-                    <h4 className="font-medium text-gray-800">低エンゲージメンチE/h4>
-                    <p className="text-sm text-gray-600">職場への愛着・めE��がいスコアぁE0%以丁E/p>
+                    <h4 className="font-medium text-gray-800">低エンゲージメント</h4>
+                    <p className="text-sm text-gray-600">職場への愛着・やりがいスコアが30%以下</p>
                   </div>
                 </div>
                 <div className="text-right">
@@ -92,7 +94,7 @@ function FactorRankingContent() {
                   <span className="text-2xl font-bold text-gray-600">4</span>
                   <div>
                     <h4 className="font-medium text-gray-800">長時間残業</h4>
-                    <p className="text-sm text-gray-600">月間残業時間ぁE5時間以丁E/p>
+                    <p className="text-sm text-gray-600">月間残業時間が45時間以上</p>
                   </div>
                 </div>
                 <div className="text-right">
@@ -105,8 +107,8 @@ function FactorRankingContent() {
                 <div className="flex items-center gap-3">
                   <span className="text-2xl font-bold text-gray-600">5</span>
                   <div>
-                    <h4 className="font-medium text-gray-800">夜勤回数過夁E/h4>
-                    <p className="text-sm text-gray-600">月間夜勤回数ぁE0回以丁E/p>
+                    <h4 className="font-medium text-gray-800">夜勤回数過多</h4>
+                    <p className="text-sm text-gray-600">月間夜勤回数が10回以上</p>
                   </div>
                 </div>
                 <div className="text-right">
@@ -120,7 +122,7 @@ function FactorRankingContent() {
                   <span className="text-2xl font-bold text-gray-600">6</span>
                   <div>
                     <h4 className="font-medium text-gray-800">有給取得率の低さ</h4>
-                    <p className="text-sm text-gray-600">年間有給取得率ぁE0%未満</p>
+                    <p className="text-sm text-gray-600">年間有給取得率が40%未満</p>
                   </div>
                 </div>
                 <div className="text-right">
@@ -133,7 +135,7 @@ function FactorRankingContent() {
                 <div className="flex items-center gap-3">
                   <span className="text-2xl font-bold text-gray-600">7</span>
                   <div>
-                    <h4 className="font-medium text-gray-800">昁E��機会�E不足</h4>
+                    <h4 className="font-medium text-gray-800">昇進機会の不足</h4>
                     <p className="text-sm text-gray-600">3年以上同一職位での滞留</p>
                   </div>
                 </div>
@@ -147,8 +149,8 @@ function FactorRankingContent() {
                 <div className="flex items-center gap-3">
                   <span className="text-2xl font-bold text-gray-600">8</span>
                   <div>
-                    <h4 className="font-medium text-gray-800">研修参加機会�E少なぁE/h4>
-                    <p className="text-sm text-gray-600">年間研修参加時間ぁE0時間未満</p>
+                    <h4 className="font-medium text-gray-800">研修参加機会の少なさ</h4>
+                    <p className="text-sm text-gray-600">年間研修参加時間が20時間未満</p>
                   </div>
                 </div>
                 <div className="text-right">
@@ -161,7 +163,7 @@ function FactorRankingContent() {
                 <div className="flex items-center gap-3">
                   <span className="text-2xl font-bold text-gray-600">9</span>
                   <div>
-                    <h4 className="font-medium text-gray-800">勤続年数の短ぁE/h4>
+                    <h4 className="font-medium text-gray-800">勤続年数の短さ</h4>
                     <p className="text-sm text-gray-600">入社1年未満の新入職員</p>
                   </div>
                 </div>
@@ -175,8 +177,8 @@ function FactorRankingContent() {
                 <div className="flex items-center gap-3">
                   <span className="text-2xl font-bold text-gray-600">10</span>
                   <div>
-                    <h4 className="font-medium text-gray-800">年齢�E�若年層�E�E/h4>
-                    <p className="text-sm text-gray-600">25歳未満の若手�E員</p>
+                    <h4 className="font-medium text-gray-800">年齢（若年層）</h4>
+                    <p className="text-sm text-gray-600">25歳未満の若手職員</p>
                   </div>
                 </div>
                 <div className="text-right">
@@ -187,33 +189,38 @@ function FactorRankingContent() {
             </div>
           </div>
 
-          {/* 刁E��手法�E説昁E*/}
+          {/* 分析手法の説明 */}
           <div className="bg-gray-100 rounded-lg p-6 mb-6">
-            <h4 className="font-semibold text-gray-800 mb-3">刁E��手況E/h4>
+            <h4 className="font-semibold text-gray-800 mb-3">分析手法</h4>
             <div className="space-y-2 text-sm text-gray-600">
-              <p>・ランダムフォレスト、XGBoost、LightGBMの3つの機械学習モチE��を使用</p>
-              <p>・吁E��チE��の特徴量重要度を算�Eし、平坁E��を計箁E/p>
-              <p>・過去3年間�E退職老E��ータ�E�E=523�E�を学習データとして使用</p>
-              <p>・モチE��の予測精度�E�AUC = 0.92�E�高精度な予測が可能�E�E/p>
+              <p>・ランダムフォレスト、XGBoost、LightGBMの3つの機械学習モデルを使用</p>
+              <p>・各モデルの特徴量重要度を算出し、平均値を計算</p>
+              <p>・過去3年間の退職者データ（n=523）を学習データとして使用</p>
+              <p>・モデルの予測精度：AUC = 0.92（高精度な予測が可能）</p>
             </div>
           </div>
 
-          {/* 重要な発要E*/}
+          {/* 重要な発見 */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-            <h4 className="font-semibold text-blue-900 mb-2">重要な発要E/h4>
+            <h4 className="font-semibold text-blue-900 mb-2">重要な発見</h4>
             <p className="text-sm text-blue-800">
-              従来「若ぁE��がすぐ辞める」とぁE��通説がありましたが、データ刁E��の結果、E              年齢の影響度は10位！E.15�E�と低く、最も重要なのは「面諁E��度」！E.89�E�であることが判明しました、E              朁E回以上�E定期面諁E��実施することで、E��職リスクを大幁E��低減できる可能性があります、E            </p>
+              従来「若い人がすぐ辞める」という通説がありましたが、データ分析の結果、
+              年齢の影響度は10位（0.15）と低く、最も重要なのは「面談頻度」（0.89）であることが判明しました。
+              月1回以上の定期面談を実施することで、離職リスクを大幅に低減できる可能性があります。
+            </p>
           </div>
 
           {/* アクションボタン */}
           <div className="flex gap-4 mt-8">
             <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
-              詳細刁E��レポ�EチE            </button>
+              詳細分析レポート
+            </button>
             <button className="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition">
-              チE�Eタエクスポ�EチE            </button>
+              データエクスポート
+            </button>
           </div>
         </div>
-      </div><CategoryTopButton categoryPath="/reports?tab=turnover" categoryName="離職要因刁E��" /></div>
+      </div><CategoryTopButton categoryPath="/reports?tab=turnover" categoryName="離職要因分析" /></div>
   );
 }
 

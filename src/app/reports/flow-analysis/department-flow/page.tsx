@@ -25,14 +25,14 @@ function DepartmentFlowContent() {
             <div className="flex justify-between items-start">
               <div>
                 <h1 className="text-2xl font-bold">部署間異動フロー</h1>
-                <p className="text-gray-600 mt-2">部署間�E人材移動パターンを可視化し、絁E���Eの人材流動性を�E极E/p>
+                <p className="text-gray-600 mt-2">部署間の人材移動パターンを可視化し、組織内の人材流動性を分析</p>
                 {facilityParam && (
                   <p className="text-sm text-gray-500 mt-1">対象施設: {facilityParam}</p>
                 )}
               </div>
               <button
                 onClick={() => exportToPDF({
-                  title: '部署間異動フローレポ�EチE,
+                  title: '部署間異動フローレポート',
                   facility: facilityParam,
                   reportType: 'department-flow',
                   elementId: 'report-content',
@@ -40,11 +40,12 @@ function DepartmentFlowContent() {
                 })}
                 className="pdf-exclude bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm"
               >
-                PDFダウンローチE              </button>
+                PDFダウンロード
+              </button>
             </div>
           </div>
 
-          {/* 部署間異動フロー統訁E*/}
+          {/* 部署間異動フロー統計 */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <Card className="lg:col-span-2">
               <CardHeader>
@@ -65,10 +66,10 @@ function DepartmentFlowContent() {
             </Card>
           </div>
 
-          {/* 部署別統訁E*/}
+          {/* 部署別統計 */}
           <Card>
             <CardHeader>
-              <CardTitle>部署別異動統訁E/CardTitle>
+              <CardTitle>部署別異動統計</CardTitle>
             </CardHeader>
             <CardContent>
               <DepartmentStats facility={facilityParam} />

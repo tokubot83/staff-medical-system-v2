@@ -14,16 +14,23 @@ function WhatIfSimulationContent() {
   const searchParams = useSearchParams();
   const facility = searchParams.get('facility') || '全施設';
 
-  // シミュレーションパラメータの状態管琁E  const [overtimeReduction, setOvertimeReduction] = useState([30]);
+  // シミュレーションパラメータの状態管理
+  const [overtimeReduction, setOvertimeReduction] = useState([30]);
   const [meetingFrequency, setMeetingFrequency] = useState([2]);
   const [stressReduction, setStressReduction] = useState([20]);
   const [salaryIncrease, setSalaryIncrease] = useState([5]);
 
-  // 現在の離職玁E  const currentTurnoverRate = 15.8;
+  // 現在の離職率
+  const currentTurnoverRate = 15.8;
   
-  // シミュレーション結果の計箁E  const calculateNewTurnoverRate = () => {
+  // シミュレーション結果の計算
+  const calculateNewTurnoverRate = () => {
     let reduction = 0;
-    reduction += overtimeReduction[0] * 0.08; // 残業削減�E効极E    reduction += meetingFrequency[0] * 1.5; // 面諁E��度の効极E    reduction += stressReduction[0] * 0.05; // ストレス削減�E効极E    reduction += salaryIncrease[0] * 0.3; // 給与増加の効极E    
+    reduction += overtimeReduction[0] * 0.08; // 残業削減の効果
+    reduction += meetingFrequency[0] * 1.5; // 面談頻度の効果
+    reduction += stressReduction[0] * 0.05; // ストレス削減の効果
+    reduction += salaryIncrease[0] * 0.3; // 給与増加の効果
+    
     return Math.max(5, currentTurnoverRate - reduction).toFixed(1);
   };
 
@@ -38,14 +45,14 @@ function WhatIfSimulationContent() {
       <div id="report-content" className="container mx-auto px-4 py-8">
         <div className="bg-white rounded-lg shadow p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-gray-800">施策実施時�E離職玁E��化シミュレーション</h2>
+            <h2 className="text-xl font-bold text-gray-800">施策実施時の離職率変化シミュレーション</h2>
             <div className="flex items-center gap-2">
               <span className="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
                 対象施設: {facility}
               </span>
               <button
                 onClick={() => exportToPDF({
-                  title: 'What-ifシミュレーションレポ�EチE,
+                  title: 'What-ifシミュレーションレポート',
                   facility: facility,
                   reportType: 'what-if-simulation',
                   elementId: 'report-content',
@@ -53,13 +60,15 @@ function WhatIfSimulationContent() {
                 })}
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm pdf-exclude"
               >
-                PDFダウンローチE              </button>
+                PDFダウンロード
+              </button>
             </div>
           </div>
           
           <div className="mb-6">
             <p className="text-gray-600">
-              吁E��施策を実施した場合�E離職玁E�E変化をシミュレーションします。スライダーを動かして施策�E強度を調整してください、E            </p>
+              各種施策を実施した場合の離職率の変化をシミュレーションします。スライダーを動かして施策の強度を調整してください。
+            </p>
           </div>
 
           {/* 現在の状況と予測結果 */}
@@ -67,12 +76,13 @@ function WhatIfSimulationContent() {
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
-                  現在の離職玁E                </CardTitle>
+                  現在の離職率
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-bold text-red-600">{currentTurnoverRate}%</div>
                 <p className="text-xs text-muted-foreground mt-1">
-                  過去12ヶ月�E実績
+                  過去12ヶ月の実績
                 </p>
               </CardContent>
             </Card>
@@ -80,12 +90,13 @@ function WhatIfSimulationContent() {
             <Card className="border-green-200 bg-green-50">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-green-700">
-                  シミュレーション後�E離職玁E                </CardTitle>
+                  シミュレーション後の離職率
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-bold text-green-600">{newTurnoverRate}%</div>
                 <p className="text-xs text-green-600 mt-1">
-                  改喁E��込み: -{improvement}%
+                  改善見込み: -{improvement}%
                 </p>
               </CardContent>
             </Card>
@@ -93,12 +104,13 @@ function WhatIfSimulationContent() {
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
-                  年間削減人数�E�推定！E                </CardTitle>
+                  年間削減人数（推定）
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold">{Math.round(523 * improvementValue / 100)}吁E/div>
+                <div className="text-3xl font-bold">{Math.round(523 * improvementValue / 100)}名</div>
                 <p className="text-xs text-muted-foreground mt-1">
-                  総�E員数523名�Eース
+                  総職員数523名ベース
                 </p>
               </CardContent>
             </Card>
@@ -106,22 +118,24 @@ function WhatIfSimulationContent() {
 
           {/* シミュレーションパラメータ */}
           <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-gray-800">施策パラメータ設宁E/h3>
+            <h3 className="text-lg font-semibold text-gray-800">施策パラメータ設定</h3>
 
-            {/* 残業時間削渁E*/}
+            {/* 残業時間削減 */}
             <Card>
               <CardHeader>
                 <CardTitle className="text-base flex items-center gap-2">
                   <Activity className="h-5 w-5 text-blue-500" />
-                  残業時間の削渁E                </CardTitle>
+                  残業時間の削減
+                </CardTitle>
                 <CardDescription>
-                  月間平坁E��業時間を削減する割合を設宁E                </CardDescription>
+                  月間平均残業時間を削減する割合を設定
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex justify-between text-sm">
                     <span>削減率: {overtimeReduction[0]}%</span>
-                    <span className="text-green-600">離職玁E-{(overtimeReduction[0] * 0.08).toFixed(1)}%</span>
+                    <span className="text-green-600">離職率 -{(overtimeReduction[0] * 0.08).toFixed(1)}%</span>
                   </div>
                   <Slider
                     value={overtimeReduction}
@@ -131,26 +145,28 @@ function WhatIfSimulationContent() {
                     className="w-full"
                   />
                   <div className="text-xs text-gray-600">
-                    現在の平坁E5時間/朁EↁE{Math.round(45 * (100 - overtimeReduction[0]) / 100)}時間/朁E                  </div>
+                    現在の平均45時間/月 → {Math.round(45 * (100 - overtimeReduction[0]) / 100)}時間/月
+                  </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* 面諁E��度増加 */}
+            {/* 面談頻度増加 */}
             <Card>
               <CardHeader>
                 <CardTitle className="text-base flex items-center gap-2">
                   <Users className="h-5 w-5 text-purple-500" />
-                  1on1面諁E�E頻度増加
+                  1on1面談の頻度増加
                 </CardTitle>
                 <CardDescription>
-                  月間の1on1面諁E��施回数を設宁E                </CardDescription>
+                  月間の1on1面談実施回数を設定
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex justify-between text-sm">
-                    <span>月間実施回数: {meetingFrequency[0]}囁E/span>
-                    <span className="text-green-600">離職玁E-{(meetingFrequency[0] * 1.5).toFixed(1)}%</span>
+                    <span>月間実施回数: {meetingFrequency[0]}回</span>
+                    <span className="text-green-600">離職率 -{(meetingFrequency[0] * 1.5).toFixed(1)}%</span>
                   </div>
                   <Slider
                     value={meetingFrequency}
@@ -161,25 +177,28 @@ function WhatIfSimulationContent() {
                     className="w-full"
                   />
                   <div className="text-xs text-gray-600">
-                    現在の平坁E.5囁E朁EↁE{meetingFrequency[0]}囁E朁E                  </div>
+                    現在の平均0.5回/月 → {meetingFrequency[0]}回/月
+                  </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* ストレス対筁E*/}
+            {/* ストレス対策 */}
             <Card>
               <CardHeader>
                 <CardTitle className="text-base flex items-center gap-2">
                   <TrendingDown className="h-5 w-5 text-orange-500" />
-                  ストレス軽減施筁E                </CardTitle>
+                  ストレス軽減施策
+                </CardTitle>
                 <CardDescription>
-                  ストレスチェチE��スコアの改喁E��標を設宁E                </CardDescription>
+                  ストレスチェックスコアの改善目標を設定
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex justify-between text-sm">
-                    <span>スコア改喁E��: {stressReduction[0]}%</span>
-                    <span className="text-green-600">離職玁E-{(stressReduction[0] * 0.05).toFixed(1)}%</span>
+                    <span>スコア改善率: {stressReduction[0]}%</span>
+                    <span className="text-green-600">離職率 -{(stressReduction[0] * 0.05).toFixed(1)}%</span>
                   </div>
                   <Slider
                     value={stressReduction}
@@ -189,26 +208,28 @@ function WhatIfSimulationContent() {
                     className="w-full"
                   />
                   <div className="text-xs text-gray-600">
-                    平坁E��トレススコア65 ↁE{Math.round(65 * (100 - stressReduction[0]) / 100)}
+                    平均ストレススコア65 → {Math.round(65 * (100 - stressReduction[0]) / 100)}
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* 給与改喁E*/}
+            {/* 給与改善 */}
             <Card>
               <CardHeader>
                 <CardTitle className="text-base flex items-center gap-2">
                   <Calculator className="h-5 w-5 text-green-500" />
-                  給与�E処遁E��喁E                </CardTitle>
+                  給与・処遇改善
+                </CardTitle>
                 <CardDescription>
-                  基本給また�E手当�E増加玁E��設宁E                </CardDescription>
+                  基本給または手当の増加率を設定
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex justify-between text-sm">
-                    <span>給与増加玁E {salaryIncrease[0]}%</span>
-                    <span className="text-green-600">離職玁E-{(salaryIncrease[0] * 0.3).toFixed(1)}%</span>
+                    <span>給与増加率: {salaryIncrease[0]}%</span>
+                    <span className="text-green-600">離職率 -{(salaryIncrease[0] * 0.3).toFixed(1)}%</span>
                   </div>
                   <Slider
                     value={salaryIncrease}
@@ -218,66 +239,67 @@ function WhatIfSimulationContent() {
                     className="w-full"
                   />
                   <div className="text-xs text-gray-600">
-                    年間コスト墁E 約{Math.round(523 * 400000 * salaryIncrease[0] / 100 / 1000000)}百丁E�E
+                    年間コスト増: 約{Math.round(523 * 400000 * salaryIncrease[0] / 100 / 1000000)}百万円
                   </div>
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* コスト効果�E极E*/}
+          {/* コスト効果分析 */}
           <Card className="mt-6">
             <CardHeader>
-              <CardTitle>コスト効果�E极E/CardTitle>
+              <CardTitle>コスト効果分析</CardTitle>
               <CardDescription>
-                施策実施による投賁E��効果�E試箁E              </CardDescription>
+                施策実施による投資対効果の試算
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h4 className="font-semibold mb-3">施策コスト（年間！E/h4>
+                  <h4 className="font-semibold mb-3">施策コスト（年間）</h4>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span>残業削減による人員補�E</span>
-                      <span className="font-medium">{Math.round(overtimeReduction[0] * 0.5)}百丁E�E</span>
+                      <span>残業削減による人員補充</span>
+                      <span className="font-medium">{Math.round(overtimeReduction[0] * 0.5)}百万円</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>面諁E��施の時間コスチE/span>
-                      <span className="font-medium">{Math.round(meetingFrequency[0] * 10)}百丁E�E</span>
+                      <span>面談実施の時間コスト</span>
+                      <span className="font-medium">{Math.round(meetingFrequency[0] * 10)}百万円</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>ストレス対策�Eログラム</span>
-                      <span className="font-medium">{Math.round(stressReduction[0] * 0.3)}百丁E�E</span>
+                      <span>ストレス対策プログラム</span>
+                      <span className="font-medium">{Math.round(stressReduction[0] * 0.3)}百万円</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>給与�E処遁E��喁E/span>
-                      <span className="font-medium">{Math.round(523 * 400000 * salaryIncrease[0] / 100 / 1000000)}百丁E�E</span>
+                      <span>給与・処遇改善</span>
+                      <span className="font-medium">{Math.round(523 * 400000 * salaryIncrease[0] / 100 / 1000000)}百万円</span>
                     </div>
                     <div className="flex justify-between border-t pt-2 font-semibold">
-                      <span>合計コスチE/span>
-                      <span>{Math.round(overtimeReduction[0] * 0.5 + meetingFrequency[0] * 10 + stressReduction[0] * 0.3 + 523 * 400000 * salaryIncrease[0] / 100 / 1000000)}百丁E�E</span>
+                      <span>合計コスト</span>
+                      <span>{Math.round(overtimeReduction[0] * 0.5 + meetingFrequency[0] * 10 + stressReduction[0] * 0.3 + 523 * 400000 * salaryIncrease[0] / 100 / 1000000)}百万円</span>
                     </div>
                   </div>
                 </div>
                 
                 <div>
-                  <h4 className="font-semibold mb-3">期征E��れる効果（年間！E/h4>
+                  <h4 className="font-semibold mb-3">期待される効果（年間）</h4>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span>採用コスト削渁E/span>
-                      <span className="font-medium text-green-600">{Math.round(523 * improvementValue / 100 * 1.5)}百丁E�E</span>
+                      <span>採用コスト削減</span>
+                      <span className="font-medium text-green-600">{Math.round(523 * improvementValue / 100 * 1.5)}百万円</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>教育コスト削渁E/span>
-                      <span className="font-medium text-green-600">{Math.round(523 * improvementValue / 100 * 0.8)}百丁E�E</span>
+                      <span>教育コスト削減</span>
+                      <span className="font-medium text-green-600">{Math.round(523 * improvementValue / 100 * 0.8)}百万円</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>生産性向丁E/span>
-                      <span className="font-medium text-green-600">{Math.round(improvementValue * 5)}百丁E�E</span>
+                      <span>生産性向上</span>
+                      <span className="font-medium text-green-600">{Math.round(improvementValue * 5)}百万円</span>
                     </div>
                     <div className="flex justify-between border-t pt-2 font-semibold">
-                      <span>合計効极E/span>
-                      <span className="text-green-600">{Math.round(523 * improvementValue / 100 * 1.5 + 523 * improvementValue / 100 * 0.8 + improvementValue * 5)}百丁E�E</span>
+                      <span>合計効果</span>
+                      <span className="text-green-600">{Math.round(523 * improvementValue / 100 * 1.5 + 523 * improvementValue / 100 * 0.8 + improvementValue * 5)}百万円</span>
                     </div>
                   </div>
                   
@@ -286,7 +308,7 @@ function WhatIfSimulationContent() {
                       ROI: {Math.round((523 * improvementValue / 100 * 1.5 + 523 * improvementValue / 100 * 0.8 + improvementValue * 5) / (overtimeReduction[0] * 0.5 + meetingFrequency[0] * 10 + stressReduction[0] * 0.3 + 523 * 400000 * salaryIncrease[0] / 100 / 1000000) * 100)}%
                     </p>
                     <p className="text-xs text-blue-700 mt-1">
-                      投賁E冁E��たり{((523 * improvementValue / 100 * 1.5 + 523 * improvementValue / 100 * 0.8 + improvementValue * 5) / (overtimeReduction[0] * 0.5 + meetingFrequency[0] * 10 + stressReduction[0] * 0.3 + 523 * 400000 * salaryIncrease[0] / 100 / 1000000)).toFixed(2)}冁E�Eリターン
+                      投資1円あたり{((523 * improvementValue / 100 * 1.5 + 523 * improvementValue / 100 * 0.8 + improvementValue * 5) / (overtimeReduction[0] * 0.5 + meetingFrequency[0] * 10 + stressReduction[0] * 0.3 + 523 * 400000 * salaryIncrease[0] / 100 / 1000000)).toFixed(2)}円のリターン
                     </p>
                   </div>
                 </div>
@@ -297,15 +319,17 @@ function WhatIfSimulationContent() {
           {/* アクションボタン */}
           <div className="flex gap-4 mt-8">
             <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
-              シミュレーション結果を保孁E            </button>
+              シミュレーション結果を保存
+            </button>
             <button className="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition">
-              詳細レポ�Eト生戁E            </button>
+              詳細レポート生成
+            </button>
             <button className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition">
-              施策実行計画を作�E
+              施策実行計画を作成
             </button>
           </div>
         </div>
-      </div><CategoryTopButton categoryPath="/reports?tab=turnover" categoryName="離職要因刁E��" /></div>
+      </div><CategoryTopButton categoryPath="/reports?tab=turnover" categoryName="離職要因分析" /></div>
   );
 }
 

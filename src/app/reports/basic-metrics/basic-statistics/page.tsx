@@ -10,16 +10,16 @@ function BasicStatisticsPageContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="基本統訁E />
+      <CommonHeader title="基本統計" />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <div className="flex items-center gap-3 mb-4">
             <span className="text-3xl">📊</span>
-            <h1 className="text-2xl font-bold text-gray-900">基本統訁E/h1>
+            <h1 className="text-2xl font-bold text-gray-900">基本統計</h1>
           </div>
           <p className="text-gray-600">
-            総�E員数、E��門別人員構�Eなど基本皁E��統計データを確認します、E
+            総職員数、部門別人員構成など基本的な統計データを確認します。
           </p>
         </div>
 
@@ -32,21 +32,21 @@ function BasicStatisticsPageContent() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold mb-2">総�E員数</h3>
+            <h3 className="text-lg font-semibold mb-2">総職員数</h3>
             <p className="text-3xl font-bold text-blue-600">1,234人</p>
-            <p className="text-sm text-gray-600 mt-2">前年同期毁E +5.2%</p>
+            <p className="text-sm text-gray-600 mt-2">前年同期比: +5.2%</p>
           </div>
 
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold mb-2">平坁E��齢</h3>
+            <h3 className="text-lg font-semibold mb-2">平均年齢</h3>
             <p className="text-3xl font-bold text-green-600">38.5歳</p>
-            <p className="text-sm text-gray-600 mt-2">前年同期毁E +0.3歳</p>
+            <p className="text-sm text-gray-600 mt-2">前年同期比: +0.3歳</p>
           </div>
 
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold mb-2">平坁E��続年数</h3>
+            <h3 className="text-lg font-semibold mb-2">平均勤続年数</h3>
             <p className="text-3xl font-bold text-purple-600">7.8年</p>
-            <p className="text-sm text-gray-600 mt-2">前年同期毁E +0.5年</p>
+            <p className="text-sm text-gray-600 mt-2">前年同期比: +0.5年</p>
           </div>
 
           <div className="bg-white rounded-lg shadow-md p-6">
@@ -58,20 +58,20 @@ function BasicStatisticsPageContent() {
           </div>
 
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold mb-2">正規�E員比率</h3>
+            <h3 className="text-lg font-semibold mb-2">正規職員比率</h3>
             <p className="text-3xl font-bold text-indigo-600">78.5%</p>
-            <p className="text-sm text-gray-600 mt-2">非正要E 21.5%</p>
+            <p className="text-sm text-gray-600 mt-2">非正規: 21.5%</p>
           </div>
 
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold mb-2">離職玁E/h3>
+            <h3 className="text-lg font-semibold mb-2">離職率</h3>
             <p className="text-3xl font-bold text-red-600">12.3%</p>
-            <p className="text-sm text-gray-600 mt-2">前年同期毁E -1.2pt</p>
+            <p className="text-sm text-gray-600 mt-2">前年同期比: -1.2pt</p>
           </div>
         </div>
 
         <div className="mt-8 bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold mb-4">部門別人員構�E</h3>
+          <h3 className="text-lg font-semibold mb-4">部門別人員構成</h3>
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <span>看護部</span>
@@ -90,7 +90,7 @@ function BasicStatisticsPageContent() {
               <span className="font-semibold">148人 (12.0%)</span>
             </div>
             <div className="flex items-center justify-between">
-              <span>そ�E仁E/span>
+              <span>その他</span>
               <span className="font-semibold">211人 (17.0%)</span>
             </div>
           </div>

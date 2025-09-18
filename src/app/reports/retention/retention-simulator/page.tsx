@@ -30,14 +30,14 @@ ChartJS.register(
   Legend
 );
 
-// シミュレーション施筁E
+// シミュレーション施策
 const interventions = [
-  { id: 'salary', name: '給与改喁E��E%アチE�E�E�E, cost: 50000000, effect: 2.5 },
-  { id: 'mentor', name: 'メンター制度導�E', cost: 10000000, effect: 3.2 },
-  { id: 'wlb', name: 'ワークライフバランス改喁E, cost: 15000000, effect: 2.8 },
-  { id: 'training', name: '研修プログラム拡允E, cost: 20000000, effect: 2.0 },
-  { id: 'flexible', name: 'フレチE��スタイム導�E', cost: 5000000, effect: 1.8 },
-  { id: 'career', name: 'キャリアパス明確匁E, cost: 8000000, effect: 2.3 }
+  { id: 'salary', name: '給与改善（5%アップ）', cost: 50000000, effect: 2.5 },
+  { id: 'mentor', name: 'メンター制度導入', cost: 10000000, effect: 3.2 },
+  { id: 'wlb', name: 'ワークライフバランス改善', cost: 15000000, effect: 2.8 },
+  { id: 'training', name: '研修プログラム拡充', cost: 20000000, effect: 2.0 },
+  { id: 'flexible', name: 'フレックスタイム導入', cost: 5000000, effect: 1.8 },
+  { id: 'career', name: 'キャリアパス明確化', cost: 8000000, effect: 2.3 }
 ];
 
 function RetentionSimulatorContent() {
@@ -46,32 +46,32 @@ function RetentionSimulatorContent() {
   const [selectedInterventions, setSelectedInterventions] = useState<string[]>([]);
   const [simulationResult, setSimulationResult] = useState<any>(null);
   
-  const baseRetentionRate = 75; // 基準定着玁E
+  const baseRetentionRate = 75; // 基準定着率
   const currentHeadcount = 500; // 現在の職員数
-  const averageSalary = 4500000; // 平坁E��叁E
-  const recruitmentCost = 1500000; // 採用コスチE人
+  const averageSalary = 4500000; // 平均年収
+  const recruitmentCost = 1500000; // 採用コスト/人
 
-  // 施策選択�E刁E��替ぁE
+  // 施策選択の切り替え
   const toggleIntervention = (id: string) => {
     setSelectedInterventions(prev => 
       prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
     );
   };
 
-  // シミュレーション実衁E
+  // シミュレーション実行
   const runSimulation = () => {
     const selected = interventions.filter(i => selectedInterventions.includes(i.id));
     const totalCost = selected.reduce((sum, i) => sum + i.cost, 0);
     const totalEffect = selected.reduce((sum, i) => sum + i.effect, 0);
     
-    // 相乗効果を老E�E�E�褁E��施策で効果が増幁E��E
+    // 相乗効果を考慮（複数施策で効果が増幅）
     const synergyBonus = selected.length > 1 ? (selected.length - 1) * 0.5 : 0;
     const adjustedEffect = totalEffect + synergyBonus;
     
     const newRetentionRate = Math.min(95, baseRetentionRate + adjustedEffect);
     const retentionImprovement = newRetentionRate - baseRetentionRate;
     
-    // 5年間�E予測
+    // 5年間の予測
     const projections = [];
     for (let year = 0; year <= 5; year++) {
       const baseAttrition = currentHeadcount * (100 - baseRetentionRate) / 100;
@@ -105,14 +105,14 @@ function RetentionSimulatorContent() {
     labels: simulationResult.projections.map((p: any) => `${p.year}年目`),
     datasets: [
       {
-        label: '現在の定着玁E,
+        label: '現在の定着率',
         data: simulationResult.projections.map((p: any) => p.baseRetention),
         borderColor: 'rgb(156, 163, 175)',
         borderDash: [5, 5],
         fill: false
       },
       {
-        label: '施策後�E定着玁E,
+        label: '施策後の定着率',
         data: simulationResult.projections.map((p: any) => p.newRetention),
         borderColor: 'rgb(34, 197, 94)',
         backgroundColor: 'rgba(34, 197, 94, 0.1)',
@@ -126,14 +126,14 @@ function RetentionSimulatorContent() {
     labels: simulationResult.projections.map((p: any) => `${p.year}年目`),
     datasets: [
       {
-        label: '節紁E��（累計！E,
+        label: '節約額（累計）',
         data: simulationResult.projections.map((p: any) => p.savedCost),
         type: 'line' as const,
         borderColor: 'rgb(34, 197, 94)',
         yAxisID: 'y'
       },
       {
-        label: '投賁E��E,
+        label: '投資額',
         data: simulationResult.projections.map(() => simulationResult.totalCost),
         type: 'line' as const,
         borderColor: 'rgb(239, 68, 68)',
@@ -161,7 +161,7 @@ function RetentionSimulatorContent() {
             <h1 className="text-2xl font-bold text-gray-900">定着シミュレーター</h1>
           </div>
           <p className="text-gray-600">
-            吁E��施策�E導�Eによる定着玁E�E変化とROIをシミュレーションします、E
+            各種施策の導入による定着率の変化とROIをシミュレーションします。
           </p>
         </div>
 
@@ -175,26 +175,26 @@ function RetentionSimulatorContent() {
         {/* 現状サマリー */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-gray-50 p-4 rounded-lg">
-            <p className="text-sm text-gray-600">現在の定着玁E/p>
+            <p className="text-sm text-gray-600">現在の定着率</p>
             <p className="text-2xl font-bold">{baseRetentionRate}%</p>
           </div>
           <div className="bg-gray-50 p-4 rounded-lg">
-            <p className="text-sm text-gray-600">年間離職老E��</p>
-            <p className="text-2xl font-bold">{Math.round(currentHeadcount * (100 - baseRetentionRate) / 100)}吁E/p>
+            <p className="text-sm text-gray-600">年間離職者数</p>
+            <p className="text-2xl font-bold">{Math.round(currentHeadcount * (100 - baseRetentionRate) / 100)}名</p>
           </div>
           <div className="bg-gray-50 p-4 rounded-lg">
-            <p className="text-sm text-gray-600">採用コスチE人</p>
+            <p className="text-sm text-gray-600">採用コスト/人</p>
             <p className="text-2xl font-bold">¥{(recruitmentCost ?? 0).toLocaleString()}</p>
           </div>
           <div className="bg-gray-50 p-4 rounded-lg">
-            <p className="text-sm text-gray-600">年間採用コスチE/p>
+            <p className="text-sm text-gray-600">年間採用コスト</p>
             <p className="text-2xl font-bold">¥{(Math.round(currentHeadcount * (100 - baseRetentionRate) / 100) * (recruitmentCost ?? 0)).toLocaleString()}</p>
           </div>
         </div>
 
-        {/* 施策選抁E*/}
+        {/* 施策選択 */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h3 className="text-lg font-semibold mb-4">施策選抁E/h3>
+          <h3 className="text-lg font-semibold mb-4">施策選択</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {interventions.map(intervention => (
               <div
@@ -210,7 +210,7 @@ function RetentionSimulatorContent() {
                   <div>
                     <h4 className="font-medium">{intervention.name}</h4>
                     <p className="text-sm text-gray-600 mt-1">
-                      効极E +{intervention.effect}% | 投賁E��E ¥{(intervention.cost ?? 0).toLocaleString()}
+                      効果: +{intervention.effect}% | 投資額: ¥{(intervention.cost ?? 0).toLocaleString()}
                     </p>
                   </div>
                   <input
@@ -228,7 +228,7 @@ function RetentionSimulatorContent() {
             <div>
               <p className="text-sm text-gray-600">選択した施策数: {selectedInterventions.length}</p>
               <p className="text-sm text-gray-600">
-                総投賁E��E ¥{interventions
+                総投資額: ¥{interventions
                   .filter(i => selectedInterventions.includes(i.id))
                   .reduce((sum, i) => sum + i.cost, 0)
                   .toLocaleString() ?? '0'}
@@ -243,7 +243,7 @@ function RetentionSimulatorContent() {
                   : 'bg-gray-300 text-gray-500 cursor-not-allowed'
               }`}
             >
-              シミュレーション実衁E
+              シミュレーション実行
             </button>
           </div>
         </div>
@@ -255,7 +255,7 @@ function RetentionSimulatorContent() {
               <h3 className="text-lg font-semibold mb-4">シミュレーション結果</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 <div className="text-center">
-                  <p className="text-sm text-gray-600">予測定着玁E/p>
+                  <p className="text-sm text-gray-600">予測定着率</p>
                   <p className="text-3xl font-bold text-green-600">
                     {simulationResult.newRetentionRate.toFixed(1)}%
                   </p>
@@ -264,13 +264,13 @@ function RetentionSimulatorContent() {
                   </p>
                 </div>
                 <div className="text-center">
-                  <p className="text-sm text-gray-600">年間削減離職老E��</p>
+                  <p className="text-sm text-gray-600">年間削減離職者数</p>
                   <p className="text-3xl font-bold text-blue-600">
-                    {Math.round(currentHeadcount * simulationResult.retentionImprovement / 100)}吁E
+                    {Math.round(currentHeadcount * simulationResult.retentionImprovement / 100)}名
                   </p>
                 </div>
                 <div className="text-center">
-                  <p className="text-sm text-gray-600">投賁E��収期閁E/p>
+                  <p className="text-sm text-gray-600">投資回収期間</p>
                   <p className="text-3xl font-bold text-purple-600">
                     {simulationResult.breakEvenYear || '---'}年
                   </p>
@@ -279,26 +279,26 @@ function RetentionSimulatorContent() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h4 className="font-medium mb-2">定着玁E��測</h4>
+                  <h4 className="font-medium mb-2">定着率予測</h4>
                   <Line data={projectionChartData!} options={{
                     scales: {
                       y: {
                         min: 70,
                         max: 100,
-                        title: { display: true, text: '定着玁E(%)' }
+                        title: { display: true, text: '定着率 (%)' }
                       }
                     }
                   }} />
                 </div>
                 <div>
-                  <h4 className="font-medium mb-2">投賁E��効果！EOI�E�E/h4>
+                  <h4 className="font-medium mb-2">投資対効果（ROI）</h4>
                   <Chart type='bar' data={roiChartData!} options={{
                     scales: {
                       y: {
                         type: 'linear',
                         display: true,
                         position: 'left',
-                        title: { display: true, text: '金額（�E�E�E }
+                        title: { display: true, text: '金額（円）' }
                       },
                       y1: {
                         type: 'linear',
@@ -319,19 +319,19 @@ function RetentionSimulatorContent() {
                 {simulationResult.selected.map((intervention: any) => (
                   <li key={intervention.id}>{intervention.name}を優先的に実施</li>
                 ))}
-                <li>実施征Eヶ月ごとに効果測定を実施</li>
-                <li>効果が低い施策�E随時見直ぁE/li>
+                <li>実施後3ヶ月ごとに効果測定を実施</li>
+                <li>効果が低い施策は随時見直し</li>
               </ul>
             </div>
           </div>
         )}
 
         <DataComment
-          comment="褁E��施策�E絁E��合わせにより相乗効果が期征E��きます。特にメンター制度と給与改喁E�E絁E��合わせが効果的です、E
+          comment="複数施策の組み合わせにより相乗効果が期待できます。特にメンター制度と給与改善の組み合わせが効果的です。"
           details={[
-            '投賁E��収期間�E平坁E-3年',
-            '早期実施により累積効果が大きくなめE,
-            '定期皁E��効果測定により施策�E最適化が可能'
+            '投資回収期間は平均2-3年',
+            '早期実施により累積効果が大きくなる',
+            '定期的な効果測定により施策の最適化が可能'
           ]}
         />
       </div><CategoryBackButton /></div>

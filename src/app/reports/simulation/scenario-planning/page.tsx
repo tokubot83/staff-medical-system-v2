@@ -33,14 +33,14 @@ import {
 
 // リスク要因の定義
 const riskFactors = {
-  pandemic: { name: '感染痁E��ンチE��チE��', probability: 0.15, impact: 0.9 },
-  economicRecession: { name: '経済不況E, probability: 0.3, impact: 0.7 },
-  nursingShortage: { name: '看護師不足深刻匁E, probability: 0.6, impact: 0.8 },
-  agingSociety: { name: '趁E��齢化進屁E, probability: 0.9, impact: 0.6 },
-  digitalization: { name: 'DX加送E, probability: 0.8, impact: 0.5 },
+  pandemic: { name: '感染症パンデミック', probability: 0.15, impact: 0.9 },
+  economicRecession: { name: '経済不況', probability: 0.3, impact: 0.7 },
+  nursingShortage: { name: '看護師不足深刻化', probability: 0.6, impact: 0.8 },
+  agingSociety: { name: '超高齢化進展', probability: 0.9, impact: 0.6 },
+  digitalization: { name: 'DX加速', probability: 0.8, impact: 0.5 },
   regulatoryChange: { name: '制度改正', probability: 0.7, impact: 0.6 },
   naturalDisaster: { name: '自然災害', probability: 0.2, impact: 0.8 },
-  competition: { name: '競争激匁E, probability: 0.5, impact: 0.5 }
+  competition: { name: '競争激化', probability: 0.5, impact: 0.5 }
 };
 
 function Content() {
@@ -51,7 +51,7 @@ function Content() {
   const [timeHorizon, setTimeHorizon] = useState(3); // years
   const [selectedRiskFactors, setSelectedRiskFactors] = useState(['nursingShortage', 'agingSociety', 'digitalization']);
 
-  // 現状刁E��
+  // 現状分析
   const currentState = useMemo(() => {
     const staffList = Object.values(staffDatabase).filter(staff => 
       selectedFacility === '全施設' || staff.facility === selectedFacility
@@ -62,7 +62,7 @@ function Content() {
     const avgEngagement = staffList.reduce((sum, s) => sum + s.engagement, 0) / staffList.length;
     const avgStress = staffList.reduce((sum, s) => sum + s.stressIndex, 0) / staffList.length;
     
-    // 職種別構�E
+    // 職種別構成
     const positionComposition: { [key: string]: number } = {};
     staffList.forEach(staff => {
       const basePosition = staff.position.replace(/主任|師長|部長|科長/, '').trim();
@@ -84,7 +84,7 @@ function Content() {
   const scenarios = useMemo(() => ({
     optimistic: {
       name: '楽観シナリオ',
-      description: '経済�E長・医療需要増�E技術革新が進む',
+      description: '経済成長・医療需要増・技術革新が進む',
       assumptions: {
         economicGrowth: 0.03,
         staffTurnover: 0.08,
@@ -96,7 +96,7 @@ function Content() {
     },
     realistic: {
       name: '現実的シナリオ',
-      description: '現状トレンドが継綁E,
+      description: '現状トレンドが継続',
       assumptions: {
         economicGrowth: 0.01,
         staffTurnover: 0.12,
@@ -108,7 +108,7 @@ function Content() {
     },
     pessimistic: {
       name: '悲観シナリオ',
-      description: '経済停滞�E人材不足・競争激匁E,
+      description: '経済停滞・人材不足・競争激化',
       assumptions: {
         economicGrowth: -0.01,
         staffTurnover: 0.18,
@@ -129,15 +129,16 @@ function Content() {
     for (let i = 0; i <= timeHorizon; i++) {
       const year = currentYear + i;
       
-      // スタチE��数予測
+      // スタッフ数予測
       const turnoverImpact = Math.pow(1 - scenario.assumptions.staffTurnover, i);
       const projectedStaff = Math.round(currentState.totalStaff * turnoverImpact);
       
-      // 患老E��要予測
+      // 患者需要予測
       const demandGrowth = Math.pow(scenario.assumptions.patientDemand, i);
       const projectedDemand = 100 * demandGrowth;
       
-      // 収益予測�E�相対値�E�E      const revenueGrowth = Math.pow(scenario.assumptions.reimbursementRate, i) * demandGrowth;
+      // 収益予測（相対値）
+      const revenueGrowth = Math.pow(scenario.assumptions.reimbursementRate, i) * demandGrowth;
       const projectedRevenue = 100 * revenueGrowth;
       
       // コスト予測
@@ -158,7 +159,7 @@ function Content() {
     return projections;
   }, [selectedScenario, timeHorizon, currentState.totalStaff, scenarios]);
 
-  // リスク影響度刁E��
+  // リスク影響度分析
   const riskImpactAnalysis = useMemo(() => {
     return selectedRiskFactors.map(riskKey => {
       const risk = riskFactors[riskKey as keyof typeof riskFactors];
@@ -188,40 +189,41 @@ function Content() {
     });
   }, [selectedRiskFactors, selectedScenario, scenarios]);
 
-  // 対応策�EトリチE��ス
+  // 対応策マトリックス
   const responseStrategies = useMemo(() => {
     const strategies: Array<{ risk: string; strategies: string[]; priority: string; timeline: string }> = [];
     
     riskImpactAnalysis.forEach(risk => {
       const baseStrategies = {
-        nursingShortage: ['採用強匁E, '定着玁E��上施筁E, '業務効玁E��', '外部人材活用'],
-        agingSociety: ['慢性期対応強匁E, '在宁E��療展開', '予防医療推進', '地域連携強匁E],
-        digitalization: ['IT投賁E��大', 'スタチE��教育', 'シスチE��統吁E, 'チE�Eタ活用推進'],
-        pandemic: ['感染対策強匁E, 'BCM整傁E, '在宁E��務体制', '備蓄管琁E],
-        economicRecession: ['コスト削渁E, '収益多角化', '効玁E��推進', '投賁E��制'],
-        regulatoryChange: ['惁E��収集強匁E, '体制整傁E, 'コンプライアンス強匁E, '専門人材確俁E],
-        naturalDisaster: ['BCP策宁E, '施設強匁E, '訓練実施', '代替拠点確俁E],
-        competition: ['差別化戦略', 'サービス向丁E, 'マ�EケチE��ング強匁E, '提携推進']
+        nursingShortage: ['採用強化', '定着率向上施策', '業務効率化', '外部人材活用'],
+        agingSociety: ['慢性期対応強化', '在宅医療展開', '予防医療推進', '地域連携強化'],
+        digitalization: ['IT投資拡大', 'スタッフ教育', 'システム統合', 'データ活用推進'],
+        pandemic: ['感染対策強化', 'BCM整備', '在宅勤務体制', '備蓄管理'],
+        economicRecession: ['コスト削減', '収益多角化', '効率化推進', '投資抑制'],
+        regulatoryChange: ['情報収集強化', '体制整備', 'コンプライアンス強化', '専門人材確保'],
+        naturalDisaster: ['BCP策定', '施設強化', '訓練実施', '代替拠点確保'],
+        competition: ['差別化戦略', 'サービス向上', 'マーケティング強化', '提携推進']
       };
       
       const riskKey = Object.keys(riskFactors).find(key => riskFactors[key as keyof typeof riskFactors].name === risk.name);
       if (riskKey && baseStrategies[riskKey as keyof typeof baseStrategies]) {
         strategies.push({
           risk: risk.name,
-          priority: risk.category === 'high' ? '最優允E : risk.category === 'medium' ? '優允E : '通常',
+          priority: risk.category === 'high' ? '最優先' : risk.category === 'medium' ? '優先' : '通常',
           strategies: baseStrategies[riskKey as keyof typeof baseStrategies],
-          timeline: risk.category === 'high' ? '即時対忁E : risk.category === 'medium' ? '6ヶ月以冁E : '1年以冁E
+          timeline: risk.category === 'high' ? '即時対応' : risk.category === 'medium' ? '6ヶ月以内' : '1年以内'
         });
       }
     });
     
     return strategies.sort((a, b) => {
-      const priorityOrder = { '最優允E: 0, '優允E: 1, '通常': 2 };
+      const priorityOrder = { '最優先': 0, '優先': 1, '通常': 2 };
       return priorityOrder[a.priority as keyof typeof priorityOrder] - priorityOrder[b.priority as keyof typeof priorityOrder];
     });
   }, [riskImpactAnalysis]);
 
-  // KPI目標設宁E  const kpiTargets = useMemo(() => {
+  // KPI目標設定
+  const kpiTargets = useMemo(() => {
     const scenario = scenarios[selectedScenario as keyof typeof scenarios];
     const baseTargets = {
       staffRetention: 88,
@@ -243,28 +245,28 @@ function Content() {
     }));
   }, [selectedScenario, scenarios]);
 
-  // シナリオ比輁E��ータ
+  // シナリオ比較データ
   const scenarioComparison = useMemo(() => {
-    const metrics = ['スタチE��数', '患老E��要E, '収益性', '投賁E��力', '競争力'];
+    const metrics = ['スタッフ数', '患者需要', '収益性', '投資余力', '競争力'];
     
     return metrics.map(metric => {
       const data: { metric: string; [key: string]: any } = { metric };
       
       Object.keys(scenarios).forEach(scenarioKey => {
         const scenario = scenarios[scenarioKey as keyof typeof scenarios];
-        let value = 50; // ベ�Eスライン
+        let value = 50; // ベースライン
         
         switch (metric) {
-          case 'スタチE��数':
+          case 'スタッフ数':
             value = 100 - (scenario.assumptions.staffTurnover * 100);
             break;
-          case '患老E��要E:
+          case '患者需要':
             value = scenario.assumptions.patientDemand * 80;
             break;
           case '収益性':
             value = scenario.assumptions.reimbursementRate * 100 - 50;
             break;
-          case '投賁E��力':
+          case '投資余力':
             value = (scenario.assumptions.economicGrowth + 0.05) * 1000;
             break;
           case '競争力':
@@ -299,7 +301,7 @@ function Content() {
           {/* ヘッダー */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <h1 className="text-2xl font-bold">シナリオプランニング</h1>
-            <p className="text-gray-600 mt-2">褁E��の封E��シナリオに基づくリスク要因の特定と対応策�E事前検訁E/p>
+            <p className="text-gray-600 mt-2">複数の将来シナリオに基づくリスク要因の特定と対応策の事前検討</p>
             {facilityParam && (
               <p className="text-sm text-gray-500 mt-1">対象施設: {facilityParam}</p>
             )}
@@ -350,7 +352,7 @@ function Content() {
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">老E�Eするリスク要因</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">考慮するリスク要因</label>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {Object.entries(riskFactors).map(([key, risk]) => (
                   <label key={key} className="flex items-center space-x-2 cursor-pointer">
@@ -373,7 +375,7 @@ function Content() {
             </div>
           </div>
 
-          {/* シナリオ概要E*/}
+          {/* シナリオ概要 */}
           <Card>
             <CardHeader>
               <CardTitle>{scenarios[selectedScenario as keyof typeof scenarios].name}の詳細</CardTitle>
@@ -382,19 +384,19 @@ function Content() {
               <p className="text-gray-600 mb-4">{scenarios[selectedScenario as keyof typeof scenarios].description}</p>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                 <div className="bg-gray-50 p-3 rounded">
-                  <p className="text-xs text-gray-600">経済�E長玁E/p>
+                  <p className="text-xs text-gray-600">経済成長率</p>
                   <p className="text-lg font-bold">{(scenarios[selectedScenario as keyof typeof scenarios].assumptions.economicGrowth * 100).toFixed(1)}%</p>
                 </div>
                 <div className="bg-gray-50 p-3 rounded">
-                  <p className="text-xs text-gray-600">離職玁E/p>
+                  <p className="text-xs text-gray-600">離職率</p>
                   <p className="text-lg font-bold">{(scenarios[selectedScenario as keyof typeof scenarios].assumptions.staffTurnover * 100).toFixed(0)}%</p>
                 </div>
                 <div className="bg-gray-50 p-3 rounded">
-                  <p className="text-xs text-gray-600">患老E��要E/p>
+                  <p className="text-xs text-gray-600">患者需要</p>
                   <p className="text-lg font-bold">×{scenarios[selectedScenario as keyof typeof scenarios].assumptions.patientDemand.toFixed(2)}</p>
                 </div>
                 <div className="bg-gray-50 p-3 rounded">
-                  <p className="text-xs text-gray-600">技術導�E玁E/p>
+                  <p className="text-xs text-gray-600">技術導入率</p>
                   <p className="text-lg font-bold">{(scenarios[selectedScenario as keyof typeof scenarios].assumptions.technologyAdoption * 100).toFixed(0)}%</p>
                 </div>
                 <div className="bg-gray-50 p-3 rounded">
@@ -405,10 +407,10 @@ function Content() {
             </CardContent>
           </Card>
 
-          {/* 主要指標�E推移予測 */}
+          {/* 主要指標の推移予測 */}
           <Card>
             <CardHeader>
-              <CardTitle>主要指標�E推移予測</CardTitle>
+              <CardTitle>主要指標の推移予測</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-80">
@@ -428,10 +430,10 @@ function Content() {
                       wrapperStyle={{ zIndex: 1000 }}
                     />
                     <Legend />
-                    <Line type="monotone" dataKey="staffCount" stroke="#8B5CF6" strokeWidth={2} name="スタチE��数" />
-                    <Line type="monotone" dataKey="patientDemand" stroke="#3B82F6" strokeWidth={2} name="患老E��要E />
+                    <Line type="monotone" dataKey="staffCount" stroke="#8B5CF6" strokeWidth={2} name="スタッフ数" />
+                    <Line type="monotone" dataKey="patientDemand" stroke="#3B82F6" strokeWidth={2} name="患者需要" />
                     <Line type="monotone" dataKey="revenue" stroke="#10B981" strokeWidth={2} name="収益" />
-                    <Line type="monotone" dataKey="cost" stroke="#F59E0B" strokeWidth={2} name="コスチE />
+                    <Line type="monotone" dataKey="cost" stroke="#F59E0B" strokeWidth={2} name="コスト" />
                     <Line type="monotone" dataKey="margin" stroke="#EF4444" strokeWidth={2} strokeDasharray="5 5" name="利益率" />
                   </LineChart>
                 </ResponsiveContainer>
@@ -439,11 +441,11 @@ function Content() {
             </CardContent>
           </Card>
 
-          {/* シナリオ比輁E��ーダーチャーチE*/}
+          {/* シナリオ比較レーダーチャート */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle>シナリオ別影響度比輁E/CardTitle>
+                <CardTitle>シナリオ別影響度比較</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-80">
@@ -474,14 +476,14 @@ function Content() {
 
             <Card>
               <CardHeader>
-                <CardTitle>リスクマトリチE��ス</CardTitle>
+                <CardTitle>リスクマトリックス</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-80">
                   <ResponsiveContainer width="100%" height="100%">
                     <ScatterChart>
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="probability" domain={[0, 100]} name="発生確玁E unit="%" />
+                      <XAxis dataKey="probability" domain={[0, 100]} name="発生確率" unit="%" />
                       <YAxis dataKey="impact" domain={[0, 100]} name="影響度" unit="%" />
                       <Tooltip 
                         cursor={{ strokeDasharray: '3 3' }}
@@ -555,8 +557,8 @@ function Content() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm">
                           <span className={`px-2 py-1 text-xs rounded-full ${
-                            strategy.priority === '最優允E ? 'bg-red-100 text-red-800' :
-                            strategy.priority === '優允E ? 'bg-amber-100 text-amber-800' :
+                            strategy.priority === '最優先' ? 'bg-red-100 text-red-800' :
+                            strategy.priority === '優先' ? 'bg-amber-100 text-amber-800' :
                             'bg-green-100 text-green-800'
                           }`}>
                             {strategy.priority}
@@ -580,10 +582,10 @@ function Content() {
             </CardContent>
           </Card>
 
-          {/* KPI目標設宁E*/}
+          {/* KPI目標設定 */}
           <Card>
             <CardHeader>
-              <CardTitle>シナリオ別KPI目樁E/CardTitle>
+              <CardTitle>シナリオ別KPI目標</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-80">
@@ -609,7 +611,7 @@ function Content() {
                     <Legend />
                     <Bar dataKey="current" fill="#94A3B8" name="現在値" isAnimationActive={false} />
                     <Bar dataKey="target" fill={scenarios[selectedScenario as keyof typeof scenarios].color} name="目標値" isAnimationActive={false} />
-                    <Bar dataKey="stretch" fill="#F59E0B" name="ストレチE��目樁E isAnimationActive={false} />
+                    <Bar dataKey="stretch" fill="#F59E0B" name="ストレッチ目標" isAnimationActive={false} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -625,44 +627,44 @@ function Content() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div className="bg-blue-50 p-4 rounded-lg">
-                    <h4 className="font-semibold text-blue-900 mb-2">即時対応頁E��</h4>
+                    <h4 className="font-semibold text-blue-900 mb-2">即時対応項目</h4>
                     <ul className="list-disc list-inside text-sm text-blue-800 space-y-1">
-                      <li>リスク管琁E��員会�E設置</li>
-                      <li>シナリオ別対応計画の策宁E/li>
-                      <li>早期警戒指標！EWI�E��E設宁E/li>
-                      <li>定期皁E��シナリオ見直し体制構篁E/li>
+                      <li>リスク管理委員会の設置</li>
+                      <li>シナリオ別対応計画の策定</li>
+                      <li>早期警戒指標（EWI）の設定</li>
+                      <li>定期的なシナリオ見直し体制構築</li>
                     </ul>
                   </div>
                   
                   <div className="bg-green-50 p-4 rounded-lg">
-                    <h4 className="font-semibold text-green-900 mb-2">中期的取り絁E��</h4>
+                    <h4 className="font-semibold text-green-900 mb-2">中期的取り組み</h4>
                     <ul className="list-disc list-inside text-sm text-green-800 space-y-1">
-                      <li>絁E��レジリエンスの強匁E/li>
-                      <li>多様な収益源�E開発</li>
-                      <li>人材育成�Eログラムの拡允E/li>
-                      <li>チE��タル化投賁E�E加送E/li>
+                      <li>組織レジリエンスの強化</li>
+                      <li>多様な収益源の開発</li>
+                      <li>人材育成プログラムの拡充</li>
+                      <li>デジタル化投資の加速</li>
                     </ul>
                   </div>
                 </div>
                 
                 <div className="space-y-4">
                   <div className="bg-amber-50 p-4 rounded-lg">
-                    <h4 className="font-semibold text-amber-900 mb-2">モニタリング頁E��</h4>
+                    <h4 className="font-semibold text-amber-900 mb-2">モニタリング項目</h4>
                     <ul className="list-disc list-inside text-sm text-amber-800 space-y-1">
-                      <li>外部環墁E��化の定期評価</li>
-                      <li>リスク持E���E継続的監要E/li>
+                      <li>外部環境変化の定期評価</li>
+                      <li>リスク指標の継続的監視</li>
                       <li>シナリオ前提条件の検証</li>
-                      <li>対応策�E効果測宁E/li>
+                      <li>対応策の効果測定</li>
                     </ul>
                   </div>
                   
                   <div className="bg-purple-50 p-4 rounded-lg">
-                    <h4 className="font-semibold text-purple-900 mb-2">絁E���E力開発</h4>
+                    <h4 className="font-semibold text-purple-900 mb-2">組織能力開発</h4>
                     <ul className="list-disc list-inside text-sm text-purple-800 space-y-1">
-                      <li>シナリオ思老E�E絁E��浸送E/li>
-                      <li>リスク感度の向丁E/li>
-                      <li>変化対応力の強匁E/li>
-                      <li>イノ�Eーション斁E��の醸戁E/li>
+                      <li>シナリオ思考の組織浸透</li>
+                      <li>リスク感度の向上</li>
+                      <li>変化対応力の強化</li>
+                      <li>イノベーション文化の醸成</li>
                     </ul>
                   </div>
                 </div>
@@ -674,7 +676,7 @@ function Content() {
           <div className="flex gap-4">
             <button 
               onClick={() => exportToPDF({
-                title: 'シナリオプランニングレポ�EチE,
+                title: 'シナリオプランニングレポート',
                 facility: selectedFacility,
                 reportType: 'scenario-planning',
                 elementId: 'report-content',
@@ -682,7 +684,8 @@ function Content() {
               })}
               className="pdf-exclude bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
             >
-              PDFダウンローチE            </button>
+              PDFダウンロード
+            </button>
           </div>
 
         </div>

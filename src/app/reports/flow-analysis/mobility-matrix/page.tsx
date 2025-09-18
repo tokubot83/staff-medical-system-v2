@@ -14,7 +14,7 @@ function Content() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="人材モビリチE��マトリチE��ス" />
+      <CommonHeader title="人材モビリティマトリックス" />
       
       <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
@@ -22,15 +22,15 @@ function Content() {
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex justify-between items-start">
               <div>
-                <h1 className="text-2xl font-bold">人材モビリチE��マトリチE��ス</h1>
-                <p className="text-gray-600 mt-2">職位�E職種間�E移動可能性を評価し、戦略皁E��人材�E置を支援</p>
+                <h1 className="text-2xl font-bold">人材モビリティマトリックス</h1>
+                <p className="text-gray-600 mt-2">職位・職種間の移動可能性を評価し、戦略的な人材配置を支援</p>
                 {facilityParam && (
                   <p className="text-sm text-gray-500 mt-1">対象施設: {facilityParam}</p>
                 )}
               </div>
               <button
                 onClick={() => exportToPDF({
-                  title: '人材モビリチE��マトリチE��スレポ�EチE,
+                  title: '人材モビリティマトリックスレポート',
                   facility: facilityParam,
                   reportType: 'mobility-matrix',
                   elementId: 'report-content',
@@ -38,7 +38,8 @@ function Content() {
                 })}
                 className="pdf-exclude bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm"
               >
-                PDFダウンローチE              </button>
+                PDFダウンロード
+              </button>
             </div>
           </div>
 

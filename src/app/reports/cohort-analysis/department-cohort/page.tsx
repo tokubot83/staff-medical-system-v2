@@ -29,7 +29,8 @@ interface DepartmentCohortData {
 
 interface ComparisonMetric {
   metric: string;
-  [key: string]: any; // 動的に部署名がキーとなめE}
+  [key: string]: any; // 動的に部署名がキーとなる
+}
 
 function Content() {
   const searchParams = useSearchParams();
@@ -41,13 +42,14 @@ function Content() {
   const [viewMode, setViewMode] = useState<'comparison' | 'ranking'>('comparison');
   const [staffData, setStaffData] = useState<StaffDetail[]>([]);
 
-  // チE��チE�Eタ生�E
+  // デモデータ生成
   useEffect(() => {
     const data = generateAllCohortDemoData();
     setStaffData(data);
   }, []);
 
-  // 部署一覧を取征E  const departments = useMemo(() => {
+  // 部署一覧を取得
+  const departments = useMemo(() => {
     const deptSet = new Set(
       staffData
         .filter(staff => selectedFacility === '全施設' || staff.facility === selectedFacility)
@@ -56,12 +58,15 @@ function Content() {
     return Array.from(deptSet).sort();
   }, [staffData, selectedFacility]);
 
-  // 初期選抁E  useEffect(() => {
+  // 初期選択
+  useEffect(() => {
     if (departments.length > 0 && selectedDepartments.length === 0) {
-      setSelectedDepartments(departments.slice(0, 3)); // 最初�E3部署を選抁E    }
+      setSelectedDepartments(departments.slice(0, 3)); // 最初の3部署を選択
+    }
   }, [departments]);
 
-  // 部署別チE�Eタの雁E��E  const departmentCohortData = useMemo(() => {
+  // 部署別データの集計
+  const departmentCohortData = useMemo(() => {
     return departments.map(dept => {
       const deptStaff = staffData.filter(staff => 
         staff.department === dept &&
@@ -73,7 +78,7 @@ function Content() {
       }
 
       const avgAge = deptStaff.reduce((sum, s) => sum + s.age, 0) / deptStaff.length;
-      // Calculate tenure from tenure string (e.g., "5年3ヶ朁E -> 5.25)
+      // Calculate tenure from tenure string (e.g., "5年3ヶ月" -> 5.25)
       const avgTenure = deptStaff.reduce((sum, s) => {
         const tenureMatch = s.tenure.match(/(\d+)年/);
         const years = tenureMatch ? parseInt(tenureMatch[1]) : 0;
@@ -103,17 +108,17 @@ function Content() {
     }).filter(data => data !== null) as DepartmentCohortData[];
   }, [staffData, departments, selectedFacility]);
 
-  // 比輁E��チE�Eタの準備
+  // 比較用データの準備
   const comparisonData = useMemo(() => {
     const metrics: ComparisonMetric[] = [
-      { metric: '平坁E��齢' },
-      { metric: '平坁E��続年数' },
-      { metric: '定着玁E },
+      { metric: '平均年齢' },
+      { metric: '平均勤続年数' },
+      { metric: '定着率' },
       { metric: 'パフォーマンス' },
       { metric: 'ストレスレベル' },
-      { metric: 'エンゲージメンチE },
-      { metric: '研修完亁E��' },
-      { metric: 'リーダーシチE�E潜在劁E }
+      { metric: 'エンゲージメント' },
+      { metric: '研修完了率' },
+      { metric: 'リーダーシップ潜在力' }
     ];
 
     selectedDepartments.forEach(dept => {
@@ -123,7 +128,7 @@ function Content() {
         metrics[1][dept] = deptData.averageTenure;
         metrics[2][dept] = deptData.retentionRate;
         metrics[3][dept] = deptData.performanceScore * 20; // スケール調整 (0-5 to 0-100)
-        metrics[4][dept] = 100 - deptData.stressLevel; // 反転して良ぁE��を高く
+        metrics[4][dept] = 100 - deptData.stressLevel; // 反転して良い方を高く
         metrics[5][dept] = deptData.engagementScore;
         metrics[6][dept] = deptData.trainingCompletionRate;
         metrics[7][dept] = deptData.leadershipPotential;
@@ -133,29 +138,30 @@ function Content() {
     return metrics;
   }, [selectedDepartments, departmentCohortData]);
 
-  // レーダーチャート用チE�Eタ
+  // レーダーチャート用データ
   const radarData = useMemo(() => {
     return comparisonData.map(item => {
       const normalized: any = { metric: item.metric };
       selectedDepartments.forEach(dept => {
-        // 吁E��標を0-100にスケーリング
+        // 各指標を0-100にスケーリング
         let value = item[dept] || 0;
-        if (item.metric === '平坁E��齢') value = (value / 60) * 100;
-        if (item.metric === '平坁E��続年数') value = (value / 20) * 100;
+        if (item.metric === '平均年齢') value = (value / 60) * 100;
+        if (item.metric === '平均勤続年数') value = (value / 20) * 100;
         normalized[dept] = value;
       });
       return normalized;
     });
   }, [comparisonData, selectedDepartments]);
 
-  // ランキングチE�Eタ
+  // ランキングデータ
   const rankingData = useMemo(() => {
     const sorted = [...departmentCohortData].sort((a, b) => {
       switch (comparisonType) {
         case 'performance':
           return b.performanceScore - a.performanceScore;
         case 'risk':
-          return a.riskScore - b.riskScore; // リスクは低い方が良ぁE        case 'development':
+          return a.riskScore - b.riskScore; // リスクは低い方が良い
+        case 'development':
           return b.leadershipPotential - a.leadershipPotential;
         default:
           return 0;
@@ -166,11 +172,13 @@ function Content() {
 
   const getMetricColor = (value: number, metric: string) => {
     if (metric === 'ストレスレベル' || metric === 'リスクスコア') {
-      // 低い方が良ぁE��樁E      if (value > 70) return 'text-red-600';
+      // 低い方が良い指標
+      if (value > 70) return 'text-red-600';
       if (value > 50) return 'text-yellow-600';
       return 'text-green-600';
     } else {
-      // 高い方が良ぁE��樁E      if (value > 80) return 'text-green-600';
+      // 高い方が良い指標
+      if (value > 80) return 'text-green-600';
       if (value > 60) return 'text-yellow-600';
       return 'text-red-600';
     }
@@ -178,14 +186,14 @@ function Content() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <CommonHeader title="部署別コホ�Eト比輁E />
+      <CommonHeader title="部署別コホート比較" />
       
       <div id="report-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
           {/* ヘッダー */}
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h1 className="text-2xl font-bold">部署別コホ�Eト比輁E/h1>
-            <p className="text-gray-600 mt-2">部署・職種別にコホ�Eト�E特性を比輁E��、絁E��課題を特宁E/p>
+            <h1 className="text-2xl font-bold">部署別コホート比較</h1>
+            <p className="text-gray-600 mt-2">部署・職種別にコホートの特性を比較し、組織課題を特定</p>
             {facilityParam && (
               <p className="text-sm text-gray-500 mt-1">対象施設: {facilityParam}</p>
             )}
@@ -194,7 +202,7 @@ function Content() {
           {/* フィルター */}
           <Card className="pdf-exclude">
             <CardHeader>
-              <CardTitle>刁E��設宁E/CardTitle>
+              <CardTitle>分析設定</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -206,32 +214,32 @@ function Content() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="全施設">全施設</SelectItem>
-                      <SelectItem value="小原痁E��">小原痁E��</SelectItem>
-                      <SelectItem value="立神リハビリチE�Eション温泉病院">立神リハビリチE�Eション温泉病院</SelectItem>
+                      <SelectItem value="小原病院">小原病院</SelectItem>
+                      <SelectItem value="立神リハビリテーション温泉病院">立神リハビリテーション温泉病院</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">比輁E��イチE/label>
+                  <label className="block text-sm font-medium mb-2">比較タイプ</label>
                   <Select value={comparisonType} onValueChange={(value: any) => setComparisonType(value)}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="performance">パフォーマンス</SelectItem>
-                      <SelectItem value="risk">リスク刁E��</SelectItem>
-                      <SelectItem value="development">成長・育戁E/SelectItem>
+                      <SelectItem value="risk">リスク分析</SelectItem>
+                      <SelectItem value="development">成長・育成</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">表示モーチE/label>
+                  <label className="block text-sm font-medium mb-2">表示モード</label>
                   <Select value={viewMode} onValueChange={(value: any) => setViewMode(value)}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="comparison">比輁E��ュー</SelectItem>
+                      <SelectItem value="comparison">比較ビュー</SelectItem>
                       <SelectItem value="ranking">ランキング</SelectItem>
                     </SelectContent>
                   </Select>
@@ -239,7 +247,7 @@ function Content() {
               </div>
               {viewMode === 'comparison' && (
                 <div className="mt-4">
-                  <label className="block text-sm font-medium mb-2">比輁E��象部署�E�最大3つ�E�E/label>
+                  <label className="block text-sm font-medium mb-2">比較対象部署（最大3つ）</label>
                   <div className="flex flex-wrap gap-2">
                     {departments.map(dept => (
                       <button
@@ -267,7 +275,7 @@ function Content() {
             </CardContent>
           </Card>
 
-          {/* サマリーカーチE*/}
+          {/* サマリーカード */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card>
               <CardContent className="p-6">
@@ -299,7 +307,7 @@ function Content() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600">平坁E��トレス</p>
+                    <p className="text-sm text-gray-600">平均ストレス</p>
                     <p className="text-2xl font-bold">
                       {departmentCohortData.length > 0
                         ? Math.round(departmentCohortData.reduce((sum, d) => sum + d.stressLevel, 0) / departmentCohortData.length)
@@ -327,11 +335,11 @@ function Content() {
 
           {viewMode === 'comparison' && selectedDepartments.length > 0 && (
             <>
-              {/* 比輁E��ャーチE*/}
+              {/* 比較チャート */}
               <Card>
                 <CardHeader>
-                  <CardTitle>部署間比輁E/CardTitle>
-                  <CardDescription>選択した部署の主要指標を比輁E/CardDescription>
+                  <CardTitle>部署間比較</CardTitle>
+                  <CardDescription>選択した部署の主要指標を比較</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ResponsiveContainer width="100%" height={400}>
@@ -353,11 +361,11 @@ function Content() {
                 </CardContent>
               </Card>
 
-              {/* レーダーチャーチE*/}
+              {/* レーダーチャート */}
               <Card>
                 <CardHeader>
-                  <CardTitle>多面皁E��価</CardTitle>
-                  <CardDescription>吁E��署の強み・弱みを可視化</CardDescription>
+                  <CardTitle>多面的評価</CardTitle>
+                  <CardDescription>各部署の強み・弱みを可視化</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ResponsiveContainer width="100%" height={400}>
@@ -381,10 +389,10 @@ function Content() {
                 </CardContent>
               </Card>
 
-              {/* 詳細比輁E��ーブル */}
+              {/* 詳細比較テーブル */}
               <Card>
                 <CardHeader>
-                  <CardTitle>詳細比輁E/CardTitle>
+                  <CardTitle>詳細比較</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="overflow-x-auto">
@@ -392,7 +400,8 @@ function Content() {
                       <thead className="bg-gray-50">
                         <tr>
                           <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            持E��E                          </th>
+                            指標
+                          </th>
                           {selectedDepartments.map(dept => (
                             <th key={dept} className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                               {dept}
@@ -411,7 +420,8 @@ function Content() {
                                 const data = departmentCohortData.find(d => d.department === dept);
                                 return (
                                   <td key={dept} className="px-6 py-4 whitespace-nowrap text-sm text-center">
-                                    {data?.totalStaff || 0}吁E                                  </td>
+                                    {data?.totalStaff || 0}名
+                                  </td>
                                 );
                               })}
                             </tr>
@@ -443,11 +453,12 @@ function Content() {
                             </tr>
                             <tr className="bg-gray-50">
                               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                エンゲージメンチE                              </td>
+                                エンゲージメント
+                              </td>
                               {selectedDepartments.map(dept => {
                                 const data = departmentCohortData.find(d => d.department === dept);
                                 return (
-                                  <td key={dept} className={`px-6 py-4 whitespace-nowrap text-sm text-center font-semibold ${getMetricColor(data?.engagementScore || 0, 'エンゲージメンチE)}`}>
+                                  <td key={dept} className={`px-6 py-4 whitespace-nowrap text-sm text-center font-semibold ${getMetricColor(data?.engagementScore || 0, 'エンゲージメント')}`}>
                                     {data?.engagementScore || 0}%
                                   </td>
                                 );
@@ -485,8 +496,8 @@ function Content() {
                 <CardHeader>
                   <CardTitle>
                     {comparisonType === 'performance' && 'パフォーマンスランキング'}
-                    {comparisonType === 'risk' && 'リスクスコアランキング�E�低い頁E��E}
-                    {comparisonType === 'development' && '育成�EチE��シャルランキング'}
+                    {comparisonType === 'risk' && 'リスクスコアランキング（低い順）'}
+                    {comparisonType === 'development' && '育成ポテンシャルランキング'}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -499,7 +510,7 @@ function Content() {
                           </div>
                           <div>
                             <p className="font-semibold">{dept.department}</p>
-                            <p className="text-sm text-gray-600">総人数: {dept.totalStaff}吁E/p>
+                            <p className="text-sm text-gray-600">総人数: {dept.totalStaff}名</p>
                           </div>
                         </div>
                         <div className="text-right">
@@ -518,7 +529,7 @@ function Content() {
                           {comparisonType === 'development' && (
                             <>
                               <p className="text-2xl font-bold text-green-600">{dept.leadershipPotential}%</p>
-                              <p className="text-sm text-gray-600">リーダーシチE�E潜在劁E/p>
+                              <p className="text-sm text-gray-600">リーダーシップ潜在力</p>
                             </>
                           )}
                         </div>
@@ -528,21 +539,21 @@ function Content() {
                 </CardContent>
               </Card>
 
-              {/* トレンドチャーチE*/}
+              {/* トレンドチャート */}
               <Card>
                 <CardHeader>
-                  <CardTitle>部署別トレンチE/CardTitle>
-                  <CardDescription>過去6ヶ月�E推移�E�シミュレーション�E�E/CardDescription>
+                  <CardTitle>部署別トレンド</CardTitle>
+                  <CardDescription>過去6ヶ月の推移（シミュレーション）</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ResponsiveContainer width="100%" height={300}>
                     <LineChart data={[
-                      { month: '1朁E, ...Object.fromEntries(rankingData.slice(0, 5).map(d => [d.department, 70 + Math.random() * 20])) },
-                      { month: '2朁E, ...Object.fromEntries(rankingData.slice(0, 5).map(d => [d.department, 72 + Math.random() * 20])) },
-                      { month: '3朁E, ...Object.fromEntries(rankingData.slice(0, 5).map(d => [d.department, 75 + Math.random() * 20])) },
-                      { month: '4朁E, ...Object.fromEntries(rankingData.slice(0, 5).map(d => [d.department, 73 + Math.random() * 20])) },
-                      { month: '5朁E, ...Object.fromEntries(rankingData.slice(0, 5).map(d => [d.department, 78 + Math.random() * 20])) },
-                      { month: '6朁E, ...Object.fromEntries(rankingData.slice(0, 5).map(d => [d.department, 80 + Math.random() * 20])) }
+                      { month: '1月', ...Object.fromEntries(rankingData.slice(0, 5).map(d => [d.department, 70 + Math.random() * 20])) },
+                      { month: '2月', ...Object.fromEntries(rankingData.slice(0, 5).map(d => [d.department, 72 + Math.random() * 20])) },
+                      { month: '3月', ...Object.fromEntries(rankingData.slice(0, 5).map(d => [d.department, 75 + Math.random() * 20])) },
+                      { month: '4月', ...Object.fromEntries(rankingData.slice(0, 5).map(d => [d.department, 73 + Math.random() * 20])) },
+                      { month: '5月', ...Object.fromEntries(rankingData.slice(0, 5).map(d => [d.department, 78 + Math.random() * 20])) },
+                      { month: '6月', ...Object.fromEntries(rankingData.slice(0, 5).map(d => [d.department, 80 + Math.random() * 20])) }
                     ]}>
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="month" />
@@ -565,10 +576,10 @@ function Content() {
             </>
           )}
 
-          {/* インサイトと推奨事頁E*/}
+          {/* インサイトと推奨事項 */}
           <Card>
             <CardHeader>
-              <CardTitle>刁E��結果からのインサイチE/CardTitle>
+              <CardTitle>分析結果からのインサイト</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -577,15 +588,19 @@ function Content() {
                   <div>
                     <p className="font-semibold">高パフォーマンス部署の特徴</p>
                     <p className="text-sm text-gray-600">
-                      パフォーマンスが高い部署は、エンゲージメントスコアも高く、ストレスレベルが適刁E��管琁E��れてぁE��す、E                      これら�E部署のベスト�EラクチE��スを他部署に展開することを推奨します、E                    </p>
+                      パフォーマンスが高い部署は、エンゲージメントスコアも高く、ストレスレベルが適切に管理されています。
+                      これらの部署のベストプラクティスを他部署に展開することを推奨します。
+                    </p>
                   </div>
                 </div>
                 <div className="flex gap-3">
                   <AlertCircle className="h-5 w-5 text-red-500 mt-0.5" />
                   <div>
-                    <p className="font-semibold">高リスク部署への対忁E/p>
+                    <p className="font-semibold">高リスク部署への対応</p>
                     <p className="text-sm text-gray-600">
-                      リスクスコアが高い部署では、E��職玁E�E上�Eが予測されます、E                      早急な業務負荷の見直しとサポ�Eト体制の強化が忁E��です、E                    </p>
+                      リスクスコアが高い部署では、離職率の上昇が予測されます。
+                      早急な業務負荷の見直しとサポート体制の強化が必要です。
+                    </p>
                   </div>
                 </div>
                 <div className="flex gap-3">
@@ -593,7 +608,9 @@ function Content() {
                   <div>
                     <p className="font-semibold">部署間連携の推進</p>
                     <p className="text-sm text-gray-600">
-                      部署間でのノウハウ共有やジョブローチE�Eションを通じて、E                      絁E���E体�EレベルアチE�Eを図ることができます、E                    </p>
+                      部署間でのノウハウ共有やジョブローテーションを通じて、
+                      組織全体のレベルアップを図ることができます。
+                    </p>
                   </div>
                 </div>
               </div>
@@ -604,7 +621,7 @@ function Content() {
           <div className="flex gap-4">
             <button 
               onClick={() => exportToPDF({
-                title: '部署別コホ�Eト比輁E��ポ�EチE,
+                title: '部署別コホート比較レポート',
                 facility: facilityParam || '全施設',
                 reportType: 'department-cohort',
                 elementId: 'report-content',
@@ -612,11 +629,12 @@ function Content() {
               })}
               className="pdf-exclude bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
             >
-              PDFダウンローチE            </button>
+              PDFダウンロード
+            </button>
           </div>
 
         </div>
-      </div><CategoryTopButton categoryPath="/reports/cohort-analysis" categoryName="コホ�Eト�E极E /></div>
+      </div><CategoryTopButton categoryPath="/reports/cohort-analysis" categoryName="コホート分析" /></div>
   );
 }
 
