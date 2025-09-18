@@ -2,6 +2,7 @@
 
 import React, { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import BreadcrumbBar from '@/components/navigation/BreadcrumbBar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';

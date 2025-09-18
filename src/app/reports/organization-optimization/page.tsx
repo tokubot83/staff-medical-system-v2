@@ -145,9 +145,11 @@ function OrganizationOptimizationReportContent() {
   const reportData = generateReportData();
 
   return (
-    <ReportLayout
-      title="組織構造最適化分析"
-      description="部門別の人員配置と組織効率を分析します"
+    <div>
+      <BreadcrumbBar />
+      <ReportLayout
+        title="組織構造最適化分析"
+        description="部門別の人員配置と組織効率を分析します"
       icon="🏢"
       color="bg-indigo-500"
       facility={facility}

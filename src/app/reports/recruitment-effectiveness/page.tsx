@@ -116,9 +116,11 @@ function RecruitmentEffectivenessReportContent() {
   const reportData = generateReportData();
 
   return (
-    <ReportLayout
-      title="採用効果分析"
-      description="採用活動の効果測定と改善提案を提供します"
+    <div>
+      <BreadcrumbBar />
+      <ReportLayout
+        title="採用効果分析"
+        description="採用活動の効果測定と改善提案を提供します"
       icon="🎯"
       color="bg-teal-500"
       facility={facility}

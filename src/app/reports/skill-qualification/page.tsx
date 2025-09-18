@@ -155,9 +155,11 @@ function SkillQualificationReportContent() {
   const reportData = generateReportData();
 
   return (
-    <ReportLayout
-      title="スキル・資格管理分析"
-      description="職員のスキルと資格の現状分析と育成計画を策定します"
+    <div>
+      <BreadcrumbBar />
+      <ReportLayout
+        title="スキル・資格管理分析"
+        description="職員のスキルと資格の現状分析と育成計画を策定します"
       icon="📜"
       color="bg-pink-500"
       facility={facility}

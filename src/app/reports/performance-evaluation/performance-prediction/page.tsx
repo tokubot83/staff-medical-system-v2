@@ -2,6 +2,7 @@
 
 import React, { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import BreadcrumbBar from '@/components/navigation/BreadcrumbBar';
 import FacilitySelector from '@/components/reports/FacilitySelector';
 
 interface PredictionData {

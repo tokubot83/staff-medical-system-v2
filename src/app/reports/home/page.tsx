@@ -154,6 +154,7 @@ export default function ReportsHomePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <BreadcrumbBar />
       <div className={homeStyles.container}>
         {/* 施設選択 */}
         <div className={homeStyles.facilitySection}>

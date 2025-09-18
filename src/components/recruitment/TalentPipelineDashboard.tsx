@@ -14,7 +14,8 @@ import {
 import {
   Users, TrendingUp, AlertTriangle, Search, Filter, ArrowRight,
   UserCheck, UserX, Clock, Building, Mail, Phone, Eye,
-  ChevronRight, AlertCircle, CheckCircle2, XCircle
+  ChevronRight, AlertCircle, CheckCircle2, XCircle, ListTodo,
+  Bell, CalendarCheck, FileWarning, UserPlus, Calendar, CheckSquare
 } from 'lucide-react'
 
 interface TalentPipelineDashboardProps {
@@ -36,6 +37,11 @@ export default function TalentPipelineDashboard({
   const [selectedStage, setSelectedStage] = useState<string>('all')
   const [duplicateAlerts, setDuplicateAlerts] = useState<{ [key: string]: DuplicateCheckResult }>({})
   const [showDuplicateOnly, setShowDuplicateOnly] = useState(false)
+  const [todoCompleted, setTodoCompleted] = useState<string[]>([])
+
+  // 今日の日付を取得
+  const today = new Date().toISOString().split('T')[0]
+  const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]
 
   // ステージ別の人数カウント
   const stageCounts = {
