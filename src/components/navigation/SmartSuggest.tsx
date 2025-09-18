@@ -66,7 +66,7 @@ export const SmartSuggest: React.FC<SmartSuggestProps> = ({
     // 初回マウント時のみ実行
     setPosition({
       x: window.innerWidth - 340,
-      y: window.innerHeight - 500
+      y: window.innerHeight - 400  // 500から400に変更（より下に配置）
     })
   }, []) // 空の依存配列で初回のみ実行
 
