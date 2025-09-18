@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import CommonHeader from '@/components/CommonHeader';
 import GenericMasterTable from '@/components/admin/GenericMasterTable';
 import DevelopmentMemoTab from '@/components/admin/DevelopmentMemoTab';
 import { masterSchemas } from '@/config/masterSchemas';
@@ -87,9 +86,6 @@ export default function MasterDataPage() {
 
   return (
     <div>
-      <div className="print:hidden">
-        <CommonHeader title="マスターデータ管理" />
-      </div>
       
       <div className="min-h-screen bg-gray-50">
 
