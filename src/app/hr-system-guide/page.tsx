@@ -155,13 +155,6 @@ export default function HRSystemGuidePage() {
 
   return (
     <div>
-      {/* パンくずリスト */}
-      <BreadcrumbBar
-        items={[
-          { label: '人事制度ガイド', current: true }
-        ]}
-      />
-
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-7xl mx-auto p-6">
           {/* ページヘッダー */}
