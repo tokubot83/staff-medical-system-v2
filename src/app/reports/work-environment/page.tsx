@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import BreadcrumbBar from '@/components/navigation/BreadcrumbBar';
+
 import ReportLayout from '@/components/reports/ReportLayout';
 import { facilities } from '@/app/data/facilityData';
 import { exportToPDF } from '@/utils/pdfExport';
@@ -380,7 +380,6 @@ function WorkEnvironmentReportContent() {
 export default function WorkEnvironmentReport() {
   return (
     <div>
-      <BreadcrumbBar />
       <Suspense fallback={<div className="flex items-center justify-center h-screen">読み込み中...</div>}>
         <WorkEnvironmentReportContent />
       </Suspense>

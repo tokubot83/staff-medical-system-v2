@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import BreadcrumbBar from '@/components/navigation/BreadcrumbBar';
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FileDown } from 'lucide-react';
@@ -9,7 +9,6 @@ import { FileDown } from 'lucide-react';
 export default function ReportsExportPage() {
   return (
     <div className="container mx-auto py-6">
-      <BreadcrumbBar />
       <Card>
         <CardHeader>
           <CardTitle>レポートエクスポート</CardTitle>

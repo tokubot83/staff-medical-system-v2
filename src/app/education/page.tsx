@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useReducer } from 'react';
-import BreadcrumbBar from '@/components/navigation/BreadcrumbBar';
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -732,7 +732,6 @@ export default function EducationPage() {
 
   return (
     <div>
-      <BreadcrumbBar />
       <div className={styles.container}>
         <div className={styles.tabNavigation}>
           <button 

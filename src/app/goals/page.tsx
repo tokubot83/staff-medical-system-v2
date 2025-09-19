@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import BreadcrumbBar from '@/components/navigation/BreadcrumbBar'
+
 import Link from 'next/link'
 import { staffDatabase } from '../data/staffData.js'
 import styles from './Goals.module.css'
@@ -112,8 +112,6 @@ export default function GoalsPage() {
 
   return (
     <div>
-      <BreadcrumbBar />
-
       <div className={styles.container}>
         <div className={styles.tabNavigation}>
           {tabs.map((tab) => (

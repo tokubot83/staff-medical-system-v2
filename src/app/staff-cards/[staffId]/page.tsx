@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
-import BreadcrumbBar from '@/components/navigation/BreadcrumbBar'
+
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { staffDatabase } from '../../data/staffData.js'
@@ -116,7 +116,6 @@ export default function StaffDetailPage() {
   if (!selectedStaff) {
     return (
       <div>
-        <BreadcrumbBar />
         <div className={styles.container}>
           <div className={styles.noSelection}>
             <p>職員が見つかりません</p>
@@ -131,8 +130,6 @@ export default function StaffDetailPage() {
 
   return (
     <div>
-      <BreadcrumbBar />
-
       <div className={styles.container}>
         <div className={styles.tabNavigation}>
           {tabs.map((tab) => (

@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import BreadcrumbBar from '@/components/navigation/BreadcrumbBar'
+
 
 // コンポーネントのインポート
 import TalentPipelineDashboard from '@/components/recruitment/TalentPipelineDashboard'
@@ -431,8 +431,6 @@ export default function RecruitmentPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <BreadcrumbBar />
-
       <div className="container mx-auto py-8 px-4">
         {/* メインヘッダーカード */}
         <Card className="mb-8 shadow-lg">

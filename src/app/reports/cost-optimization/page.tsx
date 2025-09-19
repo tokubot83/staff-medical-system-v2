@@ -3,7 +3,7 @@
 import React, { useEffect, useState, Suspense, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ReportLayout from '@/components/reports/ReportLayout';
-import BreadcrumbBar from '@/components/navigation/BreadcrumbBar';
+
 import { facilities } from '@/app/data/facilityData';
 import { exportToPDF } from '@/utils/pdfExport';
 import { DataCommentList, MetricWithComment } from '@/components/DataComment';
@@ -192,7 +192,6 @@ function CostOptimizationReportContent() {
 
   return (
     <>
-      <BreadcrumbBar />
       <ReportLayout
         title="人件費最適化分析"
         description="人件費の詳細分析と最適化提案を行います"

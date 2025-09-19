@@ -3,7 +3,7 @@
 import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ReportLayout from '@/components/reports/ReportLayout';
-import BreadcrumbBar from '@/components/navigation/BreadcrumbBar';
+
 import { facilities } from '@/app/data/facilityData';
 import { staffDatabase } from '@/app/data/staffData';
 import { exportToPDF } from '@/utils/pdfExport';
@@ -402,7 +402,6 @@ function WorkLifeBalanceReportContent() {
 export default function WorkLifeBalanceReport() {
   return (
     <div>
-      <BreadcrumbBar />
       <Suspense fallback={<div className="flex items-center justify-center h-screen">読み込み中...</div>}>
         <WorkLifeBalanceReportContent />
       </Suspense>

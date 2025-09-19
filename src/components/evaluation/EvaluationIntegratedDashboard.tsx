@@ -19,7 +19,7 @@ import {
   BarChart3
 } from 'lucide-react'
 import Link from 'next/link'
-import BreadcrumbBar from '@/components/navigation/BreadcrumbBar'
+
 
 // モックデータ（実際はAPIから取得）
 const mockDashboardData = {
@@ -176,7 +176,6 @@ export default function EvaluationIntegratedDashboard() {
 
   return (
     <>
-      <BreadcrumbBar />
       <div className="evaluationDashboard">
         {/* ヘッダー */}
         <div className="dashboardHeader">

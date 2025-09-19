@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
-import BreadcrumbBar from '@/components/navigation/BreadcrumbBar'
+
 import AnnouncementComposer from '@/components/notification/AnnouncementComposer'
 import DeliveryHistory from '@/components/notification/DeliveryHistory'
 import TemplateManager from '@/components/notification/TemplateManager'
@@ -13,8 +13,6 @@ export default function NotificationsPage() {
   const [activeTab, setActiveTab] = useState<'create' | 'history' | 'templates' | 'analytics' | 'settings'>('create')
   return (
     <div>
-      <BreadcrumbBar />
-
       <div className="min-h-screen bg-white">
         <div className="container mx-auto py-8 px-4 bg-gradient-to-b from-gray-50 to-white min-h-screen">
         {/* タブナビゲーション */}

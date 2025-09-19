@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import BreadcrumbBar from '@/components/navigation/BreadcrumbBar'
+
 import ReportLayout from '@/components/reports/ReportLayout'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -36,7 +36,6 @@ export default function TwoAxisEvaluationPage() {
 
   return (
     <>
-      <BreadcrumbBar />
       <ReportLayout
         title="2軸評価分析"
         description="施設内・法人内での職員の相対的な位置づけを把握する評価システム"

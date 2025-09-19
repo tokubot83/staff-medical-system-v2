@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import BreadcrumbBar from '@/components/navigation/BreadcrumbBar';
+
 import ReportLayout from '@/components/reports/ReportLayout';
 import { facilities } from '@/app/data/facilityData';
 import { staffDatabase } from '@/app/data/staffData';
@@ -153,7 +153,6 @@ function SkillQualificationReportContent() {
 
   return (
     <>
-      <BreadcrumbBar />
       <ReportLayout
         title="スキル・資格管理分析"
         description="職員のスキルと資格の現状分析と育成計画を策定します"

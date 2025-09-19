@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import BreadcrumbBar from '@/components/navigation/BreadcrumbBar'
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
@@ -93,8 +93,6 @@ export default function OrganizationalEfficiency() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <BreadcrumbBar />
-
       <div className="p-6 max-w-7xl mx-auto">
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">

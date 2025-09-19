@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import BreadcrumbBar from '@/components/navigation/BreadcrumbBar'
+
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -35,7 +35,6 @@ export default function RiskPredictionPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <BreadcrumbBar />
       <div id="report-content" className="container mx-auto px-4 py-8">
         <Button
           variant="ghost"

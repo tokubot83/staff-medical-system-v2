@@ -9,7 +9,7 @@ import { DataCommentList, MetricWithComment } from '@/components/DataComment';
 import { generateRecruitmentComments } from '@/utils/reportComments';
 import { organizationData, getDepartmentsByType } from '@/app/data/organizationData';
 import { tachigamiOrganizationData } from '@/app/data/tachigamiOrganizationData';
-import BreadcrumbBar from '@/components/navigation/BreadcrumbBar';
+
 
 function RecruitmentEffectivenessReportContent() {
   const searchParams = useSearchParams();
@@ -114,7 +114,6 @@ function RecruitmentEffectivenessReportContent() {
 
   return (
     <>
-      <BreadcrumbBar />
       <ReportLayout
         title="採用効果分析"
         description="採用活動の効果測定と改善提案を提供します"

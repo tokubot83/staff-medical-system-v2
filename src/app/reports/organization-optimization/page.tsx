@@ -3,7 +3,7 @@
 import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ReportLayout from '@/components/reports/ReportLayout';
-import BreadcrumbBar from '@/components/navigation/BreadcrumbBar';
+
 import { facilities } from '@/app/data/facilityData';
 import { exportToPDF } from '@/utils/pdfExport';
 import { DataCommentList, MetricWithComment } from '@/components/DataComment';
@@ -143,7 +143,6 @@ function OrganizationOptimizationReportContent() {
 
   return (
     <>
-      <BreadcrumbBar />
       <ReportLayout
         title="組織構造最適化分析"
         description="部門別の人員配置と組織効率を分析します"

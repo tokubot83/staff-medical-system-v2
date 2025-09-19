@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
-import BreadcrumbBar from '@/components/navigation/BreadcrumbBar'
+
 import Link from 'next/link'
 import { staffDatabase } from '../data/staffData.js'
 import styles from './Interviews.module.css'
@@ -191,7 +191,6 @@ function InterviewsPageContent() {
 
   return (
     <div>
-      <BreadcrumbBar />
       <div className={styles.container}>
         <div className={styles.tabNavigation}>
           {tabs.map((tab) => (

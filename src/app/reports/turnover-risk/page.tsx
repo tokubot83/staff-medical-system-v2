@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import BreadcrumbBar from '@/components/navigation/BreadcrumbBar';
+
 import ReportLayout from '@/components/reports/ReportLayout';
 import { facilities } from '@/app/data/facilityData';
 import { staffDatabase } from '@/app/data/staffData';
@@ -164,7 +164,6 @@ function TurnoverRiskReportContent() {
 
   return (
     <div>
-      <BreadcrumbBar />
       <ReportLayout
       title="離職リスク予測"
       description="AI分析による離職リスクの予測と対策を提案します"

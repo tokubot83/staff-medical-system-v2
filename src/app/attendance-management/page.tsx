@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
-import BreadcrumbBar from '@/components/navigation/BreadcrumbBar'
+
 import styles from './Attendance.module.css'
 import { staffDatabase } from '../data/staffData.js'
 import Link from 'next/link'
@@ -80,8 +80,6 @@ function AttendanceManagementContent() {
 
   return (
     <div>
-      <BreadcrumbBar />
-
       <div className={styles.container}>
         {/* 開発ステータスの警告バナー */}
         <div className={styles.developmentBanner}>
