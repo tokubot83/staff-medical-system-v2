@@ -17,7 +17,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
         <header className="bg-gradient-to-r from-gray-700 via-gray-600 to-gray-700 text-white shadow-xl relative overflow-hidden">
           <div className="absolute inset-0 bg-black opacity-10"></div>
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-20"></div>
-          <div className="relative max-w-7xl mx-auto px-6">
+          <div className="relative px-6">
             <div className="flex items-center h-20">
               <div className="flex items-center space-x-4">
                 {/* Logo Icon */}
@@ -88,7 +88,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
         <nav className="bg-gradient-to-r from-gray-800 via-gray-750 to-gray-800 text-white shadow-lg relative">
           <div className="absolute inset-0 bg-gradient-to-b from-black opacity-10 to-transparent"></div>
           <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent"></div>
-          <div className="relative max-w-7xl mx-auto px-4">
+          <div className="relative px-4">
             <div className="flex items-center h-12 lg:h-12 md:h-auto md:flex-wrap">
               <div className="flex space-x-0">
                 <Link
