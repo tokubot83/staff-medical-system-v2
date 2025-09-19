@@ -412,10 +412,11 @@ export default function IntegratedAssessment() {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div>
       <BreadcrumbBar />
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">統合的指標アセスメント</h1>
+      <div className="p-6 space-y-6">
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold">統合的指標アセスメント</h1>
         <div className="flex items-center gap-2">
           <BarChart3 className="h-5 w-5 text-purple-500" />
           <span className="text-sm text-gray-600">統合分析システム</span>
@@ -500,6 +501,7 @@ export default function IntegratedAssessment() {
           </div>
         </CardContent>
       </Card>
+      </div>
     </div>
   )
 }

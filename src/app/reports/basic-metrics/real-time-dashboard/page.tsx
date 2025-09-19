@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import BreadcrumbBar from '@/components/navigation/BreadcrumbBar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -19,6 +19,16 @@ import {
 } from 'lucide-react'
 
 export default function RealTimeDashboard() {
+  const [currentTime, setCurrentTime] = useState<string>('')
+
+  useEffect(() => {
+    setCurrentTime(new Date().toLocaleTimeString('ja-JP'))
+    const timer = setInterval(() => {
+      setCurrentTime(new Date().toLocaleTimeString('ja-JP'))
+    }, 1000)
+    return () => clearInterval(timer)
+  }, [])
+
   const currentStats = {
     totalStaff: 150,
     present: 142,
@@ -43,15 +53,18 @@ export default function RealTimeDashboard() {
   ]
 
   return (
-    <div className="p-6 space-y-6">
+    <div>
       <BreadcrumbBar />
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">リアルタイムダッシュボード</h1>
+      <div className="p-6 space-y-6">
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold">リアルタイムダッシュボード</h1>
         <div className="flex items-center gap-2">
           <Activity className="h-5 w-5 text-green-500 animate-pulse" />
-          <span className="text-sm text-gray-600">
-            最終更新: {new Date().toLocaleTimeString('ja-JP')}
-          </span>
+          {currentTime && (
+            <span className="text-sm text-gray-600">
+              最終更新: {currentTime}
+            </span>
+          )}
         </div>
       </div>
 
@@ -279,6 +292,7 @@ export default function RealTimeDashboard() {
           </div>
         </CardContent>
       </Card>
+      </div>
     </div>
   )
 }

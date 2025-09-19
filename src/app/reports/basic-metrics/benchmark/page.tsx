@@ -89,10 +89,11 @@ export default function BenchmarkMetrics() {
   ]
 
   return (
-    <div className="p-6 space-y-6">
+    <div>
       <BreadcrumbBar />
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">ベンチマーク指標</h1>
+      <div className="p-6 space-y-6">
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold">ベンチマーク指標</h1>
         <div className="flex items-center gap-2">
           <BarChart3 className="h-5 w-5 text-blue-500" />
           <span className="text-sm text-gray-600">総合ランク: 地域3位</span>
@@ -506,6 +507,7 @@ export default function BenchmarkMetrics() {
           </div>
         </CardContent>
       </Card>
+      </div>
     </div>
   )
 }

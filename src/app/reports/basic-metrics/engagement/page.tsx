@@ -98,10 +98,11 @@ export default function EngagementMetrics() {
   ]
 
   return (
-    <div className="p-6 space-y-6">
+    <div>
       <BreadcrumbBar />
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">エンゲージメント指標</h1>
+      <div className="p-6 space-y-6">
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold">エンゲージメント指標</h1>
         <div className="flex items-center gap-2">
           <Heart className="h-5 w-5 text-red-500" />
           <span className="text-sm text-gray-600">総合スコア: 80/100</span>
@@ -481,6 +482,7 @@ export default function EngagementMetrics() {
           </div>
         </CardContent>
       </Card>
+      </div>
     </div>
   )
 }

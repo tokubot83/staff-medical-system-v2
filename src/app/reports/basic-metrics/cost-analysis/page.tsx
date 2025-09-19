@@ -97,10 +97,11 @@ export default function CostAnalysis() {
   const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899']
 
   return (
-    <div className="p-6 space-y-6">
+    <div>
       <BreadcrumbBar />
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">コスト分析指標</h1>
+      <div className="p-6 space-y-6">
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold">コスト分析指標</h1>
         <div className="flex items-center gap-2">
           <DollarSign className="h-5 w-5 text-green-500" />
           <span className="text-sm text-gray-600">人件費率: 61.5%</span>
@@ -495,6 +496,7 @@ export default function CostAnalysis() {
           </div>
         </CardContent>
       </Card>
+      </div>
     </div>
   )
 }

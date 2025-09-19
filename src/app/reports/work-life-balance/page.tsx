@@ -137,7 +137,6 @@ function WorkLifeBalanceReportContent() {
       categoryPath="/reports/strategic-analysis"
       categoryName="戦略分析"
     >
-      <BreadcrumbBar />
       <div id="report-content" className="p-8">
         {/* 概要指標 */}
         <section className="mb-8">
@@ -402,8 +401,11 @@ function WorkLifeBalanceReportContent() {
 
 export default function WorkLifeBalanceReport() {
   return (
-    <Suspense fallback={<div className="flex items-center justify-center h-screen">読み込み中...</div>}>
-      <WorkLifeBalanceReportContent />
-    </Suspense>
+    <div>
+      <BreadcrumbBar />
+      <Suspense fallback={<div className="flex items-center justify-center h-screen">読み込み中...</div>}>
+        <WorkLifeBalanceReportContent />
+      </Suspense>
+    </div>
   );
 }

@@ -148,7 +148,6 @@ function HRStrategyReportContent() {
       categoryPath="/reports/strategic-analysis"
       categoryName="戦略分析"
     >
-      <BreadcrumbBar />
       <div id="report-content" className="p-8">
         {/* 概要セクション */}
         <section className="mb-8">
@@ -388,8 +387,11 @@ function HRStrategyReportContent() {
 
 export default function HRStrategyReport() {
   return (
-    <Suspense fallback={<div className="flex items-center justify-center h-screen">読み込み中...</div>}>
-      <HRStrategyReportContent />
-    </Suspense>
+    <div>
+      <BreadcrumbBar />
+      <Suspense fallback={<div className="flex items-center justify-center h-screen">読み込み中...</div>}>
+        <HRStrategyReportContent />
+      </Suspense>
+    </div>
   );
 }

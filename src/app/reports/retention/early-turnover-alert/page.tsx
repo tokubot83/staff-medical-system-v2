@@ -10,9 +10,10 @@ function EarlyTurnoverAlertContent() {
   const facility = searchParams.get('facility') || '全施設';
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       <BreadcrumbBar />
-      <div id="report-content" className="container mx-auto px-4 py-8">
+      <div className="min-h-screen bg-gray-50">
+        <div id="report-content" className="container mx-auto px-4 py-8">
         <div className="bg-white rounded-lg shadow p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-gray-800">AI予測による高リスク従業員検出</h2>
@@ -232,7 +233,9 @@ function EarlyTurnoverAlertContent() {
             </button>
           </div>
         </div>
-      </div></div>
+      </div>
+      </div>
+    </div>
   );
 }
 

@@ -379,8 +379,11 @@ function WorkEnvironmentReportContent() {
 
 export default function WorkEnvironmentReport() {
   return (
-    <Suspense fallback={<div className="flex items-center justify-center h-screen">読み込み中...</div>}>
-      <WorkEnvironmentReportContent />
-    </Suspense>
+    <div>
+      <BreadcrumbBar />
+      <Suspense fallback={<div className="flex items-center justify-center h-screen">読み込み中...</div>}>
+        <WorkEnvironmentReportContent />
+      </Suspense>
+    </div>
   );
 }

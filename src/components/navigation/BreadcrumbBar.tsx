@@ -13,6 +13,25 @@ export default function BreadcrumbBar() {
     const segments = pathname.split('/').filter(Boolean)
     const breadcrumbs = []
 
+    // 戦略分析カテゴリに属するページ
+    const strategicAnalysisPages = [
+      'hr-strategy',
+      'talent-development',
+      'organization-optimization',
+      'work-environment',
+      'cost-optimization',
+      'recruitment-effectiveness',
+      'skill-qualification',
+      'department-analysis',
+      'work-life-balance',
+      'turnover-risk'
+    ]
+
+    // 基本指標カテゴリに属するページ
+    const basicMetricsPages = [
+      'two-axis-evaluation'
+    ]
+
     // ページマッピング
     const pageNames: Record<string, string> = {
       'staff-cards': '職員カルテ',
@@ -44,8 +63,18 @@ export default function BreadcrumbBar() {
       'retention': '定着分析',
       'simulation': 'シミュレーション',
       'strategic-analysis': '戦略分析',
+      'hr-strategy': '人事管理戦略分析',
+      'talent-development': '職種別人材育成戦略',
+      'organization-optimization': '組織構造最適化分析',
+      'work-environment': '労働環境改善戦略',
+      'cost-optimization': 'コスト最適化戦略',
+      'recruitment-effectiveness': '採用効率分析',
+      'skill-qualification': 'スキル・資格管理',
+      'department-analysis': '部門別詳細分析',
+      'work-life-balance': 'ワークライフバランス',
       'talent-mapping': 'タレントマッピング',
       'turnover': '離職分析',
+      'turnover-risk': '離職リスク予測',
       'wellbeing': 'ウェルビーイング',
       'two-axis-evaluation': '2軸評価分析',
       'home': 'ホーム',
@@ -123,6 +152,7 @@ export default function BreadcrumbBar() {
       'improvement-suggestions': '改善提案',
       'predictive-modeling': '予測モデリング',
       'retention-strategies': '定着戦略',
+      'risk-prediction': 'リスク予測分析',
       'time-series-trend': '時系列トレンド',
       'what-if-simulation': 'What-Ifシミュレーション',
       // ウェルビーイングサブページ
@@ -148,6 +178,26 @@ export default function BreadcrumbBar() {
       // 職員IDの場合
       if (segment.match(/^(ST|OH|TA)/)) {
         label = `職員詳細 (${segment})`
+      }
+
+      // 戦略分析カテゴリのページの場合、戦略分析を挿入
+      if (index === 1 && segments[0] === 'reports' && strategicAnalysisPages.includes(segment)) {
+        // レポートセンターの後に戦略分析を挿入
+        breadcrumbs.push({
+          label: '戦略分析',
+          href: '/reports/strategic-analysis',
+          current: false
+        })
+      }
+
+      // 基本指標カテゴリのページの場合、基本指標を挿入
+      if (index === 1 && segments[0] === 'reports' && basicMetricsPages.includes(segment)) {
+        // レポートセンターの後に基本指標を挿入
+        breadcrumbs.push({
+          label: '基本指標',
+          href: '/reports/basic-metrics',
+          current: false
+        })
       }
 
       breadcrumbs.push({

@@ -102,10 +102,11 @@ export default function PredictiveAnalytics() {
   ]
 
   return (
-    <div className="p-6 space-y-6">
+    <div>
       <BreadcrumbBar />
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">予測的人員分析</h1>
+      <div className="p-6 space-y-6">
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold">予測的人員分析</h1>
         <div className="flex items-center gap-2">
           <Brain className="h-5 w-5 text-purple-500" />
           <span className="text-sm text-gray-600">AI予測モデル稼働中</span>
@@ -402,6 +403,7 @@ export default function PredictiveAnalytics() {
           </div>
         </CardContent>
       </Card>
+      </div>
     </div>
   )
 }
