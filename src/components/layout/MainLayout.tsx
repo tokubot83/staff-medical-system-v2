@@ -13,11 +13,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
       {/* Header - 固定表示 */}
       <div className="sticky top-0 z-50">
         {/* Header Title */}
-        <header className="bg-blue-900 text-white shadow-lg">
+        <header className="bg-gray-700 text-white shadow-lg">
           <div className="max-w-7xl mx-auto px-4">
             <div className="flex items-center h-16">
               <h1 className="text-2xl font-bold">職員カルテシステム</h1>
-              <span className="ml-4 text-sm text-blue-200">医療法人厚生会</span>
+              <span className="ml-4 text-sm text-gray-300">医療法人厚生会</span>
             </div>
           </div>
         </header>
