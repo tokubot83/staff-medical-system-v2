@@ -213,21 +213,22 @@ export default function BreadcrumbBar() {
   const breadcrumbs = generateBreadcrumbs()
 
   return (
-    <div className="bg-white border-b border-gray-200 px-6 py-2 shadow-sm">
-      <nav aria-label="パンくずリスト">
+    <div className="bg-gray-50 border-t border-gray-600 border-b border-gray-300 px-6 py-2 shadow-inner relative">
+      <div className="absolute inset-0 bg-gradient-to-b from-gray-100 to-gray-50 opacity-50"></div>
+      <nav aria-label="パンくずリスト" className="relative">
         <ol className="flex items-center space-x-2 text-sm">
           {breadcrumbs.map((crumb, index) => (
             <React.Fragment key={index}>
               {index > 0 && (
                 <li className="flex items-center">
-                  <ChevronRight className="w-3 h-3 text-gray-400 mx-1" />
+                  <ChevronRight className="w-3 h-3 text-gray-500 mx-1" />
                 </li>
               )}
               <li className="flex items-center">
                 {crumb.href ? (
                   <Link
                     href={crumb.href}
-                    className="text-gray-600 hover:text-blue-600 transition-colors flex items-center hover:underline"
+                    className="text-gray-700 hover:text-blue-700 transition-all duration-200 flex items-center hover:underline font-light tracking-wide"
                   >
                     {index === 0 && <Home className="w-3 h-3 mr-1" />}
                     {crumb.label}
@@ -235,8 +236,8 @@ export default function BreadcrumbBar() {
                 ) : (
                   <span className={`flex items-center ${
                     crumb.current
-                      ? 'text-blue-600 font-medium'
-                      : 'text-gray-600'
+                      ? 'text-gray-900 font-normal tracking-wide'
+                      : 'text-gray-700 font-light tracking-wide'
                   }`}>
                     {crumb.label}
                   </span>

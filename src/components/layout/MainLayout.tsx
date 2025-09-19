@@ -84,45 +84,95 @@ export default function MainLayout({ children }: MainLayoutProps) {
         </header>
 
         {/* Navigation - 1列構成 */}
-        <nav className="bg-gray-800 text-white shadow-md">
-          <div className="max-w-7xl mx-auto px-4">
+        <nav className="bg-gradient-to-r from-gray-800 via-gray-750 to-gray-800 text-white shadow-lg relative">
+          <div className="absolute inset-0 bg-gradient-to-b from-black opacity-10 to-transparent"></div>
+          <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent"></div>
+          <div className="relative max-w-7xl mx-auto px-4">
             <div className="flex items-center h-12 lg:h-12 md:h-auto md:flex-wrap">
-              <div className="flex space-x-1">
-                <Link href="/notifications" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-purple-400">
-                  お知らせ配信
+              <div className="flex space-x-0">
+                <Link
+                  href="/notifications"
+                  className="relative px-4 py-3 text-sm font-light tracking-wide transition-all duration-300 hover:bg-white hover:bg-opacity-5 group"
+                >
+                  <span className="relative z-10">お知らせ配信</span>
+                  <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-purple-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </Link>
-                <Link href="/staff-cards" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
-                  カルテ
+                <Link
+                  href="/staff-cards"
+                  className="relative px-4 py-3 text-sm font-light tracking-wide transition-all duration-300 hover:bg-white hover:bg-opacity-5 group"
+                >
+                  <span className="relative z-10">カルテ</span>
+                  <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </Link>
-                <Link href="/recruitment" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
-                  採用
+                <Link
+                  href="/recruitment"
+                  className="relative px-4 py-3 text-sm font-light tracking-wide transition-all duration-300 hover:bg-white hover:bg-opacity-5 group"
+                >
+                  <span className="relative z-10">採用</span>
+                  <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </Link>
-                <Link href="/interviews" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
-                  面談
+                <Link
+                  href="/interviews"
+                  className="relative px-4 py-3 text-sm font-light tracking-wide transition-all duration-300 hover:bg-white hover:bg-opacity-5 group"
+                >
+                  <span className="relative z-10">面談</span>
+                  <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </Link>
-                <Link href="/education" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
-                  教育・研修
+                <Link
+                  href="/education"
+                  className="relative px-4 py-3 text-sm font-light tracking-wide transition-all duration-300 hover:bg-white hover:bg-opacity-5 group"
+                >
+                  <span className="relative z-10">教育・研修</span>
+                  <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </Link>
-                <Link href="/goals" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
-                  目標
+                <Link
+                  href="/goals"
+                  className="relative px-4 py-3 text-sm font-light tracking-wide transition-all duration-300 hover:bg-white hover:bg-opacity-5 group"
+                >
+                  <span className="relative z-10">目標</span>
+                  <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </Link>
-                <Link href="/health" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
-                  健康
+                <Link
+                  href="/health"
+                  className="relative px-4 py-3 text-sm font-light tracking-wide transition-all duration-300 hover:bg-white hover:bg-opacity-5 group"
+                >
+                  <span className="relative z-10">健康</span>
+                  <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </Link>
-                <Link href="/attendance-management" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
-                  勤怠
+                <Link
+                  href="/attendance-management"
+                  className="relative px-4 py-3 text-sm font-light tracking-wide transition-all duration-300 hover:bg-white hover:bg-opacity-5 group"
+                >
+                  <span className="relative z-10">勤怠</span>
+                  <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </Link>
-                <Link href="/dashboard" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-purple-400">
-                  評価
+                <Link
+                  href="/dashboard"
+                  className="relative px-4 py-3 text-sm font-light tracking-wide transition-all duration-300 hover:bg-white hover:bg-opacity-5 group"
+                >
+                  <span className="relative z-10">評価</span>
+                  <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-purple-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </Link>
-                <Link href="/reports" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
-                  レポート
+                <Link
+                  href="/reports"
+                  className="relative px-4 py-3 text-sm font-light tracking-wide transition-all duration-300 hover:bg-white hover:bg-opacity-5 group"
+                >
+                  <span className="relative z-10">レポート</span>
+                  <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </Link>
-                <Link href="/hr-system-guide" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-blue-400">
-                  ガイド
+                <Link
+                  href="/hr-system-guide"
+                  className="relative px-4 py-3 text-sm font-light tracking-wide transition-all duration-300 hover:bg-white hover:bg-opacity-5 group"
+                >
+                  <span className="relative z-10">ガイド</span>
+                  <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </Link>
-                <Link href="/admin/master-data" className="hover:bg-gray-700 px-4 py-3 text-sm font-medium transition-colors border-b-3 border-transparent hover:border-amber-400">
-                  管理者設定
+                <Link
+                  href="/admin/master-data"
+                  className="relative px-4 py-3 text-sm font-light tracking-wide transition-all duration-300 hover:bg-white hover:bg-opacity-5 group"
+                >
+                  <span className="relative z-10">管理者設定</span>
+                  <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-amber-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </Link>
               </div>
             </div>
