@@ -34,13 +34,49 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 </div>
               </div>
 
-              {/* Right Side Decoration */}
-              <div className="ml-auto flex items-center space-x-6">
+              {/* Search Functions */}
+              <div className="ml-auto flex items-center space-x-3">
+                {/* Staff Search */}
                 <div className="hidden lg:block">
-                  <div className="flex items-center space-x-2 text-xs text-gray-400">
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                    <span>システム稼働中</span>
+                  <div className="relative group">
+                    <input
+                      type="text"
+                      placeholder="職員検索..."
+                      className="w-48 px-4 py-2 pl-10 bg-white bg-opacity-10 backdrop-blur-sm border border-white border-opacity-20 rounded-lg text-sm text-white placeholder-gray-400 focus:outline-none focus:bg-opacity-20 focus:border-opacity-40 transition-all duration-200"
+                      onFocus={(e) => e.target.placeholder = '氏名・職員番号を入力'}
+                      onBlur={(e) => e.target.placeholder = '職員検索...'}
+                    />
+                    <svg className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    <div className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent opacity-0 group-focus-within:opacity-100 transition-opacity duration-300"></div>
                   </div>
+                </div>
+
+                {/* Applicant Search */}
+                <div className="hidden lg:block">
+                  <div className="relative group">
+                    <input
+                      type="text"
+                      placeholder="応募者検索..."
+                      className="w-48 px-4 py-2 pl-10 bg-white bg-opacity-10 backdrop-blur-sm border border-white border-opacity-20 rounded-lg text-sm text-white placeholder-gray-400 focus:outline-none focus:bg-opacity-20 focus:border-opacity-40 transition-all duration-200"
+                      onFocus={(e) => e.target.placeholder = '氏名・応募番号を入力'}
+                      onBlur={(e) => e.target.placeholder = '応募者検索...'}
+                    />
+                    <svg className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    <div className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-purple-400 to-transparent opacity-0 group-focus-within:opacity-100 transition-opacity duration-300"></div>
+                  </div>
+                </div>
+
+                {/* Mobile Search Toggle */}
+                <div className="lg:hidden">
+                  <button className="p-2 bg-white bg-opacity-10 backdrop-blur-sm rounded-lg border border-white border-opacity-20">
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </button>
                 </div>
               </div>
             </div>

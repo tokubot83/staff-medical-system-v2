@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import BreadcrumbBar from '@/components/navigation/BreadcrumbBar';
 import SheetPreviewModal from '@/components/SheetPreviewModal';
 import InterviewSheetModal from '@/components/InterviewSheetModal';
 import TrainingContent from './TrainingContent';
@@ -10,7 +11,7 @@ import ActionPlanLayout from './ActionPlanLayout';
 import DesignPhaseLayout from './DesignPhaseLayout';
 import TrialPhaseLayout from './TrialPhaseLayout';
 import {
-  Users, Briefcase, GraduationCap, LineChart, 
+  Users, Briefcase, GraduationCap, LineChart,
   CheckCircle, Calendar, Target, Star,
   TrendingUp
 } from 'lucide-react';
@@ -155,8 +156,15 @@ export default function HRSystemGuidePage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto p-6">
+        {/* パンくずリスト */}
+        <BreadcrumbBar
+          items={[
+            { label: '人事制度ガイド', current: true }
+          ]}
+        />
+
         {/* ページヘッダー */}
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
+        <div className="bg-white rounded-xl shadow-lg p-6 mb-6 mt-4">
           <h1 className="text-3xl font-bold text-gray-800 mb-4">人事制度ガイド</h1>
           <p className="text-gray-600">
             医療法人厚生会の革新的な人事評価制度・面談制度について、職員の皆様にわかりやすくご説明します。
