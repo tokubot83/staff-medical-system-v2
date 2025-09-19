@@ -47,6 +47,7 @@ export default function BreadcrumbBar() {
       'goals': '目標管理',
       'notifications': 'お知らせ',
       'dashboard': 'ダッシュボード',
+      'hr-system-guide': '人事制度ガイド',
       'admin': '管理者設定',
       'master-data': 'マスターデータ管理',
       'backup': 'バックアップ・リストア',
