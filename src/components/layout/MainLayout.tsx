@@ -13,11 +13,36 @@ export default function MainLayout({ children }: MainLayoutProps) {
       {/* Header - 固定表示 */}
       <div className="sticky top-0 z-50">
         {/* Header Title */}
-        <header className="bg-gray-700 text-white shadow-lg">
-          <div className="max-w-7xl mx-auto px-4">
-            <div className="flex items-center h-16">
-              <h1 className="text-2xl font-bold">職員カルテシステム</h1>
-              <span className="ml-4 text-sm text-gray-300">医療法人厚生会</span>
+        <header className="bg-gradient-to-r from-gray-700 via-gray-600 to-gray-700 text-white shadow-xl relative overflow-hidden">
+          <div className="absolute inset-0 bg-black opacity-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-20"></div>
+          <div className="relative max-w-7xl mx-auto px-6">
+            <div className="flex items-center h-20">
+              <div className="flex items-center space-x-4">
+                {/* Logo Icon */}
+                <div className="w-12 h-12 bg-white bg-opacity-10 backdrop-blur-sm rounded-lg flex items-center justify-center border border-white border-opacity-20 shadow-lg">
+                  <span className="text-2xl">🏥</span>
+                </div>
+                {/* Title Section */}
+                <div className="flex flex-col">
+                  <h1 className="text-2xl font-light tracking-wide text-white drop-shadow-sm">
+                    職員カルテシステム
+                  </h1>
+                  <span className="text-xs text-gray-300 tracking-widest uppercase opacity-80">
+                    医療法人厚生会
+                  </span>
+                </div>
+              </div>
+
+              {/* Right Side Decoration */}
+              <div className="ml-auto flex items-center space-x-6">
+                <div className="hidden lg:block">
+                  <div className="flex items-center space-x-2 text-xs text-gray-400">
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <span>システム稼働中</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </header>
