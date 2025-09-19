@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
-import BreadcrumbBar from "@/components/navigation/BreadcrumbBar";
 import { SmartSuggest } from "@/components/navigation/SmartSuggest";
 import MainLayout from "@/components/layout/MainLayout";
 

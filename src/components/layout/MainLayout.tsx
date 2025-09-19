@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import BreadcrumbBar from '@/components/navigation/BreadcrumbBar';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -178,10 +179,15 @@ export default function MainLayout({ children }: MainLayoutProps) {
             </div>
           </div>
         </nav>
+
+        {/* Breadcrumb - 固定表示の一部として */}
+        <BreadcrumbBar />
       </div>
 
-      {/* Main content */}
-      {children}
+      {/* Main content - パンくずリストの高さ分のパディングを追加 */}
+      <div className="pt-2">
+        {children}
+      </div>
     </div>
   );
 }
