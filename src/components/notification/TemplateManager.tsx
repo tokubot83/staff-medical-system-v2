@@ -292,11 +292,10 @@ export default function TemplateManager() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">すべて</SelectItem>
-                <SelectItem value="urgent">緊急</SelectItem>
+                <SelectItem value="announcement">お知らせ</SelectItem>
                 <SelectItem value="interview">面談</SelectItem>
                 <SelectItem value="training">研修</SelectItem>
                 <SelectItem value="survey">アンケート</SelectItem>
-                <SelectItem value="health">健康管理</SelectItem>
                 <SelectItem value="other">その他</SelectItem>
               </SelectContent>
             </Select>
@@ -321,9 +320,9 @@ export default function TemplateManager() {
                   </div>
 
                   <div className="flex items-center gap-2 flex-wrap mb-2">
-                    <Badge className={`${categoryConfig[template.category].color} text-white text-xs`}>
-                      <span className="mr-1">{categoryConfig[template.category].icon}</span>
-                      {categoryConfig[template.category].label}
+                    <Badge className={`${categoryConfig[template.category]?.color || 'bg-gray-500'} text-white text-xs`}>
+                      <span className="mr-1">{categoryConfig[template.category]?.icon || '📢'}</span>
+                      {categoryConfig[template.category]?.label || template.category}
                     </Badge>
 
                     {template.tags.slice(0, 2).map((tag, index) => (

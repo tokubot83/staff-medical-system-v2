@@ -553,9 +553,9 @@ export default function DeliveryHistory() {
                         </h4>
 
                         {/* カテゴリバッジ */}
-                        <Badge className={`${categoryConfig[record.category].color} text-white text-xs`}>
-                          <span className="mr-1">{categoryConfig[record.category].icon}</span>
-                          {categoryConfig[record.category].label}
+                        <Badge className={`${categoryConfig[record.category]?.color || 'bg-gray-500'} text-white text-xs`}>
+                          <span className="mr-1">{categoryConfig[record.category]?.icon || '📢'}</span>
+                          {categoryConfig[record.category]?.label || record.category}
                         </Badge>
 
                         {/* 優先度バッジ */}
