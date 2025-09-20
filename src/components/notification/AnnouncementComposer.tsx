@@ -378,14 +378,18 @@ export default function AnnouncementComposer() {
       hasActionButton = true
       actionButtonType = 'survey_response'
       actionButtonLabel = 'アンケートに回答する'
+    } else if (categoryId === 'announcement' || categoryId === 'urgent' || categoryId === 'other') {
+      // テンプレートがないカテゴリの場合、タイトルと内容をクリア
+      templateTitle = ''
+      templateContent = ''
     }
 
     setForm(prev => ({
       ...prev,
       category: categoryId,
-      // テンプレートがある場合のみ、タイトルと内容を更新
-      ...(templateTitle && { title: templateTitle }),
-      ...(templateContent && { content: templateContent }),
+      // タイトルと内容を更新（テンプレートがない場合は空文字列でクリア）
+      title: templateTitle,
+      content: templateContent,
       // アクションボタン設定
       hasActionButton,
       actionButtonType: actionButtonType as any,
