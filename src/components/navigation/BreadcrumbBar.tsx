@@ -56,6 +56,9 @@ export default function BreadcrumbBar() {
       'scheduler': 'スケジューラー',
       'interview-bank': '面談バンク管理',
       'image-management': '画像管理',
+      'documents': '保存書類',
+      'dev-notes': '開発メモ',
+      'mcp-shared': 'MCP共有フォルダ',
       // レポートカテゴリ
       'basic-metrics': '基本指標',
       'cohort-analysis': 'コホート分析',
