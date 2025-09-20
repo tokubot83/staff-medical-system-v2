@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
+import { getFileModifiedDate, shouldUseMappedDates } from '@/lib/file-dates';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -16,7 +17,18 @@ export async function GET(request: NextRequest) {
 
   try {
     const files = await getDocumentFiles(docsPath);
-    return NextResponse.json({ files });
+
+    // キャッシュ無効化のためのヘッダーを追加
+    return NextResponse.json(
+      { files },
+      {
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        }
+      }
+    );
   } catch (error) {
     console.error('Error reading documents:', error);
     return NextResponse.json({ error: 'Failed to read documents' }, { status: 500 });
@@ -48,12 +60,18 @@ async function getDocumentFiles(dirPath: string): Promise<any[]> {
         const ext = path.extname(entry.name).toLowerCase();
         if (['.md', '.pdf', '.txt', '.json'].includes(ext)) {
           const stats = await fs.stat(fullPath);
+
+          // Vercel環境では手動マッピングから日付を取得
+          const modifiedDate = shouldUseMappedDates()
+            ? getFileModifiedDate(entry.name, stats.mtime)
+            : stats.mtime;
+
           files.push({
             name: entry.name,
             path: entry.name,
             type: ext.substring(1),
             size: stats.size,
-            modified: stats.mtime,
+            modified: modifiedDate,
             created: stats.ctime
           });
         }

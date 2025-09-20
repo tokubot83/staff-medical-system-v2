@@ -25,7 +25,13 @@ export default function DocumentsPage() {
 
   const fetchDocuments = async () => {
     try {
-      const response = await fetch('/api/documents?type=saved');
+      // キャッシュを無効化してフェッチ
+      const response = await fetch('/api/documents?type=saved', {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache',
+        }
+      });
       const data = await response.json();
       setDocuments(data.files || []);
     } catch (error) {
