@@ -334,6 +334,124 @@ export default function AnnouncementComposer() {
   const [showIndividualSearch, setShowIndividualSearch] = useState(false)
   const [individualSearchTerm, setIndividualSearchTerm] = useState('')
 
+  // アンケートサブカテゴリ選択時のテンプレート設定
+  const handleSurveySubCategorySelect = (subCategoryId: string) => {
+    let templateTitle = ''
+    let templateContent = ''
+
+    switch (subCategoryId) {
+      case 'satisfaction':
+        templateTitle = '【満足度調査】職場環境アンケート'
+        templateContent = `お疲れ様です。
+
+職場環境改善のため、満足度調査を実施いたします。
+
+【調査内容】
+■現在の職場環境の満足度
+■業務内容・負担感
+■チームワーク・人間関係
+■改善要望
+
+回答期限：〇月〇日（金）
+所要時間：約5分
+
+回答は匿名で取り扱います。率直なご意見をお聞かせください。`
+        break
+      case 'workenv':
+        templateTitle = '【職場環境調査】働き方に関するアンケート'
+        templateContent = `お疲れ様です。
+
+より良い職場環境づくりのため、アンケートを実施いたします。
+
+【調査項目】
+■勤務時間・シフト体制
+■休暇取得状況
+■職場の設備・環境
+■安全管理体制
+
+皆様の声をもとに改善に取り組んでまいります。`
+        break
+      case 'education':
+        templateTitle = '【研修・教育】スキルアップニーズ調査'
+        templateContent = `お疲れ様です。
+
+来年度の研修計画策定に向けて、スキルアップニーズ調査を実施いたします。
+
+【調査内容】
+■必要としているスキル・知識
+■希望する研修分野
+■研修参加の障壁
+■キャリア開発の希望
+
+皆様のニーズに合った研修を企画してまいります。`
+        break
+      case 'welfare':
+        templateTitle = '【福利厚生】制度利用状況アンケート'
+        templateContent = `お疲れ様です。
+
+福利厚生制度の充実のため、利用状況アンケートを実施いたします。
+
+【調査項目】
+■現在の福利厚生制度の認知度
+■各制度の利用状況
+■満足度・改善点
+■新たに希望する制度
+
+ご意見を参考に制度の見直しを検討いたします。`
+        break
+      case 'system':
+        templateTitle = '【システム改善】ITツール利用状況調査'
+        templateContent = `お疲れ様です。
+
+業務システム改善のため、ITツールの利用状況を調査いたします。
+
+【調査内容】
+■現在利用中のシステムの使い勝手
+■不便を感じている点
+■新たに必要な機能
+■システム研修の必要性
+
+使いやすいシステム構築に向けて活用させていただきます。`
+        break
+      case 'event':
+        templateTitle = '【イベント企画】参加希望調査'
+        templateContent = `お疲れ様です。
+
+職場交流イベントの企画にあたり、参加希望をお伺いします。
+
+【調査項目】
+■希望するイベント内容
+■参加しやすい日程・時間帯
+■過去のイベントへの感想
+■企画アイディア
+
+皆様が楽しめるイベントを企画してまいります。`
+        break
+      case 'other':
+        templateTitle = '【アンケートご協力のお願い】'
+        templateContent = `お疲れ様です。
+
+下記のアンケートにご協力をお願いいたします。
+
+【アンケート概要】
+■目的：
+■回答期限：
+■所要時間：約5分
+■対象者：
+
+ご回答は今後の改善に活用させていただきます。
+ご協力のほど、よろしくお願いいたします。`
+        break
+    }
+
+    setForm(prev => ({
+      ...prev,
+      surveySubCategory: subCategoryId,
+      title: templateTitle,
+      content: templateContent
+    }))
+  }
+
   const handleCategorySelect = (categoryId: string) => {
     // カテゴリに応じたテンプレートを自動挿入
     let templateTitle = ''
@@ -641,7 +759,7 @@ export default function AnnouncementComposer() {
                   {surveySubCategories.map(subCategory => (
                     <div
                       key={subCategory.id}
-                      onClick={() => setForm(prev => ({ ...prev, surveySubCategory: subCategory.id }))}
+                      onClick={() => handleSurveySubCategorySelect(subCategory.id)}
                       className={`p-3 border-2 rounded-lg cursor-pointer transition-all hover:bg-gray-50 ${
                         form.surveySubCategory === subCategory.id
                           ? 'border-green-500 bg-green-50'
