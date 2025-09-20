@@ -5,68 +5,119 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   Database, Download, Link2, History, Calendar,
-  Shield, Settings, FileText, Share2, Home, StickyNote, Clock
+  Shield, Settings, FileText, Share2, Home, StickyNote, Clock,
+  BarChart3, FolderOpen, Cog
 } from 'lucide-react';
 
 
+// トップバーのメニュー項目
 const adminMenuItems = [
-  { 
-    href: '/admin/master-data', 
-    label: 'マスターデータ管理', 
+  {
+    href: '/admin/master-data',
+    label: 'マスターデータ管理',
     icon: Database,
     description: '各種マスターデータの管理'
   },
-  { 
-    href: '/admin/backup', 
-    label: 'バックアップ・リストア', 
+  {
+    href: '/admin/backup',
+    label: 'バックアップ・リストア',
     icon: Download,
     description: 'データのバックアップと復元'
   },
-  { 
-    href: '/admin/integration', 
-    label: '外部システム連携', 
+  {
+    href: '/admin/integration',
+    label: '外部システム連携',
     icon: Link2,
     description: 'API連携の設定'
   },
-  { 
-    href: '/admin/audit-log', 
-    label: '監査ログ', 
+  {
+    href: '/admin/audit-log',
+    label: '監査ログ',
     icon: History,
     description: '操作履歴の確認'
   },
-  { 
-    href: '/admin/scheduler', 
-    label: 'スケジューラー', 
+  {
+    href: '/admin/scheduler',
+    label: 'スケジューラー',
     icon: Calendar,
     description: 'バッチ処理の管理'
   },
 ];
 
-const sidebarMenuItems = [
+// サイドバーのメニュー構造（機能別グループ化）
+const sidebarMenuGroups = [
   {
-    href: '/admin',
-    label: 'ダッシュボード',
-    icon: Home,
-    description: '管理者ダッシュボード'
+    title: null, // ダッシュボードは単独
+    icon: BarChart3,
+    items: [
+      {
+        href: '/admin',
+        label: 'ダッシュボード',
+        icon: Home,
+        description: '管理者ダッシュボード'
+      }
+    ]
   },
   {
-    href: '/admin/dev-notes',
-    label: '開発メモ',
-    icon: StickyNote,
-    description: '開発ノートとメモ'
+    title: 'ドキュメント管理',
+    icon: FolderOpen,
+    items: [
+      {
+        href: '/admin/dev-notes',
+        label: '開発メモ',
+        icon: StickyNote,
+        description: '開発ノートとメモ'
+      },
+      {
+        href: '/admin/documents',
+        label: '保存書類',
+        icon: FileText,
+        description: 'システムドキュメント'
+      },
+      {
+        href: '/admin/mcp-shared',
+        label: 'MCP共有フォルダ',
+        icon: Share2,
+        description: '連携システム情報'
+      }
+    ]
   },
   {
-    href: '/admin/documents',
-    label: '保存書類',
-    icon: FileText,
-    description: 'システムドキュメント'
-  },
-  {
-    href: '/admin/mcp-shared',
-    label: 'MCP共有',
-    icon: Share2,
-    description: '連携システム情報'
-  },
+    title: 'システム管理',
+    icon: Cog,
+    items: [
+      {
+        href: '/admin/master-data',
+        label: 'マスターデータ管理',
+        icon: Database,
+        description: '各種マスターデータの管理'
+      },
+      {
+        href: '/admin/backup',
+        label: 'バックアップ・リストア',
+        icon: Download,
+        description: 'データのバックアップと復元'
+      },
+      {
+        href: '/admin/integration',
+        label: '外部システム連携',
+        icon: Link2,
+        description: 'API連携の設定'
+      },
+      {
+        href: '/admin/audit-log',
+        label: '監査ログ',
+        icon: History,
+        description: '操作履歴の確認'
+      },
+      {
+        href: '/admin/scheduler',
+        label: 'スケジューラー',
+        icon: Calendar,
+        description: 'バッチ処理の管理'
+      }
+    ]
+  }
 ];
 
 export default function AdminLayout({
@@ -131,80 +182,73 @@ export default function AdminLayout({
       </div>
 
       <div className="flex">
-        {/* Left Sidebar */}
-        <div className="w-64 bg-gray-50 border-r border-gray-200 min-h-screen">
-          <div className="p-4">
-            <div className="space-y-1">
-              {sidebarMenuItems.map((item) => {
-                const Icon = item.icon;
-                const isActive = pathname === item.href;
+        {/* Left Sidebar - 機能別グループ化 */}
+        <div className="w-72 bg-gray-50 border-r border-gray-200 min-h-screen">
+          <div className="p-4 space-y-6">
+            {sidebarMenuGroups.map((group, groupIndex) => (
+              <div key={groupIndex}>
+                {/* グループタイトル */}
+                {group.title && (
+                  <div className="flex items-center gap-2 px-3 mb-2">
+                    <group.icon className="h-4 w-4 text-gray-500" />
+                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      {group.title}
+                    </span>
+                  </div>
+                )}
 
-                // Get the latest date for documents and mcp-shared items
-                let latestDate = null;
-                if (item.href === '/admin/documents') {
-                  latestDate = formatRelativeDate(latestDates.saved);
-                } else if (item.href === '/admin/mcp-shared') {
-                  latestDate = formatRelativeDate(latestDates.mcp);
-                }
+                {/* グループ内のアイテム */}
+                <div className="space-y-1">
+                  {group.items.map((item) => {
+                    const Icon = item.icon;
+                    const isActive = pathname === item.href;
 
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`
-                      flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200
-                      ${isActive
-                        ? 'bg-blue-100 text-blue-700 font-semibold'
-                        : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
-                      }
-                    `}
-                  >
-                    <Icon className="h-5 w-5" />
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm">{item.label}</span>
-                        {latestDate && (
-                          <span className="text-xs text-gray-500 flex items-center gap-1">
-                            <Clock className="h-3 w-3" />
-                            {latestDate}
-                          </span>
-                        )}
-                      </div>
-                      {isActive && (
-                        <div className="text-xs text-gray-500 mt-0.5">{item.description}</div>
-                      )}
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
+                    // Get the latest date for documents and mcp-shared items
+                    let latestDate = null;
+                    if (item.href === '/admin/documents') {
+                      latestDate = formatRelativeDate(latestDates.saved);
+                    } else if (item.href === '/admin/mcp-shared') {
+                      latestDate = formatRelativeDate(latestDates.mcp);
+                    }
 
-            <div className="mt-8 pt-8 border-t border-gray-200">
-              <div className="text-xs text-gray-500 mb-2">管理機能</div>
-              <div className="space-y-1">
-                {adminMenuItems.map((item) => {
-                  const Icon = item.icon;
-                  const isActive = pathname === item.href;
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className={`
+                          flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all duration-200
+                          ${isActive
+                            ? 'bg-blue-100 text-blue-700 font-semibold shadow-sm'
+                            : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                          }
+                          ${group.title ? 'ml-6' : ''}
+                        `}
+                      >
+                        <Icon className={`${group.title ? 'h-4 w-4' : 'h-5 w-5'}`} />
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between">
+                            <span className={`${group.title ? 'text-sm' : 'text-sm font-medium'}`}>
+                              {item.label}
+                            </span>
+                            {latestDate && (
+                              <span className="text-xs text-gray-500 flex items-center gap-1">
+                                <Clock className="h-3 w-3" />
+                                {latestDate}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
 
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={`
-                        flex items-center gap-3 px-4 py-2 rounded-lg transition-all duration-200 text-sm
-                        ${isActive
-                          ? 'bg-blue-100 text-blue-700 font-semibold'
-                          : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
-                        }
-                      `}
-                    >
-                      <Icon className="h-4 w-4" />
-                      <span>{item.label}</span>
-                    </Link>
-                  );
-                })}
+                {/* セクション区切り */}
+                {groupIndex < sidebarMenuGroups.length - 1 && (
+                  <div className="mt-4 mb-2 border-b border-gray-200" />
+                )}
               </div>
-            </div>
+            ))}
           </div>
         </div>
 
