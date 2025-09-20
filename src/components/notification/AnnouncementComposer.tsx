@@ -83,7 +83,6 @@ const categories = [
   { id: 'interview', label: '面談', icon: '👥', color: 'border-blue-500' },
   { id: 'training', label: '研修', icon: '📚', color: 'border-purple-500' },
   { id: 'survey', label: 'アンケート', icon: '📊', color: 'border-green-500' },
-  { id: 'health', label: '健康管理', icon: '🏥', color: 'border-orange-500' },
   { id: 'other', label: 'その他', icon: '📢', color: 'border-gray-500' }
 ]
 
