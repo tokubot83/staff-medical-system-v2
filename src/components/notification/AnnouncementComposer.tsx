@@ -62,6 +62,7 @@ interface AnnouncementForm {
   priority: 'high' | 'medium' | 'low'
   scheduledDate?: string
   // アンケート固有
+  surveySubCategory?: string
   surveyQuestions: Question[]
   surveyEndDate?: string
   surveyAnonymous: boolean
@@ -94,6 +95,17 @@ const departments = [
 
 const positions = [
   '主任', '師長', '副師長', '科長', '係長', '部長', '課長', '管理職'
+]
+
+// アンケートのサブカテゴリ
+const surveySubCategories = [
+  { id: 'satisfaction', label: '満足度調査', icon: '😊' },
+  { id: 'workenv', label: '職場環境', icon: '🏢' },
+  { id: 'education', label: '教育・研修', icon: '📚' },
+  { id: 'welfare', label: '福利厚生', icon: '🎁' },
+  { id: 'system', label: 'システム改善', icon: '💻' },
+  { id: 'event', label: 'イベント', icon: '🎉' },
+  { id: 'other', label: 'その他', icon: '📝' }
 ]
 
 // 質問タイプ
@@ -311,6 +323,7 @@ export default function AnnouncementComposer() {
     targetIndividuals: [],
     targetPositions: [],
     priority: 'medium',
+    surveySubCategory: '',
     surveyQuestions: [],
     surveyAnonymous: true,
     surveyAllowMultipleResponses: false,
@@ -390,6 +403,8 @@ export default function AnnouncementComposer() {
       // タイトルと内容を更新（テンプレートがない場合は空文字列でクリア）
       title: templateTitle,
       content: templateContent,
+      // アンケートカテゴリでない場合はサブカテゴリをクリア
+      surveySubCategory: categoryId === 'survey' ? prev.surveySubCategory : '',
       // アクションボタン設定
       hasActionButton,
       actionButtonType: actionButtonType as any,
@@ -617,6 +632,31 @@ export default function AnnouncementComposer() {
                 ))}
               </div>
             </div>
+
+            {/* アンケートのサブカテゴリ選択 */}
+            {form.category === 'survey' && (
+              <div>
+                <Label className="text-base font-semibold mb-4 block">アンケート種別</Label>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {surveySubCategories.map(subCategory => (
+                    <div
+                      key={subCategory.id}
+                      onClick={() => setForm(prev => ({ ...prev, surveySubCategory: subCategory.id }))}
+                      className={`p-3 border-2 rounded-lg cursor-pointer transition-all hover:bg-gray-50 ${
+                        form.surveySubCategory === subCategory.id
+                          ? 'border-green-500 bg-green-50'
+                          : 'border-gray-200'
+                      }`}
+                    >
+                      <div className="text-center">
+                        <div className="text-xl mb-1">{subCategory.icon}</div>
+                        <div className="text-sm font-medium">{subCategory.label}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* 件名 */}
             <div>
