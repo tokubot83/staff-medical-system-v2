@@ -89,7 +89,7 @@ export default function NotificationSettings() {
     {
       id: '3',
       name: '緊急通知エスカレーション',
-      category: 'urgent',
+      category: 'announcement',
       condition: '未読30分経過',
       action: 'SMS配信',
       enabled: false

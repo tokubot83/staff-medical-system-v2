@@ -37,7 +37,7 @@ import {
 } from 'lucide-react'
 
 type DeliveryStatus = 'draft' | 'scheduled' | 'sending' | 'delivered' | 'failed'
-type CategoryType = 'urgent' | 'interview' | 'training' | 'survey' | 'health' | 'other'
+type CategoryType = 'announcement' | 'interview' | 'training' | 'survey' | 'other'
 
 interface DeliveryRecord {
   id: string
@@ -85,11 +85,10 @@ const statusConfig = {
 }
 
 const categoryConfig = {
-  urgent: { label: '緊急', color: 'bg-red-500', icon: '🚨' },
+  announcement: { label: 'お知らせ', color: 'bg-cyan-500', icon: '📣' },
   interview: { label: '面談', color: 'bg-blue-500', icon: '👥' },
   training: { label: '研修', color: 'bg-purple-500', icon: '📚' },
-  survey: { label: 'アンケート', color: 'bg-green-500', icon: '📝' },
-  health: { label: '健康管理', color: 'bg-orange-500', icon: '🏥' },
+  survey: { label: 'アンケート', color: 'bg-green-500', icon: '📊' },
   other: { label: 'その他', color: 'bg-gray-500', icon: '📢' }
 }
 
@@ -103,7 +102,7 @@ const mockDeliveryData: DeliveryRecord[] = [
   {
     id: '1',
     title: '【緊急】新型コロナ対策強化のお知らせ',
-    category: 'urgent',
+    category: 'announcement',
     content: '新たな変異株の流行に伴い、感染対策を強化いたします。詳細は添付資料をご確認ください。',
     status: 'delivered',
     targetType: 'all',
@@ -219,7 +218,7 @@ const mockDeliveryData: DeliveryRecord[] = [
   {
     id: '7',
     title: '夜勤体制変更のお知らせ',
-    category: 'urgent',
+    category: 'announcement',
     content: '人員配置の都合により、夜勤体制を一部変更いたします。',
     status: 'failed',
     targetType: 'departments',
