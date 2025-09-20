@@ -79,6 +79,7 @@ interface AnnouncementForm {
 }
 
 const categories = [
+  { id: 'announcement', label: 'お知らせ', icon: '📣', color: 'border-cyan-500' },
   { id: 'interview', label: '面談', icon: '👥', color: 'border-blue-500' },
   { id: 'training', label: '研修', icon: '📚', color: 'border-purple-500' },
   { id: 'survey', label: 'アンケート', icon: '📊', color: 'border-green-500' },
