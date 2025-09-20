@@ -1,0 +1,126 @@
+{
+  "phase": "Phase 1: 基本機能テスト",
+  "timestamp": "2025-09-20T09:22:46.298Z",
+  "environment": {
+    "voiceDriveUrl": "http://localhost:3002/api",
+    "medicalSystemUrl": "http://localhost:3000"
+  },
+  "results": [
+    {
+      "testName": "TEST-001: お知らせ配信（通常優先度）",
+      "timestamp": "2025-09-20T09:22:36.246Z",
+      "status": 200,
+      "success": true,
+      "response": {
+        "success": true,
+        "notificationId": "vd_notif_1758360156240",
+        "message": "通知を正常に受信しました",
+        "processing": {
+          "category": "NOTIFICATION",
+          "priority": "NORMAL",
+          "targetCount": 500,
+          "estimatedDeliveryTime": "2025-09-20T10:00:00Z"
+        },
+        "metadata": {
+          "receivedAt": "2025-09-20T09:22:36.240Z",
+          "processedBy": "VoiceDrive Test API v1.0"
+        }
+      },
+      "responseTime": null
+    },
+    {
+      "testName": "TEST-002: お知らせ配信（高優先度/緊急）",
+      "timestamp": "2025-09-20T09:22:38.256Z",
+      "status": 200,
+      "success": true,
+      "response": {
+        "success": true,
+        "notificationId": "vd_notif_1758360158255",
+        "message": "通知を正常に受信しました",
+        "processing": {
+          "category": "NOTIFICATION",
+          "priority": "URGENT",
+          "targetCount": 500,
+          "estimatedDeliveryTime": "2025-09-20T10:00:00Z"
+        },
+        "metadata": {
+          "receivedAt": "2025-09-20T09:22:38.255Z",
+          "processedBy": "VoiceDrive Test API v1.0"
+        }
+      },
+      "responseTime": null
+    },
+    {
+      "testName": "TEST-003: 面談案内配信",
+      "timestamp": "2025-09-20T09:22:40.270Z",
+      "status": 200,
+      "success": true,
+      "response": {
+        "success": true,
+        "notificationId": "vd_notif_1758360160269",
+        "message": "通知を正常に受信しました",
+        "processing": {
+          "category": "MEETING",
+          "priority": "NORMAL",
+          "targetCount": 100,
+          "estimatedDeliveryTime": "2025-09-20T10:00:00Z"
+        },
+        "metadata": {
+          "receivedAt": "2025-09-20T09:22:40.269Z",
+          "processedBy": "VoiceDrive Test API v1.0"
+        }
+      },
+      "responseTime": null
+    },
+    {
+      "testName": "TEST-004: 研修案内配信",
+      "timestamp": "2025-09-20T09:22:42.280Z",
+      "status": 200,
+      "success": true,
+      "response": {
+        "success": true,
+        "notificationId": "vd_notif_1758360162279",
+        "message": "通知を正常に受信しました",
+        "processing": {
+          "category": "EDUCATION",
+          "priority": "NORMAL",
+          "targetCount": 500,
+          "estimatedDeliveryTime": "2025-09-20T10:00:00Z"
+        },
+        "metadata": {
+          "receivedAt": "2025-09-20T09:22:42.279Z",
+          "processedBy": "VoiceDrive Test API v1.0"
+        }
+      },
+      "responseTime": null
+    },
+    {
+      "testName": "TEST-005: アンケート配信（満足度調査）",
+      "timestamp": "2025-09-20T09:22:44.292Z",
+      "status": 200,
+      "success": true,
+      "response": {
+        "success": true,
+        "notificationId": "vd_notif_1758360164291",
+        "message": "通知を正常に受信しました",
+        "processing": {
+          "category": "SURVEY",
+          "priority": "LOW",
+          "targetCount": 500,
+          "estimatedDeliveryTime": "2025-09-20T10:00:00Z"
+        },
+        "metadata": {
+          "receivedAt": "2025-09-20T09:22:44.291Z",
+          "processedBy": "VoiceDrive Test API v1.0"
+        }
+      },
+      "responseTime": null
+    }
+  ],
+  "summary": {
+    "total": 5,
+    "success": 5,
+    "failed": 0,
+    "successRate": "100.0"
+  }
+}
