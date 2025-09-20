@@ -46,9 +46,13 @@ export default function DocumentsPage() {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
-    const diffTime = Math.abs(now.getTime() - date.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffTime = now.getTime() - date.getTime();
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
+    if (diffDays < 0) {
+      // 未来の日付の場合
+      return date.toLocaleDateString('ja-JP');
+    }
     if (diffDays === 0) return '今日';
     if (diffDays === 1) return '昨日';
     if (diffDays < 7) return `${diffDays}日前`;
