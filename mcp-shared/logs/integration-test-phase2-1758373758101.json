@@ -1,0 +1,325 @@
+{
+  "phase": "Phase 2: サブカテゴリ・配信対象テスト",
+  "timestamp": "2025-09-20T13:09:18.101Z",
+  "results": [
+    {
+      "testName": "TEST-2A-1: 満足度調査",
+      "timestamp": "2025-09-20T13:09:06.978Z",
+      "status": 200,
+      "success": true,
+      "response": {
+        "success": true,
+        "notificationId": "vd_notif_1758373746973",
+        "message": "通知を正常に受信しました",
+        "processing": {
+          "category": "SURVEY",
+          "priority": "NORMAL",
+          "targetCount": 500,
+          "estimatedDeliveryTime": "2025-09-20T10:00:00Z"
+        },
+        "metadata": {
+          "receivedAt": "2025-09-20T13:09:06.973Z",
+          "processedBy": "VoiceDrive Test API v1.0"
+        }
+      },
+      "responseTime": 24,
+      "testData": {
+        "category": "survey",
+        "subCategory": "satisfaction",
+        "targetType": "all",
+        "targetCount": "all"
+      }
+    },
+    {
+      "testName": "TEST-2A-2: 職場環境調査",
+      "timestamp": "2025-09-20T13:09:07.988Z",
+      "status": 200,
+      "success": true,
+      "response": {
+        "success": true,
+        "notificationId": "vd_notif_1758373747987",
+        "message": "通知を正常に受信しました",
+        "processing": {
+          "category": "SURVEY",
+          "priority": "NORMAL",
+          "targetCount": 50,
+          "estimatedDeliveryTime": "2025-09-20T10:00:00Z"
+        },
+        "metadata": {
+          "receivedAt": "2025-09-20T13:09:07.987Z",
+          "processedBy": "VoiceDrive Test API v1.0"
+        }
+      },
+      "responseTime": 3,
+      "testData": {
+        "category": "survey",
+        "subCategory": "workenv",
+        "targetType": "departments",
+        "targetCount": 1
+      }
+    },
+    {
+      "testName": "TEST-2A-3: 教育・研修調査",
+      "timestamp": "2025-09-20T13:09:09.001Z",
+      "status": 200,
+      "success": true,
+      "response": {
+        "success": true,
+        "notificationId": "vd_notif_1758373749000",
+        "message": "通知を正常に受信しました",
+        "processing": {
+          "category": "SURVEY",
+          "priority": "LOW",
+          "targetCount": 500,
+          "estimatedDeliveryTime": "2025-09-20T10:00:00Z"
+        },
+        "metadata": {
+          "receivedAt": "2025-09-20T13:09:09.000Z",
+          "processedBy": "VoiceDrive Test API v1.0"
+        }
+      },
+      "responseTime": 2,
+      "testData": {
+        "category": "survey",
+        "subCategory": "education",
+        "targetType": "all",
+        "targetCount": "all"
+      }
+    },
+    {
+      "testName": "TEST-2A-4: 福利厚生調査",
+      "timestamp": "2025-09-20T13:09:10.017Z",
+      "status": 200,
+      "success": true,
+      "response": {
+        "success": true,
+        "notificationId": "vd_notif_1758373750015",
+        "message": "通知を正常に受信しました",
+        "processing": {
+          "category": "SURVEY",
+          "priority": "LOW",
+          "targetCount": 500,
+          "estimatedDeliveryTime": "2025-09-20T10:00:00Z"
+        },
+        "metadata": {
+          "receivedAt": "2025-09-20T13:09:10.015Z",
+          "processedBy": "VoiceDrive Test API v1.0"
+        }
+      },
+      "responseTime": 3,
+      "testData": {
+        "category": "survey",
+        "subCategory": "welfare",
+        "targetType": "all",
+        "targetCount": "all"
+      }
+    },
+    {
+      "testName": "TEST-2A-5: システム改善調査",
+      "timestamp": "2025-09-20T13:09:11.027Z",
+      "status": 200,
+      "success": true,
+      "response": {
+        "success": true,
+        "notificationId": "vd_notif_1758373751025",
+        "message": "通知を正常に受信しました",
+        "processing": {
+          "category": "SURVEY",
+          "priority": "NORMAL",
+          "targetCount": 100,
+          "estimatedDeliveryTime": "2025-09-20T10:00:00Z"
+        },
+        "metadata": {
+          "receivedAt": "2025-09-20T13:09:11.025Z",
+          "processedBy": "VoiceDrive Test API v1.0"
+        }
+      },
+      "responseTime": 3,
+      "testData": {
+        "category": "survey",
+        "subCategory": "system",
+        "targetType": "departments",
+        "targetCount": 2
+      }
+    },
+    {
+      "testName": "TEST-2A-6: イベント企画調査",
+      "timestamp": "2025-09-20T13:09:12.040Z",
+      "status": 200,
+      "success": true,
+      "response": {
+        "success": true,
+        "notificationId": "vd_notif_1758373752039",
+        "message": "通知を正常に受信しました",
+        "processing": {
+          "category": "SURVEY",
+          "priority": "LOW",
+          "targetCount": 40,
+          "estimatedDeliveryTime": "2025-09-20T10:00:00Z"
+        },
+        "metadata": {
+          "receivedAt": "2025-09-20T13:09:12.039Z",
+          "processedBy": "VoiceDrive Test API v1.0"
+        }
+      },
+      "responseTime": 2,
+      "testData": {
+        "category": "survey",
+        "subCategory": "event",
+        "targetType": "positions",
+        "targetCount": 2
+      }
+    },
+    {
+      "testName": "TEST-2A-7: その他のアンケート",
+      "timestamp": "2025-09-20T13:09:13.046Z",
+      "status": 200,
+      "success": true,
+      "response": {
+        "success": true,
+        "notificationId": "vd_notif_1758373753045",
+        "message": "通知を正常に受信しました",
+        "processing": {
+          "category": "SURVEY",
+          "priority": "NORMAL",
+          "targetCount": 3,
+          "estimatedDeliveryTime": "2025-09-20T10:00:00Z"
+        },
+        "metadata": {
+          "receivedAt": "2025-09-20T13:09:13.045Z",
+          "processedBy": "VoiceDrive Test API v1.0"
+        }
+      },
+      "responseTime": 3,
+      "testData": {
+        "category": "survey",
+        "subCategory": "other",
+        "targetType": "individuals",
+        "targetCount": 3
+      }
+    },
+    {
+      "testName": "TEST-2B-1: 全職員配信",
+      "timestamp": "2025-09-20T13:09:14.055Z",
+      "status": 200,
+      "success": true,
+      "response": {
+        "success": true,
+        "notificationId": "vd_notif_1758373754054",
+        "message": "通知を正常に受信しました",
+        "processing": {
+          "category": "NOTIFICATION",
+          "priority": "URGENT",
+          "targetCount": 500,
+          "estimatedDeliveryTime": "2025-09-20T10:00:00Z"
+        },
+        "metadata": {
+          "receivedAt": "2025-09-20T13:09:14.054Z",
+          "processedBy": "VoiceDrive Test API v1.0"
+        }
+      },
+      "responseTime": 3,
+      "testData": {
+        "category": "announcement",
+        "targetType": "all",
+        "targetCount": "all"
+      }
+    },
+    {
+      "testName": "TEST-2B-2: 複数部署配信",
+      "timestamp": "2025-09-20T13:09:15.066Z",
+      "status": 200,
+      "success": true,
+      "response": {
+        "success": true,
+        "notificationId": "vd_notif_1758373755064",
+        "message": "通知を正常に受信しました",
+        "processing": {
+          "category": "NOTIFICATION",
+          "priority": "NORMAL",
+          "targetCount": 150,
+          "estimatedDeliveryTime": "2025-09-20T10:00:00Z"
+        },
+        "metadata": {
+          "receivedAt": "2025-09-20T13:09:15.064Z",
+          "processedBy": "VoiceDrive Test API v1.0"
+        }
+      },
+      "responseTime": 3,
+      "testData": {
+        "category": "announcement",
+        "targetType": "departments",
+        "targetCount": 3
+      }
+    },
+    {
+      "testName": "TEST-2B-3: 個人選択配信（5名）",
+      "timestamp": "2025-09-20T13:09:16.079Z",
+      "status": 200,
+      "success": true,
+      "response": {
+        "success": true,
+        "notificationId": "vd_notif_1758373756078",
+        "message": "通知を正常に受信しました",
+        "processing": {
+          "category": "MEETING",
+          "priority": "URGENT",
+          "targetCount": 5,
+          "estimatedDeliveryTime": "2025-09-20T10:00:00Z"
+        },
+        "metadata": {
+          "receivedAt": "2025-09-20T13:09:16.078Z",
+          "processedBy": "VoiceDrive Test API v1.0"
+        }
+      },
+      "responseTime": 3,
+      "testData": {
+        "category": "interview",
+        "targetType": "individuals",
+        "targetCount": 5
+      }
+    },
+    {
+      "testName": "TEST-2B-4: 役職別配信（管理職）",
+      "timestamp": "2025-09-20T13:09:17.094Z",
+      "status": 200,
+      "success": true,
+      "response": {
+        "success": true,
+        "notificationId": "vd_notif_1758373757092",
+        "message": "通知を正常に受信しました",
+        "processing": {
+          "category": "EDUCATION",
+          "priority": "URGENT",
+          "targetCount": 100,
+          "estimatedDeliveryTime": "2025-09-20T10:00:00Z"
+        },
+        "metadata": {
+          "receivedAt": "2025-09-20T13:09:17.092Z",
+          "processedBy": "VoiceDrive Test API v1.0"
+        }
+      },
+      "responseTime": 4,
+      "testData": {
+        "category": "training",
+        "targetType": "positions",
+        "targetCount": 5
+      }
+    }
+  ],
+  "summary": {
+    "total": 11,
+    "success": 11,
+    "failed": 0,
+    "successRate": "100.0",
+    "avgResponseTime": 4.818181818181818,
+    "subCategoryTests": {
+      "total": 7,
+      "success": 7
+    },
+    "targetPatternTests": {
+      "total": 4,
+      "success": 4
+    }
+  }
+}

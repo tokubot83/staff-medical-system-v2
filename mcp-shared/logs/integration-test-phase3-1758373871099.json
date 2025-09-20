@@ -1,0 +1,202 @@
+{
+  "phase": "Phase 3: エラーハンドリングテスト",
+  "timestamp": "2025-09-20T13:11:11.099Z",
+  "results": [
+    {
+      "testName": "TEST-3A-1: 無効なトークン",
+      "timestamp": "2025-09-20T13:11:01.464Z",
+      "status": 401,
+      "expectedStatus": 401,
+      "success": true,
+      "expectedError": "Invalid authentication token",
+      "actualError": "無効なトークンです",
+      "response": {
+        "success": false,
+        "error": "無効なトークンです"
+      },
+      "responseTime": 29
+    },
+    {
+      "testName": "TEST-3A-2: トークン未送信",
+      "timestamp": "2025-09-20T13:11:02.481Z",
+      "status": 401,
+      "expectedStatus": 401,
+      "success": true,
+      "expectedError": "Authorization header missing",
+      "actualError": "認証が必要です",
+      "response": {
+        "success": false,
+        "error": "認証が必要です"
+      },
+      "responseTime": 2
+    },
+    {
+      "testName": "TEST-3A-3: 期限切れトークン",
+      "timestamp": "2025-09-20T13:11:03.490Z",
+      "status": 401,
+      "expectedStatus": 401,
+      "success": true,
+      "expectedError": "Token has expired",
+      "actualError": "無効なトークンです",
+      "response": {
+        "success": false,
+        "error": "無効なトークンです"
+      },
+      "responseTime": 1
+    },
+    {
+      "testName": "TEST-3B-1: 不正なカテゴリ",
+      "timestamp": "2025-09-20T13:11:04.505Z",
+      "status": 200,
+      "expectedStatus": 400,
+      "success": false,
+      "expectedError": "Invalid category",
+      "actualError": "通知を正常に受信しました",
+      "response": {
+        "success": true,
+        "notificationId": "vd_notif_1758373864503",
+        "message": "通知を正常に受信しました",
+        "processing": {
+          "category": "OTHER",
+          "priority": "URGENT",
+          "targetCount": 500,
+          "estimatedDeliveryTime": "2025-09-20T10:00:00Z"
+        },
+        "metadata": {
+          "receivedAt": "2025-09-20T13:11:04.503Z",
+          "processedBy": "VoiceDrive Test API v1.0"
+        }
+      },
+      "responseTime": 2
+    },
+    {
+      "testName": "TEST-3B-2: 必須項目欠如（title）",
+      "timestamp": "2025-09-20T13:11:05.518Z",
+      "status": 200,
+      "expectedStatus": 400,
+      "success": false,
+      "expectedError": "Missing required field: title",
+      "actualError": "通知を正常に受信しました",
+      "response": {
+        "success": true,
+        "notificationId": "vd_notif_1758373865516",
+        "message": "通知を正常に受信しました",
+        "processing": {
+          "category": "NOTIFICATION",
+          "priority": "URGENT",
+          "targetCount": 500,
+          "estimatedDeliveryTime": "2025-09-20T10:00:00Z"
+        },
+        "metadata": {
+          "receivedAt": "2025-09-20T13:11:05.516Z",
+          "processedBy": "VoiceDrive Test API v1.0"
+        }
+      },
+      "responseTime": 3
+    },
+    {
+      "testName": "TEST-3B-3: 必須項目欠如（content）",
+      "timestamp": "2025-09-20T13:11:06.523Z",
+      "status": 200,
+      "expectedStatus": 400,
+      "success": false,
+      "expectedError": "Missing required field: content",
+      "actualError": "通知を正常に受信しました",
+      "response": {
+        "success": true,
+        "notificationId": "vd_notif_1758373866521",
+        "message": "通知を正常に受信しました",
+        "processing": {
+          "category": "NOTIFICATION",
+          "priority": "URGENT",
+          "targetCount": 500,
+          "estimatedDeliveryTime": "2025-09-20T10:00:00Z"
+        },
+        "metadata": {
+          "receivedAt": "2025-09-20T13:11:06.521Z",
+          "processedBy": "VoiceDrive Test API v1.0"
+        }
+      },
+      "responseTime": 2
+    },
+    {
+      "testName": "TEST-3B-4: 不正なtargetType",
+      "timestamp": "2025-09-20T13:11:07.535Z",
+      "status": 200,
+      "expectedStatus": 400,
+      "success": false,
+      "expectedError": "Invalid targetType",
+      "actualError": "通知を正常に受信しました",
+      "response": {
+        "success": true,
+        "notificationId": "vd_notif_1758373867534",
+        "message": "通知を正常に受信しました",
+        "processing": {
+          "category": "NOTIFICATION",
+          "priority": "URGENT",
+          "targetCount": 0,
+          "estimatedDeliveryTime": "2025-09-20T10:00:00Z"
+        },
+        "metadata": {
+          "receivedAt": "2025-09-20T13:11:07.534Z",
+          "processedBy": "VoiceDrive Test API v1.0"
+        }
+      },
+      "responseTime": 1
+    },
+    {
+      "testName": "TEST-3B-5: 不正な優先度",
+      "timestamp": "2025-09-20T13:11:08.548Z",
+      "status": 200,
+      "expectedStatus": 400,
+      "success": false,
+      "expectedError": "Invalid priority",
+      "actualError": "通知を正常に受信しました",
+      "response": {
+        "success": true,
+        "notificationId": "vd_notif_1758373868546",
+        "message": "通知を正常に受信しました",
+        "processing": {
+          "category": "NOTIFICATION",
+          "priority": "LOW",
+          "targetCount": 500,
+          "estimatedDeliveryTime": "2025-09-20T10:00:00Z"
+        },
+        "metadata": {
+          "receivedAt": "2025-09-20T13:11:08.546Z",
+          "processedBy": "VoiceDrive Test API v1.0"
+        }
+      },
+      "responseTime": 1
+    },
+    {
+      "testName": "TEST-3C-1: レート制限（100リクエスト/分）",
+      "timestamp": "2025-09-20T13:11:11.098Z",
+      "totalRequests": 101,
+      "successfulRequests": 101,
+      "rateLimitedRequests": 0,
+      "rateLimitHit": false,
+      "success": false,
+      "expectedStatus": 429,
+      "message": "レート制限が発動しませんでした"
+    }
+  ],
+  "summary": {
+    "total": 9,
+    "success": 3,
+    "failed": 6,
+    "successRate": "33.3",
+    "authErrorTests": {
+      "total": 3,
+      "success": 3
+    },
+    "validationTests": {
+      "total": 5,
+      "success": 0
+    },
+    "rateLimitTests": {
+      "total": 1,
+      "success": 0
+    }
+  }
+}

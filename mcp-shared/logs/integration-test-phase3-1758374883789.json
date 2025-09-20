@@ -1,0 +1,147 @@
+{
+  "phase": "Phase 3: エラーハンドリングテスト",
+  "timestamp": "2025-09-20T13:28:03.789Z",
+  "results": [
+    {
+      "testName": "TEST-3A-1: 無効なトークン",
+      "timestamp": "2025-09-20T13:27:54.164Z",
+      "status": 404,
+      "expectedStatus": 401,
+      "success": false,
+      "expectedError": "Invalid authentication token",
+      "actualError": "Not Found",
+      "response": {
+        "error": "Not Found",
+        "message": "Route /api/notifications/receive not found"
+      },
+      "responseTime": 18
+    },
+    {
+      "testName": "TEST-3A-2: トークン未送信",
+      "timestamp": "2025-09-20T13:27:55.181Z",
+      "status": 404,
+      "expectedStatus": 401,
+      "success": false,
+      "expectedError": "Authorization header missing",
+      "actualError": "Not Found",
+      "response": {
+        "error": "Not Found",
+        "message": "Route /api/notifications/receive not found"
+      },
+      "responseTime": 3
+    },
+    {
+      "testName": "TEST-3A-3: 期限切れトークン",
+      "timestamp": "2025-09-20T13:27:56.186Z",
+      "status": 404,
+      "expectedStatus": 401,
+      "success": false,
+      "expectedError": "Token has expired",
+      "actualError": "Not Found",
+      "response": {
+        "error": "Not Found",
+        "message": "Route /api/notifications/receive not found"
+      },
+      "responseTime": 2
+    },
+    {
+      "testName": "TEST-3B-1: 不正なカテゴリ",
+      "timestamp": "2025-09-20T13:27:57.194Z",
+      "status": 404,
+      "expectedStatus": 400,
+      "success": false,
+      "expectedError": "Invalid category",
+      "actualError": "Not Found",
+      "response": {
+        "error": "Not Found",
+        "message": "Route /api/notifications/receive not found"
+      },
+      "responseTime": 2
+    },
+    {
+      "testName": "TEST-3B-2: 必須項目欠如（title）",
+      "timestamp": "2025-09-20T13:27:58.209Z",
+      "status": 404,
+      "expectedStatus": 400,
+      "success": false,
+      "expectedError": "Missing required field: title",
+      "actualError": "Not Found",
+      "response": {
+        "error": "Not Found",
+        "message": "Route /api/notifications/receive not found"
+      },
+      "responseTime": 3
+    },
+    {
+      "testName": "TEST-3B-3: 必須項目欠如（content）",
+      "timestamp": "2025-09-20T13:27:59.221Z",
+      "status": 404,
+      "expectedStatus": 400,
+      "success": false,
+      "expectedError": "Missing required field: content",
+      "actualError": "Not Found",
+      "response": {
+        "error": "Not Found",
+        "message": "Route /api/notifications/receive not found"
+      },
+      "responseTime": 3
+    },
+    {
+      "testName": "TEST-3B-4: 不正なtargetType",
+      "timestamp": "2025-09-20T13:28:00.226Z",
+      "status": 404,
+      "expectedStatus": 400,
+      "success": false,
+      "expectedError": "Invalid targetType",
+      "actualError": "Not Found",
+      "response": {
+        "error": "Not Found",
+        "message": "Route /api/notifications/receive not found"
+      },
+      "responseTime": 3
+    },
+    {
+      "testName": "TEST-3B-5: 不正な優先度",
+      "timestamp": "2025-09-20T13:28:01.234Z",
+      "status": 404,
+      "expectedStatus": 400,
+      "success": false,
+      "expectedError": "Invalid priority",
+      "actualError": "Not Found",
+      "response": {
+        "error": "Not Found",
+        "message": "Route /api/notifications/receive not found"
+      },
+      "responseTime": 3
+    },
+    {
+      "testName": "TEST-3C-1: レート制限（100リクエスト/分）",
+      "timestamp": "2025-09-20T13:28:03.788Z",
+      "totalRequests": 101,
+      "successfulRequests": 0,
+      "rateLimitedRequests": 0,
+      "rateLimitHit": false,
+      "success": false,
+      "expectedStatus": 429,
+      "message": "レート制限が発動しませんでした"
+    }
+  ],
+  "summary": {
+    "total": 9,
+    "success": 0,
+    "failed": 9,
+    "successRate": "0.0",
+    "authErrorTests": {
+      "total": 3,
+      "success": 0
+    },
+    "validationTests": {
+      "total": 5,
+      "success": 0
+    },
+    "rateLimitTests": {
+      "total": 1,
+      "success": 0
+    }
+  }
+}

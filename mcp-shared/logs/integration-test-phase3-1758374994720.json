@@ -1,0 +1,175 @@
+{
+  "phase": "Phase 3: エラーハンドリングテスト",
+  "timestamp": "2025-09-20T13:29:54.720Z",
+  "results": [
+    {
+      "testName": "TEST-3A-1: 無効なトークン",
+      "timestamp": "2025-09-20T13:29:45.099Z",
+      "status": 401,
+      "expectedStatus": 401,
+      "success": true,
+      "expectedError": "Invalid authentication token",
+      "actualError": "無効なトークンです",
+      "response": {
+        "success": false,
+        "error": "無効なトークンです",
+        "timestamp": "2025-09-20T13:29:45.095Z"
+      },
+      "responseTime": 27
+    },
+    {
+      "testName": "TEST-3A-2: トークン未送信",
+      "timestamp": "2025-09-20T13:29:46.105Z",
+      "status": 401,
+      "expectedStatus": 401,
+      "success": true,
+      "expectedError": "Authorization header missing",
+      "actualError": "認証が必要です",
+      "response": {
+        "success": false,
+        "error": "認証が必要です",
+        "timestamp": "2025-09-20T13:29:46.104Z"
+      },
+      "responseTime": 4
+    },
+    {
+      "testName": "TEST-3A-3: 期限切れトークン",
+      "timestamp": "2025-09-20T13:29:47.113Z",
+      "status": 401,
+      "expectedStatus": 401,
+      "success": true,
+      "expectedError": "Token has expired",
+      "actualError": "無効なトークンです",
+      "response": {
+        "success": false,
+        "error": "無効なトークンです",
+        "timestamp": "2025-09-20T13:29:47.112Z"
+      },
+      "responseTime": 2
+    },
+    {
+      "testName": "TEST-3B-1: 不正なカテゴリ",
+      "timestamp": "2025-09-20T13:29:48.126Z",
+      "status": 400,
+      "expectedStatus": 400,
+      "success": true,
+      "expectedError": "Invalid category",
+      "actualError": "Validation failed",
+      "response": {
+        "success": false,
+        "error": "Validation failed",
+        "message": "Request data validation failed",
+        "details": [
+          "Invalid category: 'invalid_category'. Valid categories: announcement, interview, training, survey, other"
+        ],
+        "timestamp": "2025-09-20T13:29:48.125Z"
+      },
+      "responseTime": 4
+    },
+    {
+      "testName": "TEST-3B-2: 必須項目欠如（title）",
+      "timestamp": "2025-09-20T13:29:49.135Z",
+      "status": 400,
+      "expectedStatus": 400,
+      "success": true,
+      "expectedError": "Missing required field: title",
+      "actualError": "Validation failed",
+      "response": {
+        "success": false,
+        "error": "Validation failed",
+        "message": "Request data validation failed",
+        "details": [
+          "Missing required field: title"
+        ],
+        "timestamp": "2025-09-20T13:29:49.134Z"
+      },
+      "responseTime": 4
+    },
+    {
+      "testName": "TEST-3B-3: 必須項目欠如（content）",
+      "timestamp": "2025-09-20T13:29:50.144Z",
+      "status": 400,
+      "expectedStatus": 400,
+      "success": true,
+      "expectedError": "Missing required field: content",
+      "actualError": "Validation failed",
+      "response": {
+        "success": false,
+        "error": "Validation failed",
+        "message": "Request data validation failed",
+        "details": [
+          "Missing required field: content"
+        ],
+        "timestamp": "2025-09-20T13:29:50.144Z"
+      },
+      "responseTime": 2
+    },
+    {
+      "testName": "TEST-3B-4: 不正なtargetType",
+      "timestamp": "2025-09-20T13:29:51.158Z",
+      "status": 400,
+      "expectedStatus": 400,
+      "success": true,
+      "expectedError": "Invalid targetType",
+      "actualError": "Validation failed",
+      "response": {
+        "success": false,
+        "error": "Validation failed",
+        "message": "Request data validation failed",
+        "details": [
+          "Invalid targetType: 'invalid_target'. Valid types: all, departments, individuals, positions"
+        ],
+        "timestamp": "2025-09-20T13:29:51.158Z"
+      },
+      "responseTime": 2
+    },
+    {
+      "testName": "TEST-3B-5: 不正な優先度",
+      "timestamp": "2025-09-20T13:29:52.166Z",
+      "status": 400,
+      "expectedStatus": 400,
+      "success": true,
+      "expectedError": "Invalid priority",
+      "actualError": "Validation failed",
+      "response": {
+        "success": false,
+        "error": "Validation failed",
+        "message": "Request data validation failed",
+        "details": [
+          "Invalid priority: 'super_urgent'. Valid priorities: high, medium, low"
+        ],
+        "timestamp": "2025-09-20T13:29:52.165Z"
+      },
+      "responseTime": 2
+    },
+    {
+      "testName": "TEST-3C-1: レート制限（100リクエスト/分）",
+      "timestamp": "2025-09-20T13:29:54.720Z",
+      "totalRequests": 101,
+      "successfulRequests": 5,
+      "rateLimitedRequests": 96,
+      "rateLimitHit": true,
+      "success": true,
+      "expectedStatus": 429,
+      "message": "レート制限正常動作（96リクエストが制限）"
+    }
+  ],
+  "summary": {
+    "total": 9,
+    "success": 9,
+    "failed": 0,
+    "successRate": "100.0",
+    "authErrorTests": {
+      "total": 3,
+      "success": 3
+    },
+    "validationTests": {
+      "total": 5,
+      "success": 5
+    },
+    "rateLimitTests": {
+      "total": 1,
+      "success": 1
+    }
+  }
+}

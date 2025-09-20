@@ -4,7 +4,7 @@
 const fetch = require('node-fetch');
 
 // テスト環境設定
-const VOICEDRIVE_API_URL = 'http://localhost:3002/api';
+const VOICEDRIVE_API_URL = 'http://localhost:3003/api';
 const VALID_TOKEN = 'test_vd_token_2025_0920';
 const INVALID_TOKEN = 'invalid_token_xyz';
 const EXPIRED_TOKEN = 'expired_token_2024_0101';
