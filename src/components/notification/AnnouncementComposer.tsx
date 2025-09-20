@@ -84,7 +84,6 @@ const categories = [
   { id: 'interview', label: '面談', icon: '👥', color: 'border-blue-500' },
   { id: 'training', label: '研修', icon: '📚', color: 'border-purple-500' },
   { id: 'survey', label: 'アンケート', icon: '📊', color: 'border-green-500' },
-  { id: 'urgent', label: '緊急', icon: '🚨', color: 'border-red-500' },
   { id: 'other', label: 'その他', icon: '📢', color: 'border-gray-500' }
 ]
 
@@ -509,7 +508,7 @@ export default function AnnouncementComposer() {
       hasActionButton = true
       actionButtonType = 'survey_response'
       actionButtonLabel = 'アンケートに回答する'
-    } else if (categoryId === 'announcement' || categoryId === 'urgent' || categoryId === 'other') {
+    } else if (categoryId === 'announcement' || categoryId === 'other') {
       // テンプレートがないカテゴリの場合、タイトルと内容をクリア
       templateTitle = ''
       templateContent = ''

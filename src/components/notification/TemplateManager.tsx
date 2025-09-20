@@ -36,7 +36,7 @@ import {
   Clock
 } from 'lucide-react'
 
-type CategoryType = 'urgent' | 'interview' | 'training' | 'survey' | 'health' | 'other'
+type CategoryType = 'announcement' | 'interview' | 'training' | 'survey' | 'other'
 
 interface NotificationTemplate {
   id: string
@@ -104,7 +104,7 @@ const mockTemplates: NotificationTemplate[] = [
   {
     id: '4',
     name: '緊急システム障害通知',
-    category: 'urgent',
+    category: 'announcement',
     title: '【緊急】{system_name}システム障害のお知らせ',
     content: '職員の皆様\n\n現在、{system_name}システムに障害が発生しており、ご利用いただけない状況となっております。\n\n■障害発生時刻：{incident_time}\n■影響範囲：{affected_areas}\n■復旧予定：{estimated_recovery}\n\n復旧まで以下の代替手段をご利用ください：\n{alternative_method}\n\n復旧完了次第、改めてご連絡いたします。\nご迷惑をおかけして申し訳ございません。',
     variables: ['{system_name}', '{incident_time}', '{affected_areas}', '{estimated_recovery}', '{alternative_method}'],
