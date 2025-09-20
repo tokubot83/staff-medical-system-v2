@@ -53,11 +53,10 @@ interface NotificationTemplate {
 }
 
 const categoryConfig = {
-  urgent: { label: '緊急', color: 'bg-red-500', icon: '🚨' },
+  announcement: { label: 'お知らせ', color: 'bg-cyan-500', icon: '📣' },
   interview: { label: '面談', color: 'bg-blue-500', icon: '👥' },
   training: { label: '研修', color: 'bg-purple-500', icon: '📚' },
-  survey: { label: 'アンケート', color: 'bg-green-500', icon: '📝' },
-  health: { label: '健康管理', color: 'bg-orange-500', icon: '🏥' },
+  survey: { label: 'アンケート', color: 'bg-green-500', icon: '📊' },
   other: { label: 'その他', color: 'bg-gray-500', icon: '📢' }
 }
 
