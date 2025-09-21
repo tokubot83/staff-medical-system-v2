@@ -99,6 +99,16 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-purple-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </Link>
                 <Link
+                  href="/hr-station"
+                  className="relative px-4 py-3 text-sm font-light tracking-wide transition-all duration-300 hover:bg-white hover:bg-opacity-5 group"
+                >
+                  <span className="relative z-10 flex items-center">
+                    人事ステーション
+                    <span className="ml-1 text-xs text-cyan-400 font-normal">NEW</span>
+                  </span>
+                  <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </Link>
+                <Link
                   href="/staff-cards"
                   className="relative px-4 py-3 text-sm font-light tracking-wide transition-all duration-300 hover:bg-white hover:bg-opacity-5 group"
                 >
@@ -167,6 +177,16 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 >
                   <span className="relative z-10">ガイド</span>
                   <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </Link>
+                <Link
+                  href="/hr-policy"
+                  className="relative px-4 py-3 text-sm font-light tracking-wide transition-all duration-300 hover:bg-white hover:bg-opacity-5 group"
+                >
+                  <span className="relative z-10 flex items-center">
+                    人事ポリシー
+                    <span className="ml-1 text-xs text-amber-400 font-normal">（案）</span>
+                  </span>
+                  <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-green-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </Link>
                 <Link
                   href="/admin/master-data"
