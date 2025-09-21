@@ -113,9 +113,15 @@ export default function HeatmapGrid({ phaseData, phase, filters, onCellClick }: 
         <div className="min-w-[800px] lg:min-w-0">
           {/* Column Headers */}
           <div className="grid grid-cols-5 gap-2 mb-2">
-            <div className="p-4 text-center">
-              <div className="text-sm font-medium text-gray-600">
-                パフォーマンス層
+            <div className="p-4 bg-gradient-to-br from-slate-100 to-gray-100 rounded-lg border-2 border-slate-300 text-center shadow-md hover:shadow-lg transition-all duration-200">
+              <div className="flex items-center justify-center gap-2 mb-1">
+                <span className="text-slate-700 text-sm">⚡</span>
+                <div className="text-sm font-extrabold text-slate-700 tracking-wide">
+                  パフォーマンス層
+                </div>
+              </div>
+              <div className="text-xs text-slate-600 opacity-80">
+                成果レベル分析
               </div>
             </div>
             {courses.map((course) => (
