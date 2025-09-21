@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { facilityData, positionData } from '@/lib/hr/heatmapData';
 import { segmentAnalysisData, actionMasterData } from '@/lib/hr/segmentAnalysisData';
+import { exportStaffListToCSV } from '@/lib/hr/exportUtils';
+import { Download } from 'lucide-react';
 
 interface StaffMember {
   id: string;
@@ -220,14 +222,38 @@ export default function IntegratedStaffModal({ isOpen, onClose, cellData, filter
                     <span className="text-gray-600">{cellData.data.count}</span>
                   </div>
                 </div>
-                <button
-                  onClick={onClose}
-                  className="w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-lg flex items-center justify-center transition-colors border border-gray-300"
-                >
-                  <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      const layerLabel = cellData.layer === 'top' ? '上位20%' : cellData.layer === 'middle' ? '中間60%' : '要支援20%';
+                      exportStaffListToCSV(
+                        cellData.layer,
+                        cellData.course,
+                        staffList.map(staff => ({
+                          id: staff.id,
+                          name: staff.name,
+                          department: staff.facility,
+                          position: staff.position,
+                          points: staff.evaluation?.total,
+                          grade: staff.grade,
+                          evaluation: staff.evaluation?.grade
+                        }))
+                      );
+                    }}
+                    className="px-3 py-1.5 bg-blue-100 hover:bg-blue-200 rounded-lg flex items-center gap-1.5 transition-colors border border-blue-300 text-blue-700 text-sm"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    CSVエクスポート
+                  </button>
+                  <button
+                    onClick={onClose}
+                    className="w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-lg flex items-center justify-center transition-colors border border-gray-300"
+                  >
+                    <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
               </div>
             </div>
 

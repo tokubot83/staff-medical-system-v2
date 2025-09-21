@@ -3,6 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { facilityData, positionData } from '@/lib/hr/heatmapData';
+import { Download } from 'lucide-react';
 
 interface FilterPanelProps {
   selectedFilters: {
@@ -11,9 +12,10 @@ interface FilterPanelProps {
     phase: number;
   };
   onFiltersChange: (filters: any) => void;
+  onExportCSV?: () => void;
 }
 
-export default function FilterPanel({ selectedFilters, onFiltersChange }: FilterPanelProps) {
+export default function FilterPanel({ selectedFilters, onFiltersChange, onExportCSV }: FilterPanelProps) {
   const handleFilterChange = (filterType: string, value: string | number) => {
     onFiltersChange({
       ...selectedFilters,
@@ -136,15 +138,17 @@ export default function FilterPanel({ selectedFilters, onFiltersChange }: Filter
 
           {/* Export Button */}
           <motion.button
+            onClick={onExportCSV}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="
               px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700
               text-white text-sm rounded-lg shadow-lg shadow-blue-500/25
               hover:shadow-xl hover:shadow-blue-500/40
-              transition-all duration-200
+              transition-all duration-200 flex items-center gap-2
             "
           >
+            <Download className="w-4 h-4" />
             エクスポート
           </motion.button>
         </div>

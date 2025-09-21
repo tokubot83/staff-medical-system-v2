@@ -27,6 +27,75 @@ const DevNotesPage = () => {
   // サンプルデータ
   const devNotes: DevNote[] = [
     {
+      id: '6',
+      title: '人事ステーションページ実装状況',
+      content: `【実装完了機能】
+1. ヒートマップダッシュボード
+   - 3段階フェーズ表示（コース制度→等級制度→100点評価）
+   - パフォーマンス層別×キャリアコース別マトリックス
+   - パステルトーン配色での視認性向上
+
+2. フィルタリング機能
+   - 施設別フィルター（全施設/富士宮/富士宮南/フジトピア/フジヤマ）
+   - 職種別フィルター（全職種/医師/看護師/介護士/理学療法士/事務職）
+   - フェーズ切り替え機能
+
+3. 職員詳細モーダル（IntegratedStaffModal）
+   - セグメント別職員リスト表示
+   - 個別アクション推奨表示
+   - CSVエクスポート機能
+
+4. アクションプラン作成機能（ActionPlanModal）
+   - 短期・中期アクション設定
+   - KPI指標管理
+   - タイムライン設定
+
+【未実装機能（DB連携後）】
+1. 実データ連携
+   - 職員マスタテーブル連携
+   - 評価データテーブル連携
+   - リアルタイム集計処理
+
+2. ドリルダウン分析
+   - セル単位の詳細分析
+   - 時系列推移グラフ
+   - 相関分析レポート
+
+3. API実装
+   - GET /api/hr-station/heatmap
+   - GET /api/hr-station/staff-list
+   - POST /api/hr-station/action-plan
+   - GET /api/hr-station/export
+
+4. パフォーマンス最適化
+   - データキャッシュ機構
+   - 仮想スクロール実装
+   - 遅延ローディング
+
+【DB構築後の作業指示】
+1. lib/hr/heatmapData.tsのダミーデータを実API呼び出しに置換
+2. components/hr/IntegratedStaffModal.tsxのgenerateStaffList関数をAPI連携に変更
+3. app/api/hr-station/配下にAPIエンドポイント実装
+4. Prismaスキーマに以下のテーブル追加：
+   - hr_evaluations（評価データ）
+   - hr_courses（コース設定）
+   - hr_grades（等級設定）
+   - hr_action_plans（アクションプラン）
+
+【必要なDBテーブル設計】
+- staff_master: 既存の職員マスタ
+- hr_evaluations: phase, staff_id, technical_score, organizational_score, total_score, evaluation_date
+- hr_courses: course_code, course_name, grade_ceiling, salary_coefficient
+- hr_grades: grade_level, grade_name, min_points, max_points
+- hr_action_plans: plan_id, layer, course, actions, timeline, kpis, created_by, created_at`,
+      category: 'feature',
+      tags: ['人事ステーション', 'HR', 'ダッシュボード', 'DB連携待ち'],
+      createdAt: '2025-09-21',
+      updatedAt: '2025-09-21',
+      status: 'in-progress',
+      priority: 'high'
+    },
+    {
       id: '1',
       title: '面談システムの改善点',
       content: '面談シートのUIを改善し、入力しやすくする。特にモバイル対応を強化する必要がある。',

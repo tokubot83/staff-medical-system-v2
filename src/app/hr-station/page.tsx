@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import HRHeatmap from '@/components/hr/HRHeatmap';
 import FilterPanel from '@/components/hr/FilterPanel';
 import IntegratedStaffModal from '@/components/hr/IntegratedStaffModal';
+import { exportHeatmapToCSV } from '@/lib/hr/exportUtils';
+import { generatePhaseData } from '@/lib/hr/heatmapData';
 
 export default function HRStationPage() {
   const [selectedFilters, setSelectedFilters] = useState({
@@ -35,6 +37,22 @@ export default function HRStationPage() {
 
   const handleCloseStaffList = () => {
     setSelectedCell(null);
+  };
+
+  const handleExportCSV = () => {
+    const phaseData = generatePhaseData(selectedFilters.phase, selectedFilters);
+    const totalStaff = Object.values(phaseData.data).reduce((acc, layer) => {
+      return acc + Object.values(layer).reduce((sum, cell: any) => sum + cell.count, 0);
+    }, 0);
+
+    const topPerformers = Object.values(phaseData.data.top || {}).reduce((sum, cell: any) => sum + cell.count, 0);
+    const needsSupport = Object.values(phaseData.data.low || {}).reduce((sum, cell: any) => sum + cell.count, 0);
+    const allCells = Object.values(phaseData.data).flatMap(layer => Object.values(layer));
+    const avgPoints = allCells.reduce((sum, cell: any) => sum + (cell.avgPoints || 0), 0) / allCells.length;
+
+    exportHeatmapToCSV({
+      filters: selectedFilters
+    });
   };
 
   return (
@@ -77,6 +95,7 @@ export default function HRStationPage() {
               <FilterPanel
                 selectedFilters={selectedFilters}
                 onFiltersChange={handleFiltersChange}
+                onExportCSV={handleExportCSV}
               />
             </div>
 

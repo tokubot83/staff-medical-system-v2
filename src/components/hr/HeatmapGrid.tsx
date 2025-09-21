@@ -98,10 +98,10 @@ export default function HeatmapGrid({ phaseData, phase, filters, onCellClick }: 
       {/* Header */}
       <div className="mb-6">
         <h3 className="text-2xl font-bold text-gray-800 mb-2">
-          人事アプローチ戦略マトリックス
+          人事制度統合ダッシュボード
         </h3>
         <p className="text-gray-600">
-          パフォーマンス層別 × キャリアコース別の配置状況と推奨アクション
+          キャリア選択制度導入から人事評価制度導入までの人材マネジメント
         </p>
       </div>
 
