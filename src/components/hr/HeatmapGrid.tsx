@@ -52,10 +52,38 @@ export default function HeatmapGrid({ phaseData, phase, filters, onCellClick }: 
   ];
 
   const courses = [
-    { key: 'A', label: 'Aコース', subLabel: 'フルスペック' },
-    { key: 'B', label: 'Bコース', subLabel: '施設内限定' },
-    { key: 'C', label: 'Cコース', subLabel: '部署固定' },
-    { key: 'D', label: 'Dコース', subLabel: '限定勤務' }
+    {
+      key: 'A',
+      label: 'Aコース',
+      subLabel: 'フルスペック',
+      bgColor: 'bg-purple-50',
+      borderColor: 'border-purple-400',
+      textColor: 'text-purple-800'
+    },
+    {
+      key: 'B',
+      label: 'Bコース',
+      subLabel: '施設内限定',
+      bgColor: 'bg-blue-50',
+      borderColor: 'border-blue-400',
+      textColor: 'text-blue-800'
+    },
+    {
+      key: 'C',
+      label: 'Cコース',
+      subLabel: '部署固定',
+      bgColor: 'bg-teal-50',
+      borderColor: 'border-teal-400',
+      textColor: 'text-teal-800'
+    },
+    {
+      key: 'D',
+      label: 'Dコース',
+      subLabel: '限定勤務',
+      bgColor: 'bg-gray-50',
+      borderColor: 'border-gray-400',
+      textColor: 'text-gray-700'
+    }
   ];
 
   return (
@@ -83,12 +111,12 @@ export default function HeatmapGrid({ phaseData, phase, filters, onCellClick }: 
             {courses.map((course) => (
               <div
                 key={course.key}
-                className="p-4 bg-blue-50 rounded-lg border-2 border-blue-400 text-center shadow-sm"
+                className={`p-4 ${course.bgColor} rounded-lg border-2 ${course.borderColor} text-center shadow-sm`}
               >
-                <div className="text-sm font-bold text-blue-800 mb-1">
+                <div className={`text-sm font-bold ${course.textColor} mb-1`}>
                   {course.label}
                 </div>
-                <div className="text-xs text-blue-600">
+                <div className={`text-xs ${course.textColor} opacity-80`}>
                   {course.subLabel}
                 </div>
               </div>
