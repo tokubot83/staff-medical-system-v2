@@ -22,69 +22,91 @@ interface HeatmapCellProps {
 }
 
 export default function HeatmapCell({ data, layer, course, phase, onClick }: HeatmapCellProps) {
-  // ヒートマップカラー配色（元のHTMLのグラデーションを反映）
+  // ヒートマップカラー配色（鮮やかさを強化）
   const getIntensityClass = (intensity: string, status: string) => {
-    // データ形式に基づく配色マッピング
-    const intensityMap: { [key: string]: { bg: string; borderColor: string; textColor: string; } } = {
+    // データ形式に基づく配色マッピング（彩度を上げて鮮やかに）
+    const intensityMap: { [key: string]: { bg: string; bgGradient: string; borderColor: string; textColor: string; shadow: string; } } = {
       // 緑系グラデーション（最適な状態）
       'cell-intensity-1': {
-        bg: '#e8f5e9',  // 薄い緑
-        borderColor: '#c8e6c9',
-        textColor: '#2e7d32'
+        bg: '#e0f7e9',
+        bgGradient: 'linear-gradient(135deg, #e0f7e9 0%, #d4f4dd 100%)',
+        borderColor: '#a8e6a3',
+        textColor: '#2e7d32',
+        shadow: '0 2px 4px rgba(76, 175, 80, 0.1)'
       },
       'cell-intensity-2': {
-        bg: '#c8e6c9',  // やや薄い緑
-        borderColor: '#a5d6a7',
-        textColor: '#2e7d32'
+        bg: '#c3efc3',
+        bgGradient: 'linear-gradient(135deg, #c3efc3 0%, #b0e8b0 100%)',
+        borderColor: '#81d67f',
+        textColor: '#2e7d32',
+        shadow: '0 2px 6px rgba(76, 175, 80, 0.15)'
       },
       'cell-intensity-3': {
-        bg: '#a5d6a7',  // 中間の緑
-        borderColor: '#81c784',
-        textColor: '#1b5e20'
+        bg: '#a1e3a1',
+        bgGradient: 'linear-gradient(135deg, #a1e3a1 0%, #8dd68d 100%)',
+        borderColor: '#66c466',
+        textColor: '#1b5e20',
+        shadow: '0 3px 8px rgba(76, 175, 80, 0.2)'
       },
       'cell-intensity-4': {
-        bg: '#81c784',  // やや濃い緑
-        borderColor: '#66bb6a',
-        textColor: '#1b5e20'
+        bg: '#7ed67e',
+        bgGradient: 'linear-gradient(135deg, #7ed67e 0%, #69c969 100%)',
+        borderColor: '#4caf50',
+        textColor: '#ffffff',
+        shadow: '0 4px 10px rgba(76, 175, 80, 0.25)'
       },
       'cell-intensity-5': {
-        bg: '#66bb6a',  // 濃い緑（最適）
-        borderColor: '#4caf50',
-        textColor: '#ffffff'
+        bg: '#5fcf60',
+        bgGradient: 'linear-gradient(135deg, #5fcf60 0%, #4caf50 100%)',
+        borderColor: '#388e3c',
+        textColor: '#ffffff',
+        shadow: '0 4px 12px rgba(76, 175, 80, 0.3)'
       },
 
       // オレンジ系グラデーション（要注意）
       'cell-warning-1': {
-        bg: '#fff3e0',  // 薄いオレンジ
-        borderColor: '#ffe0b2',
-        textColor: '#e65100'
+        bg: '#fff0d9',
+        bgGradient: 'linear-gradient(135deg, #fff0d9 0%, #ffe8c4 100%)',
+        borderColor: '#ffc947',
+        textColor: '#e65100',
+        shadow: '0 2px 4px rgba(255, 152, 0, 0.1)'
       },
       'cell-warning-2': {
-        bg: '#ffe0b2',  // 中間のオレンジ
-        borderColor: '#ffcc80',
-        textColor: '#e65100'
+        bg: '#ffd8a8',
+        bgGradient: 'linear-gradient(135deg, #ffd8a8 0%, #ffc77d 100%)',
+        borderColor: '#ffb300',
+        textColor: '#d84315',
+        shadow: '0 3px 8px rgba(255, 152, 0, 0.2)'
       },
       'cell-warning-3': {
-        bg: '#ffcc80',  // 濃いオレンジ
-        borderColor: '#ffb74d',
-        textColor: '#ffffff'
+        bg: '#ffb74d',
+        bgGradient: 'linear-gradient(135deg, #ffb74d 0%, #ff9800 100%)',
+        borderColor: '#f57c00',
+        textColor: '#ffffff',
+        shadow: '0 4px 10px rgba(255, 152, 0, 0.3)'
       },
 
       // 赤系グラデーション（要対応）
       'cell-alert-1': {
-        bg: '#ffebee',  // 薄い赤
-        borderColor: '#ffcdd2',
-        textColor: '#c62828'
+        bg: '#ffe5e8',
+        bgGradient: 'linear-gradient(135deg, #ffe5e8 0%, #ffd5da 100%)',
+        borderColor: '#ff8a95',
+        textColor: '#c62828',
+        shadow: '0 2px 4px rgba(244, 67, 54, 0.1)'
       },
       'cell-alert-2': {
-        bg: '#ffcdd2',  // 中間の赤
-        borderColor: '#ef9a9a',
-        textColor: '#c62828'
+        bg: '#ffb4bc',
+        bgGradient: 'linear-gradient(135deg, #ffb4bc 0%, #ff99a3 100%)',
+        borderColor: '#f44336',
+        textColor: '#b71c1c',
+        shadow: '0 3px 8px rgba(244, 67, 54, 0.2)'
       },
       'cell-alert-3': {
-        bg: '#ef9a9a',  // 濃い赤（緊急）
-        borderColor: '#e57373',
-        textColor: '#ffffff'
+        bg: '#ef7b7b',
+        bgGradient: 'linear-gradient(135deg, #ef7b7b 0%, #e57373 100%)',
+        borderColor: '#d32f2f',
+        textColor: '#ffffff',
+        shadow: '0 4px 12px rgba(244, 67, 54, 0.35)'
       }
     };
 
@@ -193,24 +215,26 @@ export default function HeatmapCell({ data, layer, course, phase, onClick }: Hea
       whileHover={{ scale: 1.02, z: 10 }}
       whileTap={{ scale: 0.98 }}
       style={{
-        backgroundColor: intensityConfig.bg,
+        background: intensityConfig.bgGradient || intensityConfig.bg,
         borderColor: intensityConfig.borderColor,
-        color: intensityConfig.textColor
+        color: intensityConfig.textColor,
+        boxShadow: intensityConfig.shadow,
+        borderWidth: '2px'
       }}
       className={`
-        relative w-full p-3 md:p-4 rounded-lg border-2
-        hover:shadow-lg hover:scale-105
+        relative w-full p-3 md:p-4 rounded-lg
+        hover:shadow-xl hover:scale-105 hover:brightness-105
         transition-all duration-200 cursor-pointer
         min-h-[160px] md:min-h-[180px] flex flex-col
-        group
+        group backdrop-blur-sm
       `}
     >
       {/* Percentage */}
       <div className="mb-2">
-        <div className={`text-2xl font-bold mb-1`} style={{ color: intensityConfig.textColor }}>
+        <div className={`text-3xl font-extrabold mb-1 drop-shadow-sm`} style={{ color: intensityConfig.textColor }}>
           {data.percent}
         </div>
-        <div className="text-sm text-gray-600">
+        <div className="text-sm font-medium" style={{ color: intensityConfig.textColor, opacity: 0.85 }}>
           {data.count}
         </div>
       </div>

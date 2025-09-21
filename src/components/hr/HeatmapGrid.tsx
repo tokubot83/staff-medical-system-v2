@@ -29,25 +29,28 @@ export default function HeatmapGrid({ phaseData, phase, filters, onCellClick }: 
       key: 'top',
       label: '上位20%',
       subLabel: '高パフォーマンス層',
-      bgColor: 'bg-green-50',
-      borderColor: 'border-green-300',
-      textColor: 'text-green-800'
+      bgColor: 'bg-gradient-to-br from-green-100 to-green-50',
+      borderColor: 'border-green-500',
+      textColor: 'text-green-800',
+      shadow: 'shadow-md shadow-green-200'
     },
     {
       key: 'middle',
       label: '中間60%',
       subLabel: '標準パフォーマンス層',
-      bgColor: 'bg-blue-50',
-      borderColor: 'border-blue-400',
-      textColor: 'text-blue-800'
+      bgColor: 'bg-gradient-to-br from-blue-100 to-blue-50',
+      borderColor: 'border-blue-500',
+      textColor: 'text-blue-800',
+      shadow: 'shadow-md shadow-blue-200'
     },
     {
       key: 'low',
       label: '要支援20%',
       subLabel: '育成必要層',
-      bgColor: 'bg-amber-50',
-      borderColor: 'border-amber-300',
-      textColor: 'text-amber-800'
+      bgColor: 'bg-gradient-to-br from-amber-100 to-amber-50',
+      borderColor: 'border-amber-500',
+      textColor: 'text-amber-800',
+      shadow: 'shadow-md shadow-amber-200'
     }
   ];
 
@@ -56,33 +59,37 @@ export default function HeatmapGrid({ phaseData, phase, filters, onCellClick }: 
       key: 'A',
       label: 'Aコース',
       subLabel: 'フルスペック',
-      bgColor: 'bg-purple-50',
-      borderColor: 'border-purple-400',
-      textColor: 'text-purple-800'
+      bgColor: 'bg-gradient-to-br from-purple-100 to-purple-50',
+      borderColor: 'border-purple-500',
+      textColor: 'text-purple-800',
+      shadow: 'shadow-md shadow-purple-200'
     },
     {
       key: 'B',
       label: 'Bコース',
       subLabel: '施設内限定',
-      bgColor: 'bg-blue-50',
-      borderColor: 'border-blue-400',
-      textColor: 'text-blue-800'
+      bgColor: 'bg-gradient-to-br from-blue-100 to-blue-50',
+      borderColor: 'border-blue-500',
+      textColor: 'text-blue-800',
+      shadow: 'shadow-md shadow-blue-200'
     },
     {
       key: 'C',
       label: 'Cコース',
       subLabel: '部署固定',
-      bgColor: 'bg-teal-50',
-      borderColor: 'border-teal-400',
-      textColor: 'text-teal-800'
+      bgColor: 'bg-gradient-to-br from-teal-100 to-teal-50',
+      borderColor: 'border-teal-500',
+      textColor: 'text-teal-800',
+      shadow: 'shadow-md shadow-teal-200'
     },
     {
       key: 'D',
       label: 'Dコース',
       subLabel: '限定勤務',
-      bgColor: 'bg-gray-50',
-      borderColor: 'border-gray-400',
-      textColor: 'text-gray-700'
+      bgColor: 'bg-gradient-to-br from-gray-100 to-gray-50',
+      borderColor: 'border-gray-500',
+      textColor: 'text-gray-700',
+      shadow: 'shadow-md shadow-gray-300'
     }
   ];
 
@@ -111,9 +118,9 @@ export default function HeatmapGrid({ phaseData, phase, filters, onCellClick }: 
             {courses.map((course) => (
               <div
                 key={course.key}
-                className={`p-4 ${course.bgColor} rounded-lg border-2 ${course.borderColor} text-center shadow-sm`}
+                className={`p-4 ${course.bgColor} rounded-lg border-2 ${course.borderColor} text-center ${course.shadow || 'shadow-sm'} hover:shadow-lg transition-all duration-200`}
               >
-                <div className={`text-sm font-bold ${course.textColor} mb-1`}>
+                <div className={`text-sm font-extrabold ${course.textColor} mb-1 tracking-wide`}>
                   {course.label}
                 </div>
                 <div className={`text-xs ${course.textColor} opacity-80`}>
@@ -135,9 +142,10 @@ export default function HeatmapGrid({ phaseData, phase, filters, onCellClick }: 
               {/* Row Header */}
               <div className={`
                 p-4 ${layer.bgColor} rounded-lg border-2 ${layer.borderColor}
-                flex flex-col justify-center text-center shadow-sm
+                flex flex-col justify-center text-center ${layer.shadow || 'shadow-sm'}
+                hover:shadow-lg transition-all duration-200
               `}>
-                <div className={`text-base font-bold ${layer.textColor} mb-1`}>
+                <div className={`text-base font-extrabold ${layer.textColor} mb-1 tracking-wide`}>
                   {layer.label}
                 </div>
                 <div className="text-xs text-gray-600">
