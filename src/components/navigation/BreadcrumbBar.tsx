@@ -48,6 +48,8 @@ export default function BreadcrumbBar() {
       'notifications': 'お知らせ',
       'dashboard': 'ダッシュボード',
       'hr-system-guide': '人事制度ガイド',
+      'hr-station': '人事ステーション',
+      'hr-policy': '人事ポリシー',
       'admin': '管理者設定',
       'master-data': 'マスターデータ管理',
       'backup': 'バックアップ・リストア',

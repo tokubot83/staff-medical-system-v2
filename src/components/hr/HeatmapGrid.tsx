@@ -1,0 +1,195 @@
+'use client';
+
+import React from 'react';
+import { motion } from 'framer-motion';
+import HeatmapCell from './HeatmapCell';
+
+interface HeatmapGridProps {
+  phaseData: any;
+  phase: number;
+  filters: {
+    facility: string;
+    position: string;
+    phase: number;
+  };
+  onCellClick: (layer: string, course: string, data: any) => void;
+}
+
+export default function HeatmapGrid({ phaseData, phase, filters, onCellClick }: HeatmapGridProps) {
+  if (!phaseData?.data) {
+    return (
+      <div className="p-8 text-center text-slate-400">
+        データを読み込み中...
+      </div>
+    );
+  }
+
+  const layers = [
+    {
+      key: 'top',
+      label: '上位20%',
+      subLabel: '高パフォーマンス層',
+      bgColor: 'bg-green-50',
+      borderColor: 'border-green-300',
+      textColor: 'text-green-800'
+    },
+    {
+      key: 'middle',
+      label: '中間60%',
+      subLabel: '標準パフォーマンス層',
+      bgColor: 'bg-blue-50',
+      borderColor: 'border-blue-400',
+      textColor: 'text-blue-800'
+    },
+    {
+      key: 'low',
+      label: '要支援20%',
+      subLabel: '育成必要層',
+      bgColor: 'bg-amber-50',
+      borderColor: 'border-amber-300',
+      textColor: 'text-amber-800'
+    }
+  ];
+
+  const courses = [
+    { key: 'A', label: 'Aコース', subLabel: 'フルスペック' },
+    { key: 'B', label: 'Bコース', subLabel: '施設内限定' },
+    { key: 'C', label: 'Cコース', subLabel: '部署固定' },
+    { key: 'D', label: 'Dコース', subLabel: '限定勤務' }
+  ];
+
+  return (
+    <div className="p-6">
+      {/* Header */}
+      <div className="mb-6">
+        <h3 className="text-2xl font-bold text-gray-800 mb-2">
+          人事アプローチ戦略マトリックス
+        </h3>
+        <p className="text-gray-600">
+          パフォーマンス層別 × キャリアコース別の配置状況と推奨アクション
+        </p>
+      </div>
+
+      {/* Grid Container */}
+      <div className="overflow-x-auto">
+        <div className="min-w-[800px] lg:min-w-0">
+          {/* Column Headers */}
+          <div className="grid grid-cols-5 gap-2 mb-2">
+            <div className="p-4 text-center">
+              <div className="text-sm font-medium text-gray-600">
+                パフォーマンス層
+              </div>
+            </div>
+            {courses.map((course) => (
+              <div
+                key={course.key}
+                className="p-4 bg-blue-50 rounded-lg border-2 border-blue-400 text-center shadow-sm"
+              >
+                <div className="text-sm font-bold text-blue-800 mb-1">
+                  {course.label}
+                </div>
+                <div className="text-xs text-blue-600">
+                  {course.subLabel}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Data Rows */}
+          {layers.map((layer, layerIndex) => (
+            <motion.div
+              key={layer.key}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: layerIndex * 0.1 }}
+              className="grid grid-cols-5 gap-2 mb-2"
+            >
+              {/* Row Header */}
+              <div className={`
+                p-4 ${layer.bgColor} rounded-lg border-2 ${layer.borderColor}
+                flex flex-col justify-center text-center shadow-sm
+              `}>
+                <div className={`text-base font-bold ${layer.textColor} mb-1`}>
+                  {layer.label}
+                </div>
+                <div className="text-xs text-gray-600">
+                  {layer.subLabel}
+                </div>
+              </div>
+
+              {/* Data Cells */}
+              {courses.map((course, courseIndex) => {
+                const cellData = phaseData.data[layer.key]?.[course.key];
+
+                if (!cellData) {
+                  return (
+                    <div
+                      key={course.key}
+                      className="p-4 bg-gray-50 rounded-lg border border-gray-200 text-center text-gray-400"
+                    >
+                      データなし
+                    </div>
+                  );
+                }
+
+                return (
+                  <motion.div
+                    key={course.key}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{
+                      duration: 0.4,
+                      delay: layerIndex * 0.1 + courseIndex * 0.05
+                    }}
+                  >
+                    <HeatmapCell
+                      data={cellData}
+                      layer={layer.key}
+                      course={course.key}
+                      phase={phase}
+                      onClick={() => onCellClick(layer.key, course.key, cellData)}
+                    />
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      {/* Phase-specific Info */}
+      {phase >= 2 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+          className="mt-8 p-6 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border-2 border-indigo-200 shadow-md"
+        >
+          <h4 className="text-lg font-semibold text-gray-800 mb-3">
+            等級制度による処遇差
+          </h4>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+            {courses.map((course) => {
+              const courseData = phaseData.courseStructure?.[course.key];
+              if (!courseData) return null;
+
+              return (
+                <div key={course.key} className="text-center bg-white p-3 rounded-lg border border-gray-200">
+                  <div className="text-gray-800 font-medium mb-1">
+                    {course.key}コース
+                  </div>
+                  <div className="text-gray-600">
+                    上限{courseData.ceiling}級
+                  </div>
+                  <div className="text-amber-600 font-semibold">
+                    係数×{courseData.coefficient}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </motion.div>
+      )}
+    </div>
+  );
+}
