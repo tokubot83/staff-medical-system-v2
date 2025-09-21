@@ -97,12 +97,15 @@ export default function HeatmapGrid({ phaseData, phase, filters, onCellClick }: 
     <div className="p-6">
       {/* Header */}
       <div className="mb-6">
-        <h3 className="text-2xl font-bold text-gray-800 mb-2">
-          人事制度統合ダッシュボード
-        </h3>
-        <p className="text-gray-600">
-          キャリア選択制度導入から人事評価制度導入までの人材マネジメント
-        </p>
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-indigo-500 rounded-xl flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+            📊
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-gray-800">人事制度統合ダッシュボード</h2>
+            <p className="text-sm text-gray-600">全500名の人材配置と育成戦略を可視化</p>
+          </div>
+        </div>
       </div>
 
       {/* Grid Container */}
