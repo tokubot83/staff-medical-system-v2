@@ -652,6 +652,85 @@ export default function Home() {
      {/* 人事指標ダッシュボード */}
      <HRDashboardSection />
 
+     {/* 人事制度統合ダッシュボード */}
+     <div className="bg-white">
+      <div className="max-w-7xl mx-auto p-5">
+       <div className="mb-12">
+        <div className="bg-gray-50 rounded-2xl p-8 shadow-lg border border-gray-200">
+        <div className="flex items-center gap-3 mb-6">
+         <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-indigo-500 rounded-xl flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+          📊
+         </div>
+         <div>
+          <h2 className="text-2xl font-bold text-gray-800">人事制度統合ダッシュボード</h2>
+          <p className="text-sm text-gray-600">全500名の人材配置と育成戦略を可視化</p>
+         </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+         {/* セクション説明 */}
+         <div className="bg-white rounded-xl p-6 shadow-md border border-gray-200">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">統合システム概要</h3>
+          <div className="space-y-3 text-sm text-gray-600">
+           <div className="flex items-center gap-2">
+            <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+            <span>キャリア選択制度（A/B/C/Dコース）</span>
+           </div>
+           <div className="flex items-center gap-2">
+            <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+            <span>パフォーマンス層分析（上位20%/中間60%/要支援20%）</span>
+           </div>
+           <div className="flex items-center gap-2">
+            <span className="w-2 h-2 bg-indigo-500 rounded-full"></span>
+            <span>等級制度と処遇設計</span>
+           </div>
+           <div className="flex items-center gap-2">
+            <span className="w-2 h-2 bg-purple-600 rounded-full"></span>
+            <span>人事評価制度統合分析</span>
+           </div>
+          </div>
+         </div>
+
+         {/* アクセスボタン */}
+         <div className="bg-white rounded-xl p-6 shadow-md border border-gray-200">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">ヒートマップ分析</h3>
+          <p className="text-sm text-gray-600 mb-6">
+           フェーズ別×パフォーマンス層別の戦略的施策を可視化し、最適な人材配置と育成戦略を実現します。
+          </p>
+          <Link
+           href="/hr-station"
+           className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+          >
+           <span>📊</span>
+           ダッシュボードを開く
+          </Link>
+         </div>
+        </div>
+
+        {/* 主要指標 */}
+        <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+         <div className="bg-white rounded-lg p-4 text-center border border-gray-200">
+          <div className="text-2xl font-bold text-purple-600">4</div>
+          <div className="text-sm text-gray-600">キャリアコース</div>
+         </div>
+         <div className="bg-white rounded-lg p-4 text-center border border-gray-200">
+          <div className="text-2xl font-bold text-blue-600">3</div>
+          <div className="text-sm text-gray-600">パフォーマンス層</div>
+         </div>
+         <div className="bg-white rounded-lg p-4 text-center border border-gray-200">
+          <div className="text-2xl font-bold text-indigo-600">3</div>
+          <div className="text-sm text-gray-600">導入フェーズ</div>
+         </div>
+         <div className="bg-white rounded-lg p-4 text-center border border-gray-200">
+          <div className="text-2xl font-bold text-purple-700">500</div>
+          <div className="text-sm text-gray-600">対象職員数</div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+
      {/* 組織健康診断 */}
      <div className="bg-white">
       <div className="max-w-7xl mx-auto p-5">
