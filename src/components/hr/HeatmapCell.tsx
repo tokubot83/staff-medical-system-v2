@@ -22,36 +22,74 @@ interface HeatmapCellProps {
 }
 
 export default function HeatmapCell({ data, layer, course, phase, onClick }: HeatmapCellProps) {
-  // 組織図風パステルカラー配色
+  // ヒートマップカラー配色（元のHTMLのグラデーションを反映）
   const getIntensityClass = (intensity: string, status: string) => {
-    // ステータスに基づく特別な配色
-    if (status === 'alert') {
-      return {
-        bg: 'bg-red-50',
-        border: 'border-red-400',
-        text: 'text-red-800',
-        glow: 'shadow-red-200'
-      };
-    }
-    if (status === 'caution') {
-      return {
-        bg: 'bg-amber-50',
-        border: 'border-amber-400',
-        text: 'text-amber-800',
-        glow: 'shadow-amber-200'
-      };
-    }
+    // データ形式に基づく配色マッピング
+    const intensityMap: { [key: string]: { bg: string; borderColor: string; textColor: string; } } = {
+      // 緑系グラデーション（最適な状態）
+      'cell-intensity-1': {
+        bg: '#e8f5e9',  // 薄い緑
+        borderColor: '#c8e6c9',
+        textColor: '#2e7d32'
+      },
+      'cell-intensity-2': {
+        bg: '#c8e6c9',  // やや薄い緑
+        borderColor: '#a5d6a7',
+        textColor: '#2e7d32'
+      },
+      'cell-intensity-3': {
+        bg: '#a5d6a7',  // 中間の緑
+        borderColor: '#81c784',
+        textColor: '#1b5e20'
+      },
+      'cell-intensity-4': {
+        bg: '#81c784',  // やや濃い緑
+        borderColor: '#66bb6a',
+        textColor: '#1b5e20'
+      },
+      'cell-intensity-5': {
+        bg: '#66bb6a',  // 濃い緑（最適）
+        borderColor: '#4caf50',
+        textColor: '#ffffff'
+      },
 
-    // Intensityレベルに基づく配色（組織図風のパステルカラー）
-    const intensityLevels = {
-      '1': { bg: 'bg-gray-50', border: 'border-gray-300', text: 'text-gray-700', glow: 'shadow-gray-200' },
-      '2': { bg: 'bg-blue-50', border: 'border-blue-300', text: 'text-blue-800', glow: 'shadow-blue-200' },
-      '3': { bg: 'bg-green-50', border: 'border-green-300', text: 'text-green-800', glow: 'shadow-green-200' },
-      '4': { bg: 'bg-indigo-50', border: 'border-indigo-300', text: 'text-indigo-800', glow: 'shadow-indigo-200' },
-      '5': { bg: 'bg-purple-50', border: 'border-purple-300', text: 'text-purple-800', glow: 'shadow-purple-200' }
+      // オレンジ系グラデーション（要注意）
+      'cell-warning-1': {
+        bg: '#fff3e0',  // 薄いオレンジ
+        borderColor: '#ffe0b2',
+        textColor: '#e65100'
+      },
+      'cell-warning-2': {
+        bg: '#ffe0b2',  // 中間のオレンジ
+        borderColor: '#ffcc80',
+        textColor: '#e65100'
+      },
+      'cell-warning-3': {
+        bg: '#ffcc80',  // 濃いオレンジ
+        borderColor: '#ffb74d',
+        textColor: '#ffffff'
+      },
+
+      // 赤系グラデーション（要対応）
+      'cell-alert-1': {
+        bg: '#ffebee',  // 薄い赤
+        borderColor: '#ffcdd2',
+        textColor: '#c62828'
+      },
+      'cell-alert-2': {
+        bg: '#ffcdd2',  // 中間の赤
+        borderColor: '#ef9a9a',
+        textColor: '#c62828'
+      },
+      'cell-alert-3': {
+        bg: '#ef9a9a',  // 濃い赤（緊急）
+        borderColor: '#e57373',
+        textColor: '#ffffff'
+      }
     };
 
-    return intensityLevels[intensity as keyof typeof intensityLevels] || intensityLevels['3'];
+    // intensityの値に基づいて色を返す
+    return intensityMap[intensity] || intensityMap['cell-intensity-3'];
   };
 
   const getStatusConfig = (status: string) => {
@@ -154,10 +192,14 @@ export default function HeatmapCell({ data, layer, course, phase, onClick }: Hea
       onClick={onClick}
       whileHover={{ scale: 1.02, z: 10 }}
       whileTap={{ scale: 0.98 }}
+      style={{
+        backgroundColor: intensityConfig.bg,
+        borderColor: intensityConfig.borderColor,
+        color: intensityConfig.textColor
+      }}
       className={`
         relative w-full p-3 md:p-4 rounded-lg border-2
-        ${intensityConfig.bg} ${intensityConfig.border}
-        hover:shadow-md hover:${intensityConfig.glow}
+        hover:shadow-lg hover:scale-105
         transition-all duration-200 cursor-pointer
         min-h-[160px] md:min-h-[180px] flex flex-col
         group
@@ -165,7 +207,7 @@ export default function HeatmapCell({ data, layer, course, phase, onClick }: Hea
     >
       {/* Percentage */}
       <div className="mb-2">
-        <div className={`text-2xl font-bold ${intensityConfig.text} mb-1`}>
+        <div className={`text-2xl font-bold mb-1`} style={{ color: intensityConfig.textColor }}>
           {data.percent}
         </div>
         <div className="text-sm text-gray-600">

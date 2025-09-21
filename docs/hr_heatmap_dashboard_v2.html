@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人事アプローチ戦略ヒートマップ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', -apple-system, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+        
+        .phase-selector {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .phase-btn {
+            padding: 15px 30px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 200px;
+        }
+        
+        .phase-btn:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+        }
+        
+        .phase-btn.active {
+            background: #667eea;
+            color: white;
+            box-shadow: 0 5px 20px rgba(102,126,234,0.4);
+        }
+        
+        .phase-info {
+            background: linear-gradient(135deg, #667eea10, #764ba210);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 1px solid #e1e8ff;
+        }
+        
+        .phase-title {
+            color: #667eea;
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .phase-description {
+            color: #5a6c7d;
+            line-height: 1.6;
+        }
+        
+        .heatmap-container {
+            margin: 30px 0;
+        }
+        
+        .heatmap-grid {
+            display: grid;
+            grid-template-columns: 150px repeat(4, 1fr);
+            gap: 2px;
+            background: #e0e0e0;
+            padding: 2px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .heatmap-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .heatmap-row-header {
+            background: #f8f9fa;
+            padding: 15px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .performance-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .heatmap-cell {
+            background: white;
+            padding: 15px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-height: 150px;
+        }
+        
+        .heatmap-cell:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+        
+        .cell-intensity-1 { background: #e8f5e9; }
+        .cell-intensity-2 { background: #c8e6c9; }
+        .cell-intensity-3 { background: #a5d6a7; }
+        .cell-intensity-4 { background: #81c784; }
+        .cell-intensity-5 { background: #66bb6a; }
+        
+        .cell-warning-1 { background: #fff3e0; }
+        .cell-warning-2 { background: #ffe0b2; }
+        .cell-warning-3 { background: #ffcc80; }
+        
+        .cell-alert-1 { background: #ffebee; }
+        .cell-alert-2 { background: #ffcdd2; }
+        .cell-alert-3 { background: #ef9a9a; }
+        
+        .cell-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .cell-percentage {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .cell-count {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .cell-status {
+            font-size: 0.85em;
+            padding: 4px 8px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        
+        .status-ideal { background: #4caf50; color: white; }
+        .status-acceptable { background: #2196f3; color: white; }
+        .status-caution { background: #ff9800; color: white; }
+        .status-alert { background: #f44336; color: white; }
+        
+        .cell-action {
+            font-size: 0.8em;
+            color: #555;
+            margin-top: auto;
+            padding-top: 8px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .action-priority {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.75em;
+            margin-right: 5px;
+            font-weight: bold;
+        }
+        
+        .priority-high { background: #ff5252; color: white; }
+        .priority-medium { background: #ffc107; color: white; }
+        .priority-low { background: #03a9f4; color: white; }
+        
+        .legend-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .legend-section {
+            text-align: center;
+        }
+        
+        .legend-title {
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .legend-items {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+        
+        .action-summary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 40px;
+        }
+        
+        .action-summary h3 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .action-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .action-card {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .action-card h4 {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .action-card ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .action-card li {
+            padding: 5px 0;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        .action-card li::before {
+            content: "▸ ";
+            color: #ffd700;
+            font-weight: bold;
+        }
+        
+        .detail-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .detail-modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .modal-title {
+            font-size: 1.4em;
+            color: #2c3e50;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            color: #999;
+            cursor: pointer;
+        }
+        
+        .modal-close:hover {
+            color: #333;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .metric-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .metric-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .metric-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        /* 評価分布バー */
+        .evaluation-distribution {
+            margin: 10px 0;
+            height: 25px;
+        }
+        
+        .eval-bar {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .eval-segment {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .eval-segment:hover {
+            filter: brightness(1.2);
+            transform: scale(1.05);
+            z-index: 10;
+        }
+        
+        /* 埋もれた人材カード */
+        .hidden-talents-container {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border: 2px solid #ff9800;
+        }
+        
+        .hidden-talents-title {
+            color: #e65100;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .hidden-talents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .hidden-talent-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #ff9800;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .hidden-talent-type {
+            font-weight: bold;
+            color: #e65100;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+        
+        .hidden-talent-name {
+            font-size: 1.1em;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .hidden-talent-count {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+        }
+        
+        .hidden-talent-action {
+            background: #fff3e0;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.85em;
+            color: #e65100;
+            font-weight: bold;
+        }
+        
+        /* 評価システム説明 */
+        .evaluation-system-info {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border: 2px solid #4caf50;
+        }
+        
+        .evaluation-system-title {
+            color: #2e7d32;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .evaluation-grades-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .evaluation-grade-box {
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .two-axis-matrix {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+        
+        .matrix-grid-5x5 {
+            display: grid;
+            grid-template-columns: 60px repeat(5, 1fr);
+            gap: 2px;
+            margin-top: 10px;
+        }
+        
+        .matrix-cell-header {
+            background: #667eea;
+            color: white;
+            padding: 8px;
+            text-align: center;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+        
+        .matrix-cell {
+            background: #f8f9fa;
+            padding: 8px;
+            text-align: center;
+            font-size: 0.8em;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .matrix-result-s-plus { background: #ffcdd2; }
+        .matrix-result-s { background: #ffe0b2; }
+        .matrix-result-a-plus { background: #fff9c4; }
+        .matrix-result-a { background: #dcedc8; }
+        .matrix-result-b { background: #bbdefb; }
+        .matrix-result-c { background: #e0e0e0; }
+        .matrix-result-d { background: #ffab91; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 人事アプローチ戦略ヒートマップ</h1>
+            <p class="subtitle">フェーズ別 × パフォーマンス層別の最適施策可視化システム</p>
+        </div>
+        
+        <!-- フェーズ選択ボタン -->
+        <div class="phase-selector">
+            <button class="phase-btn active" onclick="selectPhase(1)">
+                第1段階<br><span style="font-size:0.8em">コース制度のみ</span>
+            </button>
+            <button class="phase-btn" onclick="selectPhase(2)">
+                第2段階<br><span style="font-size:0.8em">＋等級制度</span>
+            </button>
+            <button class="phase-btn" onclick="selectPhase(3)">
+                第3段階<br><span style="font-size:0.8em">＋評価制度（完成）</span>
+            </button>
+        </div>
+        
+        <!-- フェーズ情報 -->
+        <div class="phase-info" id="phaseInfo">
+            <div class="phase-title">第1段階（2026年4月〜）：キャリアコース制度導入</div>
+            <div class="phase-description">
+                自己選択による働き方の多様化開始。評価・等級未導入のため、選択と実態のギャップが大きい時期。
+                上位層のAコース選択70%、中間層でも30%がAコースを選択する「期待過多」状態。
+            </div>
+        </div>
+        
+        <!-- ヒートマップ -->
+        <div class="heatmap-container">
+            <div class="heatmap-grid" id="heatmapGrid">
+                <!-- ヘッダー行 -->
+                <div class="heatmap-header">パフォーマンス層</div>
+                <div class="heatmap-header">Aコース<br>フルスペック</div>
+                <div class="heatmap-header">Bコース<br>施設内限定</div>
+                <div class="heatmap-header">Cコース<br>部署固定</div>
+                <div class="heatmap-header">Dコース<br>限定勤務</div>
+                
+                <!-- データ行はJavaScriptで動的生成 -->
+            </div>
+        </div>
+        
+        <!-- 凡例 -->
+        <div class="legend-container">
+            <div class="legend-section">
+                <div class="legend-title">適合度</div>
+                <div class="legend-items">
+                    <div class="legend-item">
+                        <div class="legend-color cell-intensity-5"></div>
+                        <span>最適</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color cell-warning-2"></div>
+                        <span>要調整</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color cell-alert-2"></div>
+                        <span>ミスマッチ</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="legend-section">
+                <div class="legend-title">優先度</div>
+                <div class="legend-items">
+                    <div class="legend-item">
+                        <span class="action-priority priority-high">高</span>
+                        <span>即時対応</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="action-priority priority-medium">中</span>
+                        <span>計画的対応</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="action-priority priority-low">低</span>
+                        <span>経過観察</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- アクションサマリー -->
+        <div class="action-summary" id="actionSummary">
+            <h3>📋 第1段階の重点アクション</h3>
+            <div class="action-cards">
+                <div class="action-card">
+                    <h4>🎯 上位20%層</h4>
+                    <ul>
+                        <li>Aコース選択者の早期育成プログラム開始</li>
+                        <li>法人横断プロジェクトへの参画機会提供</li>
+                        <li>次世代リーダー候補としての意識付け</li>
+                    </ul>
+                </div>
+                <div class="action-card">
+                    <h4>📊 中間60%層</h4>
+                    <ul>
+                        <li>Aコース選択者への現実的な期待値調整</li>
+                        <li>B・Cコースの魅力と可能性の説明強化</li>
+                        <li>個別キャリアカウンセリングの実施</li>
+                    </ul>
+                </div>
+                <div class="action-card">
+                    <h4>⚠️ 要支援20%層</h4>
+                    <ul>
+                        <li>Aコース選択者への早期コース変更勧奨</li>
+                        <li>C・Dコースでの安定就労支援</li>
+                        <li>基礎スキル向上研修の優先実施</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 詳細モーダル -->
+    <div class="detail-modal" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">詳細情報</h3>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div id="modalBody">
+                <!-- 動的コンテンツ -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let currentPhase = 1;
+        
+        // 評価制度の定義
+        const evaluationSystem = {
+            grades: {
+                'S+': { label: '最優秀', color: '#d32f2f', percentage: 5 },
+                'S': { label: '優秀', color: '#f57c00', percentage: 7 },
+                'A+': { label: '良好上位', color: '#fbc02d', percentage: 8 },
+                'A': { label: '良好', color: '#689f38', percentage: 15 },
+                'B': { label: '標準', color: '#1976d2', percentage: 45 },
+                'C': { label: '要改善', color: '#757575', percentage: 15 },
+                'D': { label: '要指導', color: '#b71c1c', percentage: 5 }
+            },
+            distribution: {
+                top: ['S+', 'S', 'A+'],  // 上位20%
+                middle: ['A', 'B'],       // 中間60%
+                low: ['C', 'D']          // 要支援20%
+            }
+        };
+        
+        // フェーズごとのデータ定義
+        const phaseData = {
+            1: {
+                title: "第1段階（2026年4月〜）：キャリアコース制度導入",
+                description: "自己選択による働き方の多様化開始。評価・等級未導入のため、選択と実態のギャップが大きい時期。上位層のAコース選択70%、中間層でも30%がAコースを選択する「期待過多」状態。【職員数：500名】",
+                data: {
+                    top: {
+                        A: { percent: "70%", count: "70名", status: "ideal", intensity: "cell-intensity-5", priority: "low", action: "早期育成開始", gradeRange: "想定25-45級" },
+                        B: { percent: "25%", count: "25名", status: "acceptable", intensity: "cell-intensity-3", priority: "low", action: "施設リーダー育成", gradeRange: "想定20-35級" },
+                        C: { percent: "5%", count: "5名", status: "acceptable", intensity: "cell-intensity-2", priority: "low", action: "専門性強化", gradeRange: "想定15-28級" },
+                        D: { percent: "0%", count: "0名", status: "ideal", intensity: "cell-intensity-1", priority: "low", action: "該当なし", gradeRange: "-" }
+                    },
+                    middle: {
+                        A: { percent: "30%", count: "90名", status: "caution", intensity: "cell-warning-2", priority: "high", action: "期待値調整必要", gradeRange: "想定15-35級" },
+                        B: { percent: "40%", count: "120名", status: "ideal", intensity: "cell-intensity-5", priority: "low", action: "継続支援", gradeRange: "想定10-25級" },
+                        C: { percent: "20%", count: "60名", status: "acceptable", intensity: "cell-intensity-3", priority: "medium", action: "専門研修", gradeRange: "想定8-20級" },
+                        D: { percent: "10%", count: "30名", status: "acceptable", intensity: "cell-intensity-2", priority: "low", action: "WLB支援", gradeRange: "想定5-15級" }
+                    },
+                    low: {
+                        A: { percent: "10%", count: "10名", status: "alert", intensity: "cell-alert-3", priority: "high", action: "早期転換勧奨", gradeRange: "想定10-20級" },
+                        B: { percent: "30%", count: "30名", status: "caution", intensity: "cell-warning-1", priority: "medium", action: "基礎力強化", gradeRange: "想定5-15級" },
+                        C: { percent: "35%", count: "35名", status: "ideal", intensity: "cell-intensity-4", priority: "low", action: "適正配置", gradeRange: "想定3-12級" },
+                        D: { percent: "25%", count: "25名", status: "ideal", intensity: "cell-intensity-5", priority: "low", action: "継続就労支援", gradeRange: "想定1-10級" }
+                    }
+                }
+            },
+            2: {
+                title: "第2段階（2026年10月〜）：等級制度導入",
+                description: "共通50等級制度により各コースの上限が明確化（A:50級、B:40級、C:30級、D:20級）。能力と選択の適正化が進む調整期。処遇差により現実的な選択へシフト。【職員数：500名】",
+                courseStructure: {
+                    A: { ceiling: 50, coefficient: 1.2, label: "全範囲（1-50級）" },
+                    B: { ceiling: 40, coefficient: 1.1, label: "上限40級" },
+                    C: { ceiling: 30, coefficient: 1.0, label: "上限30級" },
+                    D: { ceiling: 20, coefficient: 0.9, label: "上限20級" }
+                },
+                data: {
+                    top: {
+                        A: { 
+                            percent: "60%", 
+                            count: "60名", 
+                            status: "ideal", 
+                            intensity: "cell-intensity-5", 
+                            priority: "low", 
+                            action: "幹部候補育成",
+                            gradeRange: "25-45級",
+                            gradeCeiling: "50級まで可"
+                        },
+                        B: { 
+                            percent: "35%", 
+                            count: "35名", 
+                            status: "ideal", 
+                            intensity: "cell-intensity-4", 
+                            priority: "low", 
+                            action: "施設運営参画",
+                            gradeRange: "20-35級",
+                            gradeCeiling: "上限40級"
+                        },
+                        C: { 
+                            percent: "5%", 
+                            count: "5名", 
+                            status: "acceptable", 
+                            intensity: "cell-intensity-3", 
+                            priority: "medium", 
+                            action: "専門職認定",
+                            gradeRange: "15-28級",
+                            gradeCeiling: "上限30級"
+                        },
+                        D: { 
+                            percent: "0%", 
+                            count: "0名", 
+                            status: "ideal", 
+                            intensity: "cell-intensity-1", 
+                            priority: "low", 
+                            action: "該当なし",
+                            gradeRange: "-",
+                            gradeCeiling: "-"
+                        }
+                    },
+                    middle: {
+                        A: { 
+                            percent: "15%", 
+                            count: "45名", 
+                            status: "acceptable", 
+                            intensity: "cell-intensity-3", 
+                            priority: "medium", 
+                            action: "昇格支援",
+                            gradeRange: "15-35級",
+                            gradeCeiling: "50級まで可"
+                        },
+                        B: { 
+                            percent: "50%", 
+                            count: "150名", 
+                            status: "ideal", 
+                            intensity: "cell-intensity-5", 
+                            priority: "low", 
+                            action: "中核人材育成",
+                            gradeRange: "10-25級",
+                            gradeCeiling: "上限40級"
+                        },
+                        C: { 
+                            percent: "25%", 
+                            count: "75名", 
+                            status: "ideal", 
+                            intensity: "cell-intensity-4", 
+                            priority: "low", 
+                            action: "技術向上",
+                            gradeRange: "8-20級",
+                            gradeCeiling: "上限30級"
+                        },
+                        D: { 
+                            percent: "10%", 
+                            count: "30名", 
+                            status: "acceptable", 
+                            intensity: "cell-intensity-2", 
+                            priority: "low", 
+                            action: "復帰支援",
+                            gradeRange: "5-15級",
+                            gradeCeiling: "上限20級"
+                        }
+                    },
+                    low: {
+                        A: { 
+                            percent: "2%", 
+                            count: "2名", 
+                            status: "alert", 
+                            intensity: "cell-alert-2", 
+                            priority: "high", 
+                            action: "即時転換",
+                            gradeRange: "10-20級",
+                            gradeCeiling: "要コース変更"
+                        },
+                        B: { 
+                            percent: "38%", 
+                            count: "38名", 
+                            status: "acceptable", 
+                            intensity: "cell-intensity-3", 
+                            priority: "medium", 
+                            action: "段階的育成",
+                            gradeRange: "5-15級",
+                            gradeCeiling: "上限40級"
+                        },
+                        C: { 
+                            percent: "40%", 
+                            count: "40名", 
+                            status: "ideal", 
+                            intensity: "cell-intensity-5", 
+                            priority: "low", 
+                            action: "定型業務最適化",
+                            gradeRange: "3-12級",
+                            gradeCeiling: "上限30級"
+                        },
+                        D: { 
+                            percent: "20%", 
+                            count: "20名", 
+                            status: "ideal", 
+                            intensity: "cell-intensity-4", 
+                            priority: "low", 
+                            action: "健康管理",
+                            gradeRange: "1-10級",
+                            gradeCeiling: "上限20級"
+                        }
+                    }
+                }
+            },
+            3: {
+                title: "第3段階（2027年4月〜）：評価制度導入（完成形）",
+                description: "3軸統合により精密な人材マネジメントが実現。共通50等級制度×7段階評価×4コースの組み合わせで個別最適配置を実現。【職員数：500名】",
+                courseStructure: {
+                    A: { ceiling: 50, coefficient: 1.2, label: "全範囲（1-50級）" },
+                    B: { ceiling: 40, coefficient: 1.1, label: "上限40級" },
+                    C: { ceiling: 30, coefficient: 1.0, label: "上限30級" },
+                    D: { ceiling: 20, coefficient: 0.9, label: "上限20級" }
+                },
+                data: {
+                    top: {
+                        A: { 
+                            percent: "50%", 
+                            count: "50名", 
+                            status: "ideal", 
+                            intensity: "cell-intensity-5", 
+                            priority: "low", 
+                            action: "経営層育成",
+                            gradeRange: "30-48級",
+                            gradeCeiling: "50級到達可",
+                            evaluation: { 'S+': 40, 'S': 35, 'A+': 20, 'A': 5 }
+                        },
+                        B: { 
+                            percent: "40%", 
+                            count: "40名", 
+                            status: "ideal", 
+                            intensity: "cell-intensity-5", 
+                            priority: "low", 
+                            action: "施設幹部化",
+                            gradeRange: "25-38級",
+                            gradeCeiling: "上限40級",
+                            evaluation: { 'S+': 10, 'S': 30, 'A+': 35, 'A': 25 }
+                        },
+                        C: { 
+                            percent: "10%", 
+                            count: "10名", 
+                            status: "ideal", 
+                            intensity: "cell-intensity-4", 
+                            priority: "low", 
+                            action: "エキスパート認定",
+                            gradeRange: "20-29級",
+                            gradeCeiling: "上限30級",
+                            evaluation: { 'S': 15, 'A+': 40, 'A': 45 }
+                        },
+                        D: { 
+                            percent: "0%", 
+                            count: "0名", 
+                            status: "ideal", 
+                            intensity: "cell-intensity-1", 
+                            priority: "low", 
+                            action: "該当なし",
+                            gradeRange: "-",
+                            gradeCeiling: "-",
+                            evaluation: {}
+                        }
+                    },
+                    middle: {
+                        A: { 
+                            percent: "10%", 
+                            count: "30名", 
+                            status: "ideal", 
+                            intensity: "cell-intensity-4", 
+                            priority: "low", 
+                            action: "選抜育成",
+                            gradeRange: "20-40級",
+                            gradeCeiling: "50級到達可",
+                            evaluation: { 'A+': 15, 'A': 45, 'B': 40 }
+                        },
+                        B: { 
+                            percent: "45%", 
+                            count: "135名", 
+                            status: "ideal", 
+                            intensity: "cell-intensity-5", 
+                            priority: "low", 
+                            action: "実務リーダー化",
+                            gradeRange: "15-30級",
+                            gradeCeiling: "上限40級",
+                            evaluation: { 'A': 25, 'B': 65, 'C': 10 }
+                        },
+                        C: { 
+                            percent: "35%", 
+                            count: "105名", 
+                            status: "ideal", 
+                            intensity: "cell-intensity-5", 
+                            priority: "low", 
+                            action: "専門性深化",
+                            gradeRange: "10-22級",
+                            gradeCeiling: "上限30級",
+                            evaluation: { 'A': 10, 'B': 70, 'C': 20 }
+                        },
+                        D: { 
+                            percent: "10%", 
+                            count: "30名", 
+                            status: "acceptable", 
+                            intensity: "cell-intensity-3", 
+                            priority: "low", 
+                            action: "柔軟勤務継続",
+                            gradeRange: "8-18級",
+                            gradeCeiling: "上限20級",
+                            evaluation: { 'B': 50, 'C': 40, 'D': 10 }
+                        }
+                    },
+                    low: {
+                        A: { 
+                            percent: "1%", 
+                            count: "1名", 
+                            status: "alert", 
+                            intensity: "cell-alert-1", 
+                            priority: "high", 
+                            action: "個別対応",
+                            gradeRange: "15-25級",
+                            gradeCeiling: "要転換検討",
+                            evaluation: { 'C': 75, 'D': 25 }
+                        },
+                        B: { 
+                            percent: "34%", 
+                            count: "34名", 
+                            status: "acceptable", 
+                            intensity: "cell-intensity-3", 
+                            priority: "medium", 
+                            action: "補助役割明確化",
+                            gradeRange: "8-20級",
+                            gradeCeiling: "上限40級",
+                            evaluation: { 'C': 60, 'D': 40 }
+                        },
+                        C: { 
+                            percent: "45%", 
+                            count: "45名", 
+                            status: "ideal", 
+                            intensity: "cell-intensity-5", 
+                            priority: "low", 
+                            action: "業務標準化",
+                            gradeRange: "5-15級",
+                            gradeCeiling: "上限30級",
+                            evaluation: { 'C': 70, 'D': 30 }
+                        },
+                        D: { 
+                            percent: "20%", 
+                            count: "20名", 
+                            status: "ideal", 
+                            intensity: "cell-intensity-5", 
+                            priority: "low", 
+                            action: "定年後準備",
+                            gradeRange: "3-12級",
+                            gradeCeiling: "上限20級",
+                            evaluation: { 'C': 50, 'D': 50 }
+                        }
+                    }
+                },
+                hiddenTalents: [
+                    { name: "施設内D×法人内B", count: 5, type: "環境不適合", action: "施設異動検討" },
+                    { name: "施設内B×法人内S", count: 3, type: "専門性突出", action: "法人プロジェクト参画" },
+                    { name: "施設内S×法人内C", count: 7, type: "ローカル特化", action: "施設内権限強化" }
+                ]
+            }
+        };
+        
+        // アクションサマリーデータ
+        const actionSummaryData = {
+            1: {
+                top: [
+                    "Aコース選択者の早期育成プログラム開始",
+                    "法人横断プロジェクトへの参画機会提供",
+                    "次世代リーダー候補としての意識付け"
+                ],
+                middle: [
+                    "Aコース選択者への現実的な期待値調整",
+                    "B・Cコースの魅力と可能性の説明強化",
+                    "個別キャリアカウンセリングの実施"
+                ],
+                low: [
+                    "Aコース選択者への早期コース変更勧奨",
+                    "C・Dコースでの安定就労支援",
+                    "基礎スキル向上研修の優先実施"
+                ]
+            },
+            2: {
+                top: [
+                    "等級上位者の幹部候補プログラム本格化",
+                    "施設運営への段階的参画",
+                    "外部研修・MBA派遣の検討"
+                ],
+                middle: [
+                    "等級に応じた役割の明確化",
+                    "昇格要件の個別目標設定",
+                    "専門資格取得支援の強化"
+                ],
+                low: [
+                    "適正等級への配置調整",
+                    "基礎業務の標準化推進",
+                    "メンター制度による個別支援"
+                ]
+            },
+            3: {
+                top: [
+                    "サクセッションプラン策定",
+                    "戦略立案への直接参画",
+                    "法人全体の変革リーダー育成"
+                ],
+                middle: [
+                    "評価に基づく個別育成計画",
+                    "部門横断プロジェクトリード",
+                    "後進指導役としての役割付与"
+                ],
+                low: [
+                    "強みを活かした配置最適化",
+                    "チーム補助役としての明確化",
+                    "継続就労のための環境整備"
+                ]
+            }
+        };
+        
+        function selectPhase(phase) {
+            currentPhase = phase;
+            
+            // ボタンのアクティブ状態を更新
+            document.querySelectorAll('.phase-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.closest('.phase-btn').classList.add('active');
+            
+            // フェーズ情報を更新
+            const phaseInfo = document.getElementById('phaseInfo');
+            phaseInfo.innerHTML = `
+                <div class="phase-title">${phaseData[phase].title}</div>
+                <div class="phase-description">${phaseData[phase].description}</div>
+            `;
+            
+            // ヒートマップを更新
+            updateHeatmap(phase);
+            
+            // アクションサマリーを更新
+            updateActionSummary(phase);
+            
+            // 第3段階の場合、評価システム情報を表示
+            displayEvaluationSystem();
+        }
+        
+        function updateHeatmap(phase) {
+            const grid = document.getElementById('heatmapGrid');
+            const data = phaseData[phase].data;
+            
+            // ヘッダー行を残して、データ行をクリア
+            while (grid.children.length > 5) {
+                grid.removeChild(grid.lastChild);
+            }
+            
+            // データ行を追加
+            const layers = [
+                { key: 'top', label: '上位20%', subLabel: '高パフォーマンス層' },
+                { key: 'middle', label: '中間60%', subLabel: '標準パフォーマンス層' },
+                { key: 'low', label: '要支援20%', subLabel: '育成必要層' }
+            ];
+            
+            layers.forEach(layer => {
+                // 行ヘッダー
+                const rowHeader = document.createElement('div');
+                rowHeader.className = 'heatmap-row-header';
+                rowHeader.innerHTML = `
+                    <div>${layer.label}</div>
+                    <div class="performance-label">${layer.subLabel}</div>
+                `;
+                grid.appendChild(rowHeader);
+                
+                // データセル
+                ['A', 'B', 'C', 'D'].forEach(course => {
+                    const cellData = data[layer.key][course];
+                    const cell = document.createElement('div');
+                    cell.className = `heatmap-cell ${cellData.intensity}`;
+                    cell.onclick = () => showDetail(phase, layer.key, course);
+                    
+                    // 等級範囲の表示（第2段階以降）
+                    let gradeInfo = '';
+                    if (phase >= 2 && cellData.gradeRange) {
+                        gradeInfo = `
+                            <div style="font-size: 0.75em; color: #666; margin: 5px 0; background: rgba(255,255,255,0.7); padding: 3px 5px; border-radius: 3px;">
+                                <div>📊 ${cellData.gradeRange}</div>
+                                ${cellData.gradeCeiling ? `<div style="color: #ff6b6b; font-weight: bold;">🔝 ${cellData.gradeCeiling}</div>` : ''}
+                            </div>
+                        `;
+                    } else if (phase === 1 && cellData.gradeRange) {
+                        gradeInfo = `
+                            <div style="font-size: 0.75em; color: #999; margin: 5px 0; font-style: italic;">
+                                ${cellData.gradeRange}
+                            </div>
+                        `;
+                    }
+                    
+                    // 第3段階で評価分布を表示
+                    let evaluationBar = '';
+                    if (phase === 3 && cellData.evaluation && Object.keys(cellData.evaluation).length > 0) {
+                        evaluationBar = '<div class="evaluation-distribution"><div class="eval-bar">';
+                        for (const [grade, percentage] of Object.entries(cellData.evaluation)) {
+                            const gradeInfo = evaluationSystem.grades[grade];
+                            if (percentage > 0) {
+                                evaluationBar += `<span class="eval-segment" style="width: ${percentage}%; background: ${gradeInfo.color}; color: white; font-size: 0.7em; padding: 2px;" title="${grade}: ${percentage}%">${grade}</span>`;
+                            }
+                        }
+                        evaluationBar += '</div></div>';
+                    }
+                    
+                    cell.innerHTML = `
+                        <div class="cell-content">
+                            <div class="cell-percentage">${cellData.percent}</div>
+                            <div class="cell-count">${cellData.count}</div>
+                            ${gradeInfo}
+                            ${evaluationBar}
+                            <div class="cell-status status-${cellData.status}">
+                                ${getStatusLabel(cellData.status)}
+                            </div>
+                            <div class="cell-action">
+                                <span class="action-priority priority-${cellData.priority}">
+                                    ${getPriorityLabel(cellData.priority)}
+                                </span>
+                                ${cellData.action}
+                            </div>
+                        </div>
+                    `;
+                    grid.appendChild(cell);
+                });
+            });
+            
+            // 第3段階の場合、埋もれた人材情報を表示
+            if (phase === 3 && phaseData[phase].hiddenTalents) {
+                displayHiddenTalents();
+            }
+            
+            // 第2段階以降でコース構造情報を表示
+            if (phase >= 2 && phaseData[phase].courseStructure) {
+                displayCourseStructure(phase);
+            }
+        }
+        
+        function getStatusLabel(status) {
+            const labels = {
+                'ideal': '理想的',
+                'acceptable': '許容範囲',
+                'caution': '要注意',
+                'alert': '要対応'
+            };
+            return labels[status] || status;
+        }
+        
+        function getPriorityLabel(priority) {
+            const labels = {
+                'high': '高',
+                'medium': '中',
+                'low': '低'
+            };
+            return labels[priority] || priority;
+        }
+        
+        function updateActionSummary(phase) {
+            const summary = document.getElementById('actionSummary');
+            const actions = actionSummaryData[phase];
+            
+            summary.innerHTML = `
+                <h3>📋 第${phase}段階の重点アクション</h3>
+                <div class="action-cards">
+                    <div class="action-card">
+                        <h4>🎯 上位20%層</h4>
+                        <ul>
+                            ${actions.top.map(action => `<li>${action}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="action-card">
+                        <h4>📊 中間60%層</h4>
+                        <ul>
+                            ${actions.middle.map(action => `<li>${action}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="action-card">
+                        <h4>⚠️ 要支援20%層</h4>
+                        <ul>
+                            ${actions.low.map(action => `<li>${action}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function showDetail(phase, layer, course) {
+            const modal = document.getElementById('detailModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            
+            const layerLabels = {
+                'top': '上位20%層',
+                'middle': '中間60%層',
+                'low': '要支援20%層'
+            };
+            
+            const courseLabels = {
+                'A': 'Aコース（フルスペック）',
+                'B': 'Bコース（施設内限定）',
+                'C': 'Cコース（部署固定）',
+                'D': 'Dコース（限定勤務）'
+            };
+            
+            const cellData = phaseData[phase].data[layer][course];
+            
+            modalTitle.textContent = `${layerLabels[layer]} × ${courseLabels[course]}`;
+            
+            // 評価分布チャート（第3段階のみ）
+            let evaluationChart = '';
+            if (phase === 3 && cellData.evaluation && Object.keys(cellData.evaluation).length > 0) {
+                evaluationChart = `
+                    <h4 style="margin-top: 20px; color: #667eea;">📊 評価分布詳細</h4>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 10px;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 10px; margin-bottom: 15px;">
+                            ${Object.entries(cellData.evaluation).map(([grade, percentage]) => {
+                                const gradeInfo = evaluationSystem.grades[grade];
+                                return percentage > 0 ? `
+                                    <div style="text-align: center;">
+                                        <div style="background: ${gradeInfo.color}; color: white; padding: 8px; border-radius: 6px; font-weight: bold;">
+                                            ${grade}
+                                        </div>
+                                        <div style="margin-top: 5px; font-size: 1.2em; font-weight: bold; color: #2c3e50;">
+                                            ${percentage}%
+                                        </div>
+                                        <div style="font-size: 0.8em; color: #666;">
+                                            ${gradeInfo.label}
+                                        </div>
+                                    </div>
+                                ` : '';
+                            }).join('')}
+                        </div>
+                        <div style="background: white; padding: 10px; border-radius: 6px;">
+                            <strong>評価分析：</strong><br>
+                            ${getEvaluationAnalysis(layer, course, cellData.evaluation)}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            modalBody.innerHTML = `
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">選択率</div>
+                        <div class="metric-value">${cellData.percent}</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">該当人数</div>
+                        <div class="metric-value">${cellData.count}</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">適合状態</div>
+                        <div class="metric-value status-${cellData.status}" style="font-size: 1.2em; padding: 5px 10px; border-radius: 5px;">
+                            ${getStatusLabel(cellData.status)}
+                        </div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">対応優先度</div>
+                        <div class="metric-value">
+                            <span class="action-priority priority-${cellData.priority}" style="font-size: 1.2em; padding: 5px 15px;">
+                                ${getPriorityLabel(cellData.priority)}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                ${evaluationChart}
+                
+                <h4 style="margin-top: 20px; color: #667eea;">📋 推奨アクション</h4>
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 10px;">
+                    <p style="font-size: 1.1em; line-height: 1.6;">${cellData.action}</p>
+                </div>
+                
+                <h4 style="margin-top: 20px; color: #667eea;">🎯 具体的施策</h4>
+                <ul style="list-style: none; padding: 0; margin-top: 10px;">
+                    ${getDetailedActions(phase, layer, course).map(action => 
+                        `<li style="background: #fff; padding: 10px; margin: 5px 0; border-left: 4px solid #667eea; border-radius: 4px;">
+                            ${action}
+                        </li>`
+                    ).join('')}
+                </ul>
+            `;
+            
+            modal.classList.add('active');
+        }
+        
+        // 評価分布の分析コメントを生成
+        function getEvaluationAnalysis(layer, course, evaluation) {
+            const analyses = {
+                'top-A': 'S+・S評価が75%を占め、次世代経営層として最適な人材群です。',
+                'top-B': 'A+・S評価中心で、施設運営の中核を担える実力を持っています。',
+                'top-C': 'A+・A評価が主体で、専門領域でのリーダーシップが期待できます。',
+                'middle-A': 'A・B評価が中心。上位層への成長可能性を秘めた人材群です。',
+                'middle-B': 'B評価が65%と安定。実務の確実な遂行が期待できます。',
+                'middle-C': 'B評価中心で専門性を着実に深めている段階です。',
+                'middle-D': 'B・C評価が混在。個別の事情に配慮した活用が必要です。',
+                'low-A': 'C・D評価のため、早急なコース変更が必要です。',
+                'low-B': 'C・D評価ですが、適切な支援で成長可能性があります。',
+                'low-C': 'C・D評価ながら、定型業務では安定的な貢献が可能です。',
+                'low-D': 'C・D評価ですが、限定的な役割で継続就労が可能です。'
+            };
+            
+            return analyses[`${layer}-${course}`] || '評価分布を分析中...';
+        }
+        
+        function getDetailedActions(phase, layer, course) {
+            // 詳細アクションのデータ（実際の運用では外部データから取得）
+            const actions = {
+                '1-top-A': [
+                    '四半期ごとの成長目標設定と達成度評価',
+                    '法人本部での研修参加（月1回）',
+                    '他施設見学・交流プログラムへの参加',
+                    'メンター制度による個別指導'
+                ],
+                '1-middle-A': [
+                    '能力評価面談の実施（3ヶ月ごと）',
+                    'コース選択の再検討機会提供',
+                    '基礎マネジメント研修への参加',
+                    '現実的なキャリアパス提示'
+                ],
+                '1-low-A': [
+                    '即時の個別面談実施',
+                    'B・Cコースへの変更勧奨',
+                    '基礎スキル向上プログラム優先適用',
+                    '業務負荷の適正化'
+                ],
+                // 他の組み合わせも同様に定義...
+            };
+            
+            const key = `${phase}-${layer}-${course}`;
+            return actions[key] || [
+                '個別評価の実施',
+                '適性に応じた研修プログラム',
+                '定期的なフィードバック',
+                'キャリア目標の明確化'
+            ];
+        }
+        
+        function closeModal() {
+            document.getElementById('detailModal').classList.remove('active');
+        }
+        
+        // 埋もれた人材を表示する関数
+        function displayHiddenTalents() {
+            const existingContainer = document.querySelector('.hidden-talents-container');
+            if (existingContainer) {
+                existingContainer.remove();
+            }
+            
+            const container = document.createElement('div');
+            container.className = 'hidden-talents-container';
+            container.innerHTML = `
+                <div class="hidden-talents-title">
+                    💎 2軸評価で発見された埋もれた人材（500名中）
+                </div>
+                <div class="hidden-talents-grid">
+                    ${phaseData[3].hiddenTalents.map(talent => `
+                        <div class="hidden-talent-card">
+                            <div class="hidden-talent-type">${talent.type}</div>
+                            <div class="hidden-talent-name">${talent.name}</div>
+                            <div class="hidden-talent-count">該当者：${talent.count}名</div>
+                            <div class="hidden-talent-action">📌 ${talent.action}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            const heatmapContainer = document.querySelector('.heatmap-container');
+            heatmapContainer.appendChild(container);
+        }
+        
+        // コース構造情報を表示する関数
+        function displayCourseStructure(phase) {
+            const existingInfo = document.querySelector('.course-structure-info');
+            if (existingInfo) {
+                existingInfo.remove();
+            }
+            
+            if (!phaseData[phase].courseStructure) return;
+            
+            const info = document.createElement('div');
+            info.className = 'course-structure-info';
+            info.style.cssText = 'background: linear-gradient(135deg, #e3f2fd, #bbdefb); padding: 20px; border-radius: 15px; margin: 30px 0; border: 2px solid #2196f3;';
+            info.innerHTML = `
+                <div style="color: #1565c0; font-size: 1.3em; font-weight: bold; margin-bottom: 15px;">
+                    🏢 川畑局長案：共通50等級制度の構造
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;">
+                    ${Object.entries(phaseData[phase].courseStructure).map(([course, data]) => `
+                        <div style="background: white; padding: 15px; border-radius: 10px; text-align: center; box-shadow: 0 3px 10px rgba(0,0,0,0.1);">
+                            <div style="font-size: 1.5em; font-weight: bold; color: #1565c0; margin-bottom: 5px;">${course}コース</div>
+                            <div style="color: #666; font-size: 0.9em; margin-bottom: 10px;">${data.label}</div>
+                            <div style="background: #e3f2fd; padding: 8px; border-radius: 5px; margin-bottom: 8px;">
+                                <div style="font-size: 0.85em; color: #555;">等級上限</div>
+                                <div style="font-size: 1.3em; font-weight: bold; color: #1565c0;">${data.ceiling}級</div>
+                            </div>
+                            <div style="background: #fff3e0; padding: 8px; border-radius: 5px;">
+                                <div style="font-size: 0.85em; color: #555;">給与係数</div>
+                                <div style="font-size: 1.2em; font-weight: bold; color: #f57c00;">×${data.coefficient}</div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div style="margin-top: 15px; padding: 10px; background: white; border-radius: 8px;">
+                    <strong style="color: #1565c0;">基本給計算式：</strong>
+                    <span style="color: #666;">等級テーブル金額 × コース係数 = 実支給額</span>
+                    <div style="font-size: 0.9em; color: #888; margin-top: 5px;">
+                        例：25等級の場合 → A:×1.2、B:×1.1、C:×1.0、D:×0.9
+                    </div>
+                </div>
+            `;
+            
+            const legendContainer = document.querySelector('.legend-container');
+            legendContainer.parentNode.insertBefore(info, legendContainer);
+        }
+        
+        // 第3段階選択時に評価システムの説明を表示
+        function displayEvaluationSystem() {
+            const existingInfo = document.querySelector('.evaluation-system-info');
+            if (existingInfo) {
+                existingInfo.remove();
+            }
+            
+            if (currentPhase !== 3) return;
+            
+            const info = document.createElement('div');
+            info.className = 'evaluation-system-info';
+            info.innerHTML = `
+                <div class="evaluation-system-title">
+                    📊 100点満点評価制度による精密な人材把握
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <h5 style="color: #2e7d32; margin-bottom: 10px;">技術評価（50点）+ 組織貢献評価（50点）</h5>
+                        <div style="background: white; padding: 10px; border-radius: 8px;">
+                            <div style="margin-bottom: 8px;">🔧 <strong>技術評価</strong></div>
+                            <div style="font-size: 0.9em; color: #666; margin-left: 20px;">
+                                • 法人統一項目（30点）<br>
+                                • 施設特化項目（20点）
+                            </div>
+                            <div style="margin-top: 10px; margin-bottom: 8px;">🤝 <strong>組織貢献評価</strong></div>
+                            <div style="font-size: 0.9em; color: #666; margin-left: 20px;">
+                                • 施設貢献（25点）<br>
+                                • 法人貢献（25点）
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h5 style="color: #2e7d32; margin-bottom: 10px;">7段階最終評価</h5>
+                        <div class="evaluation-grades-grid">
+                            ${Object.entries(evaluationSystem.grades).map(([grade, info]) => `
+                                <div class="evaluation-grade-box" style="background: ${info.color};">
+                                    <div>${grade}</div>
+                                    <div style="font-size: 0.7em;">${info.percentage}%</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div style="margin-top: 10px; padding: 10px; background: white; border-radius: 8px;">
+                            <div style="font-size: 0.9em; color: #666;">
+                                <strong>2軸マトリックス評価：</strong><br>
+                                施設内相対評価 × 法人内相対評価で決定
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            const legendContainer = document.querySelector('.legend-container');
+            legendContainer.parentNode.insertBefore(info, legendContainer);
+        }
+        
+        // 初期表示
+        updateHeatmap(1);
+    </script>
+</body>
+</html>
