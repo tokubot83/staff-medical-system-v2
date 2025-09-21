@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import MainLayout from '@/components/layout/MainLayout';
 import HRHeatmap from '@/components/hr/HRHeatmap';
 import FilterPanel from '@/components/hr/FilterPanel';
 import IntegratedStaffModal from '@/components/hr/IntegratedStaffModal';
@@ -39,8 +38,7 @@ export default function HRStationPage() {
   };
 
   return (
-    <MainLayout>
-      <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
         {/* Hero Section - パステルトーン調整 */}
         <div className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
           <div className="absolute inset-0">
@@ -176,7 +174,6 @@ export default function HRStationPage() {
             filters={selectedFilters}
           />
         )}
-      </div>
-    </MainLayout>
+    </div>
   );
 }
