@@ -16,7 +16,7 @@ export default function EvaluationSystemInfo({ evaluationSystem }: EvaluationSys
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="bg-gradient-to-br from-emerald-500/10 to-green-500/10 backdrop-blur-xl rounded-2xl border border-emerald-500/20 p-8"
+      className="bg-gradient-to-br from-emerald-500/20 to-green-500/20 backdrop-blur-xl rounded-2xl border border-emerald-500/20 p-8"
     >
       {/* Header */}
       <div className="mb-8 text-center">

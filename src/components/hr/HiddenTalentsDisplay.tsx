@@ -27,19 +27,19 @@ export default function HiddenTalentsDisplay({ talents }: HiddenTalentsDisplayPr
   const getTypeColor = (type: string) => {
     const typeColors = {
       '環境不適合': {
-        bg: 'from-orange-500/10 to-amber-500/10',
+        bg: 'from-orange-500/20 to-amber-500/20',
         border: 'border-orange-500/30',
         text: 'text-orange-400',
         accent: 'bg-orange-500/20'
       },
       '専門性突出': {
-        bg: 'from-cyan-500/10 to-blue-500/10',
+        bg: 'from-cyan-500/20 to-blue-500/20',
         border: 'border-cyan-500/30',
         text: 'text-cyan-400',
         accent: 'bg-cyan-500/20'
       },
       'ローカル特化': {
-        bg: 'from-emerald-500/10 to-green-500/10',
+        bg: 'from-emerald-500/20 to-green-500/20',
         border: 'border-emerald-500/30',
         text: 'text-emerald-400',
         accent: 'bg-emerald-500/20'
@@ -53,7 +53,7 @@ export default function HiddenTalentsDisplay({ talents }: HiddenTalentsDisplayPr
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 backdrop-blur-xl rounded-2xl border border-amber-500/20 p-8"
+      className="bg-gradient-to-br from-amber-500/20 to-orange-500/20 backdrop-blur-xl rounded-2xl border border-amber-500/20 p-8"
     >
       {/* Header */}
       <div className="mb-8 text-center">
