@@ -14,6 +14,7 @@ import ABTestPanel from './ABTestPanel';
 import { MatrixCorrespondenceTable } from './MatrixCorrespondenceTable';
 import { EditableMatrixTable } from './EditableMatrixTable';
 import { DynamicEvaluationCalculator } from './DynamicEvaluationCalculator';
+import { EvaluationSystemGuide } from './EvaluationSystemGuide';
 import {
   Calculator,
   Settings,
@@ -27,7 +28,8 @@ import {
   FlaskConical,
   AlertTriangle,
   History,
-  GitCompare
+  GitCompare,
+  BookOpen
 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
@@ -56,6 +58,13 @@ export default function EvaluationSystemMasterManager() {
   ];
 
   const tabs = [
+    {
+      key: 'guide',
+      label: '使い方ガイド',
+      icon: BookOpen,
+      description: '評価制度マスターの使い方と運用シナリオ',
+      adminOnly: false
+    },
     {
       key: 'evaluationSystem',
       label: '評価制度設定',
@@ -217,7 +226,9 @@ export default function EvaluationSystemMasterManager() {
 
               {tabs.map(tab => (
                 <TabsContent key={tab.key} value={tab.key}>
-                  {tab.key === 'approvalWorkflow' ? (
+                  {tab.key === 'guide' ? (
+                    <EvaluationSystemGuide />
+                  ) : tab.key === 'approvalWorkflow' ? (
                     <ApprovalWorkflowPanel />
                   ) : tab.key === 'simulation' ? (
                     <EvaluationSimulationPanel />
