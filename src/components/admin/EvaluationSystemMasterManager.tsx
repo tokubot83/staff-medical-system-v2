@@ -16,6 +16,7 @@ import { EditableMatrixTable } from './EditableMatrixTable';
 import { DynamicEvaluationCalculator } from './DynamicEvaluationCalculator';
 import { EvaluationSystemGuide } from './EvaluationSystemGuide';
 import EvaluationSystemVersionManager from './EvaluationSystemVersionManager';
+import EvaluationItemEditor from './EvaluationItemEditor';
 import {
   Calculator,
   Settings,
@@ -31,7 +32,8 @@ import {
   History,
   GitCompare,
   BookOpen,
-  GitBranch
+  GitBranch,
+  Edit
 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
@@ -93,6 +95,13 @@ export default function EvaluationSystemMasterManager() {
       label: '貢献度項目',
       icon: TrendingUp,
       description: '施設貢献・法人貢献の評価項目定義',
+      adminOnly: false
+    },
+    {
+      key: 'evaluationItems',
+      label: '評価項目設定',
+      icon: Edit,
+      description: '評価項目のカスタマイズと部署別設定',
       adminOnly: false
     },
     {
@@ -239,6 +248,15 @@ export default function EvaluationSystemMasterManager() {
                     <EvaluationSystemGuide />
                   ) : tab.key === 'versionManager' ? (
                     <EvaluationSystemVersionManager />
+                  ) : tab.key === 'evaluationItems' ? (
+                    <EvaluationItemEditor
+                      versionId="v4"
+                      versionName="v4.0 2軸統合評価（現行）"
+                      onSave={(categories, customizations) => {
+                        console.log('Saved categories:', categories);
+                        console.log('Saved customizations:', customizations);
+                      }}
+                    />
                   ) : tab.key === 'approvalWorkflow' ? (
                     <ApprovalWorkflowPanel />
                   ) : tab.key === 'simulation' ? (

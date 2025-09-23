@@ -17,6 +17,16 @@ export interface EvaluationVersion {
   createdBy?: string;
   createdAt?: string;
   updatedAt?: string;
+  // 評価項目カスタマイズ
+  customizationEnabled?: boolean;
+  departmentCustomizations?: {
+    [departmentId: string]: {
+      enabled: boolean;
+      customItems?: any[];
+      approvedBy?: string;
+    };
+  };
+  evaluationCategories?: any[]; // 評価カテゴリー
 }
 
 // コンテキストの型定義
