@@ -1,3 +1,10 @@
+// generatePhaseData関数 - フェーズとフィルタに基づいてデータを生成
+export function generatePhaseData(phase: number, filters?: any) {
+  // phaseDataから対応するフェーズのデータを返す
+  const selectedPhase = phaseData[phase] || phaseData[1];
+  return selectedPhase;
+}
+
 // 評価制度の定義
 export const evaluationSystem = {
   grades: {

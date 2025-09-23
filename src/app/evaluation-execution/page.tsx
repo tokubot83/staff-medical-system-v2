@@ -8,6 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import styles from './EvaluationExecution.module.css';
 import {
   ArrowLeft,
@@ -35,7 +36,8 @@ import {
   UserCheck,
   HelpCircle,
   RefreshCw,
-  Activity
+  Activity,
+  Sparkles
 } from 'lucide-react';
 import Link from 'next/link';
 import { ExperienceLevelMapper, ExperienceLevelsV3 } from '@/services/evaluationV3Service';
