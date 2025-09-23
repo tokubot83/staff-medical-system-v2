@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useEvaluationVersion } from '@/contexts/EvaluationVersionContext';
+import CareerSupportDashboard from '@/components/career/CareerSupportDashboard';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -76,7 +77,7 @@ export default function DashboardPage() {
 
   // 現在の月を取得
   const currentMonth = new Date().getMonth() + 1;
-  const [activeTab, setActiveTab] = useState<'home' | 'guide' | 'progress' | 'settings' | 'reports'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'guide' | 'progress' | 'settings' | 'reports' | 'career'>('home');
   const [storyActiveTab, setStoryActiveTab] = useState<'新人' | '一般' | '中堅' | 'ベテラン' | '管理職' | '評価制度' | 'シミュレーション'>('評価制度');
 
   const completionRate = Math.round((evaluationProgress.completed / evaluationProgress.total) * 100);
@@ -154,6 +155,7 @@ export default function DashboardPage() {
             { id: 'home', label: '評価ステーション', icon: '🚉' },
             { id: 'guide', label: '評価ガイド', icon: '📖' },
             { id: 'progress', label: '進捗管理', icon: '📊' },
+            { id: 'career', label: 'キャリア支援', icon: '🎯' },
             { id: 'settings', label: '設定・運用', icon: '⚙️' },
             { id: 'analysis', label: '分析・レポート', icon: '📈' }
           ].map((tab) => (
@@ -4049,6 +4051,13 @@ export default function DashboardPage() {
                 </div>
               </CardContent>
             </Card>
+            </div>
+          )}
+
+          {/* キャリア支援タブ */}
+          {activeTab === 'career' && (
+            <div className="p-6">
+              <CareerSupportDashboard />
             </div>
           )}
         </div>

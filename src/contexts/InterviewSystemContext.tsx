@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { InterviewType, InterviewCategory } from '@/types/interview';
+import { CareerSupportIntegration, EvaluationTrigger } from '@/types/career-support';
 
 // 面談制度バージョンの型定義
 export interface InterviewSystemVersion {
@@ -77,6 +78,37 @@ export interface InterviewSystemVersion {
       category: string;
       questionCount: number;
     }[];
+  };
+
+  // キャリア支援統合設定（NEW）
+  careerSupportIntegration?: {
+    enabled: boolean;
+    // 評価結果に基づく支援面談の自動提案
+    autoSuggestSupport: boolean;
+    // 支援タイプの分類
+    supportTypes: ('skill' | 'career' | 'motivation' | 'wellness')[];
+    // トリガー設定
+    triggers: {
+      highPerformer: {
+        threshold: number;
+        actions: string[];
+      };
+      standard: {
+        threshold: number;
+        actions: string[];
+      };
+      needsSupport: {
+        threshold: number;
+        actions: string[];
+      };
+    };
+    // 評価トリガー詳細
+    evaluationTriggers?: EvaluationTrigger[];
+    // プライバシー保護
+    privacy: {
+      evaluationIsolation: boolean;  // 評価への影響を完全遮断
+      anonymizedAnalysis: boolean;   // 匿名化された分析
+    };
   };
 
   createdBy?: string;
@@ -288,6 +320,30 @@ const defaultVersions: InterviewSystemVersion[] = [
         { category: '管理職', questionCount: 28 },
       ],
     },
+    // キャリア支援統合設定
+    careerSupportIntegration: {
+      enabled: true,
+      autoSuggestSupport: true,
+      supportTypes: ['skill', 'career', 'motivation'],
+      triggers: {
+        highPerformer: {
+          threshold: 85,
+          actions: ['キャリアアップ面談', '次期リーダー育成プログラム案内'],
+        },
+        standard: {
+          threshold: 60,
+          actions: ['定期キャリア面談', 'スキルアップ支援'],
+        },
+        needsSupport: {
+          threshold: 40,
+          actions: ['集中支援面談', 'メンター配置', '月次フォローアップ'],
+        },
+      },
+      privacy: {
+        evaluationIsolation: true,
+        anonymizedAnalysis: true,
+      },
+    },
   },
   {
     id: 'iv4',
@@ -352,6 +408,48 @@ const defaultVersions: InterviewSystemVersion[] = [
         { category: '管理職', questionCount: 40 },
         { category: 'AI推奨', questionCount: 30 },
       ],
+    },
+    // 高度なキャリア支援統合設定（AI支援）
+    careerSupportIntegration: {
+      enabled: true,
+      autoSuggestSupport: true,
+      supportTypes: ['skill', 'career', 'motivation', 'wellness'],
+      triggers: {
+        highPerformer: {
+          threshold: 90,
+          actions: ['キャリアアップ面談', '次期リーダー育成', 'サクセッションプラン'],
+        },
+        standard: {
+          threshold: 65,
+          actions: ['定期キャリア面談', '個別成長プラン', 'オンデマンド研修'],
+        },
+        needsSupport: {
+          threshold: 45,
+          actions: ['集中支援面談', 'メンター配置', '週次フォローアップ', 'AI推奨介入'],
+        },
+      },
+      evaluationTriggers: [
+        {
+          name: '高成長者向けキャリア開発',
+          scoreThreshold: 90,
+          condition: 'above' as const,
+          action: 'schedule_career_interview' as const,
+          type: 'leadership_development' as const,
+          priority: 'high' as const,
+        },
+        {
+          name: 'パフォーマンス改善支援',
+          scoreThreshold: 50,
+          condition: 'below' as const,
+          action: 'create_development_plan' as const,
+          type: 'performance_improvement' as const,
+          priority: 'high' as const,
+        },
+      ],
+      privacy: {
+        evaluationIsolation: true,
+        anonymizedAnalysis: true,
+      },
     },
   },
 ];
