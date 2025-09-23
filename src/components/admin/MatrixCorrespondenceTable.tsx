@@ -30,7 +30,7 @@ import {
   TrendingDown,
   Minus,
 } from 'lucide-react';
-import { matrixCorrespondenceTable, type MatrixTableEntry } from '../../data/evaluationMatrixTable';
+import { matrixCorrespondenceTable, type MatrixTableEntry } from '@/data/evaluationMatrixTable';
 
 const getGradeColor = (grade: string): string => {
   const gradeColors: Record<string, string> = {
