@@ -583,3 +583,194 @@ export interface RiskAlert {
   affectedCount?: number;
   recommendation?: string;
 }
+
+// 履歴比較関連
+export interface SystemVersionHistory {
+  id: string;
+  versionName: string;
+  systemId: string;
+  effectiveFrom: string;
+  effectiveTo?: string;
+  status: 'active' | 'archived' | 'planned';
+
+  // バージョン詳細
+  details: {
+    totalScore: number;
+    technicalScore: number;
+    contributionScore: number;
+    gradeThresholds: {
+      S: { min: number; max: number };
+      A: { min: number; max: number };
+      B: { min: number; max: number };
+      C: { min: number; max: number };
+      D: { min: number; max: number };
+    };
+  };
+
+  // 実績データ
+  performance?: {
+    employeeCount: number;
+    averageScore: number;
+    gradeDistribution: Record<string, number>;
+    departmentScores: {
+      departmentName: string;
+      averageScore: number;
+      employeeCount: number;
+    }[];
+  };
+
+  // 変更履歴
+  changes?: {
+    changedFrom?: string; // 前バージョンID
+    changedBy: string;
+    changedAt: string;
+    changeLog: ChangeLogEntry[];
+  };
+}
+
+export interface ChangeLogEntry {
+  category: 'score' | 'threshold' | 'matrix' | 'rule' | 'other';
+  item: string;
+  oldValue: any;
+  newValue: any;
+  reason?: string;
+  impact?: string;
+}
+
+export interface VersionComparison {
+  id: string;
+  comparisonName: string;
+  version1Id: string;
+  version2Id: string;
+  createdAt: string;
+  createdBy: string;
+
+  // 比較結果
+  differences: {
+    scoreChanges: {
+      technical: { v1: number; v2: number; diff: number };
+      contribution: { v1: number; v2: number; diff: number };
+    };
+    thresholdChanges: {
+      grade: string;
+      v1: { min: number; max: number };
+      v2: { min: number; max: number };
+    }[];
+    performanceComparison?: {
+      averageScore: { v1: number; v2: number; diff: number };
+      gradeDistribution: {
+        grade: string;
+        v1: number;
+        v2: number;
+        diff: number;
+      }[];
+    };
+  };
+
+  // 効果測定
+  effectiveness?: {
+    goals: {
+      goalName: string;
+      target: number;
+      actual: number;
+      achieved: boolean;
+    }[];
+    kpis: {
+      kpiName: string;
+      v1Value: number;
+      v2Value: number;
+      improvement: number;
+      unit: string;
+    }[];
+  };
+}
+
+// A/Bテスト関連
+export interface ABTestConfig {
+  id: string;
+  testName: string;
+  description: string;
+  status: 'planning' | 'running' | 'completed' | 'cancelled';
+  startDate: string;
+  endDate: string;
+  createdBy: string;
+  createdAt: string;
+
+  // テスト設定
+  variants: {
+    variantId: string;
+    variantName: string; // 'A' or 'B'
+    systemId: string;
+    systemName: string;
+    targetGroups: {
+      type: 'department' | 'facility' | 'position' | 'random';
+      ids?: string[];
+      percentage?: number; // ランダム割り当ての場合
+    }[];
+    employeeCount: number;
+  }[];
+
+  // 成功指標
+  successMetrics: {
+    metricName: string;
+    description: string;
+    targetValue: number;
+    unit: string;
+    measurementMethod: string;
+  }[];
+
+  // テスト結果
+  results?: ABTestResults;
+}
+
+export interface ABTestResults {
+  executedAt: string;
+  duration: number; // 日数
+
+  // バリアント別結果
+  variantResults: {
+    variantId: string;
+    variantName: string;
+
+    // 基本統計
+    statistics: {
+      participantCount: number;
+      averageScore: number;
+      standardDeviation: number;
+      medianScore: number;
+    };
+
+    // グレード分布
+    gradeDistribution: Record<string, number>;
+
+    // 成功指標の結果
+    metricResults: {
+      metricName: string;
+      value: number;
+      targetAchieved: boolean;
+    }[];
+
+    // 満足度
+    satisfaction?: {
+      averageRating: number;
+      responseCount: number;
+    };
+  }[];
+
+  // 統計的有意性
+  statisticalAnalysis: {
+    pValue: number;
+    confidenceLevel: number;
+    isSignificant: boolean;
+    effectSize: number;
+    recommendation: 'A' | 'B' | 'no_difference';
+  };
+
+  // 詳細分析
+  insights: {
+    winningVariant?: string;
+    keyFindings: string[];
+    recommendations: string[];
+    risks: string[];
+  };
+}

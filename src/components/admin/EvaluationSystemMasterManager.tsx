@@ -9,6 +9,8 @@ import DepartmentCustomizationPanel from './DepartmentCustomizationPanel';
 import ApprovalWorkflowPanel from './ApprovalWorkflowPanel';
 import EvaluationSimulationPanel from './EvaluationSimulationPanel';
 import ImpactAnalysisPanel from './ImpactAnalysisPanel';
+import HistoryComparisonPanel from './HistoryComparisonPanel';
+import ABTestPanel from './ABTestPanel';
 import {
   Calculator,
   Settings,
@@ -20,7 +22,9 @@ import {
   Shield,
   Send,
   FlaskConical,
-  AlertTriangle
+  AlertTriangle,
+  History,
+  GitCompare
 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
@@ -119,6 +123,20 @@ export default function EvaluationSystemMasterManager() {
       description: '制度変更の個人・部署・給与への影響を詳細分析',
       adminOnly: false
     },
+    {
+      key: 'historyComparison',
+      label: '履歴比較',
+      icon: History,
+      description: '過去バージョン間の比較と効果測定',
+      adminOnly: false
+    },
+    {
+      key: 'abTest',
+      label: 'A/Bテスト',
+      icon: GitCompare,
+      description: '複数制度の並行運用と統計的検証',
+      adminOnly: false
+    },
   ];
 
   const currentTab = tabs.find(tab => tab.key === activeTab);
@@ -181,6 +199,10 @@ export default function EvaluationSystemMasterManager() {
                     <EvaluationSimulationPanel />
                   ) : tab.key === 'impactAnalysis' ? (
                     <ImpactAnalysisPanel />
+                  ) : tab.key === 'historyComparison' ? (
+                    <HistoryComparisonPanel />
+                  ) : tab.key === 'abTest' ? (
+                    <ABTestPanel />
                   ) : tab.key === 'departmentPermission' && currentUser.role === 'admin' ? (
                     <GenericMasterTable
                       masterType={tab.key}
