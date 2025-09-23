@@ -19,7 +19,7 @@ export interface MatrixTableEntry {
 }
 
 // マトリックス対応表（全25パターン）
-export const evaluationMatrixTable: MatrixTableEntry[] = [
+export const matrixCorrespondenceTable: MatrixTableEntry[] = [
   // ===== 最終評価 7 (S+) : トップパフォーマー =====
   {
     facilityGrade: 'S',
@@ -403,7 +403,7 @@ export const salaryImpactDetails = {
 
 // ヘルパー関数：評価の組み合わせから最終評価を取得
 export function getFinalGrade(facilityGrade: string, corporateGrade: string): MatrixTableEntry | undefined {
-  return evaluationMatrixTable.find(
+  return matrixCorrespondenceTable.find(
     entry => entry.facilityGrade === facilityGrade && entry.corporateGrade === corporateGrade
   );
 }
