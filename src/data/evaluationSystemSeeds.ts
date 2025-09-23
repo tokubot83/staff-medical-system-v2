@@ -74,7 +74,7 @@ export const currentEvaluationSystem: EvaluationSystemMaster = {
     {
       id: 'RULE_001',
       evaluationUnit: 'facility',
-      comparisonScope: '同一施設・同一職種',
+      comparisonScope: '同一施設・同一職種（標準）',
       percentileRanges: [
         { grade: 'S', minPercentile: 90, maxPercentile: 100, score: 5 },
         { grade: 'A', minPercentile: 70, maxPercentile: 89, score: 4 },
@@ -86,26 +86,231 @@ export const currentEvaluationSystem: EvaluationSystemMaster = {
     {
       id: 'RULE_002',
       evaluationUnit: 'corporate',
-      comparisonScope: '全法人・同一職種',
+      comparisonScope: '全法人・同一職種（標準）',
       percentileRanges: [
-        { grade: 'S', minPercentile: 90, maxPercentile: 100, score: 5 },
-        { grade: 'A', minPercentile: 70, maxPercentile: 89, score: 4 },
-        { grade: 'B', minPercentile: 30, maxPercentile: 69, score: 3 },
-        { grade: 'C', minPercentile: 10, maxPercentile: 29, score: 2 },
-        { grade: 'D', minPercentile: 0, maxPercentile: 9, score: 1 },
+        { grade: 'S', minPercentile: 95, maxPercentile: 100, score: 5 },
+        { grade: 'A', minPercentile: 80, maxPercentile: 94, score: 4 },
+        { grade: 'B', minPercentile: 35, maxPercentile: 79, score: 3 },
+        { grade: 'C', minPercentile: 15, maxPercentile: 34, score: 2 },
+        { grade: 'D', minPercentile: 0, maxPercentile: 14, score: 1 },
+      ],
+    },
+    {
+      id: 'RULE_003',
+      evaluationUnit: 'facility',
+      comparisonScope: '同一施設・看護部専用',
+      percentileRanges: [
+        { grade: 'S', minPercentile: 92, maxPercentile: 100, score: 5 },
+        { grade: 'A', minPercentile: 75, maxPercentile: 91, score: 4 },
+        { grade: 'B', minPercentile: 35, maxPercentile: 74, score: 3 },
+        { grade: 'C', minPercentile: 15, maxPercentile: 34, score: 2 },
+        { grade: 'D', minPercentile: 0, maxPercentile: 14, score: 1 },
+      ],
+    },
+    {
+      id: 'RULE_004',
+      evaluationUnit: 'facility',
+      comparisonScope: '同一施設・リハビリ科専用',
+      percentileRanges: [
+        { grade: 'S', minPercentile: 88, maxPercentile: 100, score: 5 },
+        { grade: 'A', minPercentile: 65, maxPercentile: 87, score: 4 },
+        { grade: 'B', minPercentile: 25, maxPercentile: 64, score: 3 },
+        { grade: 'C', minPercentile: 8, maxPercentile: 24, score: 2 },
+        { grade: 'D', minPercentile: 0, maxPercentile: 7, score: 1 },
+      ],
+    },
+    {
+      id: 'RULE_005',
+      evaluationUnit: 'corporate',
+      comparisonScope: '全法人・事務職専用',
+      percentileRanges: [
+        { grade: 'S', minPercentile: 93, maxPercentile: 100, score: 5 },
+        { grade: 'A', minPercentile: 72, maxPercentile: 92, score: 4 },
+        { grade: 'B', minPercentile: 28, maxPercentile: 71, score: 3 },
+        { grade: 'C', minPercentile: 12, maxPercentile: 27, score: 2 },
+        { grade: 'D', minPercentile: 0, maxPercentile: 11, score: 1 },
       ],
     },
   ],
   gradeConversionRules: [
     {
       id: 'CONV_001',
-      ruleName: '標準5段階変換',
+      ruleName: '施設内相対評価（標準）',
       gradeDefinitions: [
-        { grade: 'S', minPercentile: 90, maxPercentile: 100, description: '極めて優秀' },
-        { grade: 'A', minPercentile: 70, maxPercentile: 89, description: '優秀' },
-        { grade: 'B', minPercentile: 30, maxPercentile: 69, description: '標準' },
-        { grade: 'C', minPercentile: 10, maxPercentile: 29, description: '要改善' },
-        { grade: 'D', minPercentile: 0, maxPercentile: 9, description: '大幅改善必要' },
+        {
+          grade: 'S',
+          minPercentile: 90,
+          maxPercentile: 100,
+          description: '極めて優秀（上位10%）'
+        },
+        {
+          grade: 'A',
+          minPercentile: 70,
+          maxPercentile: 89,
+          description: '優秀（上位11-30%）'
+        },
+        {
+          grade: 'B',
+          minPercentile: 30,
+          maxPercentile: 69,
+          description: '標準（中位40%）'
+        },
+        {
+          grade: 'C',
+          minPercentile: 10,
+          maxPercentile: 29,
+          description: '要改善（下位11-30%）'
+        },
+        {
+          grade: 'D',
+          minPercentile: 0,
+          maxPercentile: 9,
+          description: '大幅改善必要（下位10%）'
+        },
+      ],
+    },
+    {
+      id: 'CONV_002',
+      ruleName: '法人内相対評価（標準）',
+      gradeDefinitions: [
+        {
+          grade: 'S',
+          minPercentile: 95,
+          maxPercentile: 100,
+          description: '法人内最優秀（上位5%）'
+        },
+        {
+          grade: 'A',
+          minPercentile: 80,
+          maxPercentile: 94,
+          description: '法人内優秀（上位6-20%）'
+        },
+        {
+          grade: 'B',
+          minPercentile: 35,
+          maxPercentile: 79,
+          description: '法人内標準（中位45%）'
+        },
+        {
+          grade: 'C',
+          minPercentile: 15,
+          maxPercentile: 34,
+          description: '法人内要改善（下位21-35%）'
+        },
+        {
+          grade: 'D',
+          minPercentile: 0,
+          maxPercentile: 14,
+          description: '法人内要指導（下位15%）'
+        },
+      ],
+    },
+    {
+      id: 'CONV_003',
+      ruleName: '医師職専用評価',
+      gradeDefinitions: [
+        {
+          grade: 'S',
+          minPercentile: 85,
+          maxPercentile: 100,
+          description: '指導医レベル（上位15%）'
+        },
+        {
+          grade: 'A',
+          minPercentile: 60,
+          maxPercentile: 84,
+          description: '専門医レベル（上位16-40%）'
+        },
+        {
+          grade: 'B',
+          minPercentile: 30,
+          maxPercentile: 59,
+          description: '標準医師（中位30%）'
+        },
+        {
+          grade: 'C',
+          minPercentile: 10,
+          maxPercentile: 29,
+          description: '研修強化必要（下位21-30%）'
+        },
+        {
+          grade: 'D',
+          minPercentile: 0,
+          maxPercentile: 9,
+          description: '指導必須（下位10%）'
+        },
+      ],
+    },
+    {
+      id: 'CONV_004',
+      ruleName: '新入職員用評価（入職3年未満）',
+      gradeDefinitions: [
+        {
+          grade: 'S',
+          minPercentile: 80,
+          maxPercentile: 100,
+          description: '期待を大きく上回る（上位20%）'
+        },
+        {
+          grade: 'A',
+          minPercentile: 50,
+          maxPercentile: 79,
+          description: '期待を上回る（上位21-50%）'
+        },
+        {
+          grade: 'B',
+          minPercentile: 20,
+          maxPercentile: 49,
+          description: '期待通り（中位30%）'
+        },
+        {
+          grade: 'C',
+          minPercentile: 5,
+          maxPercentile: 19,
+          description: '成長途上（下位16-20%）'
+        },
+        {
+          grade: 'D',
+          minPercentile: 0,
+          maxPercentile: 4,
+          description: '要フォロー（下位5%）'
+        },
+      ],
+    },
+    {
+      id: 'CONV_005',
+      ruleName: '管理職用評価',
+      gradeDefinitions: [
+        {
+          grade: 'S',
+          minPercentile: 90,
+          maxPercentile: 100,
+          description: '経営層候補（上位10%）'
+        },
+        {
+          grade: 'A',
+          minPercentile: 70,
+          maxPercentile: 89,
+          description: '優秀管理職（上位11-30%）'
+        },
+        {
+          grade: 'B',
+          minPercentile: 40,
+          maxPercentile: 69,
+          description: '標準管理職（中位30%）'
+        },
+        {
+          grade: 'C',
+          minPercentile: 20,
+          maxPercentile: 39,
+          description: '改善必要（下位21-40%）'
+        },
+        {
+          grade: 'D',
+          minPercentile: 0,
+          maxPercentile: 19,
+          description: '役職見直し検討（下位20%）'
+        },
       ],
     },
   ],

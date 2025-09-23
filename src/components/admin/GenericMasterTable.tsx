@@ -148,6 +148,11 @@ export default function GenericMasterTable({
             ruleName: rule.ruleName,
             gradeCount: rule.gradeDefinitions.length,
             sThreshold: rule.gradeDefinitions[0].minPercentile,
+            description: rule.gradeDefinitions[0].description,
+            targetGroup: rule.ruleName.includes('医師') ? '医師職' :
+                        rule.ruleName.includes('新入') ? '新入職員' :
+                        rule.ruleName.includes('管理') ? '管理職' :
+                        rule.ruleName.includes('法人') ? '全法人' : '施設内',
           },
           metadata: {
             createdAt: '2024-04-01',
