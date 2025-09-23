@@ -9,14 +9,14 @@ import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import styles from './Dashboard.module.css';
-import { 
-  Shield, 
-  User, 
-  ArrowRight, 
-  Target, 
-  TrendingUp, 
-  Users, 
-  CheckCircle, 
+import {
+  Shield,
+  User,
+  ArrowRight,
+  Target,
+  TrendingUp,
+  Users,
+  CheckCircle,
   Clock,
   AlertCircle,
   FileText,
@@ -48,7 +48,10 @@ import {
   Send,
   Rocket,
   MessageSquare,
-  Archive
+  Archive,
+  GitBranch,
+  Layers,
+  Package
 } from 'lucide-react';
 
 export default function DashboardPage() {
@@ -58,14 +61,65 @@ export default function DashboardPage() {
     inProgress: 32,
     notStarted: 15
   });
-  
+
   // 現在の月を取得
   const currentMonth = new Date().getMonth() + 1;
   const [activeTab, setActiveTab] = useState<'home' | 'guide' | 'progress' | 'settings' | 'reports'>('home');
   const [storyActiveTab, setStoryActiveTab] = useState<'新人' | '一般' | '中堅' | 'ベテラン' | '管理職' | '評価制度' | 'シミュレーション'>('評価制度');
+  const [selectedSystemVersion, setSelectedSystemVersion] = useState('SYS_2024_001');
 
   const completionRate = Math.round((evaluationProgress.completed / evaluationProgress.total) * 100);
 
+  // 評価制度バージョン定義
+  const evaluationSystemVersions = [
+    {
+      id: 'SYS_2024_001',
+      version: '1.0.0',
+      name: '2024年度評価制度（現行）',
+      status: 'active',
+      effectiveFrom: '2024-04-01',
+      effectiveTo: '2025-03-31',
+      description: '施設内×法人内の2軸マトリックス評価',
+      features: [
+        '技術評価50点・組織貢献50点',
+        '5×5マトリックスから7段階評価',
+        '相対評価による順位付け',
+        '部署別カスタマイズ対応'
+      ]
+    },
+    {
+      id: 'SYS_2025_001',
+      version: '2.0.0-beta',
+      name: '2025年度評価制度（準備中）',
+      status: 'preparing',
+      effectiveFrom: '2025-04-01',
+      effectiveTo: '2026-03-31',
+      description: 'コンピテンシー評価と360度評価を統合',
+      features: [
+        'コンピテンシー評価30点追加',
+        '360度評価の導入',
+        '人事評価会議での最終決定',
+        'AI支援による評価補助'
+      ],
+      migrationNotes: '移行期間中は両制度で並行評価を実施'
+    },
+    {
+      id: 'SYS_2025_TEST',
+      version: '2.0.0-test',
+      name: 'テスト運用版',
+      status: 'testing',
+      effectiveFrom: '2025-01-01',
+      effectiveTo: '2025-03-31',
+      description: 'リハビリテーション科での試験運用',
+      features: [
+        '特定部署での限定運用',
+        'フィードバック収集中',
+        '本番導入前の検証'
+      ]
+    }
+  ];
+
+  const currentVersion = evaluationSystemVersions.find(v => v.id === selectedSystemVersion);
 
   // 世代別ストーリータブの定義
   const storyTabs = [
@@ -3649,7 +3703,147 @@ export default function DashboardPage() {
 
           {activeTab === 'settings' && (
             <div className="space-y-6 p-6">
-            <div className="grid grid-cols-2 gap-6">
+              {/* 評価制度バージョン管理セクション */}
+              <Card className="border-2 border-blue-200">
+                <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50">
+                  <CardTitle className="flex items-center gap-2">
+                    <GitBranch className="h-5 w-5 text-blue-600" />
+                    評価制度バージョン管理
+                  </CardTitle>
+                  <CardDescription>
+                    使用する評価制度のバージョンを選択・管理します
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6 pt-6">
+                  {/* 現在のバージョン表示 */}
+                  <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Package className="h-5 w-5 text-blue-600" />
+                          <h4 className="font-semibold text-blue-900">現在の運用バージョン</h4>
+                          {currentVersion?.status === 'active' && (
+                            <Badge className="bg-green-100 text-green-800">稼働中</Badge>
+                          )}
+                        </div>
+                        <p className="text-lg font-bold text-blue-800 mb-1">{currentVersion?.name}</p>
+                        <p className="text-sm text-gray-600 mb-3">{currentVersion?.description}</p>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <p className="text-xs text-gray-500">有効期間</p>
+                            <p className="text-sm font-medium">
+                              {currentVersion?.effectiveFrom} 〜 {currentVersion?.effectiveTo || '無期限'}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-gray-500">バージョン</p>
+                            <p className="text-sm font-medium">v{currentVersion?.version}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* バージョン選択 */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">評価制度バージョン切り替え</label>
+                    <select
+                      value={selectedSystemVersion}
+                      onChange={(e) => setSelectedSystemVersion(e.target.value)}
+                      className="w-full p-2 border rounded-md bg-white"
+                    >
+                      {evaluationSystemVersions.map(version => (
+                        <option key={version.id} value={version.id}>
+                          {version.name} (v{version.version})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* バージョン一覧 */}
+                  <div className="space-y-3">
+                    <h4 className="font-medium">利用可能なバージョン</h4>
+                    <div className="space-y-2">
+                      {evaluationSystemVersions.map(version => (
+                        <div
+                          key={version.id}
+                          className={`p-4 rounded-lg border transition-all cursor-pointer hover:shadow-md ${
+                            version.id === selectedSystemVersion
+                              ? 'border-blue-500 bg-blue-50'
+                              : 'border-gray-200 bg-white'
+                          }`}
+                          onClick={() => setSelectedSystemVersion(version.id)}
+                        >
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="font-medium">{version.name}</span>
+                                <Badge
+                                  className={
+                                    version.status === 'active'
+                                      ? 'bg-green-100 text-green-800'
+                                      : version.status === 'preparing'
+                                      ? 'bg-yellow-100 text-yellow-800'
+                                      : version.status === 'testing'
+                                      ? 'bg-blue-100 text-blue-800'
+                                      : 'bg-gray-100 text-gray-800'
+                                  }
+                                >
+                                  {version.status === 'active' && '稼働中'}
+                                  {version.status === 'preparing' && '準備中'}
+                                  {version.status === 'testing' && 'テスト中'}
+                                  {version.status === 'archived' && 'アーカイブ'}
+                                </Badge>
+                              </div>
+                              <p className="text-sm text-gray-600 mb-2">{version.description}</p>
+                              <div className="space-y-1">
+                                {version.features.map((feature, idx) => (
+                                  <div key={idx} className="flex items-start gap-1">
+                                    <CheckCircle className="h-3 w-3 text-green-500 mt-0.5" />
+                                    <span className="text-xs text-gray-600">{feature}</span>
+                                  </div>
+                                ))}
+                              </div>
+                              {version.migrationNotes && (
+                                <Alert className="mt-2 border-orange-200 bg-orange-50">
+                                  <AlertCircle className="h-4 w-4 text-orange-600" />
+                                  <AlertDescription className="text-xs">
+                                    {version.migrationNotes}
+                                  </AlertDescription>
+                                </Alert>
+                              )}
+                            </div>
+                            <div className="text-right ml-4">
+                              <p className="text-sm font-mono">v{version.version}</p>
+                              <p className="text-xs text-gray-500 mt-1">
+                                {version.effectiveFrom}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* アクションボタン */}
+                  <div className="flex gap-2 pt-4 border-t">
+                    <Link href="/admin/evaluation-system-master">
+                      <Button variant="outline" className="flex items-center gap-2">
+                        <Settings className="h-4 w-4" />
+                        評価制度マスター管理
+                      </Button>
+                    </Link>
+                    <Link href="/evaluation-design">
+                      <Button variant="outline" className="flex items-center gap-2">
+                        <Layers className="h-4 w-4" />
+                        評価制度設計
+                      </Button>
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <div className="grid grid-cols-2 gap-6">
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">

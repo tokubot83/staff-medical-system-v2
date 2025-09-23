@@ -10,13 +10,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import styles from './EvaluationExecution.module.css';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { 
   ArrowLeft,
   User,
   FileText,
@@ -31,7 +24,6 @@ import {
   Calendar,
   Clock,
   TrendingUp,
-  Sparkles,
   ChevronRight,
   PlayCircle,
   Edit3,
@@ -96,38 +88,9 @@ interface FacilityProgress {
   };
 }
 
-// 評価制度バージョンの型定義
-interface SystemVersion {
-  id: string;
-  version: string;
-  name: string;
-  status: 'active' | 'preparing' | 'testing';
-  description: string;
-}
-
-// 利用可能なバージョン
-const availableVersions: SystemVersion[] = [
-  {
-    id: 'v1',
-    version: '1.0.0',
-    name: '2024年度評価制度（現行）',
-    status: 'active',
-    description: '技術評価50点・組織貢献50点の2軸マトリックス評価'
-  },
-  {
-    id: 'v2',
-    version: '2.0.0-beta',
-    name: '2025年度評価制度（準備中）',
-    status: 'preparing',
-    description: 'コンピテンシー評価と360度評価を統合予定'
-  }
-];
 
 export default function EvaluationExecutionPage() {
   const [currentDate] = useState(new Date());
-  const [selectedVersion, setSelectedVersion] = useState<SystemVersion>(
-    availableVersions.find(v => v.status === 'active') || availableVersions[0]
-  );
   const currentMonth = currentDate.getMonth() + 1; // 1-12
 
   // 施設別進捗データ
@@ -478,113 +441,6 @@ export default function EvaluationExecutionPage() {
   return (
     <div>
       <div className={styles.container}>
-        {/* バージョン選択UI */}
-        <div className="mb-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Label htmlFor="version-select" className="text-sm font-medium">評価制度バージョン:</Label>
-            <Select
-              value={selectedVersion.id}
-              onValueChange={(value) => {
-                const version = availableVersions.find(v => v.id === value);
-                if (version) setSelectedVersion(version);
-              }}
-            >
-              <SelectTrigger id="version-select" className="w-[300px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {availableVersions.map(version => (
-                  <SelectItem key={version.id} value={version.id}>
-                    <div className="flex items-center gap-2">
-                      {version.status === 'active' && <Badge className="bg-green-100 text-green-800">運用中</Badge>}
-                      {version.status === 'preparing' && <Badge className="bg-blue-100 text-blue-800">準備中</Badge>}
-                      {version.status === 'testing' && <Badge className="bg-yellow-100 text-yellow-800">テスト中</Badge>}
-                      <span>{version.name}</span>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* 現在のバージョン情報 */}
-          <div className="flex items-center gap-2 bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-lg px-4 py-2 shadow-sm">
-            <Sparkles className="w-5 h-5 text-purple-600" />
-            <div className="text-sm">
-              <div className="font-medium text-purple-900">{selectedVersion.name}</div>
-              <div className="text-purple-700">{selectedVersion.description}</div>
-            </div>
-            <Badge className="bg-purple-100 text-purple-800 font-medium">v{selectedVersion.version}</Badge>
-          </div>
-        </div>
-
-        {/* V2が選択された場合は準備中メッセージを表示 */}
-        {selectedVersion.id === 'v2' ? (
-          <Card className="border-2 border-blue-200 bg-blue-50">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <AlertCircle className="h-5 w-5 text-blue-600" />
-                2025年度評価制度（準備中）
-              </CardTitle>
-              <CardDescription>
-                次期評価制度は現在準備中です。以下の新機能を実装予定です。
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <Alert>
-                  <AlertTriangle className="h-4 w-4" />
-                  <AlertTitle>新機能実装予定</AlertTitle>
-                  <AlertDescription>
-                    <ul className="mt-2 space-y-2">
-                      <li className="flex items-start gap-2">
-                        <CheckCircle className="h-4 w-4 text-green-600 mt-0.5" />
-                        <span>コンピテンシー評価（30点）の追加</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <CheckCircle className="h-4 w-4 text-green-600 mt-0.5" />
-                        <span>360度評価の導入</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <CheckCircle className="h-4 w-4 text-green-600 mt-0.5" />
-                        <span>人事評価会議での最終決定プロセス</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <CheckCircle className="h-4 w-4 text-green-600 mt-0.5" />
-                        <span>AI支援による評価補助機能</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <CheckCircle className="h-4 w-4 text-green-600 mt-0.5" />
-                        <span>評価段階を7段階から9段階へ拡張</span>
-                      </li>
-                    </ul>
-                  </AlertDescription>
-                </Alert>
-
-                <div className="p-4 bg-white rounded-lg">
-                  <h4 className="font-semibold mb-2">移行スケジュール</h4>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4" />
-                      <span>2025年1月〜3月: リハビリテーション科でテスト運用</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4" />
-                      <span>2025年4月: 全施設で本格運用開始</span>
-                    </div>
-                  </div>
-                </div>
-
-                <Button className="w-full" variant="outline">
-                  <FileText className="h-4 w-4 mr-2" />
-                  評価制度マスターで詳細を確認
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ) : (
-          /* V1（現行）の評価システム表示 */
-          <>
             <div className={styles.tabContent}>
           <div className="space-y-6 p-6">
               {/* 現在の評価業務カード */}
@@ -1020,8 +876,6 @@ export default function EvaluationExecutionPage() {
               </Card>
             </div>
           </div>
-          </>
-        )}
       </div>
     </div>
   );
