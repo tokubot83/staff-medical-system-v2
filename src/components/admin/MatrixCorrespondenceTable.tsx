@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -15,6 +15,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Separator } from '@/components/ui/separator';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Search,
   X,
@@ -23,8 +24,10 @@ import {
   TrendingUp,
   TrendingDown,
   Minus,
+  RefreshCw,
+  AlertCircle,
 } from 'lucide-react';
-import { matrixCorrespondenceTable, type MatrixTableEntry } from '@/data/evaluationMatrixTable';
+import { matrixCorrespondenceTable as defaultMatrixTable, type MatrixTableEntry } from '@/data/evaluationMatrixTable';
 
 const getGradeColor = (grade: string): string => {
   const gradeColors: Record<string, string> = {
@@ -58,6 +61,46 @@ export const MatrixCorrespondenceTable = () => {
   const [viewMode, setViewMode] = useState('grid');
   const [selectedFacilityGrade, setSelectedFacilityGrade] = useState<string>('');
   const [selectedCorporateGrade, setSelectedCorporateGrade] = useState<string>('');
+  const [matrixCorrespondenceTable, setMatrixCorrespondenceTable] = useState<MatrixTableEntry[]>(defaultMatrixTable);
+  const [hasCustomMatrix, setHasCustomMatrix] = useState(false);
+  const [lastUpdateTime, setLastUpdateTime] = useState<Date | null>(null);
+
+  // ローカルストレージから編集されたマトリックスを読み込み
+  useEffect(() => {
+    const loadCustomMatrix = () => {
+      const savedMatrix = localStorage.getItem('evaluationMatrix');
+      if (savedMatrix) {
+        try {
+          const parsedMatrix = JSON.parse(savedMatrix);
+          setMatrixCorrespondenceTable(parsedMatrix);
+          setHasCustomMatrix(true);
+          setLastUpdateTime(new Date());
+        } catch (error) {
+          console.error('Failed to load custom matrix:', error);
+        }
+      }
+    };
+
+    // 初回読み込み
+    loadCustomMatrix();
+
+    // ストレージイベントをリッスン（他のタブでの変更を検知）
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'evaluationMatrix') {
+        loadCustomMatrix();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    // 定期的に更新をチェック（同一タブでの変更用）
+    const interval = setInterval(loadCustomMatrix, 2000);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
+  }, []);
 
   const filteredEntries = useMemo(() => {
     return matrixCorrespondenceTable.filter(entry => {
@@ -86,14 +129,53 @@ export const MatrixCorrespondenceTable = () => {
     );
   };
 
+  // デフォルトに戻す
+  const resetToDefault = () => {
+    localStorage.removeItem('evaluationMatrix');
+    setMatrixCorrespondenceTable(defaultMatrixTable);
+    setHasCustomMatrix(false);
+    setLastUpdateTime(null);
+  };
+
   return (
     <Card className="w-full">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-gray-800">
-            評価マトリックス対応表
-          </CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-2xl font-bold text-gray-800">
+              評価マトリックス対応表
+            </CardTitle>
+            {hasCustomMatrix && (
+              <div className="flex items-center gap-2">
+                <Badge className="bg-blue-100 text-blue-800">
+                  <AlertCircle className="h-3 w-3 mr-1" />
+                  カスタマイズ済み
+                </Badge>
+                {lastUpdateTime && (
+                  <span className="text-xs text-gray-500">
+                    更新: {lastUpdateTime.toLocaleTimeString()}
+                  </span>
+                )}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={resetToDefault}
+                >
+                  <RefreshCw className="h-3 w-3 mr-1" />
+                  デフォルトに戻す
+                </Button>
+              </div>
+            )}
+          </div>
         </CardHeader>
         <CardContent className="space-y-6">
+          {hasCustomMatrix && (
+            <Alert>
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                このマトリックスは編集されています。「マトリックス編集」タブで変更内容を確認・編集できます。
+              </AlertDescription>
+            </Alert>
+          )}
           <div className="flex flex-col md:flex-row gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
