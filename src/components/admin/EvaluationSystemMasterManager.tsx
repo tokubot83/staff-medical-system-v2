@@ -12,6 +12,8 @@ import ImpactAnalysisPanel from './ImpactAnalysisPanel';
 import HistoryComparisonPanel from './HistoryComparisonPanel';
 import ABTestPanel from './ABTestPanel';
 import { MatrixCorrespondenceTable } from './MatrixCorrespondenceTable';
+import { EditableMatrixTable } from './EditableMatrixTable';
+import { DynamicEvaluationCalculator } from './DynamicEvaluationCalculator';
 import {
   Calculator,
   Settings,
@@ -94,6 +96,20 @@ export default function EvaluationSystemMasterManager() {
       label: 'マトリックス対応表',
       icon: Grid3x3,
       description: '評価マトリックスの詳細対応表（視覚的表示）',
+      adminOnly: false
+    },
+    {
+      key: 'matrixEdit',
+      label: 'マトリックス編集',
+      icon: Settings,
+      description: '評価マトリックスの動的編集・部署別カスタマイズ',
+      adminOnly: false
+    },
+    {
+      key: 'dynamicCalculation',
+      label: '動的評価計算',
+      icon: Calculator,
+      description: 'カスタマイズされたマトリックスを使用した評価計算',
       adminOnly: false
     },
     {
@@ -213,6 +229,14 @@ export default function EvaluationSystemMasterManager() {
                     <ABTestPanel />
                   ) : tab.key === 'matrixCorrespondence' ? (
                     <MatrixCorrespondenceTable />
+                  ) : tab.key === 'matrixEdit' ? (
+                    <EditableMatrixTable
+                      department={currentUser.department}
+                      facility={currentUser.facility}
+                      isAdmin={currentUser.role === 'admin'}
+                    />
+                  ) : tab.key === 'dynamicCalculation' ? (
+                    <DynamicEvaluationCalculator />
                   ) : tab.key === 'departmentPermission' && currentUser.role === 'admin' ? (
                     <GenericMasterTable
                       masterType={tab.key}
