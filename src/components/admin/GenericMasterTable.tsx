@@ -36,6 +36,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import DataExportImport from '@/components/data-management/DataExportImport';
+import { evaluationSystemSeeds } from '@/data/evaluationSystemSeeds';
 
 interface GenericMasterTableProps {
   masterType: string;
@@ -73,8 +74,144 @@ export default function GenericMasterTable({
   }, [records, searchTerm]);
 
   const loadRecords = async () => {
-    const data = await masterDataService.getAll(masterType);
-    setRecords(data);
+    // シードデータから初期データを取得
+    const seedData = getInitialSeedData(masterType);
+
+    // 実際のデータベース接続時は以下のコードを使用
+    // const data = await masterDataService.getAll(masterType);
+
+    // デモ用：シードデータを使用
+    setRecords(seedData);
+  };
+
+  // マスタータイプに応じた初期データを取得
+  const getInitialSeedData = (type: string): MasterRecord[] => {
+    switch (type) {
+      case 'evaluationSystem':
+        return [{
+          id: evaluationSystemSeeds.evaluationSystem.id,
+          data: {
+            id: evaluationSystemSeeds.evaluationSystem.id,
+            systemName: evaluationSystemSeeds.evaluationSystem.systemName,
+            version: evaluationSystemSeeds.evaluationSystem.version,
+            effectiveFrom: evaluationSystemSeeds.evaluationSystem.effectiveFrom,
+            totalScore: evaluationSystemSeeds.evaluationSystem.totalScore,
+            technicalScore: 50,
+            contributionScore: 50,
+            status: evaluationSystemSeeds.evaluationSystem.isActive ? '有効' : '無効',
+          },
+          metadata: {
+            createdAt: '2024-04-01',
+            updatedAt: '2024-04-01',
+            createdBy: 'システム管理者'
+          }
+        }];
+
+      case 'scoreComponent':
+        return evaluationSystemSeeds.evaluationSystem.scoreComponents.map(comp => ({
+          id: comp.id,
+          data: {
+            id: comp.id,
+            categoryName: comp.categoryName,
+            score: comp.score,
+            evaluationType: comp.evaluationType === 'absolute' ? '絶対評価' : '相対評価',
+            subComponents: comp.subComponents?.length || 0,
+          },
+          metadata: {
+            createdAt: '2024-04-01',
+            updatedAt: '2024-04-01',
+          }
+        }));
+
+      case 'contributionItem':
+        return evaluationSystemSeeds.contributionItems.map(item => ({
+          id: item.id,
+          data: {
+            id: item.id,
+            itemName: item.itemName,
+            category: item.category === 'facility' ? '施設' : '法人',
+            period: item.period,
+            baseScore: item.baseScore,
+            elementCount: item.evaluationElements.length,
+          },
+          metadata: {
+            createdAt: '2024-04-01',
+            updatedAt: '2024-04-01',
+          }
+        }));
+
+      case 'gradeConversion':
+        return evaluationSystemSeeds.evaluationSystem.gradeConversionRules.map(rule => ({
+          id: rule.id,
+          data: {
+            id: rule.id,
+            ruleName: rule.ruleName,
+            gradeCount: rule.gradeDefinitions.length,
+            sThreshold: rule.gradeDefinitions[0].minPercentile,
+          },
+          metadata: {
+            createdAt: '2024-04-01',
+            updatedAt: '2024-04-01',
+          }
+        }));
+
+      case 'matrixDefinition':
+        return [{
+          id: evaluationSystemSeeds.evaluationSystem.matrixDefinition.id,
+          data: {
+            id: evaluationSystemSeeds.evaluationSystem.matrixDefinition.id,
+            dimensions: evaluationSystemSeeds.evaluationSystem.matrixDefinition.dimensions,
+            axisCount: evaluationSystemSeeds.evaluationSystem.matrixDefinition.axes.length,
+            ruleCount: evaluationSystemSeeds.evaluationSystem.matrixDefinition.conversionTable.length,
+          },
+          metadata: {
+            createdAt: '2024-04-01',
+            updatedAt: '2024-04-01',
+          }
+        }];
+
+      case 'periodAllocation':
+        return evaluationSystemSeeds.periodAllocations.map(period => ({
+          id: period.id,
+          data: {
+            id: period.id,
+            systemId: period.systemId,
+            allocationPattern: period.allocationPattern,
+            periodCount: period.periods.length,
+            summerScore: period.periods[0]?.score || 0,
+            winterScore: period.periods[1]?.score || 0,
+          },
+          metadata: {
+            createdAt: '2024-04-01',
+            updatedAt: '2024-04-01',
+          }
+        }));
+
+      case 'departmentPermission':
+        return evaluationSystemSeeds.departmentPermissions.map(perm => ({
+          id: perm.id,
+          data: {
+            id: perm.id,
+            departmentName: perm.departmentName,
+            facilityName: perm.facilityName,
+            status: perm.status === 'active' ? '有効' : '無効',
+            scoreAdjustmentAllowed: perm.customizableItems.scoreAdjustment?.allowed || false,
+            scoreAdjustmentRange: perm.customizableItems.scoreAdjustment?.range || 0,
+            itemAdditionAllowed: perm.customizableItems.itemAddition?.allowed || false,
+            maxAdditionalItems: perm.customizableItems.itemAddition?.maxItems || 0,
+            primaryManager: perm.managers.primary,
+            validFrom: perm.validFrom,
+          },
+          metadata: {
+            createdAt: '2024-04-01',
+            updatedAt: perm.lastModified,
+            updatedBy: perm.modifiedBy,
+          }
+        }));
+
+      default:
+        return [];
+    }
   };
 
   const filterRecords = () => {
