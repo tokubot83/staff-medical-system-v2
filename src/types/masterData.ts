@@ -315,3 +315,131 @@ export interface DepartmentCustomSettings {
     approvedBy?: string;
   }[];
 }
+
+// 評価シミュレーション関連
+export interface EvaluationSimulation {
+  id: string;
+  simulationName: string;
+  targetSystemId: string;
+  targetSystemName: string;
+  createdAt: string;
+  createdBy: string;
+  status: 'draft' | 'running' | 'completed' | 'archived';
+
+  // What-if分析条件
+  conditions: {
+    scoreChanges?: {
+      technical: number;
+      contribution: number;
+      customItems?: { itemName: string; score: number }[];
+    };
+    thresholdChanges?: {
+      grade: string;
+      percentile: string;
+    }[];
+    periodAllocationChanges?: {
+      summer: number;
+      winter: number;
+    };
+  };
+
+  // 検証データ
+  testData: {
+    dataSource: string; // '2024年度実績'など
+    employeeCount: number;
+    period: string;
+    departments: string[];
+  };
+
+  // シミュレーション結果
+  results?: SimulationResults;
+}
+
+export interface SimulationResults {
+  executedAt: string;
+  executionTime: number; // ミリ秒
+
+  // 評価分布の変化
+  gradeDistribution: {
+    before: {
+      S: number;
+      A: number;
+      B: number;
+      C: number;
+      D: number;
+    };
+    after: {
+      S: number;
+      A: number;
+      B: number;
+      C: number;
+      D: number;
+    };
+    changes: {
+      S: number; // 増減数
+      A: number;
+      B: number;
+      C: number;
+      D: number;
+    };
+  };
+
+  // 統計情報
+  statistics: {
+    averageScoreBefore: number;
+    averageScoreAfter: number;
+    scoreDifference: number;
+    standardDeviationBefore: number;
+    standardDeviationAfter: number;
+    medianBefore: number;
+    medianAfter: number;
+  };
+
+  // 部署別影響
+  departmentImpacts: {
+    departmentId: string;
+    departmentName: string;
+    averageScoreBefore: number;
+    averageScoreAfter: number;
+    impact: 'positive' | 'negative' | 'neutral';
+    impactLevel: number; // -100 〜 +100
+    affectedEmployees: number;
+  }[];
+
+  // 職種別影響
+  jobCategoryImpacts: {
+    jobCategory: string;
+    averageScoreBefore: number;
+    averageScoreAfter: number;
+    impact: 'positive' | 'negative' | 'neutral';
+    impactLevel: number;
+  }[];
+
+  // 個別影響（トップ10件）
+  topImpactedEmployees: {
+    positive: {
+      employeeId: string;
+      name: string;
+      department: string;
+      scoreBefore: number;
+      scoreAfter: number;
+      gradeBefore: string;
+      gradeAfter: string;
+    }[];
+    negative: {
+      employeeId: string;
+      name: string;
+      department: string;
+      scoreBefore: number;
+      scoreAfter: number;
+      gradeBefore: string;
+      gradeAfter: string;
+    }[];
+  };
+
+  // リスク分析
+  riskAnalysis: {
+    warnings: string[];
+    recommendations: string[];
+  };
+}

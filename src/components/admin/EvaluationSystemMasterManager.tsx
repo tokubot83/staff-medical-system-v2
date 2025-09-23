@@ -7,6 +7,7 @@ import GenericMasterTable from './GenericMasterTable';
 import { masterSchemas } from '@/config/masterSchemas';
 import DepartmentCustomizationPanel from './DepartmentCustomizationPanel';
 import ApprovalWorkflowPanel from './ApprovalWorkflowPanel';
+import EvaluationSimulationPanel from './EvaluationSimulationPanel';
 import {
   Calculator,
   Settings,
@@ -16,10 +17,12 @@ import {
   Award,
   Info,
   Shield,
-  Send
+  Send,
+  FlaskConical
 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 
 export default function EvaluationSystemMasterManager() {
   const [activeTab, setActiveTab] = useState('evaluationSystem');
@@ -90,6 +93,13 @@ export default function EvaluationSystemMasterManager() {
       description: 'カスタマイズ申請の承認管理',
       adminOnly: true
     },
+    {
+      key: 'simulation',
+      label: 'シミュレーション',
+      icon: FlaskConical,
+      description: '評価制度変更のWhat-if分析',
+      adminOnly: false
+    },
   ];
 
   const currentTab = tabs.find(tab => tab.key === activeTab);
@@ -148,6 +158,8 @@ export default function EvaluationSystemMasterManager() {
                 <TabsContent key={tab.key} value={tab.key}>
                   {tab.key === 'approvalWorkflow' ? (
                     <ApprovalWorkflowPanel />
+                  ) : tab.key === 'simulation' ? (
+                    <EvaluationSimulationPanel />
                   ) : tab.key === 'departmentPermission' && currentUser.role === 'admin' ? (
                     <GenericMasterTable
                       masterType={tab.key}
