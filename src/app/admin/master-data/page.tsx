@@ -5,10 +5,11 @@ import GenericMasterTable from '@/components/admin/GenericMasterTable';
 import DevelopmentMemoTab from '@/components/admin/DevelopmentMemoTab';
 import EvaluationSystemMasterManager from '@/components/admin/EvaluationSystemMasterManager';
 import InterviewSystemVersionManager from '@/components/admin/InterviewSystemVersionManager';
+import HRPolicyManager from '@/components/admin/HRPolicyManager';
 import { masterSchemas } from '@/config/masterSchemas';
 import {
   Users, Building2, GraduationCap, ClipboardCheck,
-  Database, ChevronRight, Shield, Settings, BookOpen, Image, Calculator, MessageSquare
+  Database, ChevronRight, Shield, Settings, BookOpen, Image, Calculator, MessageSquare, FileText
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -48,6 +49,13 @@ const masterTypes = [
     icon: MessageSquare,
     description: '面談制度バージョンの管理',
     color: 'violet'
+  },
+  {
+    key: 'hrPolicy',
+    label: '人事ポリシーマスター',
+    icon: FileText,
+    description: '19項目の人事ポリシー管理',
+    color: 'amber'
   },
   {
     key: 'evaluationItem',
@@ -177,6 +185,8 @@ export default function MasterDataPage() {
                   <EvaluationSystemMasterManager />
                 ) : selectedMaster === 'interviewSystem' ? (
                   <InterviewSystemVersionManager />
+                ) : selectedMaster === 'hrPolicy' ? (
+                  <HRPolicyManager />
                 ) : selectedMaster === 'developmentMemo' ? (
                   <DevelopmentMemoTab />
                 ) : selectedMaster === 'imageManagement' ? (

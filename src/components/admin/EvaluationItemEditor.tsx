@@ -33,7 +33,7 @@ import {
   ChevronUp,
   ChevronDown,
   Settings,
-  FileTemplate,
+  FileText,
   AlertCircle,
   CheckCircle,
   Percent,
@@ -325,7 +325,7 @@ export default function EvaluationItemEditor({
             部署別カスタマイズ
           </TabsTrigger>
           <TabsTrigger value="templates">
-            <FileTemplate className="h-4 w-4 mr-1" />
+            <FileText className="h-4 w-4 mr-1" />
             テンプレート
           </TabsTrigger>
         </TabsList>
