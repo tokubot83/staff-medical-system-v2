@@ -28,13 +28,23 @@ export default function EvaluationSystemMasterManager() {
   const [activeTab, setActiveTab] = useState('evaluationSystem');
   const [showDepartmentPanel, setShowDepartmentPanel] = useState(false);
 
-  // デモ用のユーザー情報
+  // ユーザー情報（実際はコンテキストやセッションから取得）
   const currentUser = {
     id: 'USER_001',
-    name: 'リハビリ科長',
+    name: '部署管理者',
     role: 'department_manager',
-    department: '小原病院リハビリテーション科',
+    department: '営業部',
+    facility: '東京本社',
   };
+
+  // デモ用：複数の部署管理者例
+  const sampleUsers = [
+    { id: 'USER_001', name: 'リハビリ科長', role: 'department_manager', department: 'リハビリテーション科', facility: '小原病院' },
+    { id: 'USER_002', name: '看護部長', role: 'department_manager', department: '看護部', facility: '小原病院' },
+    { id: 'USER_003', name: '総務部長', role: 'department_manager', department: '総務部', facility: '本社' },
+    { id: 'USER_004', name: '営業部長', role: 'department_manager', department: '営業部', facility: '東京支社' },
+    { id: 'USER_005', name: 'システム管理者', role: 'admin', department: 'IT部', facility: '本社' },
+  ];
 
   const tabs = [
     {
@@ -193,12 +203,13 @@ export default function EvaluationSystemMasterManager() {
                 className="w-full"
               >
                 <Shield className="h-4 w-4 mr-2" />
-                {currentUser.department}のカスタマイズ設定
+                {currentUser.facility} {currentUser.department}のカスタマイズ設定
               </Button>
               {showDepartmentPanel && (
                 <div className="mt-4">
                   <DepartmentCustomizationPanel
                     department={currentUser.department}
+                    facility={currentUser.facility}
                     currentUser={currentUser}
                   />
                 </div>

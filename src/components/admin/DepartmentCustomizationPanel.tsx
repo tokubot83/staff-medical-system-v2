@@ -47,15 +47,17 @@ import { DepartmentCustomPermission, CustomizationRequest } from '@/types/master
 
 interface Props {
   department: string;
+  facility?: string;
   currentUser: {
     id: string;
     name: string;
     role: string;
     department: string;
+    facility?: string;
   };
 }
 
-export default function DepartmentCustomizationPanel({ department, currentUser }: Props) {
+export default function DepartmentCustomizationPanel({ department, facility, currentUser }: Props) {
   const [permission, setPermission] = useState<DepartmentCustomPermission | null>(null);
   const [customSettings, setCustomSettings] = useState<any>({});
   const [pendingRequests, setPendingRequests] = useState<CustomizationRequest[]>([]);
@@ -65,12 +67,12 @@ export default function DepartmentCustomizationPanel({ department, currentUser }
 
   // デモ用の権限データ
   useEffect(() => {
-    // 実際はAPIから取得
+    // 実際はAPIから取得（施設・部署に応じた設定を取得）
     setPermission({
       id: 'PERM_001',
       departmentId: 'DEPT_001',
       departmentName: department,
-      facilityName: '小原病院',
+      facilityName: facility || currentUser.facility || '未指定',
       customizableItems: {
         scoreAdjustment: {
           allowed: true,
@@ -81,7 +83,7 @@ export default function DepartmentCustomizationPanel({ department, currentUser }
           allowed: true,
           maxItems: 3,
           requiresApproval: true,
-          allowedCategories: ['専門技術', '部署特有'],
+          allowedCategories: getDepartmentCategories(department),
         },
         thresholdChange: {
           allowed: false,
@@ -94,7 +96,7 @@ export default function DepartmentCustomizationPanel({ department, currentUser }
       },
       managers: {
         primary: currentUser.name,
-        secondary: '副リハビリ科長',
+        secondary: `副${department}長`,
       },
       status: 'active',
       validFrom: '2024-04-01',
@@ -114,16 +116,64 @@ export default function DepartmentCustomizationPanel({ department, currentUser }
         requestType: 'item_addition',
         requestDetails: {
           current: [],
-          proposed: ['ADL改善度評価'],
-          reason: 'リハビリ成果を適切に評価するため',
-          impact: 'PT/OT/ST全員に適用',
+          proposed: [getDefaultProposedItem(department)],
+          reason: getDepartmentSpecificReason(department),
+          impact: getDepartmentSpecificImpact(department),
         },
         approvalStatus: 'pending',
         approvalLevel: 1,
         approvers: [],
       },
     ]);
-  }, [department, currentUser]);
+  }, [department, facility, currentUser]);
+
+  // 部署ごとのカテゴリを取得
+  const getDepartmentCategories = (dept: string): string[] => {
+    const categoryMap: Record<string, string[]> = {
+      'リハビリテーション科': ['専門技術', '機能改善', '患者満足度'],
+      '看護部': ['看護技術', '患者ケア', 'チーム連携'],
+      '総務部': ['業務効率', 'コスト削減', 'コンプライアンス'],
+      '営業部': ['売上貢献', '顧客満足', '新規開拓'],
+      'IT部': ['システム品質', 'セキュリティ', 'イノベーション'],
+    };
+    return categoryMap[dept] || ['専門技術', '部署特有'];
+  };
+
+  // 部署ごとのデフォルト提案項目
+  const getDefaultProposedItem = (dept: string): string => {
+    const itemMap: Record<string, string> = {
+      'リハビリテーション科': 'ADL改善度評価',
+      '看護部': '看護ケアの質指標',
+      '総務部': '業務改善提案数',
+      '営業部': '顧客獲得件数',
+      'IT部': 'システム稼働率',
+    };
+    return itemMap[dept] || '部署独自評価項目';
+  };
+
+  // 部署ごとの申請理由
+  const getDepartmentSpecificReason = (dept: string): string => {
+    const reasonMap: Record<string, string> = {
+      'リハビリテーション科': 'リハビリ成果を適切に評価するため',
+      '看護部': '看護ケアの質を定量的に評価するため',
+      '総務部': '業務効率化の取り組みを評価するため',
+      '営業部': '営業成績を公正に評価するため',
+      'IT部': 'システム品質向上への貢献を評価するため',
+    };
+    return reasonMap[dept] || '部署独自の貢献を適切に評価するため';
+  };
+
+  // 部署ごとの影響範囲
+  const getDepartmentSpecificImpact = (dept: string): string => {
+    const impactMap: Record<string, string> = {
+      'リハビリテーション科': 'PT/OT/ST全員に適用',
+      '看護部': '全看護スタッフに適用',
+      '総務部': '総務部全員に適用',
+      '営業部': '営業チーム全員に適用',
+      'IT部': 'エンジニア全員に適用',
+    };
+    return impactMap[dept] || '部署全員に適用';
+  };
 
   const handleScoreAdjustment = (value: number[]) => {
     setCustomSettings({
@@ -156,7 +206,7 @@ export default function DepartmentCustomizationPanel({ department, currentUser }
           <CardTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Settings className="h-5 w-5" />
-              {department} カスタマイズ設定
+              {facility && `${facility} `}{department} カスタマイズ設定
             </div>
             <Badge variant={permission.status === 'active' ? 'default' : 'secondary'}>
               {permission.status === 'active' ? '有効' : '停止中'}
@@ -292,8 +342,8 @@ export default function DepartmentCustomizationPanel({ department, currentUser }
                     <div className="border rounded-lg p-4">
                       <div className="flex justify-between items-center">
                         <div>
-                          <p className="font-medium">ADL改善度</p>
-                          <p className="text-sm text-gray-600">リハビリテーション効果測定</p>
+                          <p className="font-medium">{getDefaultProposedItem(department)}</p>
+                          <p className="text-sm text-gray-600">{getDepartmentSpecificReason(department)}</p>
                         </div>
                         <Badge>5点</Badge>
                       </div>
@@ -301,8 +351,8 @@ export default function DepartmentCustomizationPanel({ department, currentUser }
                     <div className="border rounded-lg p-4">
                       <div className="flex justify-between items-center">
                         <div>
-                          <p className="font-medium">FIM利得</p>
-                          <p className="text-sm text-gray-600">機能的自立度評価</p>
+                          <p className="font-medium">チーム連携評価</p>
+                          <p className="text-sm text-gray-600">部署内協力度の測定</p>
                         </div>
                         <Badge>3点</Badge>
                       </div>
