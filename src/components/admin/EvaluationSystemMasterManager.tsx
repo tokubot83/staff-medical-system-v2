@@ -15,6 +15,7 @@ import { MatrixCorrespondenceTable } from './MatrixCorrespondenceTable';
 import { EditableMatrixTable } from './EditableMatrixTable';
 import { DynamicEvaluationCalculator } from './DynamicEvaluationCalculator';
 import { EvaluationSystemGuide } from './EvaluationSystemGuide';
+import EvaluationSystemVersionManager from './EvaluationSystemVersionManager';
 import {
   Calculator,
   Settings,
@@ -29,7 +30,8 @@ import {
   AlertTriangle,
   History,
   GitCompare,
-  BookOpen
+  BookOpen,
+  GitBranch
 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
@@ -63,6 +65,13 @@ export default function EvaluationSystemMasterManager() {
       label: '使い方ガイド',
       icon: BookOpen,
       description: '評価制度マスターの使い方と運用シナリオ',
+      adminOnly: false
+    },
+    {
+      key: 'versionManager',
+      label: 'バージョン管理',
+      icon: GitBranch,
+      description: '評価制度バージョンの作成・切り替え・管理',
       adminOnly: false
     },
     {
@@ -228,6 +237,8 @@ export default function EvaluationSystemMasterManager() {
                 <TabsContent key={tab.key} value={tab.key}>
                   {tab.key === 'guide' ? (
                     <EvaluationSystemGuide />
+                  ) : tab.key === 'versionManager' ? (
+                    <EvaluationSystemVersionManager />
                   ) : tab.key === 'approvalWorkflow' ? (
                     <ApprovalWorkflowPanel />
                   ) : tab.key === 'simulation' ? (

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useEvaluationVersion } from '@/contexts/EvaluationVersionContext';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -55,6 +56,17 @@ import {
 } from 'lucide-react';
 
 export default function DashboardPage() {
+  // Context APIから評価制度バージョン情報を取得
+  const {
+    versions,
+    currentVersion,
+    selectedVersionId,
+    setSelectedVersionId,
+    activateVersion,
+    canActivate,
+    loading: versionLoading,
+  } = useEvaluationVersion();
+
   const [evaluationProgress] = useState({
     total: 125,
     completed: 78,
@@ -66,12 +78,14 @@ export default function DashboardPage() {
   const currentMonth = new Date().getMonth() + 1;
   const [activeTab, setActiveTab] = useState<'home' | 'guide' | 'progress' | 'settings' | 'reports'>('home');
   const [storyActiveTab, setStoryActiveTab] = useState<'新人' | '一般' | '中堅' | 'ベテラン' | '管理職' | '評価制度' | 'シミュレーション'>('評価制度');
-  const [selectedSystemVersion, setSelectedSystemVersion] = useState('SYS_2024_001');
 
   const completionRate = Math.round((evaluationProgress.completed / evaluationProgress.total) * 100);
 
-  // 評価制度バージョン定義
-  const evaluationSystemVersions = [
+  // Context APIから取得したバージョンを使用
+  const evaluationSystemVersions = versions;
+
+  // 旧バージョン定義（削除予定）
+  const evaluationSystemVersionsOld = [
     {
       id: 'SYS_2024_001',
       version: '1.0.0',
@@ -119,7 +133,7 @@ export default function DashboardPage() {
     }
   ];
 
-  const currentVersion = evaluationSystemVersions.find(v => v.id === selectedSystemVersion);
+  // currentVersionはContext APIから直接取得済み（上で既に定義されている）
 
   // 世代別ストーリータブの定義
   const storyTabs = [
@@ -3748,9 +3762,10 @@ export default function DashboardPage() {
                   <div className="space-y-2">
                     <label className="text-sm font-medium">評価制度バージョン切り替え</label>
                     <select
-                      value={selectedSystemVersion}
-                      onChange={(e) => setSelectedSystemVersion(e.target.value)}
+                      value={selectedVersionId}
+                      onChange={(e) => setSelectedVersionId(e.target.value)}
                       className="w-full p-2 border rounded-md bg-white"
+                      disabled={versionLoading}
                     >
                       {evaluationSystemVersions.map(version => (
                         <option key={version.id} value={version.id}>
@@ -3768,11 +3783,11 @@ export default function DashboardPage() {
                         <div
                           key={version.id}
                           className={`p-4 rounded-lg border transition-all cursor-pointer hover:shadow-md ${
-                            version.id === selectedSystemVersion
+                            version.id === selectedVersionId
                               ? 'border-blue-500 bg-blue-50'
                               : 'border-gray-200 bg-white'
                           }`}
-                          onClick={() => setSelectedSystemVersion(version.id)}
+                          onClick={() => setSelectedVersionId(version.id)}
                         >
                           <div className="flex items-start justify-between">
                             <div className="flex-1">
