@@ -183,8 +183,10 @@ export default function GenericMasterTable({
             systemId: period.systemId,
             allocationPattern: period.allocationPattern,
             periodCount: period.periods.length,
-            summerScore: period.periods[0]?.score || 0,
-            winterScore: period.periods[1]?.score || 0,
+            totalScore: period.periods.reduce((sum, p) => sum + p.score, 0),
+            description: period.periods.map(p => `${p.periodName}:${p.score}点`).join(', '),
+            facilityRatio: Math.round((period.periods[0]?.facilityScore || 0) / (period.periods[0]?.score || 1) * 100),
+            corporateRatio: Math.round((period.periods[0]?.corporateScore || 0) / (period.periods[0]?.score || 1) * 100),
           },
           metadata: {
             createdAt: '2024-04-01',

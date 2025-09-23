@@ -511,6 +511,7 @@ export const currentEvaluationSystem: EvaluationSystemMaster = {
 
 // 組織貢献度項目マスター
 export const contributionItems: ContributionItemMaster[] = [
+  // ===== 施設貢献（夏季評価） =====
   {
     id: 'CONTRIB_001',
     itemName: '委員会活動',
@@ -518,11 +519,12 @@ export const contributionItems: ContributionItemMaster[] = [
     period: '夏季',
     baseScore: 5,
     evaluationElements: [
-      { elementName: '委員長', score: 5, description: '委員会の運営責任者' },
-      { elementName: '副委員長', score: 3, description: '委員長の補佐' },
-      { elementName: '委員', score: 1, description: '委員会メンバー' },
+      { elementName: '委員長', score: 5, description: '委員会の運営責任者として活動' },
+      { elementName: '副委員長', score: 3, description: '委員長の補佐として実務を推進' },
+      { elementName: '委員', score: 1, description: '委員会メンバーとして参加' },
     ],
     applicablePositions: ['全職種'],
+    applicableDepartments: ['全部署'],
   },
   {
     id: 'CONTRIB_002',
@@ -531,32 +533,148 @@ export const contributionItems: ContributionItemMaster[] = [
     period: '夏季',
     baseScore: 5,
     evaluationElements: [
-      { elementName: '新人教育担当', score: 5, description: '新入職員の教育担当' },
-      { elementName: '実習指導', score: 3, description: '学生実習の指導' },
-      { elementName: '勉強会講師', score: 2, description: '院内勉強会の講師' },
+      { elementName: '新人教育担当', score: 5, description: '新入職員の主担当として6ヶ月以上指導' },
+      { elementName: '実習指導', score: 3, description: '学生実習の指導（1クール以上）' },
+      { elementName: '勉強会講師', score: 2, description: '院内勉強会の講師（30分以上）' },
+      { elementName: 'OJT指導', score: 1, description: '日常的な後輩指導' },
     ],
+    applicablePositions: ['全職種'],
   },
   {
     id: 'CONTRIB_003',
-    itemName: '研究発表',
-    category: 'corporate',
-    period: '冬季',
-    baseScore: 10,
+    itemName: '安全管理活動',
+    category: 'facility',
+    period: '夏季',
+    baseScore: 4,
     evaluationElements: [
-      { elementName: '学会発表', score: 10, description: '全国学会での発表' },
-      { elementName: '論文執筆', score: 8, description: '査読付き論文の執筆' },
-      { elementName: '院内研究', score: 3, description: '院内研究発表' },
+      { elementName: '医療安全推進者', score: 4, description: '医療安全の推進リーダー' },
+      { elementName: 'インシデント分析', score: 3, description: 'インシデント分析と改善提案' },
+      { elementName: '安全ラウンド参加', score: 2, description: '定期的な安全ラウンドへの参加' },
+      { elementName: 'ヒヤリハット報告', score: 1, description: '積極的なヒヤリハット報告（5件以上）' },
     ],
   },
   {
     id: 'CONTRIB_004',
+    itemName: '地域連携活動',
+    category: 'facility',
+    period: '夏季',
+    baseScore: 3,
+    evaluationElements: [
+      { elementName: '地域講演', score: 3, description: '地域での健康講座等の講師' },
+      { elementName: '連携会議出席', score: 2, description: '地域連携会議への定期出席' },
+      { elementName: '見学対応', score: 1, description: '他施設からの見学対応' },
+    ],
+  },
+
+  // ===== 施設貢献（冬季評価） =====
+  {
+    id: 'CONTRIB_005',
     itemName: '業務改善',
     category: 'facility',
     period: '冬季',
     baseScore: 5,
     evaluationElements: [
-      { elementName: '改善提案採用', score: 5, description: '業務改善提案が採用' },
-      { elementName: '効率化実施', score: 3, description: '業務効率化の実施' },
+      { elementName: '改善提案採用', score: 5, description: '業務改善提案が採用され効果確認' },
+      { elementName: '効率化実施', score: 3, description: '部署内業務効率化の実施' },
+      { elementName: 'マニュアル作成', score: 2, description: '業務マニュアルの新規作成・改訂' },
+      { elementName: '改善提案', score: 1, description: '改善提案の提出（採用前）' },
+    ],
+  },
+  {
+    id: 'CONTRIB_006',
+    itemName: '患者満足度向上',
+    category: 'facility',
+    period: '冬季',
+    baseScore: 4,
+    evaluationElements: [
+      { elementName: '表彰・感謝状', score: 4, description: '患者からの表彰・感謝状受領' },
+      { elementName: '満足度調査高評価', score: 3, description: '満足度調査で高評価（上位20%）' },
+      { elementName: 'クレーム対応', score: 2, description: '困難なクレームの適切な対応' },
+      { elementName: 'サービス改善', score: 1, description: '患者サービスの改善活動' },
+    ],
+  },
+  {
+    id: 'CONTRIB_007',
+    itemName: '経営貢献',
+    category: 'facility',
+    period: '冬季',
+    baseScore: 4,
+    evaluationElements: [
+      { elementName: '新規事業立上', score: 4, description: '新規事業・サービスの立ち上げ' },
+      { elementName: '収益改善', score: 3, description: '具体的な収益改善（100万円以上）' },
+      { elementName: 'コスト削減', score: 2, description: 'コスト削減の実現（50万円以上）' },
+      { elementName: '稼働率向上', score: 1, description: '病床・検査等の稼働率向上' },
+    ],
+  },
+
+  // ===== 法人貢献（夏季評価） =====
+  {
+    id: 'CONTRIB_008',
+    itemName: '法人プロジェクト',
+    category: 'corporate',
+    period: '夏季',
+    baseScore: 8,
+    evaluationElements: [
+      { elementName: 'プロジェクトリーダー', score: 8, description: '法人横断プロジェクトのリーダー' },
+      { elementName: 'プロジェクトサブリーダー', score: 5, description: 'サブリーダーとして推進' },
+      { elementName: 'プロジェクトメンバー', score: 3, description: 'メンバーとして積極的参加' },
+      { elementName: 'タスク担当', score: 1, description: '特定タスクの責任者' },
+    ],
+  },
+  {
+    id: 'CONTRIB_009',
+    itemName: '法人間連携',
+    category: 'corporate',
+    period: '夏季',
+    baseScore: 5,
+    evaluationElements: [
+      { elementName: '他施設支援', score: 5, description: '他施設への応援・技術支援（5日以上）' },
+      { elementName: '法人研修講師', score: 3, description: '法人全体研修の講師' },
+      { elementName: '標準化推進', score: 2, description: '法人内業務標準化の推進' },
+      { elementName: '情報共有', score: 1, description: 'ベストプラクティスの共有' },
+    ],
+  },
+
+  // ===== 法人貢献（冬季評価） =====
+  {
+    id: 'CONTRIB_010',
+    itemName: '研究・学術活動',
+    category: 'corporate',
+    period: '冬季',
+    baseScore: 10,
+    evaluationElements: [
+      { elementName: '国際学会発表', score: 10, description: '国際学会での発表・座長' },
+      { elementName: '全国学会発表', score: 8, description: '全国学会での発表' },
+      { elementName: '論文執筆（査読付）', score: 7, description: '査読付き論文の執筆（筆頭・共著）' },
+      { elementName: '地方学会発表', score: 5, description: '地方学会での発表' },
+      { elementName: '院内研究発表', score: 3, description: '法人内研究発表会での発表' },
+      { elementName: '研究参加', score: 1, description: '研究プロジェクトへの参加' },
+    ],
+  },
+  {
+    id: 'CONTRIB_011',
+    itemName: '対外活動',
+    category: 'corporate',
+    period: '冬季',
+    baseScore: 6,
+    evaluationElements: [
+      { elementName: '学会役員', score: 6, description: '学会・協会の役員として活動' },
+      { elementName: '外部委員', score: 4, description: '行政・団体の委員として活動' },
+      { elementName: 'メディア対応', score: 3, description: 'TV・新聞等のメディア対応' },
+      { elementName: '講演・セミナー', score: 2, description: '外部での講演・セミナー講師' },
+    ],
+  },
+  {
+    id: 'CONTRIB_012',
+    itemName: '資格取得・スキル向上',
+    category: 'corporate',
+    period: '冬季',
+    baseScore: 5,
+    evaluationElements: [
+      { elementName: '高度資格取得', score: 5, description: '専門医・認定看護師等の高度資格取得' },
+      { elementName: '専門資格取得', score: 3, description: '業務関連の専門資格取得' },
+      { elementName: '研修修了', score: 2, description: '法人指定研修の修了（40時間以上）' },
+      { elementName: '自己研鑽', score: 1, description: '自主的な研修参加（20時間以上）' },
     ],
   },
 ];
@@ -566,10 +684,10 @@ export const periodAllocations: PeriodScoreAllocation[] = [
   {
     id: 'PERIOD_001',
     systemId: 'SYS_2024_001',
-    allocationPattern: '標準均等型',
+    allocationPattern: '標準均等型（現行）',
     periods: [
       {
-        periodName: '夏季',
+        periodName: '上半期（夏季評価）',
         startMonth: 4,
         endMonth: 9,
         score: 25,
@@ -577,12 +695,205 @@ export const periodAllocations: PeriodScoreAllocation[] = [
         corporateScore: 12.5,
       },
       {
-        periodName: '冬季',
+        periodName: '下半期（冬季評価）',
         startMonth: 10,
         endMonth: 3,
         score: 25,
         facilityScore: 12.5,
         corporateScore: 12.5,
+      },
+    ],
+  },
+  {
+    id: 'PERIOD_002',
+    systemId: 'SYS_2024_001',
+    allocationPattern: '年度末重視型',
+    periods: [
+      {
+        periodName: '上半期（夏季評価）',
+        startMonth: 4,
+        endMonth: 9,
+        score: 20,
+        facilityScore: 10,
+        corporateScore: 10,
+      },
+      {
+        periodName: '下半期（冬季評価）',
+        startMonth: 10,
+        endMonth: 3,
+        score: 30,
+        facilityScore: 15,
+        corporateScore: 15,
+      },
+    ],
+  },
+  {
+    id: 'PERIOD_003',
+    systemId: 'SYS_2024_001',
+    allocationPattern: '四半期評価型',
+    periods: [
+      {
+        periodName: '第1四半期',
+        startMonth: 4,
+        endMonth: 6,
+        score: 10,
+        facilityScore: 5,
+        corporateScore: 5,
+      },
+      {
+        periodName: '第2四半期',
+        startMonth: 7,
+        endMonth: 9,
+        score: 15,
+        facilityScore: 7.5,
+        corporateScore: 7.5,
+      },
+      {
+        periodName: '第3四半期',
+        startMonth: 10,
+        endMonth: 12,
+        score: 10,
+        facilityScore: 5,
+        corporateScore: 5,
+      },
+      {
+        periodName: '第4四半期',
+        startMonth: 1,
+        endMonth: 3,
+        score: 15,
+        facilityScore: 7.5,
+        corporateScore: 7.5,
+      },
+    ],
+  },
+  {
+    id: 'PERIOD_004',
+    systemId: 'SYS_2024_001',
+    allocationPattern: '施設重視型',
+    periods: [
+      {
+        periodName: '上半期（夏季評価）',
+        startMonth: 4,
+        endMonth: 9,
+        score: 25,
+        facilityScore: 17.5,  // 施設70%
+        corporateScore: 7.5,   // 法人30%
+      },
+      {
+        periodName: '下半期（冬季評価）',
+        startMonth: 10,
+        endMonth: 3,
+        score: 25,
+        facilityScore: 17.5,
+        corporateScore: 7.5,
+      },
+    ],
+  },
+  {
+    id: 'PERIOD_005',
+    systemId: 'SYS_2024_001',
+    allocationPattern: '法人重視型',
+    periods: [
+      {
+        periodName: '上半期（夏季評価）',
+        startMonth: 4,
+        endMonth: 9,
+        score: 25,
+        facilityScore: 7.5,    // 施設30%
+        corporateScore: 17.5,  // 法人70%
+      },
+      {
+        periodName: '下半期（冬季評価）',
+        startMonth: 10,
+        endMonth: 3,
+        score: 25,
+        facilityScore: 7.5,
+        corporateScore: 17.5,
+      },
+    ],
+  },
+  {
+    id: 'PERIOD_006',
+    systemId: 'SYS_2024_001',
+    allocationPattern: '通年一括評価型',
+    periods: [
+      {
+        periodName: '通年評価',
+        startMonth: 4,
+        endMonth: 3,
+        score: 50,
+        facilityScore: 25,
+        corporateScore: 25,
+      },
+    ],
+  },
+  {
+    id: 'PERIOD_007',
+    systemId: 'SYS_2024_001',
+    allocationPattern: '医療職特化型（患者数変動対応）',
+    periods: [
+      {
+        periodName: '繁忙期（4-7月）',
+        startMonth: 4,
+        endMonth: 7,
+        score: 20,
+        facilityScore: 12,
+        corporateScore: 8,
+      },
+      {
+        periodName: '通常期（8-11月）',
+        startMonth: 8,
+        endMonth: 11,
+        score: 15,
+        facilityScore: 7.5,
+        corporateScore: 7.5,
+      },
+      {
+        periodName: '年度末期（12-3月）',
+        startMonth: 12,
+        endMonth: 3,
+        score: 15,
+        facilityScore: 5.5,
+        corporateScore: 9.5,
+      },
+    ],
+  },
+  {
+    id: 'PERIOD_008',
+    systemId: 'SYS_2024_001',
+    allocationPattern: '新人育成重視型（入職1年目用）',
+    periods: [
+      {
+        periodName: '研修期（4-6月）',
+        startMonth: 4,
+        endMonth: 6,
+        score: 5,  // 研修期間は低配点
+        facilityScore: 3,
+        corporateScore: 2,
+      },
+      {
+        periodName: '成長期（7-9月）',
+        startMonth: 7,
+        endMonth: 9,
+        score: 15,
+        facilityScore: 8,
+        corporateScore: 7,
+      },
+      {
+        periodName: '実践期（10-12月）',
+        startMonth: 10,
+        endMonth: 12,
+        score: 15,
+        facilityScore: 7.5,
+        corporateScore: 7.5,
+      },
+      {
+        periodName: '評価期（1-3月）',
+        startMonth: 1,
+        endMonth: 3,
+        score: 15,
+        facilityScore: 6.5,
+        corporateScore: 8.5,
       },
     ],
   },
