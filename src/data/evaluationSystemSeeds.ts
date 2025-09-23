@@ -322,39 +322,176 @@ export const currentEvaluationSystem: EvaluationSystemMaster = {
       { axisName: '法人内評価', evaluationType: 'corporate_relative' },
     ],
     conversionTable: [
-      // S×S → 7
-      { inputs: { facility: 'S', corporate: 'S' }, output: '7', priority: 1 },
-      // S×A, A×S → 6
-      { inputs: { facility: 'S', corporate: 'A' }, output: '6', priority: 2 },
-      { inputs: { facility: 'A', corporate: 'S' }, output: '6', priority: 2 },
-      // S×B, A×A, B×S → 5
-      { inputs: { facility: 'S', corporate: 'B' }, output: '5', priority: 3 },
-      { inputs: { facility: 'A', corporate: 'A' }, output: '5', priority: 3 },
-      { inputs: { facility: 'B', corporate: 'S' }, output: '5', priority: 3 },
-      // S×C, A×B, B×A, C×S → 4
-      { inputs: { facility: 'S', corporate: 'C' }, output: '4', priority: 4 },
-      { inputs: { facility: 'A', corporate: 'B' }, output: '4', priority: 4 },
-      { inputs: { facility: 'B', corporate: 'A' }, output: '4', priority: 4 },
-      { inputs: { facility: 'C', corporate: 'S' }, output: '4', priority: 4 },
-      // B×B, その他の組み合わせ → 3
-      { inputs: { facility: 'B', corporate: 'B' }, output: '3', priority: 5 },
-      { inputs: { facility: 'A', corporate: 'C' }, output: '3', priority: 5 },
-      { inputs: { facility: 'C', corporate: 'A' }, output: '3', priority: 5 },
-      // C×C, B×D, D×B → 2
-      { inputs: { facility: 'C', corporate: 'C' }, output: '2', priority: 6 },
-      { inputs: { facility: 'B', corporate: 'D' }, output: '2', priority: 6 },
-      { inputs: { facility: 'D', corporate: 'B' }, output: '2', priority: 6 },
-      // D×D → 1
-      { inputs: { facility: 'D', corporate: 'D' }, output: '1', priority: 7 },
-      // その他のD評価を含む組み合わせ
-      { inputs: { facility: 'S', corporate: 'D' }, output: '3', priority: 5 },
-      { inputs: { facility: 'D', corporate: 'S' }, output: '3', priority: 5 },
-      { inputs: { facility: 'A', corporate: 'D' }, output: '2', priority: 6 },
-      { inputs: { facility: 'D', corporate: 'A' }, output: '2', priority: 6 },
-      { inputs: { facility: 'C', corporate: 'D' }, output: '2', priority: 6 },
-      { inputs: { facility: 'D', corporate: 'C' }, output: '2', priority: 6 },
-      { inputs: { facility: 'B', corporate: 'C' }, output: '3', priority: 5 },
-      { inputs: { facility: 'C', corporate: 'B' }, output: '3', priority: 5 },
+      // ===== 最終評価 7 (S+) : 最優秀層 =====
+      // 両方でS評価を取得した最上位者のみ
+      {
+        inputs: { facility: 'S', corporate: 'S' },
+        output: '7',
+        priority: 1,
+        description: '施設・法人両方でトップ評価の最優秀職員'
+      },
+
+      // ===== 最終評価 6 (S) : 極めて優秀層 =====
+      // 片方でS評価、もう片方でA評価
+      {
+        inputs: { facility: 'S', corporate: 'A' },
+        output: '6',
+        priority: 2,
+        description: '施設内トップ、法人内でも上位の優秀職員'
+      },
+      {
+        inputs: { facility: 'A', corporate: 'S' },
+        output: '6',
+        priority: 2,
+        description: '法人内トップ、施設内でも上位の優秀職員'
+      },
+
+      // ===== 最終評価 5 (A) : 優秀層 =====
+      // 高評価の組み合わせ
+      {
+        inputs: { facility: 'S', corporate: 'B' },
+        output: '5',
+        priority: 3,
+        description: '施設内トップだが法人内では標準'
+      },
+      {
+        inputs: { facility: 'A', corporate: 'A' },
+        output: '5',
+        priority: 3,
+        description: '施設・法人両方で上位評価'
+      },
+      {
+        inputs: { facility: 'B', corporate: 'S' },
+        output: '5',
+        priority: 3,
+        description: '法人内トップだが施設内では標準'
+      },
+
+      // ===== 最終評価 4 (B+) : 良好層 =====
+      // バランスの取れた中上位評価
+      {
+        inputs: { facility: 'S', corporate: 'C' },
+        output: '4',
+        priority: 4,
+        description: '施設内トップだが法人内では要改善'
+      },
+      {
+        inputs: { facility: 'A', corporate: 'B' },
+        output: '4',
+        priority: 4,
+        description: '施設内上位、法人内標準'
+      },
+      {
+        inputs: { facility: 'B', corporate: 'A' },
+        output: '4',
+        priority: 4,
+        description: '法人内上位、施設内標準'
+      },
+      {
+        inputs: { facility: 'C', corporate: 'S' },
+        output: '4',
+        priority: 4,
+        description: '法人内トップだが施設内では要改善'
+      },
+
+      // ===== 最終評価 3 (B) : 標準層 =====
+      // 中位評価の組み合わせ
+      {
+        inputs: { facility: 'B', corporate: 'B' },
+        output: '3',
+        priority: 5,
+        description: '施設・法人両方で標準的な評価'
+      },
+      {
+        inputs: { facility: 'A', corporate: 'C' },
+        output: '3',
+        priority: 5,
+        description: '施設内上位だが法人内では要改善'
+      },
+      {
+        inputs: { facility: 'C', corporate: 'A' },
+        output: '3',
+        priority: 5,
+        description: '法人内上位だが施設内では要改善'
+      },
+      {
+        inputs: { facility: 'B', corporate: 'C' },
+        output: '3',
+        priority: 5,
+        description: '施設内標準、法人内要改善'
+      },
+      {
+        inputs: { facility: 'C', corporate: 'B' },
+        output: '3',
+        priority: 5,
+        description: '法人内標準、施設内要改善'
+      },
+      {
+        inputs: { facility: 'S', corporate: 'D' },
+        output: '3',
+        priority: 5,
+        description: '施設内トップだが法人内では大幅改善必要（特別考慮）'
+      },
+      {
+        inputs: { facility: 'D', corporate: 'S' },
+        output: '3',
+        priority: 5,
+        description: '法人内トップだが施設内では大幅改善必要（特別考慮）'
+      },
+
+      // ===== 最終評価 2 (C) : 要改善層 =====
+      // 低評価が含まれる組み合わせ
+      {
+        inputs: { facility: 'C', corporate: 'C' },
+        output: '2',
+        priority: 6,
+        description: '施設・法人両方で要改善'
+      },
+      {
+        inputs: { facility: 'B', corporate: 'D' },
+        output: '2',
+        priority: 6,
+        description: '施設内標準だが法人内では大幅改善必要'
+      },
+      {
+        inputs: { facility: 'D', corporate: 'B' },
+        output: '2',
+        priority: 6,
+        description: '法人内標準だが施設内では大幅改善必要'
+      },
+      {
+        inputs: { facility: 'A', corporate: 'D' },
+        output: '2',
+        priority: 6,
+        description: '施設内上位だが法人内では大幅改善必要'
+      },
+      {
+        inputs: { facility: 'D', corporate: 'A' },
+        output: '2',
+        priority: 6,
+        description: '法人内上位だが施設内では大幅改善必要'
+      },
+      {
+        inputs: { facility: 'C', corporate: 'D' },
+        output: '2',
+        priority: 6,
+        description: '施設内要改善、法人内大幅改善必要'
+      },
+      {
+        inputs: { facility: 'D', corporate: 'C' },
+        output: '2',
+        priority: 6,
+        description: '法人内要改善、施設内大幅改善必要'
+      },
+
+      // ===== 最終評価 1 (D) : 大幅改善必要層 =====
+      // 両方でD評価の最下位者
+      {
+        inputs: { facility: 'D', corporate: 'D' },
+        output: '1',
+        priority: 7,
+        description: '施設・法人両方で最下位評価、集中的な改善支援が必要'
+      },
     ],
   },
   finalGradeDefinition: {

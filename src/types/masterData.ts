@@ -131,6 +131,7 @@ export interface MatrixDefinition {
     inputs: Record<string, string>; // { facility: 'S', corporate: 'A' }
     output: string; // 'S+'
     priority: number;
+    description?: string; // 組み合わせの説明
   }[];
 }
 
