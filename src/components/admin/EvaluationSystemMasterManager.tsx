@@ -8,6 +8,7 @@ import { masterSchemas } from '@/config/masterSchemas';
 import DepartmentCustomizationPanel from './DepartmentCustomizationPanel';
 import ApprovalWorkflowPanel from './ApprovalWorkflowPanel';
 import EvaluationSimulationPanel from './EvaluationSimulationPanel';
+import ImpactAnalysisPanel from './ImpactAnalysisPanel';
 import {
   Calculator,
   Settings,
@@ -18,7 +19,8 @@ import {
   Info,
   Shield,
   Send,
-  FlaskConical
+  FlaskConical,
+  AlertTriangle
 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
@@ -110,6 +112,13 @@ export default function EvaluationSystemMasterManager() {
       description: '評価制度変更のWhat-if分析',
       adminOnly: false
     },
+    {
+      key: 'impactAnalysis',
+      label: '影響分析',
+      icon: AlertTriangle,
+      description: '制度変更の個人・部署・給与への影響を詳細分析',
+      adminOnly: false
+    },
   ];
 
   const currentTab = tabs.find(tab => tab.key === activeTab);
@@ -170,6 +179,8 @@ export default function EvaluationSystemMasterManager() {
                     <ApprovalWorkflowPanel />
                   ) : tab.key === 'simulation' ? (
                     <EvaluationSimulationPanel />
+                  ) : tab.key === 'impactAnalysis' ? (
+                    <ImpactAnalysisPanel />
                   ) : tab.key === 'departmentPermission' && currentUser.role === 'admin' ? (
                     <GenericMasterTable
                       masterType={tab.key}

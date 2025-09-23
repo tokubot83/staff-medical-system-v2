@@ -443,3 +443,143 @@ export interface SimulationResults {
     recommendations: string[];
   };
 }
+
+// 影響分析関連
+export interface ImpactAnalysis {
+  id: string;
+  analysisName: string;
+  targetSystemId: string;
+  baselineSystemId: string;
+  createdAt: string;
+  createdBy: string;
+  status: 'draft' | 'analyzing' | 'completed' | 'archived';
+
+  // 分析対象
+  targetChanges: {
+    scoreChanges?: {
+      technical: { from: number; to: number };
+      contribution: { from: number; to: number };
+    };
+    thresholdChanges?: {
+      grade: string;
+      from: { min: number; max: number };
+      to: { min: number; max: number };
+    }[];
+    matrixChanges?: boolean;
+  };
+
+  // 分析結果
+  results?: ImpactAnalysisResults;
+}
+
+export interface ImpactAnalysisResults {
+  executedAt: string;
+
+  // 個人レベルの影響
+  individualImpacts: {
+    totalEmployees: number;
+    impactedEmployees: number;
+    impactPercentage: number;
+
+    // グレード変動
+    gradeChanges: {
+      improved: number; // グレード上昇人数
+      unchanged: number; // グレード維持人数
+      declined: number; // グレード下降人数
+    };
+
+    // 詳細リスト（上位影響者）
+    topPositiveImpacts: EmployeeImpact[];
+    topNegativeImpacts: EmployeeImpact[];
+    highRiskEmployees: EmployeeImpact[]; // 大幅下降リスク
+  };
+
+  // 部署レベルの影響
+  departmentImpacts: {
+    byDepartment: DepartmentImpact[];
+    mostImproved: DepartmentImpact[];
+    mostDeclined: DepartmentImpact[];
+  };
+
+  // 給与・賞与への影響
+  compensationImpacts: {
+    totalCostChange: number; // 総人件費の変動
+    averageSalaryChange: number; // 平均給与変動
+    bonusPoolChange: number; // 賞与原資への影響
+
+    // グレード別給与影響
+    byGrade: {
+      grade: string;
+      currentAverage: number;
+      newAverage: number;
+      changeAmount: number;
+      changePercentage: number;
+      employeeCount: number;
+    }[];
+
+    // 部署別コスト影響
+    byDepartment: {
+      departmentId: string;
+      departmentName: string;
+      currentCost: number;
+      newCost: number;
+      changeAmount: number;
+      changePercentage: number;
+    }[];
+  };
+
+  // リスクアラート
+  riskAlerts: {
+    level: 'critical' | 'high' | 'medium' | 'low';
+    alerts: RiskAlert[];
+    mitigationSuggestions: string[];
+  };
+}
+
+export interface EmployeeImpact {
+  employeeId: string;
+  name: string;
+  department: string;
+  position: string;
+  currentGrade: string;
+  newGrade: string;
+  currentScore: number;
+  newScore: number;
+  salaryImpact: number;
+  bonusImpact: number;
+  riskLevel?: 'high' | 'medium' | 'low';
+}
+
+export interface DepartmentImpact {
+  departmentId: string;
+  departmentName: string;
+  facilityName?: string;
+  employeeCount: number;
+
+  // スコア影響
+  averageScoreChange: number;
+  scoreChangePercentage: number;
+
+  // グレード分布
+  gradeDistribution: {
+    current: Record<string, number>;
+    new: Record<string, number>;
+  };
+
+  // コスト影響
+  totalCostChange: number;
+  costChangePercentage: number;
+
+  // リスク評価
+  riskLevel: 'high' | 'medium' | 'low';
+  riskFactors: string[];
+}
+
+export interface RiskAlert {
+  type: 'legal' | 'retention' | 'morale' | 'cost' | 'fairness';
+  severity: 'critical' | 'high' | 'medium' | 'low';
+  title: string;
+  description: string;
+  affectedCount?: number;
+  recommendation?: string;
+}
