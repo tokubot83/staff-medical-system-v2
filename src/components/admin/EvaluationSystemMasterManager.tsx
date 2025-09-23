@@ -40,18 +40,18 @@ export default function EvaluationSystemMasterManager() {
   // ユーザー情報（実際はコンテキストやセッションから取得）
   const currentUser = {
     id: 'USER_001',
-    name: '部署管理者',
+    name: 'リハビリ科長',
     role: 'department_manager',
-    department: '営業部',
-    facility: '東京本社',
+    department: 'リハビリテーション科',
+    facility: '小原病院',
   };
 
   // デモ用：複数の部署管理者例
   const sampleUsers = [
     { id: 'USER_001', name: 'リハビリ科長', role: 'department_manager', department: 'リハビリテーション科', facility: '小原病院' },
     { id: 'USER_002', name: '看護部長', role: 'department_manager', department: '看護部', facility: '小原病院' },
-    { id: 'USER_003', name: '総務部長', role: 'department_manager', department: '総務部', facility: '本社' },
-    { id: 'USER_004', name: '営業部長', role: 'department_manager', department: '営業部', facility: '東京支社' },
+    { id: 'USER_003', name: '医事課長', role: 'department_manager', department: '医事課', facility: '小原病院' },
+    { id: 'USER_004', name: '薬剤部長', role: 'department_manager', department: '薬剤部', facility: '小原病院' },
     { id: 'USER_005', name: 'システム管理者', role: 'admin', department: 'IT部', facility: '本社' },
   ];
 
