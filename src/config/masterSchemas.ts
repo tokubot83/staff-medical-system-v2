@@ -1,4 +1,4 @@
-import { MasterSchema } from '@/types/masterData';
+import { MasterSchema, FieldDefinition } from '@/types/masterData';
 
 export const masterSchemas: Record<string, MasterSchema> = {
   staff: {
@@ -196,5 +196,225 @@ export const masterSchemas: Record<string, MasterSchema> = {
     searchableFields: ['code', 'name', 'description'],
     sortableFields: ['code', 'name', 'category', 'displayOrder'],
     exportFields: ['code', 'name', 'category', 'description', 'evaluationType', 'weight', 'isRequired'],
+  },
+
+  // 評価制度マスター
+  evaluationSystem: {
+    name: 'evaluationSystem',
+    label: '評価制度マスター',
+    fields: [
+      { key: 'id', label: '制度ID', type: 'string', required: true, readonly: true },
+      { key: 'systemName', label: '制度名', type: 'string', required: true },
+      { key: 'version', label: 'バージョン', type: 'string', required: true },
+      { key: 'effectiveFrom', label: '有効開始日', type: 'date', required: true },
+      { key: 'effectiveTo', label: '有効終了日', type: 'date' },
+      { key: 'totalScore', label: '総点', type: 'number', required: true, defaultValue: 100 },
+      { key: 'isActive', label: '有効', type: 'boolean', defaultValue: true },
+    ],
+    searchableFields: ['systemName', 'version'],
+    sortableFields: ['systemName', 'version', 'effectiveFrom'],
+    exportFields: ['systemName', 'version', 'effectiveFrom', 'effectiveTo', 'totalScore'],
+  },
+
+  scoreComponent: {
+    name: 'scoreComponent',
+    label: '評価配点構成',
+    fields: [
+      { key: 'id', label: '配点ID', type: 'string', required: true, readonly: true },
+      { key: 'systemId', label: '制度ID', type: 'string', required: true },
+      { key: 'categoryName', label: 'カテゴリ名', type: 'string', required: true },
+      { key: 'score', label: '配点', type: 'number', required: true },
+      {
+        key: 'evaluationType',
+        label: '評価方式',
+        type: 'select',
+        required: true,
+        options: [
+          { value: 'absolute', label: '絶対評価' },
+          { value: 'relative', label: '相対評価' },
+        ]
+      },
+      { key: 'description', label: '説明', type: 'textarea' },
+    ],
+    searchableFields: ['categoryName'],
+    sortableFields: ['categoryName', 'score'],
+    exportFields: ['systemId', 'categoryName', 'score', 'evaluationType'],
+  },
+
+  contributionItem: {
+    name: 'contributionItem',
+    label: '貢献度項目マスター',
+    fields: [
+      { key: 'id', label: '項目ID', type: 'string', required: true, readonly: true },
+      { key: 'itemName', label: '項目名', type: 'string', required: true },
+      {
+        key: 'category',
+        label: 'カテゴリ',
+        type: 'select',
+        required: true,
+        options: [
+          { value: 'facility', label: '施設貢献' },
+          { value: 'corporate', label: '法人貢献' },
+        ]
+      },
+      {
+        key: 'period',
+        label: '評価期',
+        type: 'select',
+        options: [
+          { value: 'summer', label: '夏季' },
+          { value: 'winter', label: '冬季' },
+          { value: 'annual', label: '通年' },
+        ]
+      },
+      { key: 'baseScore', label: '基本配点', type: 'number', required: true },
+      { key: 'evaluationElements', label: '評価要素', type: 'textarea' },
+      { key: 'applicablePositions', label: '対象職位', type: 'textarea' },
+      { key: 'isActive', label: '有効', type: 'boolean', defaultValue: true },
+    ],
+    searchableFields: ['itemName', 'category'],
+    sortableFields: ['itemName', 'category', 'period', 'baseScore'],
+    exportFields: ['itemName', 'category', 'period', 'baseScore', 'evaluationElements'],
+  },
+
+  gradeConversion: {
+    name: 'gradeConversion',
+    label: '評価グレード変換ルール',
+    fields: [
+      { key: 'id', label: 'ルールID', type: 'string', required: true, readonly: true },
+      { key: 'ruleName', label: 'ルール名', type: 'string', required: true },
+      { key: 'systemId', label: '制度ID', type: 'string', required: true },
+      { key: 'grade', label: 'グレード', type: 'string', required: true },
+      { key: 'minPercentile', label: '最小パーセンタイル', type: 'number', required: true },
+      { key: 'maxPercentile', label: '最大パーセンタイル', type: 'number', required: true },
+      { key: 'description', label: '説明', type: 'string' },
+      { key: 'isActive', label: '有効', type: 'boolean', defaultValue: true },
+    ],
+    searchableFields: ['ruleName', 'grade'],
+    sortableFields: ['ruleName', 'grade', 'minPercentile'],
+    exportFields: ['ruleName', 'grade', 'minPercentile', 'maxPercentile', 'description'],
+  },
+
+  matrixDefinition: {
+    name: 'matrixDefinition',
+    label: '評価マトリックス定義',
+    fields: [
+      { key: 'id', label: 'マトリックスID', type: 'string', required: true, readonly: true },
+      { key: 'systemId', label: '制度ID', type: 'string', required: true },
+      { key: 'facilityGrade', label: '施設内評価', type: 'string', required: true },
+      { key: 'corporateGrade', label: '法人内評価', type: 'string', required: true },
+      { key: 'finalGrade', label: '最終評価', type: 'string', required: true },
+      { key: 'priority', label: '優先度', type: 'number', required: true },
+      { key: 'description', label: '説明', type: 'textarea' },
+    ],
+    searchableFields: ['facilityGrade', 'corporateGrade', 'finalGrade'],
+    sortableFields: ['priority', 'finalGrade'],
+    exportFields: ['facilityGrade', 'corporateGrade', 'finalGrade', 'priority', 'description'],
+  },
+
+  periodAllocation: {
+    name: 'periodAllocation',
+    label: '期別配点設定',
+    fields: [
+      { key: 'id', label: '設定ID', type: 'string', required: true, readonly: true },
+      { key: 'systemId', label: '制度ID', type: 'string', required: true },
+      {
+        key: 'allocationPattern',
+        label: '配分パターン',
+        type: 'select',
+        required: true,
+        options: [
+          { value: 'equal', label: '均等型' },
+          { value: 'yearend', label: '年度末重視型' },
+          { value: 'quarterly', label: '四半期型' },
+          { value: 'custom', label: 'カスタム' },
+        ]
+      },
+      { key: 'periodName', label: '期名', type: 'string', required: true },
+      { key: 'startMonth', label: '開始月', type: 'number', required: true },
+      { key: 'endMonth', label: '終了月', type: 'number', required: true },
+      { key: 'score', label: '配点', type: 'number', required: true },
+      { key: 'facilityScore', label: '施設配点', type: 'number' },
+      { key: 'corporateScore', label: '法人配点', type: 'number' },
+    ],
+    searchableFields: ['allocationPattern', 'periodName'],
+    sortableFields: ['periodName', 'startMonth', 'score'],
+    exportFields: ['allocationPattern', 'periodName', 'startMonth', 'endMonth', 'score'],
+  },
+
+  // 部署別カスタマイズ権限
+  departmentPermission: {
+    name: 'departmentPermission',
+    label: '部署別カスタマイズ権限',
+    fields: [
+      { key: 'id', label: '権限ID', type: 'string', required: true, readonly: true },
+      { key: 'departmentName', label: '部署名', type: 'string', required: true },
+      { key: 'facilityName', label: '施設名', type: 'string' },
+      {
+        key: 'status',
+        label: '状態',
+        type: 'select',
+        required: true,
+        options: [
+          { value: 'active', label: '有効' },
+          { value: 'pending', label: '承認待ち' },
+          { value: 'suspended', label: '停止中' },
+        ]
+      },
+      { key: 'scoreAdjustmentAllowed', label: '配点調整許可', type: 'boolean', defaultValue: false },
+      { key: 'scoreAdjustmentRange', label: '配点調整範囲(±)', type: 'number' },
+      { key: 'itemAdditionAllowed', label: '項目追加許可', type: 'boolean', defaultValue: false },
+      { key: 'maxAdditionalItems', label: '最大追加項目数', type: 'number' },
+      { key: 'primaryManager', label: '主管理者', type: 'string', required: true },
+      { key: 'secondaryManager', label: '副管理者', type: 'string' },
+      { key: 'validFrom', label: '有効開始日', type: 'date', required: true },
+      { key: 'validUntil', label: '有効終了日', type: 'date' },
+    ],
+    searchableFields: ['departmentName', 'facilityName', 'primaryManager'],
+    sortableFields: ['departmentName', 'status', 'validFrom'],
+    exportFields: ['departmentName', 'status', 'primaryManager', 'validFrom', 'validUntil'],
+  },
+
+  customizationRequest: {
+    name: 'customizationRequest',
+    label: 'カスタマイズ申請',
+    fields: [
+      { key: 'id', label: '申請ID', type: 'string', required: true, readonly: true },
+      { key: 'departmentName', label: '申請部署', type: 'string', required: true },
+      { key: 'requesterName', label: '申請者', type: 'string', required: true },
+      { key: 'requestDate', label: '申請日', type: 'date', required: true },
+      {
+        key: 'requestType',
+        label: '申請種別',
+        type: 'select',
+        required: true,
+        options: [
+          { value: 'score_adjustment', label: '配点調整' },
+          { value: 'item_addition', label: '項目追加' },
+          { value: 'threshold_change', label: '闾値変更' },
+          { value: 'other', label: 'その他' },
+        ]
+      },
+      { key: 'reason', label: '申請理由', type: 'textarea', required: true },
+      { key: 'impact', label: '影響範囲', type: 'textarea' },
+      {
+        key: 'approvalStatus',
+        label: '承認状態',
+        type: 'select',
+        required: true,
+        options: [
+          { value: 'pending', label: '承認待ち' },
+          { value: 'approved', label: '承認済' },
+          { value: 'rejected', label: '却下' },
+          { value: 'revision_requested', label: '修正依頼' },
+        ]
+      },
+      { key: 'approvalLevel', label: '承認段階', type: 'number' },
+      { key: 'finalDecision', label: '最終決定', type: 'textarea' },
+      { key: 'implementationDate', label: '実施日', type: 'date' },
+    ],
+    searchableFields: ['departmentName', 'requesterName', 'requestType'],
+    sortableFields: ['requestDate', 'approvalStatus', 'requestType'],
+    exportFields: ['departmentName', 'requesterName', 'requestDate', 'requestType', 'approvalStatus'],
   },
 };

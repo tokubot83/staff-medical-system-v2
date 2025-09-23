@@ -3,41 +3,49 @@
 import React, { useState } from 'react';
 import GenericMasterTable from '@/components/admin/GenericMasterTable';
 import DevelopmentMemoTab from '@/components/admin/DevelopmentMemoTab';
+import EvaluationSystemMasterManager from '@/components/admin/EvaluationSystemMasterManager';
 import { masterSchemas } from '@/config/masterSchemas';
-import { 
-  Users, Building2, GraduationCap, ClipboardCheck, 
-  Database, ChevronRight, Shield, Settings, BookOpen, Image
+import {
+  Users, Building2, GraduationCap, ClipboardCheck,
+  Database, ChevronRight, Shield, Settings, BookOpen, Image, Calculator
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
 const masterTypes = [
-  { 
-    key: 'staff', 
-    label: '職員マスター', 
+  {
+    key: 'staff',
+    label: '職員マスター',
     icon: Users,
     description: '職員情報の管理',
     color: 'blue'
   },
-  { 
-    key: 'facility', 
-    label: '施設マスター', 
+  {
+    key: 'facility',
+    label: '施設マスター',
     icon: Building2,
     description: '施設・事業所の管理',
     color: 'green'
   },
-  { 
-    key: 'training', 
-    label: '研修マスター', 
+  {
+    key: 'training',
+    label: '研修マスター',
     icon: GraduationCap,
     description: '研修プログラムの管理',
     color: 'purple'
   },
-  { 
-    key: 'evaluationItem', 
-    label: '評価項目マスター', 
+  {
+    key: 'evaluationSystem',
+    label: '評価制度マスター',
+    icon: Calculator,
+    description: '2軸評価制度の完全動的管理',
+    color: 'cyan'
+  },
+  {
+    key: 'evaluationItem',
+    label: '評価項目（旧）',
     icon: ClipboardCheck,
-    description: '評価項目の管理',
+    description: '旧評価項目の管理',
     color: 'orange'
   },
   {
@@ -58,7 +66,7 @@ const masterTypes = [
 
 export default function MasterDataPage() {
   const [selectedMaster, setSelectedMaster] = useState<string>('staff');
-  const currentSchema = selectedMaster !== 'developmentMemo' && selectedMaster !== 'imageManagement' ? masterSchemas[selectedMaster] : null;
+  const currentSchema = selectedMaster !== 'developmentMemo' && selectedMaster !== 'imageManagement' && selectedMaster !== 'evaluationSystem' ? masterSchemas[selectedMaster] : null;
 
   const getColorClasses = (color: string) => {
     const colors: Record<string, string> = {
@@ -68,6 +76,7 @@ export default function MasterDataPage() {
       orange: 'bg-orange-50 hover:bg-orange-100 border-orange-200 text-orange-700',
       indigo: 'bg-indigo-50 hover:bg-indigo-100 border-indigo-200 text-indigo-700',
       pink: 'bg-pink-50 hover:bg-pink-100 border-pink-200 text-pink-700',
+      cyan: 'bg-cyan-50 hover:bg-cyan-100 border-cyan-200 text-cyan-700',
     };
     return colors[color] || colors.blue;
   };
@@ -80,6 +89,7 @@ export default function MasterDataPage() {
       orange: 'text-orange-600',
       indigo: 'text-indigo-600',
       pink: 'text-pink-600',
+      cyan: 'text-cyan-600',
     };
     return colors[color] || colors.blue;
   };
@@ -92,6 +102,7 @@ export default function MasterDataPage() {
       orange: 'border-orange-500 text-orange-600',
       indigo: 'border-indigo-500 text-indigo-600',
       pink: 'border-pink-500 text-pink-600',
+      cyan: 'border-cyan-500 text-cyan-600',
     };
     return colors[color] || colors.blue;
   };
@@ -151,7 +162,9 @@ export default function MasterDataPage() {
                   </p>
                 </div>
 
-                {selectedMaster === 'developmentMemo' ? (
+                {selectedMaster === 'evaluationSystem' ? (
+                  <EvaluationSystemMasterManager />
+                ) : selectedMaster === 'developmentMemo' ? (
                   <DevelopmentMemoTab />
                 ) : selectedMaster === 'imageManagement' ? (
                   <div className="text-center py-8">
