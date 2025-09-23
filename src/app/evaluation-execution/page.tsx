@@ -585,8 +585,7 @@ export default function EvaluationExecutionPage() {
         ) : (
           /* V1（現行）の評価システム表示 */
           <>
-
-        <div className={styles.tabContent}>
+            <div className={styles.tabContent}>
           <div className="space-y-6 p-6">
               {/* 現在の評価業務カード */}
               {currentMonthTask && (
@@ -1021,8 +1020,7 @@ export default function EvaluationExecutionPage() {
               </Card>
             </div>
           </div>
-        </div>
-      </>
+          </>
         )}
       </div>
     </div>
