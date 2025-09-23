@@ -6,6 +6,7 @@ import DevelopmentMemoTab from '@/components/admin/DevelopmentMemoTab';
 import EvaluationSystemMasterManager from '@/components/admin/EvaluationSystemMasterManager';
 import InterviewSystemVersionManager from '@/components/admin/InterviewSystemVersionManager';
 import HRPolicyManager from '@/components/admin/HRPolicyManager';
+import TrainingSystemManager from '@/components/admin/TrainingSystemManager';
 import { masterSchemas } from '@/config/masterSchemas';
 import {
   Users, Building2, GraduationCap, ClipboardCheck,
@@ -35,6 +36,13 @@ const masterTypes = [
     icon: GraduationCap,
     description: '研修プログラムの管理',
     color: 'purple'
+  },
+  {
+    key: 'trainingSystem',
+    label: '教育・研修制度マスター',
+    icon: GraduationCap,
+    description: '試用期間活用プログラムを含む全研修制度の動的管理',
+    color: 'teal'
   },
   {
     key: 'evaluationSystem',
@@ -82,7 +90,7 @@ const masterTypes = [
 
 export default function MasterDataPage() {
   const [selectedMaster, setSelectedMaster] = useState<string>('staff');
-  const currentSchema = selectedMaster !== 'developmentMemo' && selectedMaster !== 'imageManagement' && selectedMaster !== 'evaluationSystem' && selectedMaster !== 'interviewSystem' ? masterSchemas[selectedMaster] : null;
+  const currentSchema = selectedMaster !== 'developmentMemo' && selectedMaster !== 'imageManagement' && selectedMaster !== 'evaluationSystem' && selectedMaster !== 'interviewSystem' && selectedMaster !== 'hrPolicy' && selectedMaster !== 'trainingSystem' ? masterSchemas[selectedMaster] : null;
 
   const getColorClasses = (color: string) => {
     const colors: Record<string, string> = {
@@ -94,6 +102,8 @@ export default function MasterDataPage() {
       pink: 'bg-pink-50 hover:bg-pink-100 border-pink-200 text-pink-700',
       cyan: 'bg-cyan-50 hover:bg-cyan-100 border-cyan-200 text-cyan-700',
       violet: 'bg-violet-50 hover:bg-violet-100 border-violet-200 text-violet-700',
+      amber: 'bg-amber-50 hover:bg-amber-100 border-amber-200 text-amber-700',
+      teal: 'bg-teal-50 hover:bg-teal-100 border-teal-200 text-teal-700',
     };
     return colors[color] || colors.blue;
   };
@@ -108,6 +118,8 @@ export default function MasterDataPage() {
       pink: 'text-pink-600',
       cyan: 'text-cyan-600',
       violet: 'text-violet-600',
+      amber: 'text-amber-600',
+      teal: 'text-teal-600',
     };
     return colors[color] || colors.blue;
   };
@@ -122,6 +134,8 @@ export default function MasterDataPage() {
       pink: 'border-pink-500 text-pink-600',
       cyan: 'border-cyan-500 text-cyan-600',
       violet: 'border-violet-500 text-violet-600',
+      amber: 'border-amber-500 text-amber-600',
+      teal: 'border-teal-500 text-teal-600',
     };
     return colors[color] || colors.blue;
   };
@@ -187,6 +201,8 @@ export default function MasterDataPage() {
                   <InterviewSystemVersionManager />
                 ) : selectedMaster === 'hrPolicy' ? (
                   <HRPolicyManager />
+                ) : selectedMaster === 'trainingSystem' ? (
+                  <TrainingSystemManager />
                 ) : selectedMaster === 'developmentMemo' ? (
                   <DevelopmentMemoTab />
                 ) : selectedMaster === 'imageManagement' ? (
