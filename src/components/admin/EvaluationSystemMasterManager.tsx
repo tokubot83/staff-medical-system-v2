@@ -11,6 +11,7 @@ import EvaluationSimulationPanel from './EvaluationSimulationPanel';
 import ImpactAnalysisPanel from './ImpactAnalysisPanel';
 import HistoryComparisonPanel from './HistoryComparisonPanel';
 import ABTestPanel from './ABTestPanel';
+import { MatrixCorrespondenceTable } from './MatrixCorrespondenceTable';
 import {
   Calculator,
   Settings,
@@ -86,6 +87,13 @@ export default function EvaluationSystemMasterManager() {
       label: 'マトリックス定義',
       icon: Grid3x3,
       description: '2軸評価から7段階への変換マトリックス',
+      adminOnly: false
+    },
+    {
+      key: 'matrixCorrespondence',
+      label: 'マトリックス対応表',
+      icon: Grid3x3,
+      description: '評価マトリックスの詳細対応表（視覚的表示）',
       adminOnly: false
     },
     {
@@ -203,6 +211,8 @@ export default function EvaluationSystemMasterManager() {
                     <HistoryComparisonPanel />
                   ) : tab.key === 'abTest' ? (
                     <ABTestPanel />
+                  ) : tab.key === 'matrixCorrespondence' ? (
+                    <MatrixCorrespondenceTable />
                   ) : tab.key === 'departmentPermission' && currentUser.role === 'admin' ? (
                     <GenericMasterTable
                       masterType={tab.key}
