@@ -14,12 +14,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { Separator } from '@/components/ui/separator';
 import {
   Search,
@@ -93,8 +87,7 @@ export const MatrixCorrespondenceTable = () => {
   };
 
   return (
-    <TooltipProvider>
-      <Card className="w-full">
+    <Card className="w-full">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-gray-800">
             評価マトリックス対応表
@@ -207,35 +200,22 @@ export const MatrixCorrespondenceTable = () => {
                               }}
                             >
                               {entry && (
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <div className="inline-flex flex-col items-center">
-                                      <Badge
-                                        className="text-white font-bold text-base px-3 py-1"
-                                        style={{
-                                          backgroundColor: getGradeColor(entry.finalGrade),
-                                        }}
-                                      >
-                                        {entry.finalGrade}
-                                      </Badge>
-                                      <div className="mt-1">
-                                        {getSalaryImpactIcon(entry.salaryImpact)}
-                                      </div>
-                                    </div>
-                                  </TooltipTrigger>
-                                  <TooltipContent className="max-w-xs">
-                                    <div className="space-y-1">
-                                      <p><strong>説明:</strong> {entry.description}</p>
-                                      <p><strong>従業員タイプ:</strong> {entry.employeeType}</p>
-                                      {entry.actionRequired && (
-                                        <p><strong>必要な対応:</strong> {entry.actionRequired}</p>
-                                      )}
-                                      {entry.salaryImpact && (
-                                        <p><strong>給与影響:</strong> {entry.salaryImpact}</p>
-                                      )}
-                                    </div>
-                                  </TooltipContent>
-                                </Tooltip>
+                                <div
+                                  className="inline-flex flex-col items-center"
+                                  title={`説明: ${entry.description}\n従業員タイプ: ${entry.employeeType}${entry.actionRequired ? `\n必要な対応: ${entry.actionRequired}` : ''}${entry.salaryImpact ? `\n給与影響: ${entry.salaryImpact}` : ''}`}
+                                >
+                                  <Badge
+                                    className="text-white font-bold text-base px-3 py-1"
+                                    style={{
+                                      backgroundColor: getGradeColor(entry.finalGrade),
+                                    }}
+                                  >
+                                    {entry.finalGrade}
+                                  </Badge>
+                                  <div className="mt-1">
+                                    {getSalaryImpactIcon(entry.salaryImpact)}
+                                  </div>
+                                </div>
                               )}
                             </TableCell>
                           );
@@ -336,16 +316,12 @@ export const MatrixCorrespondenceTable = () => {
                         </TableCell>
                         <TableCell>{entry.promotionPotential || '-'}</TableCell>
                         <TableCell>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <span className="block max-w-[200px] truncate">
-                                {entry.description}
-                              </span>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p className="max-w-xs">{entry.description}</p>
-                            </TooltipContent>
-                          </Tooltip>
+                          <span
+                            className="block max-w-[200px] truncate"
+                            title={entry.description}
+                          >
+                            {entry.description}
+                          </span>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -386,6 +362,5 @@ export const MatrixCorrespondenceTable = () => {
           </div>
         </CardContent>
       </Card>
-    </TooltipProvider>
   );
 };
