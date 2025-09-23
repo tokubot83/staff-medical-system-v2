@@ -5,6 +5,7 @@ import "./globals.css";
 import { SmartSuggest } from "@/components/navigation/SmartSuggest";
 import MainLayout from "@/components/layout/MainLayout";
 import { EvaluationVersionProvider } from "@/contexts/EvaluationVersionContext";
+import { InterviewSystemProvider } from "@/contexts/InterviewSystemContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -41,10 +42,12 @@ export default function RootLayout({
     <html lang="ja">
       <body className={inter.className}>
         <EvaluationVersionProvider>
-          <MainLayout>
-            {children}
-          </MainLayout>
-          <SmartSuggest />
+          <InterviewSystemProvider>
+            <MainLayout>
+              {children}
+            </MainLayout>
+            <SmartSuggest />
+          </InterviewSystemProvider>
         </EvaluationVersionProvider>
       </body>
     </html>

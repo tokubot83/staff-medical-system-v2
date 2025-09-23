@@ -4,10 +4,11 @@ import React, { useState } from 'react';
 import GenericMasterTable from '@/components/admin/GenericMasterTable';
 import DevelopmentMemoTab from '@/components/admin/DevelopmentMemoTab';
 import EvaluationSystemMasterManager from '@/components/admin/EvaluationSystemMasterManager';
+import InterviewSystemVersionManager from '@/components/admin/InterviewSystemVersionManager';
 import { masterSchemas } from '@/config/masterSchemas';
 import {
   Users, Building2, GraduationCap, ClipboardCheck,
-  Database, ChevronRight, Shield, Settings, BookOpen, Image, Calculator
+  Database, ChevronRight, Shield, Settings, BookOpen, Image, Calculator, MessageSquare
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -42,6 +43,13 @@ const masterTypes = [
     color: 'cyan'
   },
   {
+    key: 'interviewSystem',
+    label: '面談制度マスター',
+    icon: MessageSquare,
+    description: '面談制度バージョンの管理',
+    color: 'violet'
+  },
+  {
     key: 'evaluationItem',
     label: '評価項目（旧）',
     icon: ClipboardCheck,
@@ -66,7 +74,7 @@ const masterTypes = [
 
 export default function MasterDataPage() {
   const [selectedMaster, setSelectedMaster] = useState<string>('staff');
-  const currentSchema = selectedMaster !== 'developmentMemo' && selectedMaster !== 'imageManagement' && selectedMaster !== 'evaluationSystem' ? masterSchemas[selectedMaster] : null;
+  const currentSchema = selectedMaster !== 'developmentMemo' && selectedMaster !== 'imageManagement' && selectedMaster !== 'evaluationSystem' && selectedMaster !== 'interviewSystem' ? masterSchemas[selectedMaster] : null;
 
   const getColorClasses = (color: string) => {
     const colors: Record<string, string> = {
@@ -77,6 +85,7 @@ export default function MasterDataPage() {
       indigo: 'bg-indigo-50 hover:bg-indigo-100 border-indigo-200 text-indigo-700',
       pink: 'bg-pink-50 hover:bg-pink-100 border-pink-200 text-pink-700',
       cyan: 'bg-cyan-50 hover:bg-cyan-100 border-cyan-200 text-cyan-700',
+      violet: 'bg-violet-50 hover:bg-violet-100 border-violet-200 text-violet-700',
     };
     return colors[color] || colors.blue;
   };
@@ -90,6 +99,7 @@ export default function MasterDataPage() {
       indigo: 'text-indigo-600',
       pink: 'text-pink-600',
       cyan: 'text-cyan-600',
+      violet: 'text-violet-600',
     };
     return colors[color] || colors.blue;
   };
@@ -103,6 +113,7 @@ export default function MasterDataPage() {
       indigo: 'border-indigo-500 text-indigo-600',
       pink: 'border-pink-500 text-pink-600',
       cyan: 'border-cyan-500 text-cyan-600',
+      violet: 'border-violet-500 text-violet-600',
     };
     return colors[color] || colors.blue;
   };
@@ -164,6 +175,8 @@ export default function MasterDataPage() {
 
                 {selectedMaster === 'evaluationSystem' ? (
                   <EvaluationSystemMasterManager />
+                ) : selectedMaster === 'interviewSystem' ? (
+                  <InterviewSystemVersionManager />
                 ) : selectedMaster === 'developmentMemo' ? (
                   <DevelopmentMemoTab />
                 ) : selectedMaster === 'imageManagement' ? (
