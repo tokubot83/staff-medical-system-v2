@@ -5,7 +5,8 @@ import Link from 'next/link';
 import {
   Database, Download, Link2, History, Calendar,
   Shield, FileText, Share2, StickyNote, Users,
-  Activity, Settings, TrendingUp, AlertCircle, Briefcase
+  Activity, Settings, TrendingUp, AlertCircle, Briefcase,
+  AlertTriangle
 } from 'lucide-react';
 
 const AdminDashboard = () => {
@@ -65,6 +66,14 @@ const AdminDashboard = () => {
       description: '採用プロセスの設定とカスタマイズ',
       color: 'bg-teal-500',
       stats: '7つの管理機能'
+    },
+    {
+      href: '/admin/compliance-master',
+      label: 'コンプライアンスマスター',
+      icon: AlertTriangle,
+      description: 'VoiceDrive統合・ハラスメント通報管理',
+      color: 'bg-red-500',
+      stats: '6つの管理機能'
     }
   ];
 
