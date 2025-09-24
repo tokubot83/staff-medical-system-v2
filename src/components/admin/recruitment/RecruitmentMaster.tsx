@@ -9,9 +9,12 @@ import AutomationRules from './AutomationRules'
 import ReportTemplates from './ReportTemplates'
 import ValidationRules from './ValidationRules'
 import ImportExport from './ImportExport'
+import ApplicantStatusConfig from './ApplicantStatusConfig'
+import VisitorTypeConfig from './VisitorTypeConfig'
+import ApplicationSourceConfig from './ApplicationSourceConfig'
 import {
   GitBranch, FileText, Zap, BarChart3, Shield, ArrowUpDown,
-  Settings, Users, Building, Briefcase
+  Settings, Users, Building, Briefcase, Eye, Globe, UserCheck
 } from 'lucide-react'
 
 export default function RecruitmentMaster() {
@@ -80,35 +83,59 @@ export default function RecruitmentMaster() {
 
       {/* メインタブコンテンツ */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-3 lg:grid-cols-9">
           <TabsTrigger value="status-flow" className="flex items-center gap-2">
             <GitBranch className="h-4 w-4" />
-            <span className="hidden sm:inline">ステータス</span>
+            <span className="hidden xl:inline">ステータス</span>
+          </TabsTrigger>
+          <TabsTrigger value="applicant-status" className="flex items-center gap-2">
+            <UserCheck className="h-4 w-4" />
+            <span className="hidden xl:inline">応募者</span>
+          </TabsTrigger>
+          <TabsTrigger value="visitor-type" className="flex items-center gap-2">
+            <Eye className="h-4 w-4" />
+            <span className="hidden xl:inline">見学者</span>
+          </TabsTrigger>
+          <TabsTrigger value="app-source" className="flex items-center gap-2">
+            <Globe className="h-4 w-4" />
+            <span className="hidden xl:inline">経路</span>
           </TabsTrigger>
           <TabsTrigger value="form-builder" className="flex items-center gap-2">
             <FileText className="h-4 w-4" />
-            <span className="hidden sm:inline">フォーム</span>
+            <span className="hidden xl:inline">フォーム</span>
           </TabsTrigger>
           <TabsTrigger value="automation" className="flex items-center gap-2">
             <Zap className="h-4 w-4" />
-            <span className="hidden sm:inline">自動化</span>
+            <span className="hidden xl:inline">自動化</span>
           </TabsTrigger>
           <TabsTrigger value="reports" className="flex items-center gap-2">
             <BarChart3 className="h-4 w-4" />
-            <span className="hidden sm:inline">レポート</span>
+            <span className="hidden xl:inline">レポート</span>
           </TabsTrigger>
           <TabsTrigger value="validation" className="flex items-center gap-2">
             <Shield className="h-4 w-4" />
-            <span className="hidden sm:inline">検証</span>
+            <span className="hidden xl:inline">検証</span>
           </TabsTrigger>
           <TabsTrigger value="import-export" className="flex items-center gap-2">
             <ArrowUpDown className="h-4 w-4" />
-            <span className="hidden sm:inline">I/E</span>
+            <span className="hidden xl:inline">I/E</span>
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="status-flow" className="mt-6">
           <StatusFlowConfig />
+        </TabsContent>
+
+        <TabsContent value="applicant-status" className="mt-6">
+          <ApplicantStatusConfig />
+        </TabsContent>
+
+        <TabsContent value="visitor-type" className="mt-6">
+          <VisitorTypeConfig />
+        </TabsContent>
+
+        <TabsContent value="app-source" className="mt-6">
+          <ApplicationSourceConfig />
         </TabsContent>
 
         <TabsContent value="form-builder" className="mt-6">

@@ -830,6 +830,337 @@ export interface EvaluationTemplate {
 }
 
 // ==========================================
+// 9. 応募者ステータス定義
+// ==========================================
+
+export interface ApplicantStatusDefinition {
+  id: string
+  code: string
+  name: string
+  category: 'screening' | 'interview' | 'offer' | 'hired' | 'rejected' | 'withdrawn'
+  description: string
+  color: string
+  icon: string
+  order: number
+  isActive: boolean
+  isDefault: boolean
+  isSystem: boolean // システム標準（削除不可）
+
+  // ステータス遷移ルール
+  transitions: {
+    allowedNext: string[] // 遷移可能な次のステータスコード
+    requiredFields?: string[] // 遷移時に必要なフィールド
+    requiredDocuments?: string[] // 遷移時に必要な書類
+    approvalRequired?: boolean
+    approvers?: string[] // 承認者ロール
+  }
+
+  // 自動アクション
+  autoActions?: {
+    onEnter?: {
+      sendNotification?: boolean
+      notificationTemplate?: string
+      createTask?: boolean
+      taskTemplate?: string
+    }
+    onExit?: {
+      archiveDocuments?: boolean
+      updateFields?: Record<string, any>
+    }
+    afterDays?: {
+      days: number
+      action: 'remind' | 'escalate' | 'auto_reject'
+      notificationTemplate?: string
+    }
+  }
+
+  metadata: {
+    createdAt: string
+    createdBy: string
+    updatedAt: string
+    updatedBy: string
+  }
+}
+
+// ==========================================
+// 10. 見学者タイプ設定
+// ==========================================
+
+export interface VisitorTypeDefinition {
+  id: string
+  code: string
+  name: string
+  category: 'student' | 'career_change' | 'referral' | 'walk_in' | 'other'
+  description: string
+  color: string
+  icon: string
+  order: number
+  isActive: boolean
+
+  // 見学者設定
+  settings: {
+    requiresAppointment: boolean
+    maxGroupSize: number
+    defaultDuration: number // 分
+    availableFacilities: string[]
+    availableTimeSlots: {
+      dayOfWeek: number // 0-6
+      startTime: string // HH:mm
+      endTime: string
+    }[]
+  }
+
+  // 必要情報
+  requiredInfo: {
+    fields: string[] // 必須フィールドコード
+    documents: string[] // 必要書類
+    consent: boolean // 同意書必要
+    consentTemplate?: string
+  }
+
+  // コンバージョン設定
+  conversion: {
+    canConvertToApplicant: boolean
+    conversionFields: string[] // 応募者への変換時に引き継ぐフィールド
+    additionalFields?: string[] // 変換時に追加で必要なフィールド
+  }
+
+  // フォローアップ設定
+  followUp: {
+    enabled: boolean
+    daysAfter: number[]
+    template: string
+    autoConvertAfterDays?: number
+  }
+
+  metadata: {
+    createdAt: string
+    createdBy: string
+    updatedAt: string
+    updatedBy: string
+  }
+}
+
+// ==========================================
+// 11. 応募経路マスター
+// ==========================================
+
+export interface ApplicationSourceDefinition {
+  id: string
+  code: string
+  name: string
+  category: 'online' | 'offline' | 'referral' | 'agency' | 'internal' | 'other'
+  description: string
+  isActive: boolean
+  order: number
+
+  // 詳細分類
+  subCategory?: {
+    code: string
+    name: string
+    description?: string
+  }
+
+  // コスト・予算管理
+  budget?: {
+    annual: number
+    monthly: number
+    costPerApplication?: number
+    costPerHire?: number
+    currency: string
+  }
+
+  // トラッキング
+  tracking: {
+    utmSource: string
+    utmMedium: string
+    utmCampaign?: string
+    customParameters?: Record<string, string>
+    conversionPixel?: string
+  }
+
+  // パフォーマンス指標
+  kpis: {
+    targetApplications?: number // 月次目標
+    targetHires?: number
+    targetConversionRate?: number
+    qualityThreshold?: number // 1-10
+  }
+
+  // 連携設定
+  integration?: {
+    type: 'api' | 'email' | 'webhook'
+    endpoint?: string
+    apiKey?: string
+    emailAddress?: string
+    autoImport: boolean
+    importSchedule?: string // cron式
+  }
+
+  // 評価
+  evaluation: {
+    qualityScore: number // 1-10
+    speedScore: number // 1-10
+    volumeScore: number // 1-10
+    costEffectiveness: number // 1-10
+    overallRating: number // 1-5
+    notes?: string
+  }
+
+  metadata: {
+    createdAt: string
+    createdBy: string
+    updatedAt: string
+    updatedBy: string
+  }
+}
+
+// ==========================================
+// 12. 必要書類マスター
+// ==========================================
+
+export interface DocumentTypeDefinition {
+  id: string
+  code: string
+  name: string
+  category: 'identity' | 'education' | 'experience' | 'certification' | 'health' | 'other'
+  description: string
+  isActive: boolean
+  order: number
+
+  // 書類要件
+  requirements: {
+    mandatory: boolean
+    mandatoryFor?: string[] // 特定の職種・部門で必須
+    stages: string[] // 必要なステージ（応募時、面接時、内定時等）
+    validityPeriod?: number // 有効期限（日数）
+    acceptedFormats: string[] // pdf, jpg, png等
+    maxFileSize: number // MB
+  }
+
+  // テンプレート
+  template?: {
+    hasTemplate: boolean
+    templateUrl?: string
+    sampleUrl?: string
+    instructions?: string
+  }
+
+  // 検証ルール
+  validation: {
+    requiresVerification: boolean
+    verificationMethod?: 'manual' | 'automated' | 'third_party'
+    verificationProvider?: string
+    expiryCheck: boolean
+    expiryWarningDays?: number
+  }
+
+  // 保管設定
+  storage: {
+    retentionPeriod: number // 日数
+    archiveAfterDays?: number
+    encryptionRequired: boolean
+    accessControl: {
+      viewRoles: string[]
+      editRoles: string[]
+      deleteRoles: string[]
+    }
+  }
+
+  metadata: {
+    createdAt: string
+    createdBy: string
+    updatedAt: string
+    updatedBy: string
+  }
+}
+
+// ==========================================
+// 13. 選考プロセステンプレート
+// ==========================================
+
+export interface SelectionProcessTemplate {
+  id: string
+  code: string
+  name: string
+  description: string
+  targetPositions: string[]
+  isActive: boolean
+  isDefault: boolean
+
+  // プロセスステージ
+  stages: {
+    id: string
+    name: string
+    type: 'document_review' | 'phone_screen' | 'interview' | 'test' | 'reference_check' | 'final_decision'
+    order: number
+    description: string
+
+    // ステージ設定
+    settings: {
+      duration: number // 目標日数
+      slaWarning: number // SLA警告日数
+      slaCritical: number // SLAクリティカル日数
+      requiredParticipants: string[] // 必須参加者ロール
+      optionalParticipants?: string[]
+      location?: string
+      isRemoteAllowed: boolean
+    }
+
+    // 必要なアクション
+    actions: {
+      type: 'schedule' | 'evaluate' | 'document' | 'approve'
+      name: string
+      description: string
+      assignTo: string // ロール
+      mandatory: boolean
+      template?: string
+    }[]
+
+    // 評価基準
+    evaluationCriteria?: {
+      templateId: string // EvaluationTemplateのID
+      passingScore?: number
+      weightInTotal?: number
+    }
+
+    // ゲート条件
+    gateConditions?: {
+      mustPass: boolean
+      conditions: {
+        field: string
+        operator: string
+        value: any
+      }[]
+    }
+  }[]
+
+  // 並行処理設定
+  parallelStages?: {
+    stages: string[] // 並行実行可能なステージID
+    mergePoint: string // 合流ポイントのステージID
+  }[]
+
+  // 通知設定
+  notifications: {
+    candidateNotifications: boolean
+    hiringTeamNotifications: boolean
+    customNotifications?: {
+      trigger: string
+      recipients: string[]
+      template: string
+    }[]
+  }
+
+  metadata: {
+    createdAt: string
+    createdBy: string
+    updatedAt: string
+    updatedBy: string
+  }
+}
+
+// ==========================================
 // 採用管理マスター設定（統合）
 // ==========================================
 
@@ -850,6 +1181,13 @@ export interface RecruitmentMasterConfig {
   importExportConfigs: ImportExportConfig[]
   recruitmentSources: RecruitmentSource[]
   evaluationTemplates: EvaluationTemplate[]
+
+  // 新規追加: 応募者・見学者設定
+  applicantStatuses: ApplicantStatusDefinition[]
+  visitorTypes: VisitorTypeDefinition[]
+  applicationSources: ApplicationSourceDefinition[]
+  documentTypes: DocumentTypeDefinition[]
+  selectionProcesses: SelectionProcessTemplate[]
 
   // グローバル設定
   globalSettings: {
