@@ -183,6 +183,13 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-green-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </Link>
                 <Link
+                  href="/compliance"
+                  className="relative px-4 py-3 text-sm font-light tracking-wide transition-all duration-300 hover:bg-white hover:bg-opacity-5 group"
+                >
+                  <span className="relative z-10">コンプライアンス窓口</span>
+                  <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-red-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </Link>
+                <Link
                   href="/admin/master-data"
                   className="relative px-4 py-3 text-sm font-light tracking-wide transition-all duration-300 hover:bg-white hover:bg-opacity-5 group"
                 >
