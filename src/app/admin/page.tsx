@@ -5,7 +5,7 @@ import Link from 'next/link';
 import {
   Database, Download, Link2, History, Calendar,
   Shield, FileText, Share2, StickyNote, Users,
-  Activity, Settings, TrendingUp, AlertCircle
+  Activity, Settings, TrendingUp, AlertCircle, Briefcase
 } from 'lucide-react';
 
 const AdminDashboard = () => {
@@ -57,6 +57,14 @@ const AdminDashboard = () => {
       description: 'アップロード画像の一覧と管理',
       color: 'bg-pink-500',
       stats: 'ストレージ使用量: 2.3GB'
+    },
+    {
+      href: '/admin/recruitment-master',
+      label: '採用管理マスター',
+      icon: Briefcase,
+      description: '採用プロセスの設定とカスタマイズ',
+      color: 'bg-teal-500',
+      stats: '7つの管理機能'
     }
   ];
 
