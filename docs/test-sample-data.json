@@ -1,0 +1,146 @@
+{
+  "testStaffData": [
+    {
+      "staffId": "STAFF001",
+      "name": "佐藤花子",
+      "facility": "小原病院",
+      "department": "看護部",
+      "profession": "看護師",
+      "hireDate": "2025-04-01",
+      "experienceYears": 0.5,
+      "canPerformLeaderDuty": false,
+      "expectedLevel": 1,
+      "description": "新人看護師（リーダー不可）"
+    },
+    {
+      "staffId": "STAFF002",
+      "name": "鈴木太郎",
+      "facility": "小原病院",
+      "department": "看護部",
+      "profession": "看護師",
+      "hireDate": "2025-04-01",
+      "experienceYears": 0.5,
+      "canPerformLeaderDuty": true,
+      "expectedLevel": 1.5,
+      "description": "新人看護師（リーダー可）- 稀なケース"
+    },
+    {
+      "staffId": "STAFF003",
+      "name": "田中美咲",
+      "facility": "小原病院",
+      "department": "看護部",
+      "profession": "看護師",
+      "hireDate": "2023-04-01",
+      "experienceYears": 2.5,
+      "canPerformLeaderDuty": false,
+      "expectedLevel": 2,
+      "description": "若手看護師（リーダー不可）"
+    },
+    {
+      "staffId": "STAFF004",
+      "name": "山田次郎",
+      "facility": "小原病院",
+      "department": "看護部",
+      "profession": "看護師",
+      "hireDate": "2023-04-01",
+      "experienceYears": 2.5,
+      "canPerformLeaderDuty": true,
+      "expectedLevel": 2.5,
+      "description": "若手看護師（リーダー可）"
+    },
+    {
+      "staffId": "STAFF005",
+      "name": "高橋恵子",
+      "facility": "小原病院",
+      "department": "看護部",
+      "profession": "看護師",
+      "hireDate": "2019-04-01",
+      "experienceYears": 6.5,
+      "canPerformLeaderDuty": true,
+      "expectedLevel": 3.5,
+      "description": "中堅看護師（リーダー可・プリセプター）"
+    },
+    {
+      "staffId": "STAFF006",
+      "name": "伊藤洋子",
+      "facility": "小原病院",
+      "department": "看護部",
+      "profession": "看護師",
+      "hireDate": "2010-04-01",
+      "experienceYears": 15.5,
+      "canPerformLeaderDuty": true,
+      "expectedLevel": 4.5,
+      "description": "ベテラン看護師（リーダー可・副主任候補）"
+    },
+    {
+      "staffId": "STAFF007",
+      "name": "渡辺明美",
+      "facility": "小原病院",
+      "department": "看護部",
+      "position": "副主任",
+      "profession": "看護師",
+      "hireDate": "2012-04-01",
+      "experienceYears": 13.5,
+      "expectedLevel": 5,
+      "description": "副主任看護師"
+    },
+    {
+      "staffId": "STAFF008",
+      "name": "小林正子",
+      "facility": "小原病院",
+      "department": "看護部",
+      "position": "主任",
+      "profession": "看護師",
+      "hireDate": "2008-04-01",
+      "experienceYears": 17.5,
+      "expectedLevel": 6,
+      "description": "主任看護師"
+    },
+    {
+      "staffId": "STAFF009",
+      "name": "佐々木清",
+      "facility": "小原病院",
+      "department": "看護部",
+      "position": "師長",
+      "profession": "看護師",
+      "hireDate": "2005-04-01",
+      "experienceYears": 20.5,
+      "expectedLevel": 8,
+      "description": "看護師長"
+    },
+    {
+      "staffId": "STAFF010",
+      "name": "廻総師長",
+      "facility": "法人本部",
+      "department": "人事部",
+      "position": "戦略企画部門員",
+      "profession": "看護師",
+      "hireDate": "2000-04-01",
+      "experienceYears": 25.5,
+      "expectedLevel": 16,
+      "description": "戦略企画・統括管理部門員（廻総師長）"
+    }
+  ],
+  "testScenarios": [
+    {
+      "scenario": "新人看護師の権限レベル計算",
+      "staffIds": ["STAFF001", "STAFF002"],
+      "expectedResults": "リーダー可否により1.0 or 1.5"
+    },
+    {
+      "scenario": "経験年数による段階判定",
+      "staffIds": ["STAFF003", "STAFF004", "STAFF005", "STAFF006"],
+      "expectedResults": "2-3年:レベル2、4-10年:レベル3、11年以上:レベル4"
+    },
+    {
+      "scenario": "役職による権限判定",
+      "staffIds": ["STAFF007", "STAFF008", "STAFF009"],
+      "expectedResults": "副主任:5、主任:6、師長:8"
+    },
+    {
+      "scenario": "法人人事部の特別権限",
+      "staffIds": ["STAFF010"],
+      "expectedResults": "戦略企画部門:16"
+    }
+  ]
+}

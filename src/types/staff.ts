@@ -51,7 +51,11 @@ export interface StaffDetail {
   
   // 2軸評価データ
   twoAxisEvaluation?: TwoAxisEvaluationData
-  
+
+  // VoiceDrive連携用権限情報
+  accountLevel?: number            // 1-18の権限レベル（小数点対応）
+  canPerformLeaderDuty?: boolean   // リーダー業務可否（看護師・准看護師のみ）
+
   evaluationHistory: {
     period: string
     overall: string
