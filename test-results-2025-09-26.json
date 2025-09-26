@@ -1,0 +1,96 @@
+{
+  "summary": {
+    "total": 11,
+    "passed": 5,
+    "failed": 6,
+    "successRate": "45.5",
+    "duration": "0.84s"
+  },
+  "results": [
+    {
+      "scenario": "API疎通",
+      "test": "ヘルスチェック",
+      "status": "FAIL",
+      "details": "getaddrinfo ENOTFOUND medical-test.example.com",
+      "timestamp": "2025-09-26T13:23:18.003Z"
+    },
+    {
+      "scenario": "権限取得",
+      "test": "総師長(TATE_TEST_001)",
+      "status": "FAIL",
+      "details": "getaddrinfo ENOTFOUND medical-test.example.com",
+      "timestamp": "2025-09-26T13:23:18.006Z"
+    },
+    {
+      "scenario": "権限取得",
+      "test": "統括主任(TATE_TEST_002)",
+      "status": "FAIL",
+      "details": "getaddrinfo ENOTFOUND medical-test.example.com",
+      "timestamp": "2025-09-26T13:23:18.119Z"
+    },
+    {
+      "scenario": "権限取得",
+      "test": "師長(TATE_TEST_003)",
+      "status": "FAIL",
+      "details": "getaddrinfo ENOTFOUND medical-test.example.com",
+      "timestamp": "2025-09-26T13:23:18.228Z"
+    },
+    {
+      "scenario": "権限取得",
+      "test": "介護主任(TATE_TEST_004)",
+      "status": "FAIL",
+      "details": "getaddrinfo ENOTFOUND medical-test.example.com",
+      "timestamp": "2025-09-26T13:23:18.338Z"
+    },
+    {
+      "scenario": "権限取得",
+      "test": "看護師(TATE_TEST_005)",
+      "status": "FAIL",
+      "details": "getaddrinfo ENOTFOUND medical-test.example.com",
+      "timestamp": "2025-09-26T13:23:18.448Z"
+    },
+    {
+      "scenario": "施設間変換",
+      "test": "小原→立神（薬剤部長→薬局長）",
+      "status": "PASS",
+      "details": "",
+      "timestamp": "2025-09-26T13:23:18.556Z"
+    },
+    {
+      "scenario": "施設間変換",
+      "test": "立神→小原（統括主任→科長）",
+      "status": "PASS",
+      "details": "",
+      "timestamp": "2025-09-26T13:23:18.556Z"
+    },
+    {
+      "scenario": "Webhook",
+      "test": "staff.updated",
+      "status": "PASS",
+      "details": "",
+      "timestamp": "2025-09-26T13:23:18.556Z"
+    },
+    {
+      "scenario": "Webhook",
+      "test": "staff.transferred",
+      "status": "PASS",
+      "details": "",
+      "timestamp": "2025-09-26T13:23:18.556Z"
+    },
+    {
+      "scenario": "負荷テスト",
+      "test": "100件同時処理",
+      "status": "PASS",
+      "details": "処理時間: 0.11秒",
+      "timestamp": "2025-09-26T13:23:18.665Z"
+    }
+  ],
+  "environment": {
+    "API_BASE_URL": "medical-test.example.com",
+    "BEARER_TOKEN": "test_vd_prod_key_A8B9C2D3E4F5G6H7",
+    "WEBHOOK_URL": "/api/webhooks/voicedrive",
+    "WEBHOOK_SECRET": "webhook_secret_X9Y8Z7W6V5",
+    "TIMEOUT_MS": 5000
+  },
+  "timestamp": "2025-09-26T13:23:18.666Z"
+}

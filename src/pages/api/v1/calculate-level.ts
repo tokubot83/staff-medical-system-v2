@@ -1,5 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { accountLevelCalculator, StaffMasterData } from '../../../services/accountLevelCalculator';
+import { CalculateLevelRequest, CalculateLevelResponse as FacilityLevelResponse } from '../../../types/facility-authority';
+import { facilityPositionMappingService } from '../../../lib/facility-position-mapping';
 
 /**
  * VoiceDrive連携用 権限レベル計算API
@@ -12,10 +14,14 @@ import { accountLevelCalculator, StaffMasterData } from '../../../services/accou
 // レスポンス型定義
 interface CalculateLevelResponse {
   staffId: string;
+  facilityId?: string;
+  position?: string;
   accountLevel: number;
   breakdown: {
     baseLevel: number;
+    experienceBonus: number;
     leaderBonus: number;
+    facilityAdjustment: number;
     positionLevel?: number;
   };
   levelDetails: {
@@ -74,7 +80,7 @@ export default async function handler(
     }
 
     // リクエストボディから職員情報を取得
-    const { staffId, staffData } = req.body;
+    const { staffId, facilityId, staffData } = req.body;
 
     if (!staffId && !staffData) {
       return res.status(400).json({
@@ -86,10 +92,15 @@ export default async function handler(
       });
     }
 
+    // facilityIdが提供された場合、施設別の調整を適用
+    const useFacilityId = facilityId || staffData?.facility || 'obara-hospital';
+
     let staff: StaffMasterData;
     let calculatedLevel: number;
-    let baseLevel: number;
+    let baseLevel: number = 0;
+    let experienceBonus: number = 0;
     let leaderBonus: number = 0;
+    let facilityAdjustment: number = 0;
     let positionLevel: number | undefined;
 
     // staffDataが提供された場合はそれを使用
@@ -99,8 +110,30 @@ export default async function handler(
         hireDate: new Date(staffData.hireDate)
       };
 
-      // 権限レベル計算
-      calculatedLevel = accountLevelCalculator.calculateAccountLevel(staff);
+      // 施設別の役職レベルチェック
+      if (staff.position && useFacilityId) {
+        const facilityLevel = facilityPositionMappingService.getPositionLevel(
+          useFacilityId,
+          staff.position
+        );
+        if (facilityLevel !== undefined) {
+          positionLevel = facilityLevel;
+          baseLevel = facilityLevel;
+          // 施設別調整値を計算
+          facilityAdjustment = facilityPositionMappingService.calculateFacilityAdjustment(
+            useFacilityId,
+            facilityLevel,
+            staff.position
+          );
+          calculatedLevel = facilityLevel + facilityAdjustment;
+        } else {
+          // 通常の権限レベル計算
+          calculatedLevel = accountLevelCalculator.calculateAccountLevel(staff);
+        }
+      } else {
+        // 通常の権限レベル計算
+        calculatedLevel = accountLevelCalculator.calculateAccountLevel(staff);
+      }
 
       // 内訳を計算
       if (staff.position) {
@@ -112,9 +145,10 @@ export default async function handler(
       }
 
       if (!positionLevel) {
-        const years = staff.experienceYears ||
-          accountLevelCalculator['calculateExperienceYears'](staff.hireDate.toISOString());
-        baseLevel = accountLevelCalculator['getExperienceLevelMapping'](years);
+        const years = staff.experienceYears || 0;
+        const experienceLevel = years <= 1 ? 1 : years <= 3 ? 2 : years <= 10 ? 3 : 4;
+        baseLevel = experienceLevel;
+        experienceBonus = 0;
 
         // 看護職のリーダーボーナス
         if (['看護師', '准看護師'].includes(staff.profession) && staff.canPerformLeaderDuty) {
@@ -135,7 +169,28 @@ export default async function handler(
       }
 
       staff = mockStaff;
-      calculatedLevel = accountLevelCalculator.calculateAccountLevel(staff);
+
+      // 施設別の役職レベルチェック
+      if (staff.position && useFacilityId) {
+        const facilityLevel = facilityPositionMappingService.getPositionLevel(
+          useFacilityId,
+          staff.position
+        );
+        if (facilityLevel !== undefined) {
+          positionLevel = facilityLevel;
+          baseLevel = facilityLevel;
+          facilityAdjustment = facilityPositionMappingService.calculateFacilityAdjustment(
+            useFacilityId,
+            facilityLevel,
+            staff.position
+          );
+          calculatedLevel = facilityLevel + facilityAdjustment;
+        } else {
+          calculatedLevel = accountLevelCalculator.calculateAccountLevel(staff);
+        }
+      } else {
+        calculatedLevel = accountLevelCalculator.calculateAccountLevel(staff);
+      }
 
       // 内訳を計算（上記と同じロジック）
       if (staff.position) {
@@ -148,7 +203,9 @@ export default async function handler(
 
       if (!positionLevel) {
         const years = staff.experienceYears || 1;
-        baseLevel = accountLevelCalculator['getExperienceLevelMapping'](years);
+        const experienceLevel = years <= 1 ? 1 : years <= 3 ? 2 : years <= 10 ? 3 : 4;
+        baseLevel = experienceLevel;
+        experienceBonus = 0;
 
         if (['看護師', '准看護師'].includes(staff.profession) && staff.canPerformLeaderDuty) {
           leaderBonus = 0.5;
@@ -162,10 +219,14 @@ export default async function handler(
     // レスポンス返却（5秒以内のタイムアウト要件を満たす）
     const response: CalculateLevelResponse = {
       staffId: staff.staffId,
+      facilityId: useFacilityId,
+      position: staff.position,
       accountLevel: calculatedLevel,
       breakdown: {
-        baseLevel: baseLevel!,
+        baseLevel: baseLevel,
+        experienceBonus,
         leaderBonus,
+        facilityAdjustment,
         ...(positionLevel && { positionLevel })
       },
       levelDetails: {
