@@ -15,9 +15,9 @@ const AdminDashboard = () => {
       href: '/admin/master-data',
       label: 'マスターデータ管理',
       icon: Database,
-      description: '職員、部署、役職などの基本データを管理',
+      description: '職員、施設、採用、健康データなど各種マスターを統合管理',
       color: 'bg-blue-500',
-      stats: '5種類のマスターデータ'
+      stats: '13種類のマスターデータ'
     },
     {
       href: '/admin/backup',
@@ -58,14 +58,6 @@ const AdminDashboard = () => {
       description: 'アップロード画像の一覧と管理',
       color: 'bg-pink-500',
       stats: 'ストレージ使用量: 2.3GB'
-    },
-    {
-      href: '/admin/recruitment-master',
-      label: '採用管理マスター',
-      icon: Briefcase,
-      description: '採用プロセスの設定とカスタマイズ',
-      color: 'bg-teal-500',
-      stats: '7つの管理機能'
     },
     {
       href: '/admin/compliance-master',
