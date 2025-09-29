@@ -6,7 +6,7 @@ import {
   Database, Download, Link2, History, Calendar,
   Shield, FileText, Share2, StickyNote, Users,
   Activity, Settings, TrendingUp, AlertCircle, Briefcase,
-  AlertTriangle
+  AlertTriangle, Bot
 } from 'lucide-react';
 
 const AdminDashboard = () => {
@@ -74,6 +74,14 @@ const AdminDashboard = () => {
       description: 'VoiceDrive統合・ハラスメント通報管理',
       color: 'bg-red-500',
       stats: '6つの管理機能'
+    },
+    {
+      href: '/admin/ai-settings',
+      label: 'AI制御センター',
+      icon: Bot,
+      description: 'AI機能の統合管理とモデル設定',
+      color: 'bg-gradient-to-r from-purple-500 to-indigo-500',
+      stats: '8つのAI機能を管理'
     }
   ];
 
