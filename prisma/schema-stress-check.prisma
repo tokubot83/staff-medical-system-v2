@@ -1,0 +1,268 @@
+// ストレスチェック管理用 追加スキーマ
+// Created: 2025-09-29
+// Purpose: 健康診断DBと統合して使用
+
+// ============================================================
+// 7. ストレスチェック結果テーブル
+// ============================================================
+model StressCheckResult {
+  id                String   @id @default(cuid())
+  staffId           String   @map("staff_id")
+  checkDate         DateTime @map("check_date")
+  fiscalYear        String   @map("fiscal_year") // 2025年度 等
+
+  // ストレスチェック結果（57項目版）
+  // A. 仕事のストレス要因
+  jobStressorScore  Int?     @map("job_stressor_score")     // 職場の要因スコア
+
+  // B. 心身のストレス反応
+  stressReactionScore Int?   @map("stress_reaction_score")  // ストレス反応スコア
+
+  // C. 周囲のサポート
+  supportScore      Int?     @map("support_score")          // サポートスコア
+
+  // 総合評価
+  totalScore        Int?     @map("total_score")            // 合計点
+  stressLevel       StressLevel? @map("stress_level")       // 高/中/低ストレス判定
+
+  // 高ストレス者判定
+  isHighStress      Boolean  @default(false) @map("is_high_stress")
+
+  // 面談希望
+  consultationRequested Boolean @default(false) @map("consultation_requested")
+  consultationStatus    ConsultationStatus? @map("consultation_status")
+
+  // 実施者情報（産業医等）
+  implementerId     String?  @map("implementer_id")
+  implementerName   String?  @map("implementer_name")
+
+  // 本人同意
+  consentToShare    Boolean  @default(false) @map("consent_to_share") // 事業者への結果提供同意
+  consentDate       DateTime? @map("consent_date")
+
+  // 集団分析用
+  departmentAtTime  String?  @map("department_at_time")     // 実施時の所属部署
+  positionAtTime    String?  @map("position_at_time")       // 実施時の役職
+
+  // 管理情報
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  staff             StaffMaster @relation(fields: [staffId], references: [id])
+  details           StressCheckDetail[]
+  followUps         StressCheckFollowUp[]
+
+  @@index([staffId, checkDate(sort: Desc)])
+  @@index([fiscalYear, isHighStress])
+  @@index([departmentAtTime, stressLevel])
+  @@map("stress_check_results")
+}
+
+// ============================================================
+// 8. ストレスチェック詳細項目テーブル
+// ============================================================
+model StressCheckDetail {
+  id                String   @id @default(cuid())
+  resultId          String   @map("result_id")
+
+  // 質問カテゴリ
+  category          StressCheckCategory
+  questionNumber    Int      @map("question_number")    // 質問番号（1-57）
+
+  // 回答
+  answer            Int      // 1-4の4段階評価
+  score             Int      // 変換後のスコア
+
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  // Relations
+  result            StressCheckResult @relation(fields: [resultId], references: [id], onDelete: Cascade)
+
+  @@unique([resultId, questionNumber])
+  @@index([resultId, category])
+  @@map("stress_check_details")
+}
+
+// ============================================================
+// 9. ストレスチェック フォローアップテーブル
+// ============================================================
+model StressCheckFollowUp {
+  id                String   @id @default(cuid())
+  resultId          String   @map("result_id")
+  staffId           String   @map("staff_id")
+
+  // フォローアップ内容
+  followUpType      FollowUpType
+  followUpDate      DateTime @map("follow_up_date")
+
+  // 産業医面談
+  consultationDate  DateTime? @map("consultation_date")
+  doctorId          String?   @map("doctor_id")
+  doctorName        String?   @map("doctor_name")
+
+  // 面談内容（機密）
+  consultationNotes String?   @db.Text @map("consultation_notes")
+
+  // 就業上の措置
+  workMeasures      String?   @db.Text @map("work_measures")
+  measureStartDate  DateTime? @map("measure_start_date")
+  measureEndDate    DateTime? @map("measure_end_date")
+
+  // ステータス
+  status            FollowUpStatus @default(SCHEDULED)
+  completedAt       DateTime? @map("completed_at")
+
+  // 管理情報
+  createdBy         String?   @map("created_by")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  result            StressCheckResult @relation(fields: [resultId], references: [id])
+  staff             StaffMaster @relation(fields: [staffId], references: [id])
+
+  @@index([staffId, followUpDate])
+  @@index([status, followUpDate])
+  @@map("stress_check_follow_ups")
+}
+
+// ============================================================
+// 10. ストレスチェック集団分析テーブル
+// ============================================================
+model StressCheckGroupAnalysis {
+  id                String   @id @default(cuid())
+  fiscalYear        String   @map("fiscal_year")
+  analysisDate      DateTime @map("analysis_date")
+
+  // 分析対象
+  groupType         GroupType // 部署/職種/年代 等
+  groupName         String    @map("group_name")
+
+  // 対象者数（10人以上必須）
+  targetCount       Int       @map("target_count")
+  responseCount     Int       @map("response_count")
+  responseRate      Float     @map("response_rate")
+
+  // 集団分析結果
+  avgJobStressorScore    Float  @map("avg_job_stressor_score")
+  avgStressReactionScore Float  @map("avg_stress_reaction_score")
+  avgSupportScore        Float  @map("avg_support_score")
+  avgTotalScore          Float  @map("avg_total_score")
+
+  // 健康リスク評価
+  healthRiskLevel   Int       @map("health_risk_level") // 健康リスク（標準を100とした指数）
+
+  // 高ストレス者統計
+  highStressCount   Int       @map("high_stress_count")
+  highStressRate    Float     @map("high_stress_rate")
+
+  // 前年比較
+  previousYearRisk  Int?      @map("previous_year_risk")
+  riskChange        Float?    @map("risk_change") // 変化率
+
+  // レポート
+  reportGenerated   Boolean   @default(false) @map("report_generated")
+  reportPath        String?   @map("report_path")
+
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  @@unique([fiscalYear, groupType, groupName])
+  @@index([fiscalYear, healthRiskLevel])
+  @@map("stress_check_group_analyses")
+}
+
+// ============================================================
+// StaffMasterへの関連追加（既存テーブル拡張）
+// ============================================================
+// model StaffMaster {
+//   ... existing fields ...
+//
+//   // Stress Check Relations (追加)
+//   stressCheckResults    StressCheckResult[]
+//   stressCheckFollowUps  StressCheckFollowUp[]
+// }
+
+// ============================================================
+// ストレスチェック用ENUMS
+// ============================================================
+
+enum StressLevel {
+  HIGH             @map("high")              // 高ストレス
+  MEDIUM           @map("medium")            // 中程度
+  LOW              @map("low")               // 低ストレス
+}
+
+enum ConsultationStatus {
+  NOT_APPLICABLE   @map("not_applicable")    // 対象外
+  OFFERED          @map("offered")           // 案内済
+  REQUESTED        @map("requested")         // 希望あり
+  SCHEDULED        @map("scheduled")         // 日程調整済
+  COMPLETED        @map("completed")         // 実施済
+  DECLINED         @map("declined")          // 辞退
+}
+
+enum StressCheckCategory {
+  JOB_STRESSOR     @map("job_stressor")      // A. 仕事のストレス要因（17項目）
+  STRESS_REACTION  @map("stress_reaction")   // B. 心身のストレス反応（29項目）
+  SUPPORT          @map("support")           // C. 周囲のサポート（11項目）
+}
+
+enum FollowUpType {
+  CONSULTATION     @map("consultation")      // 産業医面談
+  HEALTH_GUIDANCE  @map("health_guidance")   // 保健指導
+  WORK_IMPROVEMENT @map("work_improvement")  // 職場環境改善
+  RECHECK          @map("recheck")           // 再チェック
+  OTHER            @map("other")             // その他
+}
+
+enum FollowUpStatus {
+  SCHEDULED        @map("scheduled")         // 予定
+  IN_PROGRESS      @map("in_progress")       // 実施中
+  COMPLETED        @map("completed")         // 完了
+  CANCELLED        @map("cancelled")         // キャンセル
+}
+
+enum GroupType {
+  DEPARTMENT       @map("department")        // 部署別
+  POSITION         @map("position")          // 職種別
+  AGE_GROUP        @map("age_group")         // 年代別
+  FACILITY         @map("facility")          // 施設別
+  CUSTOM           @map("custom")            // カスタム
+}
+
+// ============================================================
+// 統合管理用ビュー（仮想テーブル）
+// ============================================================
+// 注: PrismaではViewを直接サポートしていないため、
+// SQLで別途作成するか、アプリケーション層で統合する
+
+// CREATE VIEW health_wellness_summary AS
+// SELECT
+//   s.id as staff_id,
+//   s.name,
+//   s.department,
+//   h.checkup_date as last_checkup_date,
+//   h.overall_result as checkup_result,
+//   sc.check_date as last_stress_check_date,
+//   sc.stress_level,
+//   sc.is_high_stress,
+//   CASE
+//     WHEN h.overall_result IN ('D', 'E') OR sc.is_high_stress = true
+//     THEN 'HIGH'
+//     ELSE 'NORMAL'
+//   END as overall_risk
+// FROM staff_master s
+// LEFT JOIN LATERAL (
+//   SELECT * FROM health_checkups
+//   WHERE staff_id = s.id
+//   ORDER BY checkup_date DESC
+//   LIMIT 1
+// ) h ON true
+// LEFT JOIN LATERAL (
+//   SELECT * FROM stress_check_results
+//   WHERE staff_id = s.id
+//   ORDER BY check_date DESC
+//   LIMIT 1
+// ) sc ON true;
