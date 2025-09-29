@@ -10,9 +10,10 @@ import TrainingSystemManager from '@/components/admin/TrainingSystemManager';
 import { masterSchemas } from '@/config/masterSchemas';
 import RecruitmentMaster from '@/components/admin/recruitment/RecruitmentMaster';
 import ComplianceMasterManager from '@/components/admin/compliance/ComplianceMasterManager';
+import HealthDataMasterManager from '@/components/admin/health/HealthDataMasterManager';
 import {
   Users, Building2, GraduationCap, ClipboardCheck,
-  Database, ChevronRight, Shield, Settings, BookOpen, Image, Calculator, MessageSquare, FileText, Briefcase, ShieldCheck
+  Database, ChevronRight, Shield, Settings, BookOpen, Image, Calculator, MessageSquare, FileText, Briefcase, ShieldCheck, Heart
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -102,11 +103,18 @@ const masterTypes = [
     description: 'コンプライアンス通報管理・VoiceDrive連携設定',
     color: 'red'
   },
+  {
+    key: 'healthData',
+    label: '健康データマスター',
+    icon: Heart,
+    description: '健診項目・基準値・ストレスチェック管理',
+    color: 'rose'
+  },
 ];
 
 export default function MasterDataPage() {
   const [selectedMaster, setSelectedMaster] = useState<string>('staff');
-  const currentSchema = selectedMaster !== 'developmentMemo' && selectedMaster !== 'imageManagement' && selectedMaster !== 'evaluationSystem' && selectedMaster !== 'interviewSystem' && selectedMaster !== 'hrPolicy' && selectedMaster !== 'trainingSystem' && selectedMaster !== 'recruitment' && selectedMaster !== 'compliance' ? masterSchemas[selectedMaster] : null;
+  const currentSchema = selectedMaster !== 'developmentMemo' && selectedMaster !== 'imageManagement' && selectedMaster !== 'evaluationSystem' && selectedMaster !== 'interviewSystem' && selectedMaster !== 'hrPolicy' && selectedMaster !== 'trainingSystem' && selectedMaster !== 'recruitment' && selectedMaster !== 'compliance' && selectedMaster !== 'healthData' ? masterSchemas[selectedMaster] : null;
 
   const getColorClasses = (color: string) => {
     const colors: Record<string, string> = {
@@ -122,6 +130,7 @@ export default function MasterDataPage() {
       teal: 'bg-teal-50 hover:bg-teal-100 border-teal-200 text-teal-700',
       emerald: 'bg-emerald-50 hover:bg-emerald-100 border-emerald-200 text-emerald-700',
       red: 'bg-red-50 hover:bg-red-100 border-red-200 text-red-700',
+      rose: 'bg-rose-50 hover:bg-rose-100 border-rose-200 text-rose-700',
     };
     return colors[color] || colors.blue;
   };
@@ -140,6 +149,7 @@ export default function MasterDataPage() {
       teal: 'text-teal-600',
       emerald: 'text-emerald-600',
       red: 'text-red-600',
+      rose: 'text-rose-600',
     };
     return colors[color] || colors.blue;
   };
@@ -158,6 +168,7 @@ export default function MasterDataPage() {
       teal: 'border-teal-500 text-teal-600',
       emerald: 'border-emerald-500 text-emerald-600',
       red: 'border-red-500 text-red-600',
+      rose: 'border-rose-500 text-rose-600',
     };
     return colors[color] || colors.blue;
   };
@@ -165,7 +176,7 @@ export default function MasterDataPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* タブメニュー - 3行グリッド構成 */}
+        {/* タブメニュー - 4行グリッド構成 */}
         <div className="bg-white rounded-lg border mb-6">
           <div className="border-b">
             <div className="grid grid-cols-4 gap-1 p-4">
@@ -229,6 +240,8 @@ export default function MasterDataPage() {
                   <RecruitmentMaster />
                 ) : selectedMaster === 'compliance' ? (
                   <ComplianceMasterManager />
+                ) : selectedMaster === 'healthData' ? (
+                  <HealthDataMasterManager />
                 ) : selectedMaster === 'developmentMemo' ? (
                   <DevelopmentMemoTab />
                 ) : selectedMaster === 'imageManagement' ? (

@@ -30,6 +30,9 @@ import InterviewSheetModal from '@/components/InterviewSheetModal'
 import SectionTrendAnalysis from '@/components/interview/SectionTrendAnalysis'
 import PersonalizedEducationDashboard from '@/components/personalized/PersonalizedEducationDashboard'
 import InterviewAIAnalysis from '@/components/interview/InterviewAIAnalysis'
+import InterviewAIAnalysisDemo from '@/components/interview/InterviewAIAnalysisDemo'
+import FeedbackSummaryDemo from '@/components/interview/FeedbackSummaryDemo'
+import { isDemoMode } from '@/lib/demo-config'
 
 // V3グレード定義
 const v3Grades = {
@@ -2971,20 +2974,44 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
 
       {/* AI分析モーダル */}
       {showAIAnalysis && selectedInterviewForAI && (
-        <InterviewAIAnalysis
-          interview={selectedInterviewForAI}
-          interviewType={activeSubTab as 'regular' | 'special' | 'support'}
-          staffName={selectedStaff?.name}
-          isOpen={showAIAnalysis}
-          onClose={() => {
-            setShowAIAnalysis(false)
-            setSelectedInterviewForAI(null)
-          }}
-        />
+        isDemoMode() ? (
+          <InterviewAIAnalysisDemo
+            interview={selectedInterviewForAI}
+            interviewType={activeSubTab as 'regular' | 'special' | 'support'}
+            staffName={selectedStaff?.name}
+            isOpen={showAIAnalysis}
+            onClose={() => {
+              setShowAIAnalysis(false)
+              setSelectedInterviewForAI(null)
+            }}
+          />
+        ) : (
+          <InterviewAIAnalysis
+            interview={selectedInterviewForAI}
+            interviewType={activeSubTab as 'regular' | 'special' | 'support'}
+            staffName={selectedStaff?.name}
+            isOpen={showAIAnalysis}
+            onClose={() => {
+              setShowAIAnalysis(false)
+              setSelectedInterviewForAI(null)
+            }}
+          />
+        )
       )}
 
       {/* フィードバックサマリ作成モーダル */}
       {showSummaryModal && selectedInterviewForSummary && (
+        isDemoMode() ? (
+          <FeedbackSummaryDemo
+            isOpen={showSummaryModal}
+            onClose={() => {
+              setShowSummaryModal(false)
+              setSelectedInterviewForSummary(null)
+            }}
+            interview={selectedInterviewForSummary}
+            staffName={selectedStaff?.name}
+          />
+        ) : (
         <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center" style={{ zIndex: 999999 }}>
           <div className="bg-white rounded-xl shadow-2xl w-[900px] max-w-[95vw] max-h-[90vh] overflow-hidden">
             {/* ヘッダー */}
@@ -3259,6 +3286,7 @@ export function InterviewTab({ selectedStaff }: { selectedStaff: any }) {
             </div>
           </div>
         </div>
+        )
       )}
     </div>
   )
