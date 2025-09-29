@@ -22,7 +22,7 @@ import {
   TrendingUp,
   AlertCircle,
   Download,
-  Print,
+  Printer,
   Edit,
   ChevronLeft,
   Heart,
@@ -207,7 +207,7 @@ export default function StaffHealthPage() {
             PDF出力
           </Button>
           <Button variant="outline" size="sm">
-            <Print className="w-4 h-4 mr-1" />
+            <Printer className="w-4 h-4 mr-1" />
             印刷
           </Button>
           <Button size="sm">
