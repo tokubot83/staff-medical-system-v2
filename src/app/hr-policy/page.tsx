@@ -17,6 +17,7 @@ import {
 const KouseikaiHRPolicyDraft = () => {
   const [activePolicy, setActivePolicy] = useState('a');
   const [activeTab, setActiveTab] = useState('visual');
+  const [careerCourseTab, setCareerCourseTab] = useState<'overview' | 'courses' | 'process' | 'faq'>('overview');
 
   // 最終更新日（実際の運用では、データベースやAPIから取得）
   const lastUpdated = '2025年9月18日';
@@ -1064,7 +1065,18 @@ const KouseikaiHRPolicyDraft = () => {
                 実装ガイド
               </button>
             </div>
-            <div className="grid grid-cols-3 gap-1 bg-gray-100 p-1 rounded-lg mt-1">
+            <div className="grid grid-cols-4 gap-1 bg-gray-100 p-1 rounded-lg mt-1">
+              <button
+                onClick={() => setActiveTab('career-course')}
+                className={`flex items-center justify-center px-4 py-2 rounded-md transition-all ${
+                  activeTab === 'career-course'
+                    ? 'bg-white text-green-600 shadow-md font-bold'
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                <TrendingUp className="mr-2" size={16} />
+                キャリア選択制度
+              </button>
               <button
                 onClick={() => setActiveTab('department')}
                 className={`flex items-center justify-center px-4 py-2 rounded-md transition-all ${
@@ -1545,6 +1557,663 @@ const KouseikaiHRPolicyDraft = () => {
                   </div>
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* キャリア選択制度タブ */}
+          {activeTab === 'career-course' && (
+            <div className="space-y-6">
+              {/* サブタブナビゲーション */}
+              <div className="border-b border-gray-200">
+                <div className="flex space-x-8">
+                  <button
+                    onClick={() => setCareerCourseTab('overview')}
+                    className={`pb-3 px-1 border-b-2 font-medium transition-colors ${
+                      careerCourseTab === 'overview'
+                        ? 'border-green-600 text-green-600'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                  >
+                    制度概要
+                  </button>
+                  <button
+                    onClick={() => setCareerCourseTab('courses')}
+                    className={`pb-3 px-1 border-b-2 font-medium transition-colors ${
+                      careerCourseTab === 'courses'
+                        ? 'border-green-600 text-green-600'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                  >
+                    A～Dコース詳細
+                  </button>
+                  <button
+                    onClick={() => setCareerCourseTab('process')}
+                    className={`pb-3 px-1 border-b-2 font-medium transition-colors ${
+                      careerCourseTab === 'process'
+                        ? 'border-green-600 text-green-600'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                  >
+                    変更手続き
+                  </button>
+                  <button
+                    onClick={() => setCareerCourseTab('faq')}
+                    className={`pb-3 px-1 border-b-2 font-medium transition-colors ${
+                      careerCourseTab === 'faq'
+                        ? 'border-green-600 text-green-600'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                  >
+                    よくある質問
+                  </button>
+                </div>
+              </div>
+
+              {/* 制度概要タブ */}
+              {careerCourseTab === 'overview' && (
+                <div className="space-y-6">
+                  <div className="bg-green-50 border-l-4 border-green-600 p-6">
+                    <h3 className="text-lg font-bold text-green-900 mb-2">キャリア選択制度について</h3>
+                    <p className="text-green-800">
+                      職員一人ひとりのライフステージやキャリアビジョンに合わせて、柔軟に働き方を選択できる制度です。
+                      A～Dの4つのコースから、あなたに最適な働き方を選んでください。
+                    </p>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="bg-white border border-gray-200 rounded-lg p-6">
+                      <h4 className="font-bold text-gray-900 mb-3 flex items-center">
+                        <Target className="mr-2 text-green-600" size={20} />
+                        制度の目的
+                      </h4>
+                      <ul className="space-y-2 text-sm text-gray-700">
+                        <li className="flex items-start">
+                          <span className="text-green-600 mr-2">•</span>
+                          <span>職員のワークライフバランス実現</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-green-600 mr-2">•</span>
+                          <span>多様なキャリアパスの提供</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-green-600 mr-2">•</span>
+                          <span>組織の柔軟性と生産性向上</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-green-600 mr-2">•</span>
+                          <span>優秀な人材の確保と定着</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div className="bg-white border border-gray-200 rounded-lg p-6">
+                      <h4 className="font-bold text-gray-900 mb-3 flex items-center">
+                        <FileText className="mr-2 text-blue-600" size={20} />
+                        法的根拠
+                      </h4>
+                      <ul className="space-y-2 text-sm text-gray-700">
+                        <li className="flex items-start">
+                          <span className="text-blue-600 mr-2">•</span>
+                          <span>厚生労働省「多様な正社員の普及・拡大のための有識者懇談会」報告書（2012年）</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-blue-600 mr-2">•</span>
+                          <span>労働契約法第3条（仕事と生活の調和への配慮）</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-blue-600 mr-2">•</span>
+                          <span>働き方改革関連法（2019年施行）</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div className="bg-white border border-gray-200 rounded-lg p-6">
+                    <h4 className="font-bold text-gray-900 mb-4 flex items-center">
+                      <Award className="mr-2 text-purple-600" size={20} />
+                      4つのコースの特徴
+                    </h4>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div className="border-l-4 border-red-500 pl-4 py-2">
+                        <h5 className="font-semibold text-red-700 mb-1">Aコース：全面協力型</h5>
+                        <p className="text-sm text-gray-600">施設間異動・業務変更に柔軟に対応（給与1.2倍）</p>
+                      </div>
+                      <div className="border-l-4 border-orange-500 pl-4 py-2">
+                        <h5 className="font-semibold text-orange-700 mb-1">Bコース：施設内協力型</h5>
+                        <p className="text-sm text-gray-600">施設内での業務協力を重視（給与1.1倍）</p>
+                      </div>
+                      <div className="border-l-4 border-blue-500 pl-4 py-2">
+                        <h5 className="font-semibold text-blue-700 mb-1">Cコース：専門職型</h5>
+                        <p className="text-sm text-gray-600">専門性を活かした業務に集中（給与1.0倍）</p>
+                      </div>
+                      <div className="border-l-4 border-green-500 pl-4 py-2">
+                        <h5 className="font-semibold text-green-700 mb-1">Dコース：時短・制約あり型</h5>
+                        <p className="text-sm text-gray-600">育児・介護等の事情に配慮（給与0.9倍）</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+                    <h4 className="font-bold text-yellow-900 mb-3 flex items-center">
+                      <AlertCircle className="mr-2" size={20} />
+                      重要なポイント
+                    </h4>
+                    <ul className="space-y-2 text-sm text-yellow-900">
+                      <li className="flex items-start">
+                        <span className="mr-2">1.</span>
+                        <span>コース変更は原則として年1回、毎年3月1日の定期変更時に可能です</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="mr-2">2.</span>
+                        <span>ライフイベント（結婚・出産・介護等）による特別変更も認められます</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="mr-2">3.</span>
+                        <span>コース変更には人事部の承認が必要です</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="mr-2">4.</span>
+                        <span>各コースの給与係数は基本給に対して適用されます</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              )}
+
+              {/* A～Dコース詳細タブ */}
+              {careerCourseTab === 'courses' && (
+                <div className="space-y-6">
+                  <div className="bg-blue-50 border-l-4 border-blue-600 p-6">
+                    <h3 className="text-lg font-bold text-blue-900 mb-2">各コースの詳細比較</h3>
+                    <p className="text-blue-800">
+                      あなたのライフスタイルやキャリアプランに合ったコースを選択してください。
+                      各コースの条件と待遇を比較できます。
+                    </p>
+                  </div>
+
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full bg-white border border-gray-300">
+                      <thead className="bg-gray-100">
+                        <tr>
+                          <th className="px-4 py-3 text-left text-sm font-bold text-gray-700 border-b">項目</th>
+                          <th className="px-4 py-3 text-left text-sm font-bold text-red-700 border-b">Aコース<br/>全面協力型</th>
+                          <th className="px-4 py-3 text-left text-sm font-bold text-orange-700 border-b">Bコース<br/>施設内協力型</th>
+                          <th className="px-4 py-3 text-left text-sm font-bold text-blue-700 border-b">Cコース<br/>専門職型</th>
+                          <th className="px-4 py-3 text-left text-sm font-bold text-green-700 border-b">Dコース<br/>時短・制約あり型</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200">
+                        <tr className="hover:bg-gray-50">
+                          <td className="px-4 py-3 text-sm font-semibold text-gray-900">給与係数</td>
+                          <td className="px-4 py-3 text-sm text-red-700 font-bold">1.2倍</td>
+                          <td className="px-4 py-3 text-sm text-orange-700 font-bold">1.1倍</td>
+                          <td className="px-4 py-3 text-sm text-blue-700 font-bold">1.0倍</td>
+                          <td className="px-4 py-3 text-sm text-green-700 font-bold">0.9倍</td>
+                        </tr>
+                        <tr className="hover:bg-gray-50">
+                          <td className="px-4 py-3 text-sm font-semibold text-gray-900">施設間異動</td>
+                          <td className="px-4 py-3 text-sm">応じる<br/><span className="text-xs text-gray-500">（グループ全体）</span></td>
+                          <td className="px-4 py-3 text-sm">原則なし<br/><span className="text-xs text-gray-500">（同一施設内）</span></td>
+                          <td className="px-4 py-3 text-sm">原則なし<br/><span className="text-xs text-gray-500">（専門性重視）</span></td>
+                          <td className="px-4 py-3 text-sm">なし<br/><span className="text-xs text-gray-500">（勤務地固定）</span></td>
+                        </tr>
+                        <tr className="hover:bg-gray-50">
+                          <td className="px-4 py-3 text-sm font-semibold text-gray-900">業務変更</td>
+                          <td className="px-4 py-3 text-sm">柔軟に対応<br/><span className="text-xs text-gray-500">（全業務可能）</span></td>
+                          <td className="px-4 py-3 text-sm">施設内で対応<br/><span className="text-xs text-gray-500">（チーム協力）</span></td>
+                          <td className="px-4 py-3 text-sm">専門領域のみ<br/><span className="text-xs text-gray-500">（専門性特化）</span></td>
+                          <td className="px-4 py-3 text-sm">制限あり<br/><span className="text-xs text-gray-500">（時短考慮）</span></td>
+                        </tr>
+                        <tr className="hover:bg-gray-50">
+                          <td className="px-4 py-3 text-sm font-semibold text-gray-900">勤務時間</td>
+                          <td className="px-4 py-3 text-sm">フルタイム<br/><span className="text-xs text-gray-500">（週40時間）</span></td>
+                          <td className="px-4 py-3 text-sm">フルタイム<br/><span className="text-xs text-gray-500">（週40時間）</span></td>
+                          <td className="px-4 py-3 text-sm">フルタイム<br/><span className="text-xs text-gray-500">（週40時間）</span></td>
+                          <td className="px-4 py-3 text-sm">時短可能<br/><span className="text-xs text-gray-500">（週24～32時間）</span></td>
+                        </tr>
+                        <tr className="hover:bg-gray-50">
+                          <td className="px-4 py-3 text-sm font-semibold text-gray-900">残業</td>
+                          <td className="px-4 py-3 text-sm">対応可能<br/><span className="text-xs text-gray-500">（制限なし）</span></td>
+                          <td className="px-4 py-3 text-sm">対応可能<br/><span className="text-xs text-gray-500">（月20h程度）</span></td>
+                          <td className="px-4 py-3 text-sm">対応可能<br/><span className="text-xs text-gray-500">（月10h程度）</span></td>
+                          <td className="px-4 py-3 text-sm">原則なし<br/><span className="text-xs text-gray-500">（最大月5h）</span></td>
+                        </tr>
+                        <tr className="hover:bg-gray-50">
+                          <td className="px-4 py-3 text-sm font-semibold text-gray-900">管理職登用</td>
+                          <td className="px-4 py-3 text-sm">積極登用<br/><span className="text-xs text-gray-500">（全役職可）</span></td>
+                          <td className="px-4 py-3 text-sm">登用あり<br/><span className="text-xs text-gray-500">（主任まで）</span></td>
+                          <td className="px-4 py-3 text-sm">専門職登用<br/><span className="text-xs text-gray-500">（認定資格）</span></td>
+                          <td className="px-4 py-3 text-sm">登用なし<br/><span className="text-xs text-gray-500">（一般職）</span></td>
+                        </tr>
+                        <tr className="hover:bg-gray-50">
+                          <td className="px-4 py-3 text-sm font-semibold text-gray-900">おすすめの人</td>
+                          <td className="px-4 py-3 text-sm text-gray-700">キャリアアップを目指す<br/>転勤OK</td>
+                          <td className="px-4 py-3 text-sm text-gray-700">今の施設で長く働きたい<br/>チーム貢献重視</td>
+                          <td className="px-4 py-3 text-sm text-gray-700">専門性を深めたい<br/>認定資格取得希望</td>
+                          <td className="px-4 py-3 text-sm text-gray-700">育児・介護中<br/>ワークライフバランス重視</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="bg-white border border-gray-200 rounded-lg p-6">
+                      <h4 className="font-bold text-gray-900 mb-4 flex items-center">
+                        <TrendingUp className="mr-2 text-green-600" size={20} />
+                        キャリアアップパターン
+                      </h4>
+                      <div className="space-y-3 text-sm">
+                        <div className="border-l-4 border-blue-500 pl-3 py-2">
+                          <p className="font-semibold text-gray-900">新卒入職時</p>
+                          <p className="text-gray-600">→ Cコース（専門職型）でスキル習得</p>
+                        </div>
+                        <div className="border-l-4 border-orange-500 pl-3 py-2">
+                          <p className="font-semibold text-gray-900">5～10年目</p>
+                          <p className="text-gray-600">→ Bコース（施設内協力型）でチームリーダーへ</p>
+                        </div>
+                        <div className="border-l-4 border-red-500 pl-3 py-2">
+                          <p className="font-semibold text-gray-900">管理職候補</p>
+                          <p className="text-gray-600">→ Aコース（全面協力型）で幹部候補へ</p>
+                        </div>
+                        <div className="border-l-4 border-green-500 pl-3 py-2">
+                          <p className="font-semibold text-gray-900">ライフイベント時</p>
+                          <p className="text-gray-600">→ Dコース（時短・制約あり型）で両立支援</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-white border border-gray-200 rounded-lg p-6">
+                      <h4 className="font-bold text-gray-900 mb-4 flex items-center">
+                        <Users className="mr-2 text-blue-600" size={20} />
+                        実際の選択例
+                      </h4>
+                      <div className="space-y-3 text-sm">
+                        <div className="bg-red-50 p-3 rounded">
+                          <p className="font-semibold text-red-900">看護師Aさん（32歳）</p>
+                          <p className="text-gray-700 mt-1">Aコース → 複数施設での経験を積み、看護部長を目指す</p>
+                        </div>
+                        <div className="bg-orange-50 p-3 rounded">
+                          <p className="font-semibold text-orange-900">理学療法士Bさん（28歳）</p>
+                          <p className="text-gray-700 mt-1">Bコース → 地元で働きながら主任を目指す</p>
+                        </div>
+                        <div className="bg-blue-50 p-3 rounded">
+                          <p className="font-semibold text-blue-900">作業療法士Cさん（35歳）</p>
+                          <p className="text-gray-700 mt-1">Cコース → 専門認定資格を取得し専門職として活躍</p>
+                        </div>
+                        <div className="bg-green-50 p-3 rounded">
+                          <p className="font-semibold text-green-900">看護師Dさん（40歳）</p>
+                          <p className="text-gray-700 mt-1">Dコース → 育児中のため時短勤務で両立</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* 変更手続きタブ */}
+              {careerCourseTab === 'process' && (
+                <div className="space-y-6">
+                  <div className="bg-purple-50 border-l-4 border-purple-600 p-6">
+                    <h3 className="text-lg font-bold text-purple-900 mb-2">コース変更の手続き</h3>
+                    <p className="text-purple-800">
+                      コース変更は定期変更（年1回）と特別変更（ライフイベント時）の2種類があります。
+                      VoiceDriveシステムから簡単に申請できます。
+                    </p>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="bg-white border border-blue-300 rounded-lg p-6">
+                      <h4 className="font-bold text-blue-900 mb-4 flex items-center">
+                        <Calendar className="mr-2 text-blue-600" size={20} />
+                        定期変更（年1回）
+                      </h4>
+                      <div className="space-y-4">
+                        <div>
+                          <p className="font-semibold text-gray-900 mb-2">変更時期</p>
+                          <p className="text-sm text-gray-700">毎年3月1日（年度始め）</p>
+                        </div>
+                        <div>
+                          <p className="font-semibold text-gray-900 mb-2">申請期間</p>
+                          <p className="text-sm text-gray-700">前年12月1日～12月31日</p>
+                        </div>
+                        <div>
+                          <p className="font-semibold text-gray-900 mb-2">手続きの流れ</p>
+                          <ol className="text-sm text-gray-700 space-y-2">
+                            <li className="flex items-start">
+                              <span className="font-semibold text-blue-600 mr-2">1.</span>
+                              <span>VoiceDriveにログイン</span>
+                            </li>
+                            <li className="flex items-start">
+                              <span className="font-semibold text-blue-600 mr-2">2.</span>
+                              <span>「キャリア選択ステーション」にアクセス</span>
+                            </li>
+                            <li className="flex items-start">
+                              <span className="font-semibold text-blue-600 mr-2">3.</span>
+                              <span>希望コースと理由を入力</span>
+                            </li>
+                            <li className="flex items-start">
+                              <span className="font-semibold text-blue-600 mr-2">4.</span>
+                              <span>人事部の承認を待つ（1～2週間）</span>
+                            </li>
+                            <li className="flex items-start">
+                              <span className="font-semibold text-blue-600 mr-2">5.</span>
+                              <span>承認後、3月1日から新コース適用</span>
+                            </li>
+                          </ol>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-white border border-green-300 rounded-lg p-6">
+                      <h4 className="font-bold text-green-900 mb-4 flex items-center">
+                        <AlertCircle className="mr-2 text-green-600" size={20} />
+                        特別変更（随時）
+                      </h4>
+                      <div className="space-y-4">
+                        <div>
+                          <p className="font-semibold text-gray-900 mb-2">対象となるライフイベント</p>
+                          <ul className="text-sm text-gray-700 space-y-1">
+                            <li className="flex items-start">
+                              <span className="text-green-600 mr-2">•</span>
+                              <span>結婚・離婚</span>
+                            </li>
+                            <li className="flex items-start">
+                              <span className="text-green-600 mr-2">•</span>
+                              <span>妊娠・出産・育児</span>
+                            </li>
+                            <li className="flex items-start">
+                              <span className="text-green-600 mr-2">•</span>
+                              <span>家族の介護</span>
+                            </li>
+                            <li className="flex items-start">
+                              <span className="text-green-600 mr-2">•</span>
+                              <span>配偶者の転勤</span>
+                            </li>
+                            <li className="flex items-start">
+                              <span className="text-green-600 mr-2">•</span>
+                              <span>健康上の理由</span>
+                            </li>
+                          </ul>
+                        </div>
+                        <div>
+                          <p className="font-semibold text-gray-900 mb-2">申請方法</p>
+                          <p className="text-sm text-gray-700 mb-2">
+                            VoiceDriveの「特別変更申請」から申請してください。
+                          </p>
+                          <p className="text-sm text-gray-700">
+                            事由を証明する書類（母子手帳のコピー、介護認定通知等）が必要な場合があります。
+                          </p>
+                        </div>
+                        <div>
+                          <p className="font-semibold text-gray-900 mb-2">適用開始</p>
+                          <p className="text-sm text-gray-700">
+                            承認後、翌月1日から新コース適用（緊急の場合は即日適用も可）
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white border border-gray-200 rounded-lg p-6">
+                    <h4 className="font-bold text-gray-900 mb-4 flex items-center">
+                      <FileText className="mr-2 text-gray-600" size={20} />
+                      VoiceDriveでの申請方法（詳細）
+                    </h4>
+                    <div className="grid md:grid-cols-3 gap-4">
+                      <div className="border border-gray-200 rounded p-4">
+                        <div className="bg-blue-100 text-blue-800 rounded-full w-8 h-8 flex items-center justify-center font-bold mb-3">1</div>
+                        <h5 className="font-semibold text-gray-900 mb-2">ログイン</h5>
+                        <p className="text-sm text-gray-600">
+                          VoiceDriveにアクセスし、職員IDとパスワードでログイン
+                        </p>
+                      </div>
+                      <div className="border border-gray-200 rounded p-4">
+                        <div className="bg-blue-100 text-blue-800 rounded-full w-8 h-8 flex items-center justify-center font-bold mb-3">2</div>
+                        <h5 className="font-semibold text-gray-900 mb-2">メニュー選択</h5>
+                        <p className="text-sm text-gray-600">
+                          左サイドバーから「キャリア選択ステーション」をクリック
+                        </p>
+                      </div>
+                      <div className="border border-gray-200 rounded p-4">
+                        <div className="bg-blue-100 text-blue-800 rounded-full w-8 h-8 flex items-center justify-center font-bold mb-3">3</div>
+                        <h5 className="font-semibold text-gray-900 mb-2">現在の状況確認</h5>
+                        <p className="text-sm text-gray-600">
+                          現在のコースと次回変更可能日を確認
+                        </p>
+                      </div>
+                      <div className="border border-gray-200 rounded p-4">
+                        <div className="bg-green-100 text-green-800 rounded-full w-8 h-8 flex items-center justify-center font-bold mb-3">4</div>
+                        <h5 className="font-semibold text-gray-900 mb-2">申請ボタン</h5>
+                        <p className="text-sm text-gray-600">
+                          「コース変更を申請する」ボタンをクリック
+                        </p>
+                      </div>
+                      <div className="border border-gray-200 rounded p-4">
+                        <div className="bg-green-100 text-green-800 rounded-full w-8 h-8 flex items-center justify-center font-bold mb-3">5</div>
+                        <h5 className="font-semibold text-gray-900 mb-2">情報入力</h5>
+                        <p className="text-sm text-gray-600">
+                          希望コース、希望日、変更理由を入力
+                        </p>
+                      </div>
+                      <div className="border border-gray-200 rounded p-4">
+                        <div className="bg-green-100 text-green-800 rounded-full w-8 h-8 flex items-center justify-center font-bold mb-3">6</div>
+                        <h5 className="font-semibold text-gray-900 mb-2">送信完了</h5>
+                        <p className="text-sm text-gray-600">
+                          申請送信後、承認状況を随時確認可能
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+                    <h4 className="font-bold text-yellow-900 mb-3 flex items-center">
+                      <AlertCircle className="mr-2" size={20} />
+                      注意事項
+                    </h4>
+                    <ul className="space-y-2 text-sm text-yellow-900">
+                      <li className="flex items-start">
+                        <span className="mr-2">•</span>
+                        <span>コース変更は人事部の承認が必要です（却下される場合もあります）</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="mr-2">•</span>
+                        <span>一度変更すると、次回変更可能日まで再変更できません（原則1年後）</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="mr-2">•</span>
+                        <span>Aコースへの変更は、組織の受け入れ状況により制限がある場合があります</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="mr-2">•</span>
+                        <span>給与変更は、変更適用月から反映されます</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                    <h4 className="font-bold text-blue-900 mb-3 flex items-center">
+                      <CheckCircle className="mr-2" size={20} />
+                      VoiceDriveリンク
+                    </h4>
+                    <p className="text-sm text-blue-800 mb-3">
+                      コース変更申請はVoiceDriveシステムから行ってください。
+                    </p>
+                    <a
+                      href="/voicedrive/career-station"
+                      className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+                    >
+                      <ExternalLink className="mr-2" size={18} />
+                      VoiceDriveのキャリア選択ステーションを開く
+                    </a>
+                  </div>
+                </div>
+              )}
+
+              {/* よくある質問タブ */}
+              {careerCourseTab === 'faq' && (
+                <div className="space-y-6">
+                  <div className="bg-indigo-50 border-l-4 border-indigo-600 p-6">
+                    <h3 className="text-lg font-bold text-indigo-900 mb-2">よくある質問（FAQ）</h3>
+                    <p className="text-indigo-800">
+                      キャリア選択制度についてよく寄せられる質問と回答をまとめました。
+                    </p>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="bg-white border border-gray-200 rounded-lg p-6">
+                      <h4 className="font-semibold text-gray-900 mb-2 flex items-center">
+                        <span className="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">Q</span>
+                        コース変更は何回までできますか?
+                      </h4>
+                      <div className="ml-9 mt-2 bg-green-50 border-l-4 border-green-500 p-4">
+                        <p className="text-sm text-gray-700">
+                          <span className="font-semibold text-green-800">A:</span> 回数制限はありませんが、原則として年1回（毎年3月1日）の定期変更のみです。
+                          ただし、ライフイベント（結婚・出産・介護等）が発生した場合は、特別変更として随時申請が可能です。
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="bg-white border border-gray-200 rounded-lg p-6">
+                      <h4 className="font-semibold text-gray-900 mb-2 flex items-center">
+                        <span className="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">Q</span>
+                        新卒入職時はどのコースになりますか?
+                      </h4>
+                      <div className="ml-9 mt-2 bg-green-50 border-l-4 border-green-500 p-4">
+                        <p className="text-sm text-gray-700">
+                          <span className="font-semibold text-green-800">A:</span> 原則としてCコース（専門職型）でスタートします。
+                          まずは専門職としてのスキルを習得し、その後のキャリアプランに応じてコース変更を検討してください。
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="bg-white border border-gray-200 rounded-lg p-6">
+                      <h4 className="font-semibold text-gray-900 mb-2 flex items-center">
+                        <span className="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">Q</span>
+                        DコースからAコースへ直接変更できますか?
+                      </h4>
+                      <div className="ml-9 mt-2 bg-green-50 border-l-4 border-green-500 p-4">
+                        <p className="text-sm text-gray-700">
+                          <span className="font-semibold text-green-800">A:</span> 可能です。育児や介護が一段落した際に、キャリアアップを目指してAコースへ変更することができます。
+                          ただし、Aコースは施設間異動や業務変更に柔軟に対応する必要があるため、人事部との面談が必須です。
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="bg-white border border-gray-200 rounded-lg p-6">
+                      <h4 className="font-semibold text-gray-900 mb-2 flex items-center">
+                        <span className="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">Q</span>
+                        給与係数はどのように適用されますか?
+                      </h4>
+                      <div className="ml-9 mt-2 bg-green-50 border-l-4 border-green-500 p-4">
+                        <p className="text-sm text-gray-700">
+                          <span className="font-semibold text-green-800">A:</span> 基本給に対してコース別の係数（A: 1.2倍、B: 1.1倍、C: 1.0倍、D: 0.9倍）が適用されます。
+                          例：基本給30万円の場合、Aコースは36万円、Bコースは33万円、Cコースは30万円、Dコースは27万円となります。
+                          ※手当や賞与にも同様の係数が適用されます。
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="bg-white border border-gray-200 rounded-lg p-6">
+                      <h4 className="font-semibold text-gray-900 mb-2 flex items-center">
+                        <span className="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">Q</span>
+                        Bコース「施設内協力型」とは具体的にどういう働き方ですか?
+                      </h4>
+                      <div className="ml-9 mt-2 bg-green-50 border-l-4 border-green-500 p-4">
+                        <p className="text-sm text-gray-700">
+                          <span className="font-semibold text-green-800">A:</span> 施設間の異動はありませんが、所属施設内でのチーム協力や業務変更には柔軟に対応していただくコースです。
+                          例えば、病棟間の応援や、繁忙期のシフト調整などに協力的な姿勢が求められます。地元で長く働きたい方に最適です。
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="bg-white border border-gray-200 rounded-lg p-6">
+                      <h4 className="font-semibold text-gray-900 mb-2 flex items-center">
+                        <span className="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">Q</span>
+                        コース変更を申請したら必ず承認されますか?
+                      </h4>
+                      <div className="ml-9 mt-2 bg-green-50 border-l-4 border-green-500 p-4">
+                        <p className="text-sm text-gray-700">
+                          <span className="font-semibold text-green-800">A:</span> 必ずしも承認されるわけではありません。
+                          人事部は組織のニーズやあなたのスキル・経験を総合的に判断して承認・却下を決定します。
+                          特にAコースへの変更は、組織の受け入れ状況によって制限される場合があります。却下された場合は理由が通知されます。
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="bg-white border border-gray-200 rounded-lg p-6">
+                      <h4 className="font-semibold text-gray-900 mb-2 flex items-center">
+                        <span className="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">Q</span>
+                        Cコースでも管理職になれますか?
+                      </h4>
+                      <div className="ml-9 mt-2 bg-green-50 border-l-4 border-green-500 p-4">
+                        <p className="text-sm text-gray-700">
+                          <span className="font-semibold text-green-800">A:</span> Cコースでは通常の管理職（師長・主任等）への登用はありませんが、
+                          「専門職認定制度」による専門職としてのキャリアパスがあります。認定看護師、専門理学療法士等の資格を取得することで、
+                          専門職リーダーとして活躍できます。
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="bg-white border border-gray-200 rounded-lg p-6">
+                      <h4 className="font-semibold text-gray-900 mb-2 flex items-center">
+                        <span className="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">Q</span>
+                        出産後、Dコースに変更したいのですが、いつから申請できますか?
+                      </h4>
+                      <div className="ml-9 mt-2 bg-green-50 border-l-4 border-green-500 p-4">
+                        <p className="text-sm text-gray-700">
+                          <span className="font-semibold text-green-800">A:</span> 妊娠が判明した時点から「特別変更申請」として随時申請可能です。
+                          産休・育休明けの復職時期に合わせてDコース（時短勤務）に変更できます。母子手帳のコピーを添付して申請してください。
+                          承認後、復職と同時に新コースが適用されます。
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="bg-white border border-gray-200 rounded-lg p-6">
+                      <h4 className="font-semibold text-gray-900 mb-2 flex items-center">
+                        <span className="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">Q</span>
+                        コース変更をキャンセルしたい場合はどうすればいいですか?
+                      </h4>
+                      <div className="ml-9 mt-2 bg-green-50 border-l-4 border-green-500 p-4">
+                        <p className="text-sm text-gray-700">
+                          <span className="font-semibold text-green-800">A:</span> 人事部の承認前であれば、VoiceDriveの申請一覧から「取り下げ」ボタンでキャンセルできます。
+                          承認後は原則として取り消しできませんので、慎重に申請してください。
+                          やむを得ない事情がある場合は、人事部に直接相談してください。
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="bg-white border border-gray-200 rounded-lg p-6">
+                      <h4 className="font-semibold text-gray-900 mb-2 flex items-center">
+                        <span className="bg-blue-100 text-blue-800 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">Q</span>
+                        複数のコースを組み合わせることはできますか?
+                      </h4>
+                      <div className="ml-9 mt-2 bg-green-50 border-l-4 border-green-500 p-4">
+                        <p className="text-sm text-gray-700">
+                          <span className="font-semibold text-green-800">A:</span> できません。職員は常にA～Dのいずれか1つのコースに所属します。
+                          ただし、年度途中でライフイベントが発生した場合は、特別変更によってコースを変更することができます。
+                          例：4月Bコース → 8月出産でDコースへ変更
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                    <h4 className="font-bold text-blue-900 mb-3 flex items-center">
+                      <HelpCircle className="mr-2" size={20} />
+                      その他のご質問
+                    </h4>
+                    <p className="text-sm text-blue-800 mb-3">
+                      ここに掲載されていない質問や個別の相談がある場合は、以下にお問い合わせください。
+                    </p>
+                    <div className="space-y-2 text-sm text-blue-900">
+                      <p><span className="font-semibold">人事部キャリア支援課</span></p>
+                      <p>内線: 1234</p>
+                      <p>メール: career-support@medical-group.jp</p>
+                      <p className="text-xs text-blue-700 mt-2">※個別相談は予約制です。VoiceDriveから面談予約ができます。</p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
