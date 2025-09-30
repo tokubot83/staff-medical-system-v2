@@ -353,6 +353,14 @@ export interface TalentSearchQuery {
     blacklisted?: boolean
   }
 
+  // 退職者検索フィルター（Phase 4追加）
+  includeResignedStaff?: boolean   // 退職者を含めて検索
+  resignedDateRange?: {             // 退職日範囲
+    from: string
+    to: string
+  }
+  rehireEligibleOnly?: boolean      // 再雇用可能者のみ
+
   // ソート
   sortBy?: 'recent-contact' | 'first-contact' | 'rating' | 'name' | 'status'
   sortOrder?: 'asc' | 'desc'
@@ -435,4 +443,29 @@ export interface PipelineMetrics {
     offers: number
     hires: number
   }>
+}
+
+// 退職者情報を含む検索結果（Phase 4追加）
+export interface PreviousEmploymentRecord {
+  staffId: string
+  employeeNumber: string
+  hireDate: string
+  resignationDate: string
+  resignationReason: string
+  lastPosition: string
+  lastDepartment: string
+  lastFacility: string
+  evaluationHistory: {
+    average: number
+    highest: string
+    latest: string
+  }
+  exitInterviewSummary?: string
+  rehireEligible: boolean
+  rehireNotes?: string
+}
+
+export interface SearchResultWithEmploymentHistory {
+  talent: TalentProfile
+  previousEmployment?: PreviousEmploymentRecord
 }

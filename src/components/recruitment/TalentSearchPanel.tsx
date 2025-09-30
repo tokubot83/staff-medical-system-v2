@@ -59,6 +59,11 @@ export default function TalentSearchPanel({
     blacklisted: false
   })
 
+  // 退職者検索条件（Phase 4追加）
+  const [includeResignedStaff, setIncludeResignedStaff] = useState(false)
+  const [resignedDateRange, setResignedDateRange] = useState({ from: '', to: '' })
+  const [rehireEligibleOnly, setRehireEligibleOnly] = useState(false)
+
   const statusOptions: { value: TalentStatus; label: string }[] = [
     { value: 'visitor-scheduled', label: '見学予定' },
     { value: 'visitor-completed', label: '見学済み' },
@@ -83,7 +88,11 @@ export default function TalentSearchPanel({
         salaryRange: salaryRange.min || salaryRange.max ? salaryRange : undefined,
         experienceYears: experienceRange.min || experienceRange.max ? experienceRange : undefined,
         minRating: minRating > 0 ? minRating : undefined,
-        includeFlags: Object.values(includeFlags).some(v => v) ? includeFlags : undefined
+        includeFlags: Object.values(includeFlags).some(v => v) ? includeFlags : undefined,
+        // 退職者検索条件（Phase 4追加）
+        includeResignedStaff,
+        resignedDateRange: includeResignedStaff && (resignedDateRange.from || resignedDateRange.to) ? resignedDateRange : undefined,
+        rehireEligibleOnly: includeResignedStaff && rehireEligibleOnly
       }
 
       const results = await onSearch(query)
@@ -126,6 +135,10 @@ export default function TalentSearchPanel({
       talentPool: false,
       blacklisted: false
     })
+    // 退職者検索条件もクリア
+    setIncludeResignedStaff(false)
+    setResignedDateRange({ from: '', to: '' })
+    setRehireEligibleOnly(false)
     setSearchResults([])
     setDuplicateResults(new Map())
   }
@@ -378,6 +391,65 @@ export default function TalentSearchPanel({
                     </label>
                   </div>
                 </div>
+
+                {/* 退職者検索セクション（Phase 4追加） */}
+                <Card className="border-purple-200 bg-purple-50">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-sm flex items-center gap-2">
+                      <History className="h-4 w-4" />
+                      退職者データベース検索
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <label className="flex items-center gap-2">
+                      <Checkbox
+                        checked={includeResignedStaff}
+                        onCheckedChange={(checked) => setIncludeResignedStaff(checked as boolean)}
+                      />
+                      <span className="text-sm font-medium">退職者を含めて検索</span>
+                    </label>
+
+                    {includeResignedStaff && (
+                      <div className="pl-6 space-y-3 border-l-2 border-purple-300">
+                        <div>
+                          <label className="text-sm font-medium mb-2 block">退職日の範囲</label>
+                          <div className="flex items-center gap-2">
+                            <Input
+                              type="date"
+                              placeholder="開始日"
+                              value={resignedDateRange.from}
+                              onChange={(e) => setResignedDateRange({ ...resignedDateRange, from: e.target.value })}
+                              className="text-sm"
+                            />
+                            <span className="text-sm">〜</span>
+                            <Input
+                              type="date"
+                              placeholder="終了日"
+                              value={resignedDateRange.to}
+                              onChange={(e) => setResignedDateRange({ ...resignedDateRange, to: e.target.value })}
+                              className="text-sm"
+                            />
+                          </div>
+                        </div>
+
+                        <label className="flex items-center gap-2">
+                          <Checkbox
+                            checked={rehireEligibleOnly}
+                            onCheckedChange={(checked) => setRehireEligibleOnly(checked as boolean)}
+                          />
+                          <span className="text-sm">再雇用可能者のみ</span>
+                        </label>
+
+                        <Alert className="bg-white border-purple-200">
+                          <AlertCircle className="h-4 w-4 text-purple-600" />
+                          <AlertDescription className="text-xs text-purple-800">
+                            退職者の過去の勤務履歴・評価・退職理由を確認できます
+                          </AlertDescription>
+                        </Alert>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
               </div>
             )}
           </div>
@@ -425,14 +497,21 @@ export default function TalentSearchPanel({
                     )}
 
                     <div className="flex items-center justify-between">
-                      <div>
+                      <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
                           <span className="font-semibold">
                             {talent.basicInfo.lastName} {talent.basicInfo.firstName}
                           </span>
                           <Badge>{talent.currentStatus}</Badge>
                           {talent.flags.isPreviousEmployee && (
-                            <Badge variant="outline">元職員</Badge>
+                            <Badge variant="secondary" className="bg-purple-100 text-purple-800">
+                              元職員（再応募）
+                            </Badge>
+                          )}
+                          {talent.flags.isRehireEligible && (
+                            <Badge variant="outline" className="border-green-500 text-green-700">
+                              ✓ 再雇用推奨
+                            </Badge>
                           )}
                         </div>
                         <div className="text-sm text-gray-600 space-x-4">
@@ -440,6 +519,47 @@ export default function TalentSearchPanel({
                           <span>{talent.basicInfo.phone}</span>
                           <span>最終接触: {talent.basicInfo.lastContactDate}</span>
                         </div>
+
+                        {/* 元職員の詳細情報（Phase 4追加） */}
+                        {talent.flags.isPreviousEmployee && includeResignedStaff && (
+                          <Alert className="mt-3 border-blue-200 bg-blue-50">
+                            <AlertCircle className="h-4 w-4 text-blue-600" />
+                            <AlertDescription className="text-sm">
+                              <div className="font-semibold text-blue-900 mb-2">過去の勤務履歴</div>
+                              <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-blue-800">
+                                <div>
+                                  <span className="font-medium">在職期間:</span>
+                                  <span className="ml-1">2020-04-01 〜 2023-03-31</span>
+                                </div>
+                                <div>
+                                  <span className="font-medium">最終所属:</span>
+                                  <span className="ml-1">小原病院 / 第1病棟</span>
+                                </div>
+                                <div>
+                                  <span className="font-medium">最終職位:</span>
+                                  <span className="ml-1">看護師</span>
+                                </div>
+                                <div>
+                                  <span className="font-medium">平均評価:</span>
+                                  <span className="ml-1">4.2/5.0</span>
+                                </div>
+                                <div className="col-span-2">
+                                  <span className="font-medium">退職理由:</span>
+                                  <span className="ml-1">キャリアアップ（他院へ転職）</span>
+                                </div>
+                                {talent.flags.isRehireEligible ? (
+                                  <div className="col-span-2 text-green-700 font-medium">
+                                    ✓ 再雇用推奨 - 優秀な職員として評価されていました
+                                  </div>
+                                ) : (
+                                  <div className="col-span-2 text-gray-600">
+                                    再雇用については要検討
+                                  </div>
+                                )}
+                              </div>
+                            </AlertDescription>
+                          </Alert>
+                        )}
                       </div>
                       <Button size="sm" variant="outline">
                         詳細

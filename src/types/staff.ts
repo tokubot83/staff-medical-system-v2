@@ -56,6 +56,27 @@ export interface StaffDetail {
   accountLevel?: number            // 1-18の権限レベル（小数点対応）
   canPerformLeaderDuty?: boolean   // リーダー業務可否（看護師・准看護師のみ）
 
+  // 雇用ステータス・退職関連（Phase 4追加）
+  employmentStatus?: 'active' | 'resigned' | 'on_leave' | 'suspended'  // 雇用ステータス
+  resignationDate?: string         // 退職日
+  resignationReason?: 'personal' | 'career_change' | 'relocation' | 'health' |
+                      'family' | 'retirement' | 'contract_end' | 'disciplinary' |
+                      'company_initiated' | 'other'  // 退職理由
+  resignationReasonDetail?: string // 退職理由詳細
+  lastWorkingDate?: string         // 最終勤務日
+  resignationNoticeDate?: string   // 退職申し出日
+
+  // 退職面談情報
+  exitInterviewApplicable?: boolean   // 退職面談実施対象か
+  exitInterviewCompleted?: boolean    // 退職面談実施済みか
+  exitInterviewId?: string            // 退職面談ID
+  exitInterviewSkippedReason?: string // 面談未実施理由
+  exitInterviewWaivedBy?: string      // 面談免除承認者ID
+
+  // 再雇用関連
+  rehireEligible?: boolean         // 再雇用可能フラグ
+  rehireNotes?: string             // 再雇用に関するメモ
+
   evaluationHistory: {
     period: string
     overall: string

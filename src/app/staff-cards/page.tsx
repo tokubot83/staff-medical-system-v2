@@ -59,6 +59,53 @@ export default function StaffCardsPage() {
   return (
     <div>
       <div className={styles.container}>
+        {/* ページヘッダー（管理ページへのショートカット追加） */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '20px',
+          paddingBottom: '16px',
+          borderBottom: '2px solid #e5e7eb'
+        }}>
+          <div>
+            <h1 style={{ fontSize: '24px', fontWeight: '600', color: '#111827', margin: 0 }}>
+              職員カルテ一覧
+            </h1>
+            <p style={{ fontSize: '14px', color: '#6b7280', marginTop: '4px', margin: 0 }}>
+              全{filteredStaff.length}名の職員データ
+            </p>
+          </div>
+          <Link
+            href="/staff-cards/management"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '10px 20px',
+              backgroundColor: '#3b82f6',
+              color: 'white',
+              borderRadius: '8px',
+              textDecoration: 'none',
+              fontSize: '14px',
+              fontWeight: '500',
+              transition: 'all 0.2s',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#2563eb'
+              e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = '#3b82f6'
+              e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)'
+            }}
+          >
+            <span>⚙️</span>
+            <span>職員カルテ管理</span>
+          </Link>
+        </div>
+
         <div className={styles.searchSection}>
           <div className={styles.searchBar}>
             <input

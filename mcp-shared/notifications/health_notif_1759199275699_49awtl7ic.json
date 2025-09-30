@@ -1,0 +1,47 @@
+{
+  "type": "health_risk_assessment",
+  "staffId": "TEST_URGENT_001",
+  "timestamp": "2025-09-30T02:27:55.699Z",
+  "metadata": {
+    "source": "staff-medical-system",
+    "version": "1.0.0",
+    "priority": "urgent"
+  },
+  "assessment": {
+    "overallScore": 85,
+    "overallLevel": "very-high",
+    "highRiskCategories": [
+      {
+        "category": "心血管疾患",
+        "score": 75,
+        "level": "high"
+      },
+      {
+        "category": "糖尿病",
+        "score": 68,
+        "level": "high"
+      }
+    ],
+    "priorityActions": [
+      "緊急：循環器内科受診",
+      "緊急：血圧管理開始"
+    ],
+    "nextCheckup": "1ヶ月後"
+  },
+  "recommendations": {
+    "lifestyle": [
+      "禁煙",
+      "ストレス管理"
+    ],
+    "diet": [
+      "減塩",
+      "野菜摂取増加"
+    ],
+    "exercise": [
+      "有酸素運動週150分"
+    ],
+    "medicalFollowUp": [
+      "専門医受診"
+    ]
+  }
+}

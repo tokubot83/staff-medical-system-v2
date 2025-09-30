@@ -1,0 +1,66 @@
+{
+  "reportId": "HEALTH_REPORT_TEST_1759199284475",
+  "type": "monthly",
+  "generatedAt": "2025-09-30T02:28:04.475Z",
+  "period": {
+    "start": "2025-08-31T02:28:04.475Z",
+    "end": "2025-09-30T02:28:04.475Z"
+  },
+  "staffInfo": {
+    "staffId": "REPORT_TEST_001",
+    "name": "テスト太郎",
+    "department": "システム開発部",
+    "facility": "テスト病院"
+  },
+  "summary": {
+    "overallHealthScore": 35,
+    "riskLevel": "high",
+    "keyFindings": [
+      "複数の健康指標で要注意レベル",
+      "心血管疾患リスクが高い状態",
+      "血圧が悪化傾向"
+    ],
+    "improvements": [
+      "運動習慣の定着"
+    ],
+    "concerns": [
+      "血圧管理",
+      "体重増加"
+    ]
+  },
+  "sections": [
+    {
+      "title": "健康状態サマリー",
+      "type": "text",
+      "importance": "high",
+      "content": {
+        "healthScore": 35,
+        "riskLevel": "high",
+        "description": "健康スコアは35点です。早期の対策が必要です。"
+      }
+    }
+  ],
+  "recommendations": {
+    "immediate": [
+      "専門医受診",
+      "血圧測定開始"
+    ],
+    "shortTerm": [
+      "減塩食",
+      "有酸素運動"
+    ],
+    "longTerm": [
+      "体重5kg減量",
+      "禁煙"
+    ]
+  },
+  "nextActions": [
+    "産業医面談予約",
+    "家庭血圧測定開始"
+  ],
+  "metadata": {
+    "version": "1.0.0",
+    "generatedBy": "staff-medical-system",
+    "format": "json"
+  }
+}

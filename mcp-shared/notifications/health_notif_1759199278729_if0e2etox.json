@@ -1,0 +1,33 @@
+{
+  "type": "health_risk_assessment",
+  "staffId": "TEST_LOW_001",
+  "timestamp": "2025-09-30T02:27:58.729Z",
+  "metadata": {
+    "source": "staff-medical-system",
+    "version": "1.0.0",
+    "priority": "low"
+  },
+  "assessment": {
+    "overallScore": 25,
+    "overallLevel": "low",
+    "highRiskCategories": [],
+    "priorityActions": [
+      "運動習慣の確立"
+    ],
+    "nextCheckup": "6ヶ月後"
+  },
+  "recommendations": {
+    "lifestyle": [
+      "禁煙",
+      "ストレス管理"
+    ],
+    "diet": [
+      "減塩",
+      "野菜摂取増加"
+    ],
+    "exercise": [
+      "有酸素運動週150分"
+    ],
+    "medicalFollowUp": []
+  }
+}

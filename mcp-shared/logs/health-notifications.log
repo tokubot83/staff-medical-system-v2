@@ -1,0 +1,47 @@
+[
+  {
+    "notificationId": "test_log_0",
+    "type": "health_risk_assessment",
+    "staffId": "LOG_TEST_0",
+    "timestamp": "2025-09-30T02:28:06.487Z",
+    "priority": "urgent",
+    "status": "processed",
+    "createdAt": "2025-09-30T02:28:06.487Z"
+  },
+  {
+    "notificationId": "test_log_1",
+    "type": "health_risk_assessment",
+    "staffId": "LOG_TEST_1",
+    "timestamp": "2025-09-30T02:28:06.487Z",
+    "priority": "high",
+    "status": "processed",
+    "createdAt": "2025-09-30T02:28:06.487Z"
+  },
+  {
+    "notificationId": "test_log_2",
+    "type": "health_risk_assessment",
+    "staffId": "LOG_TEST_2",
+    "timestamp": "2025-09-30T02:28:06.487Z",
+    "priority": "medium",
+    "status": "processed",
+    "createdAt": "2025-09-30T02:28:06.487Z"
+  },
+  {
+    "notificationId": "test_log_3",
+    "type": "health_risk_assessment",
+    "staffId": "LOG_TEST_3",
+    "timestamp": "2025-09-30T02:28:06.487Z",
+    "priority": "low",
+    "status": "processed",
+    "createdAt": "2025-09-30T02:28:06.487Z"
+  },
+  {
+    "notificationId": "test_log_4",
+    "type": "health_risk_assessment",
+    "staffId": "LOG_TEST_4",
+    "timestamp": "2025-09-30T02:28:06.487Z",
+    "priority": "low",
+    "status": "processed",
+    "createdAt": "2025-09-30T02:28:06.487Z"
+  }
+]
