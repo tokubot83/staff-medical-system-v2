@@ -33,7 +33,11 @@ import {
   Mail,
   Stethoscope,
   Pill,
-  AlertTriangle
+  AlertTriangle,
+  CheckCircle,
+  Shield,
+  ClipboardList,
+  UserCheck
 } from 'lucide-react';
 import { format, differenceInYears } from 'date-fns';
 import { ja } from 'date-fns/locale';
@@ -53,6 +57,9 @@ interface HealthData {
     systolicBp?: number;
     diastolicBp?: number;
     doctorFindings?: string;
+    occupationalDoctorFindings?: string;
+    workRestrictions?: string;
+    workAccommodations?: string;
     staff?: {
       name: string;
       department: string | null;
@@ -84,6 +91,23 @@ interface HealthData {
     requiresReexamination: boolean;
     overallResult?: string;
     checkupDate: string;
+    checkupHistory: Array<{
+      date: string;
+      result: string;
+      reexamination: boolean;
+    }>;
+    lastCheckupDaysAgo: number;
+    nextCheckupDue: string;
+    overdue: boolean;
+  };
+  riskAssessment?: {
+    overallRisk: 'low' | 'medium' | 'high';
+    riskFactors: Array<{
+      category: string;
+      description: string;
+      severity: 'low' | 'medium' | 'high';
+    }>;
+    recommendations: string[];
   };
 }
 
@@ -175,10 +199,29 @@ export default function StaffHealthPage() {
     );
   }
 
-  const { current, abnormalItems, trends, summary } = healthData;
+  const { current, abnormalItems, trends, summary, riskAssessment } = healthData;
+
+  // リスクレベルの色
+  const getRiskColor = (risk: 'low' | 'medium' | 'high') => {
+    switch (risk) {
+      case 'low': return 'text-green-600';
+      case 'medium': return 'text-yellow-600';
+      case 'high': return 'text-red-600';
+    }
+  };
 
   return (
     <div className="container mx-auto py-6 space-y-6">
+      {/* 健診受診期限アラート */}
+      {summary.overdue && (
+        <Alert className="border-red-200 bg-red-50">
+          <AlertCircle className="h-4 w-4 text-red-600" />
+          <AlertDescription className="text-red-800 font-medium">
+            健康診断の受診期限を過ぎています。至急、健診の予約・受診をお願いします。
+          </AlertDescription>
+        </Alert>
+      )}
+
       {/* ヘッダー */}
       <div className="flex justify-between items-start">
         <div className="flex items-start gap-4">
@@ -218,7 +261,7 @@ export default function StaffHealthPage() {
       </div>
 
       {/* 健康サマリーカード */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-2">
@@ -229,7 +272,7 @@ export default function StaffHealthPage() {
               {format(new Date(current.checkupDate), 'yyyy年MM月dd日', { locale: ja })}
             </p>
             <p className="text-xs text-muted-foreground mt-1">
-              {Math.floor((Date.now() - new Date(current.checkupDate).getTime()) / (1000 * 60 * 60 * 24))}日前
+              {summary.lastCheckupDaysAgo}日前
             </p>
           </CardContent>
         </Card>
@@ -270,14 +313,32 @@ export default function StaffHealthPage() {
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-muted-foreground">健康スコア</span>
-              <Heart className="w-4 h-4 text-gray-400" />
+              <span className="text-sm text-muted-foreground">次回健診予定</span>
+              <Clock className="w-4 h-4 text-gray-400" />
+            </div>
+            <p className={`text-lg font-medium ${summary.overdue ? 'text-red-600' : ''}`}>
+              {format(new Date(summary.nextCheckupDue), 'yyyy年MM月', { locale: ja })}
+            </p>
+            <p className="text-xs text-muted-foreground mt-1">
+              {summary.overdue ? '期限超過' : '予定通り'}
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm text-muted-foreground">健康リスク</span>
+              <Shield className="w-4 h-4 text-gray-400" />
             </div>
             <div className="space-y-2">
-              <Progress value={current.overallResult === 'A' ? 100 : current.overallResult === 'B' ? 75 : 50} />
+              <p className={`text-2xl font-bold ${getRiskColor(riskAssessment?.overallRisk || 'low')}`}>
+                {riskAssessment?.overallRisk === 'low' ? '低' :
+                 riskAssessment?.overallRisk === 'medium' ? '中' : '高'}
+              </p>
               <p className="text-xs text-muted-foreground">
-                {current.overallResult === 'A' ? '良好' :
-                 current.overallResult === 'B' ? '概ね良好' : '要注意'}
+                {riskAssessment?.overallRisk === 'low' ? '良好な状態' :
+                 riskAssessment?.overallRisk === 'medium' ? '要注意' : '要対応'}
               </p>
             </div>
           </CardContent>
@@ -381,17 +442,142 @@ export default function StaffHealthPage() {
             </Card>
           </div>
 
-          {/* 医師所見 */}
-          {current.doctorFindings && (
+          {/* 医師所見・産業医所見 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {current.doctorFindings && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <Stethoscope className="w-5 h-5" />
+                    健診医師所見
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="whitespace-pre-wrap">{current.doctorFindings}</p>
+                </CardContent>
+              </Card>
+            )}
+
+            {current.occupationalDoctorFindings && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <UserCheck className="w-5 h-5 text-blue-600" />
+                    産業医所見
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="whitespace-pre-wrap">{current.occupationalDoctorFindings}</p>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+
+          {/* 就労配慮事項 */}
+          {(current.workRestrictions || current.workAccommodations) && (
+            <Card className="border-blue-200 bg-blue-50">
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <ClipboardList className="w-5 h-5 text-blue-600" />
+                  就労配慮事項（人事部向け）
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {current.workRestrictions && (
+                  <div>
+                    <h4 className="font-medium text-blue-900 mb-2">就労制限</h4>
+                    <p className="whitespace-pre-wrap text-blue-800">{current.workRestrictions}</p>
+                  </div>
+                )}
+                {current.workAccommodations && (
+                  <div>
+                    <h4 className="font-medium text-blue-900 mb-2">必要な配慮</h4>
+                    <p className="whitespace-pre-wrap text-blue-800">{current.workAccommodations}</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
+
+          {/* 健診受診履歴 */}
+          {summary.checkupHistory && summary.checkupHistory.length > 0 && (
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
-                  <Stethoscope className="w-5 h-5" />
-                  医師所見
+                  <FileText className="w-5 h-5" />
+                  健診受診履歴
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="whitespace-pre-wrap">{current.doctorFindings}</p>
+                <div className="space-y-2">
+                  {summary.checkupHistory.map((history, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 border rounded">
+                      <div className="flex items-center gap-4">
+                        <Calendar className="w-4 h-4 text-gray-500" />
+                        <span className="font-medium">
+                          {format(new Date(history.date), 'yyyy年MM月dd日', { locale: ja })}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge className={getResultBadgeColor(history.result)}>
+                          {history.result}
+                        </Badge>
+                        {history.reexamination && (
+                          <Badge variant="destructive" className="text-xs">要再検査</Badge>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* 健康リスク評価 */}
+          {riskAssessment && (
+            <Card className={
+              riskAssessment.overallRisk === 'high' ? 'border-red-200 bg-red-50' :
+              riskAssessment.overallRisk === 'medium' ? 'border-yellow-200 bg-yellow-50' :
+              'border-green-200 bg-green-50'
+            }>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Shield className="w-5 h-5" />
+                  健康リスク評価
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <h4 className="font-medium mb-2">リスク要因</h4>
+                  <div className="space-y-2">
+                    {riskAssessment.riskFactors.map((factor, index) => (
+                      <div key={index} className="flex items-start gap-2 p-2 bg-white rounded border">
+                        <AlertTriangle className={`w-4 h-4 mt-0.5 ${
+                          factor.severity === 'high' ? 'text-red-600' :
+                          factor.severity === 'medium' ? 'text-yellow-600' :
+                          'text-blue-600'
+                        }`} />
+                        <div className="flex-1">
+                          <p className="font-medium text-sm">{factor.category}</p>
+                          <p className="text-sm text-muted-foreground">{factor.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {riskAssessment.recommendations.length > 0 && (
+                  <div>
+                    <h4 className="font-medium mb-2">推奨事項</h4>
+                    <ul className="space-y-1">
+                      {riskAssessment.recommendations.map((rec, index) => (
+                        <li key={index} className="flex items-start gap-2 text-sm">
+                          <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                          <span>{rec}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </CardContent>
             </Card>
           )}
