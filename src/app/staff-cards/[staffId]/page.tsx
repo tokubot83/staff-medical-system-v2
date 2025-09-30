@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useSearchParams } from 'next/navigation'
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -38,14 +38,15 @@ import {
   Filler
 } from 'chart.js'
 import { Line, Bar, Radar, Scatter, Doughnut } from 'react-chartjs-2'
-import { 
-  AnalyticsTab, 
-  EvaluationTab, 
-  RecruitmentTab, 
-  InterviewTab, 
-  GrowthDevelopmentTab as DevelopmentTab, 
-  EducationTab 
+import {
+  AnalyticsTab,
+  EvaluationTab,
+  RecruitmentTab,
+  InterviewTab,
+  GrowthDevelopmentTab as DevelopmentTab,
+  EducationTab
 } from '../staff-tabs'
+import HealthCheckupDetailView from '@/components/health/HealthCheckupDetailView'
 import PersonalDashboard from '@/components/dashboard/PersonalDashboard'
 import PersonalAnalysisReport from '@/components/evaluation/PersonalAnalysisReport'
 import StrengthWeaknessRadar from '@/components/evaluation/StrengthWeaknessRadar'
@@ -78,31 +79,78 @@ ChartJS.register(
   Filler
 )
 
-const tabs = [
-  { id: 'basic', label: '基本情報', icon: '📋' },
-  { id: 'career', label: '経歴・キャリア', icon: '💼' },
-  { id: 'mindset', label: 'マインド・志向性', icon: '🧠' },
-  { id: 'qualification', label: '資格・専門性', icon: '📜' },
-  { id: 'achievement', label: '実績・表彰', icon: '🏆' },
-  { id: 'attendance', label: '勤務状況', icon: '⏰' },
-  { id: 'wellbeing', label: '健康・ウェルビーイング', icon: '💚' },
-  { id: 'development', label: '能力開発', icon: '🚀' },
-  { id: 'interview', label: '面談・指導', icon: '💬' },
-  { id: 'evaluation', label: '最新評価', icon: '📈' },
-  { id: 'evaluation-history', label: '評価履歴', icon: '📋', isNew: true },
-  { id: 'evaluation-report', label: '評価分析レポート', icon: '📊', isNew: true },
-  { id: 'analytics', label: '総合分析', icon: '📊' },
-  { id: 'recruitment', label: '採用・配属', icon: '👥' },
-  { id: 'education', label: '教育・研修', icon: '🎓' },
-  { id: 'links', label: '統合管理リンク', icon: '🔗' },
-]
+// カテゴリ別タブ構造
+const tabCategories = {
+  basic: {
+    label: '基本情報',
+    icon: '👤',
+    tabs: [
+      { id: 'basic', label: '基本情報', icon: '📋' },
+      { id: 'career', label: '経歴・キャリア', icon: '💼' },
+      { id: 'mindset', label: 'マインド・志向性', icon: '🧠' },
+    ]
+  },
+  achievements: {
+    label: '資格・実績',
+    icon: '🏆',
+    tabs: [
+      { id: 'qualification', label: '資格・専門性', icon: '📜' },
+      { id: 'achievement', label: '実績・表彰', icon: '🏆' },
+    ]
+  },
+  health: {
+    label: '健康管理',
+    icon: '🏥',
+    tabs: [
+      { id: 'attendance', label: '勤務状況', icon: '⏰' },
+      { id: 'wellbeing', label: 'ウェルビーイング', icon: '💚' },
+      { id: 'health-checkup', label: '健康診断', icon: '🩺', isNew: true },
+    ]
+  },
+  evaluation: {
+    label: '育成・評価',
+    icon: '📊',
+    tabs: [
+      { id: 'development', label: '能力開発', icon: '🚀' },
+      { id: 'interview', label: '面談・指導', icon: '💬' },
+      { id: 'evaluation', label: '最新評価', icon: '📈' },
+      { id: 'evaluation-history', label: '評価履歴', icon: '📋' },
+      { id: 'evaluation-report', label: '評価分析', icon: '📊' },
+      { id: 'analytics', label: '総合分析', icon: '📊' },
+    ]
+  },
+  training: {
+    label: '採用・研修',
+    icon: '🎓',
+    tabs: [
+      { id: 'recruitment', label: '採用・配属', icon: '👥' },
+      { id: 'education', label: '教育・研修', icon: '🎓' },
+    ]
+  },
+  links: {
+    label: '統合管理',
+    icon: '🔗',
+    tabs: [
+      { id: 'links', label: '統合管理リンク', icon: '🔗' },
+    ]
+  }
+}
 
 // staffData.tsのStaffDetailインターフェースを使用
 
 export default function StaffDetailPage() {
   const params = useParams()
+  const searchParams = useSearchParams()
+  const router = useRouter()
   const staffId = params.staffId as string
-  const [activeTab, setActiveTab] = useState('basic')
+
+  // URLパラメータからカテゴリとタブを取得
+  const categoryParam = searchParams.get('category')
+  const tabParam = searchParams.get('tab')
+
+  // 初期カテゴリとタブの設定
+  const [activeCategory, setActiveCategory] = useState(categoryParam || 'basic')
+  const [activeTab, setActiveTab] = useState(tabParam || 'basic')
   const [showNotebookLinkModal, setShowNotebookLinkModal] = useState(false)
   const [currentInterview, setCurrentInterview] = useState<{
     id: string
@@ -110,6 +158,20 @@ export default function StaffDetailPage() {
     type: string
     subtype?: string
   } | null>(null)
+
+  // URLパラメータが変更された時にstateを更新
+  useEffect(() => {
+    if (categoryParam) setActiveCategory(categoryParam)
+    if (tabParam) setActiveTab(tabParam)
+  }, [categoryParam, tabParam])
+
+  // タブ変更時にURLも更新
+  const handleTabChange = (category: string, tab: string) => {
+    setActiveCategory(category)
+    setActiveTab(tab)
+    // URLを更新（ブラウザの履歴に追加）
+    router.push(`/staff-cards/${staffId}?category=${category}&tab=${tab}`, { scroll: false })
+  }
 
   const selectedStaff = staffDatabase[staffId]
 
@@ -131,15 +193,34 @@ export default function StaffDetailPage() {
   return (
     <div>
       <div className={styles.container}>
+        {/* カテゴリタブ（メインナビゲーション） */}
+        <div className={styles.categoryNavigation}>
+          {Object.entries(tabCategories).map(([categoryKey, category]) => (
+            <button
+              key={categoryKey}
+              onClick={() => {
+                const firstTab = category.tabs[0].id
+                handleTabChange(categoryKey, firstTab)
+              }}
+              className={`${styles.categoryButton} ${activeCategory === categoryKey ? styles.active : ''}`}
+            >
+              <span className={styles.categoryIcon}>{category.icon}</span>
+              <span className={styles.categoryLabel}>{category.label}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* サブタブナビゲーション */}
         <div className={styles.tabNavigation}>
-          {tabs.map((tab) => (
+          {tabCategories[activeCategory as keyof typeof tabCategories]?.tabs.map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabChange(activeCategory, tab.id)}
               className={`${styles.tabButton} ${activeTab === tab.id ? styles.active : ''}`}
             >
               <span className={styles.tabIcon}>{tab.icon}</span>
               <span className={styles.tabLabel}>{tab.label}</span>
+              {tab.isNew && <span className={styles.newBadge}>NEW</span>}
             </button>
           ))}
         </div>
@@ -159,7 +240,8 @@ export default function StaffDetailPage() {
           {activeTab === 'qualification' && <QualificationTab selectedStaff={selectedStaff} />}
           {activeTab === 'achievement' && <AchievementTab selectedStaff={selectedStaff} />}
           {activeTab === 'attendance' && <AttendanceTab selectedStaff={selectedStaff} />}
-          {activeTab === 'wellbeing' && <WellbeingTab selectedStaff={selectedStaff} />}
+          {activeTab === 'wellbeing' && <WellbeingTab selectedStaff={selectedStaff} onNavigateToHealthCheckup={() => handleTabChange('health', 'health-checkup')} />}
+          {activeTab === 'health-checkup' && <HealthCheckupDetailView staffId={staffId} showHeader={false} />}
           {activeTab === 'links' && <ManagementLinksTab selectedStaff={selectedStaff} />}
           {activeTab === 'analytics' && <AnalyticsTab selectedStaff={selectedStaff} />}
           {activeTab === 'evaluation' && <EvaluationTab selectedStaff={selectedStaff} />}
@@ -957,21 +1039,40 @@ function AttendanceTab({ selectedStaff }: { selectedStaff: any }): React.ReactEl
   )
 }
 
-function WellbeingTab({ selectedStaff }: { selectedStaff: any }): React.ReactElement {
+function WellbeingTab({ selectedStaff, onNavigateToHealthCheckup }: { selectedStaff: any; onNavigateToHealthCheckup?: () => void }): React.ReactElement {
   const stressIndex = selectedStaff.stressIndex || 48
   const stressLevel = stressIndex < 40 ? '良好' : stressIndex < 50 ? '注意' : '要対応'
   const stressColor = stressIndex < 40 ? '#10b981' : stressIndex < 50 ? '#f59e0b' : '#ef4444'
-  
+
   return (
     <div className={styles.tabContentSection}>
       <div className={styles.sectionHeader}>
         <h2>🌿 健康・ウェルビーイング</h2>
         <div className={styles.sectionActions}>
           <Link href="/health/management" className={styles.actionButton}>組織全体の健康状況</Link>
-          <button className={styles.actionButton}>健康診断履歴</button>
+          {onNavigateToHealthCheckup && (
+            <button onClick={onNavigateToHealthCheckup} className={styles.actionButton}>
+              健康診断詳細
+            </button>
+          )}
           <button className={styles.actionButtonSecondary}>相談予約</button>
         </div>
       </div>
+
+      {onNavigateToHealthCheckup && (
+        <div style={{ marginBottom: '16px', padding: '12px', backgroundColor: '#eff6ff', borderRadius: '8px', border: '1px solid #bfdbfe' }}>
+          <p style={{ margin: 0, fontSize: '14px', color: '#1e40af' }}>
+            📋 詳細な健診データ（検査値、経年変化、産業医所見等）は
+            <button
+              onClick={onNavigateToHealthCheckup}
+              style={{ marginLeft: '4px', color: '#2563eb', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600 }}
+            >
+              「健康診断」タブ
+            </button>
+            をご覧ください
+          </p>
+        </div>
+      )}
 
       <div className={styles.interviewSummaryEnhanced}>
         <div className={styles.summaryMainCard}>
