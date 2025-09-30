@@ -56,6 +56,10 @@ import {
 import { format } from 'date-fns';
 import { ja } from 'date-fns/locale';
 import { CsvImportDialog } from '@/components/health/CsvImportDialog';
+import StressCheckDistribution from '@/features/stress-check/components/StressCheckDistribution';
+import FollowUpManagement from '@/features/stress-check/components/FollowUpManagement';
+import GroupAnalysis from '@/features/stress-check/components/GroupAnalysis';
+import IndividualAnalysis from '@/features/stress-check/components/IndividualAnalysis';
 
 interface HealthCheckup {
   id: string;
@@ -584,12 +588,16 @@ export default function HealthManagementPage() {
 
       {/* タブ */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-9">
           <TabsTrigger value="input">健診データ入力</TabsTrigger>
           <TabsTrigger value="occupational">産業医診断</TabsTrigger>
-          <TabsTrigger value="list">一覧</TabsTrigger>
+          <TabsTrigger value="list">健診一覧</TabsTrigger>
           <TabsTrigger value="reexamination">要再検査</TabsTrigger>
-          <TabsTrigger value="analysis">分析</TabsTrigger>
+          <TabsTrigger value="stress">ストレスチェック</TabsTrigger>
+          <TabsTrigger value="stress-followup">フォローアップ</TabsTrigger>
+          <TabsTrigger value="stress-group">集団分析</TabsTrigger>
+          <TabsTrigger value="stress-individual">個別分析</TabsTrigger>
+          <TabsTrigger value="analysis">統計分析</TabsTrigger>
         </TabsList>
 
         {/* 健診データ入力タブ */}
@@ -1284,7 +1292,27 @@ export default function HealthManagementPage() {
           </Card>
         </TabsContent>
 
-        {/* 分析タブ */}
+        {/* ストレスチェックタブ */}
+        <TabsContent value="stress">
+          <StressCheckDistribution />
+        </TabsContent>
+
+        {/* ストレスチェック - フォローアップタブ */}
+        <TabsContent value="stress-followup">
+          <FollowUpManagement />
+        </TabsContent>
+
+        {/* ストレスチェック - 集団分析タブ */}
+        <TabsContent value="stress-group">
+          <GroupAnalysis />
+        </TabsContent>
+
+        {/* ストレスチェック - 個別分析タブ */}
+        <TabsContent value="stress-individual">
+          <IndividualAnalysis />
+        </TabsContent>
+
+        {/* 統計分析タブ（既存の分析タブ） */}
         <TabsContent value="analysis">
           <Card>
             <CardHeader>
