@@ -967,7 +967,7 @@ function WellbeingTab({ selectedStaff }: { selectedStaff: any }): React.ReactEle
       <div className={styles.sectionHeader}>
         <h2>🌿 健康・ウェルビーイング</h2>
         <div className={styles.sectionActions}>
-          <Link href="/health" className={styles.actionButton}>組織全体の健康状況</Link>
+          <Link href="/health/management" className={styles.actionButton}>組織全体の健康状況</Link>
           <button className={styles.actionButton}>健康診断履歴</button>
           <button className={styles.actionButtonSecondary}>相談予約</button>
         </div>
