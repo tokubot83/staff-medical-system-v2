@@ -27,6 +27,79 @@ const DevNotesPage = () => {
   // サンプルデータ
   const devNotes: DevNote[] = [
     {
+      id: '7',
+      title: '健康管理システム統合実装（2025-09-30完了）',
+      content: `【完了項目】
+1. 健康ページ統合・整理
+   - 旧/healthページ削除（404行）
+   - Health.module.css削除（545行）
+   - ナビゲーションリンクを/health/managementに統一
+
+2. 職員カルテ階層化タブ構造実装
+   - 6カテゴリ×17タブの2層構造
+   - URLパラメータ対応(?category=health&tab=health-checkup)
+   - カテゴリナビゲーションUI（グラデーション背景）
+   - 各カテゴリ: 基本情報、資格・実績、健康管理、評価・面談、育成、関連情報
+
+3. 健康診断タブ統合
+   - HealthCheckupDetailViewコンポーネント作成（649行）
+   - 職員カルテに健診タブ追加
+   - ウェルビーイングタブとの相互リンク実装
+   - 健康診断5カード表示（最新、異常、傾向、再検査、統計）
+
+4. リダイレクト設定
+   - /health/staff/[staffId] → 職員カルテ健診タブへ自動遷移
+   - ローディングアニメーション付き
+
+【実装済UI機能】
+- 健康診断詳細表示（5つの詳細タブ）
+- BMI・血圧自動評価
+- 異常項目ハイライト表示
+- トレンドグラフ表示
+- リスクアセスメント表示
+- VoiceDriveアドバイス連携準備
+
+【未実装（DB構築後）】
+Phase 1 MVP:
+- CSV一括取込API実装
+- 健診データCRUD API実装
+- 健診結果配信システム（お知らせ配信経由）
+
+Phase 2 基本機能:
+- 管理ダッシュボード（実施率、要再検者管理）
+- ストレスチェック配信（機密性高）
+- リマインド機能
+- 病歴管理機能
+- 就業配慮設定機能
+
+Phase 3 拡張機能:
+- 産業医機能（面談記録、就業判定）
+- 統計・分析機能
+- トレンド分析・予測
+- レポート生成（労基署提出書類）
+- 外部システム連携
+
+【必要なDBテーブル】
+- health_checkups: 健康診断マスター
+- health_checkup_details: 検査結果詳細
+- medical_histories: 病歴・既往歴管理
+- work_accommodations: 就業配慮管理
+- health_events: 健康イベント履歴
+
+【関連ファイル】
+- src/components/health/HealthCheckupDetailView.tsx
+- src/app/staff-cards/[staffId]/page.tsx (階層タブ構造)
+- src/app/health/staff/[staffId]/page.tsx (リダイレクト)
+- docs/健康関連情報実装計画書_統合版.md
+- docs/健康機能実装_作業再開指示書.md`,
+      category: 'feature',
+      tags: ['健康管理', 'UI統合', '階層タブ', 'DB待ち', '完了'],
+      createdAt: '2025-09-30',
+      updatedAt: '2025-09-30',
+      status: 'in-progress',
+      priority: 'high'
+    },
+    {
       id: '6',
       title: '人事ステーションページ実装状況',
       content: `【実装完了機能】
