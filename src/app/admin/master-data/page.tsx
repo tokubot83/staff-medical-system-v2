@@ -13,7 +13,7 @@ import ComplianceMasterManager from '@/components/admin/compliance/ComplianceMas
 import HealthDataMasterManager from '@/components/admin/health/HealthDataMasterManager';
 import {
   Users, Building2, GraduationCap, ClipboardCheck,
-  Database, ChevronRight, Shield, Settings, BookOpen, Image, Calculator, MessageSquare, FileText, Briefcase, ShieldCheck, Heart
+  Database, ChevronRight, Shield, Settings, BookOpen, Image, Calculator, MessageSquare, FileText, Briefcase, ShieldCheck, Heart, LogOut
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -110,11 +110,18 @@ const masterTypes = [
     description: '健診項目・基準値・ストレスチェック管理',
     color: 'rose'
   },
+  {
+    key: 'resignationReason',
+    label: '退職理由マスター',
+    icon: LogOut,
+    description: '退職理由コード・カテゴリー管理（Phase 4）',
+    color: 'slate'
+  },
 ];
 
 export default function MasterDataPage() {
   const [selectedMaster, setSelectedMaster] = useState<string>('staff');
-  const currentSchema = selectedMaster !== 'developmentMemo' && selectedMaster !== 'imageManagement' && selectedMaster !== 'evaluationSystem' && selectedMaster !== 'interviewSystem' && selectedMaster !== 'hrPolicy' && selectedMaster !== 'trainingSystem' && selectedMaster !== 'recruitment' && selectedMaster !== 'compliance' && selectedMaster !== 'healthData' ? masterSchemas[selectedMaster] : null;
+  const currentSchema = selectedMaster !== 'developmentMemo' && selectedMaster !== 'imageManagement' && selectedMaster !== 'evaluationSystem' && selectedMaster !== 'interviewSystem' && selectedMaster !== 'hrPolicy' && selectedMaster !== 'trainingSystem' && selectedMaster !== 'recruitment' && selectedMaster !== 'compliance' && selectedMaster !== 'healthData' && selectedMaster !== 'resignationReason' ? masterSchemas[selectedMaster] : null;
 
   const getColorClasses = (color: string) => {
     const colors: Record<string, string> = {
@@ -131,6 +138,7 @@ export default function MasterDataPage() {
       emerald: 'bg-emerald-50 hover:bg-emerald-100 border-emerald-200 text-emerald-700',
       red: 'bg-red-50 hover:bg-red-100 border-red-200 text-red-700',
       rose: 'bg-rose-50 hover:bg-rose-100 border-rose-200 text-rose-700',
+      slate: 'bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-700',
     };
     return colors[color] || colors.blue;
   };
@@ -150,6 +158,7 @@ export default function MasterDataPage() {
       emerald: 'text-emerald-600',
       red: 'text-red-600',
       rose: 'text-rose-600',
+      slate: 'text-slate-600',
     };
     return colors[color] || colors.blue;
   };

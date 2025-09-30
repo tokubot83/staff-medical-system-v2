@@ -60,8 +60,26 @@
 - address
 - hire_date
 - employment_type
+- **employment_status (Phase 4追加)** - ENUM('active', 'resigned', 'on_leave', 'suspended') DEFAULT 'active'
+- **resignation_date (Phase 4追加)** - 退職日
+- **resignation_reason (Phase 4追加)** - 退職理由コード（FK to resignation_reasons）
+- **resignation_reason_detail (Phase 4追加)** - 退職理由詳細（TEXT）
+- **last_working_date (Phase 4追加)** - 最終勤務日
+- **resignation_notice_date (Phase 4追加)** - 退職申し出日
+- **exit_interview_applicable (Phase 4追加)** - 退職面談実施対象 (BOOLEAN)
+- **exit_interview_completed (Phase 4追加)** - 退職面談実施済み (BOOLEAN)
+- **exit_interview_id (Phase 4追加)** - 退職面談ID（FK to exit_interviews）
+- **exit_interview_skipped_reason (Phase 4追加)** - 面談未実施理由
+- **exit_interview_waived_by (Phase 4追加)** - 面談免除承認者ID（FK to staff_basic）
+- **rehire_eligible (Phase 4追加)** - 再雇用可能フラグ (BOOLEAN)
+- **rehire_notes (Phase 4追加)** - 再雇用に関するメモ (TEXT)
 - created_at
 - updated_at
+
+**インデックス（Phase 4追加）:**
+- INDEX idx_employment_status (employment_status)
+- INDEX idx_resignation_date (resignation_date)
+- INDEX idx_rehire_eligible (rehire_eligible)
 
 #### staff_assignments（配属情報）
 - assignment_id (PK)
@@ -443,9 +461,123 @@
 - career_paths（キャリアパス）
 - talent_pools（タレントプール）
 - engagement_surveys（エンゲージメント調査）
-- exit_interviews（退職時面談）
 
-### 6.2 外部システム連携
+### 6.2 Phase 4: 退職管理テーブル（詳細設計）
+
+#### exit_interviews（退職面談）
+- exit_interview_id (PK)
+- staff_id (FK to staff_basic)
+- interview_type - 'exit' (固定値)
+- booking_date - 面談予定日
+- conducted_date - 面談実施日
+- interviewer_id (FK to staff_basic) - 面談担当者
+- location - 面談場所
+- duration_minutes - 面談時間（分）
+- **resignation_reason_primary (Phase 4)** - 主要退職理由（FK to resignation_reasons）
+- **resignation_reason_secondary (Phase 4)** - 副次的退職理由（FK to resignation_reasons）
+- **satisfaction_score (Phase 4)** - 総合満足度（1-5）
+- **would_recommend (Phase 4)** - 他者推奨意向 (BOOLEAN)
+- **rehire_interest (Phase 4)** - 再雇用希望 (BOOLEAN)
+- **work_environment_rating (Phase 4)** - 職場環境評価（1-5）
+- **management_rating (Phase 4)** - マネジメント評価（1-5）
+- **compensation_rating (Phase 4)** - 給与待遇評価（1-5）
+- **career_development_rating (Phase 4)** - キャリア開発評価（1-5）
+- **work_life_balance_rating (Phase 4)** - ワークライフバランス評価（1-5）
+- **positive_aspects (Phase 4)** - 良かった点（TEXT）
+- **improvement_suggestions (Phase 4)** - 改善提案（TEXT）
+- **farewell_message (Phase 4)** - 最後のメッセージ（TEXT）
+- discussion_summary - 面談サマリー（TEXT）
+- next_action - 次のアクション
+- status - ENUM('scheduled', 'completed', 'cancelled', 'waived')
+- waived_reason - 面談免除理由
+- waived_approved_by (FK to staff_basic) - 免除承認者
+- created_at
+- updated_at
+- created_by (FK to staff_basic)
+- updated_by (FK to staff_basic)
+
+**インデックス:**
+- INDEX idx_staff (staff_id)
+- INDEX idx_conducted_date (conducted_date)
+- INDEX idx_status (status)
+
+#### resignation_reasons（退職理由マスター）
+- reason_id (PK)
+- reason_code - VARCHAR(50) UNIQUE - 'personal', 'career_change', 'relocation', etc.
+- reason_name_ja - 退職理由名（日本語）
+- reason_name_en - 退職理由名（英語）
+- category - ENUM('voluntary', 'involuntary', 'neutral') - 自己都合/会社都合/中立
+- requires_exit_interview - 面談必要性 (BOOLEAN)
+- requires_approval - 承認必要性 (BOOLEAN)
+- display_order - 表示順序
+- is_active - 有効フラグ (BOOLEAN)
+- created_at
+- updated_at
+
+**初期データ:**
+```sql
+INSERT INTO resignation_reasons (reason_code, reason_name_ja, category, requires_exit_interview) VALUES
+('personal', '自己都合', 'voluntary', TRUE),
+('career_change', 'キャリアチェンジ', 'voluntary', TRUE),
+('relocation', '転居', 'voluntary', TRUE),
+('health', '健康上の理由', 'neutral', FALSE),
+('family', '家庭の事情', 'neutral', TRUE),
+('retirement', '定年退職', 'neutral', TRUE),
+('contract_end', '契約期間満了', 'neutral', FALSE),
+('disciplinary', '懲戒', 'involuntary', FALSE),
+('company_initiated', '会社都合', 'involuntary', FALSE),
+('other', 'その他', 'neutral', TRUE);
+```
+
+#### previous_employment_records（過去の雇用記録ビュー - 採用管理用）
+退職者が再応募した際の検索用マテリアライズドビュー
+
+```sql
+CREATE MATERIALIZED VIEW previous_employment_records AS
+SELECT
+    s.staff_id,
+    s.employee_number,
+    s.last_name,
+    s.first_name,
+    s.email,
+    s.phone,
+    s.hire_date,
+    s.resignation_date,
+    s.last_working_date,
+    r.reason_name_ja as resignation_reason,
+    s.resignation_reason_detail,
+    sa.facility_id as last_facility_id,
+    sa.department_id as last_department_id,
+    sa.position_id as last_position_id,
+    f.facility_name as last_facility,
+    d.department_name as last_department,
+    p.position_name as last_position,
+    AVG(e.overall_rating) as avg_evaluation,
+    MAX(e.overall_rating) as highest_evaluation,
+    ei.satisfaction_score as exit_satisfaction,
+    ei.would_recommend,
+    s.rehire_eligible,
+    s.rehire_notes,
+    DATEDIFF(s.resignation_date, s.hire_date) as days_employed
+FROM staff_basic s
+LEFT JOIN resignation_reasons r ON s.resignation_reason = r.reason_code
+LEFT JOIN staff_assignments sa ON s.staff_id = sa.staff_id AND sa.is_primary = TRUE
+LEFT JOIN facilities f ON sa.facility_id = f.facility_id
+LEFT JOIN departments d ON sa.department_id = d.department_id
+LEFT JOIN positions p ON sa.position_id = p.position_id
+LEFT JOIN evaluations e ON s.staff_id = e.staff_id
+LEFT JOIN exit_interviews ei ON s.exit_interview_id = ei.exit_interview_id
+WHERE s.employment_status = 'resigned'
+GROUP BY s.staff_id;
+
+-- インデックス
+CREATE INDEX idx_email ON previous_employment_records(email);
+CREATE INDEX idx_phone ON previous_employment_records(phone);
+CREATE INDEX idx_rehire_eligible ON previous_employment_records(rehire_eligible);
+CREATE INDEX idx_resignation_date ON previous_employment_records(resignation_date);
+```
+
+### 6.3 外部システム連携
 - 給与システムとの連携（給与・賞与情報）
 - 人事異動システムとの連携
 - 病院情報システム（HIS）との連携

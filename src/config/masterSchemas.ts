@@ -480,4 +480,52 @@ export const masterSchemas: Record<string, MasterSchema> = {
     sortableFields: ['requestDate', 'approvalStatus', 'requestType'],
     exportFields: ['departmentName', 'requesterName', 'requestDate', 'requestType', 'approvalStatus'],
   },
+
+  // Phase 4: 退職理由マスター
+  resignationReason: {
+    name: 'resignationReason',
+    label: '退職理由マスター',
+    fields: [
+      { key: 'reasonId', label: '理由ID', type: 'string', required: true, readonly: true },
+      { key: 'reasonCode', label: '理由コード', type: 'string', required: true, description: 'personal, career_change等' },
+      { key: 'reasonNameJa', label: '退職理由名（日本語）', type: 'string', required: true },
+      { key: 'reasonNameEn', label: '退職理由名（英語）', type: 'string', required: false },
+      {
+        key: 'category',
+        label: 'カテゴリー',
+        type: 'select',
+        required: true,
+        options: [
+          { value: 'voluntary', label: '自己都合' },
+          { value: 'involuntary', label: '会社都合' },
+          { value: 'neutral', label: '中立' },
+        ]
+      },
+      {
+        key: 'requiresExitInterview',
+        label: '退職面談必須',
+        type: 'boolean',
+        defaultValue: true,
+        description: 'この理由の場合に退職面談が必要か'
+      },
+      {
+        key: 'requiresApproval',
+        label: '承認必須',
+        type: 'boolean',
+        defaultValue: false,
+        description: 'この理由の場合に上長承認が必要か'
+      },
+      { key: 'displayOrder', label: '表示順序', type: 'number', defaultValue: 0 },
+      {
+        key: 'isActive',
+        label: '有効フラグ',
+        type: 'boolean',
+        defaultValue: true
+      },
+      { key: 'description', label: '説明', type: 'textarea', required: false },
+    ],
+    searchableFields: ['reasonCode', 'reasonNameJa', 'category'],
+    sortableFields: ['displayOrder', 'reasonCode', 'category'],
+    exportFields: ['reasonCode', 'reasonNameJa', 'category', 'requiresExitInterview', 'isActive'],
+  },
 };
