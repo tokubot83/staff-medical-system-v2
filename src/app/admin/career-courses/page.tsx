@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import {
   Users, TrendingUp, AlertCircle, CheckCircle,
-  Clock, Edit, Plus, Eye, Settings, BarChart3,
+  Clock, Edit, Plus, Eye, BarChart3,
   FileText, User, Calendar, Building2, XCircle
 } from 'lucide-react'
 import type {
@@ -27,7 +27,7 @@ export default function CareerCoursesAdminPage() {
   const [statistics, setStatistics] = useState<CareerCourseStatistics | null>(null)
   const [requests, setRequests] = useState<CareerCourseChangeRequest[]>([])
   const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState<'overview' | 'requests' | 'definitions' | 'statistics'>('overview')
+  const [activeTab, setActiveTab] = useState<'overview' | 'requests' | 'statistics'>('overview')
 
   useEffect(() => {
     fetchData()
@@ -361,17 +361,6 @@ export default function CareerCoursesAdminPage() {
               )}
             </button>
             <button
-              onClick={() => setActiveTab('definitions')}
-              className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === 'definitions'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              <Settings className="w-4 h-4 inline-block mr-2" />
-              コース定義管理
-            </button>
-            <button
               onClick={() => setActiveTab('statistics')}
               className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
                 activeTab === 'statistics'
@@ -665,31 +654,6 @@ export default function CareerCoursesAdminPage() {
                   })}
                 </div>
               )}
-            </div>
-          )}
-
-          {activeTab === 'definitions' && (
-            <div>
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                コース定義管理
-              </h2>
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                <div className="flex items-start gap-3">
-                  <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-sm text-yellow-800 font-medium">
-                      コース定義の変更は慎重に行ってください
-                    </p>
-                    <p className="text-sm text-yellow-700 mt-1">
-                      基本給係数や異動条件の変更は、既存職員の労働条件に影響します。
-                      理事会承認と労基署への届出が必要になる場合があります。
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <p className="text-gray-600">
-                コース定義の編集機能は今後実装予定です。
-              </p>
             </div>
           )}
 

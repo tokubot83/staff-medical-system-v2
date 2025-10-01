@@ -117,11 +117,18 @@ const masterTypes = [
     description: '退職理由コード・カテゴリー管理（Phase 4）',
     color: 'slate'
   },
+  {
+    key: 'careerCourse',
+    label: 'キャリアコース定義マスタ',
+    icon: Users,
+    description: 'A～Dコース（将来E・F拡張対応）定義管理（Phase 5）',
+    color: 'green'
+  },
 ];
 
 export default function MasterDataPage() {
   const [selectedMaster, setSelectedMaster] = useState<string>('staff');
-  const currentSchema = selectedMaster !== 'developmentMemo' && selectedMaster !== 'imageManagement' && selectedMaster !== 'evaluationSystem' && selectedMaster !== 'interviewSystem' && selectedMaster !== 'hrPolicy' && selectedMaster !== 'trainingSystem' && selectedMaster !== 'recruitment' && selectedMaster !== 'compliance' && selectedMaster !== 'healthData' && selectedMaster !== 'resignationReason' ? masterSchemas[selectedMaster] : null;
+  const currentSchema = selectedMaster !== 'developmentMemo' && selectedMaster !== 'imageManagement' && selectedMaster !== 'evaluationSystem' && selectedMaster !== 'interviewSystem' && selectedMaster !== 'hrPolicy' && selectedMaster !== 'trainingSystem' && selectedMaster !== 'recruitment' && selectedMaster !== 'compliance' && selectedMaster !== 'healthData' && selectedMaster !== 'resignationReason' && selectedMaster !== 'careerCourse' ? masterSchemas[selectedMaster] : null;
 
   const getColorClasses = (color: string) => {
     const colors: Record<string, string> = {
@@ -251,6 +258,32 @@ export default function MasterDataPage() {
                   <ComplianceMasterManager />
                 ) : selectedMaster === 'healthData' ? (
                   <HealthDataMasterManager />
+                ) : selectedMaster === 'careerCourse' ? (
+                  <div className="text-center py-8">
+                    <div className="max-w-2xl mx-auto">
+                      <Users className="h-16 w-16 mx-auto text-green-400 mb-4" aria-hidden="true" />
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">キャリアコース定義マスタ</h3>
+                      <p className="text-gray-600 mb-6">
+                        A～Dコース（将来E・F拡張可能）の詳細定義を管理します。<br/>
+                        基本給係数、異動条件、夜勤条件、管理職登用などを設定できます。
+                      </p>
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-left">
+                        <p className="text-sm text-blue-800">
+                          <strong>実装予定機能:</strong>
+                        </p>
+                        <ul className="text-sm text-blue-700 mt-2 space-y-1 list-disc list-inside">
+                          <li>コース定義のCRUD（作成・編集・削除）</li>
+                          <li>E・Fコースなど新規コースの追加</li>
+                          <li>コードベース不要で動的に選択肢に反映</li>
+                          <li>基本給係数・異動条件・夜勤条件の詳細設定</li>
+                          <li>コース無効化（新規申請停止）機能</li>
+                        </ul>
+                      </div>
+                      <p className="text-sm text-gray-500">
+                        現在は暫定的にキャリア選択ページの「コース概要」タブで確認できます。
+                      </p>
+                    </div>
+                  </div>
                 ) : selectedMaster === 'developmentMemo' ? (
                   <DevelopmentMemoTab />
                 ) : selectedMaster === 'imageManagement' ? (

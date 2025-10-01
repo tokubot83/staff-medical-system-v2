@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import {
   Database, Download, Link2, History, Calendar,
   Shield, Settings, FileText, Share2, Home, StickyNote, Clock,
-  BarChart3, FolderOpen, Cog, Users, TrendingUp
+  BarChart3, FolderOpen, Cog
 } from 'lucide-react';
 
 
@@ -79,18 +79,6 @@ const sidebarMenuGroups = [
         label: 'MCP共有フォルダ',
         icon: Share2,
         description: '連携システム情報'
-      }
-    ]
-  },
-  {
-    title: '人事管理',
-    icon: Users,
-    items: [
-      {
-        href: '/admin/career-courses',
-        label: 'キャリアコース管理',
-        icon: TrendingUp,
-        description: 'A～D コース定義と職員所属管理'
       }
     ]
   },
