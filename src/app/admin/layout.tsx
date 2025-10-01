@@ -93,6 +93,12 @@ const sidebarMenuGroups = [
         description: '各種マスターデータの管理'
       },
       {
+        href: '/admin/dev-notes',
+        label: '開発メモ',
+        icon: StickyNote,
+        description: '統合開発メモ・実装記録'
+      },
+      {
         href: '/admin/backup',
         label: 'バックアップ・リストア',
         icon: Download,
