@@ -1,5 +1,204 @@
 import { EvaluationGrade, FinalEvaluationGrade } from './two-axis-evaluation'
 
+// ==========================================
+// キャリアコース選択制度関連の型定義
+// 参照: docs/20250919_【川畑法人統括事務局長】コース別雇用制度労基資料.pdf
+// ==========================================
+
+/**
+ * キャリアコースコード (A～D)
+ */
+export type CareerCourseCode = 'A' | 'B' | 'C' | 'D'
+
+/**
+ * 施設間異動の可否レベル
+ * - none: 施設間異動不可（Bコース: 施設内の部署異動のみ対応）
+ * - limited: 将来の拡張用（現在未使用）
+ * - full: 全施設対象（Aコース: 転居を伴う転勤も含む）
+ */
+export type FacilityTransferLevel = 'none' | 'limited' | 'full'
+
+/**
+ * 夜勤の可否レベル
+ */
+export type NightShiftAvailability = 'none' | 'selectable' | 'required'
+
+/**
+ * コース変更理由
+ */
+export type CourseChangeReason =
+  | 'annual'                 // 年次定期変更
+  | 'special_pregnancy'      // 特例: 妊娠
+  | 'special_caregiving'     // 特例: 介護
+  | 'special_illness'        // 特例: 疾病
+  | 'special_other'          // 特例: その他
+
+/**
+ * 承認ステータス
+ */
+export type ApprovalStatus = 'pending' | 'approved' | 'rejected' | 'withdrawn'
+
+/**
+ * 特例変更事由
+ */
+export type SpecialChangeReason = 'pregnancy' | 'caregiving' | 'illness' | null
+
+/**
+ * キャリアコース定義（マスターデータ）
+ */
+export interface CourseDefinition {
+  id: string
+  courseCode: CareerCourseCode
+  courseName: string
+  description: string
+
+  // 異動・転勤条件
+  departmentTransferAvailable: boolean    // 部署異動可否
+  facilityTransferAvailable: FacilityTransferLevel  // 施設間異動可否
+  relocationRequired: boolean             // 転居を伴う転勤
+
+  // 勤務条件
+  nightShiftAvailable: NightShiftAvailability
+
+  // キャリアパス
+  managementTrack: boolean                // 管理職登用対象
+
+  // 給与設定（3パターン対応: 係数のみ/等級のみ/両方）
+  baseSalaryMultiplier: number            // 基本給係数（例: 1.2）
+  salaryGrade: number | null              // 給与等級（オプション）
+  salaryNotes: string | null              // 給与計算に関するメモ
+
+  // メタデータ
+  isActive: boolean
+  displayOrder: number
+  createdAt: string
+  updatedAt: string
+}
+
+/**
+ * 職員のキャリアコース選択情報
+ */
+export interface CareerCourseSelection {
+  id: string
+  staffId: string
+  courseCode: CareerCourseCode
+  courseName?: string  // 表示用（JOIN結果）
+
+  // 適用期間
+  effectiveFrom: string  // YYYY-MM-DD
+  effectiveTo: string | null  // NULL = 現在有効
+
+  // 次回変更可能日（年1回制限）
+  nextChangeAvailableDate: string | null
+
+  // 特例変更事由
+  specialChangeReason: SpecialChangeReason
+  specialChangeNote: string | null
+
+  // 承認情報
+  changeRequestedAt: string | null
+  changeRequestedBy: string | null
+  approvedAt: string | null
+  approvedBy: string | null
+  approvalStatus: ApprovalStatus
+  rejectionReason: string | null
+
+  // メタデータ
+  createdAt: string
+  updatedAt: string
+}
+
+/**
+ * キャリアコース変更申請
+ */
+export interface CareerCourseChangeRequest {
+  id: string
+  staffId: string
+  staffName?: string  // 表示用
+
+  // 変更内容
+  currentCourseCode: CareerCourseCode
+  currentCourseName?: string  // 表示用
+  requestedCourseCode: CareerCourseCode
+  requestedCourseName?: string  // 表示用
+  requestedEffectiveDate: string  // YYYY-MM-DD
+
+  // 変更理由
+  changeReason: CourseChangeReason
+  reasonDetail: string | null
+  attachmentUrls: string[] | null  // 診断書等の添付ファイル
+
+  // 承認フロー
+  approvalStatus: ApprovalStatus
+  submittedAt: string
+  submittedBy: string
+  submittedByName?: string  // 表示用
+
+  reviewedAt: string | null
+  reviewedBy: string | null
+  reviewedByName?: string  // 表示用
+  reviewComment: string | null
+
+  // 反映状態
+  appliedToRecord: boolean
+  appliedAt: string | null
+
+  // メタデータ
+  createdAt: string
+  updatedAt: string
+}
+
+/**
+ * コース間転換ルール
+ */
+export interface CourseTransferRule {
+  id: string
+  fromCourseCode: CareerCourseCode
+  toCourseCode: CareerCourseCode
+
+  // 転換条件
+  isAllowed: boolean
+  requiresApproval: boolean
+  requiresTraining: boolean          // キャリアルートの違いを考慮した訓練
+  trainingProgramName: string | null
+
+  // 制約条件
+  minimumServiceYears: number | null  // 最低勤続年数
+  requiresManagerRecommendation: boolean
+
+  // 説明
+  notes: string | null
+
+  createdAt: string
+  updatedAt: string
+}
+
+/**
+ * キャリアコース選択制度の統計情報
+ */
+export interface CareerCourseStatistics {
+  totalStaff: number
+  byCourse: {
+    courseCode: CareerCourseCode
+    courseName: string
+    count: number
+    percentage: number
+  }[]
+  pendingChangeRequests: number
+  recentChanges: {
+    month: string
+    count: number
+  }[]
+}
+
+/**
+ * コース詳細情報（定義+職員数）
+ */
+export interface CourseDefinitionWithCount extends CourseDefinition {
+  currentStaffCount: number
+  percentage: number
+}
+
 export interface TwoAxisEvaluationData {
   facilityScore: EvaluationGrade
   facilityRank: number
@@ -76,6 +275,9 @@ export interface StaffDetail {
   // 再雇用関連
   rehireEligible?: boolean         // 再雇用可能フラグ
   rehireNotes?: string             // 再雇用に関するメモ
+
+  // キャリアコース選択制度（Phase 5）
+  careerCourse?: CareerCourseSelection
 
   evaluationHistory: {
     period: string
