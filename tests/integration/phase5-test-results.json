@@ -1,0 +1,74 @@
+{
+  "timestamp": "2025-10-01T06:41:31.697Z",
+  "summary": {
+    "total": 9,
+    "passed": 7,
+    "failed": 2,
+    "successRate": "77.8%"
+  },
+  "tests": [
+    {
+      "id": "TC-API-01",
+      "name": "マイページデータ取得",
+      "result": "PASS",
+      "duration": 35,
+      "error": null
+    },
+    {
+      "id": "TC-API-02",
+      "name": "コース定義一覧取得",
+      "result": "PASS",
+      "duration": 31,
+      "error": null
+    },
+    {
+      "id": "TC-API-03",
+      "name": "コース変更申請送信",
+      "result": "PASS",
+      "duration": 34,
+      "error": null
+    },
+    {
+      "id": "TC-API-04",
+      "name": "申請履歴取得",
+      "result": "PASS",
+      "duration": 41,
+      "error": null
+    },
+    {
+      "id": "TC-WEBHOOK-01",
+      "name": "承認通知送信",
+      "result": "FAIL",
+      "duration": 0,
+      "error": "ステータスコードが200であること - Expected: 200, Actual: 500"
+    },
+    {
+      "id": "TC-WEBHOOK-02",
+      "name": "却下通知送信",
+      "result": "FAIL",
+      "duration": 0,
+      "error": "ステータスコードが200であること - Expected: 200, Actual: 500"
+    },
+    {
+      "id": "TC-ERROR-01",
+      "name": "無効なトークン",
+      "result": "PASS",
+      "duration": 20,
+      "error": null
+    },
+    {
+      "id": "TC-ERROR-02",
+      "name": "必須項目未入力",
+      "result": "PASS",
+      "duration": 24,
+      "error": null
+    },
+    {
+      "id": "TC-ERROR-03",
+      "name": "特例変更で添付ファイルなし",
+      "result": "PASS",
+      "duration": 21,
+      "error": null
+    }
+  ]
+}

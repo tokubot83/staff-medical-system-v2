@@ -12,7 +12,15 @@ import { NextRequest, NextResponse } from 'next/server'
  */
 export async function GET(request: NextRequest) {
   try {
-    // TODO: 実際の認証処理を実装
+    // 認証チェック（開発環境用）
+    const authHeader = request.headers.get('authorization')
+    const expectedToken = process.env.MEDICAL_SYSTEM_API_KEY || 'vd_prod_key_A8B9C2D3E4F5G6H7I8J9K0L1M2N3O4P5'
+
+    if (authHeader !== `Bearer ${expectedToken}`) {
+      return NextResponse.json({ error: '認証が必要です' }, { status: 401 })
+    }
+
+    // TODO: 実際の認証処理を実装（共通DB構築後）
     // const supabase = createClient()
     // const { data: { user }, error: authError } = await supabase.auth.getUser()
     // if (authError || !user) {
