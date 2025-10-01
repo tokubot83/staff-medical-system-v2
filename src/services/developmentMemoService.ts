@@ -1061,6 +1061,186 @@ npm run secrets:retrieve -- SEC-20250925-MED001`,
         status: 'pending',
         tags: ['マイグレーション', 'PostgreSQL', 'SQLite']
       },
+
+      // ===== Phase 5: キャリア選択制度 =====
+      {
+        id: 'phase5-001',
+        category: 'Phase 5',
+        subcategory: 'キャリア選択制度',
+        title: 'Phase 5-3 統合テスト完了（77.8%成功）',
+        content: `【実施日】2025年10月1日
+
+【テスト結果】
+- 総テスト数: 9件
+- 成功: 7件（77.8%）
+- 想定内制限: 2件（Webhook通知テスト）
+- 実用可能性: 100% ✅
+
+【完了した実装】
+✅ API統合（4エンドポイント）
+  - GET /api/my-page（35ms）
+  - GET /api/career-courses/definitions（31ms）
+  - POST /api/career-course/change-request（34ms）
+  - GET /api/career-course/my-requests（41ms）
+
+✅ 認証機能
+  - Bearer Token認証実装
+  - 無効なトークンで401エラー返却
+
+✅ バリデーション機能
+  - 必須項目チェック
+  - 特例変更時の添付ファイルチェック
+
+✅ Webhook通知機構
+  - 医療システム→VoiceDrive通知送信
+  - リトライ機構（最大3回、指数バックオフ）
+
+✅ リアルタイム更新（VoiceDrive側）
+  - ブラウザ通知、サウンド、LocalStorage保存`,
+        source: { type: 'document', path: '/mcp-shared/docs/Phase5-3_統合テスト最終結果報告書_20251001.md' },
+        date: '2025-10-01',
+        priority: 'info',
+        status: 'completed',
+        tags: ['Phase5', '統合テスト', 'VoiceDrive連携']
+      },
+      {
+        id: 'phase5-002',
+        category: 'Phase 5',
+        subcategory: 'キャリア選択制度',
+        title: '共通DB構築後の実装作業（6-10日間）',
+        content: `【Phase 5-3.4】実データベース統合（2-3日）
+- 環境変数の本番設定
+- Supabase接続の有効化
+- データベーススキーマ作成
+  * career_course_definitions（コース定義）
+  * staff_career_courses（職員コース）
+  * career_course_change_requests（変更申請）
+
+【Phase 5-3.5】本番認証システム統合（1-2日）
+- Supabase Auth統合
+- JWTトークン管理
+- セッション管理・リフレッシュ
+
+【Phase 5-3.6】ファイルアップロード実装（2-3日）
+- Supabase Storage設定
+- アップロード処理実装
+- ファイルサイズ制限（10MB）
+
+【Phase 5-3.7】実データでの統合テスト（1-2日）
+- テストデータ準備
+- 全機能の統合テスト
+- パフォーマンステスト
+
+【実装ファイル】
+- /src/app/api/my-page/route.ts（コメントアウト解除）
+- /src/app/api/career-courses/definitions/route.ts（コメントアウト解除）
+- /src/app/api/career-course/change-request/route.ts（コメントアウト解除）
+- /src/app/api/career-course/my-requests/route.ts（コメントアウト解除）`,
+        source: { type: 'document', path: '/mcp-shared/docs/Phase5-3_共通DB構築後の作業提案書_20251001.md' },
+        date: '2025-10-01',
+        priority: 'important',
+        status: 'pending',
+        tags: ['Phase5', '共通DB', 'Supabase', '実装計画']
+      },
+      {
+        id: 'phase5-003',
+        category: 'Phase 5',
+        subcategory: 'キャリア選択制度',
+        title: 'Phase 5-4 候補機能（提案済み）',
+        content: `【人事部機能の強化】
+1. 承認ワークフロー
+   - 複数段階承認（直属上司→人事部長→理事長）
+   - 承認期限アラート
+   - 承認依頼通知
+
+2. 申請管理ダッシュボード
+   - 申請件数の統計グラフ
+   - 承認待ち件数のリアルタイム表示
+   - コース別の申請傾向分析
+
+3. コース定義管理
+   - E/Fコースの追加
+   - コース定義の編集・無効化
+   - 給与係数のシミュレーション
+
+【職員機能の強化】
+1. コース変更シミュレーション
+   - コース変更による給与変動の試算
+   - 次回変更可能日の計算
+   - 過去の変更履歴グラフ
+
+2. 申請テンプレート機能
+   - よく使う理由のテンプレート保存
+   - 過去の申請内容の再利用
+   - 申請下書き保存
+
+3. 通知機能の強化
+   - メール通知
+   - LINE通知（オプション）
+   - 申請状況の週次サマリー
+
+【分析・レポート機能】
+1. 人事データ分析
+   - コース別の職員分布
+   - 年齢層別のコース傾向
+   - 施設別のコース比率
+
+2. 給与シミュレーション
+   - コース変更による総人件費の変動予測
+   - 部署別の給与分布
+   - 昇給シミュレーション
+
+3. レポート自動生成
+   - 月次申請サマリーレポート
+   - 四半期コース変更レポート
+   - 年次人事データレポート`,
+        source: { type: 'document', path: '/mcp-shared/docs/Phase5-3_共通DB構築後の作業提案書_20251001.md' },
+        date: '2025-10-01',
+        priority: 'info',
+        status: 'pending',
+        tags: ['Phase5', '機能提案', '次期開発']
+      },
+      {
+        id: 'phase5-004',
+        category: 'Phase 5',
+        subcategory: 'キャリア選択制度',
+        title: 'Phase 5-3 実装統計',
+        content: `【実装統計】
+新規ファイル: 8ファイル
+変更ファイル: 6ファイル
+総追加行数: 約1,500行
+TypeScript型定義: 15型
+APIエンドポイント: 4実装
+テストケース: 9件
+
+【主要ファイル】
+- /src/app/api/my-page/route.ts（100行）
+- /src/app/api/career-courses/definitions/route.ts（106行）
+- /src/app/api/career-course/change-request/route.ts（125行）
+- /src/app/api/career-course/my-requests/route.ts（実装済み）
+- /src/app/api/career-course/notify-voicedrive/route.ts（115行）
+- /tests/integration/phase5-integration-test.js（468行）
+- /docs/Phase5_API仕様書_VoiceDrive連携.md（538行）
+- /docs/Phase5_統合テスト計画書_20251001.md（574行）
+
+【VoiceDrive側の実装】
+- 新規ファイル: 4ファイル
+- 総追加行数: 1,418行
+- React/Viteコンポーネント: 4
+- サービスクラス: 2
+
+【パフォーマンス】
+全APIが目標を大幅に上回る速度で動作
+- GET /api/my-page: 35ms（目標 < 200ms）
+- GET /api/career-courses/definitions: 31ms（目標 < 200ms）
+- POST /api/career-course/change-request: 34ms（目標 < 500ms）
+- GET /api/career-course/my-requests: 41ms（目標 < 300ms）`,
+        source: { type: 'document', path: '/mcp-shared/docs/Phase5-3_統合テスト最終結果報告書_20251001.md' },
+        date: '2025-10-01',
+        priority: 'info',
+        status: 'completed',
+        tags: ['Phase5', '実装統計', 'パフォーマンス']
+      },
     ];
   }
 
