@@ -87,6 +87,7 @@ const tabCategories = {
     tabs: [
       { id: 'basic', label: '基本情報', icon: '📋' },
       { id: 'career', label: '経歴・キャリア', icon: '💼' },
+      { id: 'career-course', label: 'キャリア選択コース', icon: '🎯' },
       { id: 'mindset', label: 'マインド・志向性', icon: '🧠' },
     ]
   },
@@ -236,6 +237,7 @@ export default function StaffDetailPage() {
             </div>
           )}
           {activeTab === 'career' && <CareerTab selectedStaff={selectedStaff} />}
+          {activeTab === 'career-course' && <CareerCourseTab selectedStaff={selectedStaff} />}
           {activeTab === 'mindset' && <MindsetTab selectedStaff={selectedStaff} />}
           {activeTab === 'qualification' && <QualificationTab selectedStaff={selectedStaff} />}
           {activeTab === 'achievement' && <AchievementTab selectedStaff={selectedStaff} />}
@@ -1239,6 +1241,269 @@ function WellbeingTab({ selectedStaff, onNavigateToHealthCheckup }: { selectedSt
       <div className={styles.sectionCard}>
         <h3>家族構成（参考情報）</h3>
         <p>配偶者あり、子供2人</p>
+      </div>
+    </div>
+  )
+}
+
+function CareerCourseTab({ selectedStaff }: { selectedStaff: any }): React.ReactElement {
+  // モックデータ：コース変更履歴
+  const courseHistory = [
+    {
+      id: 'cc-003',
+      courseCode: 'B',
+      courseName: 'Bコース（施設内協力型）',
+      salaryMultiplier: 1.1,
+      effectiveFrom: '2025-04-01',
+      effectiveTo: null,
+      period: '7ヶ月',
+      changeReason: '地元での長期勤務を希望',
+      approvedBy: '人事部',
+      approvedAt: '2025-03-25'
+    },
+    {
+      id: 'cc-002',
+      courseCode: 'C',
+      courseName: 'Cコース（専門職型）',
+      salaryMultiplier: 1.0,
+      effectiveFrom: '2023-04-01',
+      effectiveTo: '2025-03-31',
+      period: '2年',
+      changeReason: '専門性向上のため',
+      approvedBy: '人事部',
+      approvedAt: '2023-03-20'
+    },
+    {
+      id: 'cc-001',
+      courseCode: 'C',
+      courseName: 'Cコース（専門職型）',
+      salaryMultiplier: 1.0,
+      effectiveFrom: '2021-04-01',
+      effectiveTo: '2023-03-31',
+      period: '2年',
+      changeReason: '新入職（初期配属）',
+      approvedBy: '人事部',
+      approvedAt: '2021-03-15'
+    }
+  ]
+
+  // 現在のコース
+  const currentCourse = courseHistory[0]
+
+  // 申請状況（モックデータ）
+  const pendingRequests = [
+    {
+      id: 'req-003',
+      requestedCourse: 'A',
+      requestedCourseName: 'Aコース（全面協力型）',
+      requestedAt: '2025-09-15',
+      effectiveDate: '2026-04-01',
+      status: 'pending',
+      reason: '管理職を目指すため、より幅広い経験を積みたい'
+    }
+  ]
+
+  // コース別の在籍期間を計算
+  const courseStats = [
+    { courseCode: 'A', courseName: 'Aコース', totalMonths: 0, percentage: 0 },
+    { courseCode: 'B', courseName: 'Bコース', totalMonths: 7, percentage: 16 },
+    { courseCode: 'C', courseName: 'Cコース', totalMonths: 48, percentage: 84 },
+    { courseCode: 'D', courseName: 'Dコース', totalMonths: 0, percentage: 0 }
+  ]
+
+  const getStatusBadgeStyle = (status: string) => {
+    switch(status) {
+      case 'approved': return { bg: '#10b981', text: '承認済み' }
+      case 'rejected': return { bg: '#ef4444', text: '却下' }
+      case 'pending': return { bg: '#f59e0b', text: '審査中' }
+      default: return { bg: '#6b7280', text: '不明' }
+    }
+  }
+
+  const getCourseColor = (courseCode: string) => {
+    switch(courseCode) {
+      case 'A': return '#ef4444'
+      case 'B': return '#f97316'
+      case 'C': return '#3b82f6'
+      case 'D': return '#10b981'
+      default: return '#6b7280'
+    }
+  }
+
+  return (
+    <div className={styles.tabContentSection}>
+      <div className={styles.sectionHeader}>
+        <h2>🎯 キャリア選択コース</h2>
+        <div className={styles.sectionActions}>
+          <button className={styles.actionButton}>コース変更申請</button>
+        </div>
+      </div>
+
+      {/* 現在のコース情報 */}
+      <div className={styles.sectionCard} style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', marginBottom: '24px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <div style={{ fontSize: '14px', opacity: 0.9, marginBottom: '8px' }}>現在のコース</div>
+            <h2 style={{ fontSize: '28px', fontWeight: 'bold', margin: '0 0 12px 0' }}>
+              {currentCourse.courseName}
+            </h2>
+            <div style={{ fontSize: '16px', opacity: 0.95 }}>
+              給与係数: <strong>{currentCourse.salaryMultiplier}倍</strong> |
+              適用開始: {currentCourse.effectiveFrom} |
+              在籍期間: {currentCourse.period}
+            </div>
+          </div>
+          <div style={{ fontSize: '72px' }}>🎯</div>
+        </div>
+      </div>
+
+      {/* 申請状況 */}
+      {pendingRequests.length > 0 && (
+        <div className={styles.sectionCard} style={{ borderLeft: '4px solid #f59e0b', background: '#fffbeb', marginBottom: '24px' }}>
+          <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+            <span>⏳</span>
+            申請中のコース変更
+          </h3>
+          {pendingRequests.map(request => {
+            const statusStyle = getStatusBadgeStyle(request.status)
+            return (
+              <div key={request.id} style={{ padding: '12px', background: 'white', borderRadius: '8px', border: '1px solid #fbbf24' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '8px' }}>
+                  <div>
+                    <div style={{ fontWeight: 'bold', fontSize: '16px', marginBottom: '4px' }}>
+                      {request.requestedCourseName}
+                    </div>
+                    <div style={{ fontSize: '14px', color: '#6b7280' }}>
+                      申請日: {request.requestedAt} | 適用希望日: {request.effectiveDate}
+                    </div>
+                  </div>
+                  <span style={{
+                    padding: '4px 12px',
+                    borderRadius: '12px',
+                    fontSize: '12px',
+                    fontWeight: 'bold',
+                    background: statusStyle.bg,
+                    color: 'white'
+                  }}>
+                    {statusStyle.text}
+                  </span>
+                </div>
+                <div style={{ fontSize: '14px', color: '#374151', marginTop: '8px' }}>
+                  <strong>変更理由:</strong> {request.reason}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
+
+      {/* コース別在籍期間 */}
+      <div className={styles.sectionCard} style={{ marginBottom: '24px' }}>
+        <h3 style={{ marginBottom: '16px' }}>📊 コース別在籍期間</h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginBottom: '16px' }}>
+          {courseStats.map(stat => (
+            <div key={stat.courseCode} style={{
+              padding: '16px',
+              borderRadius: '8px',
+              border: '2px solid #e5e7eb',
+              textAlign: 'center',
+              background: stat.totalMonths > 0 ? getCourseColor(stat.courseCode) + '10' : '#f9fafb'
+            }}>
+              <div style={{ fontSize: '24px', fontWeight: 'bold', color: getCourseColor(stat.courseCode) }}>
+                {stat.courseCode}
+              </div>
+              <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '4px' }}>
+                {stat.courseName}
+              </div>
+              <div style={{ fontSize: '20px', fontWeight: 'bold', marginTop: '8px' }}>
+                {stat.totalMonths}ヶ月
+              </div>
+              <div style={{ fontSize: '14px', color: '#6b7280' }}>
+                {stat.percentage}%
+              </div>
+            </div>
+          ))}
+        </div>
+        <div style={{ fontSize: '14px', color: '#6b7280', textAlign: 'center' }}>
+          総在籍期間: 55ヶ月（4年7ヶ月）
+        </div>
+      </div>
+
+      {/* コース変更履歴 */}
+      <div className={styles.sectionCard}>
+        <h3 style={{ marginBottom: '16px' }}>📜 コース変更履歴</h3>
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ background: '#f3f4f6', borderBottom: '2px solid #e5e7eb' }}>
+                <th style={{ padding: '12px', textAlign: 'left', fontSize: '14px', fontWeight: '600' }}>コース</th>
+                <th style={{ padding: '12px', textAlign: 'left', fontSize: '14px', fontWeight: '600' }}>給与係数</th>
+                <th style={{ padding: '12px', textAlign: 'left', fontSize: '14px', fontWeight: '600' }}>適用期間</th>
+                <th style={{ padding: '12px', textAlign: 'left', fontSize: '14px', fontWeight: '600' }}>在籍期間</th>
+                <th style={{ padding: '12px', textAlign: 'left', fontSize: '14px', fontWeight: '600' }}>変更理由</th>
+                <th style={{ padding: '12px', textAlign: 'left', fontSize: '14px', fontWeight: '600' }}>承認者</th>
+              </tr>
+            </thead>
+            <tbody>
+              {courseHistory.map((course, index) => (
+                <tr key={course.id} style={{ borderBottom: '1px solid #e5e7eb' }}>
+                  <td style={{ padding: '12px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{
+                        display: 'inline-block',
+                        width: '32px',
+                        height: '32px',
+                        borderRadius: '50%',
+                        background: getCourseColor(course.courseCode),
+                        color: 'white',
+                        fontWeight: 'bold',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}>
+                        {course.courseCode}
+                      </span>
+                      <div>
+                        <div style={{ fontWeight: '600', fontSize: '14px' }}>{course.courseName}</div>
+                        {index === 0 && (
+                          <span style={{
+                            fontSize: '10px',
+                            padding: '2px 6px',
+                            borderRadius: '4px',
+                            background: '#10b981',
+                            color: 'white',
+                            fontWeight: 'bold'
+                          }}>
+                            現在
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </td>
+                  <td style={{ padding: '12px', fontWeight: 'bold' }}>{course.salaryMultiplier}倍</td>
+                  <td style={{ padding: '12px', fontSize: '14px' }}>
+                    {course.effectiveFrom} ～ {course.effectiveTo || '現在'}
+                  </td>
+                  <td style={{ padding: '12px', fontSize: '14px' }}>{course.period}</td>
+                  <td style={{ padding: '12px', fontSize: '14px', color: '#6b7280' }}>{course.changeReason}</td>
+                  <td style={{ padding: '12px', fontSize: '14px' }}>
+                    <div>{course.approvedBy}</div>
+                    <div style={{ fontSize: '12px', color: '#9ca3af' }}>{course.approvedAt}</div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* 給与係数の推移グラフ（将来実装） */}
+      <div className={styles.sectionCard} style={{ marginTop: '24px', background: '#f9fafb' }}>
+        <h3 style={{ marginBottom: '16px' }}>📈 給与係数の推移（準備中）</h3>
+        <div style={{ textAlign: 'center', padding: '40px', color: '#9ca3af' }}>
+          <div style={{ fontSize: '48px', marginBottom: '16px' }}>📊</div>
+          <p>給与係数の推移グラフは実装準備中です</p>
+        </div>
       </div>
     </div>
   )

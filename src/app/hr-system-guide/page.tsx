@@ -6,6 +6,7 @@ import Link from 'next/link';
 import SheetPreviewModal from '@/components/SheetPreviewModal';
 import InterviewSheetModal from '@/components/InterviewSheetModal';
 import TrainingContent from './TrainingContent';
+import CareerCourseContent from './CareerCourseContent';
 import JinzaiPreparationLayout from './JinzaiPreparationLayout';
 import ActionPlanLayout from './ActionPlanLayout';
 import DesignPhaseLayout from './DesignPhaseLayout';
@@ -31,7 +32,7 @@ interface SheetItem {
 }
 
 export default function HRSystemGuidePage() {
-  const [activeTab, setActiveTab] = useState<'evaluation' | 'interview' | 'training' | 'sheets' | 'preparation'>('evaluation');
+  const [activeTab, setActiveTab] = useState<'evaluation' | 'interview' | 'training' | 'career-course' | 'sheets' | 'preparation'>('evaluation');
   const [preparationSubTab, setPreparationSubTab] = useState<'organization' | 'info-collection' | 'system-design' | 'trial-adjustment'>('organization');
   const [viewMode, setViewMode] = useState<'general' | 'formal'>('general');
   const [sheetType, setSheetType] = useState<'all' | 'interview'>('all');
@@ -197,6 +198,16 @@ export default function HRSystemGuidePage() {
               }`}
             >
               教育・研修制度
+            </button>
+            <button
+              onClick={() => setActiveTab('career-course')}
+              className={`flex-1 py-3 px-6 rounded-lg font-medium transition-all ${
+                activeTab === 'career-course'
+                  ? 'bg-blue-500 text-white shadow-md'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              キャリア選択制度
             </button>
             <button
               onClick={() => setActiveTab('sheets')}
@@ -1827,6 +1838,37 @@ export default function HRSystemGuidePage() {
             </div>
             
             <TrainingContent viewMode={viewMode} />
+          </>
+        )}
+
+        {/* キャリア選択制度のコンテンツ */}
+        {activeTab === 'career-course' && (
+          <>
+            {/* 表示モード切り替え */}
+            <div className="mb-4 flex gap-2">
+              <button
+                onClick={() => setViewMode('general')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  viewMode === 'general'
+                    ? 'bg-green-500 text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                📘 一般職員向け
+              </button>
+              <button
+                onClick={() => setViewMode('formal')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  viewMode === 'formal'
+                    ? 'bg-purple-500 text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                📜 正式文書版
+              </button>
+            </div>
+
+            <CareerCourseContent viewMode={viewMode} />
           </>
         )}
 
