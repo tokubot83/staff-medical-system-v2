@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import GenericMasterTable from '@/components/admin/GenericMasterTable';
-import DevelopmentMemoTab from '@/components/admin/DevelopmentMemoTab';
 import EvaluationSystemMasterManager from '@/components/admin/EvaluationSystemMasterManager';
 import InterviewSystemVersionManager from '@/components/admin/InterviewSystemVersionManager';
 import HRPolicyManager from '@/components/admin/HRPolicyManager';
@@ -76,13 +75,6 @@ const masterTypes = [
     color: 'orange'
   },
   {
-    key: 'developmentMemo',
-    label: '開発メモ',
-    icon: BookOpen,
-    description: '開発メモ・実装指示の集約',
-    color: 'indigo'
-  },
-  {
     key: 'imageManagement',
     label: '画像管理',
     icon: Image,
@@ -128,7 +120,7 @@ const masterTypes = [
 
 export default function MasterDataPage() {
   const [selectedMaster, setSelectedMaster] = useState<string>('staff');
-  const currentSchema = selectedMaster !== 'developmentMemo' && selectedMaster !== 'imageManagement' && selectedMaster !== 'evaluationSystem' && selectedMaster !== 'interviewSystem' && selectedMaster !== 'hrPolicy' && selectedMaster !== 'trainingSystem' && selectedMaster !== 'recruitment' && selectedMaster !== 'compliance' && selectedMaster !== 'healthData' && selectedMaster !== 'resignationReason' && selectedMaster !== 'careerCourse' ? masterSchemas[selectedMaster] : null;
+  const currentSchema = selectedMaster !== 'imageManagement' && selectedMaster !== 'evaluationSystem' && selectedMaster !== 'interviewSystem' && selectedMaster !== 'hrPolicy' && selectedMaster !== 'trainingSystem' && selectedMaster !== 'recruitment' && selectedMaster !== 'compliance' && selectedMaster !== 'healthData' && selectedMaster !== 'resignationReason' && selectedMaster !== 'careerCourse' ? masterSchemas[selectedMaster] : null;
 
   const getColorClasses = (color: string) => {
     const colors: Record<string, string> = {
@@ -284,8 +276,6 @@ export default function MasterDataPage() {
                       </p>
                     </div>
                   </div>
-                ) : selectedMaster === 'developmentMemo' ? (
-                  <DevelopmentMemoTab />
                 ) : selectedMaster === 'imageManagement' ? (
                   <div className="text-center py-8">
                     <div className="max-w-md mx-auto">
@@ -345,49 +335,26 @@ export default function MasterDataPage() {
               </div>
 
               {/* 情報パネル */}
-              {selectedMaster === 'developmentMemo' ? (
-                <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4">
-                  <div className="flex">
-                    <div className="flex-shrink-0">
-                      <BookOpen className="h-5 w-5 text-indigo-600" />
-                    </div>
-                    <div className="ml-3">
-                      <h3 className="text-sm font-medium text-indigo-800">
-                        開発メモについて
-                      </h3>
-                      <div className="mt-2 text-sm text-indigo-700">
-                        <ul className="list-disc list-inside space-y-1">
-                          <li>システム内の開発メモ、TODO、実装指示書を集約表示しています</li>
-                          <li>ファイルパスをクリックすると、該当ファイルの場所が確認できます</li>
-                          <li>優先度「Critical」の項目は早急な対応が必要です</li>
-                          <li>最新の実装指示書: /docs/implementation-resume-guide-v3-20250813.md</li>
-                        </ul>
-                      </div>
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <Shield className="h-5 w-5 text-blue-600" />
+                  </div>
+                  <div className="ml-3">
+                    <h3 className="text-sm font-medium text-blue-800">
+                      データ管理に関する注意事項
+                    </h3>
+                    <div className="mt-2 text-sm text-blue-700">
+                      <ul className="list-disc list-inside space-y-1">
+                        <li>マスターデータの変更は、システム全体に影響を与える可能性があります</li>
+                        <li>削除したデータは復元できません。必要に応じてバックアップを取得してください</li>
+                        <li>インポート時は、データ形式が正しいことを確認してください</li>
+                        <li>変更履歴は自動的に記録されます</li>
+                      </ul>
                     </div>
                   </div>
                 </div>
-              ) : (
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <div className="flex">
-                    <div className="flex-shrink-0">
-                      <Shield className="h-5 w-5 text-blue-600" />
-                    </div>
-                    <div className="ml-3">
-                      <h3 className="text-sm font-medium text-blue-800">
-                        データ管理に関する注意事項
-                      </h3>
-                      <div className="mt-2 text-sm text-blue-700">
-                        <ul className="list-disc list-inside space-y-1">
-                          <li>マスターデータの変更は、システム全体に影響を与える可能性があります</li>
-                          <li>削除したデータは復元できません。必要に応じてバックアップを取得してください</li>
-                          <li>インポート時は、データ形式が正しいことを確認してください</li>
-                          <li>変更履歴は自動的に記録されます</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
+              </div>
             </div>
           </div>
         </div>

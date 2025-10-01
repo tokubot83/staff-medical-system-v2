@@ -1241,6 +1241,450 @@ APIエンドポイント: 4実装
         status: 'completed',
         tags: ['Phase5', '実装統計', 'パフォーマンス']
       },
+
+      // ===== Phase別開発メモ（11件追加） =====
+      {
+        id: 'phase-esp-001',
+        category: 'Phase 3統合',
+        subcategory: 'エスポワール立神',
+        title: 'エスポワール立神統合実装完了',
+        content: `【完了項目】
+- 33役職の完全マッピング実装（施設長～主任層）
+- 兼任職員権限処理（ESP_003平篤、ESP_004阿久根一信：最高レベル11採用）
+- 統合テスト完了（Day 1: 21/21成功、Day 2: 10/11成功）
+- 総計750名職員、75役職（56ユニーク）統合完了
+
+【次のアクション】
+共通DB構築完了後:
+1. DB接続設定実施
+2. マスターデータ投入
+3. Day 3負荷テスト実施
+4. VoiceDrive連携確認
+5. 本番デプロイ
+
+【重要ファイル】
+- src/lib/facility-position-mapping.ts
+- src/types/espoir-organization.ts
+- tests/integration/day2-approval-flow-test.ts`,
+        source: { type: 'document', path: '/mcp-shared/docs/Phase3_integration.md' },
+        date: '2025-09-28',
+        priority: 'critical',
+        status: 'pending',
+        tags: ['Phase3', '統合', 'テスト完了', 'DB待ち']
+      },
+      {
+        id: 'phase-esp-002',
+        category: 'Phase 3統合',
+        subcategory: '全体統合',
+        title: 'Phase 3全体統合状況',
+        content: `【統合完了施設】
+✅ 小原病院: 420名、23役職
+✅ 立神リハビリ: 180名、19役職（統括主任レベル7確認済み）
+✅ エスポワール立神: 150名、33役職
+
+【システム統合状況】
+- 総施設数: 3施設
+- 総職員数: 750名
+- 総役職数: 75役職（重複除く56ユニーク）
+- 統合完了率: 100%（アプリケーションレベル）
+
+【重要注意事項】
+- 統括主任レベル: 7（6ではなく7が正しい）
+- 兼任職員権限: Math.max()で最高権限採用
+- 施設ID形式: ハイフン区切り統一`,
+        source: { type: 'document', path: '/mcp-shared/docs/Phase3_status.md' },
+        date: '2025-09-28',
+        priority: 'important',
+        status: 'completed',
+        tags: ['Phase3', '統合', 'マスターデータ']
+      },
+      {
+        id: 'phase-admin-001',
+        category: '管理者設定',
+        subcategory: '面談予約',
+        title: '面談予約管理タブの新規実装',
+        content: `【実装概要】
+面談予約フローの効率化のため、独立した「予約管理」タブを新規実装。予約フェーズと実施フェーズを明確に分離。
+
+【タブ構成再編成】
+変更前: 🚉面談ステーション | 🏦バンク | 📖ガイド | 🎯シミュレーター | 📝結果記録 | 📊履歴・分析 | ⚙️設定
+変更後: 📅予約管理 | 🚉面談ステーション | 🏦バンク | 📖ガイド | 🎯シミュレーター | 📝結果記録 | 📊履歴・分析 | ⚙️設定
+
+【予約管理タブのサブタブ】
+- 📊 ダッシュボード: 予約状況の全体把握
+- 🔄 仮予約処理: VoiceDriveからの仮予約処理
+- 👥 担当者管理: 面談担当者の登録・管理
+- 🤖 AI最適化分析: AI推奨精度の分析・改善
+
+【予約フロー】
+職員予約アクション(VoiceDrive) → 仮予約受信 → AI最適化分析 → 人事部確認・編集 → VoiceDrive通知送信 → 本予約確定 → 面談ステーションへ移行
+
+【実装ファイル】
+- src/components/interview/ReservationManagement.tsx`,
+        source: { type: 'file', path: '/src/components/interview/ReservationManagement.tsx' },
+        date: '2025-09-15',
+        priority: 'important',
+        status: 'completed',
+        tags: ['面談', '予約管理', 'AI最適化']
+      },
+      {
+        id: 'phase-admin-002',
+        category: '管理者設定',
+        subcategory: '面談サマリ',
+        title: '面談フィードバックサマリ作成機能',
+        content: `【実装概要】
+職員カルテ個人ページの面談履歴に「📄 サマリ作成」ボタンを追加。人事部が職員向けのフィードバックサマリを作成・VoiceDrive通知する機能。
+
+【主要機能】
+- AI仮サマリ生成（ローカルLLM対応予定）
+- 面談種別による自動切り替え
+  - 定期面談: 構造化サマリ（技術専門性、対人関係ケア、安全品質管理、施設貢献、総合評価、次回目標）
+  - 特別・サポート面談: 自由記述（面談概要、主な議題、合意事項、フォローアップ、職員へのメッセージ）
+
+【サマリ作成UI】
+- 2パネル構成（左: 参考情報、右: サマリ編集）
+- 参考情報パネル: NotebookLM音声解説、面談シート、AI分析結果
+- サマリ編集パネル: AI仮生成、項目別テキストエリア、リアルタイム編集
+
+【VoiceDrive連携】
+- 職員通知チェックボックス
+- 保存時のVoiceDrive API呼び出し
+- 面談ステーションでの閲覧機能連携
+
+【実装ファイル】
+- src/app/staff-cards/staff-tabs.tsx
+
+【DB構築後の作業】
+- データ保存先をAPI呼び出しに切り替え
+- VoiceDrive通知API実連携
+- AI生成エンジン実装（ローカルLLM連携）`,
+        source: { type: 'file', path: '/src/app/staff-cards/staff-tabs.tsx' },
+        date: '2025-09-14',
+        priority: 'important',
+        status: 'completed',
+        tags: ['面談', 'サマリ', 'AI', 'VoiceDrive']
+      },
+      {
+        id: 'phase-admin-003',
+        category: '管理者設定',
+        subcategory: 'UI/UX',
+        title: '2カラム表示UI実装',
+        content: `【実装概要】
+管理画面全体のレイアウトを2カラム構成に改善。左パネルで情報確認、右パネルで編集・操作を実現。
+
+【対応ページ】
+- 職員カルテ個人ページ
+- 面談管理画面
+- 評価管理画面
+- 研修管理画面
+
+【期待効果】
+- 情報参照と編集作業の並行実施
+- 画面切り替え回数の削減
+- 作業効率の大幅向上
+- ユーザー体験の改善`,
+        source: { type: 'document', path: '/docs/ui-improvements.md' },
+        date: '2025-09-10',
+        priority: 'info',
+        status: 'completed',
+        tags: ['UI/UX', 'レイアウト', '2カラム']
+      },
+      {
+        id: 'phase-hr-001',
+        category: '人事制度ガイド',
+        subcategory: 'NotebookLM連携',
+        title: 'NotebookLM面談システム統合完成',
+        content: `【フェーズ１実装完了】
+- 面談管理タブ統合UI実装
+  - 3分類統合概要ダッシュボード（定期面談・特別面談・サポート面談）
+  - 最新面談日・回答完了度・面談傾向の統合表示
+  - NotebookLM音声録音リンク管理システム
+  - モーダルベース音声リンク登録機能
+
+【詳細分析機能】
+- 各面談分類タブの詳細アナリティクス
+- 面談シート回答状況分析・トレンド可視化
+- 音声データとテキストデータの連携基盤
+- 500名スタッフ対応スケーラブル設計
+
+【NotebookLM連携インフラ】
+- TypeScript型定義: NotebookLMLinkインターフェース
+- 音声要約・マインドマップ・トランスクリプト管理
+- リンクタイトル・作成日時・機能フラグシステム
+- React useState/useEffectによる状態管理
+
+【インターフェース統合】
+- 評価タブパターン適用
+- CHART_COLORS統一カラーパレット
+- Card・Badge コンポーネント統一デザイン
+- データストーリーテリング手法適用
+
+【段階的実装計画】
+- フェーズ２（3-6ヶ月後）: 音声感情分析・話題分類システム
+- フェーズ３（6-12ヶ月後）: 面談シート×音声データ横断分析、予測的成長パス`,
+        source: { type: 'document', path: '/docs/notebooklm-integration.md' },
+        date: '2025-08-24',
+        priority: 'important',
+        status: 'completed',
+        tags: ['NotebookLM', '面談', 'AI分析']
+      },
+      {
+        id: 'phase-hr-002',
+        category: '人事制度ガイド',
+        subcategory: 'V3評価システム',
+        title: 'V3評価・教育研修連携システム完成',
+        content: `【V2システムエラー完全解決】
+- Application client-side error根本原因解決
+- staff-tabs.tsx構文エラー修正（2843行のJSXエラー解消）
+- V3 API認証エラー修正（全APIコールに認証ヘッダー追加）
+- ビルドエラー完全解消（353ページ正常生成）
+
+【V2-V3移行戦略完成】
+- V2システム読み取り専用化
+- EvaluationItemBankV2.tsx廃止予告実装
+- 全編集機能無効化・データ参照のみ可能
+- V3システムへの自動誘導実装
+
+【V3評価連動研修システム実装】
+- 新規ページ作成: /training-v3
+- 高度な研修連携機能:
+  - 技術評価ギャップ分析（50点満点の精密分析）
+  - 組織貢献度戦略分析（施設内/法人内バランス）
+  - 予測的成長パス（12ヶ月段階的計画）
+  - インテリジェント研修推奨（ROI最適化）
+
+【評価制度設計ページへの研修連携統合】
+- 年間スケジュール統合: 各月に研修連携タスク追加
+- 評価・研修連携・分析の3タブ構成
+- V3研修連携ダッシュボード:
+  - 現在スコア: 76.8点（Bグレード）
+  - 研修完了率: 68%
+  - 予測スコア: 82.3点（Aグレード見込み）
+  - ROI: 124%（前期比+8%）
+- 成長予測シミュレーター: Phase 1-3の段階的研修計画`,
+        source: { type: 'document', path: '/docs/v3-evaluation-training.md' },
+        date: '2025-08-22',
+        priority: 'critical',
+        status: 'completed',
+        tags: ['評価制度', '研修', 'V3システム']
+      },
+      {
+        id: 'phase-hr-003',
+        category: '人事制度ガイド',
+        subcategory: 'V3 VoiceDrive統合',
+        title: 'V3評価システム + VoiceDrive統合プロジェクト 100%完成',
+        content: `【歴史的成果】
+- 統合テスト成功率: 100% (8/8項目全クリア)
+- VoiceDriveチーム完全合意: 責任分界システム・8月26日本格運用開始決定
+- 技術債務完全解消: V2依存削除・UI重複解消・APIセキュリティ強化
+- 開発効率: 想定工期の1/10で完成達成
+
+【実装完了システム一覧】
+1. V3評価システム中核機能
+   - 技術評価50点: 法人統一25点 + 施設固有25点
+   - 組織貢献50点: 夏季25点 + 冬季25点（各法人12.5点+施設12.5点）
+   - 相対評価エンジン: 2軸マトリックス7段階（D→C→B→A→A+→S→S+）
+   - 年間評価フロー: 6月夏季・12月冬季・3月最終の3段階対応
+
+2. VoiceDrive統合システム
+   - V3異議申立API: 完全実装・セキュリティ強化
+     - POST /api/v3/appeals/submit - Bearer Token認証・詳細検証
+     - GET /api/v3/appeals/list - 管理者向け一覧・統計分析
+     - PATCH /api/v3/appeals/list - ステータス更新・VoiceDrive通知
+   - 責任分界システム:
+     - 職員: VoiceDriveで異議申立・進捗確認
+     - 評価者: 医療システムで受信・審査・管理
+
+3. V3専用管理機能
+   - DisclosureManagementV3: 詳細スコア構造通知・7段階グレード開示
+   - AppealReceptionV3: VoiceDrive起点受信・評価者管理特化
+   - 評価実行統合: V2完全独立・100点満点表示・相対評価連動
+
+4. V3評価連動研修システム
+   - V3TrainingIntegrationService: 評価-研修双方向連携エンジン
+   - 技術評価ギャップ分析: 法人統一30点・施設固有20点の精密分析
+   - 組織貢献度戦略分析: 施設内/法人内貢献バランス最適化
+   - 予測的成長パス: 現在Bグレード→目標Aグレードの最適ルート
+   - インテリジェント研修推奨: ROI・期待スコア向上・グレード昇格予測`,
+        source: { type: 'document', path: '/docs/v3-voicedrive-integration.md' },
+        date: '2025-08-21',
+        priority: 'critical',
+        status: 'completed',
+        tags: ['評価制度', 'VoiceDrive', 'V3システム', '統合完了']
+      },
+      {
+        id: 'phase-phase5-001',
+        category: 'Phase 5実装',
+        subcategory: 'キャリア選択',
+        title: 'Phase 5 キャリア選択制度の実装',
+        content: `【実装状況】
+✅ キャリア選択コースタブを職員カルテに追加
+✅ 人事制度ガイドページにキャリア選択制度タブを追加
+✅ A～Dコース（将来E・F拡張対応）定義実装
+✅ コース変更申請フロー実装
+✅ 統合テスト実施（7/9成功、2/9失敗）
+
+【テスト結果】
+- 総テスト数: 9
+- 成功: 7 (77.8%)
+- 失敗: 2 (Webhook通知: TC-WEBHOOK-01, TC-WEBHOOK-02)
+
+【失敗原因】
+- Webhook通知送信: ステータスコード500エラー
+- API実装が未完了
+
+【次のアクション】
+1. Webhook通知APIの実装完了
+2. 統合テスト再実行
+3. VoiceDrive連携確認
+
+【関連ファイル】
+- src/app/hr-system-guide/CareerCourseContent.tsx
+- src/app/staff-cards/[staffId]/page.tsx
+- tests/integration/phase5-integration-test.js
+- tests/integration/phase5-test-results.json`,
+        source: { type: 'document', path: '/tests/integration/phase5-test-results.json' },
+        date: '2025-10-01',
+        priority: 'important',
+        status: 'in_progress',
+        tags: ['Phase5', 'キャリア選択', 'テスト中']
+      },
+      {
+        id: 'phase-health-001',
+        category: '健康管理',
+        subcategory: 'システム統合',
+        title: '健康管理システム統合実装完了',
+        content: `【完了項目】
+1. 健康ページ統合・整理
+   - 旧/healthページ削除（404行）
+   - Health.module.css削除（545行）
+   - ナビゲーションリンクを/health/managementに統一
+
+2. 職員カルテ階層化タブ構造実装
+   - 6カテゴリ×17タブの2層構造
+   - URLパラメータ対応(?category=health&tab=health-checkup)
+   - カテゴリナビゲーションUI（グラデーション背景）
+
+3. 健康診断タブ統合
+   - HealthCheckupDetailViewコンポーネント作成（649行）
+   - 職員カルテに健診タブ追加
+   - ウェルビーイングタブとの相互リンク実装
+   - 健康診断5カード表示（最新、異常、傾向、再検査、統計）
+
+4. リダイレクト設定
+   - /health/staff/[staffId] → 職員カルテ健診タブへ自動遷移
+   - ローディングアニメーション付き
+
+【実装済UI機能】
+- 健康診断詳細表示（5つの詳細タブ）
+- BMI・血圧自動評価
+- 異常項目ハイライト表示
+- トレンドグラフ表示
+- リスクアセスメント表示
+- VoiceDriveアドバイス連携準備
+
+【未実装（DB構築後）】
+Phase 1 MVP:
+- CSV一括取込API実装
+- 健診データCRUD API実装
+- 健診結果配信システム（お知らせ配信経由）
+
+Phase 2 基本機能:
+- 管理ダッシュボード（実施率、要再検者管理）
+- ストレスチェック配信（機密性高）
+- リマインド機能
+- 病歴管理機能
+- 就業配慮設定機能
+
+Phase 3 拡張機能:
+- 産業医機能（面談記録、就業判定）
+- 統計・分析機能
+- トレンド分析・予測
+- レポート生成（労基署提出書類）
+- 外部システム連携
+
+【必要なDBテーブル】
+- health_checkups: 健康診断マスター
+- health_checkup_details: 検査結果詳細
+- medical_histories: 病歴・既往歴管理
+- work_accommodations: 就業配慮管理
+- health_events: 健康イベント履歴
+
+【関連ファイル】
+- src/components/health/HealthCheckupDetailView.tsx
+- src/app/staff-cards/[staffId]/page.tsx
+- src/app/health/staff/[staffId]/page.tsx
+- docs/健康関連情報実装計画書_統合版.md
+- docs/健康機能実装_作業再開指示書.md`,
+        source: { type: 'document', path: '/docs/健康関連情報実装計画書_統合版.md' },
+        date: '2025-09-30',
+        priority: 'important',
+        status: 'pending',
+        tags: ['健康管理', 'UI統合', '階層タブ', 'DB待ち']
+      },
+      {
+        id: 'phase-hr-station-001',
+        category: '人事ステーション',
+        subcategory: 'ダッシュボード',
+        title: '人事ステーションページ実装状況',
+        content: `【実装完了機能】
+1. ヒートマップダッシュボード
+   - 3段階フェーズ表示（コース制度→等級制度→100点評価）
+   - パフォーマンス層別×キャリアコース別マトリックス
+   - パステルトーン配色での視認性向上
+
+2. フィルタリング機能
+   - 施設別フィルター（全施設/富士宮/富士宮南/フジトピア/フジヤマ）
+   - 職種別フィルター（全職種/医師/看護師/介護士/理学療法士/事務職）
+   - フェーズ切り替え機能
+
+3. 職員詳細モーダル（IntegratedStaffModal）
+   - セグメント別職員リスト表示
+   - 個別アクション推奨表示
+   - CSVエクスポート機能
+
+4. アクションプラン作成機能（ActionPlanModal）
+   - 短期・中期アクション設定
+   - KPI指標管理
+   - タイムライン設定
+
+【未実装機能（DB連携後）】
+1. 実データ連携
+   - 職員マスタテーブル連携
+   - 評価データテーブル連携
+   - リアルタイム集計処理
+
+2. ドリルダウン分析
+   - セル単位の詳細分析
+   - 時系列推移グラフ
+   - 相関分析レポート
+
+3. API実装
+   - GET /api/hr-station/heatmap
+   - GET /api/hr-station/staff-list
+   - POST /api/hr-station/action-plan
+   - GET /api/hr-station/export
+
+4. パフォーマンス最適化
+   - データキャッシュ機構
+   - 仮想スクロール実装
+   - 遅延ローディング
+
+【DB構築後の作業指示】
+1. lib/hr/heatmapData.tsのダミーデータを実API呼び出しに置換
+2. components/hr/IntegratedStaffModal.tsxのgenerateStaffList関数をAPI連携に変更
+3. app/api/hr-station/配下にAPIエンドポイント実装
+4. Prismaスキーマに以下のテーブル追加：
+   - hr_evaluations（評価データ）
+   - hr_courses（コース設定）
+   - hr_grades（等級設定）
+   - hr_action_plans（アクションプラン）`,
+        source: { type: 'document', path: '/docs/hr-station-implementation.md' },
+        date: '2025-09-21',
+        priority: 'important',
+        status: 'pending',
+        tags: ['人事ステーション', 'HR', 'ダッシュボード', 'DB待ち']
+      },
     ];
   }
 
