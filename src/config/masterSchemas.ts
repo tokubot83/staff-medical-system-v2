@@ -558,4 +558,62 @@ export const masterSchemas: Record<string, MasterSchema> = {
     sortableFields: ['displayOrder', 'code', 'name'],
     exportFields: ['code', 'name', 'category', 'requiresLicense', 'isActive'],
   },
+
+  // Phase 1-2: 役職マスター
+  position: {
+    name: 'position',
+    label: '役職マスター',
+    fields: [
+      { key: 'id', label: '役職ID', type: 'string', required: true, readonly: true },
+      { key: 'code', label: '役職コード', type: 'string', required: true },
+      { key: 'name', label: '役職名', type: 'string', required: true },
+      {
+        key: 'level',
+        label: '職位レベル',
+        type: 'number',
+        required: true,
+        defaultValue: 1,
+        description: '1-18の権限レベル（Phase 3施設別権限対応）'
+      },
+      {
+        key: 'category',
+        label: 'カテゴリー',
+        type: 'select',
+        required: true,
+        options: [
+          { value: 'staff', label: '一般職' },
+          { value: 'nursing_middle', label: '看護中間管理職' },
+          { value: 'nursing_senior', label: '看護上級管理職' },
+          { value: 'medical', label: '医療職管理職' },
+          { value: 'administrative', label: '事務管理職' },
+          { value: 'executive', label: '経営層' },
+        ]
+      },
+      {
+        key: 'requiresManagementTraining',
+        label: '管理職研修要',
+        type: 'boolean',
+        defaultValue: false
+      },
+      {
+        key: 'canApproveLeave',
+        label: '休暇承認権限',
+        type: 'boolean',
+        defaultValue: false,
+        description: '部下の休暇申請を承認できるか'
+      },
+      {
+        key: 'canPerformEvaluation',
+        label: '人事評価権限',
+        type: 'boolean',
+        defaultValue: false,
+        description: '部下の人事評価を実施できるか'
+      },
+      { key: 'displayOrder', label: '表示順', type: 'number', defaultValue: 0 },
+      { key: 'isActive', label: '有効', type: 'boolean', defaultValue: true },
+    ],
+    searchableFields: ['code', 'name', 'category'],
+    sortableFields: ['level', 'displayOrder', 'code'],
+    exportFields: ['code', 'name', 'level', 'category', 'requiresManagementTraining', 'isActive'],
+  },
 };

@@ -12,7 +12,7 @@ import ComplianceMasterManager from '@/components/admin/compliance/ComplianceMas
 import HealthDataMasterManager from '@/components/admin/health/HealthDataMasterManager';
 import {
   Users, Building2, GraduationCap, ClipboardCheck,
-  Database, ChevronRight, Shield, Settings, BookOpen, Image, Calculator, MessageSquare, FileText, Briefcase, ShieldCheck, Heart, LogOut, UserCheck
+  Database, ChevronRight, Shield, Settings, BookOpen, Image, Calculator, MessageSquare, FileText, Briefcase, ShieldCheck, Heart, LogOut, UserCheck, Award
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -122,6 +122,13 @@ const masterTypes = [
     icon: UserCheck,
     description: '職種の動的管理（Phase 1-1）',
     color: 'indigo'
+  },
+  {
+    key: 'position',
+    label: '役職マスター',
+    icon: Award,
+    description: '役職・権限レベル管理（Phase 1-2）',
+    color: 'amber'
   },
 ];
 

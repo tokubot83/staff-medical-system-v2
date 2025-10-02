@@ -38,6 +38,7 @@ import { Badge } from '@/components/ui/badge';
 import DataExportImport from '@/components/data-management/DataExportImport';
 import { evaluationSystemSeeds } from '@/data/evaluationSystemSeeds';
 import { professionSeeds } from '@/data/seeds/professionSeeds';
+import { positionSeeds } from '@/data/seeds/positionSeeds';
 
 interface GenericMasterTableProps {
   masterType: string;
@@ -228,6 +229,28 @@ export default function GenericMasterTable({
             requiresLicense: profession.requiresLicense,
             displayOrder: profession.displayOrder,
             isActive: profession.isActive,
+          },
+          metadata: {
+            createdAt: '2025-01-13',
+            updatedAt: '2025-01-13',
+            createdBy: 'システム管理者'
+          }
+        }));
+
+      case 'position':
+        return positionSeeds.map(position => ({
+          id: position.id,
+          data: {
+            id: position.id,
+            code: position.code,
+            name: position.name,
+            level: position.level,
+            category: position.category,
+            requiresManagementTraining: position.requiresManagementTraining,
+            canApproveLeave: position.canApproveLeave,
+            canPerformEvaluation: position.canPerformEvaluation,
+            displayOrder: position.displayOrder,
+            isActive: position.isActive,
           },
           metadata: {
             createdAt: '2025-01-13',
