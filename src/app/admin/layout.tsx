@@ -63,12 +63,6 @@ const sidebarMenuGroups = [
     icon: FolderOpen,
     items: [
       {
-        href: '/admin/dev-notes',
-        label: '開発メモ',
-        icon: StickyNote,
-        description: '開発ノートとメモ'
-      },
-      {
         href: '/admin/documents',
         label: '保存書類',
         icon: FileText,
