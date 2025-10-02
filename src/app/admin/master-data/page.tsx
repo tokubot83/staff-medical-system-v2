@@ -12,7 +12,7 @@ import ComplianceMasterManager from '@/components/admin/compliance/ComplianceMas
 import HealthDataMasterManager from '@/components/admin/health/HealthDataMasterManager';
 import {
   Users, Building2, GraduationCap, ClipboardCheck,
-  Database, ChevronRight, Shield, Settings, BookOpen, Image, Calculator, MessageSquare, FileText, Briefcase, ShieldCheck, Heart, LogOut
+  Database, ChevronRight, Shield, Settings, BookOpen, Image, Calculator, MessageSquare, FileText, Briefcase, ShieldCheck, Heart, LogOut, UserCheck
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -116,11 +116,18 @@ const masterTypes = [
     description: 'A～Dコース（将来E・F拡張対応）定義管理（Phase 5）',
     color: 'green'
   },
+  {
+    key: 'profession',
+    label: '職種マスター',
+    icon: UserCheck,
+    description: '職種の動的管理（Phase 1-1）',
+    color: 'indigo'
+  },
 ];
 
 export default function MasterDataPage() {
   const [selectedMaster, setSelectedMaster] = useState<string>('staff');
-  const currentSchema = selectedMaster !== 'imageManagement' && selectedMaster !== 'evaluationSystem' && selectedMaster !== 'interviewSystem' && selectedMaster !== 'hrPolicy' && selectedMaster !== 'trainingSystem' && selectedMaster !== 'recruitment' && selectedMaster !== 'compliance' && selectedMaster !== 'healthData' && selectedMaster !== 'resignationReason' && selectedMaster !== 'careerCourse' ? masterSchemas[selectedMaster] : null;
+  const currentSchema = selectedMaster !== 'imageManagement' && selectedMaster !== 'evaluationSystem' && selectedMaster !== 'interviewSystem' && selectedMaster !== 'hrPolicy' && selectedMaster !== 'trainingSystem' && selectedMaster !== 'recruitment' && selectedMaster !== 'compliance' && selectedMaster !== 'healthData' && selectedMaster !== 'resignationReason' && selectedMaster !== 'careerCourse' && masterSchemas[selectedMaster] ? masterSchemas[selectedMaster] : null;
 
   const getColorClasses = (color: string) => {
     const colors: Record<string, string> = {

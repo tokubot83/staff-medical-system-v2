@@ -528,4 +528,34 @@ export const masterSchemas: Record<string, MasterSchema> = {
     sortableFields: ['displayOrder', 'reasonCode', 'category'],
     exportFields: ['reasonCode', 'reasonNameJa', 'category', 'requiresExitInterview', 'isActive'],
   },
+
+  // Phase 1-1: 職種マスター
+  profession: {
+    name: 'profession',
+    label: '職種マスター',
+    fields: [
+      { key: 'id', label: '職種ID', type: 'string', required: true, readonly: true },
+      { key: 'code', label: '職種コード', type: 'string', required: true },
+      { key: 'name', label: '職種名', type: 'string', required: true },
+      {
+        key: 'category',
+        label: 'カテゴリー',
+        type: 'select',
+        required: true,
+        options: [
+          { value: 'medical', label: '医療職' },
+          { value: 'nursing', label: '看護職' },
+          { value: 'allied_health', label: '医療技術職' },
+          { value: 'administrative', label: '事務職' },
+          { value: 'support', label: '支援職' },
+        ]
+      },
+      { key: 'requiresLicense', label: '資格要', type: 'boolean', defaultValue: false },
+      { key: 'displayOrder', label: '表示順', type: 'number', defaultValue: 0 },
+      { key: 'isActive', label: '有効', type: 'boolean', defaultValue: true },
+    ],
+    searchableFields: ['code', 'name', 'category'],
+    sortableFields: ['displayOrder', 'code', 'name'],
+    exportFields: ['code', 'name', 'category', 'requiresLicense', 'isActive'],
+  },
 };

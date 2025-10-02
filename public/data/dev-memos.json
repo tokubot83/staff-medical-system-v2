@@ -1,0 +1,102 @@
+{
+  "memos": [
+    {
+      "id": "master-sys-001",
+      "title": "実装作業再開指示書 V3（最新版）",
+      "content": "2025年8月13日作成。85%完了。残タスク：データ管理・システム連携機能（4-5時間）",
+      "category": "システム全体",
+      "tags": ["実装指示", "進捗管理", "アーキテクチャ"],
+      "createdAt": "2025-08-13",
+      "updatedAt": "2025-08-13",
+      "status": "in-progress",
+      "priority": "critical",
+      "filePath": "/docs/implementation-resume-guide-v3-20250813.md"
+    },
+    {
+      "id": "master-sys-002",
+      "title": "バックエンド構築時の注意事項",
+      "content": "現在はモックデータ使用。サービス層でデータロジックを管理し、将来的なAPI移行を考慮した設計。masterDataService.tsを参考に実装すること。",
+      "category": "システム全体",
+      "tags": ["バックエンド", "API設計", "バックエンド移行"],
+      "createdAt": "2025-08-14",
+      "updatedAt": "2025-08-14",
+      "status": "todo",
+      "priority": "high",
+      "filePath": "/src/services/masterDataService.ts"
+    },
+    {
+      "id": "master-sys-003",
+      "title": "データベース設計参考資料",
+      "content": "ER図、データディクショナリー、マイグレーション戦略が文書化済み",
+      "category": "システム全体",
+      "tags": ["DB設計", "スキーマ", "データベース"],
+      "createdAt": "2025-07-15",
+      "updatedAt": "2025-07-15",
+      "status": "done",
+      "priority": "high",
+      "filePath": "/docs/database-design-reference.md"
+    }
+  ],
+  "categories": [
+    {
+      "value": "システム全体",
+      "label": "システム全体",
+      "icon": "Database",
+      "color": "blue"
+    },
+    {
+      "value": "面談システム",
+      "label": "面談システム",
+      "icon": "MessageSquare",
+      "color": "purple"
+    },
+    {
+      "value": "マスターデータ管理",
+      "label": "マスターデータ",
+      "icon": "Database",
+      "color": "cyan"
+    },
+    {
+      "value": "教育研修管理",
+      "label": "教育研修",
+      "icon": "BookOpen",
+      "color": "green"
+    },
+    {
+      "value": "評価システム",
+      "label": "評価システム",
+      "icon": "CheckCircle",
+      "color": "amber"
+    },
+    {
+      "value": "Phase 3統合",
+      "label": "Phase 3",
+      "icon": "TrendingUp",
+      "color": "indigo"
+    },
+    {
+      "value": "Phase 5実装",
+      "label": "Phase 5",
+      "icon": "Zap",
+      "color": "pink"
+    },
+    {
+      "value": "健康管理",
+      "label": "健康管理",
+      "icon": "Heart",
+      "color": "rose"
+    },
+    {
+      "value": "コンプライアンス窓口",
+      "label": "コンプライアンス",
+      "icon": "AlertCircle",
+      "color": "red"
+    }
+  ],
+  "metadata": {
+    "version": "1.0.0",
+    "lastUpdated": "2025-10-01",
+    "totalMemos": 62,
+    "description": "マスタデータ管理ページ（51件）とPhase別メモ（11件）を統合"
+  }
+}

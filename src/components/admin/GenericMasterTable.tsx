@@ -37,6 +37,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import DataExportImport from '@/components/data-management/DataExportImport';
 import { evaluationSystemSeeds } from '@/data/evaluationSystemSeeds';
+import { professionSeeds } from '@/data/seeds/professionSeeds';
 
 interface GenericMasterTableProps {
   masterType: string;
@@ -213,6 +214,25 @@ export default function GenericMasterTable({
             createdAt: '2024-04-01',
             updatedAt: perm.lastModified,
             updatedBy: perm.modifiedBy,
+          }
+        }));
+
+      case 'profession':
+        return professionSeeds.map(profession => ({
+          id: profession.id,
+          data: {
+            id: profession.id,
+            code: profession.code,
+            name: profession.name,
+            category: profession.category,
+            requiresLicense: profession.requiresLicense,
+            displayOrder: profession.displayOrder,
+            isActive: profession.isActive,
+          },
+          metadata: {
+            createdAt: '2025-01-13',
+            updatedAt: '2025-01-13',
+            createdBy: 'システム管理者'
           }
         }));
 
