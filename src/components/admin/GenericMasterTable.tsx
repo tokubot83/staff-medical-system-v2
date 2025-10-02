@@ -39,6 +39,7 @@ import DataExportImport from '@/components/data-management/DataExportImport';
 import { evaluationSystemSeeds } from '@/data/evaluationSystemSeeds';
 import { professionSeeds } from '@/data/seeds/professionSeeds';
 import { positionSeeds } from '@/data/seeds/positionSeeds';
+import { employmentTypeSeeds } from '@/data/seeds/employmentTypeSeeds';
 
 interface GenericMasterTableProps {
   masterType: string;
@@ -251,6 +252,29 @@ export default function GenericMasterTable({
             canPerformEvaluation: position.canPerformEvaluation,
             displayOrder: position.displayOrder,
             isActive: position.isActive,
+          },
+          metadata: {
+            createdAt: '2025-01-13',
+            updatedAt: '2025-01-13',
+            createdBy: 'システム管理者'
+          }
+        }));
+
+      case 'employmentType':
+        return employmentTypeSeeds.map(employmentType => ({
+          id: employmentType.id,
+          data: {
+            id: employmentType.id,
+            code: employmentType.code,
+            name: employmentType.name,
+            category: employmentType.category,
+            isFullTime: employmentType.isFullTime,
+            maxHoursPerWeek: employmentType.maxHoursPerWeek,
+            requiresSocialInsurance: employmentType.requiresSocialInsurance,
+            allowsOvertime: employmentType.allowsOvertime,
+            description: employmentType.description,
+            displayOrder: employmentType.displayOrder,
+            isActive: employmentType.isActive,
           },
           metadata: {
             createdAt: '2025-01-13',

@@ -616,4 +616,62 @@ export const masterSchemas: Record<string, MasterSchema> = {
     sortableFields: ['level', 'displayOrder', 'code'],
     exportFields: ['code', 'name', 'level', 'category', 'requiresManagementTraining', 'isActive'],
   },
+
+  // Phase 1-3: 雇用形態マスター
+  employmentType: {
+    name: 'employmentType',
+    label: '雇用形態マスター',
+    fields: [
+      { key: 'id', label: '雇用形態ID', type: 'string', required: true, readonly: true },
+      { key: 'code', label: '雇用形態コード', type: 'string', required: true },
+      { key: 'name', label: '雇用形態名', type: 'string', required: true },
+      {
+        key: 'category',
+        label: 'カテゴリー',
+        type: 'select',
+        required: true,
+        options: [
+          { value: 'full_time', label: '常勤' },
+          { value: 'part_time', label: 'パート' },
+          { value: 'contract', label: '契約' },
+          { value: 'temporary', label: '臨時' },
+          { value: 'other', label: 'その他' },
+        ]
+      },
+      {
+        key: 'isFullTime',
+        label: '常勤区分',
+        type: 'boolean',
+        defaultValue: false,
+        description: '常勤の場合true、非常勤の場合false'
+      },
+      {
+        key: 'maxHoursPerWeek',
+        label: '週最大勤務時間',
+        type: 'number',
+        required: false,
+        description: '週の最大勤務時間（null=無制限）'
+      },
+      {
+        key: 'requiresSocialInsurance',
+        label: '社会保険加入要',
+        type: 'boolean',
+        defaultValue: false,
+        description: '社会保険加入が必須の場合true'
+      },
+      {
+        key: 'allowsOvertime',
+        label: '残業可否',
+        type: 'boolean',
+        defaultValue: false,
+        description: '残業が可能な場合true'
+      },
+      { key: 'description', label: '説明', type: 'textarea', required: false },
+      { key: 'displayOrder', label: '表示順', type: 'number', defaultValue: 0 },
+      { key: 'isActive', label: '有効', type: 'boolean', defaultValue: true },
+    ],
+    searchableFields: ['code', 'name', 'category'],
+    sortableFields: ['displayOrder', 'code', 'name'],
+    exportFields: ['code', 'name', 'category', 'isFullTime', 'requiresSocialInsurance', 'allowsOvertime', 'isActive'],
+  },
 };

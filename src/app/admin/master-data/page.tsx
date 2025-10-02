@@ -12,7 +12,7 @@ import ComplianceMasterManager from '@/components/admin/compliance/ComplianceMas
 import HealthDataMasterManager from '@/components/admin/health/HealthDataMasterManager';
 import {
   Users, Building2, GraduationCap, ClipboardCheck,
-  Database, ChevronRight, Shield, Settings, BookOpen, Image, Calculator, MessageSquare, FileText, Briefcase, ShieldCheck, Heart, LogOut, UserCheck, Award
+  Database, ChevronRight, Shield, Settings, BookOpen, Image, Calculator, MessageSquare, FileText, Briefcase, ShieldCheck, Heart, LogOut, UserCheck, Award, Briefcase as BriefcaseAlt
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -130,11 +130,18 @@ const masterTypes = [
     description: '役職・権限レベル管理（Phase 1-2）',
     color: 'amber'
   },
+  {
+    key: 'employmentType',
+    label: '雇用形態マスター',
+    icon: BriefcaseAlt,
+    description: '雇用形態・勤務時間制限管理（Phase 1-3）',
+    color: 'sky'
+  },
 ];
 
 export default function MasterDataPage() {
   const [selectedMaster, setSelectedMaster] = useState<string>('staff');
-  const currentSchema = selectedMaster !== 'imageManagement' && selectedMaster !== 'evaluationSystem' && selectedMaster !== 'interviewSystem' && selectedMaster !== 'hrPolicy' && selectedMaster !== 'trainingSystem' && selectedMaster !== 'recruitment' && selectedMaster !== 'compliance' && selectedMaster !== 'healthData' && selectedMaster !== 'resignationReason' && selectedMaster !== 'careerCourse' && masterSchemas[selectedMaster] ? masterSchemas[selectedMaster] : null;
+  const currentSchema = selectedMaster !== 'imageManagement' && selectedMaster !== 'evaluationSystem' && selectedMaster !== 'interviewSystem' && selectedMaster !== 'hrPolicy' && selectedMaster !== 'trainingSystem' && selectedMaster !== 'recruitment' && selectedMaster !== 'compliance' && selectedMaster !== 'healthData' && selectedMaster !== 'resignationReason' && selectedMaster !== 'careerCourse' && selectedMaster !== 'employmentType' && masterSchemas[selectedMaster] ? masterSchemas[selectedMaster] : null;
 
   const getColorClasses = (color: string) => {
     const colors: Record<string, string> = {
@@ -152,6 +159,7 @@ export default function MasterDataPage() {
       red: 'bg-red-50 hover:bg-red-100 border-red-200 text-red-700',
       rose: 'bg-rose-50 hover:bg-rose-100 border-rose-200 text-rose-700',
       slate: 'bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-700',
+      sky: 'bg-sky-50 hover:bg-sky-100 border-sky-200 text-sky-700',
     };
     return colors[color] || colors.blue;
   };
@@ -172,6 +180,7 @@ export default function MasterDataPage() {
       red: 'text-red-600',
       rose: 'text-rose-600',
       slate: 'text-slate-600',
+      sky: 'text-sky-600',
     };
     return colors[color] || colors.blue;
   };
@@ -191,6 +200,7 @@ export default function MasterDataPage() {
       emerald: 'border-emerald-500 text-emerald-600',
       red: 'border-red-500 text-red-600',
       rose: 'border-rose-500 text-rose-600',
+      sky: 'border-sky-500 text-sky-600',
     };
     return colors[color] || colors.blue;
   };
@@ -198,7 +208,7 @@ export default function MasterDataPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* タブメニュー - 4行グリッド構成 */}
+        {/* タブメニュー - 5行グリッド構成（将来拡張対応） */}
         <div className="bg-white rounded-lg border mb-6">
           <div className="border-b">
             <div className="grid grid-cols-4 gap-1 p-4">
