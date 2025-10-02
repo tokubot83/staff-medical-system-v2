@@ -40,6 +40,7 @@ import { evaluationSystemSeeds } from '@/data/evaluationSystemSeeds';
 import { professionSeeds } from '@/data/seeds/professionSeeds';
 import { positionSeeds } from '@/data/seeds/positionSeeds';
 import { employmentTypeSeeds } from '@/data/seeds/employmentTypeSeeds';
+import { departmentSeeds } from '@/data/seeds/departmentSeeds';
 
 interface GenericMasterTableProps {
   masterType: string;
@@ -275,6 +276,29 @@ export default function GenericMasterTable({
             description: employmentType.description,
             displayOrder: employmentType.displayOrder,
             isActive: employmentType.isActive,
+          },
+          metadata: {
+            createdAt: '2025-01-13',
+            updatedAt: '2025-01-13',
+            createdBy: 'システム管理者'
+          }
+        }));
+
+      case 'department':
+        return departmentSeeds.map(department => ({
+          id: department.id,
+          data: {
+            id: department.id,
+            code: department.code,
+            name: department.name,
+            facilityId: department.facilityId,
+            facilityName: department.facilityName,
+            category: department.category,
+            parentDepartmentId: department.parentDepartmentId,
+            level: department.level,
+            description: department.description,
+            displayOrder: department.displayOrder,
+            isActive: department.isActive,
           },
           metadata: {
             createdAt: '2025-01-13',

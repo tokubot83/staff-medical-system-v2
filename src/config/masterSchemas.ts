@@ -674,4 +674,65 @@ export const masterSchemas: Record<string, MasterSchema> = {
     sortableFields: ['displayOrder', 'code', 'name'],
     exportFields: ['code', 'name', 'category', 'isFullTime', 'requiresSocialInsurance', 'allowsOvertime', 'isActive'],
   },
+
+  // Phase 1-4-A: 部署マスター（基本構造）
+  department: {
+    name: 'department',
+    label: '部署マスター',
+    fields: [
+      { key: 'id', label: '部署ID', type: 'string', required: true, readonly: true },
+      { key: 'code', label: '部署コード', type: 'string', required: true },
+      { key: 'name', label: '部署名', type: 'string', required: true },
+      {
+        key: 'facilityId',
+        label: '所属施設ID',
+        type: 'select',
+        required: true,
+        options: [
+          { value: 'obara-hospital', label: '小原病院' },
+          { value: 'tategami-rehabilitation', label: '立神リハビリテーション温泉病院' },
+          { value: 'corporate-headquarters', label: '法人本部' },
+        ],
+        description: '部署が所属する施設'
+      },
+      { key: 'facilityName', label: '所属施設名', type: 'string', readonly: true },
+      {
+        key: 'category',
+        label: 'カテゴリー',
+        type: 'select',
+        required: true,
+        options: [
+          { value: 'medical', label: '医療部門' },
+          { value: 'nursing', label: '看護部門' },
+          { value: 'rehabilitation', label: 'リハビリテーション部門' },
+          { value: 'administrative', label: '事務部門' },
+          { value: 'support', label: '支援部門' },
+          { value: 'pharmacy', label: '薬剤部門' },
+          { value: 'nutrition', label: '栄養部門' },
+          { value: 'hr', label: '人事部門' },
+          { value: 'strategy', label: '戦略企画部門' },
+        ]
+      },
+      {
+        key: 'parentDepartmentId',
+        label: '上位部署ID',
+        type: 'string',
+        required: false,
+        description: '階層構造の上位部署（最上位の場合はnull）'
+      },
+      {
+        key: 'level',
+        label: '階層レベル',
+        type: 'number',
+        defaultValue: 1,
+        description: '1=最上位、2=部、3=課など'
+      },
+      { key: 'description', label: '説明', type: 'textarea', required: false },
+      { key: 'displayOrder', label: '表示順', type: 'number', defaultValue: 0 },
+      { key: 'isActive', label: '有効', type: 'boolean', defaultValue: true },
+    ],
+    searchableFields: ['code', 'name', 'facilityName', 'category'],
+    sortableFields: ['facilityId', 'displayOrder', 'code', 'name'],
+    exportFields: ['code', 'name', 'facilityId', 'facilityName', 'category', 'level', 'isActive'],
+  },
 };

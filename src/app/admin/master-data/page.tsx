@@ -12,7 +12,7 @@ import ComplianceMasterManager from '@/components/admin/compliance/ComplianceMas
 import HealthDataMasterManager from '@/components/admin/health/HealthDataMasterManager';
 import {
   Users, Building2, GraduationCap, ClipboardCheck,
-  Database, ChevronRight, Shield, Settings, BookOpen, Image, Calculator, MessageSquare, FileText, Briefcase, ShieldCheck, Heart, LogOut, UserCheck, Award, Briefcase as BriefcaseAlt
+  Database, ChevronRight, Shield, Settings, BookOpen, Image, Calculator, MessageSquare, FileText, Briefcase, ShieldCheck, Heart, LogOut, UserCheck, Award, Briefcase as BriefcaseAlt, Network
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -137,11 +137,18 @@ const masterTypes = [
     description: '雇用形態・勤務時間制限管理（Phase 1-3）',
     color: 'sky'
   },
+  {
+    key: 'department',
+    label: '部署マスター',
+    icon: Network,
+    description: '部署・施設リレーション管理（Phase 1-4-A）',
+    color: 'lime'
+  },
 ];
 
 export default function MasterDataPage() {
   const [selectedMaster, setSelectedMaster] = useState<string>('staff');
-  const currentSchema = selectedMaster !== 'imageManagement' && selectedMaster !== 'evaluationSystem' && selectedMaster !== 'interviewSystem' && selectedMaster !== 'hrPolicy' && selectedMaster !== 'trainingSystem' && selectedMaster !== 'recruitment' && selectedMaster !== 'compliance' && selectedMaster !== 'healthData' && selectedMaster !== 'resignationReason' && selectedMaster !== 'careerCourse' && selectedMaster !== 'employmentType' && masterSchemas[selectedMaster] ? masterSchemas[selectedMaster] : null;
+  const currentSchema = selectedMaster !== 'imageManagement' && selectedMaster !== 'evaluationSystem' && selectedMaster !== 'interviewSystem' && selectedMaster !== 'hrPolicy' && selectedMaster !== 'trainingSystem' && selectedMaster !== 'recruitment' && selectedMaster !== 'compliance' && selectedMaster !== 'healthData' && selectedMaster !== 'resignationReason' && selectedMaster !== 'careerCourse' && masterSchemas[selectedMaster] ? masterSchemas[selectedMaster] : null;
 
   const getColorClasses = (color: string) => {
     const colors: Record<string, string> = {
@@ -160,6 +167,7 @@ export default function MasterDataPage() {
       rose: 'bg-rose-50 hover:bg-rose-100 border-rose-200 text-rose-700',
       slate: 'bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-700',
       sky: 'bg-sky-50 hover:bg-sky-100 border-sky-200 text-sky-700',
+      lime: 'bg-lime-50 hover:bg-lime-100 border-lime-200 text-lime-700',
     };
     return colors[color] || colors.blue;
   };
@@ -181,6 +189,7 @@ export default function MasterDataPage() {
       rose: 'text-rose-600',
       slate: 'text-slate-600',
       sky: 'text-sky-600',
+      lime: 'text-lime-600',
     };
     return colors[color] || colors.blue;
   };
@@ -201,6 +210,7 @@ export default function MasterDataPage() {
       red: 'border-red-500 text-red-600',
       rose: 'border-rose-500 text-rose-600',
       sky: 'border-sky-500 text-sky-600',
+      lime: 'border-lime-500 text-lime-600',
     };
     return colors[color] || colors.blue;
   };

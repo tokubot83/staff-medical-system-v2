@@ -1,7 +1,7 @@
 # 管理者設定ページ 開発メモ
 
-最終更新日: 2025年9月15日
-文書バージョン: 1.3
+最終更新日: 2025年10月2日
+文書バージョン: 1.4
 
 ## 概要
 医療職員管理システムの管理者設定ページに関する開発進捗と今後の実装予定を記録する開発メモです。
@@ -516,7 +516,22 @@ interface MonthData {
 - [ ] 認証・認可システムの実装
 - [ ] データベース最適化
 
-### 2025年10月
+### 2025年10月（実施中・完了）✅
+- [x] **面談サマリ送受信機能 統合テスト完全成功**（10/2完了）
+  - [x] 医療システム側送信機能実装確認
+  - [x] VoiceDrive側受信機能実装確認
+  - [x] Phase 1-3統合テスト実施（12/12項目成功）
+  - [x] データ整合性100%確認
+  - [x] パフォーマンス目標達成（平均10.8ms）
+  - [x] 本番環境移行準備完了
+
+- [ ] **共通DB構築後の移行作業**（次期実装）
+  - [ ] 本番環境URL・APIキー設定
+  - [ ] 本番環境疎通テスト実施
+  - [ ] 監視・アラート設定
+  - [ ] 運用マニュアル作成
+  - [ ] 実面談データでの送受信確認
+
 - [ ] QRコード機能実装（フェーズ5）
 - [ ] 権限管理システム実装
 - [ ] 監査ログ機能
@@ -834,6 +849,242 @@ app.get('/api/health/:staffId', authMiddleware, (req, res) => {
 - **最新コミット**: `7ff999d feat: VoiceDrive統合テスト完全成功 - Phase 1-3全完了・本番運用準備完了`
 - **統合テスト完了日**: 2025年9月16日
 - **本番運用開始可能**: 準備完了
+
+---
+
+### 2025年10月2日 - 面談サマリ送受信機能 統合テスト完全成功 ✅
+
+#### 統合テスト完了報告
+**医療システム → VoiceDrive 面談サマリ送受信機能** の統合テストが完全成功しました。本番環境移行準備が完了しています。
+
+#### 実装概要
+面談完了時に自動的に面談サマリをVoiceDriveに送信し、VoiceDrive側で受信・保存する機能の統合テストを実施しました。
+
+#### 実装内容
+
+**1. 医療システム側（送信機能）** ✅
+- **実装ファイル**:
+  - `src/services/voicedriveIntegrationService.ts` - 送信サービス
+  - `src/lib/interview-bank/services/bank-service.ts` - 自動送信トリガー
+- **送信エンドポイント**: `POST /sync/interview-results`
+- **認証方式**: Bearer Token認証
+- **送信データ構造**:
+  ```typescript
+  {
+    requestId: string,              // VoiceDrive側の申込ID
+    interviewId: string,            // 医療システム側の面談ID
+    completedAt: Date,              // 面談実施日時
+    duration: number,               // 実施時間（分）
+    summary: string,                // 面談サマリ
+    keyPoints: string[],            // 重要ポイント
+    actionItems: Array<{            // アクションアイテム
+      description: string,
+      dueDate?: Date
+    }>,
+    followUpRequired: boolean,      // フォローアップ要否
+    followUpDate?: Date,            // フォローアップ予定日
+    feedbackToEmployee: string,     // 職員向けフィードバック
+    nextRecommendations: {          // 次回推奨事項
+      suggestedNextInterview?: Date,
+      suggestedTopics: string[]
+    }
+  }
+  ```
+
+**2. VoiceDrive側（受信機能）** ✅
+- **実装確認済み項目**:
+  - データベーステーブル: `InterviewResult`モデル（Prisma）
+  - 受信サービス: `InterviewResultService`（CRUD・統計機能）
+  - APIエンドポイント: `POST /api/sync/interview-results`
+  - 認証: Bearer Token認証
+  - バリデーション: 全必須フィールドチェック
+  - データ変換: ISO文字列 → Date型自動変換
+  - 重複対応: 同一interviewIdで再送信時は既存レコード更新（UPSERT）
+
+**3. 統合テスト結果** ✅
+
+**Phase 1: 基本疎通テスト**
+- ✅ 送信成功（レスポンスタイム: 83ms）
+- ✅ VoiceDrive側で正常受信・DB保存確認
+- ✅ データ整合性100%確認
+
+**Phase 2: エラーケーステスト**
+- ✅ 認証エラー検出（HTTP 401）
+- ✅ バリデーションエラー検出（HTTP 400）
+- ✅ データ型エラー検出（HTTP 400）
+
+**Phase 3: 実運用想定テスト**
+- ✅ 複数件連続送信成功（5件、平均11ms）
+- ✅ 重複送信時の更新動作確認
+- ✅ フォローアップパターン確認（必要/不要）
+
+**統合テスト統計**:
+- **総テスト項目**: 12項目
+- **成功項目**: 12項目（100%）
+- **送信件数**: 12件（DB保存: 8件、重複除く）
+- **VoiceDrive受信確認**: 8件全て正常受信
+- **データ整合性**: 100%一致
+- **パフォーマンス**: 平均10.8ms、最大83ms（目標500ms未満）
+
+#### 技術実装詳細
+
+**送信フロー**:
+```
+1. 医療システムで面談実施・完了
+   ↓
+2. completeInterview() メソッド呼び出し
+   ↓
+3. voiceDriveRequestId の有無をチェック
+   ↓
+4. sendResultToVoiceDrive() 自動実行
+   ↓
+5. VoiceDriveIntegrationService.sendInterviewResult() 実行
+   ↓
+6. POST /sync/interview-results へ送信
+   ↓
+7. VoiceDrive側でレスポンス返却（200 OK）
+   ↓
+8. VoiceDriveデータベースに保存
+```
+
+**重複送信時の動作**:
+- 同じ`interviewId`で2回送信 → 既存レコード更新（UPSERT）
+- `status = 'processed'`、`processedAt`が設定される
+- 最新データで上書き保存
+
+**フォローアップ管理**:
+- `followUpRequired = true`: フォローアップ予定日を保存
+- `followUpRequired = false`: followUpDateはnull
+- VoiceDrive側でフォローアップ必要データを抽出可能
+
+#### 作成ドキュメント
+
+**医療システム側**:
+1. `mcp-shared/docs/面談サマリ送信機能_受信体制確認書_20251002.md` - VoiceDrive側確認書
+2. `mcp-shared/docs/面談サマリ受信体制_実装確認完了報告_20251002.md` - 実装確認報告
+3. `docs/面談サマリ統合テスト_実施手順書_20251002.md` - テスト手順書
+4. `docs/面談サマリ統合テスト_実施結果報告書_20251002.md` - 実施結果報告
+5. `tests/integration-test-interview-summary-direct.ts` - テストスクリプト
+
+**VoiceDrive側**:
+1. `mcp-shared/docs/面談サマリ統合テスト_VoiceDrive側確認依頼_20251002.md` - 確認依頼
+2. `mcp-shared/docs/面談サマリ統合テスト_VoiceDrive側確認完了通知_20251002.md` - 確認完了通知
+
+**両チーム共有**:
+1. `mcp-shared/docs/面談サマリ統合テスト_最終完了報告_20251002.md` - **最終完了報告**
+
+#### 機能フロー詳細
+
+**1. 面談完了 → サマリ送信**
+```typescript
+// src/lib/interview-bank/services/bank-service.ts (349-351行目)
+if (result.generationParams.voiceDriveRequestId) {
+  await this.sendResultToVoiceDrive(interviewId);
+}
+```
+
+**2. 送信データ準備**
+```typescript
+// src/lib/interview-bank/services/bank-service.ts (575-599行目)
+const interviewData = {
+  id: interviewId,
+  staffId: result.staffProfile.id,
+  staffName: result.staffProfile.name,
+  actualDate: result.conductedAt,
+  duration: result.duration,
+  summary: result.summary,
+  keyPoints: result.keyPoints,
+  actionItems: result.actionItems,
+  followUpRequired: result.actionItems && result.actionItems.length > 0
+};
+
+await VoiceDriveIntegrationService.sendInterviewResult(
+  interviewData,
+  result.generationParams.voiceDriveRequestId
+);
+```
+
+**3. VoiceDrive受信 → DB保存**
+```typescript
+// VoiceDrive側: src/api/db/interviewResultService.ts
+const result = await InterviewResultService.receiveResult({
+  requestId: data.requestId,
+  interviewId: data.interviewId,
+  completedAt: new Date(data.completedAt),
+  duration: data.duration,
+  summary: data.summary,
+  keyPoints: data.keyPoints,
+  actionItems: data.actionItems,
+  followUpRequired: data.followUpRequired,
+  followUpDate: data.followUpDate ? new Date(data.followUpDate) : undefined,
+  feedbackToEmployee: data.feedbackToEmployee,
+  nextRecommendations: data.nextRecommendations
+});
+```
+
+#### 本番環境移行準備
+
+**現在の状態**: ✅ **本番移行準備完了**
+
+**本番環境で必要な作業**:
+1. **VoiceDrive本番URL設定**
+   - 環境変数: `NEXT_PUBLIC_MCP_SERVER_ENDPOINT`
+   - 本番URL決定後に設定
+
+2. **本番用APIキー設定**
+   - 環境変数: `MEDICAL_SYSTEM_API_KEY`
+   - セキュアなトークン発行・設定
+
+3. **本番環境疎通テスト**
+   - 基本送信テスト（1件）
+   - データ保存確認
+   - エラーケーステスト
+
+4. **監視・アラート設定**
+   - 送信エラー監視
+   - レスポンスタイム監視
+   - データ整合性チェック
+
+#### 次のステップ
+
+**短期（共通DB構築完了後）**:
+- [ ] 本番環境URL・APIキー設定
+- [ ] 本番環境疎通テスト実施
+- [ ] 監視・アラート設定
+- [ ] 運用マニュアル作成
+
+**中期（本番運用開始後）**:
+- [ ] 実面談データでの送受信確認
+- [ ] パフォーマンス監視・最適化
+- [ ] エラーログ分析・改善
+- [ ] 統計レポート機能追加
+
+**長期（機能拡張）**:
+- [ ] VoiceDrive側での面談サマリ表示UI実装
+- [ ] 職員への自動通知機能
+- [ ] サマリ検索・分析機能
+- [ ] AI要約精度向上
+
+#### 技術成果
+
+**データ互換性**: 100%
+- 医療システム送信データとVoiceDrive受信データが完全一致
+- 日付・配列・オブジェクト型の自動変換が正常動作
+
+**パフォーマンス**: 目標達成
+- 平均レスポンスタイム: 10.8ms（目標500ms未満）
+- 最大レスポンスタイム: 83ms
+- 連続送信安定性: 100%（5/5件成功）
+
+**信頼性**: 高
+- 重複送信時の更新動作正常（UPSERT）
+- エラーハンドリング適切（401/400/500）
+- トランザクション保証
+
+#### Git管理
+- **最新コミット**: 面談サマリ統合テスト完全成功
+- **テスト完了日**: 2025年10月2日
+- **本番移行可能**: 準備完了
 
 ---
 
