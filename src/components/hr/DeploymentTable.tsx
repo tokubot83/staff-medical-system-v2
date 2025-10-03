@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { FixedSizeList as List } from 'react-window';
 import { DeploymentStaff } from '@/lib/hr/deploymentData';
 import { CareerCourseCode } from '@/types/staff';
 
@@ -78,15 +77,13 @@ export default function DeploymentTable({ staff }: DeploymentTableProps) {
   }, [groupedStaff]);
 
   // 行レンダラー
-  const Row = ({ index, style }: { index: number; style: React.CSSProperties }) => {
-    const row = flattenedRows[index];
-
+  const renderRow = (row: { type: 'header' | 'staff'; data: any }, index: number) => {
     if (row.type === 'header') {
       const { facilityId, facilityName, count } = row.data;
       return (
         <div
-          style={style}
-          className={`${FACILITY_BG_COLORS[facilityId] || 'bg-gray-50'} font-bold text-sm border-b-2 border-gray-400 flex items-center px-4 sticky top-0 z-10`}
+          key={`header-${facilityId}`}
+          className={`${FACILITY_BG_COLORS[facilityId] || 'bg-gray-50'} font-bold text-sm border-b-2 border-gray-400 flex items-center px-4 h-9`}
         >
           <span className="text-gray-800">{facilityName}</span>
           <span className="ml-3 text-gray-600 text-xs">（{count}名）</span>
@@ -101,8 +98,8 @@ export default function DeploymentTable({ staff }: DeploymentTableProps) {
 
     return (
       <div
-        style={style}
-        className={`${facilityBg} border-b border-gray-200 hover:bg-gray-100 transition-colors flex items-center text-xs`}
+        key={s.id}
+        className={`${facilityBg} border-b border-gray-200 hover:bg-gray-100 transition-colors flex items-center text-xs h-9`}
       >
         {/* 施設名（省略） */}
         <div className="w-20 px-2 truncate text-gray-600"></div>
@@ -169,16 +166,10 @@ export default function DeploymentTable({ staff }: DeploymentTableProps) {
         <div className="w-24 px-2">職員ID</div>
       </div>
 
-      {/* 仮想スクロールリスト */}
-      <List
-        height={700}
-        itemCount={flattenedRows.length}
-        itemSize={36}
-        width="100%"
-        overscanCount={5}
-      >
-        {Row}
-      </List>
+      {/* スクロール可能なリスト */}
+      <div className="overflow-y-auto" style={{ maxHeight: '700px' }}>
+        {flattenedRows.map((row, index) => renderRow(row, index))}
+      </div>
 
       {/* フッター統計 */}
       <div className="bg-slate-100 border-t-2 border-slate-300 px-4 py-3 text-xs text-gray-700">
