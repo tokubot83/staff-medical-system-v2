@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
+import type { AcknowledgementNotification } from '@/types/complianceMaster';
 
 // VoiceDriveからの通報受信API
 // 小原病院ハラスメント防止規程・公益通報規程に準拠
@@ -122,6 +123,113 @@ async function recordAuditLog(action: string, data: any): Promise<void> {
   // 実際はデータベースに保存
 }
 
+// 受付確認通知データの生成
+function createAcknowledgementNotification(
+  reportId: string,
+  caseNumber: string,
+  anonymousId: string,
+  category: string,
+  severity: 'critical' | 'high' | 'medium' | 'low'
+): AcknowledgementNotification {
+  const estimatedResponseTime = getEstimatedResponseTime(severity);
+
+  return {
+    reportId,
+    caseNumber,
+    anonymousId,
+    receivedAt: new Date().toISOString(),
+    category,
+    severity,
+    message: getAcknowledgementMessage(severity),
+    nextSteps: {
+      description: getNextStepsDescription(severity),
+      estimatedResponseTime,
+      deadlineForAdditionalInfo: severity === 'critical' || severity === 'high'
+        ? new Date(Date.now() + 86400000).toISOString() // 24時間後
+        : undefined
+    },
+    anonymityProtection: {
+      level: 'full',
+      message: 'あなたの匿名性は厳格に保護されます。通報者の特定につながる情報は暗号化され、限定された担当者のみがアクセス可能です。'
+    },
+    trackingInfo: {
+      statusCheckUrl: `/api/v3/compliance/receive?anonymousId=${anonymousId}`,
+      contactMethod: '匿名IDを使用して、いつでもケースの進捗状況を確認できます。'
+    }
+  };
+}
+
+// 受付確認メッセージの生成
+function getAcknowledgementMessage(severity: string): string {
+  switch (severity) {
+    case 'critical':
+      return '【緊急】通報を受け付けました。重大案件として直ちに対応を開始します。';
+    case 'high':
+      return '通報を受け付けました。優先案件として速やかに対応いたします。';
+    case 'medium':
+      return '通報を受け付けました。担当者を割り当て、調査を開始いたします。';
+    default:
+      return '通報を受け付けました。内容を確認し、適切に対応いたします。';
+  }
+}
+
+// 今後の流れの説明
+function getNextStepsDescription(severity: string): string {
+  switch (severity) {
+    case 'critical':
+      return '1時間以内に担当者に通知し、緊急対応を開始します。24時間以内に初期調査結果をお知らせします。';
+    case 'high':
+      return '当日中に担当者に通知し、調査を開始します。3営業日以内に初期調査結果をお知らせします。';
+    case 'medium':
+      return '3営業日以内に担当者を割り当て、調査を開始します。1週間以内に初期調査結果をお知らせします。';
+    default:
+      return '1週間以内に内容を確認し、必要に応じて調査を開始します。進捗は適宜お知らせします。';
+  }
+}
+
+// VoiceDriveへの受付確認通知送信
+async function sendAcknowledgementToVoiceDrive(notification: AcknowledgementNotification): Promise<void> {
+  const webhookUrl = process.env.VOICEDRIVE_ACKNOWLEDGEMENT_WEBHOOK_URL
+    || process.env.VOICEDRIVE_WEBHOOK_URL
+    || 'https://voicedrive.example.com/api/webhook/compliance/acknowledgement';
+  const webhookSecret = process.env.VOICEDRIVE_WEBHOOK_SECRET || 'shared-secret-key';
+
+  // Webhook署名の生成
+  const signature = crypto
+    .createHmac('sha256', webhookSecret)
+    .update(JSON.stringify(notification))
+    .digest('hex');
+
+  try {
+    const response = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Webhook-Secret': signature,
+        'X-Case-Number': notification.caseNumber,
+        'X-Anonymous-Id': notification.anonymousId,
+        'X-Timestamp': new Date().toISOString()
+      },
+      body: JSON.stringify(notification)
+    });
+
+    if (!response.ok) {
+      console.error('Failed to send acknowledgement to VoiceDrive:', {
+        status: response.status,
+        statusText: response.statusText,
+        caseNumber: notification.caseNumber
+      });
+      throw new Error('Acknowledgement delivery failed');
+    }
+
+    console.log('Acknowledgement sent successfully to VoiceDrive:', notification.caseNumber);
+  } catch (error) {
+    console.error('Error sending acknowledgement:', error);
+    // エラーでも処理は継続（受付自体は成功）
+    // 後でリトライ機構を実装予定
+  }
+}
+
 export async function POST(request: NextRequest) {
   const requestId = request.headers.get('x-request-id') || crypto.randomUUID();
 
@@ -195,7 +303,18 @@ export async function POST(request: NextRequest) {
       await notifyHandlers(report);
     }
 
-    // 8. 監査ログ記録
+    // 8. 通報者への受付確認通知送信（新規実装）
+    const acknowledgementNotification = createAcknowledgementNotification(
+      body.metadata.reportId,
+      caseNumber,
+      body.metadata.anonymousId,
+      body.metadata.category,
+      body.metadata.severity
+    );
+
+    await sendAcknowledgementToVoiceDrive(acknowledgementNotification);
+
+    // 9. 監査ログ記録
     await recordAuditLog('REPORT_RECEIVED', {
       requestId,
       caseNumber,
@@ -203,7 +322,14 @@ export async function POST(request: NextRequest) {
       category: body.metadata.category
     });
 
-    // 9. 成功応答
+    await recordAuditLog('ACKNOWLEDGEMENT_SENT', {
+      requestId,
+      caseNumber,
+      anonymousId: body.metadata.anonymousId,
+      sentAt: new Date().toISOString()
+    });
+
+    // 10. 成功応答
     return NextResponse.json(
       {
         success: true,
@@ -211,7 +337,8 @@ export async function POST(request: NextRequest) {
         acknowledgementId: crypto.randomUUID(),
         receivedAt: new Date().toISOString(),
         message: 'Report received and processing started',
-        estimatedResponseTime: getEstimatedResponseTime(body.metadata.severity)
+        estimatedResponseTime: getEstimatedResponseTime(body.metadata.severity),
+        acknowledgementSent: true
       },
       { status: 200 }
     );

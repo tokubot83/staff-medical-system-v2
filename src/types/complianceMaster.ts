@@ -94,6 +94,33 @@ export interface StagePermission {
   actions: ('view' | 'edit' | 'approve' | 'reject' | 'escalate')[];
 }
 
+// 通報受付確認通知（VoiceDrive → 通報者への通知用）
+export interface AcknowledgementNotification {
+  reportId: string;           // VoiceDriveのレポートID
+  caseNumber: string;         // 医療システムのケース番号
+  anonymousId: string;        // 匿名ID
+  receivedAt: string;         // 受付日時（ISO 8601）
+  category: string;           // 通報カテゴリ
+  severity: 'critical' | 'high' | 'medium' | 'low';
+  message: string;            // 通報者へのメッセージ
+  nextSteps: {
+    description: string;      // 今後の流れ
+    estimatedResponseTime: {
+      value: number;
+      unit: 'hours' | 'days';
+    };
+    deadlineForAdditionalInfo?: string; // 追加情報提供期限
+  };
+  anonymityProtection: {
+    level: 'full' | 'conditional' | 'partial';
+    message: string;
+  };
+  trackingInfo: {
+    statusCheckUrl?: string;  // ステータス確認URL
+    contactMethod?: string;   // 連絡方法
+  };
+}
+
 export interface ChecklistItem {
   id: string;
   text: string;
