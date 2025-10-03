@@ -4,11 +4,14 @@ import React, { useState, useMemo } from 'react';
 import DeploymentTable from '@/components/hr/DeploymentTable';
 import DeploymentFilter, { FilterState } from '@/components/hr/DeploymentFilter';
 import WardComparisonView from '@/components/hr/WardComparisonView';
+import FacilityComparisonView from '@/components/hr/FacilityComparisonView';
+import DepartmentComparisonView from '@/components/hr/DepartmentComparisonView';
 import { generateAllFacilitiesStaff, getFacilitySummary } from '@/lib/hr/deploymentData';
 import { FACILITY_ID_MAP } from '@/lib/facility-position-mapping';
 import { DisplayMode } from '@/lib/hr/wardUtils';
 
 type TabType = 'list' | 'comparison';
+type ComparisonMode = 'facility' | 'ward' | 'department';
 
 export default function DeploymentPage() {
   // サンプルデータ生成
@@ -19,6 +22,9 @@ export default function DeploymentPage() {
 
   // 表示モード
   const [displayMode, setDisplayMode] = useState<DisplayMode>('facility');
+
+  // 比較モード
+  const [comparisonMode, setComparisonMode] = useState<ComparisonMode>('ward');
 
   // フィルター状態
   const [filters, setFilters] = useState<FilterState>({
@@ -259,8 +265,52 @@ export default function DeploymentPage() {
             <DeploymentTable staff={filteredStaff} displayMode={displayMode} />
           </>
         ) : (
-          /* 病棟比較ビュー */
-          <WardComparisonView staff={allStaff} />
+          /* 比較ビュー */
+          <>
+            {/* 比較モード切替 */}
+            <div className="mb-4 bg-white rounded-lg shadow-md p-4">
+              <div className="flex items-center gap-4">
+                <span className="text-sm font-medium text-gray-700">比較単位:</span>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setComparisonMode('facility')}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                      comparisonMode === 'facility'
+                        ? 'bg-indigo-600 text-white shadow-md'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    🏥 施設別
+                  </button>
+                  <button
+                    onClick={() => setComparisonMode('ward')}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                      comparisonMode === 'ward'
+                        ? 'bg-indigo-600 text-white shadow-md'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    🛏️ 病棟別
+                  </button>
+                  <button
+                    onClick={() => setComparisonMode('department')}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                      comparisonMode === 'department'
+                        ? 'bg-indigo-600 text-white shadow-md'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    📂 部署別
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* 比較ビュー本体 */}
+            {comparisonMode === 'facility' && <FacilityComparisonView staff={allStaff} />}
+            {comparisonMode === 'ward' && <WardComparisonView staff={allStaff} />}
+            {comparisonMode === 'department' && <DepartmentComparisonView staff={allStaff} />}
+          </>
         )}
 
         {/* 凡例 */}

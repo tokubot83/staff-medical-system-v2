@@ -209,13 +209,76 @@ export default function WardComparisonView({ staff }: WardComparisonViewProps) {
           </div>
         </div>
       ) : (
-        <div className={`grid gap-6 ${
-          comparisonStats.length === 1 ? 'grid-cols-1 max-w-2xl mx-auto' :
-          comparisonStats.length === 2 ? 'grid-cols-2' :
-          'grid-cols-3'
-        }`}>
-          {comparisonStats.map((stat, index) => renderStatCard(stat, index))}
-        </div>
+        <>
+          {/* 統計カード */}
+          <div className={`grid gap-6 ${
+            comparisonStats.length === 1 ? 'grid-cols-1 max-w-2xl mx-auto' :
+            comparisonStats.length === 2 ? 'grid-cols-2' :
+            'grid-cols-3'
+          }`}>
+            {comparisonStats.map((stat, index) => renderStatCard(stat, index))}
+          </div>
+
+          {/* 職員リスト並列表示 */}
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+              <span>👥</span>
+              <span>職員一覧（並列比較）</span>
+            </h3>
+            <div className={`grid gap-4 ${
+              comparisonStats.length === 1 ? 'grid-cols-1' :
+              comparisonStats.length === 2 ? 'grid-cols-2' :
+              'grid-cols-3'
+            }`}>
+              {selectedWardIds.map((wardId, index) => {
+                const wardStaff = staff.filter(s => `${s.facilityId}_${s.department}` === wardId);
+                const ward = wards.find(w => w.id === wardId);
+                const colors = ['border-blue-500', 'border-green-500', 'border-purple-500'];
+
+                return (
+                  <div key={wardId} className="space-y-2">
+                    <div className={`bg-gradient-to-r ${
+                      index === 0 ? 'from-blue-500 to-blue-600' :
+                      index === 1 ? 'from-green-500 to-green-600' :
+                      'from-purple-500 to-purple-600'
+                    } text-white px-4 py-2 rounded-t-lg font-medium text-sm sticky top-0 z-10`}>
+                      {ward?.facilityName} / {ward?.name}（{wardStaff.length}名）
+                    </div>
+                    <div className="max-h-[600px] overflow-y-auto space-y-1">
+                      {wardStaff.map(s => {
+                        const courseColor = COURSE_COLORS[s.careerCourse];
+                        return (
+                          <div
+                            key={s.employeeId}
+                            className={`border-l-4 ${colors[index]} bg-gray-50 hover:bg-gray-100 p-3 rounded transition-colors`}
+                          >
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="font-medium text-gray-800">{s.name}</span>
+                              <span className={`${courseColor.bg} ${courseColor.text} text-xs px-2 py-0.5 rounded-full font-bold`}>
+                                {courseColor.label}
+                              </span>
+                            </div>
+                            <div className="text-xs text-gray-600 space-y-0.5">
+                              <div>{s.position}</div>
+                              <div className="flex items-center gap-2">
+                                <span>権限Lv.{s.accountLevel}</span>
+                                <span>
+                                  {s.canPerformLeaderDuty === true ? '✅ LD可' :
+                                   s.canPerformLeaderDuty === false ? '⛔ LD不可' : '-'}
+                                </span>
+                              </div>
+                              <div className="text-gray-400">{s.employeeId}</div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </>
       )}
 
       {/* 比較サマリー */}
