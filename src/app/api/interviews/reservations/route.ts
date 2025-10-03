@@ -332,6 +332,12 @@ export async function POST(request: NextRequest) {
       supportCategory: body.supportCategory,
       supportTopic: body.supportTopic,
       supportDetails: body.supportDetails,
+      evaluationDetails: body.evaluationDetails ? {
+        ...body.evaluationDetails,
+        appealDeadline: body.evaluationDetails.appealDeadline
+          ? new Date(body.evaluationDetails.appealDeadline)
+          : undefined
+      } : undefined,
       notes: body.notes,
       source: body.source || 'system',
       createdBy: body.createdBy || 'system',

@@ -57,6 +57,17 @@ interface ProvisionalReservation {
   confirmedAt?: Date;
   rejectionCount?: number;
   needsReproposal?: boolean;
+  // フィードバック面談用フィールド
+  supportCategory?: 'feedback' | 'career' | 'workplace' | 'health' | 'other';
+  evaluationDetails?: {
+    evaluationId: string;
+    evaluationType: 'summer_provisional' | 'winter_provisional' | 'annual_final';
+    facilityGrade?: string;
+    corporateGrade?: string;
+    totalPoints?: number;
+    appealDeadline?: Date;
+    appealable?: boolean;
+  };
 }
 import { useRouter, useSearchParams } from 'next/navigation';
 import { mockInterviews } from '@/data/mockInterviews';
@@ -134,12 +145,23 @@ export interface UnifiedInterviewReservation {
   supportTopic?: string;
   supportDetails?: string;
   voiceDriveRequestId?: string;
-  
+
+  // フィードバック面談用（評価結果紐づけ）
+  evaluationDetails?: {
+    evaluationId: string;
+    evaluationType: 'summer_provisional' | 'winter_provisional' | 'annual_final';
+    facilityGrade?: string;
+    corporateGrade?: string;
+    totalPoints?: number;
+    appealDeadline?: Date;
+    appealable?: boolean;
+  };
+
   // 共通
   notes?: string;
   createdAt: Date;
   updatedAt?: Date;
-  
+
   // 予約ソース
   source?: 'manual' | 'voicedrive' | 'system';
   createdBy?: string;
@@ -266,7 +288,7 @@ export default function UnifiedInterviewDashboard() {
           needsReproposal: true
         },
         {
-          id: 'PROV-003',
+          id: 'PROV-004',
           staffId: 'OH-PT-2022-005',
           staffName: '佐藤 美咲',
           department: 'リハビリテーション科',
@@ -277,7 +299,69 @@ export default function UnifiedInterviewDashboard() {
           source: 'voicedrive',
           status: 'pending',
           receivedAt: new Date('2025-09-15'),
-          notes: '職場環境についての相談'
+          notes: '職場環境についての相談',
+          workflowStage: 'initial',
+          voicedriveApprovalReceived: false,
+          humanConfirmationRequired: false,
+          needsReproposal: false
+        },
+        // フィードバック面談サンプル（夏季評価・異議申立期限間近）
+        {
+          id: 'PROV-005',
+          staffId: 'OH-NS-2020-010',
+          staffName: '高橋 由美',
+          department: '外来看護部',
+          position: '看護師',
+          interviewType: 'support',
+          supportCategory: 'feedback',
+          preferredDates: [new Date('2025-09-22'), new Date('2025-09-23')],
+          urgency: 'high',
+          source: 'voicedrive',
+          status: 'pending',
+          receivedAt: new Date('2025-09-15T14:30:00'),
+          notes: '夏季評価結果について詳しくお話を伺いたい',
+          workflowStage: 'initial',
+          voicedriveApprovalReceived: false,
+          humanConfirmationRequired: false,
+          needsReproposal: false,
+          evaluationDetails: {
+            evaluationId: 'EVAL-2024-SUMMER-010',
+            evaluationType: 'summer_provisional',
+            facilityGrade: 'A',
+            corporateGrade: 'B',
+            totalPoints: 21.5,
+            appealDeadline: new Date('2025-09-25'),
+            appealable: true
+          }
+        },
+        // フィードバック面談サンプル（冬季評価・異議申立期限まで余裕あり）
+        {
+          id: 'PROV-006',
+          staffId: 'TG-PT-2019-007',
+          staffName: '伊藤 健太',
+          department: 'リハビリテーション科',
+          position: '理学療法士',
+          interviewType: 'support',
+          supportCategory: 'feedback',
+          preferredDates: [new Date('2025-10-05'), new Date('2025-10-06')],
+          urgency: 'medium',
+          source: 'voicedrive',
+          status: 'pending',
+          receivedAt: new Date('2025-09-16T09:00:00'),
+          notes: '冬季評価のフィードバックと今後のキャリアについて相談したい',
+          workflowStage: 'initial',
+          voicedriveApprovalReceived: false,
+          humanConfirmationRequired: false,
+          needsReproposal: false,
+          evaluationDetails: {
+            evaluationId: 'EVAL-2024-WINTER-007',
+            evaluationType: 'winter_provisional',
+            facilityGrade: 'S',
+            corporateGrade: 'S',
+            totalPoints: 24.8,
+            appealDeadline: new Date('2025-10-20'),
+            appealable: false
+          }
         }
       ];
 
@@ -1199,6 +1283,21 @@ function ReservationManagementSection({ provisionalReservations, onConfirmed, on
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [selectedReservation, setSelectedReservation] = useState<ProvisionalReservation | null>(null);
 
+  // 異議申立期限が近いフィードバック面談をチェック
+  const getUrgentFeedbackReservations = () => {
+    return provisionalReservations.filter(r => {
+      if (r.supportCategory !== 'feedback' || !r.evaluationDetails?.appealDeadline) {
+        return false;
+      }
+      const daysUntilDeadline = Math.ceil(
+        (new Date(r.evaluationDetails.appealDeadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+      );
+      return daysUntilDeadline <= 7 && daysUntilDeadline >= 0; // 7日以内
+    });
+  };
+
+  const urgentFeedbackReservations = getUrgentFeedbackReservations();
+
   const handleProcessReservation = (reservation: ProvisionalReservation) => {
     setSelectedReservation(reservation);
     setShowProcessingModal(true);
@@ -1302,6 +1401,96 @@ function ReservationManagementSection({ provisionalReservations, onConfirmed, on
         </div>
       </CardHeader>
       <CardContent className="pt-4">
+        {/* 異議申立期限アラート */}
+        {urgentFeedbackReservations.length > 0 && (
+          <Alert className="mb-4 border-red-500 bg-red-50">
+            <AlertTriangle className="h-5 w-5 text-red-600" />
+            <div className="ml-2">
+              <div className="font-bold text-red-900">⚠️ 異議申立期限が近い評価フィードバック面談があります</div>
+              <div className="text-sm text-red-700 mt-1">
+                {urgentFeedbackReservations.map(r => {
+                  const daysLeft = Math.ceil(
+                    (new Date(r.evaluationDetails!.appealDeadline!).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+                  );
+                  return (
+                    <div key={r.id} className="mt-1">
+                      • {r.staffName} - 期限まで残り{daysLeft}日 ({new Date(r.evaluationDetails!.appealDeadline!).toLocaleDateString('ja-JP')})
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="text-xs text-red-600 mt-2 font-bold">
+                これらの面談は優先的に処理してください。
+              </div>
+            </div>
+          </Alert>
+        )}
+
+        {/* フィードバック面談統計 */}
+        {provisionalReservations.filter(r => r.supportCategory === 'feedback').length > 0 && (
+          <div className="mb-4 bg-purple-50 border-2 border-purple-200 rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <BarChart3 className="h-5 w-5 text-purple-600" />
+              <h4 className="font-bold text-purple-900">📊 評価フィードバック面談 統計</h4>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="bg-white p-3 rounded border border-purple-200">
+                <div className="text-xs text-purple-700">総数</div>
+                <div className="text-2xl font-bold text-purple-900">
+                  {provisionalReservations.filter(r => r.supportCategory === 'feedback').length}件
+                </div>
+              </div>
+              <div className="bg-white p-3 rounded border border-yellow-200">
+                <div className="text-xs text-yellow-700">未処理</div>
+                <div className="text-2xl font-bold text-yellow-900">
+                  {provisionalReservations.filter(r => r.supportCategory === 'feedback' && r.workflowStage === 'initial').length}件
+                </div>
+              </div>
+              <div className="bg-white p-3 rounded border border-blue-200">
+                <div className="text-xs text-blue-700">処理中</div>
+                <div className="text-2xl font-bold text-blue-900">
+                  {provisionalReservations.filter(r => r.supportCategory === 'feedback' && r.workflowStage === 'awaiting_approval').length}件
+                </div>
+              </div>
+              <div className="bg-white p-3 rounded border border-red-200">
+                <div className="text-xs text-red-700">期限間近</div>
+                <div className="text-2xl font-bold text-red-900">
+                  {urgentFeedbackReservations.length}件
+                </div>
+              </div>
+            </div>
+            <div className="mt-3 grid grid-cols-3 gap-2 text-xs">
+              <div className="bg-purple-100 p-2 rounded text-center">
+                <div className="text-purple-700">夏季評価</div>
+                <div className="font-bold text-purple-900">
+                  {provisionalReservations.filter(r =>
+                    r.supportCategory === 'feedback' &&
+                    r.evaluationDetails?.evaluationType === 'summer_provisional'
+                  ).length}件
+                </div>
+              </div>
+              <div className="bg-purple-100 p-2 rounded text-center">
+                <div className="text-purple-700">冬季評価</div>
+                <div className="font-bold text-purple-900">
+                  {provisionalReservations.filter(r =>
+                    r.supportCategory === 'feedback' &&
+                    r.evaluationDetails?.evaluationType === 'winter_provisional'
+                  ).length}件
+                </div>
+              </div>
+              <div className="bg-purple-100 p-2 rounded text-center">
+                <div className="text-purple-700">年間評価</div>
+                <div className="font-bold text-purple-900">
+                  {provisionalReservations.filter(r =>
+                    r.supportCategory === 'feedback' &&
+                    r.evaluationDetails?.evaluationType === 'annual_final'
+                  ).length}件
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* VoiceDrive連携ステーション ヘッダー */}
         <div className="mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-200">
           <div className="flex items-center justify-center mb-3">
@@ -1394,6 +1583,57 @@ function ReservationManagementSection({ provisionalReservations, onConfirmed, on
                         )}
                       </div>
                     </div>
+
+                    {/* 評価情報表示（フィードバック面談のみ） */}
+                    {reservation.supportCategory === 'feedback' && reservation.evaluationDetails && (
+                      <div className="bg-purple-50 p-3 rounded-md mb-3 border-2 border-purple-200">
+                        <h5 className="font-medium text-sm text-purple-900 mb-2 flex items-center gap-1">
+                          📊 評価結果
+                          <Badge variant="outline" className="text-xs">
+                            {reservation.evaluationDetails.evaluationType === 'summer_provisional' ? '夏季（暫定）' :
+                             reservation.evaluationDetails.evaluationType === 'winter_provisional' ? '冬季（暫定）' :
+                             '年間（確定）'}
+                          </Badge>
+                        </h5>
+                        <div className="space-y-1 text-sm">
+                          {reservation.evaluationDetails.facilityGrade && (
+                            <div className="flex justify-between items-center">
+                              <span className="text-purple-700">施設内評価:</span>
+                              <Badge variant="default" className="bg-purple-600">
+                                {reservation.evaluationDetails.facilityGrade}
+                              </Badge>
+                            </div>
+                          )}
+                          {reservation.evaluationDetails.corporateGrade && (
+                            <div className="flex justify-between items-center">
+                              <span className="text-purple-700">法人内評価:</span>
+                              <Badge variant="default" className="bg-purple-600">
+                                {reservation.evaluationDetails.corporateGrade}
+                              </Badge>
+                            </div>
+                          )}
+                          {reservation.evaluationDetails.totalPoints !== undefined && (
+                            <div className="flex justify-between items-center">
+                              <span className="text-purple-700">組織貢献度:</span>
+                              <span className="font-bold text-purple-900">{reservation.evaluationDetails.totalPoints}点</span>
+                            </div>
+                          )}
+                          {reservation.evaluationDetails.appealDeadline && (
+                            <div className="mt-2 pt-2 border-t border-purple-200">
+                              <div className="flex items-center gap-1 text-xs">
+                                <AlertTriangle className="w-3 h-3 text-red-600" />
+                                <span className="text-red-600 font-bold">
+                                  異議申立期限: {new Date(reservation.evaluationDetails.appealDeadline).toLocaleDateString('ja-JP')}
+                                </span>
+                              </div>
+                              {new Date(reservation.evaluationDetails.appealDeadline).getTime() - Date.now() < 7 * 24 * 60 * 60 * 1000 && (
+                                <div className="text-xs text-red-600 mt-1">※ 期限まで1週間未満</div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
 
                     {/* 相談内容 */}
                     {reservation.notes && (
@@ -1769,6 +2009,39 @@ function InterviewExecutionSection({ todayReservations, loading, onStartIntervie
                             📝 {reservation.notes}
                           </div>
                         )}
+                        {/* フィードバック面談の場合は評価情報を表示 */}
+                        {reservation.supportCategory === 'feedback' && reservation.evaluationDetails && (
+                          <div className="mt-2 bg-purple-50 p-3 rounded border-2 border-purple-200">
+                            <div className="font-medium text-sm text-purple-900 mb-2">📊 評価情報（面談参照用）</div>
+                            <div className="grid grid-cols-2 gap-2 text-sm">
+                              <div>
+                                <span className="text-purple-700">評価種別:</span>
+                                <div className="font-bold">
+                                  {reservation.evaluationDetails.evaluationType === 'summer_provisional' ? '夏季（暫定）' :
+                                   reservation.evaluationDetails.evaluationType === 'winter_provisional' ? '冬季（暫定）' :
+                                   '年間（確定）'}
+                                </div>
+                              </div>
+                              <div>
+                                <span className="text-purple-700">組織貢献度:</span>
+                                <div className="font-bold">{reservation.evaluationDetails.totalPoints}点</div>
+                              </div>
+                              <div>
+                                <span className="text-purple-700">施設内:</span>
+                                <Badge className="bg-purple-600">{reservation.evaluationDetails.facilityGrade}</Badge>
+                              </div>
+                              <div>
+                                <span className="text-purple-700">法人内:</span>
+                                <Badge className="bg-purple-600">{reservation.evaluationDetails.corporateGrade}</Badge>
+                              </div>
+                            </div>
+                            {reservation.evaluationDetails.appealDeadline && (
+                              <div className="mt-2 pt-2 border-t border-purple-200 text-xs text-red-600 font-bold">
+                                ⚠️ 異議申立期限: {new Date(reservation.evaluationDetails.appealDeadline).toLocaleDateString('ja-JP')}
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -1816,14 +2089,26 @@ function ReservationProcessingModal({ isOpen, onClose, reservation, onStatusChan
     setIsAnalyzing(true);
     setAnalysisProgress(0);
 
-    const stages = [
-      { stage: '職員データ分析中...', progress: 15 },
-      { stage: '面談履歴を確認中...', progress: 30 },
-      { stage: '担当者スケジュール確認中...', progress: 45 },
-      { stage: '担当者専門分野マッチング中...', progress: 60 },
-      { stage: 'AI推薦案生成中...', progress: 80 },
-      { stage: '最終調整中...', progress: 100 }
-    ];
+    // フィードバック面談の場合は評価情報分析を追加
+    const stages = reservation.supportCategory === 'feedback' && reservation.evaluationDetails
+      ? [
+          { stage: '職員データ分析中...', progress: 10 },
+          { stage: '評価情報を確認中...', progress: 20 },
+          { stage: '異議申立期限を考慮中...', progress: 30 },
+          { stage: '面談履歴を確認中...', progress: 40 },
+          { stage: '担当者スケジュール確認中...', progress: 55 },
+          { stage: '評価担当者とのマッチング中...', progress: 70 },
+          { stage: 'AI推薦案生成中...', progress: 85 },
+          { stage: '最終調整中...', progress: 100 }
+        ]
+      : [
+          { stage: '職員データ分析中...', progress: 15 },
+          { stage: '面談履歴を確認中...', progress: 30 },
+          { stage: '担当者スケジュール確認中...', progress: 45 },
+          { stage: '担当者専門分野マッチング中...', progress: 60 },
+          { stage: 'AI推薦案生成中...', progress: 80 },
+          { stage: '最終調整中...', progress: 100 }
+        ];
 
     for (const { stage, progress } of stages) {
       setAnalysisStage(stage);
@@ -1888,6 +2173,24 @@ function ReservationProcessingModal({ isOpen, onClose, reservation, onStatusChan
           friday: { isAvailable: true, timeSlots: ['10:30-11:30', '13:00-14:00'] }
         },
         workloadAnalysis: { currentWeekLoad: 45, maxCapacity: 80, efficiency: 95, nextAvailableSlot: '2025-09-19 16:00' }
+      },
+      // フィードバック面談専門担当者
+      {
+        id: 'INT-004',
+        name: '鈴木 敏夫',
+        title: '評価制度担当課長',
+        department: '人事部評価課',
+        specialties: ['人事評価フィードバック', '評価制度説明', '異議申立対応'],
+        experienceYears: 18,
+        workingDays: { monday: true, tuesday: true, wednesday: true, thursday: true, friday: true },
+        dailySchedule: {
+          monday: { isAvailable: true, timeSlots: ['10:00-11:00', '14:00-15:00'] },
+          tuesday: { isAvailable: true, timeSlots: ['9:00-10:00', '13:00-14:00', '15:00-16:00'] },
+          wednesday: { isAvailable: true, timeSlots: ['10:30-11:30', '14:30-15:30'] },
+          thursday: { isAvailable: true, timeSlots: ['9:30-10:30', '13:30-14:30'] },
+          friday: { isAvailable: true, timeSlots: ['10:00-11:00', '15:00-16:00'] }
+        },
+        workloadAnalysis: { currentWeekLoad: 70, maxCapacity: 100, efficiency: 90, nextAvailableSlot: '2025-09-20 10:00' }
       }
     ];
 
@@ -1936,6 +2239,47 @@ function ReservationProcessingModal({ isOpen, onClose, reservation, onStatusChan
       if (interviewer.workloadAnalysis.efficiency > 90) {
         baseScore += 5;
         reasoning += `業務効率性${interviewer.workloadAnalysis.efficiency}%で高品質な面談が期待。`;
+      }
+
+      // フィードバック面談専用マッチング
+      if (reservation.supportCategory === 'feedback' && reservation.evaluationDetails) {
+        // 評価フィードバック専門家を優先
+        if (interviewer.specialties.includes('人事評価フィードバック') ||
+            interviewer.specialties.includes('評価制度説明')) {
+          baseScore += 25;
+          reasoning += '評価フィードバック専門担当者で説明が的確。';
+        }
+
+        // 異議申立対応経験
+        if (interviewer.specialties.includes('異議申立対応')) {
+          baseScore += 15;
+          reasoning += '異議申立対応の経験豊富。';
+        }
+
+        // 異議申立期限が近い場合の優先度調整
+        if (reservation.evaluationDetails.appealDeadline) {
+          const daysUntilDeadline = Math.ceil(
+            (new Date(reservation.evaluationDetails.appealDeadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+          );
+
+          if (daysUntilDeadline <= 3) {
+            baseScore += 20;
+            reasoning += `異議申立期限まで${daysUntilDeadline}日のため最優先対応。`;
+          } else if (daysUntilDeadline <= 7) {
+            baseScore += 10;
+            reasoning += `異議申立期限まで${daysUntilDeadline}日のため優先対応。`;
+          }
+        }
+
+        // 評価結果に応じた担当者選定
+        if (reservation.evaluationDetails.facilityGrade === 'D' ||
+            reservation.evaluationDetails.corporateGrade === 'D') {
+          // 低評価の場合は経験豊富な担当者を優先
+          if (interviewer.experienceYears >= 15) {
+            baseScore += 10;
+            reasoning += '低評価ケースの対応経験豊富。';
+          }
+        }
       }
 
       // 経験年数
@@ -2002,16 +2346,52 @@ function ReservationProcessingModal({ isOpen, onClose, reservation, onStatusChan
   const sendToVoiceDrive = async () => {
     setIsSending(true);
 
-    // 送信シミュレーション
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    try {
+      // VoiceDriveへの送信データを構築
+      const sendData = {
+        reservationId: reservation.id,
+        staffId: reservation.staffId,
+        staffName: reservation.staffName,
+        proposals: aiProposals?.proposals || [],
+        recommendedChoice: selectedProposal,
+        editedProposal: editedProposal,
+        interviewType: reservation.interviewType,
+        supportCategory: reservation.supportCategory,
+        // フィードバック面談の場合は評価情報も送信
+        evaluationDetails: reservation.supportCategory === 'feedback'
+          ? reservation.evaluationDetails
+          : undefined,
+        urgency: reservation.urgency,
+        notes: reservation.notes
+      };
 
-    // ステータス更新
-    onStatusChange(reservation, 'awaiting');
-    setIsSending(false);
-    onClose();
+      // 送信シミュレーション（実際の実装ではAPI呼び出し）
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
-    // 成功通知
-    alert('VoiceDriveに送信完了しました！職員からの返答をお待ちください。');
+      // TODO: 実際のAPI呼び出し
+      // await fetch('/api/voicedrive/send-proposals', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(sendData)
+      // });
+
+      console.log('VoiceDrive送信データ:', sendData);
+
+      // ステータス更新
+      onStatusChange(reservation, 'awaiting');
+      setIsSending(false);
+      onClose();
+
+      // 成功通知
+      const successMessage = reservation.supportCategory === 'feedback'
+        ? 'フィードバック面談の提案をVoiceDriveに送信完了しました！職員からの返答をお待ちください。'
+        : 'VoiceDriveに送信完了しました！職員からの返答をお待ちください。';
+      alert(successMessage);
+    } catch (error) {
+      console.error('VoiceDrive送信エラー:', error);
+      setIsSending(false);
+      alert('送信に失敗しました。もう一度お試しください。');
+    }
   };
 
   // ステップごとのレンダリング
@@ -2167,6 +2547,32 @@ function ReservationProcessingModal({ isOpen, onClose, reservation, onStatusChan
           <div><span className="font-medium">宛先:</span> {reservation.staffName}</div>
           <div><span className="font-medium">面談者:</span> {editedProposal?.interviewer}</div>
           <div><span className="font-medium">提案日時:</span> {editedProposal?.timeSlot}</div>
+
+          {/* フィードバック面談の場合は評価情報を表示 */}
+          {reservation.supportCategory === 'feedback' && reservation.evaluationDetails && (
+            <div className="mt-3 bg-purple-50 p-3 rounded border border-purple-200">
+              <div className="font-medium text-purple-900 mb-2">📊 評価情報</div>
+              <div className="space-y-1 text-xs">
+                <div>評価種別: {
+                  reservation.evaluationDetails.evaluationType === 'summer_provisional' ? '夏季評価（暫定）' :
+                  reservation.evaluationDetails.evaluationType === 'winter_provisional' ? '冬季評価（暫定）' :
+                  '年間総合評価（確定）'
+                }</div>
+                {reservation.evaluationDetails.facilityGrade && (
+                  <div>施設内評価: {reservation.evaluationDetails.facilityGrade}</div>
+                )}
+                {reservation.evaluationDetails.corporateGrade && (
+                  <div>法人内評価: {reservation.evaluationDetails.corporateGrade}</div>
+                )}
+                {reservation.evaluationDetails.appealDeadline && (
+                  <div className="text-red-600 font-bold">
+                    異議申立期限: {new Date(reservation.evaluationDetails.appealDeadline).toLocaleDateString('ja-JP')}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
           <div><span className="font-medium">面談内容:</span></div>
           <div className="bg-white p-2 rounded border text-xs">
             {editedProposal?.reasoning}
