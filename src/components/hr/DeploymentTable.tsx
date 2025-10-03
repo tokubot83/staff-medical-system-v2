@@ -3,9 +3,11 @@
 import React, { useMemo } from 'react';
 import { DeploymentStaff } from '@/lib/hr/deploymentData';
 import { CareerCourseCode } from '@/types/staff';
+import { DisplayMode, getGroupKey, getGroupLabel } from '@/lib/hr/wardUtils';
 
 interface DeploymentTableProps {
   staff: DeploymentStaff[];
+  displayMode?: DisplayMode;
 }
 
 // コース別の色定義
@@ -25,41 +27,45 @@ const FACILITY_BG_COLORS: Record<string, string> = {
   'visiting-nurse-station-tategami': 'bg-pink-50'
 };
 
-export default function DeploymentTable({ staff }: DeploymentTableProps) {
-  // 施設でグループ化
+export default function DeploymentTable({ staff, displayMode = 'facility' }: DeploymentTableProps) {
+  // 表示モードに応じてグループ化
   const groupedStaff = useMemo(() => {
-    const groups: { facilityId: string; facilityName: string; staff: DeploymentStaff[] }[] = [];
-    const facilityMap = new Map<string, DeploymentStaff[]>();
+    const groups: { groupKey: string; groupLabel: string; staff: DeploymentStaff[] }[] = [];
+    const groupMap = new Map<string, DeploymentStaff[]>();
 
     staff.forEach(s => {
-      if (!facilityMap.has(s.facilityId)) {
-        facilityMap.set(s.facilityId, []);
+      const key = getGroupKey(s, displayMode);
+      if (!groupMap.has(key)) {
+        groupMap.set(key, []);
       }
-      facilityMap.get(s.facilityId)!.push(s);
+      groupMap.get(key)!.push(s);
     });
 
-    facilityMap.forEach((staffList, facilityId) => {
+    groupMap.forEach((staffList, groupKey) => {
       groups.push({
-        facilityId,
-        facilityName: staffList[0].facilityName,
+        groupKey,
+        groupLabel: getGroupLabel(staffList[0], displayMode),
         staff: staffList
       });
     });
 
-    return groups;
-  }, [staff]);
+    // グループをソート
+    groups.sort((a, b) => a.groupLabel.localeCompare(b.groupLabel, 'ja'));
 
-  // フラット化されたリスト（施設ヘッダー含む）
+    return groups;
+  }, [staff, displayMode]);
+
+  // フラット化されたリスト（グループヘッダー含む）
   const flattenedRows = useMemo(() => {
     const rows: Array<{ type: 'header' | 'staff'; data: any }> = [];
 
     groupedStaff.forEach(group => {
-      // 施設ヘッダー
+      // グループヘッダー
       rows.push({
         type: 'header',
         data: {
-          facilityId: group.facilityId,
-          facilityName: group.facilityName,
+          groupKey: group.groupKey,
+          groupLabel: group.groupLabel,
           count: group.staff.length
         }
       });
@@ -79,13 +85,14 @@ export default function DeploymentTable({ staff }: DeploymentTableProps) {
   // 行レンダラー
   const renderRow = (row: { type: 'header' | 'staff'; data: any }, index: number) => {
     if (row.type === 'header') {
-      const { facilityId, facilityName, count } = row.data;
+      const { groupKey, groupLabel, count } = row.data;
+      const facilityId = row.data.groupKey.split('-')[0];
       return (
         <div
-          key={`header-${facilityId}`}
+          key={`header-${groupKey}`}
           className={`${FACILITY_BG_COLORS[facilityId] || 'bg-gray-50'} font-bold text-sm border-b-2 border-gray-400 flex items-center px-4 h-9`}
         >
-          <span className="text-gray-800">{facilityName}</span>
+          <span className="text-gray-800">{groupLabel}</span>
           <span className="ml-3 text-gray-600 text-xs">（{count}名）</span>
         </div>
       );

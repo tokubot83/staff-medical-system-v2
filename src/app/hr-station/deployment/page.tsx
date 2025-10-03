@@ -3,12 +3,22 @@
 import React, { useState, useMemo } from 'react';
 import DeploymentTable from '@/components/hr/DeploymentTable';
 import DeploymentFilter, { FilterState } from '@/components/hr/DeploymentFilter';
+import WardComparisonView from '@/components/hr/WardComparisonView';
 import { generateAllFacilitiesStaff, getFacilitySummary } from '@/lib/hr/deploymentData';
 import { FACILITY_ID_MAP } from '@/lib/facility-position-mapping';
+import { DisplayMode } from '@/lib/hr/wardUtils';
+
+type TabType = 'list' | 'comparison';
 
 export default function DeploymentPage() {
   // サンプルデータ生成
   const allStaff = useMemo(() => generateAllFacilitiesStaff(), []);
+
+  // タブ状態
+  const [activeTab, setActiveTab] = useState<TabType>('list');
+
+  // 表示モード
+  const [displayMode, setDisplayMode] = useState<DisplayMode>('facility');
 
   // フィルター状態
   const [filters, setFilters] = useState<FilterState>({
@@ -114,69 +124,144 @@ export default function DeploymentPage() {
               </div>
             </div>
           </div>
+
+          {/* タブナビゲーション */}
+          <div className="mt-6 flex gap-2">
+            <button
+              onClick={() => setActiveTab('list')}
+              className={`px-6 py-2.5 rounded-lg font-medium transition-all ${
+                activeTab === 'list'
+                  ? 'bg-white text-indigo-600 shadow-lg'
+                  : 'bg-white/10 text-white hover:bg-white/20'
+              }`}
+            >
+              📋 一覧表示
+            </button>
+            <button
+              onClick={() => setActiveTab('comparison')}
+              className={`px-6 py-2.5 rounded-lg font-medium transition-all ${
+                activeTab === 'comparison'
+                  ? 'bg-white text-indigo-600 shadow-lg'
+                  : 'bg-white/10 text-white hover:bg-white/20'
+              }`}
+            >
+              📊 病棟比較
+            </button>
+          </div>
         </div>
       </div>
 
       {/* メインコンテンツ */}
       <div className="max-w-[1800px] mx-auto px-6 py-6">
-        {/* 施設別サマリーカード */}
-        <div className="grid grid-cols-5 gap-4 mb-6">
-          {facilitySummary.map(fac => (
-            <div
-              key={fac.facilityId}
-              className="bg-white rounded-lg shadow-md p-4 border-l-4 border-blue-500 hover:shadow-lg transition-shadow"
-            >
-              <div className="text-xs font-semibold text-gray-600 mb-1 truncate">
-                {fac.facilityName}
-              </div>
-              <div className="text-2xl font-bold text-gray-800 mb-2">
-                {fac.totalCount}
-                <span className="text-sm text-gray-500 ml-1">名</span>
-              </div>
-              <div className="flex gap-2 text-xs">
-                <span className="bg-red-100 text-red-700 px-2 py-0.5 rounded">
-                  A:{fac.byCourse.get('A') || 0}
-                </span>
-                <span className="bg-orange-100 text-orange-700 px-2 py-0.5 rounded">
-                  B:{fac.byCourse.get('B') || 0}
-                </span>
-                <span className="bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded">
-                  C:{fac.byCourse.get('C') || 0}
-                </span>
-                <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded">
-                  D:{fac.byCourse.get('D') || 0}
-                </span>
-              </div>
-              <div className="mt-2 text-xs text-gray-600">
-                ✅ リーダー可: <span className="font-bold">{fac.leaderCapable}名</span>
+        {activeTab === 'list' ? (
+          <>
+            {/* 施設別サマリーカード */}
+            <div className="grid grid-cols-5 gap-4 mb-6">
+              {facilitySummary.map(fac => (
+                <div
+                  key={fac.facilityId}
+                  className="bg-white rounded-lg shadow-md p-4 border-l-4 border-blue-500 hover:shadow-lg transition-shadow"
+                >
+                  <div className="text-xs font-semibold text-gray-600 mb-1 truncate">
+                    {fac.facilityName}
+                  </div>
+                  <div className="text-2xl font-bold text-gray-800 mb-2">
+                    {fac.totalCount}
+                    <span className="text-sm text-gray-500 ml-1">名</span>
+                  </div>
+                  <div className="flex gap-2 text-xs">
+                    <span className="bg-red-100 text-red-700 px-2 py-0.5 rounded">
+                      A:{fac.byCourse.get('A') || 0}
+                    </span>
+                    <span className="bg-orange-100 text-orange-700 px-2 py-0.5 rounded">
+                      B:{fac.byCourse.get('B') || 0}
+                    </span>
+                    <span className="bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded">
+                      C:{fac.byCourse.get('C') || 0}
+                    </span>
+                    <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded">
+                      D:{fac.byCourse.get('D') || 0}
+                    </span>
+                  </div>
+                  <div className="mt-2 text-xs text-gray-600">
+                    ✅ リーダー可: <span className="font-bold">{fac.leaderCapable}名</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* 表示モード切替 */}
+            <div className="mb-4 bg-white rounded-lg shadow-md p-4">
+              <div className="flex items-center gap-4">
+                <span className="text-sm font-medium text-gray-700">表示単位:</span>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setDisplayMode('facility')}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                      displayMode === 'facility'
+                        ? 'bg-indigo-600 text-white shadow-md'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    🏥 施設別
+                  </button>
+                  <button
+                    onClick={() => setDisplayMode('ward')}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                      displayMode === 'ward'
+                        ? 'bg-indigo-600 text-white shadow-md'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    🛏️ 病棟別
+                  </button>
+                  <button
+                    onClick={() => setDisplayMode('department')}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                      displayMode === 'department'
+                        ? 'bg-indigo-600 text-white shadow-md'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    📂 部署別
+                  </button>
+                </div>
+                <div className="ml-auto text-xs text-gray-500">
+                  {displayMode === 'facility' && '施設ごとにグループ化して表示'}
+                  {displayMode === 'ward' && '病棟ごとにグループ化して表示'}
+                  {displayMode === 'department' && '全部署をグループ化して表示'}
+                </div>
               </div>
             </div>
-          ))}
-        </div>
 
-        {/* フィルター */}
-        <DeploymentFilter
-          filters={filters}
-          onFilterChange={setFilters}
-          facilities={facilities}
-          departments={departments}
-        />
+            {/* フィルター */}
+            <DeploymentFilter
+              filters={filters}
+              onFilterChange={setFilters}
+              facilities={facilities}
+              departments={departments}
+            />
 
-        {/* フィルター結果表示 */}
-        <div className="mb-3 text-sm text-gray-600">
-          {filteredStaff.length < allStaff.length && (
-            <div className="bg-yellow-50 border border-yellow-200 rounded-md px-4 py-2 flex items-center gap-2">
-              <span className="text-yellow-600">🔍</span>
-              <span>
-                フィルター適用中: <strong className="text-yellow-700">{filteredStaff.length}名</strong>{' '}
-                / 全{allStaff.length}名
-              </span>
+            {/* フィルター結果表示 */}
+            <div className="mb-3 text-sm text-gray-600">
+              {filteredStaff.length < allStaff.length && (
+                <div className="bg-yellow-50 border border-yellow-200 rounded-md px-4 py-2 flex items-center gap-2">
+                  <span className="text-yellow-600">🔍</span>
+                  <span>
+                    フィルター適用中: <strong className="text-yellow-700">{filteredStaff.length}名</strong>{' '}
+                    / 全{allStaff.length}名
+                  </span>
+                </div>
+              )}
             </div>
-          )}
-        </div>
 
-        {/* テーブル */}
-        <DeploymentTable staff={filteredStaff} />
+            {/* テーブル */}
+            <DeploymentTable staff={filteredStaff} displayMode={displayMode} />
+          </>
+        ) : (
+          /* 病棟比較ビュー */
+          <WardComparisonView staff={allStaff} />
+        )}
 
         {/* 凡例 */}
         <div className="mt-6 bg-white rounded-lg shadow-md p-4">
