@@ -1685,6 +1685,266 @@ Phase 3 拡張機能:
         status: 'pending',
         tags: ['人事ステーション', 'HR', 'ダッシュボード', 'DB待ち']
       },
+
+      // ===== フィードバック面談連携機能 =====
+      {
+        id: 'feedback-interview-001',
+        category: '面談システム',
+        subcategory: 'フィードバック面談連携',
+        title: 'フィードバック面談連携機能 統合テスト完了（9/9成功）',
+        content: `【実施日】2025年10月3日
+【統合テスト結果】100%成功（9/9ケース）
+
+【テスト内訳】
+✅ 医療システムAPIテスト: 5/5成功
+  - 夏季評価フィードバック（緊急）
+  - 冬季評価フィードバック（中）
+  - 年間評価フィードバック（確定）
+  - 必須フィールド欠損エラー
+  - 型不正エラー
+
+✅ VoiceDriveチームテスト: 3/3成功
+  - 冬期評価フィードバック
+  - 夏期評価フィードバック（異議申立済み）
+  - 緊急フィードバック
+
+✅ エンドツーエンドテスト: 1/1成功
+  - VoiceDrive → MCP → 医療システム（79ms）
+
+【実装完了機能】
+1. 評価情報受信・保存
+   - evaluationDetails型定義拡張
+   - 評価ID、評価タイプ（夏季/冬季/年間）
+   - 施設内評価・法人内評価・総合点
+   - 異議申立期限・申立可否
+
+2. UI実装
+   - 評価情報カード（紫色）
+   - 異議申立期限アラート（赤字警告）
+   - 統計ダッシュボード（フィードバック面談数）
+
+3. AI最適化強化
+   - 8ステップ分析（通常面談6ステップ）
+   - フィードバック専門家優先マッチング
+   - 異議申立期限に基づくスコアリング
+     * 期限3日以内: +20点
+     * 期限7日以内: +10点
+
+4. MCPプロキシサーバー
+   - VoiceDrive形式 → 医療システム形式の変換
+   - 日程情報の自動計算（timing → scheduledDate）
+   - エラーハンドリングとログ記録
+
+【データフロー】
+VoiceDrive評価ステーション
+  ↓ (評価結果通知)
+フィードバック面談予約ボタン
+  ↓ (evaluationDetails自動引き継ぎ)
+MCPサーバー (8080)
+  ↓ (データ変換・転送)
+医療システムAPI (3002)
+  ↓ (受信・保存)
+予約管理ページ（初回受付待ち）
+
+【パフォーマンス】
+- エンドツーエンドレスポンス: 79ms
+- VoiceDrive → MCP: 20ms
+- MCP → 医療システム: 59ms`,
+        source: { type: 'document', path: '/mcp-shared/docs/フィードバック面談連携_最終統合テスト完了報告書_20251003.md' },
+        date: '2025-10-03',
+        priority: 'critical',
+        status: 'completed',
+        tags: ['面談', 'フィードバック', '評価連携', '統合テスト完了']
+      },
+      {
+        id: 'feedback-interview-002',
+        category: '面談システム',
+        subcategory: 'フィードバック面談連携',
+        title: '【次フェーズ】UI確認テストと本番デプロイ準備',
+        content: `【現在のステータス】
+✅ API統合テスト完了（5/5成功）
+✅ VoiceDrive側実装完了（3/3成功）
+✅ エンドツーエンドテスト完了（1/1成功）
+⏳ UI確認テスト（次のステップ）
+
+【UI確認テスト項目】
+1. 予約管理ページ表示確認
+   URL: http://localhost:3002/interviews?tab=station
+
+   確認項目:
+   - [ ] 初回受付待ちカラムに予約表示
+   - [ ] 評価情報カード（紫色）表示
+   - [ ] 評価タイプ表示（夏季/冬季/年間）
+   - [ ] 施設内評価・法人内評価表示
+   - [ ] 組織貢献度点数表示
+   - [ ] 異議申立期限表示
+   - [ ] 期限警告（赤字）表示（期限1週間未満の場合）
+   - [ ] 緊急度バッジ表示（🚨緊急）
+   - [ ] 統計ダッシュボードでフィードバック面談数表示
+
+2. AI最適化3案生成テスト
+   - [ ] 「詳細処理」ボタンクリック
+   - [ ] AI分析による3案生成
+   - [ ] フィードバック専門家優先マッチング確認
+   - [ ] 異議申立期限に基づくスコアリング確認
+
+3. VoiceDriveへの3案送信テスト
+   - [ ] 3案送信処理実行
+   - [ ] VoiceDrive側で受信確認
+   - [ ] 評価情報の正常伝達確認
+
+4. 職員選択→本予約確定テスト
+   - [ ] VoiceDrive側で職員が第2案を選択
+   - [ ] 医療システムへの選択結果送信
+   - [ ] カレンダーへの反映確認
+   - [ ] 評価情報の保持確認
+
+【本番デプロイ準備（DB構築後）】
+1. データベース設定
+   - [ ] .envのDATABASE_URL設定
+   - [ ] Prismaマイグレーション実行
+
+2. API切り替え
+   - [ ] メモリ配列 → DB操作クラスに変更
+   - [ ] /api/interviews/reservations/route.ts修正
+
+3. MCPサーバーデプロイ
+   - [ ] 本番環境にMCPプロキシサーバー配置
+   - [ ] 環境変数設定（MEDICAL_SYSTEM_API）
+   - [ ] HTTPS/TLS設定
+
+4. VoiceDrive連携確認
+   - [ ] 本番環境での疎通確認
+   - [ ] 評価情報の正常伝達確認
+   - [ ] エラーハンドリング確認
+
+【実装ファイル】
+- src/components/interview/UnifiedInterviewDashboard.tsx（評価情報UI）
+- src/app/api/interviews/reservations/route.ts（API受信）
+- server/mcp-proxy.js（MCPプロキシサーバー）
+- tests/feedback-interview-integration-test.ts（統合テスト）
+- tests/end-to-end-test.js（E2Eテスト）`,
+        source: { type: 'document', path: '/mcp-shared/docs/フィードバック面談連携_最終統合テスト完了報告書_20251003.md' },
+        date: '2025-10-03',
+        priority: 'critical',
+        status: 'in_progress',
+        tags: ['面談', 'フィードバック', 'UI確認', '次フェーズ']
+      },
+      {
+        id: 'feedback-interview-003',
+        category: '面談システム',
+        subcategory: 'フィードバック面談連携',
+        title: 'VoiceDrive側実装状況（完了）',
+        content: `【VoiceDriveチーム実装完了】
+実施日: 2025年10月3日
+コミット: 9f16246, 8ae788a
+
+【実装内容】
+1. 評価ステーションページ拡張
+   - フィードバック面談予約ボタン追加
+   - 評価データ自動引き継ぎ
+
+2. SimpleInterviewFlow拡張
+   - evaluationDetailsプロパティ追加
+   - ステップ1-3自動スキップ
+   - ステップ4（日程選択）から開始
+
+3. 緊急度自動判定
+   - 異議申立期限からの日数計算
+   - urgent/high/medium/low 4段階判定
+   - 期限3日以内: urgent
+   - 期限7日以内: high
+   - 期限14日以内: medium
+   - それ以外: low
+
+4. MCPサーバー実装
+   - POST /api/interviews/reservations
+   - GET /api/interviews/reservations
+   - GET /api/interviews/reservations/:id
+   - ダッシュボードUI (http://localhost:8080/dashboard)
+
+【テスト結果】
+✅ 冬期評価フィードバック（中優先度）
+✅ 夏期評価フィードバック（異議申立済み）
+✅ 緊急フィードバック（期限間近）
+
+【連携フロー確認済み】
+VoiceDrive UI → MCP (8080) → 医療システム (3002)
+- データ送信: 正常
+- 評価情報伝達: 完全
+- レスポンスタイム: 79ms
+
+【3軸評価データ確認】
+✅ 施設内評価（S/A/B/C/D）
+✅ 法人内評価（S/A/B/C/D）
+✅ 総合評価点（0-25点）
+✅ 評価タイプ（summer/winter/annual）
+✅ 異議申立期限
+✅ 異議申立可否（appealable）`,
+        source: { type: 'document', path: '/mcp-shared/docs/VoiceDrive_フィードバック面談予約機能_実装完了報告書_20251003.md' },
+        date: '2025-10-03',
+        priority: 'important',
+        status: 'completed',
+        tags: ['VoiceDrive', 'フィードバック', '実装完了', '連携確認']
+      },
+      {
+        id: 'feedback-interview-004',
+        category: '面談システム',
+        subcategory: 'フィードバック面談連携',
+        title: '技術的な発見事項とベストプラクティス',
+        content: `【データ変換パターン】
+VoiceDrive形式:
+- timing: "asap" | "this_week" | "next_week" | "flexible"
+- timeSlot: "morning" | "afternoon" | "evening"
+- weekdays: string[]
+
+医療システム形式:
+- scheduledDate: "YYYY-MM-DD"
+- scheduledTime: "HH:mm"
+
+変換ロジック:
+- asap → 翌営業日
+- this_week → 3日後
+- next_week → 7日後
+- flexible → 5日後
+
+【型不正データの柔軟な処理】
+- 不正なevaluationType: 受信を許容（201）
+- 文字列のtotalPoints: 受信を許容（201）
+- 理由: 過度に厳格なバリデーションでサービス断絶を避ける
+- 対策: UI側で警告表示、管理者確認を可能にする
+
+【重複チェックの実装】
+条件:
+- 同じstaffId
+- 同じscheduledDate（日付のみ比較）
+- 同じscheduledTime
+- status !== 'cancelled'
+
+結果: 409 Conflictエラー
+
+【日付型変換の注意点】
+ISO 8601文字列（"2025-10-13"）→ Date型
+- new Date(appealDeadline)で変換
+- タイムゾーンに注意（UTCとJSTの差）
+
+【レスポンスタイムの最適化】
+- メモリ内配列使用: 79ms
+- DB使用時の予測: 150-200ms
+- 目標: <500ms維持
+
+【エラーハンドリングのベストプラクティス】
+1. 必須フィールド欠損: 400 Bad Request
+2. 重複予約: 409 Conflict
+3. 認証エラー: 401 Unauthorized
+4. サーバーエラー: 500 Internal Server Error
+5. 明確なエラーメッセージ返却`,
+        source: { type: 'file', path: '/server/mcp-proxy.js' },
+        date: '2025-10-03',
+        priority: 'info',
+        status: 'completed',
+        tags: ['技術', 'データ変換', 'エラーハンドリング', 'ベストプラクティス']
+      },
     ];
   }
 
