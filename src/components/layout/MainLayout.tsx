@@ -98,13 +98,42 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   <span className="relative z-10">お知らせ配信</span>
                   <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-purple-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </Link>
-                <Link
-                  href="/hr-station"
-                  className="relative px-4 py-3 text-sm font-light tracking-wide transition-all duration-300 hover:bg-white hover:bg-opacity-5 group"
-                >
-                  <span className="relative z-10">人事ステーション</span>
-                  <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                </Link>
+                <div className="relative group">
+                  <Link
+                    href="/hr-station"
+                    className="relative px-4 py-3 text-sm font-light tracking-wide transition-all duration-300 hover:bg-white hover:bg-opacity-5 flex items-center gap-1"
+                  >
+                    <span className="relative z-10">人事ステーション</span>
+                    <svg className="w-3 h-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                    <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </Link>
+
+                  {/* ドロップダウンメニュー */}
+                  <div className="absolute hidden group-hover:block top-full left-0 mt-0 bg-gray-800 shadow-2xl rounded-b-lg border border-gray-700 min-w-[240px] z-50">
+                    <Link
+                      href="/hr-station"
+                      className="block px-4 py-2.5 text-sm text-white hover:bg-gray-700 transition-colors border-b border-gray-700"
+                    >
+                      <span className="flex items-center gap-2">
+                        <span>🎯</span>
+                        <span>ヒートマップダッシュボード</span>
+                      </span>
+                      <span className="block text-xs text-gray-400 mt-0.5 ml-6">パフォーマンス×育成戦略</span>
+                    </Link>
+                    <Link
+                      href="/hr-station/deployment"
+                      className="block px-4 py-2.5 text-sm text-white hover:bg-gray-700 transition-colors rounded-b-lg"
+                    >
+                      <span className="flex items-center gap-2">
+                        <span>👥</span>
+                        <span>配置状況ダッシュボード</span>
+                      </span>
+                      <span className="block text-xs text-gray-400 mt-0.5 ml-6">全5施設・全職員一覧</span>
+                    </Link>
+                  </div>
+                </div>
                 <div className="relative group">
                   <Link
                     href="/staff-cards"

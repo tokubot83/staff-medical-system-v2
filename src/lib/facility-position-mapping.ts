@@ -118,18 +118,58 @@ const espoirTategamiMapping: PositionMapping[] = [
   { positionName: '居宅介護支援事業所主任', baseLevel: 5, departmentScope: '居宅介護支援事業所', managementScope: 5 }
 ];
 
+// グループホーム宝寿庵の役職マッピング
+const groupHomeHojuanMapping: PositionMapping[] = [
+  // 経営層
+  { positionName: '施設長', baseLevel: 11, managementScope: 30 },
+
+  // 管理職層
+  { positionName: '管理者', baseLevel: 9, departmentScope: '管理部', managementScope: 25 },
+  { positionName: '計画作成担当者', baseLevel: 7, departmentScope: 'ケアプラン部', managementScope: 10 },
+
+  // 主任層
+  { positionName: 'ユニットリーダー', baseLevel: 5, departmentScope: 'ケアユニット', managementScope: 8 },
+  { positionName: '介護主任', baseLevel: 5, departmentScope: '介護部', managementScope: 10 },
+
+  // 一般職
+  { positionName: '介護職員', baseLevel: 3, departmentScope: '介護部', managementScope: 0 },
+  { positionName: '夜勤専従職員', baseLevel: 3, departmentScope: '介護部', managementScope: 0 }
+];
+
+// 訪問看護ステーション立神の役職マッピング
+const visitingNurseStationMapping: PositionMapping[] = [
+  // 経営層
+  { positionName: '管理者', baseLevel: 11, managementScope: 20 },
+
+  // 管理職層
+  { positionName: '統括責任者', baseLevel: 9, departmentScope: '看護部', managementScope: 15 },
+  { positionName: '主任看護師', baseLevel: 7, departmentScope: '看護部', managementScope: 8 },
+
+  // 専門職
+  { positionName: '看護師', baseLevel: 5, departmentScope: '看護部', managementScope: 0 },
+  { positionName: '准看護師', baseLevel: 4, departmentScope: '看護部', managementScope: 0 },
+  { positionName: 'リハビリスタッフ', baseLevel: 5, departmentScope: 'リハビリ部', managementScope: 0 },
+
+  // 事務
+  { positionName: '事務職員', baseLevel: 3, departmentScope: '事務部', managementScope: 0 }
+];
+
 // 施設IDと施設名のマッピング
 export const FACILITY_ID_MAP = {
   'obara-hospital': '医療法人 厚生会 小原病院',
   'tategami-rehabilitation': '立神リハビリテーション温泉病院',
-  'espoir-tategami': '介護老人保健施設エスポワール立神'
+  'espoir-tategami': '介護老人保健施設エスポワール立神',
+  'group-home-hojuan': 'グループホーム宝寿庵',
+  'visiting-nurse-station-tategami': '訪問看護ステーション立神'
 } as const;
 
 // 施設タイプのマッピング
 export const FACILITY_TYPE_MAP = {
   'obara-hospital': 'acute',
   'tategami-rehabilitation': 'rehabilitation',
-  'espoir-tategami': 'geriatric_health_facility'
+  'espoir-tategami': 'geriatric_health_facility',
+  'group-home-hojuan': 'group_home',
+  'visiting-nurse-station-tategami': 'visiting_nurse_station'
 } as const;
 
 export class FacilityPositionMappingService {
@@ -165,6 +205,22 @@ export class FacilityPositionMappingService {
       facilityId: 'espoir-tategami',
       facilityName: FACILITY_ID_MAP['espoir-tategami'],
       positionMappings: espoirTategamiMapping,
+      lastSyncedAt: new Date()
+    });
+
+    // グループホーム宝寿庵
+    this.mappings.set('group-home-hojuan', {
+      facilityId: 'group-home-hojuan',
+      facilityName: FACILITY_ID_MAP['group-home-hojuan'],
+      positionMappings: groupHomeHojuanMapping,
+      lastSyncedAt: new Date()
+    });
+
+    // 訪問看護ステーション立神
+    this.mappings.set('visiting-nurse-station-tategami', {
+      facilityId: 'visiting-nurse-station-tategami',
+      facilityName: FACILITY_ID_MAP['visiting-nurse-station-tategami'],
+      positionMappings: visitingNurseStationMapping,
       lastSyncedAt: new Date()
     });
   }
