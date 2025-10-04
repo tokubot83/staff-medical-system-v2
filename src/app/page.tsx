@@ -7,6 +7,9 @@ import { StaffDetail } from '@/types/staff';
 import TalentFlowSection from '../components/talent-flow/TalentFlowSection';
 import HRDashboardSection from '../components/hr-dashboard/HRDashboardSection';
 import { OfflineIndicator } from '@/components/offline/OfflineIndicator';
+import InterviewDeadlineWidget from '@/components/interview-deadline/InterviewDeadlineWidget';
+import ComplianceReportWidget from '@/components/compliance/ComplianceReportWidget';
+import CareerChangeWidget from '@/components/career/CareerChangeWidget';
 
 // 型定義
 interface Staff {
@@ -459,6 +462,15 @@ export default function Home() {
 
   return (
     <div>
+     {/* 面談期限管理センター（最優先表示） */}
+     <InterviewDeadlineWidget />
+
+     {/* コンプライアンス通報センター */}
+     <ComplianceReportWidget />
+
+     {/* キャリアコース変更申請センター */}
+     <CareerChangeWidget />
+
      {/* メインコンテンツエリア */}
      <div className="bg-white">
       <div className="max-w-7xl mx-auto p-5">
