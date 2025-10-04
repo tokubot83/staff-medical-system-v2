@@ -8,7 +8,10 @@ import { facilityPositionMappingService } from '../../../lib/facility-position-m
  * POST /api/v1/calculate-level
  *
  * VoiceDriveからのJWT認証付きリクエストを受け付け
- * 職員の18段階権限レベルを計算して返す
+ * 職員の25段階権限レベルを計算して返す
+ * - 基本レベル: 1-18
+ * - リーダーレベル: 1.5, 2.5, 3.5, 4.5
+ * - 特別権限レベル: 97（健診担当者）、98（産業医）、99（システム管理者）
  */
 
 // レスポンス型定義
@@ -256,6 +259,130 @@ export default async function handler(
 // デモ用モックデータ（実際はデータベースから取得）
 function getMockStaffData(staffId: string): StaffMasterData | null {
   const mockData: Record<string, StaffMasterData> = {
+    // VoiceDrive統合テスト用データ（25レベル体系対応）
+    'TEST_STAFF_001': {
+      staffId: 'TEST_STAFF_001',
+      name: 'テスト職員001（新人）',
+      facility: '小原病院',
+      department: '看護部',
+      profession: '看護師',
+      hireDate: new Date('2024-04-01'),
+      experienceYears: 1,
+      canPerformLeaderDuty: false,
+      accountLevel: 1  // Level 1: 新人
+    },
+    'TEST_STAFF_002': {
+      staffId: 'TEST_STAFF_002',
+      name: 'テスト職員002（新人リーダー）',
+      facility: '小原病院',
+      department: '看護部',
+      profession: '看護師',
+      hireDate: new Date('2024-04-01'),
+      experienceYears: 1,
+      canPerformLeaderDuty: true,  // リーダー業務可
+      accountLevel: 1.5  // Level 1.5: 新人リーダー
+    },
+    'TEST_STAFF_003': {
+      staffId: 'TEST_STAFF_003',
+      name: 'テスト職員003（中堅）',
+      facility: '小原病院',
+      department: '看護部',
+      profession: '看護師',
+      hireDate: new Date('2020-04-01'),
+      experienceYears: 5,
+      canPerformLeaderDuty: false,
+      accountLevel: 3  // Level 3: 中堅
+    },
+    'TEST_STAFF_004': {
+      staffId: 'TEST_STAFF_004',
+      name: 'テスト職員004（ベテラン）',
+      facility: '小原病院',
+      department: '看護部',
+      profession: '看護師',
+      hireDate: new Date('2010-04-01'),
+      experienceYears: 15,
+      canPerformLeaderDuty: false,
+      accountLevel: 4  // Level 4: ベテラン
+    },
+    'TEST_STAFF_005': {
+      staffId: 'TEST_STAFF_005',
+      name: 'テスト職員005（ベテランリーダー）',
+      facility: '小原病院',
+      department: '看護部',
+      profession: '看護師',
+      hireDate: new Date('2010-04-01'),
+      experienceYears: 15,
+      canPerformLeaderDuty: true,  // リーダー業務可
+      accountLevel: 4.5  // Level 4.5: ベテランリーダー
+    },
+    'TEST_STAFF_006': {
+      staffId: 'TEST_STAFF_006',
+      name: 'テスト職員006（部長）',
+      facility: '小原病院',
+      department: '医局',
+      position: '部長',
+      profession: '医師',
+      hireDate: new Date('2005-04-01'),
+      experienceYears: 20,
+      accountLevel: 10  // Level 10: 部長・医局長
+    },
+    'TEST_STAFF_007': {
+      staffId: 'TEST_STAFF_007',
+      name: 'テスト職員007（人事マネージャー）',
+      facility: '法人本部',
+      department: '人事部',
+      position: '人事各部門長',
+      profession: '事務職',
+      hireDate: new Date('2015-04-01'),
+      experienceYears: 10,
+      accountLevel: 15  // Level 15: 人事各部門長
+    },
+    'TEST_STAFF_008': {
+      staffId: 'TEST_STAFF_008',
+      name: 'テスト職員008（理事）',
+      facility: '法人本部',
+      department: '経営企画',
+      position: '理事長',
+      profession: '経営者',
+      hireDate: new Date('2000-04-01'),
+      experienceYears: 25,
+      accountLevel: 18  // Level 18: 理事長・最高経営層
+    },
+    'TEST_STAFF_097': {
+      staffId: 'TEST_STAFF_097',
+      name: 'テスト職員097（健診担当者）',
+      facility: '小原病院',
+      department: '健康管理室',
+      position: '健診担当者',
+      profession: '保健師',
+      hireDate: new Date('2018-04-01'),
+      experienceYears: 7,
+      accountLevel: 97  // Level 97: 健診担当者（特別権限）
+    },
+    'TEST_STAFF_098': {
+      staffId: 'TEST_STAFF_098',
+      name: 'テスト職員098（産業医）',
+      facility: '小原病院',
+      department: '健康管理室',
+      position: '産業医',
+      profession: '医師',
+      hireDate: new Date('2010-04-01'),
+      experienceYears: 15,
+      accountLevel: 98  // Level 98: 産業医（特別権限）
+    },
+    'TEST_STAFF_099': {
+      staffId: 'TEST_STAFF_099',
+      name: 'テスト職員099（システム管理者）',
+      facility: '法人本部',
+      department: '情報システム部',
+      position: 'システム管理者',
+      profession: 'IT管理者',
+      hireDate: new Date('2015-04-01'),
+      experienceYears: 10,
+      accountLevel: 99  // Level 99: システム管理者（最高権限）
+    },
+
+    // 既存のテストデータ
     'STAFF001': {
       staffId: 'STAFF001',
       name: '佐藤花子',
