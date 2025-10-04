@@ -11,6 +11,7 @@ import JinzaiPreparationLayout from './JinzaiPreparationLayout';
 import ActionPlanLayout from './ActionPlanLayout';
 import DesignPhaseLayout from './DesignPhaseLayout';
 import TrialPhaseLayout from './TrialPhaseLayout';
+import SystemManualContent from './SystemManualContent';
 import {
   Users, Briefcase, GraduationCap, LineChart,
   CheckCircle, Calendar, Target, Star,
@@ -32,7 +33,7 @@ interface SheetItem {
 }
 
 export default function HRSystemGuidePage() {
-  const [activeTab, setActiveTab] = useState<'evaluation' | 'interview' | 'training' | 'career-course' | 'sheets' | 'preparation'>('evaluation');
+  const [activeTab, setActiveTab] = useState<'evaluation' | 'interview' | 'training' | 'career-course' | 'sheets' | 'preparation' | 'manual'>('evaluation');
   const [preparationSubTab, setPreparationSubTab] = useState<'organization' | 'info-collection' | 'system-design' | 'trial-adjustment'>('organization');
   const [viewMode, setViewMode] = useState<'general' | 'formal'>('general');
   const [sheetType, setSheetType] = useState<'all' | 'interview'>('all');
@@ -228,6 +229,16 @@ export default function HRSystemGuidePage() {
               }`}
             >
               🏗️ 準備室活動計画
+            </button>
+            <button
+              onClick={() => setActiveTab('manual')}
+              className={`flex-1 py-3 px-6 rounded-lg font-medium transition-all ${
+                activeTab === 'manual'
+                  ? 'bg-blue-500 text-white shadow-md'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              📖 取扱説明書（人事部用）
             </button>
           </div>
         </div>
@@ -2337,6 +2348,11 @@ export default function HRSystemGuidePage() {
               <TrialPhaseLayout />
             )}
           </div>
+        )}
+
+        {/* 取扱説明書（人事部用） */}
+        {activeTab === 'manual' && (
+          <SystemManualContent />
         )}
 
         {/* お問い合わせ */}
