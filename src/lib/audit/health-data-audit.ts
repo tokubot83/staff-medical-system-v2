@@ -5,7 +5,7 @@
  * 厳格に監査するための専用ログシステム
  */
 
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@/lib/database/prisma';
 
 export type HealthDataType =
   | 'stress_check'

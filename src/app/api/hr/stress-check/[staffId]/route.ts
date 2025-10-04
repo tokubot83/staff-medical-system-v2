@@ -6,7 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@/lib/database/prisma';
 import { getHRViewStressCheckInfo } from '@/lib/stress-check/access-control';
 
 export interface HRStressCheckResponse {

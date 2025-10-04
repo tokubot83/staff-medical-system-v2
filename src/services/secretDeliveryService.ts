@@ -4,7 +4,7 @@
  */
 
 import * as crypto from 'crypto';
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@/lib/database/prisma';
 import { sendEmail } from '@/lib/email';
 import { sendSlackNotification } from '@/lib/slack';
 import { auditLog } from '@/lib/audit';

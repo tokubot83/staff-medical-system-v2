@@ -5,7 +5,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@/lib/database/prisma';
 import { logHealthDataAccess } from '@/lib/audit/health-data-audit';
 
 export interface ConsentDashboardResponse {
