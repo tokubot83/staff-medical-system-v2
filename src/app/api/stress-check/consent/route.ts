@@ -7,6 +7,10 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/database/prisma';
+import {
+  notifyStressCheckConsentChanged,
+  logVoiceDriveNotification,
+} from '@/lib/integrations/voicedrive-health-notifications';
 
 export interface ConsentUpdateRequest {
   staffId: string;
@@ -121,7 +125,23 @@ export async function POST(request: NextRequest): Promise<NextResponse<ConsentUp
 
     // VoiceDrive通知（非同期・エラーは無視）
     try {
-      await notifyVoiceDriveConsentChange(staffId, consent, previousConsent);
+      const notificationResponse = await notifyStressCheckConsentChanged(
+        staffId,
+        consent,
+        previousConsent
+      );
+
+      // 通知履歴をログに記録
+      await logVoiceDriveNotification(
+        {
+          event: 'stress_check_consent_changed',
+          staffId,
+          timestamp: new Date().toISOString(),
+          data: { previousConsent, newConsent: consent },
+          priority: 'low',
+        },
+        notificationResponse
+      );
     } catch (notifyError) {
       console.error('VoiceDrive通知エラー（処理は継続）:', notifyError);
     }
@@ -232,42 +252,3 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   }
 }
 
-/**
- * VoiceDriveへの同意状況変更通知
- *
- * @param staffId 職員ID
- * @param newConsent 新しい同意状況
- * @param previousConsent 以前の同意状況
- */
-async function notifyVoiceDriveConsentChange(
-  staffId: string,
-  newConsent: boolean,
-  previousConsent: boolean | null
-): Promise<void> {
-  const VOICEDRIVE_WEBHOOK_URL = process.env.VOICEDRIVE_WEBHOOK_URL;
-  const VOICEDRIVE_API_KEY = process.env.VOICEDRIVE_API_KEY;
-
-  if (!VOICEDRIVE_WEBHOOK_URL) {
-    console.warn('VoiceDrive Webhook URL未設定のため通知スキップ');
-    return;
-  }
-
-  const response = await fetch(VOICEDRIVE_WEBHOOK_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${VOICEDRIVE_API_KEY || ''}`,
-    },
-    body: JSON.stringify({
-      event: 'stress_check_consent_changed',
-      staffId,
-      previousConsent,
-      newConsent,
-      timestamp: new Date().toISOString(),
-    }),
-  });
-
-  if (!response.ok) {
-    throw new Error(`VoiceDrive通知失敗: ${response.status} ${response.statusText}`);
-  }
-}
