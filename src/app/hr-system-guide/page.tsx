@@ -362,14 +362,14 @@ export default function HRSystemGuidePage() {
               <div className="prose max-w-none text-gray-600">
                 <p className="mb-4">
                   当法人では、経験年数・役職・業務内容に応じて<span className="font-bold text-purple-600">25段階のアカウント権限レベル</span>を設定しています。
-                  VoiceDriveシステムと完全統合され、音声認識の精度向上と業務効率化を実現しています。
+                  VoiceDrive（法人SNS）と完全統合され、権限に応じた機能利用と業務効率化を実現しています。
                 </p>
 
                 <div className="bg-purple-50 rounded-lg p-4 mb-4">
                   <p className="text-purple-800 font-semibold mb-2">2025年10月4日 完全統合完了 ✅</p>
                   <p className="text-gray-700 text-sm">
-                    医療システムとVoiceDriveの権限レベルが完全同期。職員登録時に自動的にVoiceDriveアカウントが作成され、
-                    権限レベルに応じた音声認識機能が利用可能になります。
+                    医療システムとVoiceDrive（法人SNS）の権限レベルが完全同期。職員登録時に自動的にVoiceDriveアカウントが作成され、
+                    権限レベルに応じた機能（面談予約、お知らせ受信、SNS利用など）が利用可能になります。
                   </p>
                 </div>
 
@@ -594,9 +594,18 @@ export default function HRSystemGuidePage() {
             {/* VoiceDrive統合機能 */}
             <div className="bg-white rounded-xl shadow-lg p-6">
               <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <span className="text-3xl">🎙️</span>
+                <span className="text-3xl">📱</span>
                 VoiceDrive統合機能（2025年10月完了）
               </h3>
+
+              <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
+                <h4 className="font-semibold text-yellow-800 mb-2">⚠️ VoiceDriveについて</h4>
+                <p className="text-sm text-yellow-700">
+                  VoiceDriveは<strong>医療法人専用の統合SNS・コミュニケーションプラットフォーム</strong>です。
+                  音声録音・監視機能は一切ありません。「Voice」は職員の意見・声を大切にする、
+                  「Drive」は組織の成長を推進するという理念を表しています。
+                </p>
+              </div>
 
               <div className="space-y-4">
                 {/* 健康管理システム統合 */}
@@ -606,7 +615,7 @@ export default function HRSystemGuidePage() {
                     <span className="text-xs bg-green-500 text-white px-2 py-1 rounded">完了</span>
                   </h4>
                   <p className="text-sm text-gray-700 mb-3">
-                    ストレスチェック、健康診断データをVoiceDriveと連携し、音声での同意取得・結果確認が可能に
+                    ストレスチェック、健康診断データをVoiceDrive経由で通知・管理
                   </p>
                   <ul className="text-sm text-gray-600 space-y-1">
                     <li>✅ ストレスチェック同意管理（労働安全衛生法第66条の10準拠）</li>
@@ -623,7 +632,7 @@ export default function HRSystemGuidePage() {
                     <span className="text-xs bg-blue-500 text-white px-2 py-1 rounded">87.5%成功</span>
                   </h4>
                   <p className="text-sm text-gray-700 mb-3">
-                    VoiceDriveで音声通報を受け付け、医療システムで自動処理・緊急度判定を実施
+                    VoiceDriveのメッセージ機能で通報を受け付け、医療システムで自動処理・緊急度判定を実施
                   </p>
                   <ul className="text-sm text-gray-600 space-y-1">
                     <li>✅ VoiceDrive受付確認通知送信（10件中7件合格）</li>
@@ -650,13 +659,30 @@ export default function HRSystemGuidePage() {
                     <li>✅ 退職処理 → VoiceDriveアカウント無効化</li>
                   </ul>
                 </div>
+
+                {/* 面談予約機能 */}
+                <div className="bg-purple-50 rounded-lg p-4 border-l-4 border-purple-400">
+                  <h4 className="font-bold text-purple-800 mb-2 flex items-center gap-2">
+                    <span>📅 面談予約機能</span>
+                    <span className="text-xs bg-green-500 text-white px-2 py-1 rounded">完了</span>
+                  </h4>
+                  <p className="text-sm text-gray-700 mb-3">
+                    VoiceDriveから直接面談予約・スケジュール調整が可能
+                  </p>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    <li>✅ 職員・管理者双方のスケジュール自動調整</li>
+                    <li>✅ 面談リマインダー自動通知（VoiceDrive経由）</li>
+                    <li>✅ 予約変更・キャンセル対応</li>
+                    <li>✅ 緊急面談の即時予約機能</li>
+                  </ul>
+                </div>
               </div>
 
               <div className="mt-4 bg-green-50 border-l-4 border-green-400 p-4">
                 <p className="text-sm text-green-800">
                   <strong>🎯 統合の効果：</strong>
-                  VoiceDrive統合により、音声での業務処理が可能になり、入力作業が平均70%削減されました。
-                  権限レベルに応じた音声認識精度の向上も実現しています。
+                  VoiceDrive統合により、職員間コミュニケーションが活性化し、面談予約・健康管理・コンプライアンス通報が
+                  一元管理できるようになりました。権限レベルに応じた機能利用で業務効率が向上しています。
                 </p>
               </div>
             </div>
@@ -1188,138 +1214,12 @@ export default function HRSystemGuidePage() {
                   </ul>
                 </div>
                 <div className="bg-green-50 border-l-4 border-green-400 p-4 rounded-r-lg mt-4">
-                  <p className="text-sm font-semibold text-green-800 mb-1">🎙️ VoiceDrive音声面談連携完了（2025年10月）</p>
+                  <p className="text-sm font-semibold text-green-800 mb-1">📱 VoiceDrive面談予約連携完了（2025年10月）</p>
                   <p className="text-xs text-gray-700">
-                    VoiceDriveシステムと完全統合され、音声での面談記録・予約が可能になりました。
-                    入力作業が平均70%削減され、面談者の負担が大幅に軽減されています。
+                    VoiceDrive（法人SNS）と完全統合され、面談予約・スケジュール調整がVoiceDrive上で可能になりました。
+                    予約管理の効率が向上し、面談者・職員双方の負担が軽減されています。
                   </p>
                 </div>
-              </div>
-            </div>
-
-            {/* VoiceDrive音声面談機能 */}
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <span className="text-3xl">🎙️</span>
-                VoiceDrive音声面談機能（2025年10月完了）
-              </h3>
-              <p className="text-gray-600 mb-4">
-                VoiceDriveシステムとの統合により、面談内容を音声で記録・自動テキスト化できるようになりました。
-                面談者は話すだけで面談シートが完成し、記録時間が大幅に短縮されます。
-              </p>
-
-              <div className="grid md:grid-cols-2 gap-4">
-                {/* 音声記録機能 */}
-                <div className="bg-blue-50 rounded-lg p-4 border-l-4 border-blue-400">
-                  <h4 className="font-bold text-blue-800 mb-3 flex items-center gap-2">
-                    <span>🎤 音声→テキスト自動変換</span>
-                    <span className="text-xs bg-green-500 text-white px-2 py-1 rounded">完了</span>
-                  </h4>
-                  <ul className="text-sm text-gray-700 space-y-2">
-                    <li className="flex items-start gap-2">
-                      <span className="text-blue-500 mt-0.5">✓</span>
-                      <span>面談中の会話を音声認識で自動テキスト化</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-blue-500 mt-0.5">✓</span>
-                      <span>権限レベル別に音声認識精度を最適化</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-blue-500 mt-0.5">✓</span>
-                      <span>医療専門用語の高精度認識に対応</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-blue-500 mt-0.5">✓</span>
-                      <span>自動保存機能（30秒ごと）</span>
-                    </li>
-                  </ul>
-                </div>
-
-                {/* スマート面談予約 */}
-                <div className="bg-purple-50 rounded-lg p-4 border-l-4 border-purple-400">
-                  <h4 className="font-bold text-purple-800 mb-3 flex items-center gap-2">
-                    <span>📅 スマート面談予約</span>
-                    <span className="text-xs bg-green-500 text-white px-2 py-1 rounded">完了</span>
-                  </h4>
-                  <ul className="text-sm text-gray-700 space-y-2">
-                    <li className="flex items-start gap-2">
-                      <span className="text-purple-500 mt-0.5">✓</span>
-                      <span>職員・管理者双方のスケジュール自動調整</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-purple-500 mt-0.5">✓</span>
-                      <span>面談リマインダー自動通知（VoiceDrive経由）</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-purple-500 mt-0.5">✓</span>
-                      <span>音声での予約変更・キャンセル対応</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-purple-500 mt-0.5">✓</span>
-                      <span>緊急面談の即時予約機能</span>
-                    </li>
-                  </ul>
-                </div>
-
-                {/* AI面談分析 */}
-                <div className="bg-teal-50 rounded-lg p-4 border-l-4 border-teal-400">
-                  <h4 className="font-bold text-teal-800 mb-3 flex items-center gap-2">
-                    <span>🤖 AI面談分析</span>
-                    <span className="text-xs bg-green-500 text-white px-2 py-1 rounded">完了</span>
-                  </h4>
-                  <ul className="text-sm text-gray-700 space-y-2">
-                    <li className="flex items-start gap-2">
-                      <span className="text-teal-500 mt-0.5">✓</span>
-                      <span>感情分析・ストレスレベル検出</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-teal-500 mt-0.5">✓</span>
-                      <span>離職リスク予測アルゴリズム</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-teal-500 mt-0.5">✓</span>
-                      <span>キャリア志向自動判定</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-teal-500 mt-0.5">✓</span>
-                      <span>面談品質スコアリング</span>
-                    </li>
-                  </ul>
-                </div>
-
-                {/* セキュリティ・コンプライアンス */}
-                <div className="bg-red-50 rounded-lg p-4 border-l-4 border-red-400">
-                  <h4 className="font-bold text-red-800 mb-3 flex items-center gap-2">
-                    <span>🔒 セキュリティ対策</span>
-                    <span className="text-xs bg-green-500 text-white px-2 py-1 rounded">完了</span>
-                  </h4>
-                  <ul className="text-sm text-gray-700 space-y-2">
-                    <li className="flex items-start gap-2">
-                      <span className="text-red-500 mt-0.5">✓</span>
-                      <span>音声データの暗号化保存</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-red-500 mt-0.5">✓</span>
-                      <span>権限レベル別アクセス制御</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-red-500 mt-0.5">✓</span>
-                      <span>監査ログ自動記録</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-red-500 mt-0.5">✓</span>
-                      <span>個人情報保護法準拠</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
-              <div className="mt-4 bg-indigo-50 border-l-4 border-indigo-400 p-4">
-                <p className="text-sm text-indigo-800">
-                  <strong>💡 導入効果：</strong>
-                  VoiceDrive音声面談機能により、面談記録時間が平均70%削減されました。
-                  面談者は対話に集中でき、職員との信頼関係構築により多くの時間を使えるようになっています。
-                </p>
               </div>
             </div>
 

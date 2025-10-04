@@ -961,12 +961,6 @@ export default function SystemManualContent() {
                     </p>
                   </div>
                   <div className="bg-white p-3 rounded">
-                    <p className="font-medium text-gray-800 mb-1">🎙️ 音声入力対応</p>
-                    <p className="text-xs text-gray-600">
-                      VoiceDrive連携で音声からテキスト化。入力時間を大幅短縮。
-                    </p>
-                  </div>
-                  <div className="bg-white p-3 rounded">
                     <p className="font-medium text-gray-800 mb-1">💾 自動保存</p>
                     <p className="text-xs text-gray-600">
                       入力内容は30秒ごとに自動保存。途中で中断しても安心。
@@ -1261,7 +1255,7 @@ export default function SystemManualContent() {
                 <p className="text-sm text-gray-600">
                   ✅ 異動履歴は自動記録され、職員の経歴として残ります。
                   <br />
-                  ✅ VoiceDriveシステムにも自動連携され、音声認識の施設情報が更新されます。
+                  ✅ VoiceDrive（法人SNS）にも自動連携され、施設・役職情報が更新されます。
                 </p>
               </div>
             </div>
@@ -1620,17 +1614,29 @@ export default function SystemManualContent() {
           <div id="system-integration" className="mb-8">
             <h3 className="text-2xl font-semibold text-gray-800 mb-4">VoiceDrive連携設定</h3>
             <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-6">
-              <h4 className="font-semibold text-purple-800 mb-3">🎙️ VoiceDriveシステムとの連携</h4>
+              <h4 className="font-semibold text-purple-800 mb-3">📱 VoiceDriveシステムとの連携</h4>
               <p className="text-gray-700 mb-4">
-                音声入力システム「VoiceDrive」と連携して、面談内容の音声入力が可能です。
+                <strong>VoiceDriveは医療法人専用の統合SNS・コミュニケーションプラットフォームです。</strong>
+                職員間のコミュニケーション促進、面談予約管理、情報共有を実現します。
               </p>
+
+              <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
+                <h5 className="font-semibold text-yellow-800 mb-2">⚠️ 重要な説明</h5>
+                <p className="text-sm text-yellow-700">
+                  VoiceDriveは<strong>音声録音・監視機能は一切ありません</strong>。
+                  「Voice」は職員の意見・声を大切にする、「Drive」は組織の成長を推進するという理念を表しています。
+                </p>
+              </div>
+
               <div className="space-y-3">
                 <div className="bg-white p-4 rounded border border-purple-200">
                   <h5 className="font-semibold text-gray-800 mb-2">連携機能</h5>
                   <ul className="text-sm text-gray-600 space-y-1">
-                    <li>• 職員情報の自動同期（権限レベル含む）</li>
-                    <li>• 面談内容の音声→テキスト変換</li>
-                    <li>• 音声データの自動保存</li>
+                    <li>• 職員情報の自動同期（25段階権限レベル含む）</li>
+                    <li>• 面談予約・管理機能</li>
+                    <li>• 人事部からのお知らせ配信・受信</li>
+                    <li>• 評価結果通知・フィードバック面談予約</li>
+                    <li>• 法人内SNS（メッセージング・グループチャット）</li>
                     <li>• 施設・部署情報の連携</li>
                   </ul>
                 </div>
@@ -1643,10 +1649,20 @@ export default function SystemManualContent() {
                     <li>「有効化」をクリック</li>
                   </ol>
                 </div>
+                <div className="bg-white p-4 rounded border border-purple-200">
+                  <h5 className="font-semibold text-gray-800 mb-2">プライバシー保護</h5>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    <li>✅ エンドツーエンド暗号化通信</li>
+                    <li>✅ 25段階権限による厳格なアクセス制御</li>
+                    <li>✅ 職員本人の同意に基づく情報管理</li>
+                    <li>✅ 監査ログによる透明性確保</li>
+                    <li>❌ 音声録音・監視機能は一切なし</li>
+                  </ul>
+                </div>
               </div>
               <div className="mt-4 bg-blue-100 p-3 rounded">
                 <p className="text-sm text-blue-800">
-                  💡 VoiceDrive連携により、面談記録の入力時間が平均70%短縮されます。
+                  💡 VoiceDrive連携により、面談予約の手間が削減され、職員と上司のコミュニケーションが円滑になります。
                 </p>
               </div>
             </div>
