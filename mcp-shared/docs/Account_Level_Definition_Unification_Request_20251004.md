@@ -1,23 +1,24 @@
 # アカウントレベル定義の統一依頼書
 
-**作成日**: 2025年10月4日
+**作成日**: 2025年10月4日（最終更新: 2025年10月4日）
 **作成者**: 医療システムチーム
 **宛先**: VoiceDriveチーム
-**件名**: アカウントレベル体系の統一実装依頼
+**件名**: アカウントレベル体系の統一実装依頼（特別権限レベル97-99追加）
 **優先度**: 🔴 高（共通DB構築前に確定必須）
 
 ---
 
 ## 📋 エグゼクティブサマリー
 
-医療システムとVoiceDrive間でアカウントレベル定義に不整合が発見されました。両システムで統一した権限レベル体系を採用することで、アクセス権限設定の一元管理が可能になります。
+医療システムとVoiceDrive間でアカウントレベル定義に不整合が発見されました。また、健康管理システムのコンプライアンス対応のため、**特別権限レベル（97-99）** を新たに追加しました。両システムで統一した権限レベル体系を採用することで、アクセス権限設定の一元管理が可能になります。
 
 **現状**：
 - VoiceDrive側設計書（2025年8月31日）: **13レベル**
-- 医療システム側実装（2025年9月25日）: **18レベル + 看護職専用4レベル + Xレベル**
+- 医療システム側実装（2025年9月25日）: **18レベル + 看護職専用4レベル + Xレベル（23種類）**
+- **NEW**: 健康管理特別権限（2025年10月4日）: **レベル97-99（3種類追加）**
 
 **提案**：
-- 両システムで **18レベル + 看護職専用4レベル + Xレベル（合計23種類）** に統一
+- 両システムで **18レベル + 看護職専用4レベル + 特別権限3レベル（合計25種類）** に統一
 
 ---
 
@@ -57,7 +58,7 @@
 
 ## 📊 提案する統一アカウントレベル体系
 
-### 完全定義（23種類）
+### 完全定義（25種類）
 
 #### 【基本18レベル】全職種共通
 
@@ -96,11 +97,19 @@
 - スタッフの指示・指導権限
 - 勤務表作成への関与
 
-#### 【Xレベル（システム管理者）】
+#### 【特別権限レベル（健康管理・システム管理）】
 
-| Level | 役職名 | 特別権限 |
-|-------|--------|----------|
-| **99** | システム管理者 | 全職員データアクセス、システム設定変更、バックアップ・リストア |
+| Level | 役職名 | 特別権限 | 法的根拠 |
+|-------|--------|----------|----------|
+| **97** | 健診担当者（ストレスチェック実施者） | 健康診断・ストレスチェック管理、集計データ閲覧、同意ベース個別結果閲覧 | 労働安全衛生法第66条の10 |
+| **98** | 産業医 | 全職員の健康データ閲覧（同意不要）、産業医面談、医学的意見書発行、就業制限措置 | 労働安全衛生法第13条 |
+| **99** | システム管理者（X レベル） | 全職員データアクセス、システム設定変更、バックアップ・リストア | システム管理権限 |
+
+**特別権限レベルの特徴**:
+- 一般的な組織階層とは独立した権限体系
+- 健康データへのアクセスは法的根拠に基づき厳格に制限
+- レベル97-98は健康管理専用、給与・人事・評価データへのアクセス不可
+- 全アクセスが監査ログに記録され、不正アクセス検出機能あり
 
 ---
 
@@ -126,14 +135,14 @@ CREATE TABLE users (
 );
 ```
 
-#### 提案する新設計（18レベル + 0.5刻み + Xレベル）
+#### 提案する新設計（18レベル + 0.5刻み + 特別権限レベル）
 
 ```sql
 CREATE TABLE users (
     id VARCHAR(50) PRIMARY KEY,
     employee_id VARCHAR(20) UNIQUE NOT NULL,
 
-    -- 18段階権限システム + 看護職0.5刻み + Xレベル（23種類）
+    -- 18段階権限システム + 看護職0.5刻み + 特別権限（25種類）
     account_type ENUM(
         -- 一般職員層（1-4）
         'NEW_STAFF', 'JUNIOR_STAFF', 'MIDLEVEL_STAFF', 'VETERAN_STAFF',
@@ -151,16 +160,18 @@ CREATE TABLE users (
         -- 最高経営層（18）
         'BOARD_MEMBER',
 
-        -- システム管理者（99）
-        'SYSTEM_ADMIN'
+        -- 特別権限（97-99）
+        'HEALTH_CHECKUP_STAFF',      -- 健診担当者
+        'OCCUPATIONAL_PHYSICIAN',    -- 産業医
+        'SYSTEM_ADMIN'               -- システム管理者
     ) NOT NULL,
 
     -- permission_levelをDECIMAL型に変更（0.5刻み対応）
     permission_level DECIMAL(4,1) NOT NULL
         CHECK (
-            (permission_level BETWEEN 1 AND 18) OR  -- 基本18レベル
+            (permission_level BETWEEN 1 AND 18) OR        -- 基本18レベル
             permission_level IN (1.5, 2.5, 3.5, 4.5) OR  -- 看護職専用4レベル
-            permission_level = 99  -- Xレベル
+            permission_level IN (97, 98, 99)             -- 特別権限3レベル
         ),
 
     -- 看護職のリーダー業務可否フラグ（新規追加）
@@ -192,7 +203,7 @@ function createUserAccount(employeeData) {
 }
 ```
 
-#### 提案する新ロジック（18レベル + 0.5刻み + Xレベル）
+#### 提案する新ロジック（18レベル + 0.5刻み + 特別権限レベル）
 
 ```typescript
 // 医療システムAPIを活用
@@ -206,12 +217,16 @@ async function createUserAccount(employeeData) {
       position: employeeData.position,
       experienceYears: employeeData.experience_years,
       canPerformLeaderDuty: employeeData.can_perform_leader_duty || false,
-      facilityId: employeeData.facility_id
+      facilityId: employeeData.facility_id,
+      // 特別権限レベル用（該当する場合のみ）
+      isHealthCheckupStaff: employeeData.is_health_checkup_staff || false,
+      isOccupationalPhysician: employeeData.is_occupational_physician || false,
+      isSystemAdmin: employeeData.is_system_admin || false
     })
   });
 
   const { accountLevel } = await response.json();
-  // accountLevel: 1-18, 1.5-4.5, or 99
+  // accountLevel: 1-18, 1.5-4.5, 97-99
 
   return {
     account_type: mapLevelToAccountType(accountLevel),
@@ -246,6 +261,9 @@ function mapLevelToAccountType(level: number): string {
     16: 'STRATEGIC_PLANNING_STAFF',
     17: 'STRATEGIC_PLANNING_MANAGER',
     18: 'BOARD_MEMBER',
+    // 特別権限レベル
+    97: 'HEALTH_CHECKUP_STAFF',
+    98: 'OCCUPATIONAL_PHYSICIAN',
     99: 'SYSTEM_ADMIN'
   };
 
@@ -332,7 +350,7 @@ MODIFY COLUMN permission_level DECIMAL(4,1) NOT NULL
 CHECK (
     (permission_level BETWEEN 1 AND 18) OR
     permission_level IN (1.5, 2.5, 3.5, 4.5) OR
-    permission_level = 99
+    permission_level IN (97, 98, 99)
 );
 
 -- Step 2: account_type ENUMの拡張
@@ -344,7 +362,7 @@ MODIFY COLUMN account_type ENUM(
     'VICE_PRESIDENT', 'PRESIDENT',
     'HR_STAFF', 'HR_MANAGER', 'STRATEGIC_PLANNING_STAFF', 'STRATEGIC_PLANNING_MANAGER',
     'BOARD_MEMBER',
-    'SYSTEM_ADMIN'
+    'HEALTH_CHECKUP_STAFF', 'OCCUPATIONAL_PHYSICIAN', 'SYSTEM_ADMIN'
 ) NOT NULL;
 
 -- Step 3: 新規カラム追加
@@ -431,8 +449,21 @@ grep -r "account_type.*STAFF.*CHAIRMAN" .
     "expected_level": 7
   },
   {
+    "employee_id": "TEST_097",
+    "position": "健診担当者",
+    "is_health_checkup_staff": true,
+    "expected_level": 97
+  },
+  {
+    "employee_id": "TEST_098",
+    "position": "産業医",
+    "is_occupational_physician": true,
+    "expected_level": 98
+  },
+  {
     "employee_id": "TEST_099",
     "position": "システム管理者",
+    "is_system_admin": true,
     "expected_level": 99
   }
 ]
@@ -443,10 +474,11 @@ grep -r "account_type.*STAFF.*CHAIRMAN" .
 **テストケース**:
 1. **基本18レベルの計算確認**（18ケース）
 2. **看護職0.5刻みレベルの計算確認**（4ケース）
-3. **Xレベルの特別権限確認**（1ケース）
-4. **施設別調整の確認**（統括主任Level 7等）
-5. **医療システムAPI連携の正常動作確認**
-6. **既存13レベルデータの互換性確認**
+3. **特別権限レベルの確認**（3ケース: 97健診担当者、98産業医、99システム管理者）
+4. **健康データアクセス権限の確認**（レベル97-99の健康データ閲覧権限テスト）
+5. **施設別調整の確認**（統括主任Level 7等）
+6. **医療システムAPI連携の正常動作確認**
+7. **既存13レベルデータの互換性確認**
 
 ---
 
@@ -486,23 +518,29 @@ export enum AccountLevel {
   MIDLEVEL_STAFF_LEADER = 3.5,
   VETERAN_STAFF_LEADER = 4.5,
 
-  // Xレベル
-  SYSTEM_ADMIN = 99
+  // 特別権限レベル（健康管理専用）
+  HEALTH_CHECKUP_STAFF = 97,        // 健診担当者（ストレスチェック実施者）
+  OCCUPATIONAL_PHYSICIAN = 98,      // 産業医
+
+  // システム管理者（特別権限）
+  SYSTEM_ADMIN = 99                 // システム管理者（X レベル）
 }
 ```
 
-#### 2. 役職マスター（23役職）
+#### 2. 役職マスター（25役職）
 
 **ファイル**: `src/data/seeds/positionSeeds.ts`
 
-23役職の1-18レベルマッピング完了：
+25役職のレベルマッピング完了：
 - なし（Level 1）
-- 副主任（Level 7）
-- 主任（Level 8）
-- 副師長（Level 9）
-- 師長（Level 10）
+- 副主任（Level 5）
+- 主任（Level 6）
+- 副師長（Level 7）
+- 師長（Level 8）
 - ... （省略）
 - 理事長（Level 18）
+- **健診担当者（Level 97）** ← NEW
+- **産業医（Level 98）** ← NEW
 
 #### 3. 施設別権限調整
 
@@ -758,14 +796,86 @@ export enum AccountLevel {
 
 ---
 
+## 🏥 特別権限レベル（97-99）の追加背景
+
+### 健康管理システムのコンプライアンス要件
+
+**実装日**: 2025年10月4日
+**法的根拠**: 労働安全衛生法第66条の10
+
+#### 追加の経緯
+
+ストレスチェック制度の実装において、以下の法的要件を満たす必要が判明：
+
+1. **本人同意なしでのストレスチェック結果閲覧の禁止**
+   - 人事部門（レベル14-17）は本人の同意がなければアクセス不可
+   - 産業医のみ職務上必要により同意不要でアクセス可能
+
+2. **健康データと人事データの分離**
+   - 健診担当者・産業医は健康データにのみアクセス
+   - 給与・評価・人事データへのアクセスは不可
+
+3. **アクセス監査の厳格化**
+   - 全健康データアクセスを監査ログに記録
+   - 不正アクセスパターンの自動検出
+
+#### 特別権限レベルの詳細
+
+**レベル97: 健診担当者（ストレスチェック実施者）**
+- 健康診断・ストレスチェックの実施管理
+- 集計データの閲覧（個人特定不可）
+- 本人同意がある場合のみ個別結果閲覧可能
+- 人事データ・給与データへのアクセス不可
+
+**レベル98: 産業医**
+- 全職員の健康データ閲覧可能（同意不要、職務上必要）
+- 産業医面談の実施・記録
+- 医学的意見書の発行
+- 就業制限措置の発動
+- 人事データ・給与データへのアクセス不可
+
+**レベル99: システム管理者（従来のXレベル）**
+- 全データアクセス可能
+- システム設定変更
+- バックアップ・リストア
+
+#### 実装済み機能
+
+1. **動的アクセス制御**: 同意状況に基づくリアルタイムアクセス判定
+2. **同意取得UI**: 職員向けストレスチェック結果共有同意フォーム
+3. **人事部閲覧画面**: 同意ベースの制限付き閲覧機能
+4. **監査ログ**: 全健康データアクセスの記録・不審パターン検出
+5. **同意状況ダッシュボード**: 健診担当者向け全職員同意状況一覧
+6. **VoiceDrive通知**: 同意状況変更・高ストレス検出等の自動通知
+
+#### VoiceDrive側で必要な対応
+
+1. **アカウント作成時の特別権限フラグ**
+   - `is_health_checkup_staff`, `is_occupational_physician`, `is_system_admin`フラグを追加
+   - 該当フラグがtrueの場合、レベル97-99を設定
+
+2. **健康データ閲覧権限の実装**
+   - レベル97-99のユーザーに健康管理画面へのアクセスを許可
+   - ただし、レベル97-98は人事・給与画面へのアクセスを拒否
+
+3. **監査ログとの連携**
+   - VoiceDrive側でのアクセスも医療システムの監査ログに記録
+   - Webhook経由で通知を受信
+
+---
+
 ## 🔚 まとめ
 
 ### 依頼内容の要約
 
-1. **VoiceDrive側のアカウントレベル体系を13レベル→18レベル（+0.5刻み+Xレベル）に変更**
+1. **VoiceDrive側のアカウントレベル体系を13レベル→25種類に変更**
+   - 基本18レベル
+   - 看護職専用4レベル（0.5刻み）
+   - 特別権限3レベル（97-99）
 2. **医療システムAPIを活用した権限レベル計算の実装**
 3. **既存13レベルデータの18レベルへの移行**
-4. **10/11までに統合テスト完了、共通DB構築時に本番展開**
+4. **健康管理特別権限（97-99）への対応**
+5. **10/11までに統合テスト完了、共通DB構築時に本番展開**
 
 ### 次のアクション
 
