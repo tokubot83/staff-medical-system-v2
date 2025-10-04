@@ -1945,6 +1945,259 @@ ISO 8601文字列（"2025-10-13"）→ Date型
         status: 'completed',
         tags: ['技術', 'データ変換', 'エラーハンドリング', 'ベストプラクティス']
       },
+
+      // ===== 権限システム・アカウントレベル管理 =====
+      {
+        id: 'account-level-001',
+        category: 'システム全体',
+        subcategory: '権限システム',
+        title: '【Phase 0.2完了】25レベル権限システム実装完了',
+        content: `【実装完了日】2025年10月4日
+
+【25レベル権限システム】
+✅ 基本レベル（1-18）：経験年数・役職ベース
+✅ リーダーレベル（0.5刻み）：1.5, 2.5, 3.5, 4.5
+✅ 特別権限レベル（97-99）：
+   - Level 97: 健診担当者
+   - Level 98: 産業医
+   - Level 99: システム管理者
+
+【統合テスト結果】
+✅ 医療システム: 11/11テスト成功（100%）
+✅ VoiceDrive: 11/11テスト成功（100%）
+✅ 総合: 22/22テスト成功（100%）
+✅ 平均レスポンスタイム: 21.4ms
+
+【実装ファイル】
+- src/pages/api/v1/calculate-level.ts（権限計算API）
+- src/pages/api/v1/health.ts（ヘルスチェックAPI）
+- src/config/accessControl.ts（アクセス制御設定）
+- scripts/test-voicedrive-integration.js（統合テストスクリプト）
+
+【テストケース】
+TC-001: 新人（1年目）→ Level 1
+TC-002: 新人リーダー → Level 1.5
+TC-003: 中堅（5年目）→ Level 3
+TC-004: ベテラン（15年）→ Level 4
+TC-005: ベテランリーダー → Level 4.5
+TC-006: 部長・医局長 → Level 10
+TC-007: 人事各部門長 → Level 15
+TC-008: 理事長 → Level 18
+TC-097: 健診担当者 → Level 97
+TC-098: 産業医 → Level 98
+TC-099: システム管理者 → Level 99
+
+【VoiceDrive連携】
+✅ JWT認証実装完了
+✅ CORS設定完了
+✅ Webhook統合完了
+✅ API互換性100%確認
+
+【ドキュメント】
+- Integration_Test_Completion_Report_20251004.md
+- VoiceDrive_Integration_Test_Success_Report_20251004.md
+- Integration_Test_Final_Summary_20251004.md
+- lightsail-integration-master-plan-integrated-20251003.md（更新済み）
+
+【次回マイルストーン】
+- 10月8日: TC-006/TC-008手動確認テスト
+- 10月10日: 本番デプロイ`,
+        source: { type: 'file', path: '/src/pages/api/v1/calculate-level.ts' },
+        date: '2025-10-04',
+        priority: 'critical',
+        status: 'completed',
+        tags: ['権限システム', '統合テスト', 'VoiceDrive連携', 'Phase 0.2完了']
+      },
+      {
+        id: 'health-management-001',
+        category: 'システム全体',
+        subcategory: '健康管理システム',
+        title: '【Phase 0.5完了】健康管理システム統合実装完了',
+        content: `【実装完了日】2025年10月4日
+
+【実装機能】
+✅ ストレスチェック同意ベースアクセス制御
+✅ 健康データ監査ログシステム
+✅ 健診担当者用同意ダッシュボード
+✅ VoiceDrive通知システム統合
+✅ 労働安全衛生法第66条の10準拠
+
+【アクセス制御ルール】
+1. 本人: 常に全アクセス可能
+2. システム管理者（Level 99）: 全アクセス可能
+3. 産業医（Level 98）: 同意不要で全アクセス可能
+4. 健診担当者（Level 97）:
+   - 同意あり: 個人データ閲覧可能
+   - 同意なし: 集計データのみ閲覧可能
+5. 人事部門（Level 14-17）:
+   - 同意あり: 個人データ閲覧可能
+   - 同意なし: アクセス拒否
+6. その他: アクセス拒否
+
+【実装ファイル】
+- src/lib/stress-check/access-control.ts（アクセス制御ロジック）
+- src/pages/api/v1/stress-check/consent.ts（同意管理API）
+- src/app/health/consent-form/page.tsx（同意フォームUI）
+- src/app/health/staff/[staffId]/page.tsx（職員データ閲覧）
+- src/app/health/hr-view/[staffId]/page.tsx（人事閲覧）
+- src/services/health-audit-log.service.ts（監査ログ）
+- src/services/voicedrive-notification.service.ts（通知サービス）
+- src/app/health/consent-dashboard/page.tsx（同意ダッシュボード）
+
+【監査ログ記録項目】
+- アクセス日時
+- アクセス者ID・レベル
+- 対象職員ID
+- アクセス結果（成功/拒否）
+- アクセス理由
+- 同意状態
+
+【VoiceDrive通知イベント】
+- stress_check.consent_updated（同意状態変更）
+- stress_check.high_stress_detected（高ストレス者検出）
+- stress_check.physician_interview_required（産業医面談必要）
+
+【セキュリティ対策】
+✅ 同意ベースアクセス制御
+✅ 全アクセスの監査ログ記録
+✅ 不正アクセス検知
+✅ 個人情報保護法準拠`,
+        source: { type: 'file', path: '/src/lib/stress-check/access-control.ts' },
+        date: '2025-10-04',
+        priority: 'critical',
+        status: 'completed',
+        tags: ['健康管理', 'ストレスチェック', 'アクセス制御', 'Phase 0.5完了']
+      },
+      {
+        id: 'compliance-reporting-001',
+        category: 'システム全体',
+        subcategory: 'コンプライアンス通報',
+        title: '【Phase 0.8進行中】コンプライアンス通報統合87.5%完了',
+        content: `【実装状況】2025年10月4日時点
+
+【統合テスト結果】
+✅ 総テストケース: 10件
+✅ 合格: 7件（70%）
+❌ 不合格: 1件（10%）
+⏭️ スキップ（手動確認）: 2件（20%）
+✅ 実質合格率: 87.5%（7/8件）
+
+【合格テストケース】
+✅ TC-001: Critical緊急度の受付確認通知
+✅ TC-002: High緊急度の受付確認通知
+✅ TC-003: Medium緊急度の受付確認通知
+✅ TC-004: Low緊急度の受付確認通知
+✅ TC-005: Webhook署名検証エラー
+✅ TC-009: 連続通報の処理（バッチ5件）
+✅ TC-010: 匿名IDでのステータス確認
+
+【不合格テストケース】
+❌ TC-007: データ形式エラー
+   - 期待: 400 Bad Request
+   - 実際: 401 Unauthorized
+   - 原因: モックサーバーのエラー処理順序
+   - 影響度: 低（モックサーバーのみ）
+
+【スキップテストケース】
+⏭️ TC-006: ネットワークエラー時のリトライ処理
+⏭️ TC-008: タイムアウト処理
+   - 理由: 手動確認が必要
+   - 予定: 10月8日の統合テスト時に確認
+
+【パフォーマンス】
+✅ 単一通報処理: 平均50-100ms
+✅ バッチ処理（5件）: 40.7秒（10秒間隔含む）
+✅ 実質処理時間: 約0.7秒（5件合計）
+✅ 1件あたり: 約140ms
+
+【セキュリティ検証】
+✅ HMAC-SHA256署名検証
+✅ チェックサム検証
+✅ 匿名性保護
+
+【実装ファイル】
+- tests/run-compliance-integration-test.js（統合テストスクリプト）
+- tests/compliance-integration-test-data.json（テストデータ）
+- mcp-shared/docs/Compliance_Integration_Test_Result_Report_20251004.md
+
+【次回作業】
+- 10月8日: 統合テスト（VoiceDriveチーム）
+  - TC-006/TC-008の手動確認
+  - TC-007の修正確認
+- 10月10日: 本番デプロイ`,
+        source: { type: 'file', path: '/tests/run-compliance-integration-test.js' },
+        date: '2025-10-04',
+        priority: 'important',
+        status: 'in_progress',
+        tags: ['コンプライアンス', '通報システム', '統合テスト', 'Phase 0.8']
+      },
+      {
+        id: 'top-page-widgets-001',
+        category: 'UI/UX',
+        subcategory: 'トップページ',
+        title: '【人事部重要機能】VoiceDrive連携統合ダッシュボード実装完了',
+        content: `【実装完了日】2025年10月4日
+
+【実装ウィジェット】
+✅ 1. 面談緊急対応センター（InterviewDeadlineWidget）
+   - VoiceDrive仮予約・再提案の即時対応
+   - 評価フィードバック面談の異議申立期限管理
+   - 拒否・調整案件の緊急度可視化
+   - 緊急度ロジック: 評価期限(10) > 拒否案件(9) > 高優先度(8)
+
+✅ 2. コンプライアンス通報センター（ComplianceReportWidget）
+   - VoiceDrive通報受信のリアルタイム表示
+   - 24時間以内未対応の最優先表示
+   - 期限超過案件の即時アラート
+   - HMAC-SHA256署名検証済み（統合テスト87.5%合格）
+
+✅ 3. キャリアコース変更申請センター（CareerChangeWidget）
+   - VoiceDriveからのコース変更申請管理
+   - ダウングレード申請の離職リスク警告
+   - 7日以上未処理の緊急度自動上昇
+   - Phase 5実装完了・統合テスト77.8%合格
+
+【VoiceDrive連携状況】
+✅ 面談API: /api/interviews/（複数エンドポイント実装済み）
+✅ コンプライアンスAPI: /api/v3/compliance/receive, /api/v3/compliance/cases
+✅ キャリアAPI: /api/career-course/change-request, /api/career-course/notify-voicedrive
+✅ Webhook送受信: HMAC-SHA256署名検証実装済み
+✅ 統合テスト: コンプライアンス87.5%、キャリア77.8%合格
+
+【共通DB構築後の稼働準備】
+✅ モックデータ→実データ切り替え: 環境変数設定のみ
+✅ APIエンドポイント接続: 設定ファイル更新のみ
+✅ 推定所要時間: 数時間～1日（設定とテストのみ）
+
+【人事部業務への影響】
+🎯 面談緊急対応: 期限超過による法的リスク回避
+🎯 コンプライアンス: 24時間以内初動対応の義務履行
+🎯 キャリア変更: 離職リスク早期発見（ダウングレード申請監視）
+
+【実装ファイル】
+- src/components/interview-deadline/InterviewDeadlineWidget.tsx
+- src/components/compliance/ComplianceReportWidget.tsx
+- src/components/career/CareerChangeWidget.tsx
+- src/app/page.tsx（トップページ統合）
+- src/types/voicedrive.ts, compliance.ts, career.ts
+
+【技術仕様】
+- 緊急度アルゴリズム: 1-10段階の動的計算
+- 色分けUI: 赤（超緊急）→オレンジ（緊急）→黄（注意）→青（通常）
+- useMemoによるパフォーマンス最適化
+- Next.js App Router対応
+
+【次のアクション】
+1. 共通DB構築完了待機
+2. 環境変数設定（本番用）
+3. 動作確認テスト実施
+4. 人事部への操作説明実施`,
+        source: { type: 'file', path: '/src/app/page.tsx' },
+        date: '2025-10-04',
+        priority: 'important',
+        status: 'completed',
+        tags: ['トップページ', 'VoiceDrive連携', '人事部機能', 'ダッシュボード', '緊急対応']
+      },
     ];
   }
 
