@@ -120,6 +120,52 @@ export const ACCESS_CONTROL_CONFIG: AccessControlConfig[] = [
     description: 'コンプライアンス体制管理'
   },
 
+  // === 健診担当者専用（レベル97） ===
+  {
+    path: '/health/management',
+    label: '健診管理',
+    minLevel: 97,
+    description: '健康診断・ストレスチェック管理'
+  },
+  {
+    path: '/health/reexamination',
+    label: '再検査管理',
+    minLevel: 97,
+    description: '再検査対象者の管理'
+  },
+  {
+    path: '/health/reports',
+    label: '健診レポート',
+    minLevel: 97,
+    description: '健診統計・分析レポート'
+  },
+  {
+    path: '/stress-check',
+    label: 'ストレスチェック',
+    minLevel: 97,
+    description: 'ストレスチェック実施・管理'
+  },
+
+  // === 産業医専用（レベル98） ===
+  {
+    path: '/health/occupational-consultation',
+    label: '産業医面談',
+    minLevel: 98,
+    description: '産業医面談記録・管理'
+  },
+  {
+    path: '/health/medical-opinions',
+    label: '医学的意見書',
+    minLevel: 98,
+    description: '就業判定・意見書作成'
+  },
+  {
+    path: '/health/work-restrictions',
+    label: '就業制限管理',
+    minLevel: 98,
+    description: '就業制限・配置転換提案'
+  },
+
   // === システム管理者専用（レベル99/X） ===
   {
     path: '/admin',
@@ -220,4 +266,96 @@ export function hasPermission(
 ): boolean {
   const requiredLevel = SPECIAL_PERMISSIONS[permission];
   return userLevel >= requiredLevel;
+}
+
+// 特別権限レベル（健康管理専用）の詳細設定
+export const SPECIAL_HEALTH_PERMISSIONS = {
+  // Level 97: 健診担当者
+  HEALTH_CHECKUP_STAFF: {
+    level: 97,
+    allowedPaths: [
+      '/health/management',
+      '/health/staff/:staffId',
+      '/stress-check',
+      '/health/reexamination',
+      '/health/reports',
+    ],
+    allowedDataAccess: [
+      'healthCheckup',
+      'stressCheck',
+      'reexamination',
+      'basicStaffInfo',  // 氏名・部署のみ
+    ],
+    deniedDataAccess: [
+      'salary',
+      'evaluation',
+      'interview',
+      'disciplinary',
+      'masterData',
+    ]
+  },
+
+  // Level 98: 産業医
+  OCCUPATIONAL_PHYSICIAN: {
+    level: 98,
+    allowedPaths: [
+      '/health/management',
+      '/health/staff/:staffId',
+      '/stress-check',
+      '/health/occupational-consultation',
+      '/health/medical-opinions',
+      '/health/work-restrictions',
+    ],
+    allowedDataAccess: [
+      'healthCheckup',
+      'stressCheck',
+      'occupationalConsultation',
+      'workRestrictions',
+      'basicStaffInfo',
+      'workHistory',      // 健康評価用
+      'absenceRecords',   // 健康評価用
+    ],
+    deniedDataAccess: [
+      'salary',
+      'evaluation',
+      'interview',  // 産業医面談除く
+      'disciplinary',
+      'masterData',
+    ]
+  },
+
+  // Level 99: システム管理者
+  SYSTEM_ADMIN: {
+    level: 99,
+    allowedPaths: ['*'],  // 全て許可
+    allowedDataAccess: ['*'],
+    deniedDataAccess: []
+  }
+};
+
+// 特別権限チェック関数
+export function hasSpecialHealthPermission(
+  userLevel: number,
+  dataType: string
+): boolean {
+  if (userLevel === 99) return true;
+
+  if (userLevel === 98) {
+    const permissions = SPECIAL_HEALTH_PERMISSIONS.OCCUPATIONAL_PHYSICIAN;
+    return permissions.allowedDataAccess.includes(dataType) ||
+           permissions.allowedDataAccess.includes('*');
+  }
+
+  if (userLevel === 97) {
+    const permissions = SPECIAL_HEALTH_PERMISSIONS.HEALTH_CHECKUP_STAFF;
+    return permissions.allowedDataAccess.includes(dataType) ||
+           permissions.allowedDataAccess.includes('*');
+  }
+
+  return false;
+}
+
+// 特別権限レベルかどうかの判定
+export function isSpecialHealthLevel(userLevel: number): boolean {
+  return userLevel === 97 || userLevel === 98 || userLevel === 99;
 }
