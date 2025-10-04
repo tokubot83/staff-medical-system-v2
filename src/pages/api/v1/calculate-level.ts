@@ -173,45 +173,52 @@ export default async function handler(
 
       staff = mockStaff;
 
-      // 施設別の役職レベルチェック
-      if (staff.position && useFacilityId) {
-        const facilityLevel = facilityPositionMappingService.getPositionLevel(
-          useFacilityId,
-          staff.position
-        );
-        if (facilityLevel !== undefined) {
-          positionLevel = facilityLevel;
-          baseLevel = facilityLevel;
-          facilityAdjustment = facilityPositionMappingService.calculateFacilityAdjustment(
+      // 特別権限レベル（97-99）はモックデータのaccountLevelをそのまま使用
+      if (staff.accountLevel && staff.accountLevel >= 97) {
+        calculatedLevel = staff.accountLevel;
+        baseLevel = staff.accountLevel;
+        positionLevel = staff.accountLevel;
+      } else {
+        // 施設別の役職レベルチェック
+        if (staff.position && useFacilityId) {
+          const facilityLevel = facilityPositionMappingService.getPositionLevel(
             useFacilityId,
-            facilityLevel,
             staff.position
           );
-          calculatedLevel = facilityLevel + facilityAdjustment;
+          if (facilityLevel !== undefined) {
+            positionLevel = facilityLevel;
+            baseLevel = facilityLevel;
+            facilityAdjustment = facilityPositionMappingService.calculateFacilityAdjustment(
+              useFacilityId,
+              facilityLevel,
+              staff.position
+            );
+            calculatedLevel = facilityLevel + facilityAdjustment;
+          } else {
+            calculatedLevel = accountLevelCalculator.calculateAccountLevel(staff);
+          }
         } else {
           calculatedLevel = accountLevelCalculator.calculateAccountLevel(staff);
         }
-      } else {
-        calculatedLevel = accountLevelCalculator.calculateAccountLevel(staff);
-      }
 
-      // 内訳を計算（上記と同じロジック）
-      if (staff.position) {
-        const posLevel = accountLevelCalculator['getPositionLevel'](staff.position);
-        if (posLevel) {
-          positionLevel = posLevel;
-          baseLevel = posLevel;
+        // 内訳を計算（上記と同じロジック）
+        if (staff.position) {
+          const posLevel = accountLevelCalculator['getPositionLevel'](staff.position);
+          if (posLevel) {
+            positionLevel = posLevel;
+            baseLevel = posLevel;
+          }
         }
-      }
 
-      if (!positionLevel) {
-        const years = staff.experienceYears || 1;
-        const experienceLevel = years <= 1 ? 1 : years <= 3 ? 2 : years <= 10 ? 3 : 4;
-        baseLevel = experienceLevel;
-        experienceBonus = 0;
+        if (!positionLevel) {
+          const years = staff.experienceYears || 1;
+          const experienceLevel = years <= 1 ? 1 : years <= 3 ? 2 : years <= 10 ? 3 : 4;
+          baseLevel = experienceLevel;
+          experienceBonus = 0;
 
-        if (['看護師', '准看護師'].includes(staff.profession) && staff.canPerformLeaderDuty) {
-          leaderBonus = 0.5;
+          if (['看護師', '准看護師'].includes(staff.profession) && staff.canPerformLeaderDuty) {
+            leaderBonus = 0.5;
+          }
         }
       }
     }
