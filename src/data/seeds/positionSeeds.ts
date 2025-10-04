@@ -309,6 +309,32 @@ export const positionSeeds: PositionSeed[] = [
     displayOrder: 23,
     isActive: true,
   },
+
+  // 特別権限役職（健康管理専用）
+  {
+    id: 'POS_024',
+    code: 'HEALTH_CHECKUP_STAFF',
+    name: '健診担当者',
+    level: 97,
+    category: 'medical',
+    requiresManagementTraining: false,
+    canApproveLeave: false,
+    canPerformEvaluation: false,
+    displayOrder: 24,
+    isActive: true,
+  },
+  {
+    id: 'POS_025',
+    code: 'OCCUPATIONAL_PHYSICIAN',
+    name: '産業医',
+    level: 98,
+    category: 'medical',
+    requiresManagementTraining: false,
+    canApproveLeave: false,
+    canPerformEvaluation: false,
+    displayOrder: 25,
+    isActive: true,
+  },
 ];
 
 /**

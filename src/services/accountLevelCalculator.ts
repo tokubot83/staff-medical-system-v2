@@ -42,6 +42,10 @@ export enum AccountLevel {
   // 最高経営層
   BOARD_MEMBER = 18,                // 理事長・法人事務局長
 
+  // 特別権限レベル（健康管理専用）
+  HEALTH_CHECKUP_STAFF = 97,        // 健診担当者（ストレスチェック実施者）
+  OCCUPATIONAL_PHYSICIAN = 98,      // 産業医
+
   // システム管理者（特別権限）
   SYSTEM_ADMIN = 99                 // システム管理者（X レベル）
 }
