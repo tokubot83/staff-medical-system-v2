@@ -2457,6 +2457,102 @@ VoiceDrive DataConsentテーブル:
         status: 'pending',
         tags: ['VoiceDrive連携', '本番移行', 'チェックリスト', '共通DB']
       },
+      {
+        id: 'voicedrive-integration-005',
+        category: 'VoiceDrive連携',
+        subcategory: '分析ページ実装',
+        title: 'VoiceDrive分析ページ実装完了（レポートセンター統合）',
+        content: `【実装完了】2025年10月5日
+
+✅ レポートセンター統合
+- VoiceDrive分析を11番目のカテゴリとして追加
+- パス: /reports/voicedrive-analytics
+- アイコン: 🎤
+- グラデーション: violet-500 → purple-500
+
+✅ VoiceDrive分析ページ実装（520行）
+ファイル: src/app/reports/voicedrive-analytics/page.tsx
+
+【実装済み機能】
+1. K-匿名性チェック表示
+   - K≥5の要件判定
+   - 合格時: 緑枠、Shieldアイコン、統計データ表示
+   - 不合格時: 赤枠、AlertTriangleアイコン、必要追加同意数表示
+
+2. 基本統計カード（3種類）
+   - 同意済みユーザー数（緑、Unlockアイコン）
+   - データ削除リクエスト数（オレンジ、Trash2アイコン）
+   - K-匿名性値（青、Shieldアイコン）
+
+3. 部署別分布表示
+   - プログレスバーで視覚化
+   - パーセンテージ表示
+   - K≥5の場合のみ表示
+
+4. プライバシー保護説明
+   - K-匿名性の概念説明
+   - GDPR対応の説明
+
+5. 施設選択機能
+   - FacilitySelectorコンポーネント統合
+   - URLパラメータ対応
+
+✅ APIエンドポイント実装（100行）
+ファイル: src/app/api/voicedrive/analytics/route.ts
+
+GET /api/voicedrive/analytics?facility={facilityId}
+- 同意済みユーザー取得
+- K-匿名性チェック実行
+- 削除リクエスト数取得
+- 部署別分布データ返却（K≥5のみ）
+
+✅ VoiceDriveDataService拡張
+- getAllConsents() メソッド追加
+
+【暫定実装（モックデータ使用）】
+⚠️ 部署別分布: ハードコードされたモックデータ
+⚠️ DB接続: SQLite（file:../voicedrive/prisma/dev.db）
+⚠️ 施設フィルタリング: UIのみ、バックエンド未実装
+
+【共通DB構築後に実装すべき内容】
+□ PostgreSQL共通DB接続設定
+□ VoiceDrive UserテーブルとDataConsentテーブルのJOIN
+□ 実データでの部署別・職種別分布取得
+□ 施設別フィルタリング機能（バックエンド実装）
+□ 詳細分析機能
+  - 投稿数、投票数、コメント数統計
+  - 時系列分析
+  - カテゴリ別分析
+□ データエクスポート機能
+  - PDF出力
+  - CSV出力
+  - グラフ・チャート追加
+
+【実装ファイル】
+- src/app/reports/page.tsx（VoiceDrive分析カテゴリ追加）
+- src/app/reports/voicedrive-analytics/page.tsx（新規作成、520行）
+- src/app/api/voicedrive/analytics/route.ts（新規作成、100行）
+- src/services/VoiceDriveDataService.ts（getAllConsents追加）
+
+【本番環境での確認事項】
+1. PostgreSQL共通DBでのK-匿名性チェック動作確認
+2. 実データでの部署別分布の正確性確認
+3. 施設別フィルタリングの動作確認
+4. レスポンス時間測定（目標: 1秒以内）
+
+【所要時間（共通DB構築後）】
+- Phase 1: DB接続・JOIN実装（2-3時間）
+- Phase 2: 施設別フィルタリング実装（1-2時間）
+- Phase 3: 詳細分析機能実装（3-4時間）
+- Phase 4: エクスポート機能実装（2-3時間）
+- Phase 5: テスト・調整（2-3時間）
+合計: 10-15時間（2-3日）`,
+        source: { type: 'file', path: '/src/app/reports/voicedrive-analytics/page.tsx' },
+        date: '2025-10-05',
+        priority: 'important',
+        status: 'in_progress',
+        tags: ['VoiceDrive連携', '分析ページ', 'レポートセンター', 'K-匿名性', '共通DB待ち']
+      },
     ];
   }
 

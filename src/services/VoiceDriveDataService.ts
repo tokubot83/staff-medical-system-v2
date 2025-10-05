@@ -164,6 +164,25 @@ export class VoiceDriveDataService {
   }
 
   /**
+   * 全ての同意データを取得
+   *
+   * @returns 全同意データ
+   */
+  async getAllConsents(): Promise<VoiceDriveConsent[]> {
+    try {
+      const consents = await this.prisma.$queryRaw<VoiceDriveConsent[]>`
+        SELECT *
+        FROM DataConsent
+      `;
+
+      return consents;
+    } catch (error) {
+      console.error('[VoiceDriveDataService] 全同意データ取得エラー:', error);
+      throw new Error('全同意データの取得に失敗しました');
+    }
+  }
+
+  /**
    * 部署別同意済みユーザー数を取得
    *
    * 注意: VoiceDrive DataConsentテーブルには部署情報がないため、

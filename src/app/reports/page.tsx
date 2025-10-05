@@ -87,6 +87,15 @@ const categories = [
     hasDetailPages: true
   },
   {
+    id: 'voicedrive-analytics',
+    label: 'VoiceDrive分析',
+    icon: '🎤',
+    description: '職員の声データをプライバシー保護（K-匿名性）下で集団分析',
+    gradient: 'from-violet-500 to-purple-500',
+    path: '/reports/voicedrive-analytics',
+    hasDetailPages: true
+  },
+  {
     id: 'performance-evaluation',
     label: '人事評価分析',
     icon: '🎲',
