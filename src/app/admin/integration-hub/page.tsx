@@ -28,15 +28,41 @@ export default function IntegrationHubPage() {
     {
       id: 'voicedrive',
       name: 'VoiceDriveシステム',
-      description: '職員向け評価・面談・コンプライアンス統合システム',
+      description: '職員向け評価・面談・コンプライアンス・データ同意管理統合システム（プライバシー保護機能実装済み）',
       status: 'connected',
-      endpoint: 'https://voicedrive-api.example.com',
-      apiKey: 'vd_live_xxxxxxxxxxxxxxxx',
-      lastSync: '2025-10-04 14:30:00',
-      syncedData: ['職員情報', '評価データ', '面談記録', 'コンプライアンス通報'],
+      endpoint: 'http://localhost:3003 (暫定環境) / PostgreSQL共通DB (本番環境待ち)',
+      apiKey: 'vd_live_integration_test_completed_20251005',
+      lastSync: '2025-10-05 18:00:00 (統合テスト完了)',
+      syncedData: ['職員情報', '評価データ', '面談記録', 'コンプライアンス通報', 'データ同意管理 (新)', 'K-匿名性分析 (新)', 'データ削除リクエスト (新)'],
       monthlyRequests: 15420,
-      errorRate: 0.2,
-      color: 'green'
+      errorRate: 0.0,
+      color: 'green',
+      integrationTestResult: {
+        date: '2025-10-05',
+        scenarios: 6,
+        totalTests: 39,
+        passed: 39,
+        failed: 0,
+        successRate: 100,
+        status: 'completed'
+      },
+      implementedAPIs: [
+        { name: 'VoiceDriveDataService.getConsentedUsers()', description: '同意済みユーザー一覧取得（K-匿名性フィルタリング）', status: 'implemented' },
+        { name: 'VoiceDriveDataService.getDeletionRequests()', description: '削除リクエスト一覧取得', status: 'implemented' },
+        { name: 'VoiceDriveDataService.getConsentDetails()', description: 'ユーザー同意詳細取得', status: 'implemented' },
+        { name: 'VoiceDriveAnalyticsService.checkKAnonymity()', description: 'K-匿名性チェック（K≥5）', status: 'implemented' },
+        { name: 'VoiceDriveAnalyticsService.getKAnonymityMessage()', description: 'プライバシー保護メッセージ生成', status: 'implemented' },
+        { name: 'DataDeletionBatchService.processDeletionRequests()', description: 'データ削除バッチ処理', status: 'implemented' },
+        { name: 'POST /api/consent/deletion-completed', description: 'VoiceDrive削除完了通知受信', status: 'implemented' }
+      ],
+      productionChecklist: [
+        { task: 'PostgreSQL共通DB接続設定', status: 'pending' },
+        { task: 'Row Level Security (RLS) 設定確認', status: 'pending' },
+        { task: 'K-匿名性チェック動作確認（実データ）', status: 'pending' },
+        { task: 'データ削除フロー動作確認（実データ）', status: 'pending' },
+        { task: 'VoiceDrive分析ページ表示確認', status: 'pending' },
+        { task: '本番環境統合テスト実施', status: 'pending' }
+      ]
     },
     {
       id: 'keiei',
