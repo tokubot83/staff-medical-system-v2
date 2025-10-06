@@ -2102,9 +2102,361 @@ node tests/production/production-connection-test.js
 
 ---
 
+## 🔄 Phase 6.5: MCPサーバー統合移行計画（共通DB構築後）
+
+### **実装概要**
+
+**目的**: ローカルMCPサーバー（開発環境）からLightsail共通MCPサーバー（本番環境）への移行
+
+**実装タイミング**: Phase 6完了後、Phase 2（Week 2）と並行実施可能
+
+### **現状と将来のアーキテクチャ**
+
+#### **現状（開発環境）: ローカルMCP × 2**
+```
+医療システム                VoiceDrive
+   ↓                          ↓
+ MCP(Local)    ←─────→    MCP(Local)
+   ↓                          ↓
+   └────── mcp-shared/ ───────┘
+        （ファイル共有）
+
+課題:
+❌ 各チームが個別管理
+❌ 同期ズレのリスク
+❌ 2つのMCPサーバーが通信（レイテンシー）
+```
+
+#### **将来（本番環境）: Lightsail共通MCP × 1**
+```
+医療システム              VoiceDrive
+   ↓                        ↓
+   └─→  Lightsail  ←───────┘
+       (共通MCPサーバー)
+            ↓
+       MySQL（共通DB）
+       Llama 3.2:3b（共通LLM）
+       Redis（共通キャッシュ）
+
+メリット:
+✅ 一元管理
+✅ 単一真実の源（データ整合性）
+✅ 低レイテンシー
+✅ 高可用性
+✅ 監視・ログ統合
+```
+
+### **実装手順（3日間）**
+
+#### **Day 1: Lightsail MCPサーバー構築**
+```bash
+□ MCPサーバーインストール
+  cd /opt
+  git clone https://github.com/your-org/mcp-server.git
+  cd mcp-server
+  npm install
+
+□ systemdサービス設定
+  sudo nano /etc/systemd/system/mcp-server.service
+  sudo systemctl enable mcp-server
+  sudo systemctl start mcp-server
+
+□ ファイアウォール設定
+  sudo ufw allow 5000/tcp
+
+□ ヘルスチェックAPI実装
+  GET /health → { "status": "ok" }
+  GET /metrics → { "connections": 2, "messages": 1234 }
+
+□ 動作確認
+  curl http://localhost:5000/health
+```
+
+#### **Day 2: クライアント移行**
+```bash
+医療システム側:
+□ MCPクライアントライブラリ導入
+  npm install @mcp/client
+
+□ 接続設定変更
+  // 変更前: localhost:5000
+  // 変更後: medical-integrated.lightsail.aws:5000
+
+□ JWT認証設定
+  const client = new MCPClient({
+    url: 'wss://medical-integrated.lightsail.aws:5000/mcp',
+    token: process.env.MCP_AUTH_TOKEN
+  });
+
+VoiceDrive側:
+□ 同様の変更を実施
+□ 接続テスト
+```
+
+#### **Day 3: 統合テスト・切り替え**
+```bash
+□ 双方向同期テスト
+  - 医療システム → MCP → VoiceDrive
+  - VoiceDrive → MCP → 医療システム
+
+□ パフォーマンステスト
+  - メッセージ配信時間 < 100ms
+  - 同時接続数: 2-10
+
+□ フェイルオーバーテスト
+  - 片方切断時の自動再接続
+
+□ ローカルMCP停止
+  - 医療システム: ローカルMCP停止
+  - VoiceDrive: ローカルMCP停止
+
+□ 本番切り替え完了
+```
+
+### **MCPサーバー技術仕様**
+
+#### **通信プロトコル**
+```typescript
+Protocol: WebSocket (wss://)
+Message Format: JSON
+Authentication: JWT Bearer Token
+Reconnection: 自動再接続（exponential backoff）
+```
+
+#### **エンドポイント**
+```
+Main: wss://medical-integrated.lightsail.aws:5000/mcp
+Health: GET https://medical-integrated.lightsail.aws:5000/health
+Metrics: GET https://medical-integrated.lightsail.aws:5000/metrics
+```
+
+#### **メッセージフォーマット**
+```typescript
+// 送信メッセージ
+{
+  "type": "sync",
+  "source": "medical-system",
+  "target": "voicedrive",
+  "data": {
+    "staffId": "STAFF001",
+    "accountLevel": 15,
+    "updatedAt": "2025-10-06T12:00:00Z"
+  }
+}
+
+// 応答メッセージ
+{
+  "type": "ack",
+  "messageId": "msg_12345",
+  "status": "success",
+  "timestamp": "2025-10-06T12:00:01Z"
+}
+```
+
+#### **監視・ログ**
+```yaml
+監視項目:
+  - 接続数（目標: 2-10接続）
+  - メッセージ処理時間（目標: < 100ms）
+  - エラー率（目標: < 0.1%）
+  - 稼働率（目標: 99.9%）
+
+ログ出力:
+  - 接続/切断ログ
+  - メッセージ送受信ログ
+  - エラーログ
+
+アラート:
+  - 接続切断時
+  - エラー率が1%を超えた時
+  - 処理時間が500msを超えた時
+```
+
+### **メモリ割り当て更新（16GB）**
+
+```yaml
+旧割り当て:
+  - MySQL: 2.5GB
+  - Llama 3.2:3b: 3-4GB
+  - FastAPI: 1GB
+  - Redis: 1GB
+  - MCP: 0.5GB  ← 増量前
+  - Nginx + OS: 1.5GB
+  - Buffer: 6-7GB
+
+新割り当て（MCPサーバー強化）:
+  - MySQL: 2.5GB
+  - Llama 3.2:3b: 3-4GB
+  - FastAPI: 1GB
+  - Redis: 1GB
+  - MCP: 1GB  ← 増量（本番トラフィック対応）
+  - Nginx + OS: 1.5GB
+  - Buffer: 5-6GB
+```
+
+### **セキュリティ設定**
+
+```bash
+# ファイアウォール（ポート5000）
+sudo ufw allow from <医療システムIP> to any port 5000
+sudo ufw allow from <VoiceDriveIP> to any port 5000
+
+# JWT認証
+export MCP_JWT_SECRET="your-secret-key"
+export MCP_TOKEN_EXPIRY=86400  # 24時間
+
+# TLS/SSL証明書
+sudo certbot certonly --standalone -d medical-integrated.lightsail.aws
+```
+
+### **ロールバック計画**
+
+```
+問題発生時の切り戻し手順:
+
+1. Lightsail MCPサーバー停止
+   sudo systemctl stop mcp-server
+
+2. 医療システム・VoiceDrive：ローカルMCPに切り替え
+   接続先をlocalhost:5000に戻す
+
+3. 原因調査・修正後、再度移行テスト
+
+推定切り戻し時間: 10分以内
+```
+
+---
+
+## 💰 本番環境コスト計算（最終版）
+
+### **月額コスト構成**
+
+```yaml
+AWS Lightsail統合インスタンス:
+  Plan: 16GB RAM, 4 vCPU, 320GB SSD
+  Cost: $80/月（約12,000円）
+
+  統合コンポーネント:
+    - MySQL 8.0（共通データベース）
+    - Ollama + Llama 3.2:3b（共通ローカルLLM）
+    - FastAPI（モデレーションAPI）
+    - MCPサーバー（共通連携サーバー）← 新規追加
+    - Redis（共通キャッシュ）
+    - Nginx（リバースプロキシ）
+
+Object Storage（バックアップ）:
+  Cost: $10/月（約1,500円）
+  ⚠️ 実装時に最終確認 ← 要検討事項
+
+  用途:
+    - MySQLバックアップ（毎日）
+    - システム設定ファイル
+    - ログアーカイブ
+
+  削減オプション:
+    - 50GB: $5/月（7-14日分バックアップ）
+    - 削除: $0/月（非推奨：復旧不可リスク）
+
+Vercel Proプラン（統合）:
+  Plan: 医療システム + VoiceDrive統合
+  Cost: $20/月（約3,000円）
+
+  法人向けメリット:
+    ✅ SLA 99.99%稼働率保証
+    ✅ カスタムドメイン無制限
+    ✅ パスワード保護（ステージング環境）
+    ✅ チーム管理機能
+    ✅ 優先サポート
+    ✅ 高速ビルド
+    ✅ 分析機能強化
+```
+
+### **コスト計算（3パターン）**
+
+#### **パターンA: 完全構成（推奨）**
+```
+月額:
+  - Lightsail 16GB: $80（12,000円）
+  - Object Storage 100GB: $10（1,500円）
+  - Vercel Pro: $20（3,000円）
+  合計: $110/月（約16,500円）
+
+年額:
+  $1,320（約198,000円）
+
+適用対象: 法人システム、データ保護重視
+```
+
+#### **パターンB: Object Storage削減**
+```
+月額:
+  - Lightsail 16GB: $80（12,000円）
+  - Object Storage 50GB: $5（750円）
+  - Vercel Pro: $20（3,000円）
+  合計: $105/月（約15,750円）
+
+年額:
+  $1,260（約189,000円）
+
+適用対象: 小規模データベース、7-14日バックアップで十分
+```
+
+#### **パターンC: Object Storage削除（非推奨）**
+```
+月額:
+  - Lightsail 16GB: $80（12,000円）
+  - Vercel Pro: $20（3,000円）
+  合計: $100/月（約15,000円）
+
+年額:
+  $1,200（約180,000円）
+
+⚠️ リスク:
+  - データ損失時に復旧不可能
+  - 法人システムとして推奨しない
+  - 月1,500円の保険料として安価
+```
+
+### **Object Storage実装時確認フロー**
+
+```
+DB構築時に以下を確認：
+
+1. データベース容量見積もり
+   □ 予想データ量: ___GB
+   □ 月間増加量: ___GB
+   □ バックアップ保持期間: ___日
+
+2. バックアップ要件確認
+   □ 毎日バックアップ: 必要 / 不要
+   □ 保持期間: 7日 / 14日 / 30日
+   □ 災害復旧要件: あり / なし
+
+3. コスト判断
+   □ 100GB（$10/月）: データ量大 or 30日保持
+   □ 50GB（$5/月）: データ量小 and 7-14日保持
+   □ 削除（$0/月）: 保険料削減 vs リスク受容
+
+4. 最終決定
+   選択: パターンA / B / C
+   理由: _________________
+   承認者: _____________
+```
+
+### **外部委託との比較（参考）**
+
+| 項目 | 外部委託 | 自社運用（Lightsail） | 削減効果 |
+|------|---------|---------------------|---------|
+| **初期費用** | 1,400-2,500万円 | 0円 | 100%削減 |
+| **月額運用費** | 65-110万円 | 1.65万円 | **98.5%削減** |
+| **年間運用費** | 780-1,320万円 | 19.8万円 | **98.5%削減** |
+| **5年間総額** | 5,300-9,100万円 | 99万円 | **98.9%削減** |
+
+---
+
 ## 📊 実装統計サマリー
 
-### **Phase 1-6 実装完了状況**
+### **Phase 1-6.5 実装完了状況**
 
 | Phase | 内容 | ファイル数 | 総行数 | 状態 |
 |-------|------|-----------|--------|------|
@@ -2113,7 +2465,8 @@ node tests/production/production-connection-test.js
 | Phase 4-2 | 開発者監査ログ | 8 | 3,105 | ✅ 完了 |
 | Phase 5 | VoiceDrive統合テスト | - | - | ✅ 完了 |
 | Phase 6 | 認証・ログインシステム | 12 | 3,500 | ⏳ DB構築後 |
-| **合計** | | **50** | **15,437** | |
+| Phase 6.5 | MCPサーバー統合移行 | 3 | 800 | ⏳ DB構築後 |
+| **合計** | | **53** | **16,237** | |
 
 ### **DB構築後の実装タスク数**
 
@@ -2121,9 +2474,19 @@ node tests/production/production-connection-test.js
 |---------|---------|---------|
 | 認証システム実装 | 25 | 1週間 |
 | DB連携完了 | 18 | 1週間 |
+| MCPサーバー統合移行 | 8 | 3日間（Week 2と並行） |
 | VoiceDrive統合 | 12 | 1週間 |
 | 統合テスト・デプロイ | 20 | 1週間 |
-| **合計** | **75** | **4週間** |
+| **合計** | **83** | **4週間** |
+
+### **実装ロードマップ更新**
+
+```
+Week 1: 認証システム実装（Phase 6）
+Week 2: Phase 4/5 DB連携 + MCPサーバー統合移行（Phase 6.5並行）
+Week 3: VoiceDrive統合・230パターンテスト
+Week 4: 統合テスト・本番デプロイ
+```
 
 ---
 
@@ -2131,6 +2494,7 @@ node tests/production/production-connection-test.js
 **承認者**: プロジェクトマネージャー
 **次回更新**: 共通DB構築完了時
 **Phase 6追加日**: 2025年10月6日
+**Phase 6.5 + コスト更新日**: 2025年10月6日
 
 ---
 
