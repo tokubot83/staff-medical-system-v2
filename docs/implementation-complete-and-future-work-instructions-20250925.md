@@ -1717,6 +1717,290 @@ QR_SESSION_EXPIRY_SECONDS=120  # 2分
 
 ---
 
+## 🗄️ 共通DB構築計画（MySQL）
+
+### **DB構築の準備フロー**
+
+**目的**: 医療システムとVoiceDriveシステムの要件を統合し、最適な共通DBスキーマを設計
+
+#### **Step 1: 各システムのDB構築計画書作成**
+
+```
+医療システムチーム（3-5日）:
+├─ 1. 要件整理
+│  ├─ 必要テーブル一覧（20-30テーブル想定）
+│  ├─ 各テーブルのカラム定義
+│  ├─ データ型・制約条件
+│  └─ インデックス要件
+├─ 2. スキーマ設計
+│  ├─ ER図作成
+│  ├─ 正規化（第3正規形）
+│  ├─ 外部キー設計
+│  └─ パフォーマンス最適化
+└─ 3. マイグレーションファイル作成
+   ├─ 001_create_staff_master.sql
+   ├─ 002_create_access_control_tables.sql
+   ├─ 003_insert_initial_access_control_data.sql
+   ├─ 004_create_developer_audit_log.sql
+   ├─ 005_create_authentication_tables.sql
+   └─ 006_create_medical_specific_tables.sql
+
+VoiceDriveチーム（3-5日）:
+├─ 1. 要件整理
+│  ├─ 必要テーブル一覧（15-20テーブル想定）
+│  ├─ 提案・投票データ構造
+│  ├─ 通知・エスカレーション
+│  └─ LLMモデレーションログ
+├─ 2. スキーマ設計
+│  ├─ ER図作成
+│  ├─ 正規化
+│  ├─ 外部キー設計（staff_master連携）
+│  └─ インデックス設計
+└─ 3. マイグレーションファイル作成
+   ├─ 007_create_voicedrive_proposals.sql
+   ├─ 008_create_voicedrive_votes.sql
+   ├─ 009_create_voicedrive_escalations.sql
+   ├─ 010_create_voicedrive_notifications.sql
+   └─ 011_create_llm_moderation_log.sql
+```
+
+#### **Step 2: DB構築計画書のレビュー・統合（2-3日）**
+
+```
+レビュー観点:
+□ テーブル重複の確認
+  - 職員マスター（unified_staff_master）統合
+  - アカウント連携テーブルの調整
+  - 共通コード（施設、部署等）の統一
+
+□ 外部キー整合性の確認
+  - staff_master参照の一貫性
+  - カスケード削除ルールの統一
+  - ON UPDATE/DELETE制約の確認
+
+□ データ型統一
+  - 職員ID: VARCHAR(20) ← 両システム統一
+  - タイムスタンプ: TIMESTAMP vs DATETIME
+  - 文字コード: utf8mb4統一
+
+□ インデックス最適化
+  - 検索頻度の高いカラム
+  - 複合インデックスの検討
+  - パフォーマンステスト想定
+
+□ セキュリティ要件
+  - 個人情報カラムの特定
+  - アクセス権限設計
+  - 暗号化要否の判断
+```
+
+#### **Step 3: 共通DB統合スキーマ作成（2-3日）**
+
+```
+統合作業:
+1. 共通テーブルの確定
+   □ unified_staff_master（職員マスター）
+   □ facilities（施設マスター）
+   □ departments（部署マスター）
+   □ positions（役職マスター）
+   □ account_integration（アカウント連携）
+   □ sync_log（同期ログ）
+
+2. システム固有テーブルの分離
+   □ 医療システム: 面談、評価、健康診断等
+   □ VoiceDrive: 提案、投票、エスカレーション等
+
+3. マイグレーション実行順序の決定
+   □ 共通マスターテーブル（001-006）
+   □ VoiceDriveテーブル（007-011）
+   □ 統合テストデータ投入
+
+4. ドキュメント作成
+   □ 統合ER図（全体像）
+   □ テーブル定義書（50-60テーブル）
+   □ インデックス一覧
+   □ マイグレーション手順書
+```
+
+### **共通DBスキーマ構成（MySQL 8.0）**
+
+```sql
+-- データベース作成
+CREATE DATABASE IF NOT EXISTS staff_medical_integrated
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+
+USE staff_medical_integrated;
+
+-- ===== 共通マスターテーブル =====
+
+-- 1. 統合職員マスター（医療 + VoiceDrive共通）
+CREATE TABLE unified_staff_master (
+  staff_id VARCHAR(20) PRIMARY KEY COMMENT '職員ID（STAFF001形式）',
+  employee_number VARCHAR(10) UNIQUE NOT NULL COMMENT '職員番号',
+  full_name VARCHAR(100) NOT NULL COMMENT '氏名',
+  full_name_kana VARCHAR(100) COMMENT 'フリガナ',
+
+  -- 所属情報
+  facility_id VARCHAR(20) NOT NULL COMMENT '施設ID',
+  department_id VARCHAR(20) NOT NULL COMMENT '部署ID',
+  position_id VARCHAR(20) COMMENT '役職ID',
+  profession_category ENUM('nursing', 'rehabilitation', 'administration', 'medical', 'other') COMMENT '職種カテゴリ',
+
+  -- 権限レベル（25段階）
+  account_level DECIMAL(4,1) NOT NULL DEFAULT 1.0 COMMENT 'アカウントレベル（1.0-99.0）',
+  can_perform_leader_duty BOOLEAN DEFAULT FALSE COMMENT 'リーダー業務可否（看護職のみ）',
+
+  -- 連絡先
+  email VARCHAR(100) UNIQUE COMMENT 'メールアドレス',
+  phone VARCHAR(20) COMMENT '電話番号',
+
+  -- システム連携
+  medical_system_active BOOLEAN DEFAULT TRUE COMMENT '医療システム有効',
+  voicedrive_active BOOLEAN DEFAULT TRUE COMMENT 'VoiceDrive有効',
+
+  -- 在職状況
+  hire_date DATE NOT NULL COMMENT '入職日',
+  resignation_date DATE COMMENT '退職日',
+  employment_status ENUM('active', 'leave', 'resigned') DEFAULT 'active' COMMENT '在職状況',
+
+  -- 同期管理
+  sync_status ENUM('synced', 'pending', 'error') DEFAULT 'pending' COMMENT '同期ステータス',
+  last_synced_at TIMESTAMP NULL COMMENT '最終同期日時',
+
+  -- タイムスタンプ
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  -- インデックス
+  INDEX idx_facility (facility_id),
+  INDEX idx_department (department_id),
+  INDEX idx_account_level (account_level),
+  INDEX idx_employment_status (employment_status),
+  INDEX idx_sync_status (sync_status),
+
+  FOREIGN KEY (facility_id) REFERENCES facilities(facility_id),
+  FOREIGN KEY (department_id) REFERENCES departments(department_id),
+  FOREIGN KEY (position_id) REFERENCES positions(position_id)
+
+) ENGINE=InnoDB COMMENT='統合職員マスター：医療システムとVoiceDrive共通';
+
+-- 2. 施設マスター
+CREATE TABLE facilities (
+  facility_id VARCHAR(20) PRIMARY KEY,
+  facility_name VARCHAR(100) NOT NULL,
+  facility_type ENUM('hospital', 'clinic', 'care_facility', 'nursing_station') NOT NULL,
+  address VARCHAR(200),
+  phone VARCHAR(20),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB COMMENT='施設マスター';
+
+-- 3. 部署マスター
+CREATE TABLE departments (
+  department_id VARCHAR(20) PRIMARY KEY,
+  facility_id VARCHAR(20) NOT NULL,
+  department_name VARCHAR(100) NOT NULL,
+  department_type ENUM('medical', 'nursing', 'rehabilitation', 'administration', 'support') NOT NULL,
+  parent_department_id VARCHAR(20) COMMENT '上位部署ID',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (facility_id) REFERENCES facilities(facility_id),
+  FOREIGN KEY (parent_department_id) REFERENCES departments(department_id)
+) ENGINE=InnoDB COMMENT='部署マスター';
+
+-- 4. 役職マスター
+CREATE TABLE positions (
+  position_id VARCHAR(20) PRIMARY KEY,
+  position_name VARCHAR(100) NOT NULL,
+  base_account_level DECIMAL(4,1) NOT NULL COMMENT '基本アカウントレベル',
+  position_rank INT NOT NULL COMMENT '役職序列（1-18）',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB COMMENT='役職マスター';
+
+-- 5. アカウント連携テーブル
+CREATE TABLE account_integration (
+  integration_id INT AUTO_INCREMENT PRIMARY KEY,
+  staff_id VARCHAR(20) NOT NULL,
+
+  -- 医療システム
+  medical_username VARCHAR(50) COMMENT '医療システムユーザー名',
+  medical_last_login TIMESTAMP NULL,
+
+  -- VoiceDrive
+  voicedrive_username VARCHAR(50) COMMENT 'VoiceDriveユーザー名',
+  voicedrive_last_login TIMESTAMP NULL,
+
+  -- SSO
+  sso_token VARCHAR(500) COMMENT 'SSOトークン',
+  token_expires_at TIMESTAMP NULL,
+  auto_created BOOLEAN DEFAULT FALSE COMMENT '自動作成フラグ',
+
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  FOREIGN KEY (staff_id) REFERENCES unified_staff_master(staff_id) ON DELETE CASCADE,
+  INDEX idx_staff (staff_id),
+  INDEX idx_token_expiry (token_expires_at)
+
+) ENGINE=InnoDB COMMENT='アカウント連携：SSO・自動作成管理';
+
+-- 6. 同期ログテーブル
+CREATE TABLE sync_log (
+  log_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  sync_type ENUM('staff', 'interview', 'notification', 'proposal', 'vote', 'llm_moderation') NOT NULL,
+  source_system ENUM('medical', 'voicedrive', 'llm', 'mcp') NOT NULL,
+  target_system ENUM('medical', 'voicedrive', 'llm', 'mcp') NOT NULL,
+  record_count INT DEFAULT 0,
+  status ENUM('success', 'partial', 'failed') NOT NULL,
+  error_message TEXT,
+  execution_time_ms INT COMMENT '実行時間（ミリ秒）',
+  started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  completed_at TIMESTAMP NULL,
+
+  INDEX idx_sync_type (sync_type),
+  INDEX idx_status (status),
+  INDEX idx_started (started_at)
+
+) ENGINE=InnoDB COMMENT='同期ログ：システム間データ同期の記録';
+```
+
+### **DB構築準備チェックリスト**
+
+```
+□ Phase 1: 各システムDB構築計画書作成（3-5日）
+  □ 医療システムチーム：テーブル設計完了
+  □ VoiceDriveチーム：テーブル設計完了
+  □ 両チーム：ER図作成完了
+  □ 両チーム：マイグレーションファイル作成完了
+
+□ Phase 2: レビュー・統合（2-3日）
+  □ テーブル重複確認・統合
+  □ 外部キー整合性確認
+  □ データ型統一
+  □ インデックス最適化
+  □ セキュリティ要件確認
+
+□ Phase 3: 共通DB統合スキーマ確定（2-3日）
+  □ 共通テーブル確定（6テーブル）
+  □ システム固有テーブル分離
+  □ マイグレーション実行順序決定
+  □ 統合ER図作成
+  □ テーブル定義書作成
+  □ マイグレーション手順書作成
+
+□ Phase 4: 最終確認
+  □ 両チームレビュー完了
+  □ DBA（データベース管理者）承認
+  □ セキュリティレビュー完了
+  □ バックアップ計画確認
+
+推定所要期間: 7-11日間
+```
+
+---
+
 ## 📅 共通DB構築後の実装ロードマップ（4週間）
 
 ### **Week 1: 認証システム実装**
