@@ -1,7 +1,17 @@
 /**
  * アクセス制御設定
- * 18段階権限レベル + システム管理者(X)による画面・機能制御
+ * 25段階権限レベル（1.0-99.0）による画面・機能制御
+ *
+ * Phase 1実装：タブ権限はマスターデータベース駆動
+ * Phase 2実装予定：ページ・機能権限もマスターデータベース化
+ *
+ * @deprecated Phase 1完了後、この静的設定はマスターデータベースに移行予定
  */
+
+import {
+  canAccessPage as canAccessPageFromDB,
+  getAccessiblePaths as getAccessiblePathsFromDB,
+} from '@/services/accessControlService'
 
 export interface AccessControlConfig {
   path: string;
@@ -206,23 +216,75 @@ export const ACCESS_CONTROL_CONFIG: AccessControlConfig[] = [
 ];
 
 // 権限レベルによるアクセス可否判定
-export function canAccessPath(
+export async function canAccessPath(
   userLevel: number,
   path: string
-): boolean {
-  const config = ACCESS_CONTROL_CONFIG.find(c => c.path === path);
-  if (!config) return false;
-
+): Promise<boolean> {
   // システム管理者（レベル99）は全てアクセス可能
   if (userLevel === 99) return true;
+
+  // Phase 1: まずマスターデータベースをチェック（タブ・ページ権限）
+  try {
+    const hasAccess = await canAccessPageFromDB(userLevel, path)
+    if (hasAccess !== undefined) {
+      return hasAccess
+    }
+  } catch (error) {
+    console.warn('マスターデータベースからの権限チェックに失敗。フォールバック中:', error)
+  }
+
+  // フォールバック: 静的設定をチェック
+  const config = ACCESS_CONTROL_CONFIG.find(c => c.path === path);
+  if (!config) return false;
 
   return userLevel >= config.minLevel;
 }
 
-// ユーザーがアクセス可能なパスのリストを取得
-export function getAccessiblePaths(userLevel: number): string[] {
+// 同期版（後方互換性のため）
+export function canAccessPathSync(
+  userLevel: number,
+  path: string
+): boolean {
+  // システム管理者（レベル99）は全てアクセス可能
+  if (userLevel === 99) return true;
+
+  const config = ACCESS_CONTROL_CONFIG.find(c => c.path === path);
+  if (!config) return false;
+
+  return userLevel >= config.minLevel;
+}
+
+// ユーザーがアクセス可能なパスのリストを取得（非同期版）
+export async function getAccessiblePaths(userLevel: number): Promise<string[]> {
   if (userLevel === 99) {
     // システム管理者は全てアクセス可能
+    return ACCESS_CONTROL_CONFIG.map(c => c.path);
+  }
+
+  // Phase 1: マスターデータベースから取得を試みる
+  try {
+    const pathsFromDB = await getAccessiblePathsFromDB(userLevel)
+    if (pathsFromDB && pathsFromDB.length > 0) {
+      // マスターDBの結果と静的設定をマージ
+      const staticPaths = ACCESS_CONTROL_CONFIG
+        .filter(c => userLevel >= c.minLevel)
+        .map(c => c.path)
+
+      return Array.from(new Set([...pathsFromDB, ...staticPaths]))
+    }
+  } catch (error) {
+    console.warn('マスターデータベースからのパス取得に失敗。フォールバック中:', error)
+  }
+
+  // フォールバック: 静的設定のみ
+  return ACCESS_CONTROL_CONFIG
+    .filter(c => userLevel >= c.minLevel)
+    .map(c => c.path);
+}
+
+// 同期版（後方互換性のため）
+export function getAccessiblePathsSync(userLevel: number): string[] {
+  if (userLevel === 99) {
     return ACCESS_CONTROL_CONFIG.map(c => c.path);
   }
 
@@ -231,13 +293,19 @@ export function getAccessiblePaths(userLevel: number): string[] {
     .map(c => c.path);
 }
 
-// レベル別のメニュー表示制御
+// レベル別のメニュー表示制御（同期版）
 export function getVisibleMenuItems(userLevel: number): AccessControlConfig[] {
   if (userLevel === 99) {
     return ACCESS_CONTROL_CONFIG;
   }
 
   return ACCESS_CONTROL_CONFIG.filter(c => userLevel >= c.minLevel);
+}
+
+// レベル別のメニュー表示制御（非同期版）
+export async function getVisibleMenuItemsAsync(userLevel: number): Promise<AccessControlConfig[]> {
+  const paths = await getAccessiblePaths(userLevel)
+  return ACCESS_CONTROL_CONFIG.filter(c => paths.includes(c.path))
 }
 
 // 特別な権限チェック
