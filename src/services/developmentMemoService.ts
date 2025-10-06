@@ -2553,6 +2553,310 @@ GET /api/voicedrive/analytics?facility={facilityId}
         status: 'in_progress',
         tags: ['VoiceDrive連携', '分析ページ', 'レポートセンター', 'K-匿名性', '共通DB待ち']
       },
+
+      // ===== アクセス制御システム =====
+      {
+        id: 'access-control-001',
+        category: 'アクセス制御',
+        subcategory: 'マスターデータベース駆動',
+        title: 'アクセス制御システム Phase 1 完全実装',
+        content: `【実装完了】2025年10月6日
+タブ・ページ・機能の権限管理をマスターデータベース化。Level 99がブラウザUI/VSCodeから動的に権限設定可能。
+
+【実装内容】
+✅ データベーススキーマ（3テーブル、280行）
+  - access_control_master: 権限設定マスター
+  - access_control_change_log: 変更履歴（監査用）
+  - access_control_snapshot: ロールバック用
+
+✅ サービス層（2ファイル、1,250行）
+  - accessControlService.ts: DB/モック切替対応
+  - accessControlService.mock.ts: 17タブ完全定義
+
+✅ API層（3ファイル、330行）
+  - GET/PUT /api/admin/access-control
+  - API Key認証（VSCode対応）
+
+✅ UI層（2ファイル、950行）
+  - /admin/access-control: 管理画面
+  - カテゴリフィルター、検索、変更履歴
+
+✅ CLI Tool（500行）
+  - scripts/access-control-cli.js
+  - VSCode/ターミナルから権限管理可能
+
+【権限マトリクス（17タブ）】
+Level 14（人事部門員：7-8名）: 11タブ
+  - 基本情報、経歴、資格、勤務状況、面談、採用、研修等
+
+Level 15（人事部門長：4名）: 17タブ
+  - Level 14の全タブ + 評価関連6タブ
+
+Level 97/98（健診担当・産業医）: 3タブ
+  - ウェルビーイング、健康診断（要配慮個人情報）
+
+Level 99（システム管理者）: 全18タブ
+  - フルアクセス + 権限設定変更権限
+
+【環境変数】
+USE_MOCK_ACCESS_CONTROL=true  # モックモード（DB構築前）
+USE_MOCK_ACCESS_CONTROL=false # 本番モード（DB構築後）
+
+【共通DB構築後の作業】
+1. マイグレーション実行
+   mysql < src/lib/database/migrations/002_create_access_control_tables.sql
+   mysql < src/lib/database/migrations/003_insert_initial_access_control_data.sql
+
+2. 環境変数変更
+   USE_MOCK_ACCESS_CONTROL=false
+
+3. 動作確認
+   - /admin/access-control にアクセス
+   - タブ権限の編集・保存
+   - 変更履歴の確認
+
+【Phase 2計画】
+- ページ・機能レベルの権限（タブ以外）
+- ロールベースアクセス制御（RBAC）
+- 動的スコープ（self/department/facility/corporation）`,
+        source: { type: 'file', path: '/src/services/accessControlService.ts' },
+        date: '2025-10-06',
+        priority: 'critical',
+        status: 'completed',
+        tags: ['アクセス制御', 'マスターデータ', 'Level 99', '権限管理', 'DB移行準備']
+      },
+
+      {
+        id: 'access-control-002',
+        category: 'アクセス制御',
+        subcategory: 'セキュリティ設計',
+        title: 'レベル別アクセス権限の詳細仕様',
+        content: `【Level 14-18の人数分布】
+Level 14（人事部門員）: 7-8名
+Level 15（人事各部門長）: 4名
+Level 16（戦略企画部門員）: 1名
+Level 17（戦略企画部門長）: 1名
+Level 18（理事長・法人事務局長）: 若干名
+
+【健康情報の特別権限】
+Level 97（健診担当者）: ストレスチェック実施者
+Level 98（産業医）: 健康管理全般
+→ 個人情報保護法・労働安全衛生法により、健診データは97/98のみアクセス可
+
+【システム管理者】
+Level 99（システム管理者）:
+  - Phase 1（現在）: 運用権 + 開発権
+  - Phase 2（将来）: 運用権のみ
+
+Level 100（開発者、Phase 2専用）:
+  - 開発権のみ（運用権なし）
+  - Level 99による承認が必要
+
+【設計根拠】
+500人規模組織で Level 14 が7-8名いる場合、全員に全タブアクセスを許可するのは
+セキュリティリスクが高い。Level 15（部門長）に評価関連を限定し、段階的な権限設計を採用。
+
+【推奨設定からの逸脱検知】
+- 各タブにrecommendedMinLevelを定義
+- Level 99が推奨より低く設定した場合、警告表示
+- 変更理由10文字以上必須（コンプライアンス対応）`,
+        source: { type: 'document', path: '/docs/ACCESS_CONTROL_IMPLEMENTATION_SUMMARY.md' },
+        date: '2025-10-06',
+        priority: 'important',
+        status: 'completed',
+        tags: ['セキュリティ', 'コンプライアンス', '個人情報保護', '労働安全衛生法']
+      },
+
+      // ===== Level 99 開発者権限強化 =====
+      {
+        id: 'developer-audit-001',
+        category: 'セキュリティ',
+        subcategory: '開発者監査ログ',
+        title: 'Level 99 開発者権限強化と完全な監査ログ実装',
+        content: `【実装完了】2025年10月6日
+「ログが残るように設計する」という条件で、Level 99に開発権を付与。
+将来的なLevel 100（開発者専用）への移行パスも準備完了。
+
+【実装内容】
+✅ データベース層（206行）
+  - developer_audit_log テーブル
+  - 14種類の操作タイプ記録
+  - リスク評価（low/medium/high/critical）
+  - Phase 2承認ワークフロー準備
+
+✅ サービス層（569行）
+  - developerAuditLog.ts
+  - Git操作専用関数（logGitCommit, logGitPush）
+  - DBスキーマ変更記録
+  - 権限変更との連携
+
+✅ API層（241行）
+  - POST /api/admin/developer-audit（操作記録）
+  - GET /api/admin/developer-audit（ログ取得）
+  - API Key認証（VSCode/CLI対応）
+
+✅ Git Hooks（474行）
+  - post-commit.js: コミット時自動記録
+  - pre-push.js: プッシュ時自動記録 + mainブランチ5秒警告
+  - install.js: フックインストールスクリプト
+
+✅ UI層（376行）
+  - /admin/developer-audit ページ
+  - 統計サマリー、フィルター、Phase状態表示
+
+✅ 設定ファイル（612行）
+  - unified-account-level-definition.json 更新
+  - Level 99: developerRights + operationalRights
+  - Level 100: 開発権のみ（Phase 2用、予約状態）
+
+【Phase 1（現在）】
+Level 99 = スーパーユーザー（運用権 + 開発権）
+- 現段階で外部開発者なし
+- 完全な監査ログ記録が条件
+- Git操作、DB変更、権限変更を全て記録
+
+【Phase 2（将来）】
+Level 100（開発権のみ） + Level 99（運用権のみ）
+- トリガー: 新しい開発者が参画した時
+- Level 100の操作にはLevel 99の承認が必要
+- 役割分離によるセキュリティ強化
+
+【記録される操作（14種類）】
+1. code_deployment - コードデプロイメント
+2. database_schema_change - DBスキーマ変更（リスク: High）
+3. git_commit - Gitコミット（リスク: Low）
+4. git_push - Gitプッシュ（mainならHigh）
+5. git_merge - Gitマージ
+6. package_update - パッケージ更新
+7. config_change - 設定変更
+8. migration_execution - マイグレーション実行（High）
+9. api_key_generation - APIキー生成
+10. permission_change - 権限変更（High）
+11. system_restart - システム再起動
+12. backup_creation - バックアップ作成
+13. rollback - ロールバック
+14. other - その他
+
+【監査ログ記録内容】
+- 操作者（ID、名前、レベル、メール）
+- 操作内容（タイプ、概要、理由10文字以上必須）
+- Git情報（コミットハッシュ、ブランチ、変更ファイル、行数）
+- 影響範囲（ファイル、テーブル、リソース）
+- リスク評価（自動判定）
+- 実行結果（成功/失敗/部分成功/ロールバック）
+- 環境情報（IPアドレス、ユーザーエージェント）
+
+【Git Hooks使用方法】
+1. インストール
+   node scripts/git-hooks/install.js
+
+2. 環境変数設定
+   export SYSTEM_ADMIN_API_KEY="your-api-key"
+   export GIT_OPERATOR_ID="admin_001"
+
+3. 通常通りGit操作
+   git commit -m "新機能実装"
+   → ✅ コミット情報を監査ログに記録しました
+
+   git push origin main
+   → ⚠️ WARNING: mainブランチへのプッシュです（5秒待機）
+   → ✅ プッシュ情報を監査ログに記録しました
+
+【Phase 2移行手順】
+1. Level 100アカウント作成
+2. Level 99からdeveloperRights削除
+3. 承認ワークフロー有効化
+   UPDATE developer_audit_log
+   SET requires_approval = TRUE
+   WHERE operator_level = 100.0
+
+【共通DB構築後の作業】
+mysql < src/lib/database/migrations/004_create_developer_audit_log.sql`,
+        source: { type: 'file', path: '/src/lib/audit/developerAuditLog.ts' },
+        date: '2025-10-06',
+        priority: 'critical',
+        status: 'completed',
+        tags: ['Level 99', 'Level 100', '開発者監査', 'Git Hooks', 'セキュリティ', 'コンプライアンス']
+      },
+
+      {
+        id: 'developer-audit-002',
+        category: 'セキュリティ',
+        subcategory: 'Phase移行計画',
+        title: 'Level 99/100 Phase 1→Phase 2 移行計画',
+        content: `【Phase 1（現在の運用体制）】
+✅ Level 99 = スーパーユーザー
+  - 運用権限: アクセス制御管理、ユーザー管理、システム監視等
+  - 開発権限: コードデプロイ、DBスキーマ変更、Git操作、設定変更等
+  - 条件: 完全な監査ログ記録（developer_audit_log）
+
+【適用理由】
+- 現段階で外部開発者なし
+- 内部に開発スキルを持つ職員なし
+- システム運用者が開発も兼務する体制
+
+【Phase 2（将来の役割分離体制）】
+🔜 Level 100（開発者専用）
+  - 開発権限のみ（運用権限なし）
+  - Level 99による承認が必要
+  - 新しい開発者が参画した時に有効化
+
+🔜 Level 99（運用者）
+  - 運用権限のみ（開発権限を削除）
+  - Level 100の操作を承認
+  - アクセス制御、ユーザー管理に専念
+
+【移行トリガー】
+「新たな開発者が担当することになった時」
+
+【移行手順（詳細）】
+1. Level 100アカウント作成
+   INSERT INTO users (user_id, account_level, ...)
+   VALUES ('developer_001', 100.0, ...);
+
+2. unified-account-level-definition.json 更新
+   {
+     "level": 99.0,
+     "developerRights": false,  // ← 開発権を削除
+     "operationalRights": true
+   }
+
+3. developer_audit_log の承認ワークフロー有効化
+   UPDATE developer_audit_log
+   SET requires_approval = TRUE
+   WHERE operator_level = 100.0;
+
+4. Git Hooks 環境変数更新
+   export GIT_OPERATOR_LEVEL=100
+
+5. アクセス制御更新
+   - /admin/developer-audit → Level 99 + Level 100
+   - /admin/access-control → Level 99のみ
+   - 開発API → Level 100のみ
+
+【セキュリティ強化ポイント】
+✓ 役割分離（Separation of Duties）
+✓ 4-eyes原則（Level 100の操作にLevel 99承認必要）
+✓ 完全な監査証跡（削除不可）
+✓ リスクレベル自動評価
+✓ 推奨設定からの逸脱検知
+
+【移行所要時間】
+- システム設定変更: 1-2時間
+- テスト・検証: 2-3時間
+- ドキュメント更新: 1時間
+合計: 4-6時間（半日～1日）
+
+【注意事項】
+⚠️ Phase 1→Phase 2移行は一方通行（元に戻すのは困難）
+⚠️ 移行前に完全なバックアップを取得
+⚠️ Level 100アカウントのセキュリティ厳格化（2要素認証推奨）`,
+        source: { type: 'document', path: '/mcp-shared/config/unified-account-level-definition.json' },
+        date: '2025-10-06',
+        priority: 'important',
+        status: 'pending',
+        tags: ['Phase移行', 'セキュリティ強化', '役割分離', '将来計画']
+      },
     ];
   }
 
