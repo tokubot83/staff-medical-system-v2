@@ -19,6 +19,8 @@ import {
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Switch } from '@/components/ui/switch';
+import { DetailedHelpPanel, HelpIconButton } from '@/components/admin/DetailedHelpPanel';
+import { getHelpData } from '@/data/developerSettingsHelp';
 
 export default function MCPServerManagementPage() {
   const [serverUrl, setServerUrl] = useState('http://localhost:3001');
@@ -26,6 +28,7 @@ export default function MCPServerManagementPage() {
   const [showToken, setShowToken] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState<any>(null);
+  const [activeHelp, setActiveHelp] = useState<string | null>(null);
 
   // MCPツール一覧（実装済み）
   const mcpTools = [
@@ -274,7 +277,10 @@ export default function MCPServerManagementPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <label className="text-sm font-medium">サーバーURL</label>
+                  <label className="text-sm font-medium flex items-center gap-2">
+                    サーバーURL
+                    <HelpIconButton onClick={() => setActiveHelp('mcpServerUrl')} />
+                  </label>
                   <Input
                     type="url"
                     value={serverUrl}
@@ -288,7 +294,10 @@ export default function MCPServerManagementPage() {
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium">認証トークン</label>
+                  <label className="text-sm font-medium flex items-center gap-2">
+                    認証トークン
+                    <HelpIconButton onClick={() => setActiveHelp('mcpAuthToken')} />
+                  </label>
                   <div className="relative mt-1">
                     <Input
                       type={showToken ? 'text' : 'password'}
@@ -312,6 +321,17 @@ export default function MCPServerManagementPage() {
                     トークンは暗号化されて保存されます
                   </p>
                 </div>
+
+                {/* 詳細ヘルプパネル */}
+                {activeHelp && (
+                  <div className="mt-4">
+                    <DetailedHelpPanel
+                      title={activeHelp === 'mcpServerUrl' ? 'MCPサーバーURL' : '認証トークン'}
+                      helpData={getHelpData(activeHelp)!}
+                      onClose={() => setActiveHelp(null)}
+                    />
+                  </div>
+                )}
 
                 <div className="flex gap-2">
                   <Button
