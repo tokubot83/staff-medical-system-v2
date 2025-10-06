@@ -1100,9 +1100,1037 @@ npm run test:integration:voicedrive
 
 ---
 
+## 🔐 Phase 6: 認証・ログインシステム実装計画（共通DB構築後）
+
+### **実装概要**
+
+**目的**: 共有PC環境に対応した安全で使いやすい認証システムの構築
+
+**実装タイミング**: 共通DB構築完了後、即座に実装開始（予定期間：1週間）
+
+### **認証方式の選定（段階的実装）**
+
+#### **Phase 6-1（即座実装）: パスワード認証**
+```
+実装内容：
+✅ 職員ID + パスワード
+✅ 自動ロック機能（5分操作なし）
+✅ ログイン履歴記録
+✅ 失敗回数制限（5回でロックアウト）
+
+メリット：
+- 追加ハードウェア不要
+- 実装が確実
+- 低コスト
+
+実装期間：3-4日
+```
+
+#### **Phase 6-2（運用後追加）: QRコード認証**
+```
+実装内容：
+✅ スマホアプリでQRコードスキャン
+✅ WebSocket通信
+✅ パスワード認証と併用可能
+
+メリット：
+- パスワード入力不要
+- なりすまし防止
+- ログイン履歴追跡容易
+
+実装期間：3-4日
+追加条件：スマホアプリ開発
+```
+
+#### **Phase 6-3（将来的）: ICカード/NFC認証**
+```
+実装内容：
+✅ カードリーダーでタッチログイン
+✅ 物理的な強制ログアウト
+
+メリット：
+- 最速ログイン（1秒）
+- 医療機関で実績あり
+
+実装期間：2-3日
+追加コスト：カードリーダー 5,000-15,000円/台
+```
+
+### **データベース設計**
+
+#### **テーブル構成（4テーブル）**
+
+**1. usersテーブル（ユーザー認証情報）**
+```sql
+CREATE TABLE IF NOT EXISTS users (
+  user_id VARCHAR(50) PRIMARY KEY,
+  password_hash VARCHAR(255) NOT NULL COMMENT 'bcryptハッシュ',
+  password_salt VARCHAR(255) NOT NULL,
+  password_changed_at TIMESTAMP NULL,
+  password_expires_at TIMESTAMP NULL COMMENT '90日後',
+
+  -- 2FA設定（Phase 6-4用）
+  two_factor_enabled BOOLEAN DEFAULT FALSE,
+  two_factor_secret VARCHAR(255) NULL,
+
+  -- アカウント状態
+  is_active BOOLEAN DEFAULT TRUE,
+  is_locked BOOLEAN DEFAULT FALSE,
+  failed_login_attempts INT DEFAULT 0,
+  locked_until TIMESTAMP NULL,
+
+  -- 最終アクセス
+  last_login_at TIMESTAMP NULL,
+  last_login_ip VARCHAR(45) NULL,
+
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  FOREIGN KEY (user_id) REFERENCES staff_master(staff_id) ON DELETE CASCADE,
+
+  INDEX idx_is_active (is_active),
+  INDEX idx_last_login (last_login_at)
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+COMMENT='ユーザー認証情報：パスワード、アカウント状態管理';
+```
+
+**2. sessionsテーブル（アクティブセッション管理）**
+```sql
+CREATE TABLE IF NOT EXISTS sessions (
+  session_id VARCHAR(255) PRIMARY KEY,
+  user_id VARCHAR(50) NOT NULL,
+
+  -- セッション情報
+  ip_address VARCHAR(45),
+  user_agent TEXT,
+  device_type ENUM('pc', 'tablet', 'mobile') DEFAULT 'pc',
+
+  -- セッション状態
+  is_active BOOLEAN DEFAULT TRUE,
+  expires_at TIMESTAMP NOT NULL COMMENT '8時間後（勤務時間想定）',
+  last_activity_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  -- 認証方式
+  auth_method ENUM('password', 'qr_code', 'ic_card', 'biometric') DEFAULT 'password',
+  qr_session_id VARCHAR(255) NULL COMMENT 'QRコード認証の場合',
+
+  -- 共有PC対応
+  remember_me BOOLEAN DEFAULT FALSE COMMENT 'ログイン状態保持フラグ',
+
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+  FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+
+  INDEX idx_user_id (user_id),
+  INDEX idx_expires_at (expires_at),
+  INDEX idx_is_active (is_active),
+  INDEX idx_qr_session (qr_session_id)
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+COMMENT='アクティブセッション管理：共有PC環境対応';
+```
+
+**3. login_historyテーブル（ログイン履歴）**
+```sql
+CREATE TABLE IF NOT EXISTS login_history (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id VARCHAR(50) NOT NULL,
+
+  -- ログイン情報
+  login_status ENUM('success', 'failed', 'locked_out') NOT NULL,
+  failure_reason VARCHAR(255) NULL COMMENT 'パスワード誤り、アカウント無効等',
+  auth_method ENUM('password', 'qr_code', 'ic_card', 'biometric') DEFAULT 'password',
+
+  -- アクセス情報
+  ip_address VARCHAR(45),
+  user_agent TEXT,
+  device_type ENUM('pc', 'tablet', 'mobile'),
+  location VARCHAR(100) NULL COMMENT '施設名等',
+
+  -- セキュリティ監査用
+  account_level DECIMAL(4,1) COMMENT 'ログイン時のアカウントレベル',
+  session_duration_minutes INT NULL COMMENT 'セッション継続時間',
+
+  attempted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+  FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+
+  INDEX idx_user_id (user_id),
+  INDEX idx_attempted_at (attempted_at),
+  INDEX idx_login_status (login_status),
+  INDEX idx_account_level (account_level)
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+COMMENT='ログイン履歴：監査・セキュリティ分析用';
+```
+
+**4. qr_auth_sessionsテーブル（QRコード認証一時セッション）**
+```sql
+CREATE TABLE IF NOT EXISTS qr_auth_sessions (
+  qr_session_id VARCHAR(255) PRIMARY KEY,
+  user_id VARCHAR(50) NULL COMMENT '認証完了後に設定',
+
+  -- QRコード情報
+  status ENUM('pending', 'authenticated', 'expired', 'cancelled') DEFAULT 'pending',
+  challenge_code VARCHAR(255) NOT NULL COMMENT 'ランダムチャレンジコード',
+
+  -- PC情報
+  pc_ip_address VARCHAR(45),
+  pc_user_agent TEXT,
+
+  -- スマホ情報
+  mobile_ip_address VARCHAR(45) NULL,
+  mobile_user_agent TEXT NULL,
+
+  -- タイムスタンプ
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  expires_at TIMESTAMP NOT NULL COMMENT '2分後',
+  authenticated_at TIMESTAMP NULL,
+
+  INDEX idx_expires_at (expires_at),
+  INDEX idx_status (status),
+  INDEX idx_user_id (user_id)
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+COMMENT='QRコード認証一時セッション：有効期限2分';
+```
+
+### **技術選定：NextAuth.js + カスタマイズ**
+
+**選定理由：**
+```
+✅ 業界標準（Next.js公式推奨）
+✅ セキュリティベストプラクティス実装済み
+✅ セッション管理が簡単
+✅ JWT/Database両対応
+✅ カスタマイズ容易（医療情報対応）
+✅ ドキュメント充実
+✅ アクセス制御システムと統合容易
+
+実装期間短縮：
+- 独自実装: 2週間
+- NextAuth.js: 1週間
+```
+
+**インストール：**
+```bash
+npm install next-auth@latest bcryptjs
+npm install --save-dev @types/bcryptjs
+```
+
+**設定ファイル：**
+```typescript
+// src/app/api/auth/[...nextauth]/route.ts
+import NextAuth from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import bcrypt from 'bcryptjs';
+import { db } from '@/lib/database';
+
+export const authOptions = {
+  providers: [
+    CredentialsProvider({
+      name: 'Credentials',
+      credentials: {
+        userId: { label: "職員ID", type: "text" },
+        password: { label: "パスワード", type: "password" }
+      },
+      async authorize(credentials) {
+        if (!credentials?.userId || !credentials?.password) {
+          return null;
+        }
+
+        // ユーザー取得
+        const user = await db.query(
+          'SELECT * FROM users WHERE user_id = ?',
+          [credentials.userId]
+        );
+
+        if (!user || !user.is_active || user.is_locked) {
+          return null;
+        }
+
+        // パスワード検証
+        const isValid = await bcrypt.compare(
+          credentials.password,
+          user.password_hash
+        );
+
+        if (!isValid) {
+          // 失敗回数カウント
+          await db.query(
+            'UPDATE users SET failed_login_attempts = failed_login_attempts + 1 WHERE user_id = ?',
+            [credentials.userId]
+          );
+          return null;
+        }
+
+        // staff_masterからアカウントレベル取得
+        const staff = await db.query(
+          'SELECT account_level, name FROM staff_master WHERE staff_id = ?',
+          [credentials.userId]
+        );
+
+        return {
+          id: user.user_id,
+          name: staff.name,
+          accountLevel: staff.account_level
+        };
+      }
+    })
+  ],
+  session: {
+    strategy: 'database',
+    maxAge: 8 * 60 * 60, // 8時間
+  },
+  callbacks: {
+    async session({ session, user }) {
+      session.user.accountLevel = user.accountLevel;
+      return session;
+    }
+  }
+};
+
+const handler = NextAuth(authOptions);
+export { handler as GET, handler as POST };
+```
+
+### **UI実装**
+
+#### **ログイン画面（共有PC対応）**
+```typescript
+// src/app/login/page.tsx
+'use client';
+
+import { useState } from 'react';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+
+export default function LoginPage() {
+  const [loginMethod, setLoginMethod] = useState<'password' | 'qr'>('password');
+  const [userId, setUserId] = useState('');
+  const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
+  const [error, setError] = useState('');
+  const router = useRouter();
+
+  const handlePasswordLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+
+    const result = await signIn('credentials', {
+      userId,
+      password,
+      redirect: false,
+    });
+
+    if (result?.error) {
+      setError('職員IDまたはパスワードが正しくありません');
+    } else {
+      router.push('/dashboard');
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
+      <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+        {/* ヘッダー */}
+        <div className="text-center mb-6">
+          <h1 className="text-2xl font-bold text-gray-900">
+            医療職員管理システム
+          </h1>
+          <p className="text-sm text-gray-600 mt-1">
+            Staff Medical Management System
+          </p>
+        </div>
+
+        {/* タブ切り替え */}
+        <div className="flex gap-2 mb-6">
+          <button
+            onClick={() => setLoginMethod('password')}
+            className={`flex-1 py-2 rounded transition-colors ${
+              loginMethod === 'password'
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            パスワード
+          </button>
+          <button
+            onClick={() => setLoginMethod('qr')}
+            className={`flex-1 py-2 rounded transition-colors ${
+              loginMethod === 'qr'
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            QRコード
+          </button>
+        </div>
+
+        {/* パスワードログイン */}
+        {loginMethod === 'password' && (
+          <form onSubmit={handlePasswordLogin} className="space-y-4">
+            {error && (
+              <div className="p-3 bg-red-50 border border-red-200 rounded text-red-800 text-sm">
+                {error}
+              </div>
+            )}
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                職員ID
+              </label>
+              <input
+                type="text"
+                value={userId}
+                onChange={(e) => setUserId(e.target.value)}
+                placeholder="例: STAFF001"
+                className="w-full p-3 border rounded focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                パスワード
+              </label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full p-3 border rounded focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="remember"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="mr-2"
+              />
+              <label htmlFor="remember" className="text-sm text-gray-700">
+                ログイン状態を保持
+              </label>
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white py-3 rounded hover:bg-blue-700 transition-colors"
+            >
+              ログイン
+            </button>
+
+            <div className="text-center">
+              <a href="/forgot-password" className="text-sm text-blue-600 hover:underline">
+                パスワードを忘れた方
+              </a>
+            </div>
+          </form>
+        )}
+
+        {/* QRコードログイン */}
+        {loginMethod === 'qr' && (
+          <div className="text-center">
+            <div className="mb-4">
+              <div className="w-64 h-64 bg-gray-100 mx-auto flex items-center justify-center rounded">
+                {/* QRコードコンポーネント */}
+                <p className="text-gray-500">QRコード表示エリア</p>
+              </div>
+            </div>
+            <p className="text-sm text-gray-600 mb-2">
+              スマホアプリでこのQRコードをスキャンしてください
+            </p>
+            <p className="text-xs text-gray-500">
+              有効期限: 2分間
+            </p>
+          </div>
+        )}
+
+        {/* 共有PC警告 */}
+        <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded">
+          <div className="flex items-start">
+            <svg className="h-5 w-5 text-yellow-600 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+            <div>
+              <p className="text-sm font-medium text-yellow-800">
+                共有PCをご利用の方へ
+              </p>
+              <p className="text-xs text-yellow-700 mt-1">
+                「ログイン状態を保持」のチェックを外してください。<br />
+                離席時は必ずログアウトしてください。
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+### **セキュリティ機能**
+
+#### **1. パスワードポリシー**
+```typescript
+パスワード要件：
+✅ 最小8文字
+✅ 英数字混在
+✅ 有効期限90日
+✅ 過去3回分の再利用禁止
+
+初期パスワード：
+- "Staff" + 職員ID下4桁 + "!"
+- 例: STAFF001 → Staff001!
+- 初回ログイン時に変更強制
+```
+
+#### **2. ログイン制限**
+```typescript
+セキュリティ制限：
+✅ 失敗5回でアカウントロック（30分間）
+✅ 同一IPから10回失敗でIP制限（1時間）
+✅ セッションタイムアウト（8時間）
+✅ 自動ログアウト（5分操作なし）
+
+監査記録：
+✅ 全ログイン試行を記録
+✅ IPアドレス記録
+✅ デバイス情報記録
+✅ ログイン時刻記録
+```
+
+#### **3. アクセス制御統合**
+```typescript
+// ミドルウェアで権限チェック
+// src/middleware.ts
+import { getServerSession } from 'next-auth';
+import { accessControlService } from '@/lib/services/accessControlService';
+
+export async function middleware(req: NextRequest) {
+  const session = await getServerSession();
+
+  if (!session) {
+    return NextResponse.redirect('/login');
+  }
+
+  // アクセス制御チェック
+  const path = req.nextUrl.pathname;
+  const hasAccess = await accessControlService.checkAccess(
+    session.user.accountLevel,
+    path
+  );
+
+  if (!hasAccess) {
+    return NextResponse.redirect('/403'); // アクセス拒否
+  }
+
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: ['/admin/:path*', '/hr/:path*', '/health/:path*']
+};
+```
+
+### **実装タスク（1週間）**
+
+#### **Day 1: データベース・認証基盤**
+```
+□ マイグレーション実行（005_create_authentication_tables.sql）
+□ NextAuth.js設定
+□ bcrypt導入
+□ 環境変数設定（NEXTAUTH_SECRET等）
+```
+
+#### **Day 2-3: パスワード認証実装**
+```
+□ ログイン画面UI実装
+□ パスワード検証ロジック
+□ セッション管理
+□ ログイン履歴記録
+□ ログアウト機能
+```
+
+#### **Day 4: アクセス制御統合**
+```
+□ middleware.ts実装
+□ アクセス制御チェック統合
+□ Level別タブ表示/非表示
+□ 403/401エラーページ
+```
+
+#### **Day 5: セキュリティ機能**
+```
+□ ログイン失敗制限
+□ アカウントロック機能
+□ パスワードポリシー実装
+□ 自動ログアウト（5分）
+```
+
+#### **Day 6: QRコード認証（基本）**
+```
+□ QRコード生成API
+□ qr_auth_sessionsテーブル活用
+□ WebSocket通信（ポーリングでも可）
+□ スマホアプリ仕様書作成
+```
+
+#### **Day 7: テスト・デプロイ**
+```
+□ 単体テスト
+□ 統合テスト
+□ セキュリティテスト
+□ ドキュメント更新
+□ デプロイ準備
+```
+
+### **環境変数設定**
+
+```bash
+# .env.local
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your-secret-key-here  # openssl rand -base64 32
+
+# セッション設定
+SESSION_MAX_AGE=28800  # 8時間（秒）
+SESSION_IDLE_TIMEOUT=300  # 5分（秒）
+
+# パスワードポリシー
+PASSWORD_MIN_LENGTH=8
+PASSWORD_EXPIRY_DAYS=90
+PASSWORD_HISTORY_COUNT=3
+
+# ログイン制限
+MAX_LOGIN_ATTEMPTS=5
+LOCKOUT_DURATION_MINUTES=30
+IP_LOCKOUT_THRESHOLD=10
+IP_LOCKOUT_DURATION_MINUTES=60
+
+# QRコード設定
+QR_SESSION_EXPIRY_SECONDS=120  # 2分
+```
+
+---
+
+## 📅 共通DB構築後の実装ロードマップ（4週間）
+
+### **Week 1: 認証システム実装**
+
+| 日付 | タスク | 担当 | 優先度 | 完了条件 |
+|------|--------|------|--------|---------|
+| Day 1 | マイグレーション実行（001-006） | DBエンジニア | 🔴 最高 | 全テーブル作成完了 |
+| Day 1 | NextAuth.js設定 | バックエンド | 🔴 最高 | ログイン/ログアウト動作 |
+| Day 2-3 | パスワード認証実装 | フルスタック | 🔴 最高 | ログイン画面完成 |
+| Day 4 | アクセス制御統合 | バックエンド | 🔴 最高 | Level別タブ表示 |
+| Day 5 | セキュリティ機能 | バックエンド | 🟡 高 | ロックアウト動作 |
+| Day 6 | QRコード認証（基本） | フルスタック | 🟢 中 | QR生成・検証 |
+| Day 7 | テスト・バグ修正 | 全員 | 🔴 最高 | 全機能動作確認 |
+
+**Week 1完了基準：**
+- ✅ パスワードログイン完全動作
+- ✅ アクセス制御システムとの統合完了
+- ✅ ログイン履歴記録
+- ✅ セキュリティ機能動作確認
+
+---
+
+### **Week 2: Phase 4/5のDB連携**
+
+| 日付 | タスク | 担当 | 優先度 | 完了条件 |
+|------|--------|------|--------|---------|
+| Day 8 | アクセス制御DBモード切替 | バックエンド | 🔴 最高 | モックからDB取得 |
+| Day 9 | 開発者監査ログDB連携 | バックエンド | 🔴 最高 | ログDB保存確認 |
+| Day 10 | Git Hooks動作確認 | DevOps | 🟡 高 | commit/push記録 |
+| Day 11 | VoiceDrive API DB連携 | バックエンド | 🔴 最高 | 権限計算結果保存 |
+| Day 12 | Webhook DB保存実装 | バックエンド | 🔴 最高 | イベントデータ永続化 |
+| Day 13 | 統合テスト実行 | QA | 🔴 最高 | 全Phase動作確認 |
+| Day 14 | パフォーマンステスト | DevOps | 🟡 高 | レスポンス時間計測 |
+
+**Week 2完了基準：**
+- ✅ USE_MOCK_ACCESS_CONTROL=false で動作
+- ✅ 全ログがDBに記録される
+- ✅ VoiceDrive API完全動作
+- ✅ パフォーマンス目標達成
+
+---
+
+### **Week 3: VoiceDrive統合・医療システム側更新**
+
+| 日付 | タスク | 担当 | 優先度 | 完了条件 |
+|------|--------|------|--------|---------|
+| Day 15-16 | 25段階システム実装 | フルスタック | 🔴 最高 | Level 1.5-4.5対応 |
+| Day 17-18 | 職種別リーダーロジック修正 | バックエンド | 🔴 最高 | professionCategory対応 |
+| Day 19 | 統合管理JSON v1.0.1適用 | DevOps | 🟡 高 | バージョン確認 |
+| Day 20-21 | 230パターンテスト実行 | QA | 🔴 最高 | 全230パターン合格 |
+
+**Week 3完了基準：**
+- ✅ 25段階システム完全動作
+- ✅ 看護職のみリーダー0.5加算
+- ✅ 230パターンテスト全合格
+- ✅ VoiceDriveチームと結果共有
+
+---
+
+### **Week 4: 統合テスト・本番準備**
+
+| 日付 | タスク | 担当 | 優先度 | 完了条件 |
+|------|--------|------|--------|---------|
+| Day 22 | エンドツーエンドテスト | QA | 🔴 最高 | 全フロー動作確認 |
+| Day 23 | セキュリティ監査 | セキュリティ | 🔴 最高 | 脆弱性ゼロ |
+| Day 24 | ドキュメント整備 | 全員 | 🟡 高 | ユーザーマニュアル |
+| Day 25 | 本番環境デプロイ準備 | DevOps | 🔴 最高 | デプロイ手順書 |
+| Day 26 | ステージング環境テスト | QA | 🔴 最高 | 本番同等環境確認 |
+| Day 27 | バックアップ・ロールバック確認 | DevOps | 🔴 最高 | リストア成功 |
+| Day 28 | 本番デプロイ | DevOps | 🔴 最高 | ダウンタイムゼロ |
+
+**Week 4完了基準：**
+- ✅ 全機能統合テスト合格
+- ✅ セキュリティ監査クリア
+- ✅ 本番環境デプロイ完了
+- ✅ 運用ドキュメント完備
+
+---
+
+## ✅ DB構築完了時の実行チェックリスト
+
+### **事前準備（DB構築前に完了すべき項目）**
+
+#### **設計ドキュメント確認**
+```
+□ マスタープラン最終版確認
+□ ER図最終版確認
+□ API仕様書最終版確認
+□ セキュリティ要件最終版確認
+□ アカウントレベル定義最終版確認
+```
+
+#### **マイグレーションファイル準備**
+```
+□ 001_create_access_control_tables.sql
+□ 002_insert_initial_access_control_data.sql
+□ 003_create_developer_audit_log.sql
+□ 004_create_voicedrive_tables.sql（要作成）
+□ 005_create_authentication_tables.sql
+□ 006_create_initial_users.sql（要作成）
+```
+
+#### **環境変数準備**
+```
+□ .env.production作成
+□ DATABASE_URL設定
+□ NEXTAUTH_SECRET生成
+□ SYSTEM_ADMIN_API_KEY設定
+□ 各種タイムアウト設定
+```
+
+---
+
+### **Day 1: DB構築完了直後（即座に実行）**
+
+#### **Step 1: データベース接続確認（10分）**
+```bash
+# 接続テスト
+mysql -h <host> -u <user> -p staff_medical_system
+
+# データベース確認
+SHOW DATABASES;
+USE staff_medical_system;
+SHOW TABLES;  # 既存テーブル確認
+```
+
+#### **Step 2: マイグレーション実行（30分）**
+```bash
+# マイグレーション実行順序（重要）
+mysql < src/lib/database/migrations/001_create_staff_master.sql
+mysql < src/lib/database/migrations/002_create_access_control_tables.sql
+mysql < src/lib/database/migrations/003_insert_initial_access_control_data.sql
+mysql < src/lib/database/migrations/004_create_developer_audit_log.sql
+mysql < src/lib/database/migrations/005_create_authentication_tables.sql
+
+# 実行確認
+mysql -e "SHOW TABLES FROM staff_medical_system;"
+mysql -e "SELECT COUNT(*) FROM staff_medical_system.access_control_master;"
+# 期待値: 17行（17タブ）
+```
+
+#### **Step 3: 初期データ投入（20分）**
+```bash
+# テストユーザー作成
+mysql < scripts/create_test_users.sql
+
+# アクセス制御初期データ確認
+mysql -e "SELECT resource_id, resource_name, level_99 FROM staff_medical_system.access_control_master LIMIT 5;"
+
+# 開発者監査ログ初期化確認
+mysql -e "SELECT COUNT(*) FROM staff_medical_system.developer_audit_log;"
+# 期待値: 1行（システム初期化ログ）
+```
+
+#### **Step 4: 環境変数切り替え（5分）**
+```bash
+# .env.productionの設定確認
+cat .env.production | grep DATABASE_URL
+cat .env.production | grep USE_MOCK_ACCESS_CONTROL
+
+# モックモード無効化
+# USE_MOCK_ACCESS_CONTROL=false に変更
+
+# 環境変数読み込み
+source .env.production
+```
+
+#### **Step 5: 接続テスト実行（15分）**
+```bash
+# Next.jsサーバー起動
+npm run build
+npm run start
+
+# 別ターミナルで接続テスト
+curl http://localhost:3000/api/health
+
+# DB接続テスト
+node tests/production/production-connection-test.js
+# 期待される出力:
+# ✅ データベース接続成功
+# ✅ staff_masterテーブル存在確認
+# ✅ access_control_masterテーブル存在確認
+# ✅ developer_audit_logテーブル存在確認
+```
+
+---
+
+### **Day 2-7: Phase 6実装（認証システム）**
+
+#### **Day 2: NextAuth.js設定（4時間）**
+```bash
+□ NextAuth.jsインストール
+□ [...nextauth]/route.ts作成
+□ CredentialsProvider設定
+□ セッション管理設定（database strategy）
+□ 動作確認（モックログイン）
+```
+
+#### **Day 3: ログイン画面実装（6時間）**
+```bash
+□ /login/page.tsx実装
+□ フォームバリデーション
+□ エラーハンドリング
+□ ローディング状態表示
+□ 共有PC警告表示
+```
+
+#### **Day 4: パスワード認証（6時間）**
+```bash
+□ bcryptでパスワードハッシュ化
+□ ログイン処理実装
+□ セッション作成
+□ ログイン履歴記録
+□ 失敗回数カウント
+```
+
+#### **Day 5: アクセス制御統合（6時間）**
+```bash
+□ middleware.ts実装
+□ Level別権限チェック
+□ タブ表示/非表示制御
+□ 403/401ページ作成
+□ リダイレクト処理
+```
+
+#### **Day 6: セキュリティ機能（6時間）**
+```bash
+□ アカウントロック機能
+□ IP制限機能
+□ 自動ログアウト（5分）
+□ セッション有効期限（8時間）
+□ パスワードポリシー実装
+```
+
+#### **Day 7: テスト（8時間）**
+```bash
+□ 単体テスト実行
+□ 統合テスト実行
+□ セキュリティテスト
+□ パフォーマンステスト
+□ バグ修正
+```
+
+---
+
+### **Week 2: DB連携完了確認**
+
+#### **アクセス制御DB連携確認**
+```bash
+# モックモード無効化確認
+□ USE_MOCK_ACCESS_CONTROL=false
+□ /admin/access-control で権限取得
+□ Level 99でタブ編集
+□ 変更がDBに保存される
+□ 変更履歴が記録される
+```
+
+#### **開発者監査ログDB連携確認**
+```bash
+# Git Hooks動作確認
+□ git commit実行
+□ developer_audit_logに記録される
+□ git push実行
+□ mainブランチ警告表示
+□ 操作者情報が正しく記録される
+```
+
+#### **VoiceDrive API DB連携確認**
+```bash
+# 権限計算API
+□ POST /api/v1/calculate-level
+□ 計算結果がDBに保存される
+□ 履歴が記録される
+
+# Webhook
+□ POST /api/webhook/voicedrive
+□ イベントデータがDBに保存される
+□ 通知処理が実行される
+```
+
+---
+
+### **Week 3: VoiceDrive統合確認**
+
+#### **25段階システム確認**
+```bash
+□ Level 1.5（看護職リーダー）表示確認
+□ Level 2.5（看護職リーダー）表示確認
+□ Level 3.5（看護職リーダー）表示確認
+□ Level 4.5（看護職リーダー）表示確認
+□ Level 14-18（法人経営層）表示確認
+□ Level 97-99（特別権限）表示確認
+```
+
+#### **職種別ロジック確認**
+```bash
+□ 看護職 + リーダー可 → 0.5加算
+□ 非看護職 + リーダー可 → 加算なし
+□ Level 5以上 → 加算なし
+□ professionCategoryがnull → 看護職扱い
+```
+
+#### **230パターンテスト実行**
+```bash
+□ npm run test:integration:voicedrive
+□ 全230パターン実行
+□ 結果レポート生成
+□ VoiceDriveチームと共有
+```
+
+---
+
+### **Week 4: 本番デプロイ準備**
+
+#### **セキュリティチェック**
+```bash
+□ SQLインジェクション対策確認
+□ XSS対策確認
+□ CSRF対策確認
+□ パスワードハッシュ化確認
+□ セッション管理確認
+□ ログイン履歴記録確認
+```
+
+#### **パフォーマンステスト**
+```bash
+□ API応答時間計測（目標: 100ms以内）
+□ 同時接続数テスト（目標: 100ユーザー）
+□ DBクエリ最適化確認
+□ インデックス設定確認
+```
+
+#### **バックアップ・リストア確認**
+```bash
+□ 本番DBバックアップ実行
+□ リストアテスト成功
+□ ロールバック手順確認
+□ データ整合性確認
+```
+
+#### **本番デプロイ**
+```bash
+□ ステージング環境で最終確認
+□ デプロイスクリプト準備
+□ ダウンタイム最小化計画
+□ ロールバック計画準備
+□ 本番デプロイ実行
+□ デプロイ後動作確認
+□ 監視設定
+```
+
+---
+
+### **デプロイ後の確認項目**
+
+#### **機能確認**
+```bash
+□ ログイン/ログアウト動作
+□ Level別権限表示
+□ アクセス制御動作
+□ 監査ログ記録
+□ VoiceDrive API動作
+□ Webhook受信
+```
+
+#### **監視設定**
+```bash
+□ エラーログ監視
+□ パフォーマンス監視
+□ セキュリティ監視
+□ ログイン失敗監視
+□ アラート設定
+```
+
+#### **ドキュメント最終確認**
+```bash
+□ ユーザーマニュアル完成
+□ 管理者マニュアル完成
+□ トラブルシューティングガイド完成
+□ API仕様書最終版
+□ ER図最終版
+```
+
+---
+
+## 📊 実装統計サマリー
+
+### **Phase 1-6 実装完了状況**
+
+| Phase | 内容 | ファイル数 | 総行数 | 状態 |
+|-------|------|-----------|--------|------|
+| Phase 1-3 | VoiceDrive連携基盤 | 15 | 4,500 | ✅ 完了 |
+| Phase 4-1 | アクセス制御システム | 15 | 4,332 | ✅ 完了 |
+| Phase 4-2 | 開発者監査ログ | 8 | 3,105 | ✅ 完了 |
+| Phase 5 | VoiceDrive統合テスト | - | - | ✅ 完了 |
+| Phase 6 | 認証・ログインシステム | 12 | 3,500 | ⏳ DB構築後 |
+| **合計** | | **50** | **15,437** | |
+
+### **DB構築後の実装タスク数**
+
+| カテゴリ | タスク数 | 予定期間 |
+|---------|---------|---------|
+| 認証システム実装 | 25 | 1週間 |
+| DB連携完了 | 18 | 1週間 |
+| VoiceDrive統合 | 12 | 1週間 |
+| 統合テスト・デプロイ | 20 | 1週間 |
+| **合計** | **75** | **4週間** |
+
+---
+
 **作成者**: 医療職員管理システム開発チーム
 **承認者**: プロジェクトマネージャー
 **次回更新**: 共通DB構築完了時
+**Phase 6追加日**: 2025年10月6日
 
 ---
 
