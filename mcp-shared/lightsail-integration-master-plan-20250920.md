@@ -589,8 +589,492 @@ VoiceDriveチームのご意見・フィードバックをお聞かせくださ�
 
 ---
 
+## 📣 Phase 7: 人事お知らせ統合（2025年10月追加）
+
+### 🎯 目的
+
+VoiceDrive（法人SNS）との人事お知らせ統合機能を実装し、双方向の通知・統計管理を実現する。
+
+### 📊 実装スコープ
+
+```
+[職員カルテシステム]
+  ↓ ① 人事お知らせ送信
+[VoiceDrive]
+  ↓ ② 職員への通知表示
+  ↓ ③ アクション実行
+  ↓ ④ 統計集計
+  ↓ ⑤ Webhook送信（統計情報）
+[職員カルテシステム]
+  ↓ ⑥ 統計DB保存
+  ↓ ⑦ ダッシュボード表示
+```
+
+### ✅ VoiceDrive側の準備状況（2025年10月7日）
+
+| 項目 | 状況 | 備考 |
+|------|------|------|
+| **お知らせ受信API** | ✅ 実装完了 | `src/api/routes/hr-announcements.routes.ts` |
+| **統計送信機能** | ✅ 実装完了 | Webhook + HMAC-SHA256署名 |
+| **型定義** | ✅ 完成 | `src/types/hr-announcements.ts` |
+| **技術ドキュメント** | ✅ 3件完成 | お知らせ受信仕様、統計送信仕様、回答文書 |
+| **APIサーバー設定** | ✅ 完了 | レート制限、CORS、認証 |
+
+### 🔧 職員カルテ側の実装タスク
+
+| No | タスク | 工数 | 状況 |
+|----|--------|------|------|
+| 1 | お知らせ送信ペイロード仕様書確認 | 0.5日 | ⏳ |
+| 2 | DB設計・マイグレーション | 0.5日 | ✅ 設計完了 |
+| 3 | 型定義作成 | 0.5日 | ✅ 完了 |
+| 4 | 人事お知らせ送信サービス実装 | 1.5日 | ⏳ |
+| 5 | 統計受信Webhook API実装 | 1日 | ⏳ |
+| 6 | 配信効果測定ダッシュボード実装 | 2日 | ⏳ |
+| 7 | 統合テスト | 1日 | ⏳ |
+| 8 | ドキュメント作成 | 0.5日 | ⏳ |
+
+**合計：約7.5日（Phase 6完了後に実施）**
+
+### 📋 主要成果物
+
+| No | 成果物 | 形式 | 状況 |
+|----|--------|------|------|
+| 1 | 人事お知らせ送信機能 | TypeScript Service | ⏳ |
+| 2 | 統計受信Webhook API | Next.js API Route | ⏳ |
+| 3 | 統計DB設計 | PostgreSQL Schema | ✅ |
+| 4 | 配信効果測定ダッシュボード | React Component | ⏳ |
+| 5 | 統合テスト結果報告書 | Markdown | ⏳ |
+| 6 | 運用手順書 | Markdown | ⏳ |
+
+### 🔐 技術仕様
+
+#### **エンドポイント**
+```
+職員カルテ → VoiceDrive: POST http://localhost:4000/api/hr-announcements
+VoiceDrive → 職員カルテ: POST /api/voicedrive/stats (Webhook)
+```
+
+#### **認証**
+- Bearer Token認証
+- HMAC-SHA256署名検証（統計Webhook）
+- `X-Source-System: medical-staff-system` ヘッダー必須
+
+#### **レート制限**
+- お知らせ送信: 100リクエスト/分
+- 統計Webhook受信: 100リクエスト/分
+
+#### **データモデル**
+```typescript
+// お知らせ送信
+interface MedicalSystemAnnouncementRequest {
+  title: string;                // 最大500文字
+  content: string;             // 最大5000文字
+  category: 'announcement' | 'interview' | 'training' | 'survey' | 'other';
+  priority: 'low' | 'medium' | 'high';
+  requireResponse: false;      // 固定値
+  autoTrackResponse: true;     // 固定値
+  // ...
+}
+
+// 統計受信
+interface StatsWebhookPayload {
+  event: 'stats.updated' | 'stats.hourly' | 'stats.daily';
+  announcement: { id: string; title: string; category: string; };
+  stats: {
+    delivered: number;
+    actions: number;
+    completions: number;
+  };
+  // ...
+}
+```
+
+### 📅 実装スケジュール
+
+**前提条件**：Phase 6（共通DB構築）完了
+
+| 期間 | タスク | 担当 |
+|------|--------|------|
+| **Week 1-1.5** | DB・API・サービス実装 | 職員カルテチーム |
+| **Week 1.5-2** | ダッシュボード実装 | 職員カルテチーム |
+| **Week 2** | 統合テスト | 両チーム合同 |
+| **Week 2.5** | 本番デプロイ | 両チーム合同 |
+
+**総期間**: 約2.5週間
+
+### 🎯 成功基準
+
+| 指標 | 目標 |
+|------|------|
+| 統合テスト成功率 | 100% |
+| Webhook受信成功率 | 99%以上 |
+| 平均レスポンス時間 | 500ms以下 |
+| エラー率 | 1%以下 |
+| ダッシュボード表示速度 | 3秒以内 |
+
+### 📚 関連ドキュメント
+
+**Phase 7実装計画**：
+- `docs/Phase7_人事お知らせ統合実装計画.md`（完成）
+
+**VoiceDrive側ドキュメント**（2025年10月7日受領）：
+- `mcp-shared/specs/voicedrive-stats-webhook-spec-v1.0.0.md`
+- `mcp-shared/docs/Response_VoiceDrive_Stats_Webhook_Spec_20251007.md`
+- `mcp-shared/docs/Response_VoiceDrive_Implementation_Code_20251007.md`
+- VoiceDrive型定義ファイル（`src/types/hr-announcements.ts`）
+- VoiceDrive APIサーバー設定（`src/api/server.ts`）
+- VoiceDrive実装コード（`src/api/routes/hr-announcements.routes.ts`）
+
+**職員カルテ側成果物**：
+- `mcp-shared/interfaces/hr-announcement-api.interface.ts`（型定義完成）
+
+### 📝 備考
+
+**VoiceDriveチームの評価**: ⭐⭐⭐⭐⭐
+- 完璧な実装コード（400行）
+- 詳細な技術ドキュメント（3件）
+- HMAC-SHA256署名検証実装済み
+- 統合テスト環境構築可能
+
+**統合準備状況**: 🟢 **非常に良好**
+- VoiceDrive側: 100%完了
+- 職員カルテ側: 計画完成、実装待ち
+- 依存: Phase 6完了のみ
+
+**Phase 7実装の注意事項**（2025年10月7日 VoiceDrive回答に基づく）:
+- **統計Webhook**: Phase 7では`stats.updated`（リアルタイム）のみ実装、`stats.hourly`/`stats.daily`はPhase 8以降
+- **surveySubCategory**: Phase 7では実装不要（VoiceDrive内部用、API v2.0で検討）
+- **認証情報共有**: 1Password共有Vault使用
+- **統合テスト**: Day 6、Zoom、2-3時間
+
+---
+
+---
+
+## 📊 Phase 7.5: VoiceDrive Analytics 統合（2025年10月追加）
+
+### 🎯 目的
+
+VoiceDrive（法人SNS）の職員投稿データを自動分析し、感情分析・トピック分析結果を双方向で連携する。
+
+### 📊 実装スコープ
+
+```
+[VoiceDrive]
+  ↓ ① 集計データ取得API（過去7日間）
+[職員カルテシステム]
+  ↓ ② LLM分析実行（感情分析 + トピック分析）
+  ↓ ③ 分析結果送信API
+[VoiceDrive]
+  ↓ ④ 分析結果DB保存
+  ↓ ⑤ ダッシュボード表示
+[VoiceDrive（アカウントレベル99）]
+  ↓ ⑥ システム通知受信（成功・エラー）
+```
+
+### ✅ 実装完了状況（2025年10月9日）
+
+| 項目 | 状況 | 備考 |
+|------|------|------|
+| **VoiceDrive Analytics API** | ✅ 実装完了 | GET `/api/v1/analytics/aggregated-stats` |
+| **VoiceDrive 分析受信API** | ✅ 実装完了 | POST `/api/v1/analytics/group-data` |
+| **統合テスト** | ✅ 100%成功 | 17/17テスト成功（10/9 22:35） |
+| **データ取得バッチ** | ✅ 実装完了 | `src/batch/voicedrive-analytics-fetch.ts` |
+| **LLM分析パイプライン** | ✅ モック完了 | `src/services/VoiceDriveAnalyticsProcessor.ts` |
+| **データ送信バッチ** | ✅ 実装完了 | `src/batch/voicedrive-analytics-send.ts` |
+| **統合パイプライン** | ✅ 実装完了 | `src/batch/voicedrive-analytics-pipeline.ts` |
+| **VoiceDrive通知システム** | ✅ 実装完了 | `src/utils/voicedrive-notifier.ts` |
+| **型定義** | ✅ 完成 | `mcp-shared/interfaces/voicedrive-analytics-api.interface.ts` |
+
+### 🔧 実装完了機能
+
+#### **1. データ取得バッチ処理**
+```bash
+npm run analytics:fetch
+```
+- VoiceDriveから過去7日間の集計データ取得
+- K-匿名性チェック（K≥5）
+- HMAC-SHA256署名検証
+- レート制限監視（100リクエスト/時間）
+- データ保存先: `data/analytics/fetch-*.json`
+
+#### **2. LLM分析パイプライン**
+```typescript
+// VoiceDriveAnalyticsProcessor.ts
+export class VoiceDriveAnalyticsProcessor {
+  // 感情分析（ポジティブ・ニュートラル・ネガティブ）
+  async analyzeSentiment(data: AggregatedData): Promise<SentimentAnalysisData>
+
+  // トピック分析（キーワード抽出・新出トピック検出）
+  async analyzeTopics(data: AggregatedData): Promise<TopicAnalysisData>
+
+  // 統合分析実行
+  async processAnalytics(data: AggregatedData): Promise<GroupAnalyticsRequest>
+}
+```
+
+**現在**: 統計ベースのモック実装
+**将来**: Llama 3.2 8B Instruct 統合（共通DB構築後）
+
+#### **3. データ送信バッチ処理**
+```bash
+npm run analytics:send
+```
+- 分析結果をVoiceDriveへ送信
+- HMAC-SHA256署名付き
+- メタデータ自動付与（sourceSystem, version, generatedBy, llmModel）
+- 送信ログ保存: `logs/analytics/send-*.json`
+
+#### **4. 統合エンドツーエンドパイプライン**
+```bash
+npm run analytics:pipeline
+```
+- Step 1: データ取得
+- Step 2: LLM分析
+- Step 3: データ送信
+- Step 4: VoiceDrive通知送信（アカウントレベル99）
+- 実行タイミング: 毎日 02:00 JST（予定）
+- パイプラインログ: `logs/analytics/pipeline-log-*.json`
+
+#### **5. VoiceDrive通知システム（NEW）**
+```typescript
+// voicedrive-notifier.ts
+export async function sendVoiceDriveNotification(
+  type: 'success' | 'error' | 'warning' | 'info',
+  data: NotificationData
+): Promise<NotificationResponse>
+
+// ヘルパー関数
+sendSuccessNotification(title, message, details)
+sendErrorNotification(title, message, details)
+sendWarningNotification(title, message, details)
+sendInfoNotification(title, message, details)
+```
+
+**特徴**:
+- **アカウントレベル99通知**: システム管理者へ直接通知
+- **HMAC署名**: 改ざん防止
+- **詳細メトリクス**: 期間、総投稿数、感情分析、トピック分析、パフォーマンス
+- **エンドポイント**: `POST /api/webhook/analytics-notification`
+- **統合済み**: 成功・エラー両方の通知をパイプラインに統合
+
+**Slack通知から変更した理由**:
+- システム内完結（外部サービス不要）
+- 既存の権限システム活用
+- セキュリティ向上（外部依存排除）
+- 統一された通知管理
+
+### 🔐 技術仕様
+
+#### **エンドポイント**
+```
+GET  http://localhost:4000/api/v1/analytics/aggregated-stats
+POST http://localhost:4000/api/v1/analytics/group-data
+POST http://localhost:4000/api/webhook/analytics-notification (VoiceDrive側実装予定)
+```
+
+#### **認証**
+- Bearer Token認証（JWT）
+- アカウントレベル99権限
+- HMAC-SHA256署名検証
+
+#### **レート制限**
+- GET `/aggregated-stats`: 100リクエスト/時間
+- POST `/group-data`: レート制限なし（バッチ処理想定）
+- POST `/analytics-notification`: 100リクエスト/分（予定）
+
+#### **K-匿名性要件**
+- **最小同意ユーザー数**: K ≥ 5
+- **準拠チェック**: 全バッチ処理で自動実行
+- **違反時**: データ取得中止・エラー通知送信
+
+#### **データモデル**
+```typescript
+// 集計データ取得
+interface AggregatedStatsRequest {
+  startDate: string;  // YYYY-MM-DD
+  endDate: string;    // YYYY-MM-DD
+}
+
+// 分析結果送信
+interface GroupAnalyticsRequest {
+  analysisDate: string;
+  period: { startDate: string; endDate: string; };
+  postingTrends: { totalPosts: number; totalUsers: number; participationRate: number; };
+  sentimentAnalysis: { positive: number; neutral: number; negative: number; averageConfidence: number; };
+  topicAnalysis: { topKeywords: Keyword[]; emergingTopics: Topic[]; byDepartment: DepartmentTopic[]; };
+  privacyMetadata: { totalConsentedUsers: number; minimumGroupSize: number; kAnonymityCompliant: boolean; };
+  metadata?: { sourceSystem: string; version: string; generatedBy: string; llmModel: string; };
+}
+
+// VoiceDrive通知
+interface NotificationData {
+  title: string;
+  message: string;
+  details?: {
+    period?: { startDate: string; endDate: string; };
+    summary?: { totalPosts: number; totalUsers: number; participationRate: string; };
+    sentiment?: { positive: number; neutral: number; negative: number; confidence: number; };
+    topics?: { topKeywords: string; emergingTopicsCount: number; };
+    performance?: { processingTime: string; rateLimit?: { remaining: number; limit: number; }; };
+    error?: { message: string; stack?: string; timestamp: string; };
+  };
+}
+```
+
+### 📋 統合テスト結果（2025年10月9日）
+
+| テストフェーズ | テスト数 | 成功 | 成功率 |
+|---------------|---------|------|--------|
+| Phase 1: サーバー接続確認 | 1 | 1 | 100% |
+| Phase 2: 認証テスト | 3 | 3 | 100% |
+| Phase 3: データ取得API | 5 | 5 | 100% |
+| Phase 4: データ送信API | 5 | 5 | 100% |
+| Phase 5: エラーハンドリング | 3 | 3 | 100% |
+| **合計** | **17** | **17** | **100%** ✅ |
+
+**パフォーマンス**:
+- 平均レスポンス時間: 17.3ms
+- 最大レスポンス時間: 52ms
+- データ取得成功: 342件（過去7日間）
+- HMAC署名検証: 100%成功
+
+**確認済み機能**:
+- ✅ JWT Bearer Token認証
+- ✅ HMAC-SHA256署名検証
+- ✅ レート制限機能（100リクエスト/時間）
+- ✅ K-匿名性準拠（13同意ユーザー ≥ 5）
+- ✅ プライバシーメタデータ検証
+- ✅ エラーハンドリング（401, 400, 500）
+
+### 📅 実装スケジュール
+
+| 期間 | タスク | 状況 |
+|------|--------|------|
+| **Week 1** | VoiceDrive Analytics API統合テスト | ✅ 完了（10/9） |
+| **Week 2** | バッチ処理・LLM分析パイプライン実装 | ✅ 完了（10/9） |
+| **Week 2.5** | VoiceDrive通知システム実装 | ✅ 完了（10/9） |
+| **Phase 6完了後** | Llama 3.2 8B Instruct 統合 | ⏳ 待機中 |
+| **Phase 6完了後** | データビジュアライゼーション実装 | ⏳ 待機中 |
+| **Phase 6完了後** | 本番環境デプロイ・自動実行設定 | ⏳ 待機中 |
+
+**総期間**: 約2.5週間（基本実装完了）
+
+### 🎯 今後の実装予定
+
+#### **1. Llama 3.2 8B Instruct 統合（Phase 6完了後）**
+```typescript
+// VoiceDriveAnalyticsProcessor.ts
+// 現在: モック実装（統計ベース）
+// 将来: Llama 3.2による実際のLLM分析
+
+async analyzeSentiment(data: AggregatedData): Promise<SentimentAnalysisData> {
+  // Llama 3.2でカテゴリー別投稿内容を分析
+  // idea_voice, free_voice, question_voice, concern_voiceの感情傾向を高精度判定
+  const llamaResponse = await llamaClient.analyze({
+    model: 'llama-3.2-8b-instruct',
+    task: 'sentiment-analysis',
+    data: aggregatedData
+  });
+
+  return llamaResponse.sentimentAnalysis;
+}
+
+async analyzeTopics(data: AggregatedData): Promise<TopicAnalysisData> {
+  // Llama 3.2でキーワード抽出・TF-IDF分析
+  const llamaResponse = await llamaClient.analyze({
+    model: 'llama-3.2-8b-instruct',
+    task: 'topic-extraction',
+    data: aggregatedData
+  });
+
+  return llamaResponse.topicAnalysis;
+}
+```
+
+#### **2. データビジュアライゼーション実装（Phase 6完了後）**
+```
+新規ページ: /reports/voicedrive-analytics
+
+表示内容:
+- 期間別投稿トレンド（グラフ）
+- 感情分析結果（円グラフ）
+- トピックランキング（バーチャート）
+- 部署別統計（テーブル）
+- レベル別参加率（グラフ）
+- 新出トピック検出（アラート）
+```
+
+#### **3. 自動実行設定（Phase 6完了後）**
+```bash
+# cron設定（Lightsail環境）
+0 2 * * * cd /home/medical-system && npm run analytics:pipeline
+
+# または
+# AWS EventBridgeスケジューラ設定
+# 毎日 02:00 JST（17:00 UTC前日）
+```
+
+### 📚 関連ドキュメント
+
+**Phase 7.5実装成果物**:
+- `mcp-shared/docs/Integration_Test_Completion_Report_20251009.md`（統合テスト完了報告書）
+- `mcp-shared/docs/Integration_Test_Success_Acknowledgement_20251009.md`（VoiceDrive回答書）
+- `mcp-shared/interfaces/voicedrive-analytics-api.interface.ts`（型定義）
+- `src/services/VoiceDriveAnalyticsClient.ts`（APIクライアント）
+- `src/services/VoiceDriveAnalyticsProcessor.ts`（LLM分析パイプライン）
+- `src/batch/voicedrive-analytics-fetch.ts`（データ取得バッチ）
+- `src/batch/voicedrive-analytics-send.ts`（データ送信バッチ）
+- `src/batch/voicedrive-analytics-pipeline.ts`（統合パイプライン）
+- `src/utils/voicedrive-notifier.ts`（VoiceDrive通知システム）
+- `tests/voicedrive-analytics-integration-test.ts`（統合テスト）
+
+**VoiceDrive側ドキュメント**（2025年10月7日受領）:
+- `mcp-shared/docs/Integration_Test_Clarification_20251009.md`（VoiceDrive統合テスト説明書）
+- `mcp-shared/docs/Integration_Test_Server_Ready_20251009.md`（VoiceDriveテストサーバー準備完了通知）
+
+**実行ログサンプル**:
+- `logs/analytics/pipeline-log-2025-10-07T14-19-13-950Z.json`
+- `logs/analytics/pipeline-log-2025-10-07T14-02-43-997Z.json`
+
+### 📝 備考
+
+**VoiceDriveチームの評価**: ⭐⭐⭐⭐⭐
+- 統合テスト100%成功（17/17テスト）
+- 平均17.3msの高速レスポンス
+- HMAC署名検証100%成功
+- K-匿名性要件完全準拠
+- 詳細なエラーハンドリング
+
+**統合準備状況**: 🟢 **実装完了・待機中**
+- VoiceDrive側: API完成・テストサーバー稼働中
+- 職員カルテ側: バッチ処理・通知システム完成
+- 依存: Phase 6（共通DB構築）完了
+- 本番稼働: Phase 6完了後に自動実行設定
+
+**Phase 7.5の重要変更**（2025年10月9日）:
+- **通知方式変更**: Slack通知 → VoiceDrive アカウントレベル99通知
+  - 理由: システム内完結、既存権限活用、セキュリティ向上、統一管理
+  - 実装: `src/utils/voicedrive-notifier.ts`
+  - エンドポイント: `POST /api/webhook/analytics-notification`（VoiceDrive側実装待ち）
+  - 通知内容: 成功・エラー・警告・情報（詳細メトリクス付き）
+
+**VoiceDriveチームへの実装依頼**:
+- Webhook通知エンドポイント: `POST /api/webhook/analytics-notification`
+- HMAC-SHA256署名検証
+- アカウントレベル99ユーザーへの通知表示
+- 通知データ構造: `NotificationData` インターフェース準拠
+- 詳細仕様書: `mcp-shared/docs/VoiceDrive_Notification_Specification_20251009.md`（作成予定）
+
+---
+
 **📧 連絡先**: 医療システムチーム統合担当
 **📋 関連ファイル**:
 - `integration-test-completion-report-20250920.md`
 - `phase3-perfect-success-report-20250920.md`
-**🎯 次のマイルストーン**: Phase 0組織設計確定
+- `docs/Phase7_人事お知らせ統合実装計画.md`
+- `mcp-shared/docs/Integration_Test_Completion_Report_20251009.md` (**NEW**)
+- `mcp-shared/docs/Integration_Test_Success_Acknowledgement_20251009.md` (**NEW**)
+**🎯 次のマイルストーン**: Phase 6完了 → Llama 3.2統合 → データビジュアライゼーション実装
+
+**最終更新**: 2025年10月9日（Phase 7.5追加）
