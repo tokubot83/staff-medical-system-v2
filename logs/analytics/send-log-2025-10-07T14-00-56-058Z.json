@@ -1,0 +1,152 @@
+{
+  "sentAt": "2025-10-07T14:00:56.058Z",
+  "dataFile": "C:\\projects\\staff-medical-system\\data\\analytics\\aggregated-stats-2025-10-07T13-49-56-003Z.json",
+  "request": {
+    "analysisDate": "2025-10-07",
+    "period": {
+      "startDate": "2025-09-30",
+      "endDate": "2025-10-07"
+    },
+    "postingTrends": {
+      "totalPosts": 342,
+      "totalUsers": 89,
+      "totalEligibleUsers": 89,
+      "participationRate": 74.2
+    },
+    "sentimentAnalysis": {
+      "positive": 172,
+      "neutral": 126,
+      "negative": 39,
+      "averageConfidence": 0.85,
+      "distribution": {
+        "byDepartment": [
+          {
+            "department": "看護部",
+            "positive": 64,
+            "neutral": 47,
+            "negative": 14
+          },
+          {
+            "department": "医局",
+            "positive": 44,
+            "neutral": 32,
+            "negative": 10
+          },
+          {
+            "department": "薬剤部",
+            "positive": 33,
+            "neutral": 24,
+            "negative": 7
+          },
+          {
+            "department": "事務部",
+            "positive": 29,
+            "neutral": 21,
+            "negative": 6
+          }
+        ]
+      }
+    },
+    "topicAnalysis": {
+      "topKeywords": [
+        {
+          "keyword": "業務改善",
+          "count": 51,
+          "category": "work",
+          "tfidfScore": 0.82
+        },
+        {
+          "keyword": "シフト調整",
+          "count": 41,
+          "category": "work",
+          "tfidfScore": 0.75
+        },
+        {
+          "keyword": "患者対応",
+          "count": 34,
+          "category": "work",
+          "tfidfScore": 0.68
+        },
+        {
+          "keyword": "休憩時間",
+          "count": 27,
+          "category": "welfare",
+          "tfidfScore": 0.55
+        },
+        {
+          "keyword": "勤務環境",
+          "count": 23,
+          "category": "environment",
+          "tfidfScore": 0.52
+        }
+      ],
+      "emergingTopics": [
+        {
+          "topic": "新人教育制度",
+          "growthRate": 75.5,
+          "firstSeenDate": "2025-09-30",
+          "recentCount": 17,
+          "previousCount": 10
+        }
+      ],
+      "byDepartment": [
+        {
+          "department": "看護部",
+          "topTopics": [
+            "業務改善",
+            "シフト調整",
+            "患者対応"
+          ]
+        },
+        {
+          "department": "医局",
+          "topTopics": [
+            "業務改善",
+            "シフト調整",
+            "患者対応"
+          ]
+        },
+        {
+          "department": "薬剤部",
+          "topTopics": [
+            "業務改善",
+            "シフト調整",
+            "患者対応"
+          ]
+        },
+        {
+          "department": "事務部",
+          "topTopics": [
+            "業務改善",
+            "シフト調整",
+            "患者対応"
+          ]
+        }
+      ]
+    },
+    "privacyMetadata": {
+      "totalConsentedUsers": 13,
+      "minimumGroupSize": 5,
+      "kAnonymityCompliant": true
+    },
+    "metadata": {
+      "sourceSystem": "medical-staff-system",
+      "version": "1.0.0",
+      "generatedBy": "voicedrive-analytics-send-batch",
+      "generatedAt": "2025-10-07T14:00:56.010Z",
+      "processingTime": 0.003,
+      "llmModel": "Llama 3.2 8B Instruct (Mock)"
+    }
+  },
+  "response": {
+    "success": true,
+    "message": "分析データを受信しました",
+    "receivedAt": "2025-10-07T14:00:56.052Z"
+  },
+  "rateLimit": {
+    "limit": 100,
+    "remaining": 99,
+    "reset": 1759845717
+  },
+  "processingTime": 51
+}

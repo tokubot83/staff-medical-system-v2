@@ -1,0 +1,723 @@
+
+> staff-medical-system@0.1.0 build
+> prisma generate && next build
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+┌─────────────────────────────────────────────────────────┐
+│  Update available 6.14.0 -> 6.16.3                      │
+│  Run the following to update                            │
+│    npm i --save-dev prisma@latest                       │
+│    npm i @prisma/client@latest                          │
+└─────────────────────────────────────────────────────────┘
+
+✔ Generated Prisma Client (v6.14.0) to .\node_modules\@prisma\client in 231ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+Tip: Interested in query caching in just a few lines of code? Try Accelerate today! https://pris.ly/tip-3-accelerate
+
+ ⚠ Disabling SWC Minifer will not be an option in the next major version. Please report any issues you may be experiencing to https://github.com/vercel/next.js/issues
+  ▲ Next.js 14.2.3
+  - Environments: .env.local, .env.production, .env
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Skipping validation of types
+   Skipping linting
+   Collecting page data ...
+   Generating static pages (0/398) ...
+マイページデータ取得エラー: q [Error]: Dynamic server usage: Route /api/my-page couldn't be rendered statically because it accessed `request.headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at Object.get (C:\projects\staff-medical-system\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:37835)
+    at p (C:\projects\staff-medical-system\.next\server\app\api\my-page\route.js:1:523)
+    at C:\projects\staff-medical-system\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:34672
+    at C:\projects\staff-medical-system\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\projects\staff-medical-system\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\projects\staff-medical-system\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\projects\staff-medical-system\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\projects\staff-medical-system\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\projects\staff-medical-system\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\projects\staff-medical-system\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062) {
+  description: "Route /api/my-page couldn't be rendered statically because it accessed `request.headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+コース定義取得エラー: q [Error]: Dynamic server usage: Route /api/career-courses/definitions couldn't be rendered statically because it accessed `request.headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at Object.get (C:\projects\staff-medical-system\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:37835)
+    at l (C:\projects\staff-medical-system\.next\server\app\api\career-courses\definitions\route.js:1:523)
+    at C:\projects\staff-medical-system\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:34672
+    at C:\projects\staff-medical-system\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\projects\staff-medical-system\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\projects\staff-medical-system\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\projects\staff-medical-system\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\projects\staff-medical-system\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\projects\staff-medical-system\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\projects\staff-medical-system\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062) {
+  description: "Route /api/career-courses/definitions couldn't be rendered statically because it accessed `request.headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+Reexamination list error: q [Error]: Dynamic server usage: Route /api/health/reexamination couldn't be rendered statically because it accessed `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at Object.get (C:\projects\staff-medical-system\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:37835)
+    at d (C:\projects\staff-medical-system\.next\server\app\api\health\reexamination\route.js:1:603)
+    at C:\projects\staff-medical-system\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:34672
+    at C:\projects\staff-medical-system\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\projects\staff-medical-system\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\projects\staff-medical-system\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\projects\staff-medical-system\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\projects\staff-medical-system\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\projects\staff-medical-system\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\projects\staff-medical-system\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062) {
+  description: "Route /api/health/reexamination couldn't be rendered statically because it accessed `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+ストレスチェック結果取得エラー: q [Error]: Dynamic server usage: Route /api/stress-check/my-result couldn't be rendered statically because it accessed `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at Object.get (C:\projects\staff-medical-system\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:37835)
+    at u (C:\projects\staff-medical-system\.next\server\app\api\stress-check\my-result\route.js:1:602)
+    at C:\projects\staff-medical-system\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:34672
+    at C:\projects\staff-medical-system\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\projects\staff-medical-system\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\projects\staff-medical-system\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\projects\staff-medical-system\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\projects\staff-medical-system\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\projects\staff-medical-system\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\projects\staff-medical-system\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062) {
+  description: "Route /api/stress-check/my-result couldn't be rendered statically because it accessed `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+同意状況ダッシュボードデータ取得エラー: TypeError: Cannot read properties of undefined (reading 'findMany')
+    at l (C:\projects\staff-medical-system\.next\server\app\api\health\consent-dashboard\route.js:1:887)
+    at C:\projects\staff-medical-system\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:34672
+    at C:\projects\staff-medical-system\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\projects\staff-medical-system\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\projects\staff-medical-system\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\projects\staff-medical-system\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\projects\staff-medical-system\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\projects\staff-medical-system\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\projects\staff-medical-system\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\projects\staff-medical-system\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+Statistics error: q [Error]: Dynamic server usage: Route /api/health/statistics couldn't be rendered statically because it accessed `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at Object.get (C:\projects\staff-medical-system\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:37835)
+    at d (C:\projects\staff-medical-system\.next\server\app\api\health\statistics\route.js:1:603)
+    at C:\projects\staff-medical-system\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:34672
+    at C:\projects\staff-medical-system\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\projects\staff-medical-system\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\projects\staff-medical-system\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\projects\staff-medical-system\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\projects\staff-medical-system\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\projects\staff-medical-system\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\projects\staff-medical-system\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062) {
+  description: "Route /api/health/statistics couldn't be rendered statically because it accessed `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+   Generating static pages (99/398) 
+Comprehensive skill questions: 47
+Skill categories by profession: {
+  nurse: [
+    'バイタル測定',
+    '点滴管理',
+    '薬剤管理',
+    '採血・注射',
+    '観察・記録',
+    '感染対策',
+    'コミュニケーション',
+    '医療安全',
+    '患者教育'
+  ],
+  'assistant-nurse': [ '日常生活援助', '療養上の世話', '観察・記録', '看護師との協働', '感染対策', '患者コミュニケーション' ],
+  'nursing-aide': [ '環境整備', '患者接遇', '配膳・移送', '清掃・消毒', '感染対策', 'サービス提供' ],
+  'care-worker': [ '介護技術', 'アセスメント', '認知症ケア', '多職種連携', '記録・報告', '個別ケア', '生活支援' ],
+  pt: [ 'ROM測定', '筋力評価', '基本動作訓練', '歩行訓練', 'プログラム立案', '機能評価', '運動療法' ],
+  ot: [ 'ADL評価', '上肢機能訓練', '認知機能訓練', '作業分析', '環境調整', '生活指導', '福祉用具' ],
+  st: [ '嚥下機能評価', '失語症評価', '構音訓練', '聴力検査', '補聴器調整', 'コミュニケーション訓練' ],
+  admin: [ '医事業務', 'レセプト', '患者応対', '個人情報保護', '事務処理', '窓口業務', '電話応対' ]
+}
+Facility specific skills: {
+  acute: [ '心電図モニター', '人工呼吸器', '急変対応', 'BLS', '医療機器操作', '集中治療', '救急処置' ],
+  chronic: [ '長期療養ケア', '認知症ケア', '終末期ケア', 'リハビリ看護', '生活支援', 'QOL向上' ],
+  roken: [ '在宅復帰支援', '多職種連携', 'サービス連携', '家族指導', '通所・訪問連携', '生活指導' ],
+  grouphome: [ '認知症ケア', '個別ケア', '生活支援', '家庭的環境', '地域連携' ]
+}
+Essential engagement questions: 35
+Total questions in bank: 204
+Essential engagement questions: 35
+Comprehensive skill questions: 47
+Abstract questions: 44
+LocalStorage is not available. Data will not persist.
+Comprehensive skill questions: 47
+Skill categories by profession: {
+  nurse: [
+    'バイタル測定',
+    '点滴管理',
+    '薬剤管理',
+    '採血・注射',
+    '観察・記録',
+    '感染対策',
+    'コミュニケーション',
+    '医療安全',
+    '患者教育'
+  ],
+  'assistant-nurse': [ '日常生活援助', '療養上の世話', '観察・記録', '看護師との協働', '感染対策', '患者コミュニケーション' ],
+  'nursing-aide': [ '環境整備', '患者接遇', '配膳・移送', '清掃・消毒', '感染対策', 'サービス提供' ],
+  'care-worker': [ '介護技術', 'アセスメント', '認知症ケア', '多職種連携', '記録・報告', '個別ケア', '生活支援' ],
+  pt: [ 'ROM測定', '筋力評価', '基本動作訓練', '歩行訓練', 'プログラム立案', '機能評価', '運動療法' ],
+  ot: [ 'ADL評価', '上肢機能訓練', '認知機能訓練', '作業分析', '環境調整', '生活指導', '福祉用具' ],
+  st: [ '嚥下機能評価', '失語症評価', '構音訓練', '聴力検査', '補聴器調整', 'コミュニケーション訓練' ],
+  admin: [ '医事業務', 'レセプト', '患者応対', '個人情報保護', '事務処理', '窓口業務', '電話応対' ]
+}
+Facility specific skills: {
+  acute: [ '心電図モニター', '人工呼吸器', '急変対応', 'BLS', '医療機器操作', '集中治療', '救急処置' ],
+  chronic: [ '長期療養ケア', '認知症ケア', '終末期ケア', 'リハビリ看護', '生活支援', 'QOL向上' ],
+  roken: [ '在宅復帰支援', '多職種連携', 'サービス連携', '家族指導', '通所・訪問連携', '生活指導' ],
+  grouphome: [ '認知症ケア', '個別ケア', '生活支援', '家庭的環境', '地域連携' ]
+}
+Essential engagement questions: 35
+Total questions in bank: 204
+Essential engagement questions: 35
+Comprehensive skill questions: 47
+Abstract questions: 44
+   Generating static pages (198/398) 
+LocalStorage is not available. Data will not persist.
+Comprehensive skill questions: 47
+Skill categories by profession: {
+  nurse: [
+    'バイタル測定',
+    '点滴管理',
+    '薬剤管理',
+    '採血・注射',
+    '観察・記録',
+    '感染対策',
+    'コミュニケーション',
+    '医療安全',
+    '患者教育'
+  ],
+  'assistant-nurse': [ '日常生活援助', '療養上の世話', '観察・記録', '看護師との協働', '感染対策', '患者コミュニケーション' ],
+  'nursing-aide': [ '環境整備', '患者接遇', '配膳・移送', '清掃・消毒', '感染対策', 'サービス提供' ],
+  'care-worker': [ '介護技術', 'アセスメント', '認知症ケア', '多職種連携', '記録・報告', '個別ケア', '生活支援' ],
+  pt: [ 'ROM測定', '筋力評価', '基本動作訓練', '歩行訓練', 'プログラム立案', '機能評価', '運動療法' ],
+  ot: [ 'ADL評価', '上肢機能訓練', '認知機能訓練', '作業分析', '環境調整', '生活指導', '福祉用具' ],
+  st: [ '嚥下機能評価', '失語症評価', '構音訓練', '聴力検査', '補聴器調整', 'コミュニケーション訓練' ],
+  admin: [ '医事業務', 'レセプト', '患者応対', '個人情報保護', '事務処理', '窓口業務', '電話応対' ]
+}
+Facility specific skills: {
+  acute: [ '心電図モニター', '人工呼吸器', '急変対応', 'BLS', '医療機器操作', '集中治療', '救急処置' ],
+  chronic: [ '長期療養ケア', '認知症ケア', '終末期ケア', 'リハビリ看護', '生活支援', 'QOL向上' ],
+  roken: [ '在宅復帰支援', '多職種連携', 'サービス連携', '家族指導', '通所・訪問連携', '生活指導' ],
+  grouphome: [ '認知症ケア', '個別ケア', '生活支援', '家庭的環境', '地域連携' ]
+}
+Essential engagement questions: 35
+Total questions in bank: 204
+Essential engagement questions: 35
+Comprehensive skill questions: 47
+Abstract questions: 44
+   Generating static pages (298/398) 
+Comprehensive skill questions: 47
+Skill categories by profession: {
+  nurse: [
+    'バイタル測定',
+    '点滴管理',
+    '薬剤管理',
+    '採血・注射',
+    '観察・記録',
+    '感染対策',
+    'コミュニケーション',
+    '医療安全',
+    '患者教育'
+  ],
+  'assistant-nurse': [ '日常生活援助', '療養上の世話', '観察・記録', '看護師との協働', '感染対策', '患者コミュニケーション' ],
+  'nursing-aide': [ '環境整備', '患者接遇', '配膳・移送', '清掃・消毒', '感染対策', 'サービス提供' ],
+  'care-worker': [ '介護技術', 'アセスメント', '認知症ケア', '多職種連携', '記録・報告', '個別ケア', '生活支援' ],
+  pt: [ 'ROM測定', '筋力評価', '基本動作訓練', '歩行訓練', 'プログラム立案', '機能評価', '運動療法' ],
+  ot: [ 'ADL評価', '上肢機能訓練', '認知機能訓練', '作業分析', '環境調整', '生活指導', '福祉用具' ],
+  st: [ '嚥下機能評価', '失語症評価', '構音訓練', '聴力検査', '補聴器調整', 'コミュニケーション訓練' ],
+  admin: [ '医事業務', 'レセプト', '患者応対', '個人情報保護', '事務処理', '窓口業務', '電話応対' ]
+}
+Facility specific skills: {
+  acute: [ '心電図モニター', '人工呼吸器', '急変対応', 'BLS', '医療機器操作', '集中治療', '救急処置' ],
+  chronic: [ '長期療養ケア', '認知症ケア', '終末期ケア', 'リハビリ看護', '生活支援', 'QOL向上' ],
+  roken: [ '在宅復帰支援', '多職種連携', 'サービス連携', '家族指導', '通所・訪問連携', '生活指導' ],
+  grouphome: [ '認知症ケア', '個別ケア', '生活支援', '家庭的環境', '地域連携' ]
+}
+Essential engagement questions: 35
+Total questions in bank: 204
+Essential engagement questions: 35
+Comprehensive skill questions: 47
+Abstract questions: 44
+Comprehensive skill questions: 47
+Skill categories by profession: {
+  nurse: [
+    'バイタル測定',
+    '点滴管理',
+    '薬剤管理',
+    '採血・注射',
+    '観察・記録',
+    '感染対策',
+    'コミュニケーション',
+    '医療安全',
+    '患者教育'
+  ],
+  'assistant-nurse': [ '日常生活援助', '療養上の世話', '観察・記録', '看護師との協働', '感染対策', '患者コミュニケーション' ],
+  'nursing-aide': [ '環境整備', '患者接遇', '配膳・移送', '清掃・消毒', '感染対策', 'サービス提供' ],
+  'care-worker': [ '介護技術', 'アセスメント', '認知症ケア', '多職種連携', '記録・報告', '個別ケア', '生活支援' ],
+  pt: [ 'ROM測定', '筋力評価', '基本動作訓練', '歩行訓練', 'プログラム立案', '機能評価', '運動療法' ],
+  ot: [ 'ADL評価', '上肢機能訓練', '認知機能訓練', '作業分析', '環境調整', '生活指導', '福祉用具' ],
+  st: [ '嚥下機能評価', '失語症評価', '構音訓練', '聴力検査', '補聴器調整', 'コミュニケーション訓練' ],
+  admin: [ '医事業務', 'レセプト', '患者応対', '個人情報保護', '事務処理', '窓口業務', '電話応対' ]
+}
+Facility specific skills: {
+  acute: [ '心電図モニター', '人工呼吸器', '急変対応', 'BLS', '医療機器操作', '集中治療', '救急処置' ],
+  chronic: [ '長期療養ケア', '認知症ケア', '終末期ケア', 'リハビリ看護', '生活支援', 'QOL向上' ],
+  roken: [ '在宅復帰支援', '多職種連携', 'サービス連携', '家族指導', '通所・訪問連携', '生活指導' ],
+  grouphome: [ '認知症ケア', '個別ケア', '生活支援', '家庭的環境', '地域連携' ]
+}
+Essential engagement questions: 35
+Total questions in bank: 204
+Essential engagement questions: 35
+Comprehensive skill questions: 47
+Abstract questions: 44
+LocalStorage is not available. Data will not persist.
+ ✓ Generating static pages (398/398)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                                                                                      Size     First Load JS
+┌ ○ /                                                                                                            13.3 kB         125 kB
+├ ○ /_not-found                                                                                                  912 B            90 kB
+├ ○ /admin                                                                                                       4.43 kB         100 kB
+├ ○ /admin/ai-settings                                                                                           5.86 kB         103 kB
+├ ○ /admin/audit-log                                                                                             8.23 kB         133 kB
+├ ○ /admin/backup                                                                                                12.5 kB         267 kB
+├ ○ /admin/career-courses                                                                                        6.54 kB        95.7 kB
+├ ○ /admin/compliance-master                                                                                     18 kB           123 kB
+├ ○ /admin/dev-notes                                                                                             29.8 kB         155 kB
+├ ○ /admin/documents                                                                                             3.46 kB        92.6 kB
+├ ○ /admin/image-management                                                                                      14.9 kB         116 kB
+├ ○ /admin/integration                                                                                           10 kB           113 kB
+├ ○ /admin/interview-bank                                                                                        24.8 kB         191 kB
+├ ○ /admin/master-data                                                                                           85.3 kB         542 kB
+├ ○ /admin/mcp-shared                                                                                            3.95 kB        93.1 kB
+├ ○ /admin/recruitment-master                                                                                    2.53 kB         174 kB
+├ ○ /admin/scheduler                                                                                             9.87 kB         135 kB
+├ ○ /annual-integration-summary                                                                                  9.25 kB         113 kB
+├ ƒ /api/admin/career-course/requests/[id]/approve                                                               0 B                0 B
+├ ƒ /api/admin/career-course/requests/[id]/reject                                                                0 B                0 B
+├ ƒ /api/admin/health-audit                                                                                      0 B                0 B
+├ ƒ /api/career-course/change-request                                                                            0 B                0 B
+├ ƒ /api/career-course/my-requests                                                                               0 B                0 B
+├ ƒ /api/career-course/notify-voicedrive                                                                         0 B                0 B
+├ ƒ /api/career-courses/definitions                                                                              0 B                0 B
+├ ƒ /api/career-support/records                                                                                  0 B                0 B
+├ ƒ /api/career-support/records/[staffId]                                                                        0 B                0 B
+├ ƒ /api/career-support/suggest-support                                                                          0 B                0 B
+├ ƒ /api/documents                                                                                               0 B                0 B
+├ ƒ /api/documents/download                                                                                      0 B                0 B
+├ ○ /api/documents/latest                                                                                        0 B                0 B
+├ ƒ /api/documents/view                                                                                          0 B                0 B
+├ ƒ /api/download-sheet                                                                                          0 B                0 B
+├ ƒ /api/employees/[employeeId]/evaluation-analysis                                                              0 B                0 B
+├ ƒ /api/employees/[employeeId]/profile                                                                          0 B                0 B
+├ ƒ /api/evaluation-items/[versionId]                                                                            0 B                0 B
+├ ƒ /api/evaluation-versions                                                                                     0 B                0 B
+├ ƒ /api/evaluation-versions/[id]                                                                                0 B                0 B
+├ ƒ /api/evaluation-versions/[id]/activate                                                                       0 B                0 B
+├ ƒ /api/evaluations/two-axis/calculate                                                                          0 B                0 B
+├ ○ /api/health                                                                                                  0 B                0 B
+├ ƒ /api/health/checkups                                                                                         0 B                0 B
+├ ƒ /api/health/checkups/[id]                                                                                    0 B                0 B
+├ ƒ /api/health/consent-dashboard                                                                                0 B                0 B
+├ ƒ /api/health/import                                                                                           0 B                0 B
+├ ƒ /api/health/notifications                                                                                    0 B                0 B
+├ ƒ /api/health/reexamination                                                                                    0 B                0 B
+├ ƒ /api/health/reports/generate                                                                                 0 B                0 B
+├ ƒ /api/health/staff/[staffId]/latest                                                                           0 B                0 B
+├ ƒ /api/health/statistics                                                                                       0 B                0 B
+├ ƒ /api/hr-policies                                                                                             0 B                0 B
+├ ƒ /api/hr-policies/[id]                                                                                        0 B                0 B
+├ ƒ /api/hr/stress-check/[staffId]                                                                               0 B                0 B
+├ ○ /api/interview-system-versions                                                                               0 B                0 B
+├ ƒ /api/interview-versions                                                                                      0 B                0 B
+├ ƒ /api/interview-versions/[id]                                                                                 0 B                0 B
+├ ƒ /api/interview-versions/[id]/activate                                                                        0 B                0 B
+├ ƒ /api/interviews/assisted-booking                                                                             0 B                0 B
+├ ƒ /api/interviews/cancel-booking                                                                               0 B                0 B
+├ ƒ /api/interviews/confirm-choice                                                                               0 B                0 B
+├ ƒ /api/interviews/proposals/[requestId]                                                                        0 B                0 B
+├ ƒ /api/interviews/reschedule-request                                                                           0 B                0 B
+├ ƒ /api/interviews/reservations                                                                                 0 B                0 B
+├ ƒ /api/interviews/reservations/[id]                                                                            0 B                0 B
+├ ƒ /api/interviews/reservations/bulk                                                                            0 B                0 B
+├ ƒ /api/interviews/reservations/stats                                                                           0 B                0 B
+├ ƒ /api/mcp-shared/evaluation-notifications                                                                     0 B                0 B
+├ ƒ /api/motivation/assess                                                                                       0 B                0 B
+├ ƒ /api/motivation/distribution/[department]                                                                    0 B                0 B
+├ ƒ /api/motivation/history/[staffId]                                                                            0 B                0 B
+├ ƒ /api/motivation/team-compatibility                                                                           0 B                0 B
+├ ƒ /api/my-page                                                                                                 0 B                0 B
+├ ƒ /api/preview-sheet                                                                                           0 B                0 B
+├ ƒ /api/probation-programs                                                                                      0 B                0 B
+├ ƒ /api/stress-check/consent                                                                                    0 B                0 B
+├ ƒ /api/stress-check/my-result                                                                                  0 B                0 B
+├ ƒ /api/training-programs                                                                                       0 B                0 B
+├ ƒ /api/v3/appeals/list                                                                                         0 B                0 B
+├ ƒ /api/v3/appeals/submit                                                                                       0 B                0 B
+├ ƒ /api/v3/compliance/cases                                                                                     0 B                0 B
+├ ƒ /api/v3/compliance/receive                                                                                   0 B                0 B
+├ ƒ /api/v3/compliance/webhook                                                                                   0 B                0 B
+├ ○ /attendance-management                                                                                       5.29 kB         104 kB
+├ ○ /compliance                                                                                                  15.4 kB         115 kB
+├ ○ /dashboard                                                                                                   36 kB           140 kB
+├ ○ /dashboard/admin                                                                                             13.5 kB         236 kB
+├ ○ /dashboard/personal                                                                                          1.98 kB         102 kB
+├ ○ /docs/development-notes/evaluation-pattern-designs                                                           6.07 kB         110 kB
+├ ○ /education                                                                                                   17.6 kB         122 kB
+├ ○ /evaluation-design                                                                                           19.2 kB         304 kB
+├ ○ /evaluation-design/contribution                                                                              3.65 kB         108 kB
+├ ƒ /evaluation-design/facility/[name]                                                                           12.1 kB         152 kB
+├ ○ /evaluation-design/nursing                                                                                   10.6 kB         142 kB
+├ ○ /evaluation-design/questions                                                                                 12.6 kB         150 kB
+├ ○ /evaluation-design/simulation                                                                                12.6 kB         148 kB
+├ ○ /evaluation-design/technical/corporate                                                                       12.2 kB         122 kB
+├ ○ /evaluation-design/technical/facility                                                                        13.2 kB         149 kB
+├ ○ /evaluation-design/templates                                                                                 7.84 kB         116 kB
+├ ○ /evaluation-design/timeline                                                                                  10.9 kB         108 kB
+├ ○ /evaluation-design/wizard                                                                                    11.9 kB         154 kB
+├ ○ /evaluation-execution                                                                                        23.5 kB         171 kB
+├ ƒ /evaluation-execution/dynamic/[id]                                                                           11.8 kB         116 kB
+├ ƒ /evaluation-execution/dynamic/[id]/[staffId]                                                                 13.6 kB         151 kB
+├ ○ /evaluation-execution/enhanced                                                                               10.2 kB         130 kB
+├ ƒ /evaluation-execution/input/[id]                                                                             4.99 kB         109 kB
+├ ○ /evaluation-execution/new                                                                                    3.02 kB         100 kB
+├ ○ /evaluation-execution/urgent                                                                                 14 kB           150 kB
+├ ○ /evaluation-relative-grading                                                                                 19.9 kB         156 kB
+├ ○ /evaluation-review                                                                                           7.02 kB         119 kB
+├ ○ /evaluation-sheets                                                                                           1.01 kB        97.1 kB
+├ ƒ /evaluation-sheets/[facilityType]/[jobType]/[experienceCategory]                                             3.98 kB         101 kB
+├ ○ /evaluation-sheets/v4                                                                                        3.23 kB        99.3 kB
+├ ○ /evaluation-sheets/v4/acute-assistant-nurse/junior-assistant-nurse-evaluation-v4-pattern5                    1.6 kB         90.7 kB
+├ ○ /evaluation-sheets/v4/acute-assistant-nurse/midlevel-assistant-nurse-evaluation-v4-pattern5                  1.59 kB        90.7 kB
+├ ○ /evaluation-sheets/v4/acute-assistant-nurse/new-assistant-nurse-evaluation-v4-pattern5                       1.59 kB        90.7 kB
+├ ○ /evaluation-sheets/v4/acute-assistant-nurse/veteran-assistant-nurse-evaluation-v4-pattern5                   1.54 kB        90.7 kB
+├ ○ /evaluation-sheets/v4/acute-nurse                                                                            1.23 kB        90.3 kB
+├ ○ /evaluation-sheets/v4/acute-nurse/junior-nurse-evaluation-v4-pattern5                                        1.54 kB        90.7 kB
+├ ○ /evaluation-sheets/v4/acute-nurse/midlevel-nurse-evaluation-v4-pattern5                                      1.54 kB        90.7 kB
+├ ○ /evaluation-sheets/v4/acute-nurse/new-nurse-evaluation-v4-pattern5                                           1.55 kB        90.7 kB
+├ ○ /evaluation-sheets/v4/acute-nurse/veteran-nurse-evaluation-v4-pattern5                                       1.55 kB        90.7 kB
+├ ○ /evaluation-sheets/v4/acute-nurse/ward-chief-evaluation-v4-pattern5                                          1.51 kB        90.6 kB
+├ ○ /evaluation-sheets/v4/acute-nurse/ward-manager-evaluation-v4-pattern5                                        1.51 kB        90.6 kB
+├ ○ /evaluation-sheets/v4/acute-nursing-aide                                                                     1.28 kB        90.4 kB
+├ ○ /evaluation-sheets/v4/acute-nursing-aide/junior-nursing-aide-evaluation-v4-pattern5                          1.54 kB        90.7 kB
+├ ○ /evaluation-sheets/v4/acute-nursing-aide/leader-nursing-aide-evaluation-v4-pattern5                          1.54 kB        90.7 kB
+├ ○ /evaluation-sheets/v4/acute-nursing-aide/midlevel-nursing-aide-evaluation-v4-pattern5                        1.54 kB        90.7 kB
+├ ○ /evaluation-sheets/v4/acute-nursing-aide/new-nursing-aide-evaluation-v4-pattern5                             1.55 kB        90.7 kB
+├ ○ /evaluation-sheets/v4/acute-nursing-aide/veteran-nursing-aide-evaluation-v4-pattern5                         1.54 kB        90.7 kB
+├ ○ /evaluation-sheets/v4/acute-ot/chief-ot-evaluation-v4-pattern5                                               9.04 kB         113 kB
+├ ○ /evaluation-sheets/v4/acute-ot/junior-ot-evaluation-v4-pattern5                                              9.13 kB         113 kB
+├ ○ /evaluation-sheets/v4/acute-ot/midlevel-ot-evaluation-v4-pattern5                                            9.14 kB         113 kB
+├ ○ /evaluation-sheets/v4/acute-ot/new-ot-evaluation-v4-pattern5                                                 9.01 kB         113 kB
+├ ○ /evaluation-sheets/v4/acute-ot/veteran-ot-evaluation-v4-pattern5                                             9.11 kB         113 kB
+├ ○ /evaluation-sheets/v4/acute-pt/chief-pt-evaluation-v4-pattern5                                               9.04 kB         113 kB
+├ ○ /evaluation-sheets/v4/acute-pt/junior-pt-evaluation-v4-pattern5                                              9.14 kB         113 kB
+├ ○ /evaluation-sheets/v4/acute-pt/midlevel-pt-evaluation-v4-pattern5                                            9.16 kB         113 kB
+├ ○ /evaluation-sheets/v4/acute-pt/new-pt-evaluation-v4-pattern5                                                 9.01 kB         113 kB
+├ ○ /evaluation-sheets/v4/acute-pt/veteran-pt-evaluation-v4-pattern5                                             9.12 kB         113 kB
+├ ○ /evaluation-sheets/v4/acute-st/chief-st-evaluation-v4-pattern5                                               9.06 kB         113 kB
+├ ○ /evaluation-sheets/v4/acute-st/junior-st-evaluation-v4-pattern5                                              9.15 kB         113 kB
+├ ○ /evaluation-sheets/v4/acute-st/midlevel-st-evaluation-v4-pattern5                                            9.16 kB         113 kB
+├ ○ /evaluation-sheets/v4/acute-st/new-st-evaluation-v4-pattern5                                                 9 kB            113 kB
+├ ○ /evaluation-sheets/v4/acute-st/veteran-st-evaluation-v4-pattern5                                             9.12 kB         113 kB
+├ ƒ /evaluation-sheets/v4/chronic-assistant-nurse/chronic-junior-assistant-nurse-evaluation-v4-pattern5          10.4 kB         114 kB
+├ ƒ /evaluation-sheets/v4/chronic-assistant-nurse/chronic-midlevel-assistant-nurse-evaluation-v4-pattern5        10.4 kB         114 kB
+├ ƒ /evaluation-sheets/v4/chronic-assistant-nurse/chronic-new-assistant-nurse-evaluation-v4-pattern5             10.8 kB         114 kB
+├ ƒ /evaluation-sheets/v4/chronic-assistant-nurse/chronic-veteran-assistant-nurse-evaluation-v4-pattern5         10.4 kB         114 kB
+├ ○ /evaluation-sheets/v4/chronic-nurse/chronic-chief-nurse-evaluation-v4-pattern5                               1.54 kB        90.7 kB
+├ ○ /evaluation-sheets/v4/chronic-nurse/chronic-junior-nurse-evaluation-v4-pattern5                              1.54 kB        90.7 kB
+├ ○ /evaluation-sheets/v4/chronic-nurse/chronic-midlevel-nurse-evaluation-v4-pattern5                            1.54 kB        90.7 kB
+├ ○ /evaluation-sheets/v4/chronic-nurse/chronic-new-nurse-evaluation-v4-pattern5                                 1.55 kB        90.7 kB
+├ ○ /evaluation-sheets/v4/chronic-nurse/chronic-veteran-nurse-evaluation-v4-pattern5                             1.54 kB        90.7 kB
+├ ○ /evaluation-sheets/v4/chronic-nurse/chronic-ward-manager-evaluation-v4-pattern5                              1.55 kB        90.7 kB
+├ ƒ /evaluation-sheets/v4/chronic-nursing-aide/chronic-new-nursing-aide-evaluation-v4-pattern5                   172 B           114 kB
+├ ƒ /evaluation-sheets/v4/chronic-nursing-aide/junior                                                            10.4 kB         114 kB
+├ ƒ /evaluation-sheets/v4/chronic-nursing-aide/leader                                                            10.4 kB         114 kB
+├ ƒ /evaluation-sheets/v4/chronic-nursing-aide/midlevel                                                          10.4 kB         114 kB
+├ ƒ /evaluation-sheets/v4/chronic-nursing-aide/new                                                               172 B           114 kB
+├ ƒ /evaluation-sheets/v4/chronic-nursing-aide/veteran                                                           10.6 kB         114 kB
+├ ○ /evaluation-sheets/v4/chronic-ot/chief-ot-evaluation-v4-pattern5                                             9.15 kB         113 kB
+├ ○ /evaluation-sheets/v4/chronic-ot/junior-ot-evaluation-v4-pattern5                                            9.19 kB         113 kB
+├ ○ /evaluation-sheets/v4/chronic-ot/midlevel-ot-evaluation-v4-pattern5                                          9.19 kB         113 kB
+├ ○ /evaluation-sheets/v4/chronic-ot/new-ot-evaluation-v4-pattern5                                               9.2 kB          113 kB
+├ ○ /evaluation-sheets/v4/chronic-ot/veteran-ot-evaluation-v4-pattern5                                           9.27 kB         113 kB
+├ ○ /evaluation-sheets/v4/chronic-pt/chief-pt-evaluation-v4-pattern5                                             9.16 kB         113 kB
+├ ○ /evaluation-sheets/v4/chronic-pt/junior-pt-evaluation-v4-pattern5                                            9.23 kB         113 kB
+├ ○ /evaluation-sheets/v4/chronic-pt/midlevel-pt-evaluation-v4-pattern5                                          9.26 kB         113 kB
+├ ○ /evaluation-sheets/v4/chronic-pt/new-pt-evaluation-v4-pattern5                                               9.18 kB         113 kB
+├ ○ /evaluation-sheets/v4/chronic-pt/veteran-pt-evaluation-v4-pattern5                                           9.25 kB         113 kB
+├ ○ /evaluation-sheets/v4/chronic-st/chief-st-evaluation-v4-pattern5                                             9.21 kB         113 kB
+├ ○ /evaluation-sheets/v4/chronic-st/junior-st-evaluation-v4-pattern5                                            9.18 kB         113 kB
+├ ○ /evaluation-sheets/v4/chronic-st/new-st-evaluation-v4-pattern5                                               9.23 kB         113 kB
+├ ○ /evaluation-sheets/v4/chronic-st/veteran-st-evaluation-v4-pattern5                                           9.25 kB         113 kB
+├ ● /evaluation-sheets/v4/outpatient-assistant-nurse/[slug]                                                      11.3 kB         115 kB
+├   ├ /evaluation-sheets/v4/outpatient-assistant-nurse/new-outpatient-assistant-nurse-evaluation-v4-pattern5
+├   └ /evaluation-sheets/v4/outpatient-assistant-nurse/junior-outpatient-assistant-nurse-evaluation-v4-pattern5
+├ ○ /evaluation-sheets/v4/outpatient-chief                                                                       10.2 kB         114 kB
+├ ○ /evaluation-sheets/v4/outpatient-manager                                                                     10.3 kB         114 kB
+├ ○ /evaluation-sheets/v4/outpatient-nurse/junior-outpatient-nurse-evaluation-v4-pattern5                        1.54 kB        90.7 kB
+├ ○ /evaluation-sheets/v4/outpatient-nurse/midlevel-outpatient-nurse-evaluation-v4-pattern5                      1.54 kB        90.7 kB
+├ ○ /evaluation-sheets/v4/outpatient-nurse/new-outpatient-nurse-evaluation-v4-pattern5                           1.55 kB        90.7 kB
+├ ○ /evaluation-sheets/v4/outpatient-nurse/veteran-outpatient-nurse-evaluation-v4-pattern5                       1.59 kB        90.7 kB
+├ ○ /evaluation-sheets/v4/roken-assistant-nurse/junior-assistant-nurse-evaluation-v4-pattern5                    10 kB           114 kB
+├ ○ /evaluation-sheets/v4/roken-assistant-nurse/midlevel-assistant-nurse-evaluation-v4-pattern5                  9.68 kB         113 kB
+├ ○ /evaluation-sheets/v4/roken-assistant-nurse/new-assistant-nurse-evaluation-v4-pattern5                       10 kB           114 kB
+├ ○ /evaluation-sheets/v4/roken-assistant-nurse/veteran-assistant-nurse-evaluation-v4-pattern5                   9.75 kB         113 kB
+├ ○ /evaluation-sheets/v4/roken-care-worker/junior-care-worker-evaluation-v4-pattern5                            9.81 kB         113 kB
+├ ○ /evaluation-sheets/v4/roken-care-worker/midlevel-care-worker-evaluation-v4-pattern5                          9.75 kB         113 kB
+├ ○ /evaluation-sheets/v4/roken-care-worker/new-care-worker-evaluation-v4-pattern5                               10.5 kB         114 kB
+├ ○ /evaluation-sheets/v4/roken-care-worker/veteran-care-worker-evaluation-v4-pattern5                           9.74 kB         113 kB
+├ ○ /evaluation-sheets/v4/roken-certified-care-worker/junior-certified-care-worker-evaluation-v4-pattern5        10 kB           114 kB
+├ ○ /evaluation-sheets/v4/roken-certified-care-worker/leader-certified-care-worker-evaluation-v4-pattern5        9.97 kB         113 kB
+├ ○ /evaluation-sheets/v4/roken-certified-care-worker/midlevel-certified-care-worker-evaluation-v4-pattern5      9.99 kB         113 kB
+├ ○ /evaluation-sheets/v4/roken-certified-care-worker/new-certified-care-worker-evaluation-v4-pattern5           10.4 kB         114 kB
+├ ○ /evaluation-sheets/v4/roken-certified-care-worker/veteran-certified-care-worker-evaluation-v4-pattern5       10 kB           114 kB
+├ ○ /evaluation-sheets/v4/roken-nurse/junior-nurse-evaluation-v4-pattern5                                        10.2 kB         114 kB
+├ ○ /evaluation-sheets/v4/roken-nurse/midlevel-nurse-evaluation-v4-pattern5                                      9.54 kB         113 kB
+├ ○ /evaluation-sheets/v4/roken-nurse/new-nurse-evaluation-v4-pattern5                                           10.2 kB         114 kB
+├ ○ /evaluation-sheets/v4/roken-nurse/veteran-nurse-evaluation-v4-pattern5                                       9.61 kB         113 kB
+├ ○ /evaluation-sheets/v4/roken-ot/chief-ot-evaluation-v4-pattern5                                               9.52 kB         113 kB
+├ ○ /evaluation-sheets/v4/roken-ot/junior-ot-evaluation-v4-pattern5                                              9.3 kB          113 kB
+├ ○ /evaluation-sheets/v4/roken-ot/midlevel-ot-evaluation-v4-pattern5                                            9.39 kB         113 kB
+├ ○ /evaluation-sheets/v4/roken-ot/new-ot-evaluation-v4-pattern5                                                 9.21 kB         113 kB
+├ ○ /evaluation-sheets/v4/roken-ot/veteran-ot-evaluation-v4-pattern5                                             9.48 kB         113 kB
+├ ○ /evaluation-sheets/v4/roken-pt/chief-pt-evaluation-v4-pattern5                                               9.19 kB         113 kB
+├ ○ /evaluation-sheets/v4/roken-pt/junior-pt-evaluation-v4-pattern5                                              9.29 kB         113 kB
+├ ○ /evaluation-sheets/v4/roken-pt/midlevel-pt-evaluation-v4-pattern5                                            9.29 kB         113 kB
+├ ○ /evaluation-sheets/v4/roken-pt/new-pt-evaluation-v4-pattern5                                                 9.26 kB         113 kB
+├ ○ /evaluation-sheets/v4/roken-pt/veteran-pt-evaluation-v4-pattern5                                             9.27 kB         113 kB
+├ ○ /evaluation-sheets/v4/roken-st/chief-st-evaluation-v4-pattern5                                               9.54 kB         113 kB
+├ ○ /evaluation-sheets/v4/roken-st/junior-st-evaluation-v4-pattern5                                              9.32 kB         113 kB
+├ ○ /evaluation-sheets/v4/roken-st/midlevel-st-evaluation-v4-pattern5                                            9.43 kB         113 kB
+├ ○ /evaluation-sheets/v4/roken-st/new-st-evaluation-v4-pattern5                                                 9.24 kB         113 kB
+├ ○ /evaluation-sheets/v4/roken-st/veteran-st-evaluation-v4-pattern5                                             9.49 kB         113 kB
+├ ○ /exit-interview-sheets/general-staff-30min                                                                   8.41 kB         112 kB
+├ ○ /exit-interview-sheets/general-staff-45min                                                                   9.23 kB         113 kB
+├ ○ /exit-interview-sheets/manager-veteran-45min                                                                 8.49 kB         112 kB
+├ ○ /exit-interview-sheets/manager-veteran-60min                                                                 11.5 kB         115 kB
+├ ○ /exit-interview-sheets/probation-staff-15min                                                                 7.99 kB         111 kB
+├ ○ /exit-interview-sheets/probation-staff-30min                                                                 9.6 kB          113 kB
+├ ○ /goals                                                                                                       4.25 kB        93.4 kB
+├ ○ /health/consent-dashboard                                                                                    6.05 kB         103 kB
+├ ○ /health/management                                                                                           13.5 kB         177 kB
+├ ƒ /health/staff/[staffId]                                                                                      706 B          89.8 kB
+├ ○ /health/stress-check                                                                                         266 B           112 kB
+├ ○ /hr-policy                                                                                                   23.8 kB         113 kB
+├ ○ /hr-station                                                                                                  61.2 kB         150 kB
+├ ○ /hr-station/deployment                                                                                       11.2 kB         100 kB
+├ ○ /hr-strategy                                                                                                 607 B          89.7 kB
+├ ○ /hr-system-guide                                                                                             48 kB           149 kB
+├ ƒ /hr/stress-check/[staffId]                                                                                   5.08 kB         102 kB
+├ ○ /integration-monitor                                                                                         2 kB           91.1 kB
+├ ○ /interview-bank                                                                                              7.46 kB         160 kB
+├ ○ /interview-bank/create                                                                                       7.25 kB         154 kB
+├ ○ /interview-phase2                                                                                            9.04 kB         109 kB
+├ ○ /interview-sheets-viewer                                                                                     2.41 kB        98.5 kB
+├ ƒ /interview-sheets/[experienceCategory]/[duration]                                                            4.95 kB         102 kB
+├ ○ /interview-sheets/v5                                                                                         4.46 kB         108 kB
+├ ○ /interview-sheets/v5/chief-nurse-15min                                                                       5.12 kB         113 kB
+├ ○ /interview-sheets/v5/chief-nurse-30min                                                                       8.53 kB         117 kB
+├ ○ /interview-sheets/v5/chief-nurse-45min                                                                       10.1 kB         118 kB
+├ ○ /interview-sheets/v5/general-nurse-15min                                                                     2.57 kB         115 kB
+├ ○ /interview-sheets/v5/general-nurse-30min                                                                     4.99 kB         117 kB
+├ ○ /interview-sheets/v5/general-nurse-45min                                                                     5.31 kB         118 kB
+├ ○ /interview-sheets/v5/leader-nurse-15min                                                                      5.1 kB          113 kB
+├ ○ /interview-sheets/v5/leader-nurse-30min                                                                      8.71 kB         117 kB
+├ ○ /interview-sheets/v5/leader-nurse-45min                                                                      9.96 kB         118 kB
+├ ○ /interview-sheets/v5/medical-affairs-staff-15min                                                             7.14 kB         111 kB
+├ ○ /interview-sheets/v5/medical-affairs-staff-30min                                                             7.92 kB         111 kB
+├ ○ /interview-sheets/v5/medical-affairs-staff-45min                                                             8.96 kB         112 kB
+├ ○ /interview-sheets/v5/new-nurse-15min                                                                         5.01 kB         113 kB
+├ ○ /interview-sheets/v5/new-nurse-30min                                                                         8.19 kB         116 kB
+├ ○ /interview-sheets/v5/new-nurse-45min                                                                         5.98 kB         118 kB
+├ ○ /interview-sheets/v5/rehabilitation/ot/chief-ot-15min                                                        4.47 kB         113 kB
+├ ○ /interview-sheets/v5/rehabilitation/ot/chief-ot-30min                                                        8.87 kB         117 kB
+├ ○ /interview-sheets/v5/rehabilitation/ot/chief-ot-45min                                                        10.3 kB         118 kB
+├ ○ /interview-sheets/v5/rehabilitation/ot/general-ot-15min                                                      4.54 kB         113 kB
+├ ○ /interview-sheets/v5/rehabilitation/ot/general-ot-30min                                                      8.75 kB         117 kB
+├ ○ /interview-sheets/v5/rehabilitation/ot/general-ot-45min                                                      10.7 kB         119 kB
+├ ○ /interview-sheets/v5/rehabilitation/ot/midlevel-ot-15min                                                     4.53 kB         113 kB
+├ ○ /interview-sheets/v5/rehabilitation/ot/midlevel-ot-30min                                                     8.4 kB          117 kB
+├ ○ /interview-sheets/v5/rehabilitation/ot/midlevel-ot-45min                                                     10.2 kB         118 kB
+├ ○ /interview-sheets/v5/rehabilitation/ot/new-ot-15min                                                          4.55 kB         113 kB
+├ ○ /interview-sheets/v5/rehabilitation/ot/new-ot-30min                                                          8.7 kB          117 kB
+├ ○ /interview-sheets/v5/rehabilitation/ot/new-ot-45min                                                          10.3 kB         118 kB
+├ ○ /interview-sheets/v5/rehabilitation/ot/veteran-ot-15min                                                      4.52 kB         113 kB
+├ ○ /interview-sheets/v5/rehabilitation/ot/veteran-ot-30min                                                      8.62 kB         117 kB
+├ ○ /interview-sheets/v5/rehabilitation/ot/veteran-ot-45min                                                      10.9 kB         119 kB
+├ ○ /interview-sheets/v5/rehabilitation/pt/chief-pt-15min                                                        5.54 kB         114 kB
+├ ○ /interview-sheets/v5/rehabilitation/pt/chief-pt-30min                                                        8.34 kB         117 kB
+├ ○ /interview-sheets/v5/rehabilitation/pt/chief-pt-45min                                                        10.5 kB         119 kB
+├ ○ /interview-sheets/v5/rehabilitation/pt/general-pt-15min                                                      5.33 kB         114 kB
+├ ○ /interview-sheets/v5/rehabilitation/pt/general-pt-30min                                                      8.63 kB         117 kB
+├ ○ /interview-sheets/v5/rehabilitation/pt/general-pt-45min                                                      9.5 kB          118 kB
+├ ○ /interview-sheets/v5/rehabilitation/pt/midlevel-pt-15min                                                     5.37 kB         114 kB
+├ ○ /interview-sheets/v5/rehabilitation/pt/midlevel-pt-30min                                                     8.5 kB          117 kB
+├ ○ /interview-sheets/v5/rehabilitation/pt/midlevel-pt-45min                                                     9.59 kB         118 kB
+├ ○ /interview-sheets/v5/rehabilitation/pt/new-pt-15min                                                          4.52 kB         113 kB
+├ ○ /interview-sheets/v5/rehabilitation/pt/new-pt-30min                                                          529 B          89.6 kB
+├ ○ /interview-sheets/v5/rehabilitation/pt/new-pt-45min                                                          529 B          89.6 kB
+├ ○ /interview-sheets/v5/rehabilitation/pt/veteran-pt-15min                                                      5.37 kB         114 kB
+├ ○ /interview-sheets/v5/rehabilitation/pt/veteran-pt-30min                                                      7.96 kB         116 kB
+├ ○ /interview-sheets/v5/rehabilitation/pt/veteran-pt-45min                                                      10.1 kB         118 kB
+├ ○ /interview-sheets/v5/rehabilitation/st/chief-st-15min                                                        4.69 kB         113 kB
+├ ○ /interview-sheets/v5/rehabilitation/st/chief-st-30min                                                        8.01 kB         116 kB
+├ ○ /interview-sheets/v5/rehabilitation/st/chief-st-45min                                                        9.68 kB         118 kB
+├ ○ /interview-sheets/v5/rehabilitation/st/general-st-15min                                                      4.75 kB         113 kB
+├ ○ /interview-sheets/v5/rehabilitation/st/general-st-30min                                                      7.77 kB         116 kB
+├ ○ /interview-sheets/v5/rehabilitation/st/general-st-45min                                                      8.38 kB         117 kB
+├ ○ /interview-sheets/v5/rehabilitation/st/midlevel-st-15min                                                     4.68 kB         113 kB
+├ ○ /interview-sheets/v5/rehabilitation/st/midlevel-st-30min                                                     7.53 kB         116 kB
+├ ○ /interview-sheets/v5/rehabilitation/st/midlevel-st-45min                                                     8.6 kB          117 kB
+├ ○ /interview-sheets/v5/rehabilitation/st/new-st-15min                                                          4.6 kB          113 kB
+├ ○ /interview-sheets/v5/rehabilitation/st/new-st-30min                                                          7.75 kB         116 kB
+├ ○ /interview-sheets/v5/rehabilitation/st/new-st-45min                                                          8.94 kB         117 kB
+├ ○ /interview-sheets/v5/rehabilitation/st/veteran-st-15min                                                      4.79 kB         113 kB
+├ ○ /interview-sheets/v5/rehabilitation/st/veteran-st-30min                                                      7.88 kB         116 kB
+├ ○ /interview-sheets/v5/rehabilitation/st/veteran-st-45min                                                      9.14 kB         117 kB
+├ ○ /interview-sheets/v5/senior-nurse-15min                                                                      5.11 kB         113 kB
+├ ○ /interview-sheets/v5/senior-nurse-30min                                                                      8.48 kB         117 kB
+├ ○ /interview-sheets/v5/senior-nurse-45min                                                                      9.95 kB         118 kB
+├ ○ /interview-sheets/v5/veteran-nurse-15min                                                                     5.18 kB         113 kB
+├ ○ /interview-sheets/v5/veteran-nurse-30min                                                                     8.77 kB         117 kB
+├ ○ /interview-sheets/v5/veteran-nurse-45min                                                                     10.1 kB         118 kB
+├ ○ /interviews                                                                                                  155 kB          751 kB
+├ ○ /interviews/support/voicedrive                                                                               11.1 kB         155 kB
+├ ○ /my-page                                                                                                     6.62 kB         104 kB
+├ ○ /my-page/career-course/change-request                                                                        5.72 kB         103 kB
+├ ○ /my-page/career-course/my-requests                                                                           5.72 kB         103 kB
+├ ○ /my-stress-check                                                                                             10.9 kB         108 kB
+├ ○ /notifications                                                                                               48.8 kB         305 kB
+├ ○ /recruitment                                                                                                 25.9 kB         163 kB
+├ ○ /reminders/send                                                                                              3.11 kB         100 kB
+├ ○ /reports                                                                                                     3.16 kB        92.3 kB
+├ ○ /reports/basic-metrics                                                                                       3.83 kB        99.9 kB
+├ ○ /reports/basic-metrics/basic-statistics                                                                      2.24 kB        91.4 kB
+├ ○ /reports/basic-metrics/benchmark                                                                             7.76 kB         234 kB
+├ ○ /reports/basic-metrics/compliance                                                                            11 kB           234 kB
+├ ○ /reports/basic-metrics/cost-analysis                                                                         12.9 kB         233 kB
+├ ○ /reports/basic-metrics/diversity-inclusion                                                                   12 kB           230 kB
+├ ○ /reports/basic-metrics/engagement                                                                            11 kB           234 kB
+├ ○ /reports/basic-metrics/integrated-assessment                                                                 9.78 kB         228 kB
+├ ○ /reports/basic-metrics/organizational-efficiency                                                             10.1 kB         233 kB
+├ ○ /reports/basic-metrics/predictive-analytics                                                                  10.7 kB         234 kB
+├ ○ /reports/basic-metrics/productivity                                                                          10.5 kB         230 kB
+├ ○ /reports/basic-metrics/real-time-dashboard                                                                   8.71 kB         108 kB
+├ ○ /reports/basic-metrics/risk-management                                                                       12.4 kB         227 kB
+├ ○ /reports/basic-metrics/talent-growth                                                                         2.74 kB        91.9 kB
+├ ○ /reports/basic-metrics/talent-quality                                                                        2.43 kB        91.5 kB
+├ ○ /reports/cohort-analysis                                                                                     5.08 kB         102 kB
+├ ○ /reports/cohort-analysis/department-cohort                                                                   7.04 kB         414 kB
+├ ○ /reports/cohort-analysis/engagement-cohort                                                                   6.03 kB         383 kB
+├ ○ /reports/cohort-analysis/entry-year-cohort                                                                   4.77 kB         374 kB
+├ ○ /reports/cohort-analysis/generation-analysis                                                                 5.59 kB         382 kB
+├ ○ /reports/cohort-analysis/intervention-effect                                                                 8.32 kB         412 kB
+├ ○ /reports/cohort-analysis/learning-cohort                                                                     5.84 kB         387 kB
+├ ○ /reports/cohort-analysis/life-event-cohort                                                                   6.62 kB         384 kB
+├ ○ /reports/cohort-analysis/location-cohort                                                                     6.38 kB         383 kB
+├ ○ /reports/cohort-analysis/network-cohort                                                                      5.75 kB         383 kB
+├ ○ /reports/cohort-analysis/performance-cohort                                                                  5.34 kB         386 kB
+├ ○ /reports/cohort-analysis/wellbeing-cohort                                                                    6.48 kB         388 kB
+├ ○ /reports/cost-optimization                                                                                   4.42 kB         257 kB
+├ ○ /reports/department-analysis                                                                                 11.5 kB         136 kB
+├ ○ /reports/export                                                                                              3.1 kB          100 kB
+├ ○ /reports/flow-analysis                                                                                       4.01 kB         101 kB
+├ ○ /reports/flow-analysis/career-path                                                                           4.25 kB         262 kB
+├ ○ /reports/flow-analysis/department-flow                                                                       4.06 kB         262 kB
+├ ○ /reports/flow-analysis/mobility-matrix                                                                       2.3 kB          257 kB
+├ ○ /reports/home                                                                                                3.65 kB        92.8 kB
+├ ○ /reports/hr-strategy                                                                                         14.6 kB         343 kB
+├ ○ /reports/organization-optimization                                                                           4.18 kB         257 kB
+├ ○ /reports/performance-evaluation                                                                              4.48 kB         101 kB
+├ ○ /reports/performance-evaluation/cluster-analysis                                                             6.71 kB         208 kB
+├ ○ /reports/performance-evaluation/department-comparison                                                        7.21 kB         212 kB
+├ ○ /reports/performance-evaluation/evaluation-trend                                                             4.82 kB         209 kB
+├ ○ /reports/performance-evaluation/organization-optimization                                                    5.2 kB          105 kB
+├ ○ /reports/performance-evaluation/performance-matrix                                                           3.06 kB         103 kB
+├ ○ /reports/performance-evaluation/performance-prediction                                                       3.69 kB        92.8 kB
+├ ○ /reports/performance-evaluation/skill-assessment                                                             3.56 kB        92.7 kB
+├ ○ /reports/performance-evaluation/team-analysis                                                                4.04 kB         104 kB
+├ ○ /reports/recruitment-effectiveness                                                                           4.37 kB         257 kB
+├ ○ /reports/retention                                                                                           4.79 kB        93.9 kB
+├ ○ /reports/retention/cohort-intervention-effect                                                                5.06 kB         367 kB
+├ ○ /reports/retention/cohort-yearly-tracking                                                                    4.77 kB         367 kB
+├ ○ /reports/retention/early-turnover-alert                                                                      3.83 kB         250 kB
+├ ○ /reports/retention/early-turnover-pattern                                                                    4.76 kB         363 kB
+├ ○ /reports/retention/factor-mapping                                                                            3.19 kB         171 kB
+├ ○ /reports/retention/hazard-cox-regression                                                                     3.41 kB         250 kB
+├ ○ /reports/retention/hazard-risk-score                                                                         6.12 kB         261 kB
+├ ○ /reports/retention/retention-simulator                                                                       3.04 kB         171 kB
+├ ○ /reports/retention/segment-generation                                                                        4.54 kB         370 kB
+├ ○ /reports/retention/segment-recruitment-type                                                                  5.26 kB         368 kB
+├ ○ /reports/retention/survival-curve-department                                                                 4.14 kB         355 kB
+├ ○ /reports/retention/survival-curve-overall                                                                    3.66 kB         355 kB
+├ ○ /reports/retention/turnover-contagion                                                                        3.93 kB         172 kB
+├ ○ /reports/simulation                                                                                          4.39 kB         101 kB
+├ ○ /reports/simulation/cost-optimization                                                                        7.28 kB         385 kB
+├ ○ /reports/simulation/organization-redesign                                                                    6.21 kB         382 kB
+├ ○ /reports/simulation/recruitment-planning                                                                     7.08 kB         381 kB
+├ ○ /reports/simulation/retention-impact                                                                         6.25 kB         375 kB
+├ ○ /reports/simulation/scenario-planning                                                                        7.66 kB         388 kB
+├ ○ /reports/skill-qualification                                                                                 4.65 kB         260 kB
+├ ○ /reports/strategic-analysis                                                                                  3.37 kB        99.4 kB
+├ ○ /reports/talent-development                                                                                  8.22 kB         255 kB
+├ ○ /reports/talent-mapping                                                                                      4.02 kB         101 kB
+├ ○ /reports/talent-mapping/skill-matrix                                                                         4.63 kB         327 kB
+├ ○ /reports/talent-mapping/succession-planning                                                                  5.03 kB         262 kB
+├ ○ /reports/talent-mapping/talent-grid                                                                          7.31 kB         293 kB
+├ ○ /reports/turnover                                                                                            4.13 kB        93.2 kB
+├ ○ /reports/turnover-risk                                                                                       7.34 kB         260 kB
+├ ○ /reports/turnover/benchmark-best-practices                                                                   3.7 kB          172 kB
+├ ○ /reports/turnover/correlation-analysis                                                                       7.13 kB         355 kB
+├ ○ /reports/turnover/cost-impact                                                                                3.2 kB          171 kB
+├ ○ /reports/turnover/exit-feedback                                                                              3.72 kB         172 kB
+├ ○ /reports/turnover/factor-ranking                                                                             3.72 kB         250 kB
+├ ○ /reports/turnover/high-risk-dashboard                                                                        5.46 kB         260 kB
+├ ○ /reports/turnover/improvement-suggestions                                                                    6.36 kB         261 kB
+├ ○ /reports/turnover/predictive-modeling                                                                        6.24 kB         261 kB
+├ ○ /reports/turnover/retention-strategies                                                                       6.78 kB         261 kB
+├ ○ /reports/turnover/risk-prediction                                                                            6.15 kB         261 kB
+├ ○ /reports/turnover/time-series-trend                                                                          2.67 kB         171 kB
+├ ○ /reports/turnover/what-if-simulation                                                                         6.69 kB         267 kB
+├ ○ /reports/two-axis-evaluation                                                                                 4.79 kB         105 kB
+├ ○ /reports/wellbeing                                                                                           4.38 kB         101 kB
+├ ○ /reports/wellbeing/engagement-survey                                                                         2.93 kB         349 kB
+├ ○ /reports/wellbeing/intervention-program                                                                      3.11 kB         349 kB
+├ ○ /reports/wellbeing/stress-analysis                                                                           2.71 kB         349 kB
+├ ○ /reports/wellbeing/wellbeing-index                                                                           2.73 kB         349 kB
+├ ○ /reports/wellbeing/work-life-balance                                                                         2.99 kB         349 kB
+├ ○ /reports/work-environment                                                                                    4.15 kB         257 kB
+├ ○ /reports/work-life-balance                                                                                   6.79 kB         259 kB
+├ ○ /staff-cards                                                                                                 2.15 kB         108 kB
+├ ƒ /staff-cards/[staffId]                                                                                       104 kB          456 kB
+├ ○ /staff-cards/management                                                                                      3.58 kB         102 kB
+├ ○ /stress-check/result                                                                                         10.9 kB         229 kB
+├ ○ /stress-check/test                                                                                           8.2 kB          112 kB
+├ ○ /test/compare-button-demo                                                                                    4.58 kB         107 kB
+├ ○ /test/final-demo                                                                                             6.25 kB         108 kB
+├ ○ /test/interview-comparison                                                                                   10.7 kB         113 kB
+├ ○ /test/simple-demo                                                                                            3.76 kB         101 kB
+├ ○ /test/simple-working                                                                                         3.79 kB         101 kB
+├ ○ /test/unified-interview-test                                                                                 2.32 kB         136 kB
+└ ○ /test/working-demo                                                                                           6.31 kB         108 kB
++ First Load JS shared by all                                                                                    89.1 kB
+  ├ chunks/47023-93f7061fa80fdbcb.js                                                                             31.9 kB
+  ├ chunks/fd9d1056-68b83f091daa9521.js                                                                          54 kB
+  └ other shared chunks (total)                                                                                  3.29 kB
+
+Route (pages)                                                                                                    Size     First Load JS
+┌ ƒ /api/v1/calculate-level                                                                                      0 B            83.4 kB
+├ ƒ /api/v1/facilities/[facilityId]/position-mapping                                                             0 B            83.4 kB
+└ ƒ /api/webhook/voicedrive                                                                                      0 B            83.4 kB
++ First Load JS shared by all                                                                                    83.4 kB
+  ├ chunks/framework-5a4b07f9612b21e2.js                                                                         45.2 kB
+  ├ chunks/main-8fa39e21dc0cdd2b.js                                                                              34.9 kB
+  └ other shared chunks (total)                                                                                  3.26 kB
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses getStaticProps)
+ƒ  (Dynamic)  server-rendered on demand
+

@@ -1,0 +1,139 @@
+{
+  "fetchedAt": "2025-10-07T13:49:56.003Z",
+  "request": {
+    "startDate": "2025-09-30",
+    "endDate": "2025-10-07"
+  },
+  "response": {
+    "period": {
+      "startDate": "2025-09-30",
+      "endDate": "2025-10-07"
+    },
+    "stats": {
+      "totalPosts": 342,
+      "totalUsers": 89,
+      "participationRate": 74.2,
+      "byCategory": [
+        {
+          "category": "idea_voice",
+          "count": 145,
+          "percentage": 42.4
+        },
+        {
+          "category": "free_voice",
+          "count": 97,
+          "percentage": 28.4
+        },
+        {
+          "category": "question_voice",
+          "count": 58,
+          "percentage": 17
+        },
+        {
+          "category": "concern_voice",
+          "count": 42,
+          "percentage": 12.3
+        }
+      ],
+      "byDepartment": [
+        {
+          "department": "看護部",
+          "postCount": 128,
+          "userCount": 34,
+          "participationRate": 76.8
+        },
+        {
+          "department": "医局",
+          "postCount": 89,
+          "userCount": 23,
+          "participationRate": 71.2
+        },
+        {
+          "department": "薬剤部",
+          "postCount": 67,
+          "userCount": 18,
+          "participationRate": 72.5
+        },
+        {
+          "department": "事務部",
+          "postCount": 58,
+          "userCount": 14,
+          "participationRate": 68.3
+        }
+      ],
+      "byLevel": [
+        {
+          "levelRange": "1-3",
+          "count": 156,
+          "percentage": 45.6
+        },
+        {
+          "levelRange": "4-6",
+          "count": 98,
+          "percentage": 28.7
+        },
+        {
+          "levelRange": "7-9",
+          "count": 67,
+          "percentage": 19.6
+        },
+        {
+          "levelRange": "10-12",
+          "count": 21,
+          "percentage": 6.1
+        }
+      ],
+      "timeSeries": [
+        {
+          "date": "2025-09-30",
+          "count": 21
+        },
+        {
+          "date": "2025-10-01",
+          "count": 17
+        },
+        {
+          "date": "2025-10-02",
+          "count": 19
+        },
+        {
+          "date": "2025-10-03",
+          "count": 22
+        },
+        {
+          "date": "2025-10-04",
+          "count": 20
+        },
+        {
+          "date": "2025-10-05",
+          "count": 22
+        },
+        {
+          "date": "2025-10-06",
+          "count": 7
+        },
+        {
+          "date": "2025-10-07",
+          "count": 20
+        }
+      ],
+      "engagement": {
+        "averageLength": 245,
+        "withMedia": 68,
+        "withMediaPercentage": 19.9
+      }
+    },
+    "privacyMetadata": {
+      "consentedUsers": 13,
+      "kAnonymityCompliant": true,
+      "minimumGroupSize": 5,
+      "dataVersion": "1.0.0"
+    }
+  },
+  "rateLimit": {
+    "limit": 100,
+    "remaining": 98,
+    "reset": 1759845056
+  },
+  "processingTime": 55
+}
