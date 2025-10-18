@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"  // 開発環境用にSQLiteを使用（本番はPostgreSQLに変更）
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -626,4 +626,64 @@ enum NotificationStatus {
   PENDING @map("pending")
   SENT    @map("sent")
   FAILED  @map("failed")
+}
+
+// ============================================
+// 退職処理・緊急アカウント停止統合
+// ============================================
+
+// アカウント状態変更履歴（VoiceDrive緊急処理統合用）
+model EmployeeAccountStatusHistory {
+  id                           String    @id @default(cuid())
+
+  // 対象職員
+  employeeId                   String    @map("employee_id")
+
+  // 変更内容
+  previousStatus               String?   @map("previous_status")
+  newStatus                    String    @map("new_status")
+  // 'active' | 'emergency_deactivated' | 'retired' | 'suspended'
+
+  // 変更元システム
+  sourceSystem                 String    @map("source_system")
+  // 'staff_medical_system' | 'voicedrive_emergency'
+
+  isEmergencyChange            Boolean   @default(false) @map("is_emergency_change")
+
+  // VoiceDrive緊急処理との紐付け
+  voicedriveDeactivationId     String?   @map("voicedrive_deactivation_id")
+  voicedriveRetirementProcessId String?  @map("voicedrive_retirement_process_id")
+
+  // 実行者情報（拡張）
+  changedBy                    String?   @map("changed_by")
+  changedByName                String?   @map("changed_by_name")
+  changedByDepartment          String?   @map("changed_by_department")
+  changedByFacility            String?   @map("changed_by_facility")
+
+  // 承認情報（事後承認用）
+  approvalRequired             Boolean   @default(false) @map("approval_required")
+  approvedBy                   String?   @map("approved_by")
+  approvedByName               String?   @map("approved_by_name")
+  approvedAt                   DateTime? @map("approved_at")
+
+  // 理由
+  reason                       String?
+
+  // タイムスタンプ
+  changedAt                    DateTime  @default(now()) @map("changed_at")
+  syncedFromVoicedriveAt       DateTime? @map("synced_from_voicedrive_at")
+
+  createdAt                    DateTime  @default(now()) @map("created_at")
+  updatedAt                    DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  // employee Employee @relation(fields: [employeeId], references: [id], onDelete: Restrict)
+
+  @@index([employeeId])
+  @@index([sourceSystem])
+  @@index([isEmergencyChange])
+  @@index([voicedriveDeactivationId])
+  @@index([changedAt])
+  @@index([approvedBy])
+  @@map("employee_account_status_history")
 }
