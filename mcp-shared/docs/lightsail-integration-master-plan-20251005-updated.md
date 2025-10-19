@@ -6425,17 +6425,50 @@ model HealthReport {
 
 ### 18.5.2 実装内容
 
+#### Phase 0: 準備フェーズ（2025年10月19日完了）✅
+
+**医療システムチーム作業**:
+- ✅ 認証情報設定完了（`.env.local`）
+  - Bearer Token設定: `VOICEDRIVE_BEARER_TOKEN`
+  - HMAC Secret設定: `VOICEDRIVE_HMAC_SECRET`
+  - API URL設定: `VOICEDRIVE_API_URL`
+- ✅ API接続テストスクリプト作成
+  - ファイル: `tests/executive-dashboard/api-connectivity-test.js`
+  - データ提供API接続テスト（GET）
+  - 分析結果受信API接続テスト（POST）
+  - HMAC-SHA256署名生成実装
+- ✅ 実装関連ドキュメント作成（6件）
+  - `ExecutiveDashboard_Implementation_Inquiry_20251019.md`
+  - `ExecutiveDashboard_Implementation_Approval_20251019.md`
+  - `ExecutiveDashboard_Investigation_Summary_20251019.md`
+  - `ExecutiveDashboard_Receipt_Confirmation_20251019.md`
+  - `ExecutiveDashboard_Auth_Setup_Confirmation_20251019.md`
+  - `ExecutiveDashboard_MedicalSystemConfirmation_20251019.md`
+
+**VoiceDriveチーム作業**:
+- ✅ API実装完了報告（文書番号: ED-AUTH-2025-1019-001）
+- ✅ 認証情報提供（Bearer Token + HMAC Secret）
+
+**工数**: 0.5日（医療システム側）
+
+**成果物**:
+- VoiceDriveサーバー起動後、即座にAPI接続確認可能な状態
+
+---
+
 #### Phase 1: VoiceDrive側API実装（2025年10月19日～11月8日）
 
 **VoiceDriveチーム作業**:
-- データ提供API実装（`GET /api/v1/executive/dashboard-data`）
-- 分析結果受信API実装（`POST /api/v1/executive/strategic-insights`）
-- `ExecutiveStrategicInsight`テーブル作成
-- API仕様書作成（OpenAPI形式）
+- ✅ データ提供API実装（`GET /api/v1/executive/dashboard-data`）
+- ✅ 分析結果受信API実装（`POST /api/v1/executive/strategic-insights`）
+- ✅ `ExecutiveStrategicInsight`テーブル作成
+- ✅ API仕様書作成（OpenAPI形式）
 
 **医療システムチーム作業**: ❌ **なし**（待機）
 
 **工数**: 15日（VoiceDrive側）
+
+**状態**: ✅ **完了**（VoiceDrive側、2025年10月19日）
 
 ---
 
@@ -8095,3 +8128,4 @@ consensusLevel = Math.round(
 | **2025-10-19** | **2.37** | **医療システムチーム** | **🆕 Phase 23追加: Idea Tracking (Project Mode) - アイデア追跡プロジェクトモード**<br>- **VoiceDriveのアイデア追跡機能にProject Mode追加**<br>- **5段階プロジェクトレベル進行**: PENDING (0-99点) → TEAM (100-199点) → DEPARTMENT (200-399点) → FACILITY (400-799点) → ORGANIZATION (800点以上)<br>- **スコア計算式**: 投票レベル × 権限レベル重み<br>  - 投票レベル: 強く賛成10点、賛成5点、中立2点、反対1点、強く反対0.5点<br>  - 権限レベル重み: Level 1=1.0x、Level 6=3.2x、Level 10=6.4x、Level 13=8.5x、Level 18=10.0x<br>- **医療システム側の実装**: **完全にゼロ** 🎉<br>  - 既存APIのみ使用（職員情報取得、権限レベルマスタ取得）<br>  - 新規テーブル追加: **不要**<br>  - 新規API実装: **不要**<br>  - 開発コスト: **¥0**<br>- **VoiceDrive側の実装**:<br>  - Postモデル拡張（9フィールド追加: projectScore、エンゲージメントカウント等）<br>  - ProjectLevelHistory（新規テーブル、レベル昇格履歴管理）<br>  - 4つの新規APIエンドポイント（アイデア一覧、履歴取得、スコア再計算、プロジェクト承認）<br>  - ProjectScoreCalculator（スコア計算サービス）<br>  - ProjectLevelUpgradeService（自動レベルアップサービス）<br>  - WebSocket通知実装（レベルアップ時）<br>  - 開発コスト: ¥880,000<br>- **実装スケジュール（5フェーズ、22日間）**:<br>  - Phase 1（1-2日）: DBスキーマ拡張<br>  - Phase 2（1日）: 設定統一化（閾値100/200/400/800に統一）<br>  - Phase 3（4-10日）: API実装<br>  - Phase 4（5日）: 自動処理実装<br>  - Phase 5（7日）: フロントエンド統合<br>- **重要な実装推奨事項**:<br>  - 閾値統一化（ProjectScoring.ts: 50/100/300/600 → UIと統一: 100/200/400/800）<br>  - Redisキャッシュ（権限レベル重み24時間キャッシュ、API呼び出し頻度最小化）<br>  - WebSocket通知（レベルアップ時のリアルタイム通知）<br>- **データ管理責任分界**:<br>  - 医療システム: 職員マスタ、権限レベルマスタ（Single Source of Truth）<br>  - VoiceDrive: プロジェクト投稿、投票データ、スコア計算、レベル履歴（100%管理）<br>- **Phase 1.6統合DB構築のテーブル数更新**: **162 → 163テーブル**<br>  - 医療149テーブル（変更なし）<br>  - VoiceDrive13 → 14テーブル（ProjectLevelHistory追加）<br>- **運用コスト**: ¥0/月（既存インフラ内で対応）<br>- **関連ドキュメント**:<br>  - idea-tracking-project-mode_医療システム確認結果_20251019.md（文書番号: MEDICAL-CONFIRM-2025-1019-001）<br>  - IdeaTracking_Implementation_Strategy_20251019.md（5フェーズ22日間の詳細実装計画）<br>- マスタープラン Version 2.37更新: Phase 23追加、アイデア追跡プロジェクトモード統合実装戦略反映 |
 | **2025-10-19** | **2.38** | **医療システムチーム** | **🆕 Phase 24追加: Projects Legacy DB統合**<br>- **ProjectListPageのハードコードデータをDB統合**<br>- **現状**: 100%ハードコードされたデモデータ（getDemoProjects、固定5件）<br>- **実装後**: Prisma経由でPost/Projectテーブルから動的データ取得<br>- **Post中心アーキテクチャ採用**（オプションA）:<br>  - Postテーブルがプロジェクト情報を保持<br>  - `projectLevel='TEAM'` 以上のPostをプロジェクトとして扱う<br>  - ProjectTeamMember, ProjectMilestoneが既にPostを参照（スキーマ変更最小限）<br>- **データベース設計**:<br>  - Postテーブル拡張（8フィールド追加: projectStatus、projectProgress、projectStartDate、projectEndDate、projectDepartment、projectFacilityId、projectFacilityName、projectParticipants）<br>  - Projectテーブル調整（2フィールド追加: convertedToPostId、conversionDate）<br>  - インデックス最適化（4箇所追加）<br>- **VoiceDrive側実装**（5フェーズ、15日間）:<br>  - Phase 1（3日）: スキーマ拡張・マイグレーション実行<br>  - Phase 2（5日）: ProjectService拡張（listActiveProjects、convertPostToProjectListItem、determineUserRole、determinePriority、getProjectStats、約600行）<br>  - Phase 3（3日）: APIエンドポイント実装（GET /api/projects、/api/projects/my、/api/projects/:id、/api/projects/:id/team、/api/projects/:id/approvals）<br>  - Phase 4（2日）: ProjectListPage統合（loadProjects実装、デモデータ削除、ローディング・エラー状態管理）<br>  - Phase 5（2日）: テスト・デバッグ（統合テスト、パフォーマンステスト < 500ms、ブラウザ互換性テスト）<br>- **医療システム側の実装**: **完全にゼロ** 🎉<br>  - VoiceDrive 100% 管理<br>  - 既存APIのみ使用（職員情報、部署情報、施設情報）<br>  - 新規テーブル追加: **不要**<br>  - 新規API実装: **不要**<br>  - 開発コスト: **¥0**<br>- **データ管理責任分界**:<br>  - VoiceDrive: プロジェクト基本情報、進捗、チームメンバー、マイルストーン、承認履歴（100%管理）<br>  - 医療システム: 職員情報、部署情報、施設情報（既存APIで参照のみ）<br>- **コスト**:<br>  - VoiceDrive: ¥600,000（15日 × ¥40,000/日）<br>  - 医療システム: ¥0<br>  - 月額運用コスト: ¥0（既存のLightsail統合インスタンス使用）<br>- **成功指標**:<br>  - API応答時間 < 500ms（95%）<br>  - データ整合性 100%（Post ↔ Project変換精度）<br>  - フィルタ精度 100%<br>  - プロジェクト可視化率 100%<br>  - デモデータ依存率 0%（ハードコード削除完了）<br>- **リスク対策**:<br>  - Post/Project概念混同 → 明確なドキュメント化、`projectLevel='TEAM'`以上のルール確立<br>  - 既存データ整合性 → マイグレーション前チェック、クリーンアップスクリプト<br>  - パフォーマンス劣化 → インデックス最適化、キャッシュ戦略、N+1問題回避<br>- **実施期間**: 2025年12月1日～12月17日（Phase 2完了後）<br>- **依存関係**: Phase 1.2 (MySQL移行)完了、Idea Tracking Phase 1 (schema拡張)完了<br>- **関連ドキュメント**:<br>  - projects-legacy_DB要件分析_20251019.md（文書番号: PL-DBA-2025-1019-001）<br>  - projects-legacy_暫定マスターリスト_20251019.md（文書番号: PL-ML-2025-1019-001）<br>  - projects-legacy_医療システム確認結果_20251019.md（文書番号: MEDICAL-CONFIRM-2025-1019-002）<br>- マスタープラン Version 2.38更新: Phase 24追加、Projects Legacy DB統合実装戦略反映 |
 | **2025-10-19** | **2.39** | **医療システムチーム** | **🆕 Phase 25追加: プロジェクト詳細ページ (project/:projectId) DB統合**<br>- **ProjectDetailPageのデモデータをDB統合**<br>- **現状**: 100%デモデータで動作（承認フロー、メンバー管理、合意形成状況が固定データ）<br>- **実装後**: Prisma経由でPost/ProjectApproval/ProjectTeamMemberテーブルから動的データ取得<br>- **データベース設計**:<br>  - Postテーブル拡張（2フィールド追加: title、consensusLevel）<br>  - ProjectTeamMemberテーブル拡張（1フィールド追加: status = invited/accepted/declined）<br>  - インデックス追加（title、consensusLevel、status）<br>- **consensusLevel計算方法**: **医療システム推奨Option A採用** ✅<br>  - 計算式: consensusLevel = Math.round(((stronglySupportCount + supportCount) / totalEngagements) * 100)<br>  - 保存方針: Post.consensusLevelに保存（リアルタイム計算より高速）<br>  - 投票時に自動更新<br>- **VoiceDrive側実装**（6フェーズ、11日間）:<br>  - Phase 1（2日）: スキーマ拡張・初期データ投入<br>  - Phase 2（3日）: ProjectService実装（getProjectDetail、approveProject、joinProject、約400行）<br>  - Phase 3（2日）: APIエンドポイント実装（GET /api/projects/:projectId、POST /api/projects/:projectId/approve、POST /api/projects/:projectId/join）<br>  - Phase 4（2日）: ProjectDetailPage統合（デモデータ削除、API呼び出し実装）<br>  - Phase 5（2日）: E2Eテスト・承認フロー確認<br>  - Phase 6（1日）: 本番リリース<br>- **医療システム側の実装**: **完全にゼロ** 🎉<br>  - VoiceDrive 100% 管理<br>  - 既存APIのみ使用（職員情報、部署情報）<br>  - 新規テーブル追加: **不要**<br>  - 新規API実装: **不要**<br>  - 開発コスト: **¥0**<br>- **データ管理責任分界**:<br>  - VoiceDrive: プロジェクト詳細、承認フロー、チームメンバー、タイムライン（100%管理）<br>  - 医療システム: 職員情報、部署情報（既存APIで参照のみ）<br>- **コスト**:<br>  - VoiceDrive: ¥440,000（11日 × ¥40,000/日）<br>  - 医療システム: ¥0<br>  - 月額運用コスト: ¥0（既存のLightsail統合インスタンス使用）<br>- **成功指標**:<br>  - API応答時間 < 500ms（95%）<br>  - 承認フロー精度 100%<br>  - メンバー参加機能 100%<br>  - 合意レベル計算精度 100%<br>  - プロジェクト詳細表示率 100%<br>  - 承認完了率 > 90%<br>  - メンバー参加率 > 80%<br>- **リスク対策**:<br>  - consensusLevel計算の複雑性 → Option A採用でシンプル化、Post.consensusLevelに保存<br>  - 承認フロー複雑性 → ApprovalFlowServiceとの統合、ProjectApproval正規化<br>  - メンバーステータス管理 → statusフィールド追加、通知システムとの連携<br>- **実施期間**: 2025年12月18日～12月30日（Phase 24完了後）<br>- **依存関係**: Phase 1.2 (MySQL移行)完了、Phase 24 (Projects Legacy DB統合)完了<br>- **関連ドキュメント**:<br>  - project/:projectId 暫定マスターリスト（2025年10月19日）<br>  - project-detail_医療システム確認結果_20251019.md（文書番号: MEDICAL-CONFIRM-2025-1019-003）<br>- マスタープラン Version 2.39更新: Phase 25追加、ProjectDetailPage DB統合実装戦略反映、consensusLevel計算方法Option A推奨 |
+| **2025-10-19** | **2.40** | **医療システムチーム** | **✅ Phase 18.5準備フェーズ完了: エグゼクティブダッシュボード認証設定・API接続テスト準備完了**<br>- **Phase 0（準備フェーズ）を Phase 18.5に追加** ✅<br>- **医療システム側作業完了**:<br>  - ✅ 認証情報設定完了（.env.local）<br>    - Bearer Token設定: VOICEDRIVE_BEARER_TOKEN<br>    - HMAC Secret設定: VOICEDRIVE_HMAC_SECRET<br>    - API URL設定: VOICEDRIVE_API_URL<br>  - ✅ API接続テストスクリプト作成（tests/executive-dashboard/api-connectivity-test.js）<br>    - データ提供API接続テスト（GET /api/v1/executive/dashboard-data）<br>    - 分析結果受信API接続テスト（POST /api/v1/executive/strategic-insights）<br>    - HMAC-SHA256署名生成実装<br>  - ✅ 実装関連ドキュメント作成（6件）<br>    - ExecutiveDashboard_Implementation_Inquiry_20251019.md（VoiceDriveへの10の確認質問）<br>    - ExecutiveDashboard_Implementation_Approval_20251019.md（実装計画承認書、¥200,000医療システム側）<br>    - ExecutiveDashboard_Investigation_Summary_20251019.md（3.5時間の調査サマリー）<br>    - ExecutiveDashboard_Receipt_Confirmation_20251019.md（API実装完了受領確認）<br>    - ExecutiveDashboard_Auth_Setup_Confirmation_20251019.md（認証情報設定完了報告）<br>    - ExecutiveDashboard_MedicalSystemConfirmation_20251019.md（医療システム確認結果書）<br>- **VoiceDriveチーム作業完了**:<br>  - ✅ API実装完了報告（文書番号: ED-AUTH-2025-1019-001）<br>  - ✅ 認証情報提供（Bearer Token + HMAC Secret）<br>  - ✅ データ提供API実装（GET /api/v1/executive/dashboard-data）<br>  - ✅ 分析結果受信API実装（POST /api/v1/executive/strategic-insights）<br>  - ✅ ExecutiveStrategicInsightテーブル作成<br>- **工数**: 0.5日（医療システム側）、15日（VoiceDrive側、Phase 1完了）<br>- **成果物**: VoiceDriveサーバー起動後、即座にAPI接続確認可能な状態<br>- **Phase 1状態**: ✅ **完了**（VoiceDrive側、2025年10月19日）<br>- **次のステップ**:<br>  - ⏳ VoiceDriveサーバー起動待ち<br>  - ⏳ API接続テスト実施（10月26日まで）<br>  - ⏳ Phase 2実装開始（11月11日〜12月6日）<br>- **開発コスト**: 医療システム¥20,000（0.5日）、VoiceDrive¥600,000（15日）<br>- マスタープラン Version 2.40更新: Phase 18.5にPhase 0（準備フェーズ）追加、Phase 1完了状態に更新 |
