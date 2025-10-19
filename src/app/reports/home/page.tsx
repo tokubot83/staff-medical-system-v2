@@ -103,6 +103,14 @@ const reportCategories: ReportCategory[] = [
     description: '職員の健康と幸福度の総合分析',
     path: '/reports?tab=wellbeing',
     reportsCount: 4
+  },
+  {
+    id: 'executive-dashboard',
+    label: 'エグゼクティブダッシュボード',
+    icon: '👔',
+    description: '経営層向け戦略的意思決定支援ダッシュボード（Level 12+専用）',
+    path: '/reports/executive/overview',
+    reportsCount: 1
   }
 ];
 
@@ -111,6 +119,11 @@ export default function ReportsHomePage() {
   const [selectedFacility, setSelectedFacility] = useState('');
   const [recentReports, setRecentReports] = useState<RecentReport[]>([]);
   const [favoriteReports, setFavoriteReports] = useState<string[]>([]);
+
+  // TODO: 権限チェック実装
+  // Level 12+のユーザーのみエグゼクティブダッシュボードを表示
+  // const userPermissionLevel = useUser()?.permissionLevel || 0;
+  const userPermissionLevel = 12; // 暫定: 開発中は常にLevel 12として扱う
 
   useEffect(() => {
     // ローカルストレージから最近閲覧したレポートを取得
@@ -192,27 +205,35 @@ export default function ReportsHomePage() {
             レポートカテゴリー
           </h2>
           <div className={homeStyles.categoryGrid}>
-            {reportCategories.map((category) => (
-              <div
-                key={category.id}
-                className={homeStyles.categoryCard}
-                onClick={() => handleCategoryClick(category)}
-              >
-                <div className={homeStyles.categoryHeader}>
-                  <span className={homeStyles.categoryIcon}>{category.icon}</span>
-                  <h3 className={homeStyles.categoryLabel}>{category.label}</h3>
+            {reportCategories
+              .filter((category) => {
+                // エグゼクティブダッシュボードはLevel 12+のみ表示
+                if (category.id === 'executive-dashboard') {
+                  return userPermissionLevel >= 12;
+                }
+                return true;
+              })
+              .map((category) => (
+                <div
+                  key={category.id}
+                  className={homeStyles.categoryCard}
+                  onClick={() => handleCategoryClick(category)}
+                >
+                  <div className={homeStyles.categoryHeader}>
+                    <span className={homeStyles.categoryIcon}>{category.icon}</span>
+                    <h3 className={homeStyles.categoryLabel}>{category.label}</h3>
+                  </div>
+                  <p className={homeStyles.categoryDescription}>
+                    {category.description}
+                  </p>
+                  <div className={homeStyles.categoryFooter}>
+                    <span className={homeStyles.reportsCount}>
+                      {category.reportsCount}個のレポート
+                    </span>
+                    <span className={homeStyles.arrow}>→</span>
+                  </div>
                 </div>
-                <p className={homeStyles.categoryDescription}>
-                  {category.description}
-                </p>
-                <div className={homeStyles.categoryFooter}>
-                  <span className={homeStyles.reportsCount}>
-                    {category.reportsCount}個のレポート
-                  </span>
-                  <span className={homeStyles.arrow}>→</span>
-                </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
 
