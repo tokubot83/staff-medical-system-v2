@@ -1,11 +1,156 @@
 # 本日の共有ファイル要約（自動更新）
 
-**更新日時**: 2025-10-11 18:30:00
+**更新日時**: 2025-10-20 18:00:00
 **VoiceDrive側のClaude Code向け緊急要約**
 
 ---
 
-## 🆕 最新：ProjectApproval 医療システム確認完了（10/11 18:30）
+## 🆕 最新：Phase 6 判断履歴機能 実装準備完了（10/20 18:00）
+
+### ✅ **Phase 6判断履歴機能 - レポートセンター統合完了**
+
+**完了日時**: 2025年10月20日 18:00
+**対象機能**: 期限到達判断履歴レポート
+**実装方針**: **Option A（独立カテゴリ）採用** ✅
+**実装進捗**: **Phase 1: 80%完了**（3日中2.4日完了）
+
+#### 実装完了項目
+
+| 項目 | 内容 | ファイル | 状態 |
+|------|------|---------|------|
+| **レポートセンター統合** | 「判断履歴」カテゴリ追加（11番目） | `src/app/reports/page.tsx` | ✅ 完了 |
+| **基本ページ作成** | Phase 6準備中案内表示 | `src/app/reports/decision-history/page.tsx` | ✅ 完了 |
+| **実装計画書** | 詳細実装計画（50ページ） | `mcp-shared/docs/Phase6_判断履歴機能_実装計画書_20251020.md` | ✅ 完了 |
+| **準備完了通知** | VoiceDriveチーム向け通知書 | `mcp-shared/docs/Phase6_実装準備完了通知_20251020.md` | ✅ 完了 |
+
+#### 実装方針：Option A（独立カテゴリ）
+
+**配置**: VoiceDrive分析の直後（11番目）
+
+**採用理由**:
+
+| 観点 | VoiceDrive分析 | 判断履歴 |
+|------|--------------|---------|
+| 主要ユーザー | LEVEL_14-17（人事部） | **LEVEL_5-13（主任〜院長）** |
+| 使用頻度 | 月次・四半期 | **週次・日次** |
+| 機能性質 | 集団分析 | **個別判断記録** |
+
+#### 権限レベル別表示内容
+
+| レベル | 表示範囲 | 主要機能 |
+|--------|---------|---------|
+| **1-4** | 自分の提案のみ | 判断結果確認 |
+| **5-6** | 自分が判断した案件 | 判断履歴・チーム統計 |
+| **7-8** | 所属部署全体 | 部署統計・管理職別判断傾向 |
+| **9-13** | 所属施設全体 | 施設統計・部署別比較 |
+| **14-18** | 法人全体 | 法人統計・CSVエクスポート |
+| **99** | 全データ | システム監査 |
+
+#### 実装スケジュール（8営業日）
+
+```
+Phase 1: 基本実装（3日）     ████████░░ 80%完了 ✅
+Phase 2: API統合（2日）      ░░░░░░░░░░ VoiceDrive側準備待ち
+Phase 3: UI完成（2日）       ░░░░░░░░░░ Phase 2後
+Phase 4: PDF出力（1日）      ░░░░░░░░░░ Phase 3後
+
+本番リリース目標: 2025年11月1日（金）
+```
+
+#### API仕様（VoiceDrive実装依頼書準拠）
+
+**エンドポイント**: `GET /api/mcp/expired-escalation-history`
+
+**リクエストパラメータ**:
+```typescript
+{
+  userId: string;              // リクエストユーザーID
+  permissionLevel: number;     // 権限レベル（1-18, 99）
+  facilityId?: string;         // 施設ID（LEVEL_9-13）
+  departmentId?: string;       // 部署ID（LEVEL_7-8）
+  startDate?: string;          // 開始日（YYYY-MM-DD）
+  endDate?: string;            // 終了日（YYYY-MM-DD）
+  limit?: number;              // 件数上限
+  offset?: number;             // オフセット
+}
+```
+
+**レスポンス**:
+```typescript
+{
+  success: boolean;
+  data: {
+    period: { startDate, endDate };
+    summary: {
+      totalCount, approvedCount, downgradedCount, rejectedCount,
+      approvalRate, averageDaysToDecision, averageAchievementRate
+    };
+    items: ExpiredEscalationHistoryItem[];
+    pagination: { total, limit, offset, hasMore };
+  };
+}
+```
+
+#### VoiceDriveチームへの依頼事項
+
+**最優先（実装開始に必要）**:
+
+1. ✅ 実装計画書のレビュー・承認
+2. ✅ API仕様の最終確認
+3. ⏳ データ準備状況の共有
+   - `expired_escalation_decisions`テーブル実装状況
+   - MCPサーバーAPI実装スケジュール
+   - テストデータ準備状況
+
+#### 次のアクション
+
+**医療システムチーム**:
+- [x] ✅ レポートセンターにカテゴリ追加
+- [x] ✅ 基本ページ作成
+- [x] ✅ 実装計画書作成
+- [x] ✅ 準備完了通知作成
+- [ ] VoiceDriveチームからのフィードバック待機
+
+**VoiceDriveチーム**:
+- [ ] 実装計画書レビュー（10/21推奨）
+- [ ] API仕様最終確認（10/22推奨）
+- [ ] フィードバック返信（10/23推奨）
+- [ ] `expired_escalation_decisions`テーブル実装
+- [ ] MCPサーバーAPI実装
+- [ ] テストデータ準備
+
+#### 関連ドキュメント（NEW）
+
+1. **Phase 6実装計画書（医療システム側）**
+   - `mcp-shared/docs/Phase6_判断履歴機能_実装計画書_20251020.md`
+   - 実装方針、API仕様、スケジュール、セキュリティ要件（50ページ）
+
+2. **Phase 6実装準備完了通知**
+   - `mcp-shared/docs/Phase6_実装準備完了通知_20251020.md`
+   - VoiceDriveチーム向けサマリー、依頼事項、次のアクション
+
+3. **Phase 6実装依頼書（VoiceDrive側）**
+   - `phase6-expired-escalation-implementation-request.md`
+   - VoiceDriveチームからの実装依頼（2025年8月10日受領）
+
+#### リスク分析と対策
+
+| リスク | 影響度 | 対策 |
+|-------|--------|------|
+| VoiceDrive側API未実装 | 高 | **モックデータで先行実装** |
+| パフォーマンス問題 | 中 | ページネーション、インデックス最適化 |
+| セキュリティ懸念 | 高 | 二重チェック、テスト徹底 |
+
+#### 期待される効果
+
+- ✅ **透明性の向上**: 判断プロセスの可視化
+- ✅ **判断品質の向上**: 過去の判断から学習
+- ✅ **説明責任の強化**: 判断理由・判断者の記録
+- ✅ **統計分析の実現**: 組織の意思決定プロセス改善
+
+---
+
+## ProjectApproval 医療システム確認完了（10/11 18:30）
 
 ### ✅ **ProjectApproval（プロジェクト承認）医療システム確認完了**
 

@@ -96,6 +96,15 @@ const categories = [
     hasDetailPages: true
   },
   {
+    id: 'decision-history',
+    label: '判断履歴',
+    icon: '⚖️',
+    description: '期限到達提案の判断履歴と統計を権限レベル別に表示',
+    gradient: 'from-amber-500 to-orange-500',
+    path: '/reports/decision-history',
+    hasDetailPages: true
+  },
+  {
     id: 'performance-evaluation',
     label: '人事評価分析',
     icon: '🎲',
