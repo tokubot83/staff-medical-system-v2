@@ -96,6 +96,15 @@ const categories = [
     hasDetailPages: true
   },
   {
+    id: 'executive-dashboard',
+    label: 'エグゼクティブダッシュボード',
+    icon: '👔',
+    description: '経営層向け戦略的意思決定支援ダッシュボード（Level 12+専用）',
+    gradient: 'from-indigo-600 to-purple-600',
+    path: '/reports/executive/overview',
+    hasDetailPages: true
+  },
+  {
     id: 'decision-history',
     label: '判断履歴',
     icon: '⚖️',
