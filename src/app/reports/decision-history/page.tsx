@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useDecisionHistory, getDecisionTypeLabel, getAgendaLevelLabel, getProposalTypeLabel, getDecisionTypeColor } from '@/hooks/useDecisionHistory';
+import { ChartsContainer } from './components/ChartsContainer';
 import type { ExpiredEscalationDecision } from '@/services/voicedrive/types';
 
 /**
@@ -197,6 +198,13 @@ export default function DecisionHistoryPage() {
                 {summary.averageDaysOverdue.toFixed(1)}日
               </div>
             </div>
+          </div>
+        )}
+
+        {/* グラフ表示セクション */}
+        {!isLoading && !error && summary && decisions.length > 0 && (
+          <div className="mb-6">
+            <ChartsContainer decisions={decisions} summary={summary} />
           </div>
         )}
 
