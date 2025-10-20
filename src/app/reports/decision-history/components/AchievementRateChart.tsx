@@ -78,7 +78,7 @@ export function AchievementRateChart({ data }: AchievementRateChartProps) {
   }
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow">
+    <div className="bg-white p-6 rounded-lg shadow" data-chart="achievement-rate">
       <h3 className="text-lg font-semibold mb-4 text-gray-800">到達率分布</h3>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={chartData}>

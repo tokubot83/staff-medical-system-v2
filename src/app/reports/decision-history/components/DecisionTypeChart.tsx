@@ -110,7 +110,7 @@ export function DecisionTypeChart({ summary }: DecisionTypeChartProps) {
   }
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow">
+    <div className="bg-white p-6 rounded-lg shadow" data-chart="decision-type">
       <h3 className="text-lg font-semibold mb-4 text-gray-800">判断タイプ分布</h3>
       <ResponsiveContainer width="100%" height={300}>
         <PieChart>

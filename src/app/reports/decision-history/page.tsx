@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useDecisionHistory, getDecisionTypeLabel, getAgendaLevelLabel, getProposalTypeLabel, getDecisionTypeColor } from '@/hooks/useDecisionHistory';
 import { ChartsContainer } from './components/ChartsContainer';
+import { PDFExportButton } from './components/PDFExportButton';
 import type { ExpiredEscalationDecision } from '@/services/voicedrive/types';
 
 /**
@@ -256,6 +257,7 @@ export default function DecisionHistoryPage() {
                 </svg>
                 CSVエクスポート
               </button>
+              {summary && <PDFExportButton decisions={decisions} summary={summary} />}
             </div>
           </div>
 

@@ -113,7 +113,7 @@ export function TimeSeriesChart({ data }: TimeSeriesChartProps) {
   }
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow">
+    <div className="bg-white p-6 rounded-lg shadow" data-chart="time-series">
       <h3 className="text-lg font-semibold mb-4 text-gray-800">判断推移（日別）</h3>
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={chartData}>
