@@ -15,6 +15,7 @@ type ExpiredEscalationSummary = DecisionHistoryResponse['summary'];
 
 interface DecisionTypeChartProps {
   summary: ExpiredEscalationSummary;
+  onEnlarge?: () => void;
 }
 
 interface DecisionTypeData {
@@ -37,7 +38,7 @@ const LABELS = {
   reject: '不採用',
 };
 
-export function DecisionTypeChart({ summary }: DecisionTypeChartProps) {
+export function DecisionTypeChart({ summary, onEnlarge }: DecisionTypeChartProps) {
   const chartData: DecisionTypeData[] = useMemo(() => {
     const total = summary.totalDecisions;
     if (!total || total === 0) return [];
@@ -111,7 +112,30 @@ export function DecisionTypeChart({ summary }: DecisionTypeChartProps) {
 
   return (
     <div className="bg-white p-6 rounded-lg shadow" data-chart="decision-type">
-      <h3 className="text-lg font-semibold mb-4 text-gray-800">判断タイプ分布</h3>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-semibold text-gray-800">判断タイプ分布</h3>
+        {onEnlarge && (
+          <button
+            onClick={onEnlarge}
+            className="text-gray-600 hover:text-gray-800 transition-colors"
+            title="拡大表示"
+          >
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"
+              />
+            </svg>
+          </button>
+        )}
+      </div>
       <ResponsiveContainer width="100%" height={300}>
         <PieChart>
           <Pie
