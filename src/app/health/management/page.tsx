@@ -192,8 +192,8 @@ export default function HealthManagementPage() {
       if (searchParams.department) queryParams.append('department', searchParams.department);
       if (searchParams.dateFrom) queryParams.append('dateFrom', searchParams.dateFrom);
       if (searchParams.dateTo) queryParams.append('dateTo', searchParams.dateTo);
-      if (searchParams.overallResult) queryParams.append('overallResult', searchParams.overallResult);
-      if (searchParams.reexaminationRequired) queryParams.append('reexaminationRequired', searchParams.reexaminationRequired);
+      if (searchParams.overallResult && searchParams.overallResult !== 'all') queryParams.append('overallResult', searchParams.overallResult);
+      if (searchParams.reexaminationRequired && searchParams.reexaminationRequired !== 'all') queryParams.append('reexaminationRequired', searchParams.reexaminationRequired);
 
       queryParams.append('page', pagination.page.toString());
       queryParams.append('pageSize', pagination.pageSize.toString());
@@ -1129,7 +1129,7 @@ export default function HealthManagementPage() {
                       <SelectValue placeholder="選択してください" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">全て</SelectItem>
+                      <SelectItem value="all">全て</SelectItem>
                       <SelectItem value="A">A (異常なし)</SelectItem>
                       <SelectItem value="B">B (軽度異常)</SelectItem>
                       <SelectItem value="C">C (要経過観察)</SelectItem>
@@ -1148,7 +1148,7 @@ export default function HealthManagementPage() {
                       <SelectValue placeholder="選択してください" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">全て</SelectItem>
+                      <SelectItem value="all">全て</SelectItem>
                       <SelectItem value="true">要再検査のみ</SelectItem>
                       <SelectItem value="false">再検査不要のみ</SelectItem>
                     </SelectContent>
