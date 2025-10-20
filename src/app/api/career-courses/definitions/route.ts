@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 // import { createClient } from '@/lib/supabase'
 
+// 動的レンダリングを強制（ビルド時の静的生成をスキップ）
+export const dynamic = 'force-dynamic'
+
 /**
  * Phase 5-3 API: キャリアコース定義一覧取得
  * GET /api/career-courses/definitions

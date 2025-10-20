@@ -6,6 +6,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { healthCheckupService } from '@/services/health/healthCheckupService';
 
+// 動的レンダリングを強制（ビルド時の静的生成をスキップ）
+export const dynamic = 'force-dynamic'
+
 /**
  * GET: 要再検査者リスト取得
  */

@@ -13,6 +13,9 @@ import { PrismaClient } from '@prisma/client';
 import { validateApiKey } from '@/lib/middleware/api-key-auth';
 import { checkRateLimit } from '@/lib/middleware/rate-limiter';
 
+// 動的レンダリングを強制（ビルド時の静的生成をスキップ）
+export const dynamic = 'force-dynamic'
+
 const prisma = new PrismaClient();
 
 /**

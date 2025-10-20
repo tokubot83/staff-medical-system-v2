@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { voiceDriveDataService } from '@/services/VoiceDriveDataService';
 import { voiceDriveAnalyticsService, KAnonymityError } from '@/services/VoiceDriveAnalyticsService';
 
+// 動的レンダリングを強制（ビルド時の静的生成をスキップ）
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;

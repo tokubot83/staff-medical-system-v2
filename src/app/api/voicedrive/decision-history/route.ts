@@ -5,6 +5,9 @@ import type {
   ExpiredEscalationDecision,
 } from '@/services/voicedrive/types';
 
+// 動的レンダリングを強制（ビルド時の静的生成をスキップ）
+export const dynamic = 'force-dynamic'
+
 /**
  * Phase 6: 期限到達判断履歴API
  * GET /api/voicedrive/decision-history
