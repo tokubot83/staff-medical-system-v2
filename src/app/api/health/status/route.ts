@@ -3,6 +3,9 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+// 動的レンダリングを強制（ビルド時の静的生成をスキップ）
+export const dynamic = 'force-dynamic'
+
 /**
  * ヘルスチェックエンドポイント
  * VoiceDrive側の自動同期機能（Phase 3）で5分ごとに呼び出される

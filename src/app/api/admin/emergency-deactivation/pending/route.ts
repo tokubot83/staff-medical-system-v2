@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { getPendingEmergencyDeactivations } from '@/services/EmergencyDeactivationApprovalService';
 
+// 動的レンダリングを強制（ビルド時の静的生成をスキップ）
+export const dynamic = 'force-dynamic'
+
 /**
  * 承認待ち緊急処理一覧取得API
  *

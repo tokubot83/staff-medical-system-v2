@@ -8,6 +8,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/database/prisma';
 import { logHealthDataAccess } from '@/lib/audit/health-data-audit';
 
+// 動的レンダリングを強制（ビルド時の静的生成をスキップ）
+export const dynamic = 'force-dynamic'
+
 export interface ConsentDashboardResponse {
   success: boolean;
   message?: string;
