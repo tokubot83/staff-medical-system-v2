@@ -16,9 +16,77 @@ export const dynamic = 'force-dynamic'
  * 権限レベル別のフィルタリング機能を提供
  */
 
-// 現在はテストデータを返す（Phase 2: API統合）
-// Phase 3でDBからの取得に切り替え
+// Phase 6 統合: VoiceDrive APIからデータ取得
+// フォールバック: VoiceDrive API障害時はテストデータを使用
 import testData from '@/../mcp-shared/logs/phase6-test-data-20251020.json';
+
+/**
+ * VoiceDrive APIからデータを取得
+ * リトライ機構付き
+ */
+async function fetchFromVoiceDriveAPI(
+  params: {
+    userId: string;
+    userLevel: number;
+    facilityId?: string;
+    departmentId?: string;
+    dateFrom?: string;
+    dateTo?: string;
+  },
+  retryCount: number = 3
+): Promise<{ success: boolean; data?: any; error?: string }> {
+  const apiUrl = process.env.VOICEDRIVE_DECISION_HISTORY_API_URL || 'http://localhost:3003/api/agenda/expired-escalation-history';
+  const timeout = parseInt(process.env.VOICEDRIVE_API_TIMEOUT || '10000', 10);
+  const bearerToken = process.env.VOICEDRIVE_BEARER_TOKEN;
+
+  for (let attempt = 1; attempt <= retryCount; attempt++) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+      const queryParams = new URLSearchParams({
+        userId: params.userId,
+        permissionLevel: params.userLevel.toString(),
+        ...(params.facilityId && { facilityId: params.facilityId }),
+        ...(params.departmentId && { departmentId: params.departmentId }),
+        ...(params.dateFrom && { dateFrom: params.dateFrom }),
+        ...(params.dateTo && { dateTo: params.dateTo }),
+      });
+
+      const response = await fetch(`${apiUrl}?${queryParams.toString()}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${bearerToken}`,
+          'Content-Type': 'application/json',
+        },
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        throw new Error(`VoiceDrive API returned ${response.status}: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      return { success: true, data };
+    } catch (error) {
+      console.warn(`VoiceDrive API attempt ${attempt}/${retryCount} failed:`, error);
+
+      if (attempt === retryCount) {
+        return {
+          success: false,
+          error: error instanceof Error ? error.message : 'Unknown error',
+        };
+      }
+
+      // 次のリトライまで待機（エクスポネンシャルバックオフ）
+      await new Promise((resolve) => setTimeout(resolve, Math.pow(2, attempt) * 500));
+    }
+  }
+
+  return { success: false, error: 'All retry attempts failed' };
+}
 
 /**
  * 権限レベル別フィルタリングロジック
@@ -222,8 +290,30 @@ export async function GET(request: NextRequest) {
       limit: parseInt(searchParams.get('limit') || '50', 10),
     };
 
-    // テストデータから判断履歴を取得
-    const allDecisions = testData.decisions as ExpiredEscalationDecision[];
+    // VoiceDrive APIからデータ取得を試行
+    const voiceDriveResult = await fetchFromVoiceDriveAPI({
+      userId,
+      userLevel,
+      facilityId: userFacilityId || undefined,
+      dateFrom: filter.dateFrom,
+      dateTo: filter.dateTo,
+    });
+
+    let allDecisions: ExpiredEscalationDecision[];
+    let dataSource: 'voicedrive' | 'fallback' = 'fallback';
+    let apiError: string | undefined;
+
+    if (voiceDriveResult.success && voiceDriveResult.data) {
+      // VoiceDrive APIから取得成功
+      console.log('[Phase 6] VoiceDrive API connected successfully');
+      allDecisions = voiceDriveResult.data.data?.decisions || voiceDriveResult.data.decisions || [];
+      dataSource = 'voicedrive';
+    } else {
+      // フォールバック: テストデータを使用
+      console.warn('[Phase 6] VoiceDrive API failed, using test data:', voiceDriveResult.error);
+      allDecisions = testData.decisions as ExpiredEscalationDecision[];
+      apiError = voiceDriveResult.error;
+    }
 
     // 権限レベル別フィルタリング
     let filteredDecisions = filterByPermissionLevel(
@@ -270,14 +360,20 @@ export async function GET(request: NextRequest) {
     // レスポンスの構築
     const response: DecisionHistoryResponse & {
       pagination: typeof result.pagination;
+      dataSource?: 'voicedrive' | 'fallback';
+      apiError?: string;
     } = {
       metadata: {
         ...testData.metadata,
         totalCount: result.pagination.totalItems,
+        dataSource,
+        ...(apiError && { apiError }),
       },
       summary,
       decisions: result.data,
       pagination: result.pagination,
+      dataSource,
+      ...(apiError && { apiError }),
     };
 
     return NextResponse.json(response, {
@@ -285,6 +381,7 @@ export async function GET(request: NextRequest) {
       headers: {
         'Content-Type': 'application/json',
         'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'X-Data-Source': dataSource,
       },
     });
   } catch (error) {

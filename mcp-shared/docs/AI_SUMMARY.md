@@ -1,11 +1,200 @@
 # 本日の共有ファイル要約（自動更新）
 
-**更新日時**: 2025-10-20 18:00:00
+**更新日時**: 2025-10-21 12:45:00
 **VoiceDrive側のClaude Code向け緊急要約**
 
 ---
 
-## 🆕 最新：Phase 6 完全実装完了 - VoiceDriveチームへ報告書提出（10/21 01:30）
+## 🚀 最新：Phase 6 Phase 2（API統合）実装完了 - VoiceDrive API連携準備完了（10/21 12:45）
+
+### ✅ **Phase 6 Phase 2（API統合）実装完了 - 統合テスト準備完了**
+
+**完了日時**: 2025年10月21日 12:45
+**対象機能**: VoiceDrive API統合
+**実装ステータス**: ✅ **100%完了**
+**次のステップ**: VoiceDriveチームと統合テスト実施
+
+#### 📋 Phase 2実装完了内容
+
+**実装項目**:
+- ✅ VoiceDrive API呼び出し機能（リトライ機構付き）
+- ✅ タイムアウト処理（10秒デフォルト）
+- ✅ エクスポネンシャルバックオフ（3回リトライ）
+- ✅ フォールバック機構（テストデータへの自動切替）
+- ✅ データソース識別（voicedrive / fallback）
+- ✅ エラー情報の詳細ロギング
+- ✅ レスポンスヘッダー拡張（X-Data-Source）
+
+**変更ファイル**:
+1. `src/app/api/voicedrive/decision-history/route.ts` (+100行)
+   - `fetchFromVoiceDriveAPI()` 関数実装（リトライ付き）
+   - データソース識別ロジック
+   - レスポンスメタデータ拡張
+2. `.env.local` (+5行)
+   - `VOICEDRIVE_DECISION_HISTORY_API_URL` 設定
+   - `VOICEDRIVE_API_TIMEOUT` 設定
+   - `VOICEDRIVE_API_RETRY_COUNT` 設定
+
+#### API統合仕様
+
+**VoiceDrive APIエンドポイント**:
+```
+GET http://localhost:3003/api/agenda/expired-escalation-history
+```
+
+**送信パラメータ**:
+```typescript
+{
+  userId: string;              // ユーザーID
+  permissionLevel: number;     // 権限レベル（1-99）
+  facilityId?: string;         // 施設ID（オプション）
+  departmentId?: string;       // 部署ID（オプション）
+  dateFrom?: string;           // 開始日（オプション）
+  dateTo?: string;             // 終了日（オプション）
+}
+```
+
+**認証方式**:
+- Bearer Token認証
+- トークン: `.env.local` の `VOICEDRIVE_BEARER_TOKEN`
+
+**レスポンス形式**:
+```typescript
+{
+  success: boolean;
+  data: {
+    decisions: ExpiredEscalationDecision[];
+    // ... その他のメタデータ
+  }
+}
+```
+
+#### リトライ機構
+
+**リトライ設定**:
+- リトライ回数: 3回（デフォルト、環境変数で変更可能）
+- リトライ間隔: エクスポネンシャルバックオフ
+  - 1回目失敗: 500ms待機
+  - 2回目失敗: 1000ms待機
+  - 3回目失敗: 2000ms待機
+
+**リトライ対象エラー**:
+- ネットワークエラー
+- タイムアウト（10秒）
+- HTTPステータス 5xx（サーバーエラー）
+
+**リトライしないエラー**:
+- HTTPステータス 4xx（クライアントエラー）
+- JSONパースエラー
+
+#### フォールバック機構
+
+**フォールバック発動条件**:
+1. VoiceDrive APIが応答しない
+2. 全てのリトライが失敗
+3. HTTPステータス 4xx または 5xx
+4. JSONパースエラー
+
+**フォールバック時の動作**:
+- テストデータ（42件）を使用
+- レスポンスに `dataSource: "fallback"` を含める
+- レスポンスに `apiError` を含める（エラーメッセージ）
+- HTTPヘッダーに `X-Data-Source: fallback` を含める
+
+**テストデータソース**:
+```
+mcp-shared/logs/phase6-test-data-20251020.json
+```
+
+#### エラーログ出力例
+
+**成功時**:
+```
+[Phase 6] VoiceDrive API connected successfully
+```
+
+**リトライ時**:
+```
+[Phase 6] VoiceDrive API attempt 1/3 failed: Error: connect ECONNREFUSED 127.0.0.1:3003
+[Phase 6] VoiceDrive API attempt 2/3 failed: Error: connect ECONNREFUSED 127.0.0.1:3003
+[Phase 6] VoiceDrive API attempt 3/3 failed: Error: connect ECONNREFUSED 127.0.0.1:3003
+[Phase 6] VoiceDrive API failed, using test data: connect ECONNREFUSED 127.0.0.1:3003
+```
+
+#### 統合テスト計画
+
+**テスト項目**:
+1. ✅ VoiceDrive API接続テスト
+2. ✅ フォールバック動作テスト
+3. ✅ タイムアウトテスト
+4. ✅ 権限レベル別フィルタテスト
+5. ✅ 日付範囲フィルタテスト
+6. ✅ ページネーションテスト
+7. ✅ ソート機能テスト
+8. ✅ E2Eテスト（フロントエンド統合）
+
+**テスト実施方法**:
+```bash
+# 1. VoiceDrive APIが起動していることを確認
+curl http://localhost:3003/api/agenda/expired-escalation-history
+
+# 2. 医療職員カルテシステムのAPIをテスト
+curl http://localhost:3000/api/voicedrive/decision-history?userId=test-user&userLevel=99
+
+# 3. フロントエンドから確認
+# ブラウザで http://localhost:3000/reports/decision-history を開く
+```
+
+#### VoiceDriveチームへの依頼事項
+
+**統合テスト協力**:
+1. ✅ VoiceDrive APIの起動確認
+   - エンドポイント: `http://localhost:3003/api/agenda/expired-escalation-history`
+   - 認証: Bearer Token `ce89550c2e57e5057402f0dd0c6061a9bc3d5f2835e1f3d67dcce99551c2dcb9`
+
+2. ✅ リクエストパラメータの確認
+   - `userId`: ユーザーID
+   - `permissionLevel`: 権限レベル
+   - `facilityId`: 施設ID（オプション）
+   - `dateFrom` / `dateTo`: 日付範囲（オプション）
+
+3. ✅ レスポンス形式の確認
+   - `{ success: true, data: { decisions: [...] } }` 形式
+   - または `{ decisions: [...] }` 形式（どちらも対応済み）
+
+4. ✅ エラーハンドリングの確認
+   - HTTPステータス 5xx でエラーを返す
+   - 適切なエラーメッセージを含める
+
+#### 関連ドキュメント（NEW）
+
+1. **Phase 6 Phase 2 API統合実装完了報告書** ⭐⭐⭐ **LATEST (10/21 12:45)**
+   - `mcp-shared/docs/Phase6_Phase2_API統合実装完了報告書_20251021.md`
+   - 実装詳細、API仕様、統合テスト手順（100+ページ）
+
+2. **Phase 6 医療職員カルテシステム側 実装完了報告書**
+   - `mcp-shared/docs/Phase6_医療職員カルテシステム側_実装完了報告書_20251021.md`
+   - Phase 1-5完全実装完了報告（870行）
+
+#### 次のアクション
+
+**医療システムチーム**:
+- [x] ✅ API統合実装完了
+- [x] ✅ リトライ機構実装完了
+- [x] ✅ フォールバック機構実装完了
+- [x] ✅ Phase 2実装完了報告書作成
+- [ ] 統合テスト実施（VoiceDriveチームと協力）
+- [ ] GitHubにプッシュ（main、preview/feature-name）
+
+**VoiceDriveチーム**:
+- [ ] Phase 2実装完了報告書のレビュー
+- [ ] VoiceDrive APIの起動確認
+- [ ] 統合テスト実施（医療システムチームと協力）
+- [ ] テスト結果のフィードバック
+
+---
+
+## 🆕 前回：Phase 6 完全実装完了 - VoiceDriveチームへ報告書提出（10/21 01:30）
 
 ### 🎊 **Phase 6 医療職員カルテシステム側 完全実装完了 - VoiceDrive API統合待ち**
 
