@@ -1,28 +1,121 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import { useDecisionHistory, getDecisionTypeLabel, getAgendaLevelLabel, getProposalTypeLabel, getDecisionTypeColor } from '@/hooks/useDecisionHistory';
+import type { ExpiredEscalationDecision } from '@/services/voicedrive/types';
 
 /**
  * 判断履歴レポートページ
  *
  * Phase 6: VoiceDrive期限到達判断履歴機能
  * - 期限到達した提案の判断履歴を権限レベル別に表示
- * - LEVEL_5以上でアクセス可能（現在は実装準備中のため全員アクセス可）
+ * - LEVEL_5以上でアクセス可能
  *
  * 関連ドキュメント:
- * - mcp-shared/docs/phase6-expired-escalation-implementation-request.md
+ * - mcp-shared/docs/Phase6_判断履歴機能_実装計画書_20251020.md
  */
 
 export default function DecisionHistoryPage() {
   const router = useRouter();
-  const [isLoading] = useState(false);
+
+  // 権限情報（将来的にはセッションから取得）
+  // テスト用にLEVEL_99（全データアクセス）を設定
+  const [userLevel] = useState(99);
+  const [userId] = useState('test-user');
+  const [userFacilityId] = useState<string | null>(null);
+
+  // フィルタ表示状態
+  const [showFilters, setShowFilters] = useState(false);
+
+  // 判断履歴データ取得
+  const {
+    decisions,
+    summary,
+    pagination,
+    isLoading,
+    error,
+    filter,
+    setFilter,
+    nextPage,
+    previousPage,
+  } = useDecisionHistory({
+    userLevel,
+    userId,
+    userFacilityId,
+    autoFetch: true,
+  });
+
+  // 選択された行
+  const [selectedDecisionId, setSelectedDecisionId] = useState<string | null>(null);
+
+  // 選択された判断の詳細
+  const selectedDecision = useMemo(() => {
+    return decisions.find((d) => d.id === selectedDecisionId) || null;
+  }, [decisions, selectedDecisionId]);
+
+  // CSVエクスポート機能
+  const handleExportCSV = () => {
+    if (decisions.length === 0) {
+      alert('エクスポートするデータがありません');
+      return;
+    }
+
+    // CSVヘッダー
+    const headers = [
+      '判断日時',
+      '判断結果',
+      '提案タイプ',
+      'アジェンダレベル',
+      '提案内容',
+      '判断者名',
+      '判断者部署',
+      '判断者レベル',
+      '判断理由',
+      '到達率(%)',
+      '期限超過日数',
+      '施設ID',
+    ];
+
+    // CSVデータ
+    const rows = decisions.map((d) => [
+      new Date(d.createdAt).toLocaleString('ja-JP'),
+      getDecisionTypeLabel(d.decision),
+      getProposalTypeLabel(d.proposalType),
+      getAgendaLevelLabel(d.agendaLevel),
+      d.postContent,
+      d.deciderName,
+      d.deciderDepartment,
+      d.deciderLevel.toString(),
+      d.decisionReason,
+      d.achievementRate.toFixed(1),
+      d.daysOverdue.toString(),
+      d.facilityId || 'なし',
+    ]);
+
+    // CSV文字列生成
+    const csvContent =
+      [headers.join(','), ...rows.map((row) => row.map((cell) => `"${cell}"`).join(','))].join(
+        '\n'
+      );
+
+    // BOM付きUTF-8でダウンロード
+    const bom = '\uFEFF';
+    const blob = new Blob([bom + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `判断履歴_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* ヘッダー */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-lg p-4 text-3xl">
@@ -39,221 +132,478 @@ export default function DecisionHistoryPage() {
               onClick={() => router.push('/reports')}
               className="text-gray-600 hover:text-gray-900 transition-colors"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
         </div>
 
-        {/* 実装準備中の案内 */}
-        <div className="bg-blue-50 border-l-4 border-blue-500 p-6 mb-8">
-          <div className="flex items-start">
-            <div className="flex-shrink-0">
-              <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        {/* サマリー統計 */}
+        {summary && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 mb-6">
+            <div className="bg-white rounded-lg shadow-md p-4">
+              <div className="text-sm text-gray-600 mb-1">総判断件数</div>
+              <div className="text-2xl font-bold text-gray-900">
+                {summary.totalDecisions}件
+              </div>
+            </div>
+            <div className="bg-white rounded-lg shadow-md p-4">
+              <div className="text-sm text-gray-600 mb-1">承認</div>
+              <div className="text-2xl font-bold text-green-600">
+                {summary.approvalCount}件
+              </div>
+              <div className="text-xs text-gray-500">
+                {((summary.approvalCount / summary.totalDecisions) * 100).toFixed(1)}%
+              </div>
+            </div>
+            <div className="bg-white rounded-lg shadow-md p-4">
+              <div className="text-sm text-gray-600 mb-1">格下げ</div>
+              <div className="text-2xl font-bold text-yellow-600">
+                {summary.downgradeCount}件
+              </div>
+              <div className="text-xs text-gray-500">
+                {((summary.downgradeCount / summary.totalDecisions) * 100).toFixed(1)}%
+              </div>
+            </div>
+            <div className="bg-white rounded-lg shadow-md p-4">
+              <div className="text-sm text-gray-600 mb-1">却下</div>
+              <div className="text-2xl font-bold text-red-600">
+                {summary.rejectCount}件
+              </div>
+              <div className="text-xs text-gray-500">
+                {((summary.rejectCount / summary.totalDecisions) * 100).toFixed(1)}%
+              </div>
+            </div>
+            <div className="bg-white rounded-lg shadow-md p-4">
+              <div className="text-sm text-gray-600 mb-1">平均到達率</div>
+              <div className="text-2xl font-bold text-blue-600">
+                {summary.averageAchievementRate.toFixed(1)}%
+              </div>
+            </div>
+            <div className="bg-white rounded-lg shadow-md p-4">
+              <div className="text-sm text-gray-600 mb-1">平均超過日数</div>
+              <div className="text-2xl font-bold text-purple-600">
+                {summary.averageDaysOverdue.toFixed(1)}日
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* フィルタとアクション */}
+        <div className="bg-white rounded-lg shadow-md p-4 mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="flex items-center gap-2 text-gray-700 hover:text-gray-900"
+            >
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+                />
               </svg>
+              <span className="font-medium">フィルタ</span>
+              <span
+                className={`transform transition-transform ${showFilters ? 'rotate-180' : ''}`}
+              >
+                ▼
+              </span>
+            </button>
+            <div className="flex gap-3">
+              <button
+                onClick={handleExportCSV}
+                disabled={decisions.length === 0}
+                className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+                CSVエクスポート
+              </button>
             </div>
-            <div className="ml-3">
-              <h3 className="text-lg font-semibold text-blue-900 mb-2">
-                Phase 6: 実装準備中
-              </h3>
-              <div className="text-blue-800 space-y-2">
-                <p>
-                  <strong>判断履歴機能</strong>は、VoiceDriveの期限到達エスカレーション機能と連携し、
-                  提案の判断履歴を権限レベル別に表示します。
+          </div>
+
+          {/* フィルタパネル */}
+          {showFilters && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 border-t border-gray-200">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  判断タイプ
+                </label>
+                <select
+                  value={filter.decisionType}
+                  onChange={(e) => setFilter({ decisionType: e.target.value as any })}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                >
+                  <option value="all">すべて</option>
+                  <option value="approve_at_current_level">承認</option>
+                  <option value="downgrade">格下げ</option>
+                  <option value="reject">却下</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  アジェンダレベル
+                </label>
+                <select
+                  value={filter.agendaLevel}
+                  onChange={(e) => setFilter({ agendaLevel: e.target.value as any })}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                >
+                  <option value="all">すべて</option>
+                  <option value="escalated_to_dept">部署レベル</option>
+                  <option value="escalated_to_facility">施設レベル</option>
+                  <option value="escalated_to_corp">法人レベル</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  提案タイプ
+                </label>
+                <select
+                  value={filter.proposalType}
+                  onChange={(e) => setFilter({ proposalType: e.target.value as any })}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                >
+                  <option value="all">すべて</option>
+                  <option value="kaizen">改善提案</option>
+                  <option value="new_initiative">新規施策</option>
+                  <option value="training">研修</option>
+                  <option value="collaboration">連携プログラム</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  並び順
+                </label>
+                <select
+                  value={filter.sortBy}
+                  onChange={(e) => setFilter({ sortBy: e.target.value as any })}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                >
+                  <option value="createdAt">判断日時</option>
+                  <option value="achievementRate">到達率</option>
+                  <option value="daysOverdue">期限超過日数</option>
+                  <option value="deciderLevel">判断者レベル</option>
+                </select>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* ローディング */}
+        {isLoading && (
+          <div className="text-center py-12">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-amber-500"></div>
+            <p className="text-gray-600 mt-4">読み込み中...</p>
+          </div>
+        )}
+
+        {/* エラー */}
+        {error && (
+          <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg
+                  className="h-5 w-5 text-red-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm text-red-700">
+                  データの取得に失敗しました: {error.message}
                 </p>
-                <div className="mt-4 bg-white rounded-lg p-4 border border-blue-200">
-                  <h4 className="font-semibold text-blue-900 mb-2">実装予定機能</h4>
-                  <ul className="list-disc list-inside space-y-1 text-sm">
-                    <li><strong>サマリー統計</strong>: 総判断件数、承認率、平均判断日数、平均到達率</li>
-                    <li><strong>判断履歴一覧</strong>: 提案内容、判断結果、判断者、判断理由</li>
-                    <li><strong>権限レベル別フィルタリング</strong>: LEVEL_1-4（自分の提案）、LEVEL_5-6（自分の判断）、LEVEL_7+（部署・施設統計）</li>
-                    <li><strong>期間フィルタ</strong>: 日付範囲指定</li>
-                    <li><strong>PDF出力</strong>: レポート形式で出力</li>
-                  </ul>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 判断履歴テーブル */}
+        {!isLoading && !error && decisions.length > 0 && (
+          <>
+            <div className="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        判断日時
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        判断結果
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        提案内容
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        判断者
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        到達率
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        超過日数
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {decisions.map((decision) => (
+                      <tr
+                        key={decision.id}
+                        onClick={() => setSelectedDecisionId(decision.id)}
+                        className={`cursor-pointer hover:bg-gray-50 transition-colors ${
+                          selectedDecisionId === decision.id ? 'bg-amber-50' : ''
+                        }`}
+                      >
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {new Date(decision.createdAt).toLocaleString('ja-JP')}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span
+                            className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                              decision.decision === 'approve_at_current_level'
+                                ? 'bg-green-100 text-green-800'
+                                : decision.decision === 'downgrade'
+                                ? 'bg-yellow-100 text-yellow-800'
+                                : 'bg-red-100 text-red-800'
+                            }`}
+                          >
+                            {getDecisionTypeLabel(decision.decision)}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-900 max-w-md truncate">
+                          {decision.postContent}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          <div>{decision.deciderName}</div>
+                          <div className="text-xs text-gray-500">
+                            {decision.deciderDepartment} (L{decision.deciderLevel})
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {decision.achievementRate.toFixed(1)}%
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {decision.daysOverdue}日
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* ページネーション */}
+            {pagination && pagination.totalPages > 1 && (
+              <div className="bg-white rounded-lg shadow-md p-4 flex items-center justify-between">
+                <div className="text-sm text-gray-700">
+                  全{pagination.totalItems}件中 {(pagination.currentPage - 1) * pagination.itemsPerPage + 1}
+                  〜
+                  {Math.min(
+                    pagination.currentPage * pagination.itemsPerPage,
+                    pagination.totalItems
+                  )}
+                  件を表示
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={previousPage}
+                    disabled={!pagination.hasPreviousPage}
+                    className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    前へ
+                  </button>
+                  <div className="px-4 py-2 text-sm text-gray-700">
+                    {pagination.currentPage} / {pagination.totalPages}
+                  </div>
+                  <button
+                    onClick={nextPage}
+                    disabled={!pagination.hasNextPage}
+                    className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    次へ
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
+        )}
+
+        {/* データなし */}
+        {!isLoading && !error && decisions.length === 0 && (
+          <div className="bg-white rounded-lg shadow-md p-12 text-center">
+            <div className="text-gray-400 text-6xl mb-4">📭</div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              判断履歴がありません
+            </h3>
+            <p className="text-gray-600">
+              フィルタ条件を変更するか、判断が行われるまでお待ちください。
+            </p>
+          </div>
+        )}
+
+        {/* 詳細パネル */}
+        {selectedDecision && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg shadow-xl max-w-3xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-bold text-gray-900">判断詳細</h2>
+                  <button
+                    onClick={() => setSelectedDecisionId(null)}
+                    className="text-gray-600 hover:text-gray-900"
+                  >
+                    <svg
+                      className="w-6 h-6"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium text-gray-500">提案内容</label>
+                    <p className="text-gray-900 mt-1">{selectedDecision.postContent}</p>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-medium text-gray-500">判断結果</label>
+                      <p className="text-gray-900 mt-1">
+                        {getDecisionTypeLabel(selectedDecision.decision)}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-500">
+                        アジェンダレベル
+                      </label>
+                      <p className="text-gray-900 mt-1">
+                        {getAgendaLevelLabel(selectedDecision.agendaLevel)}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium text-gray-500">判断理由</label>
+                    <p className="text-gray-900 mt-1 whitespace-pre-wrap">
+                      {selectedDecision.decisionReason}
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-medium text-gray-500">判断者</label>
+                      <p className="text-gray-900 mt-1">
+                        {selectedDecision.deciderName}
+                        <br />
+                        <span className="text-sm text-gray-600">
+                          {selectedDecision.deciderDepartment} (LEVEL{' '}
+                          {selectedDecision.deciderLevel})
+                        </span>
+                      </p>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-500">提案者</label>
+                      <p className="text-gray-900 mt-1">
+                        {selectedDecision.postAuthor.name}
+                        <br />
+                        <span className="text-sm text-gray-600">
+                          {selectedDecision.postAuthor.department || '所属なし'}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4">
+                    <div>
+                      <label className="text-sm font-medium text-gray-500">到達率</label>
+                      <p className="text-2xl font-bold text-blue-600 mt-1">
+                        {selectedDecision.achievementRate.toFixed(1)}%
+                      </p>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-500">
+                        期限超過日数
+                      </label>
+                      <p className="text-2xl font-bold text-purple-600 mt-1">
+                        {selectedDecision.daysOverdue}日
+                      </p>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-500">
+                        提案タイプ
+                      </label>
+                      <p className="text-gray-900 mt-1">
+                        {getProposalTypeLabel(selectedDecision.proposalType)}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-medium text-gray-500">判断日時</label>
+                      <p className="text-gray-900 mt-1">
+                        {new Date(selectedDecision.createdAt).toLocaleString('ja-JP')}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-500">施設ID</label>
+                      <p className="text-gray-900 mt-1">
+                        {selectedDecision.facilityId || 'なし'}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-
-        {/* 権限レベル別の機能案内 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {/* LEVEL_1-4 */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="bg-blue-100 text-blue-600 rounded-lg p-3 text-xl">
-                👤
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900">LEVEL 1-4</h3>
-                <p className="text-sm text-gray-600">一般職員</p>
-              </div>
-            </div>
-            <div className="text-sm text-gray-700 space-y-2">
-              <p className="font-medium">表示内容：</p>
-              <ul className="list-disc list-inside space-y-1 ml-2">
-                <li>自分が提案した案件の判断履歴</li>
-                <li>判断結果と理由</li>
-              </ul>
-            </div>
-          </div>
-
-          {/* LEVEL_5-6 */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="bg-green-100 text-green-600 rounded-lg p-3 text-xl">
-                👥
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900">LEVEL 5-6</h3>
-                <p className="text-sm text-gray-600">副主任・主任</p>
-              </div>
-            </div>
-            <div className="text-sm text-gray-700 space-y-2">
-              <p className="font-medium">表示内容：</p>
-              <ul className="list-disc list-inside space-y-1 ml-2">
-                <li>自分が判断した案件の履歴</li>
-                <li>チーム統計</li>
-                <li>判断品質の振り返り</li>
-              </ul>
-            </div>
-          </div>
-
-          {/* LEVEL_7-8 */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="bg-purple-100 text-purple-600 rounded-lg p-3 text-xl">
-                🏢
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900">LEVEL 7-8</h3>
-                <p className="text-sm text-gray-600">副師長・師長、副課長・課長</p>
-              </div>
-            </div>
-            <div className="text-sm text-gray-700 space-y-2">
-              <p className="font-medium">表示内容：</p>
-              <ul className="list-disc list-inside space-y-1 ml-2">
-                <li>部署全体の判断履歴</li>
-                <li>管理職別の判断傾向</li>
-                <li>部署統計</li>
-              </ul>
-            </div>
-          </div>
-
-          {/* LEVEL_9-13 */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="bg-orange-100 text-orange-600 rounded-lg p-3 text-xl">
-                🏥
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900">LEVEL 9-13</h3>
-                <p className="text-sm text-gray-600">部長・副院長・院長</p>
-              </div>
-            </div>
-            <div className="text-sm text-gray-700 space-y-2">
-              <p className="font-medium">表示内容：</p>
-              <ul className="list-disc list-inside space-y-1 ml-2">
-                <li>施設全体の判断履歴</li>
-                <li>部署別比較</li>
-                <li>管理職ランキング</li>
-              </ul>
-            </div>
-          </div>
-
-          {/* LEVEL_14-18 */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="bg-red-100 text-red-600 rounded-lg p-3 text-xl">
-                🏛️
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900">LEVEL 14-18</h3>
-                <p className="text-sm text-gray-600">人事部・理事長</p>
-              </div>
-            </div>
-            <div className="text-sm text-gray-700 space-y-2">
-              <p className="font-medium">表示内容：</p>
-              <ul className="list-disc list-inside space-y-1 ml-2">
-                <li>法人全体の判断履歴</li>
-                <li>施設別比較</li>
-                <li>CSVエクスポート</li>
-                <li>詳細分析</li>
-              </ul>
-            </div>
-          </div>
-
-          {/* LEVEL_99 */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="bg-gray-100 text-gray-600 rounded-lg p-3 text-xl">
-                🔧
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900">LEVEL 99</h3>
-                <p className="text-sm text-gray-600">システム管理者</p>
-              </div>
-            </div>
-            <div className="text-sm text-gray-700 space-y-2">
-              <p className="font-medium">表示内容：</p>
-              <ul className="list-disc list-inside space-y-1 ml-2">
-                <li>全データアクセス</li>
-                <li>システム監査ログ</li>
-                <li>デバッグ情報</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        {/* 実装スケジュール */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">実装スケジュール</h2>
-          <div className="space-y-3">
-            <div className="flex items-center gap-3">
-              <div className="w-32 text-sm font-medium text-gray-700">Phase 1</div>
-              <div className="flex-1">
-                <div className="bg-blue-100 text-blue-800 px-3 py-2 rounded-lg text-sm">
-                  基本実装（3日）- レポートセンター統合、基本ページ作成、権限チェック
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-32 text-sm font-medium text-gray-700">Phase 2</div>
-              <div className="flex-1">
-                <div className="bg-green-100 text-green-800 px-3 py-2 rounded-lg text-sm">
-                  API統合（2日）- MCPサーバー経由データ取得、フィルタリング、ページネーション
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-32 text-sm font-medium text-gray-700">Phase 3</div>
-              <div className="flex-1">
-                <div className="bg-purple-100 text-purple-800 px-3 py-2 rounded-lg text-sm">
-                  UI完成（2日）- サマリー統計、判断履歴テーブル、フィルタUI
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-32 text-sm font-medium text-gray-700">Phase 4</div>
-              <div className="flex-1">
-                <div className="bg-orange-100 text-orange-800 px-3 py-2 rounded-lg text-sm">
-                  PDF出力（1日）- PDF生成機能、レイアウト調整
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="mt-4 text-sm text-gray-600">
-            合計: 8営業日（約2週間）
-          </div>
-        </div>
-
-        {/* フッター */}
-        <div className="mt-8 text-center text-sm text-gray-500">
-          <p>レポート生成日時: {new Date().toLocaleString('ja-JP')}</p>
-          <p className="mt-1">医療法人厚生会 人事管理システム - Phase 6: 判断履歴機能</p>
-        </div>
+        )}
       </div>
     </div>
   );

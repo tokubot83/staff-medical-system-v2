@@ -187,3 +187,108 @@ export interface AIRecommendation {
   estimatedImpact: 'high' | 'moderate' | 'low'
   legalConsiderations?: string
 }
+
+/**
+ * 期限到達判断履歴（Phase 6）
+ * VoiceDriveの期限到達提案に対する判断の履歴レコード
+ */
+export interface ExpiredEscalationDecision {
+  id: string
+  postId: string
+  postContent: string
+  postAgendaLevel: 'escalated_to_dept' | 'escalated_to_facility' | 'escalated_to_corp'
+  postProposalType: 'kaizen' | 'new_initiative' | 'training' | 'collaboration' | null
+  postAuthor: {
+    id: string
+    name: string
+    department: string | null
+  }
+  deciderId: string
+  deciderName: string
+  deciderDepartment: string
+  deciderLevel: number
+  deciderFacilityId: string | null
+  decision: 'approve_at_current_level' | 'downgrade' | 'reject'
+  decisionReason: string
+  currentScore: number
+  targetScore: number
+  achievementRate: number
+  daysOverdue: number
+  agendaLevel: 'escalated_to_dept' | 'escalated_to_facility' | 'escalated_to_corp'
+  proposalType: 'kaizen' | 'new_initiative' | 'training' | 'collaboration' | null
+  department: string
+  facilityId: string | null
+  createdAt: string
+  updatedAt: string
+}
+
+/**
+ * 判断履歴APIレスポンス
+ */
+export interface DecisionHistoryResponse {
+  metadata: {
+    exportDate: string
+    totalCount: number
+    version: string
+    description: string
+  }
+  summary: {
+    totalDecisions: number
+    approvalCount: number
+    downgradeCount: number
+    rejectCount: number
+    averageAchievementRate: number
+    averageDaysOverdue: number
+  }
+  decisions: ExpiredEscalationDecision[]
+}
+
+/**
+ * 判断履歴フィルタ条件
+ */
+export interface DecisionHistoryFilter {
+  decisionType?: 'approve_at_current_level' | 'downgrade' | 'reject' | 'all'
+  agendaLevel?: 'escalated_to_dept' | 'escalated_to_facility' | 'escalated_to_corp' | 'all'
+  proposalType?: 'kaizen' | 'new_initiative' | 'training' | 'collaboration' | 'all'
+  department?: string
+  facilityId?: string | null
+  dateFrom?: string
+  dateTo?: string
+  deciderLevel?: number
+  sortBy?: 'createdAt' | 'achievementRate' | 'daysOverdue' | 'deciderLevel'
+  sortOrder?: 'asc' | 'desc'
+  page?: number
+  limit?: number
+}
+
+/**
+ * 判断履歴統計データ
+ */
+export interface DecisionHistoryStats {
+  byDecisionType: {
+    approve: number
+    downgrade: number
+    reject: number
+  }
+  byAgendaLevel: {
+    dept: number
+    facility: number
+    corp: number
+  }
+  byProposalType: {
+    kaizen: number
+    newInitiative: number
+    training: number
+    collaboration: number
+  }
+  byDeciderLevel: {
+    [key: string]: number
+  }
+  trends: {
+    monthly: Array<{
+      month: string
+      approvalRate: number
+      averageAchievementRate: number
+    }>
+  }
+}
