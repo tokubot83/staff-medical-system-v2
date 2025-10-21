@@ -1,17 +1,35 @@
-# AWS Lightsail統合実装マスタープラン【2025年10月10日更新版】
+# AWS Lightsail統合実装マスタープラン【2025年10月21日更新版】
 
-**文書番号**: MP-2025-1010-001
+**文書番号**: MP-2025-1021-001
 **作成日**: 2025年9月20日
-**最終更新**: 2025年10月13日（Version 2.32）
+**最終更新**: 2025年10月21日（Version 2.33 - Phase 2.5追加）
 **作成者**: 医療システムチーム
 **宛先**: VoiceDriveチーム
 **重要度**: 🔴 最重要
 
 ---
 
-## 📢 重要更新（2025年10月5日）
+## 📢 重要更新
 
-### 🆕 Phase 1.5追加: LLMコンテンツモデレーション統合
+### 🆕 Phase 2.5追加: 顔写真統合（2025年10月21日）
+
+医療職員管理システムとVoiceDriveシステム間で職員の顔写真を統合します。
+
+**採用構成**: **Lightsail Public Folder方式**（CloudFront不使用）
+- **追加費用**: ¥0/月（Lightsail 80ドルプラン内で完結）
+- **実装期間**: DB構築後 3-4.5日
+- **準備完了**: VoiceDrive側・医療システム側ともに準備完了
+
+**コスト削減効果**:
+- 当初計画（CloudFront）: ¥272/月 → **新構成**: ¥0/月
+- **年間削減**: ¥3,264/年
+
+**実装状況**:
+- ✅ 準備完了: フォルダ作成、実装ガイド、Webhookユーティリティ（10/21完了）
+- ✅ VoiceDrive側実装完了: Webhook受信、PhotoAvatarコンポーネント
+- 📅 DB構築後: Webhook実装・画像移行・統合テスト・本番リリース
+
+### 🆕 Phase 1.5追加: LLMコンテンツモデレーション統合（2025年10月5日）
 
 VoiceDrive SNS投稿の自動検閲システムを **Phase 1.5** として追加しました。
 
@@ -860,6 +878,332 @@ interface JWTPayload {
     exp: number;
 }
 ```
+
+---
+
+## Phase 2.5: 顔写真統合【新規追加】🆕
+
+### 実施期間: DB構築後 3-4.5日
+
+### 更新日: 2025年10月21日
+
+### 概要
+
+医療職員管理システムとVoiceDriveシステム間で職員の顔写真を統合し、VoiceDrive側のPhotoAvatarコンポーネントで表示します。
+
+**採用構成**: **Lightsail Public Folder方式**（CloudFront不使用）
+- **追加費用**: ¥0/月（Lightsail 80ドルプラン内で完結）
+- **画像配信**: Next.js標準機能（public/employees/フォルダ）
+- **Webhook通知**: HMAC-SHA256署名検証
+
+### 2.5.1 ✅ 準備完了項目（2025年10月21日）
+
+#### 医療システム側
+- ✅ `public/employees/` フォルダ作成
+- ✅ `.gitignore` 設定追加（個人情報保護）
+- ✅ Webhook送信ユーティリティ実装（`src/lib/webhooks/phase2-photo-webhook.ts`）
+- ✅ 実装ガイド作成（`docs/Phase2_Lightsail_Public_Folder_Setup_Guide.md`）
+- ✅ 画像管理ページ統合計画作成（`docs/Phase2_Image_Management_Integration_Plan.md`）
+- ✅ VoiceDriveチームへ通知（`mcp-shared/docs/Phase2_Lightsail_Public_Folder_Notification_20251021.md`）
+
+#### VoiceDrive側
+- ✅ Prismaスキーマ拡張（`profilePhotoUrl`, `profilePhotoUpdatedAt`）
+- ✅ Webhook署名検証ミドルウェア実装（`src/middleware/webhookAuth.ts`）
+- ✅ Webhookハンドラー実装（`src/controllers/webhookController.ts`）
+- ✅ Webhookルート追加（`POST /api/webhooks/medical-system/employee`）
+- ✅ PhotoAvatarコンポーネント実装（CloudFront URL対応）
+- ✅ 環境変数設定（`.env.example`）
+
+### 2.5.2 DB構築後の実装タスク（3-4.5日）
+
+#### Phase 1: Webhook実装（1-2日）
+
+**タスク1-1: 職員作成時のWebhook送信**
+```typescript
+// 職員登録API（例: src/app/api/employees/route.ts）
+import { sendEmployeeCreatedEvent } from '@/lib/webhooks/phase2-photo-webhook';
+
+await sendEmployeeCreatedEvent({
+  staffId: newEmployee.id,
+  fullName: newEmployee.name,
+  email: newEmployee.email,
+  facilityId: newEmployee.facilityId,
+  departmentId: newEmployee.departmentId,
+  profilePhotoUrl: `https://medical-system.example.com/employees/${newEmployee.id}.jpg`,
+  photoUpdatedAt: new Date().toISOString(),
+  photoMimeType: 'image/jpeg',
+  photoFileSize: 180000,
+  employmentStatus: 'active',
+  hiredAt: newEmployee.hiredAt
+});
+```
+
+**タスク1-2: 顔写真更新時のWebhook送信**
+```typescript
+// 画像管理ページ（src/app/admin/image-management/page.tsx）
+import { sendEmployeePhotoUpdatedEvent } from '@/lib/webhooks/phase2-photo-webhook';
+
+await sendEmployeePhotoUpdatedEvent({
+  staffId,
+  profilePhotoUrl: imageUrl,
+  photoUpdatedAt: new Date().toISOString(),
+  photoMimeType: 'image/jpeg',
+  photoFileSize: 180000
+});
+```
+
+**タスク1-3: 顔写真削除時のWebhook送信**
+```typescript
+// 画像管理ページ
+import { sendEmployeePhotoDeletedEvent } from '@/lib/webhooks/phase2-photo-webhook';
+
+await sendEmployeePhotoDeletedEvent({
+  staffId,
+  deletionReason: 'user_request',
+  photoDeletedAt: new Date().toISOString()
+});
+```
+
+#### Phase 2: 既存画像の移行（0.5-1日）
+
+**タスク2-1: IndexedDBから画像エクスポート**
+- 画像管理ページ（`/admin/image-management`）の「エクスポート」機能を使用
+- ダウンロードされた画像を`public/employees/`に配置
+
+**タスク2-2: 一括Webhook送信（既存300-500枚）**
+```bash
+# スクリプト実行
+npx tsx scripts/migrate-existing-photos.ts
+```
+
+#### Phase 3: 統合テスト（1日）
+
+**テストケース**:
+- 新規職員登録（顔写真あり/なし）
+- 顔写真更新
+- 顔写真削除
+- エラーハンドリング（リトライ機構）
+
+#### Phase 4: 本番リリース（0.5日）
+
+**環境変数設定**:
+```env
+NEXT_PUBLIC_EMPLOYEE_PHOTO_BASE_URL="https://your-lightsail-domain.com"
+VOICEDRIVE_WEBHOOK_ENDPOINT_PROD="https://voicedrive.example.com/api/webhooks/medical-system/employee"
+MEDICAL_WEBHOOK_SECRET="<VoiceDriveチームから共有された秘密鍵>"
+```
+
+**デプロイ**:
+```bash
+npm run build
+# Lightsailにデプロイ（public/employees/*.jpg も含む）
+```
+
+### 2.5.3 技術仕様
+
+#### 画像配信URL
+```
+https://medical-system.example.com/employees/{staffId}.jpg
+```
+
+#### 画像仕様
+| 項目 | 仕様 |
+|------|------|
+| サイズ | 400x400ピクセル |
+| 形式 | JPEG（推奨） |
+| 品質 | 85% |
+| ファイルサイズ | 200KB以下（推奨） |
+| ファイル命名 | `{staffId}.jpg` |
+
+#### Webhook署名方式
+```typescript
+// HMAC-SHA256署名生成
+const timestamp = Date.now().toString();
+const payloadString = JSON.stringify(payload);
+const signature = crypto
+  .createHmac('sha256', WEBHOOK_SECRET)
+  .update(timestamp + payloadString)
+  .digest('hex');
+
+// HTTPヘッダー
+headers: {
+  'Content-Type': 'application/json',
+  'x-webhook-signature': signature,
+  'x-webhook-timestamp': timestamp,
+}
+```
+
+#### リトライ機構
+| リトライ回数 | 待機時間 |
+|------------|---------|
+| 1回目失敗 | 1分後 |
+| 2回目失敗 | 5分後 |
+| 3回目失敗 | 30分後 |
+| 3回失敗後 | Slackアラート |
+
+### 2.5.4 コスト
+
+#### 開発費
+| 作業項目 | 工数 | 金額 |
+|---------|------|------|
+| Webhook実装（3種類） | 1-2日 | ¥80,000 |
+| 既存画像移行 | 0.5-1日 | ¥40,000 |
+| 統合テスト | 1日 | ¥40,000 |
+| 本番リリース | 0.5日 | ¥20,000 |
+| **合計** | **3-4.5日** | **¥180,000** |
+
+#### 運用費（月額）
+| 項目 | 月額 |
+|------|------|
+| Lightsail Public Folder | **¥0**（80ドルプラン内） |
+| CloudFront（不使用） | ~~¥272~~ → **¥0** |
+| **合計** | **¥0/月** |
+
+**年間削減額**: ¥272 × 12ヶ月 = **¥3,264/年**
+
+### 2.5.5 パフォーマンス試算（日本国内500名）
+
+| 項目 | 数値 |
+|------|------|
+| 職員数 | 500名 |
+| 月間転送量 | 30GB/月 |
+| Lightsail転送枠 | 5-7TB/月 |
+| **使用率** | **0.6%**（余裕） |
+
+### 2.5.6 成功指標（KPI）
+
+| 指標 | 目標値 | 測定方法 |
+|------|--------|---------|
+| Webhook送信成功率 | > 99% | Webhookログ |
+| 画像配信速度 | < 500ms | CloudWatch |
+| リトライ成功率 | > 95% | リトライログ |
+| VoiceDrive側表示成功率 | > 99% | フロントエンドログ |
+
+### 2.5.7 関連ドキュメント
+
+#### 医療システム側
+| ドキュメント | ファイルパス |
+|------------|------------|
+| 実装ガイド | `docs/Phase2_Lightsail_Public_Folder_Setup_Guide.md` |
+| VoiceDriveチーム通知書 | `mcp-shared/docs/Phase2_Lightsail_Public_Folder_Notification_20251021.md` |
+| 画像管理ページ統合計画 | `docs/Phase2_Image_Management_Integration_Plan.md` |
+| DB構築後タスクリスト | `docs/Phase2_DB構築後タスクリスト.md` |
+| 実装サマリー | `mcp-shared/docs/Phase2_Implementation_Summary_20251021.md` |
+
+#### VoiceDrive側
+| ドキュメント | ファイルパス |
+|------------|------------|
+| ✅ 作業再開指示書 | `mcp-shared/docs/phase2-photo-integration-restart-instructions-20251021.md` |
+| ✅ 実装計画 | `mcp-shared/docs/phase2-voicedrive-implementation-plan-photo-integration-20251021.md` |
+| ✅ 実装サマリー | `mcp-shared/docs/phase2-photo-integration-implementation-summary-20251021.md` |
+| ✅ 医療チーム最終確認書 | `mcp-shared/docs/phase2-medical-final-confirmation-20251021.md` |
+
+### 2.5.8 作業再開時の連携フロー
+
+#### VoiceDrive側の作業再開手順
+
+VoiceDrive側は**作業再開指示書**（`mcp-shared/docs/phase2-photo-integration-restart-instructions-20251021.md`）に従って作業を再開します。
+
+**Step 1: 実装状況の確認**
+```bash
+# 実装済みファイルの確認
+✅ prisma/schema.prisma                          # profilePhotoUrl, profilePhotoUpdatedAt
+✅ src/middleware/webhookAuth.ts                 # HMAC署名検証
+✅ src/controllers/webhookController.ts          # Webhookハンドラー
+✅ src/components/common/PhotoAvatar.tsx         # 写真+イラストアバター
+```
+
+**Step 2: 環境変数の設定**
+```bash
+# 医療チームから受領したWebhook Secretを設定
+MEDICAL_WEBHOOK_SECRET=<64文字の秘密鍵>
+```
+
+**Step 3: ローカル動作確認**
+```bash
+# Webhookエンドポイントのテスト
+./scripts/test-webhook-medical-photo.sh
+
+# 期待される結果: { "success": true }
+```
+
+**Step 4: 統合テスト準備（11/11-11/15）**
+- テスト環境URL準備
+- 医療チームへURL共有
+- Slack `#phase2-photo-integration` で連携
+
+**Step 5: 本番デプロイ（11/18）**
+- 本番環境URL共有
+- 11/20 14:00 一括送信受信準備
+
+#### 医療システム側からの作業指示（DB構築後）
+
+**作業再開の指示文（例）**:
+
+```markdown
+@VoiceDriveチーム
+
+共通DB構築が完了しました。Phase 2顔写真統合の作業を再開してください。
+
+**作業再開指示書**: mcp-shared/docs/phase2-photo-integration-restart-instructions-20251021.md
+
+**確認事項**:
+1. 環境変数設定（MEDICAL_WEBHOOK_SECRET）← 本日中にSlack DMで共有
+2. ローカル動作確認（Step 3のスクリプト実行）
+3. テスト環境URL準備（3日以内）
+
+**スケジュール**:
+- DB構築後3日以内: テスト環境URL共有
+- +1週間: 統合テスト実施
+- +1週間: 本番デプロイ
+- +2日: 一括送信（300件）
+- +2日: Phase 2本番リリース
+
+よろしくお願いします。
+
+---
+医療システムチーム
+```
+
+#### 連携チェックリスト
+
+**医療システム側（作業指示前）**:
+- [ ] DB構築完了
+- [ ] Webhook Secret生成
+- [ ] CloudFront/Lightsailドメイン確定
+- [ ] テスト画像準備（3枚）
+- [ ] Webhook実装完了
+- [ ] 既存画像移行準備完了
+- [ ] VoiceDriveチームに作業再開指示を送付
+
+**VoiceDrive側（作業再開後）**:
+- [ ] 作業再開指示書確認
+- [ ] 環境変数設定
+- [ ] ローカル動作確認
+- [ ] テスト環境URL準備
+- [ ] 医療チームにテスト環境URL共有
+- [ ] 統合テスト実施
+- [ ] 本番環境URL準備
+- [ ] 医療チームに本番環境URL共有
+- [ ] 本番デプロイ
+- [ ] 一括送信受信準備
+- [ ] Phase 2本番リリース完了
+
+### 2.5.9 次のアクション
+
+#### 即時実行（オプション）
+- [ ] テスト画像3枚を作成して`public/employees/`に配置
+- [ ] ローカル動作確認（`http://localhost:3000/employees/TEST-001.jpg`）
+
+#### DB構築後
+- [ ] Webhook実装（employee.created, photo.updated, photo.deleted）
+- [ ] 既存画像移行（300-500枚）
+- [ ] 一括Webhook送信スクリプト実行
+- [ ] 統合テスト実施
+- [ ] Lightsailデプロイ
+- [ ] 本番リリース
+
+---
 
 *（Phase 2以降は従来のマスタープランと同じ内容のため省略）*
 

@@ -39,3 +39,17 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# ================================================================================
+# Phase 2: 顔写真統合 - 個人情報保護
+# ================================================================================
+# 職員の顔写真は個人情報のため、Gitにコミットしない
+# デプロイ時に手動でアップロード
+/public/employees/*.jpg
+/public/employees/*.jpeg
+/public/employees/*.png
+/public/employees/*.gif
+/public/employees/*.webp
+
+# .gitkeepは除外しない（フォルダ構造を維持）
+!/public/employees/.gitkeep
