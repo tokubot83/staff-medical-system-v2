@@ -2,7 +2,7 @@
 
 **文書番号**: MP-2025-1026-001
 **作成日**: 2025年9月20日
-**最終更新**: 2025年10月26日（Version 2.40 - Phase 2.9両チーム実装完了・質問回答受領）
+**最終更新**: 2025年10月26日（Version 2.42 - Phase 2.10 ProposalSelectionPage確認事項全解決）
 **作成者**: 医療システムチーム
 **宛先**: VoiceDriveチーム
 **重要度**: 🔴 最重要
@@ -10,6 +10,51 @@
 ---
 
 ## 📢 重要更新
+
+### 🆕 Phase 2.10追加: ProposalSelectionPage連携（2025年10月26日）
+
+VoiceDriveのProposalSelectionPage（面談候補選択ページ）向けの医療システムAPI実装を追加しました。
+
+**実装内容**:
+1. 提案データ取得API（`GET /api/v2/booking/:voicedriveRequestId/proposals`）
+2. 選択確定API（`POST /api/v2/booking/confirm`）
+3. 再調整依頼API（`POST /api/v2/booking/reschedule-request`）
+4. AIマッチングエンジンとの統合（提案3件生成）
+5. カレンダー統合（予約確定時）
+
+**実装状況**:
+- ✅ 暫定マスターリスト受領: VoiceDriveから40項目データ定義を受領（10/26完了）
+- ✅ 医療システム確認結果文書作成: [ProposalSelectionPage_医療システム確認結果_20251026.md](./ProposalSelectionPage_医療システム確認結果_20251026.md)
+- ✅ データ管理責任確認: 医療システム 100%管理（提案生成、マッチング、予約確定）、VoiceDrive側は表示のみ（10/26完了）
+- ✅ DB要件確認: InterviewReservationテーブル既存実装で十分、追加テーブル不要（10/26完了）
+- 📅 実装開始予定: 2025年11月1日（金）
+- 📅 統合テスト予定: 2025年11月7日（木）〜 11月8日（金）
+- 📅 リリース予定: 2025年11月11日（月）
+
+**データ管理責任**:
+- 提案生成データ: 医療システム 100%管理（AIマッチング、ランキング、適合度スコア）
+- 面談担当者情報: 医療システム 100%管理（Employeeテーブル）
+- スケジュール情報: 医療システム 100%管理（カレンダー統合）
+- 選択結果: 医療システム 100%管理（InterviewReservation更新）
+- UI状態: VoiceDrive側メモリ内のみ（永続化なし）
+
+**VoiceDriveからの回答受領（10/26完了）**:
+1. ✅ requestId管理方法: メモリ内のみ（React状態管理）を採用
+2. ✅ getCurrentEmployeeId()実装: JWT認証から取得、auth.ts実装予定（0.5日）
+3. ✅ キャッシュ有効期限: 1分で適切（既存実装維持）
+
+**実装確定事項**:
+- ✅ 医療システム最終確認書作成: [ProposalSelectionPage_医療システム最終確認書_20251026.md](./ProposalSelectionPage_医療システム最終確認書_20251026.md)
+- ✅ 3つの確認事項全て解決（10/26完了）
+- ✅ API仕様確定（3エンドポイント）
+- ✅ VoiceDrive実装タスク確定（getCurrentEmployeeId、submitChoice、エラーハンドリング）
+- 📅 実装開始: 2025年11月1日（金）
+- 📅 統合テスト: 2025年11月7日（木）〜 11月8日（金）
+- 📅 本番リリース: 2025年11月11日（月）
+
+**推定工数**: 3日（医療システムAPI実装1.5日 + VoiceDrive実装1日 + テスト0.5日）
+
+---
 
 ### 🆕 Phase 2.9追加: MyReportDetailPage連携（2025年10月26日）
 
