@@ -2,7 +2,7 @@
 
 **文書番号**: MP-2025-1026-001
 **作成日**: 2025年9月20日
-**最終更新**: 2025年10月26日（Version 2.42 - Phase 2.10 ProposalSelectionPage確認事項全解決）
+**最終更新**: 2025年10月26日（Version 2.44 - Phase 2.10 ExecutiveFunctionsPage追加）
 **作成者**: 医療システムチーム
 **宛先**: VoiceDriveチーム
 **重要度**: 🔴 最重要
@@ -10,6 +10,89 @@
 ---
 
 ## 📢 重要更新
+
+### 🆕 Phase 2.10追加: ExecutiveFunctionsPage連携（2025年10月26日）
+
+VoiceDriveのExecutiveFunctionsPage（経営層向け統合管理ページ）向けの医療システムAPI実装を追加しました。
+
+**実装内容**:
+1. 経営KPI取得API（`GET /api/medical/executive/kpis`）
+2. ROI計算API（`GET /api/medical/executive/initiatives/:id/roi`）
+3. 人材配置状況API（`GET /api/medical/executive/staffing-status`）
+4. リーダーシップ評価API（`GET /api/medical/executive/leadership-rating`）
+5. 組織能力評価API（`GET /api/medical/executive/organization-capabilities`）
+
+**実装状況**:
+- ✅ 暫定マスターリスト受領: VoiceDriveから要件定義を受領（10/26完了）
+- ✅ 医療システム確認結果文書作成: [ExecutiveFunctionsPage_医療システム確認結果_20251026.md](./ExecutiveFunctionsPage_医療システム確認結果_20251026.md)
+- ✅ データ管理責任確認: 財務・経営・人事データは医療システム100%管理（10/26完了）
+- 📅 実装開始予定: 2025年11月25日（月）
+- 📅 統合テスト予定: 2025年11月29日（金）
+- 📅 リリース予定: 2025年12月2日（月）
+
+**API一覧**:
+1. ✅ 経営KPI取得API: 総売上、純利益、職員数、患者満足度
+2. ✅ ROI計算API: 戦略イニシアチブの投資収益率算出
+3. ✅ 人材配置状況API: キーポジション充足率（管理職、専門職、次世代リーダー）
+4. ✅ リーダーシップ評価API: V3評価システム連携
+5. ✅ 組織能力評価API: 実行力、適応力、結束力、創造性
+
+**推定工数**: 5日（実装4日 + テスト1日）
+
+**VoiceDriveへの質問事項**:
+1. 予算データの連携方法（API or Webhook）
+2. ROI計算の期待リターン管理方法
+3. 組織能力評価の更新頻度（リアルタイム or 月次バッチ）
+
+---
+
+### 🆕 Phase 2.11追加: StrategicInitiativesPage連携（2025年10月26日）
+
+VoiceDriveのStrategicInitiativesPage（戦略イニシアチブページ）向けの医療システムデータベース・API実装を追加しました。
+
+**実装内容**:
+1. データベーステーブル追加（5テーブル）:
+   - StrategicProject（戦略プロジェクトマスタ）
+   - ProjectMilestone（マイルストーン）
+   - ProjectKPI（KPI管理）
+   - ProjectRisk（リスク管理）
+   - ProjectTeamMember（チームメンバー）
+2. API実装（7エンドポイント）:
+   - GET /api/v2/strategic-projects（一覧取得）
+   - GET /api/v2/strategic-projects/:id（詳細取得）
+   - POST /api/v2/strategic-projects（新規作成）
+   - PATCH /api/v2/strategic-projects/:id（更新）
+   - POST /api/v2/strategic-projects/:id/milestones/:mid/complete（マイルストーン完了）
+   - POST /api/v2/strategic-projects/:id/risks（リスク追加）
+   - PATCH /api/v2/strategic-projects/:id/risks/:rid（リスク解決）
+
+**実装状況**:
+- ✅ 暫定マスターリスト受領: VoiceDriveからデータ項目定義を受領（10/26完了）
+- ✅ 医療システム確認結果文書作成: [StrategicInitiativesPage_医療システム確認結果_20251026.md](./StrategicInitiativesPage_医療システム確認結果_20251026.md)
+- ✅ データ管理責任確認: 医療システム 100%管理（戦略プロジェクト、予算、理事会連携）、VoiceDrive側は表示のみ（10/26完了）
+- ✅ DB要件確認: 5テーブル新規追加が必要（既存テーブルなし）（10/26完了）
+- 📅 実装開始予定: 2025年11月11日（月）
+- 📅 統合テスト予定: 2025年11月19日（火）〜 11月20日（水）
+- 📅 リリース予定: 2025年11月22日（金）
+
+**データ管理責任**:
+- プロジェクト基本データ: 医療システム 100%管理（StrategicProjectテーブル）
+- 予算データ: 医療システム 100%管理（既存予算管理システムと統合検討）
+- マイルストーン: 医療システム 100%管理（ProjectMilestoneテーブル）
+- KPI: 医療システム 100%管理（ProjectKPIテーブル）
+- リスク: 医療システム 100%管理（ProjectRiskテーブル）
+- チームメンバー: 医療システム 100%管理（ProjectTeamMember + Employeeテーブル参照）
+- 理事会連携: 医療システム 100%管理（StrategicProject内フィールド）
+- プロジェクトテンプレート: VoiceDrive側管理（UI層の機能）
+
+**VoiceDriveへの確認事項（3件）**:
+1. ❓ プロジェクトテンプレート管理場所（VoiceDrive側 or 医療システム側？）
+2. ❓ 統計情報計算場所（クライアント側 or サーバー側？）
+3. ❓ 既存予算管理システムの有無確認
+
+**推定工数**: 7日（医療システムDB実装2日 + API実装3日 + VoiceDrive実装1日 + テスト1日）
+
+---
 
 ### 🆕 Phase 2.10追加: ProposalSelectionPage連携（2025年10月26日）
 
