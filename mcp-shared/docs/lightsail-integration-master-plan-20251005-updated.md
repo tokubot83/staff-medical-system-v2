@@ -2,7 +2,7 @@
 
 **文書番号**: MP-2025-1026-001
 **作成日**: 2025年9月20日
-**最終更新**: 2025年10月26日（Version 2.44 - Phase 2.10 ExecutiveFunctionsPage追加）
+**最終更新**: 2025年10月26日（Version 2.45 - Phase 2.11 StrategicInitiativesPage確認事項解決）
 **作成者**: 医療システムチーム
 **宛先**: VoiceDriveチーム
 **重要度**: 🔴 最重要
@@ -46,51 +46,65 @@ VoiceDriveのExecutiveFunctionsPage（経営層向け統合管理ページ）向
 
 ---
 
-### 🆕 Phase 2.11追加: StrategicInitiativesPage連携（2025年10月26日）
+### 🆕 Phase 2.11追加: StrategicInitiativesPage連携（2025年10月26日）- ✅ 確認事項解決
 
 VoiceDriveのStrategicInitiativesPage（戦略イニシアチブページ）向けの医療システムデータベース・API実装を追加しました。
 
 **実装内容**:
-1. データベーステーブル追加（5テーブル）:
+1. データベーステーブル追加（6テーブル）:
    - StrategicProject（戦略プロジェクトマスタ）
    - ProjectMilestone（マイルストーン）
    - ProjectKPI（KPI管理）
    - ProjectRisk（リスク管理）
    - ProjectTeamMember（チームメンバー）
+   - ProjectStatusChangeLog（ステータス変更履歴）← 高リスク自動変更対応で追加
 2. API実装（7エンドポイント）:
-   - GET /api/v2/strategic-projects（一覧取得）
-   - GET /api/v2/strategic-projects/:id（詳細取得）
-   - POST /api/v2/strategic-projects（新規作成）
-   - PATCH /api/v2/strategic-projects/:id（更新）
-   - POST /api/v2/strategic-projects/:id/milestones/:mid/complete（マイルストーン完了）
-   - POST /api/v2/strategic-projects/:id/risks（リスク追加）
-   - PATCH /api/v2/strategic-projects/:id/risks/:rid（リスク解決）
+   - GET /api/strategic-projects（一覧取得）
+   - GET /api/strategic-projects/:id（詳細取得）
+   - POST /api/strategic-projects/create（新規作成）
+   - PATCH /api/strategic-projects/:id（更新）
+   - POST /api/strategic-projects/:id/milestones/:mid/complete（マイルストーン完了）
+   - POST /api/strategic-projects/:id/risks/add（リスク追加 + 自動ステータス変更）
+   - PATCH /api/strategic-projects/:id/risks/:rid/resolve（リスク解決）
 
 **実装状況**:
 - ✅ 暫定マスターリスト受領: VoiceDriveからデータ項目定義を受領（10/26完了）
 - ✅ 医療システム確認結果文書作成: [StrategicInitiativesPage_医療システム確認結果_20251026.md](./StrategicInitiativesPage_医療システム確認結果_20251026.md)
+- ✅ VoiceDrive回答書受領: VD-RESP-2025-1026-001（10/26完了）
+- ✅ 最終確認書作成: [StrategicInitiativesPage_医療システム最終確認書_20251026.md](./StrategicInitiativesPage_医療システム最終確認書_20251026.md)
 - ✅ データ管理責任確認: 医療システム 100%管理（戦略プロジェクト、予算、理事会連携）、VoiceDrive側は表示のみ（10/26完了）
-- ✅ DB要件確認: 5テーブル新規追加が必要（既存テーブルなし）（10/26完了）
+- ✅ DB要件確認: 6テーブル新規追加が必要（既存テーブルなし）（10/26完了）
+- ✅ 全確認事項解決: 3件の確認事項 + 2件の追加確認事項 全て解決（10/26完了）
 - 📅 実装開始予定: 2025年11月11日（月）
 - 📅 統合テスト予定: 2025年11月19日（火）〜 11月20日（水）
-- 📅 リリース予定: 2025年11月22日（金）
+- 📅 リリース予定: 2025年11月20日（水）
 
 **データ管理責任**:
 - プロジェクト基本データ: 医療システム 100%管理（StrategicProjectテーブル）
-- 予算データ: 医療システム 100%管理（既存予算管理システムと統合検討）
+- 予算データ: 医療システム 100%管理（独立管理 - 既存システムなし）
 - マイルストーン: 医療システム 100%管理（ProjectMilestoneテーブル）
 - KPI: 医療システム 100%管理（ProjectKPIテーブル）
 - リスク: 医療システム 100%管理（ProjectRiskテーブル）
 - チームメンバー: 医療システム 100%管理（ProjectTeamMember + Employeeテーブル参照）
 - 理事会連携: 医療システム 100%管理（StrategicProject内フィールド）
 - プロジェクトテンプレート: VoiceDrive側管理（UI層の機能）
+- 統計情報計算: VoiceDrive側管理（クライアント側計算）
 
-**VoiceDriveへの確認事項（3件）**:
-1. ❓ プロジェクトテンプレート管理場所（VoiceDrive側 or 医療システム側？）
-2. ❓ 統計情報計算場所（クライアント側 or サーバー側？）
-3. ❓ 既存予算管理システムの有無確認
+**VoiceDriveへの確認事項（3件）- ✅ 全て解決**:
+1. ✅ プロジェクトテンプレート管理場所 → **VoiceDrive側で管理**（承認）
+2. ✅ 統計情報計算場所 → **クライアント側（VoiceDrive）で計算**（承認）
+3. ✅ 既存予算管理システムの有無 → **なし、StrategicProjectテーブルで独立管理**（承認）
 
-**推定工数**: 7日（医療システムDB実装2日 + API実装3日 + VoiceDrive実装1日 + テスト1日）
+**VoiceDriveからの追加確認事項（2件）- ✅ 全て回答**:
+1. ✅ マイルストーン完了通知機能 → **Phase 2実装推奨**（Phase 1では通知なし）
+2. ✅ 高リスク自動ステータス変更 → **Phase 1実装推奨**（完全実装コード記載）
+
+**推定工数**: 10日（医療システムDB実装2日 + API実装4日 + VoiceDrive実装2日 + テスト2日）
+
+**Phase 2実装予定（2025年12月以降）**:
+- マイルストーン完了通知機能（通知サービス連携）
+- リスク解決時の自動ステータス復元（完全自動化）
+- メール/Slack通知連携（オプション）
 
 ---
 
