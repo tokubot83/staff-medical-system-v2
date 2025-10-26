@@ -2,7 +2,7 @@
 
 **文書番号**: MP-2025-1026-001
 **作成日**: 2025年9月20日
-**最終更新**: 2025年10月26日（Version 2.45 - Phase 2.11 StrategicInitiativesPage確認事項解決）
+**最終更新**: 2025年10月26日（Version 2.46 - Phase 2.10 ExecutiveFunctionsPage API実装完了）
 **作成者**: 医療システムチーム
 **宛先**: VoiceDriveチーム
 **重要度**: 🔴 最重要
@@ -11,38 +11,41 @@
 
 ## 📢 重要更新
 
-### 🆕 Phase 2.10追加: ExecutiveFunctionsPage連携（2025年10月26日）
+### ✅ Phase 2.10実装完了: ExecutiveFunctionsPage連携（2025年10月26日）
 
-VoiceDriveのExecutiveFunctionsPage（経営層向け統合管理ページ）向けの医療システムAPI実装を追加しました。
+VoiceDriveのExecutiveFunctionsPage（経営層向け統合管理ページ）向けの医療システムAPI実装が完了しました。
 
-**実装内容**:
-1. 経営KPI取得API（`GET /api/medical/executive/kpis`）
-2. ROI計算API（`GET /api/medical/executive/initiatives/:id/roi`）
-3. 人材配置状況API（`GET /api/medical/executive/staffing-status`）
-4. リーダーシップ評価API（`GET /api/medical/executive/leadership-rating`）
-5. 組織能力評価API（`GET /api/medical/executive/organization-capabilities`）
+**実装済みAPI（8つ）**:
+1. ✅ **経営KPI取得API**（`GET /api/medical/executive/kpis`）- 総売上、純利益、職員数、患者満足度
+2. ✅ **ROI計算API**（`GET /api/medical/executive/initiatives/:id/roi`）- カテゴリ別ROI係数による自動算出
+3. ✅ **人材配置状況API**（`GET /api/medical/executive/staffing-status`）- キーポジション充足率
+4. ✅ **リーダーシップ評価API**（`GET /api/medical/executive/leadership-rating`）- V3評価システム連携
+5. ✅ **組織能力評価API**（`GET /api/medical/executive/organization-capabilities`）- 4軸評価
+6. ✅ **予算マスタ一覧API**（`GET /api/medical/budgets`）- StrategicInitiativesPage用
+7. ✅ **予算詳細取得API**（`GET /api/medical/budgets/:id`）- StrategicInitiativesPage用
+8. ✅ **組織エンゲージメントAPI**（`GET /api/medical/surveys/organization-engagement`）- VoiceDrive統合計算用
 
 **実装状況**:
 - ✅ 暫定マスターリスト受領: VoiceDriveから要件定義を受領（10/26完了）
 - ✅ 医療システム確認結果文書作成: [ExecutiveFunctionsPage_医療システム確認結果_20251026.md](./ExecutiveFunctionsPage_医療システム確認結果_20251026.md)
+- ✅ VoiceDriveからの3つの追加質問に回答: [ExecutiveFunctionsPage_医療システム回答書_20251026.md](./ExecutiveFunctionsPage_医療システム回答書_20251026.md)
 - ✅ データ管理責任確認: 財務・経営・人事データは医療システム100%管理（10/26完了）
-- 📅 実装開始予定: 2025年11月25日（月）
-- 📅 統合テスト予定: 2025年11月29日（金）
+- ✅ **API実装完了**: 2025年10月26日（全8API完了）
+- 📅 統合テスト予定: VoiceDrive側実装完了後
 - 📅 リリース予定: 2025年12月2日（月）
 
-**API一覧**:
-1. ✅ 経営KPI取得API: 総売上、純利益、職員数、患者満足度
-2. ✅ ROI計算API: 戦略イニシアチブの投資収益率算出
-3. ✅ 人材配置状況API: キーポジション充足率（管理職、専門職、次世代リーダー）
-4. ✅ リーダーシップ評価API: V3評価システム連携
-5. ✅ 組織能力評価API: 実行力、適応力、結束力、創造性
+**合意済み事項**:
+1. ✅ 予算データ連携: API方式で実装完了
+2. ✅ ROI計算: カテゴリ別係数（digital_transformation: 24%, regional_development: 18%等）による自動算出
+3. ✅ 組織能力評価: 月次バッチ方式（VoiceDrive側で1ヶ月キャッシュ）
+4. ✅ 組織エンゲージメント: VoiceDrive 40% + 医療システム 60% の統合計算
 
-**推定工数**: 5日（実装4日 + テスト1日）
+**実装工数**: 0.5日（API 8個 × 1時間）
 
-**VoiceDriveへの質問事項**:
-1. 予算データの連携方法（API or Webhook）
-2. ROI計算の期待リターン管理方法
-3. 組織能力評価の更新頻度（リアルタイム or 月次バッチ）
+**次のステップ**:
+- ⏳ VoiceDrive側UI実装待ち
+- ⏳ 統合テスト準備
+- ⏳ 本番デプロイ計画策定
 
 ---
 
