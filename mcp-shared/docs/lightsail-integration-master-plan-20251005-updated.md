@@ -2,7 +2,7 @@
 
 **文書番号**: MP-2025-1026-001
 **作成日**: 2025年9月20日
-**最終更新**: 2025年10月26日（Version 2.39 - Phase 2.9実装完了）
+**最終更新**: 2025年10月26日（Version 2.40 - Phase 2.9両チーム実装完了・質問回答受領）
 **作成者**: 医療システムチーム
 **宛先**: VoiceDriveチーム
 **重要度**: 🔴 最重要
@@ -27,11 +27,17 @@ VoiceDriveのMyReportDetailPage（内部通報詳細ページ）向けの医療�
 - ✅ 医療システム確認結果文書作成: [MyReportDetailPage_医療システム確認結果_20251026.md](./MyReportDetailPage_医療システム確認結果_20251026.md)
 - ✅ データ管理責任確認: 通報データはVoiceDrive 83%、医療システム 17%（10/26完了）
 - ✅ セキュリティ要件確認: 匿名性保護・Webhook署名方式確認（10/26完了）
-- ✅ Webhook受信エンドポイント実装: `/api/webhooks/voicedrive/whistleblowing/escalate`（10/26完了）
-- ✅ ケース番号生成ユーティリティ実装: `src/lib/utils/case-number-generator.ts`（10/26完了）
-- ✅ Webhook送信サービス実装: `src/lib/services/whistleblowing-webhook.ts`（10/26完了）
-- 📅 実装開始予定: 2025年11月18日（月） → 10/26に前倒し実装完了
-- 📅 統合テスト予定: 2025年11月21日（木）〜 11月22日（金）
+- ✅ **医療システム側実装完了**（10/26完了）:
+  - ✅ Webhook受信エンドポイント実装: `/api/webhooks/voicedrive/whistleblowing/escalate`
+  - ✅ ケース番号生成ユーティリティ実装: `src/lib/utils/case-number-generator.ts`
+  - ✅ Webhook送信サービス実装: `src/lib/services/whistleblowing-webhook.ts`
+- ✅ **VoiceDrive側実装完了**（10/26完了）:
+  - ✅ Webhook受信エンドポイント実装: `/acknowledged`, `/status-update`, `/resolution`
+  - ✅ server.ts登録完了
+  - ✅ VoiceDrive実装完了報告書作成: [MyReportDetailPage_VoiceDrive実装完了報告_20251026.md](./MyReportDetailPage_VoiceDrive実装完了報告_20251026.md)
+  - ✅ 6つの質問への回答完了（HMAC-SHA256署名、リトライポリシー、ステータス遷移、Severity再評価、InvestigationNote API、統合テスト日程）
+- 📅 実装開始予定: 2025年11月18日（月） → ✅ **10/26に両チーム実装完了**
+- 📅 統合テスト予定: 2025年11月21日（木）〜 11月22日（金）← VoiceDriveチーム承認済み
 - 📅 リリース予定: 2025年11月25日（月）
 
 **Webhook連携フロー**:
@@ -41,15 +47,15 @@ VoiceDriveのMyReportDetailPage（内部通報詳細ページ）向けの医療�
 4. 医療システム → VoiceDrive: 調査進捗通知送信（随時）
 5. 医療システム → VoiceDrive: 解決通知送信（対応完了時）
 
-**推定工数**: 4日（実装3日 + テスト1日） → ✅ 10/26に基礎実装完了（統合テストのみ残存）
+**推定工数**: 4日（実装3日 + テスト1日） → ✅ **10/26に両チーム実装完了（統合テストのみ残存）**
 
-**VoiceDriveへの質問事項**:
-1. Webhook署名方式の詳細確認（既存HMAC-SHA256で問題ないか？）
-2. リトライポリシーの確認（既存の指数バックオフ方式で問題ないか？）
-3. ステータス遷移の制約確認（`triaging`を自動スキップして良いか？）
-4. 緊急度の再評価可否（医療システム側で`medium` → `high`に引き上げ可能か？）
-5. InvestigationNote運用確認（Phase 2.10で実装を検討）
-6. 統合テスト日程の調整（11/21-22で問題ないか？）
+**VoiceDriveからの回答受領**（10/26完了）:
+1. ✅ Webhook署名方式: Phase 2.5と同じHMAC-SHA256方式を使用
+2. ✅ リトライポリシー: Phase 2.5と同じ（1分→5分→30分）を採用
+3. ✅ ステータス遷移: 提案フローを承認（実運用の最適化パスも補足）
+4. ✅ Severity再評価: 許可（Webhook通知・履歴記録・通報者通知を推奨）
+5. ✅ InvestigationNote API: Phase 2.10で提供予定（API仕様案を提示）
+6. ✅ 統合テストスケジュール: 11/21-22を承認
 
 ---
 
