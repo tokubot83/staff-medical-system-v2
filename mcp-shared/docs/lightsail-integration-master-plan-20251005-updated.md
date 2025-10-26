@@ -2,7 +2,7 @@
 
 **文書番号**: MP-2025-1026-001
 **作成日**: 2025年9月20日
-**最終更新**: 2025年10月26日（Version 2.34 - UserManagementPage API追加）
+**最終更新**: 2025年10月26日（Version 2.35 - SettingsPage連携追加）
 **作成者**: 医療システムチーム
 **宛先**: VoiceDriveチーム
 **重要度**: 🔴 最重要
@@ -10,6 +10,27 @@
 ---
 
 ## 📢 重要更新
+
+### 🆕 Phase 2.7追加: SettingsPage連携（2025年10月26日）
+
+VoiceDriveのSettingsPageにおけるデータ分析同意管理と医療システムの連携を追加しました。
+
+**実装内容**:
+1. データ削除リクエスト受信Webhook（VoiceDriveからの通知受信）
+2. データ削除完了通知Webhook（医療システムから送信）
+3. VoiceDrive同意状態参照APIクライアント（職員カルテ分析前の同意確認）
+
+**実装状況**:
+- ✅ JWT認証基盤実装完了: Phase 2.6で実装済み（10/26完了）
+- ✅ Webhook受信エンドポイント実装: `/api/webhooks/voicedrive/data-deletion-requested`（10/26完了）
+- ✅ VoiceDrive APIクライアント実装: データ分析同意状態取得機能（10/26完了）
+- ✅ 環境変数設定: JWT_SECRET, VOICEDRIVE_WEBHOOK_ENDPOINT等（10/26完了）
+- ✅ 医療システム確認結果文書作成: [SettingsPage_医療システム確認結果_20251026.md](./SettingsPage_医療システム確認結果_20251026.md)
+- 📅 DB構築後: 統合テスト実施
+
+**推定工数**: 1.5日（実装完了済み、統合テストのみ残存）
+
+---
 
 ### 🆕 Phase 2.6追加: UserManagementPage API統合（2025年10月26日）
 

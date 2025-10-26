@@ -12,11 +12,15 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import { authenticateAndAuthorize } from '@/lib/middleware/jwt-auth';
 
 const prisma = new PrismaClient();
 
 /**
  * 個別職員取得API
+ *
+ * 認証: Bearer Token（JWT）
+ * 必要権限: Level 99（システム管理者）
  *
  * パスパラメータ:
  * - employeeId: String (職員ID = employeeCode)
@@ -26,14 +30,13 @@ export async function GET(
   { params }: { params: { employeeId: string } }
 ) {
   try {
-    // API Key認証チェック
-    const apiKey = request.headers.get('x-api-key');
-    if (!apiKey || apiKey !== process.env.VOICEDRIVE_API_KEY) {
-      return NextResponse.json(
-        { error: 'Unauthorized: Invalid API Key' },
-        { status: 401 }
-      );
+    // JWT認証＆権限チェック（Level 99必須）
+    const authResult = authenticateAndAuthorize(request, 99);
+    if (!authResult.success) {
+      return authResult.response!;
     }
+
+    const user = authResult.user!;
 
     const { employeeId } = params;
 

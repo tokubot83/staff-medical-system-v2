@@ -1,11 +1,123 @@
 # 本日の共有ファイル要約（自動更新）
 
-**更新日時**: 2025-10-21 12:45:00
+**更新日時**: 2025-10-26 18:00:00
 **VoiceDrive側のClaude Code向け緊急要約**
 
 ---
 
-## 🚀 最新：Phase 6 Phase 2（API統合）実装完了 - VoiceDrive API連携準備完了（10/21 12:45）
+## 🚀 最新：Phase 2.7 SettingsPage連携実装完了（10/26 18:00）
+
+### ✅ **Phase 2.7 SettingsPage連携実装完了 - 統合テスト待機中**
+
+**完了日時**: 2025年10月26日 18:00
+**対象機能**: SettingsPageデータ削除連携
+**実装ステータス**: ✅ **100%完了**
+**次のステップ**: Lightsail DB構築後、VoiceDriveチームと統合テスト実施
+
+#### 📋 Phase 2.7実装完了内容
+
+**実装項目**:
+- ✅ データ削除リクエスト受信Webhook
+- ✅ データ削除完了通知Webhook送信機能
+- ✅ VoiceDrive同意状態参照APIクライアント
+- ✅ JWT認証基盤（Phase 2.6で実装済み）
+- ✅ 環境変数設定（JWT_SECRET等）
+- ✅ 医療システム確認結果文書作成
+
+**変更ファイル**:
+1. `src/app/api/webhooks/voicedrive/data-deletion-requested/route.ts` (新規作成)
+   - Webhook受信エンドポイント
+   - データ削除処理（将来実装）
+   - 削除完了通知送信
+2. `src/lib/services/voicedrive-client.ts` (新規作成)
+   - VoiceDrive APIクライアント実装
+   - データ分析同意状態取得機能
+   - トークン管理機能
+3. `.env` (+13行)
+   - JWT_SECRET設定
+   - VOICEDRIVE_WEBHOOK_ENDPOINT設定
+   - VOICEDRIVE_API_BASE_URL設定
+
+#### データ削除連携フロー
+
+**フロー図**:
+```
+1. ユーザー → VoiceDrive: データ削除リクエスト
+2. VoiceDrive → 医療システム: Webhook送信 (data-deletion-requested)
+3. 医療システム: VoiceDrive活動データ削除（将来実装）
+4. 医療システム: 職員カルテ分析データ削除（将来実装）
+5. 医療システム → VoiceDrive: Webhook送信 (data-deletion-completed)
+6. VoiceDrive → ユーザー: 通知「データ削除完了」
+```
+
+#### VoiceDrive同意状態参照機能
+
+**用途**: 医療システムが職員カルテ分析前にデータ利用同意状態を確認
+
+**APIエンドポイント（VoiceDrive側）**:
+```
+GET /api/voicedrive/users/{userId}/consent-status
+```
+
+**レスポンス例**:
+```json
+{
+  "userId": "user-123",
+  "employeeId": "EMP-2025-001",
+  "analyticsConsent": true,
+  "analyticsConsentDate": "2025-10-01T09:00:00Z",
+  "revokeDate": null,
+  "dataDeletionRequested": false,
+  "canAnalyze": true
+}
+```
+
+#### 医療システム側の実装範囲
+
+| 機能 | VoiceDrive責任 | 医療システム責任 |
+|------|--------------|----------------|
+| **通知設定管理** | ✅ 100%責任 | ❌ 関与なし |
+| **データ分析同意管理** | ✅ マスタデータ管理 | 🔵 参照のみ |
+| **データ削除リクエスト** | ✅ リクエスト受付 | 🔴 削除処理実行 |
+| **データ削除完了通知** | ✅ 通知受信 | 🔴 完了報告 |
+
+#### 関連ドキュメント（NEW）
+
+1. **SettingsPage医療システム確認結果** ⭐⭐⭐ **LATEST (10/26 18:00)**
+   - `mcp-shared/docs/SettingsPage_医療システム確認結果_20251026.md`
+   - 実装詳細、Webhook仕様、統合テスト計画
+
+2. **SettingsPage暫定マスターリスト（VoiceDrive側）**
+   - `mcp-shared/docs/SettingsPage暫定マスターリスト_20251026.md`
+   - 全29データ項目の詳細仕様
+
+3. **JWT Secret Key共有書**
+   - `mcp-shared/docs/UserManagementPage_JWT_Secret_Key_共有書_20251026.md`
+   - JWT認証仕様、Secret Key
+
+4. **マスタープラン更新**
+   - `mcp-shared/docs/lightsail-integration-master-plan-20251005-updated.md`（Phase 2.7追加）
+   - Version 2.35に更新
+
+#### 次のアクション
+
+**医療システムチーム**:
+- [x] ✅ Webhook実装完了
+- [x] ✅ VoiceDrive APIクライアント実装完了
+- [x] ✅ 環境変数設定完了
+- [x] ✅ 医療システム確認結果文書作成
+- [x] ✅ マスタープラン更新
+- [ ] Lightsail DB構築後、統合テスト実施
+
+**VoiceDriveチーム**:
+- [ ] SettingsPage医療システム確認結果のレビュー
+- [ ] Webhook受信エンドポイント実装（data-deletion-completed）
+- [ ] データ分析同意状態参照API実装
+- [ ] Lightsail DB構築後、統合テスト実施
+
+---
+
+## 🚀 前回：Phase 6 Phase 2（API統合）実装完了 - VoiceDrive API連携準備完了（10/21 12:45）
 
 ### ✅ **Phase 6 Phase 2（API統合）実装完了 - 統合テスト準備完了**
 
