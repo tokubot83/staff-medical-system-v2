@@ -11,9 +11,9 @@
 
 ## 📢 重要更新
 
-### 🆕 Phase 2.9追加: MyReportsPage連携（2025年10月26日）
+### 🆕 Phase 2.9追加: MyReportDetailPage連携（2025年10月26日）
 
-VoiceDriveのMyReportsPage（コンプライアンス通報履歴）向けの医療システムWebhook実装を追加しました。
+VoiceDriveのMyReportDetailPage（内部通報詳細ページ）向けの医療システムWebhook実装を追加しました。
 
 **実装内容**:
 1. 通報エスカレーションWebhook受信（`POST /api/webhooks/voicedrive/whistleblowing/escalate`）
@@ -24,7 +24,7 @@ VoiceDriveのMyReportsPage（コンプライアンス通報履歴）向けの医
 
 **実装状況**:
 - ✅ 暫定マスターリスト受領: VoiceDriveから3テーブル定義を受領（10/26完了）
-- ✅ 医療システム確認結果文書作成: [MyReports_医療システム確認結果_20251026.md](./MyReports_医療システム確認結果_20251026.md)
+- ✅ 医療システム確認結果文書作成: [MyReportDetailPage_医療システム確認結果_20251026.md](./MyReportDetailPage_医療システム確認結果_20251026.md)
 - ✅ データ管理責任確認: 通報データはVoiceDrive 83%、医療システム 17%（10/26完了）
 - ✅ セキュリティ要件確認: 匿名性保護・Webhook署名方式確認（10/26完了）
 - ✅ Webhook受信エンドポイント実装: `/api/webhooks/voicedrive/whistleblowing/escalate`（10/26完了）
