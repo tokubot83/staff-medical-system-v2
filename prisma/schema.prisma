@@ -432,12 +432,18 @@ model Interview {
   interviewDate        DateTime                 @map("interview_date")
   interviewType        String                   @map("interview_type")
   duration             Int?                     // 面談時間（分）
-  
+
   // 動機タイプ関連フィールド（v5追加）
   motivationTypeId     String?                  @map("motivation_type_id")
   motivationConfidence ConfidenceLevel?         @map("motivation_confidence")
   typeSpecificNotes    String?                  @map("type_specific_notes")
-  
+
+  // Phase 2.5: VoiceDrive連携フィールド追加
+  voicedriveSyncId     String?                  @unique @map("voicedrive_sync_id")  // VoiceDrive予約IDとの紐付け
+  durationMinutes      Int?                     @map("duration_minutes")            // 面談所要時間（分）
+  rescheduledFromId    String?                  @map("rescheduled_from_id")         // 再予約元のID
+  interviewStatus      InterviewStatus?         @default(SCHEDULED) @map("interview_status") // 'scheduled', 'completed', 'cancelled', 'no_show', 'rescheduled'
+
   // 既存フィールド
   overallEvaluation    String?                  @map("overall_evaluation")
   potentialEvaluation  String?                  @map("potential_evaluation")
@@ -454,9 +460,23 @@ model Interview {
   motivationType     MotivationType?            @relation(fields: [motivationTypeId], references: [id])
   motivationHistory  StaffMotivationHistory[]
 
+  // Phase 2.5: 再予約履歴のリレーション
+  rescheduledFrom    Interview?                 @relation("RescheduleHistory", fields: [rescheduledFromId], references: [id], onDelete: SetNull)
+  rescheduledTo      Interview[]                @relation("RescheduleHistory")
+
   @@index([employeeId])
   @@index([motivationTypeId])
+  @@index([voicedriveSyncId])
+  @@index([interviewStatus])
   @@map("interviews")
+}
+
+enum InterviewStatus {
+  SCHEDULED   @map("scheduled")
+  COMPLETED   @map("completed")
+  CANCELLED   @map("cancelled")
+  NO_SHOW     @map("no_show")
+  RESCHEDULED @map("rescheduled")
 }
 
 // ============================================
@@ -686,4 +706,66 @@ model EmployeeAccountStatusHistory {
   @@index([changedAt])
   @@index([approvedBy])
   @@map("employee_account_status_history")
+}
+
+// ============================================
+// Phase 2.5: SystemMonitorPage連携強化
+// Webhook送信統計・面談完了統計API実装
+// ============================================
+
+// Webhook送信ログテーブル
+model WebhookSendLog {
+  id               String    @id @default(cuid())
+  eventType        String    @map("event_type")        // 'employee.created', 'interview.completed'等
+  eventTimestamp   DateTime  @map("event_timestamp")   // イベント発生時刻
+  sentAt           DateTime  @map("sent_at")           // 送信時刻
+  staffId          String?   @map("staff_id")          // 関連職員ID
+  requestId        String?   @unique @map("request_id") // リクエストID（VoiceDrive連携用）
+  payloadSize      Int       @map("payload_size")      // ペイロードサイズ（bytes）
+  status           WebhookSendStatus                    // 'success', 'failed', 'timeout'
+  httpStatusCode   Int?      @map("http_status_code")  // HTTPステータスコード
+  processingTime   Int       @map("processing_time")   // 処理時間（ms）
+  errorMessage     String?   @map("error_message")     // エラーメッセージ
+  retryCount       Int       @default(0) @map("retry_count") // リトライ回数
+  lastRetryAt      DateTime? @map("last_retry_at")     // 最終リトライ時刻
+  responseBody     String?   @map("response_body")     // レスポンスボディ（JSON）
+  createdAt        DateTime  @default(now()) @map("created_at")
+
+  @@index([eventType])
+  @@index([sentAt])
+  @@index([status])
+  @@index([staffId])
+  @@map("webhook_send_logs")
+}
+
+enum WebhookSendStatus {
+  SUCCESS @map("success")
+  FAILED  @map("failed")
+  TIMEOUT @map("timeout")
+}
+
+// Webhookリトライキューテーブル
+model WebhookRetryQueue {
+  id                 String           @id @default(cuid())
+  originalLogId      String           @map("original_log_id") // 元のwebhook_send_logsのID
+  eventType          String           @map("event_type")
+  payload            Json                                     // リトライ用のペイロード
+  retryAttempt       Int              @default(0) @map("retry_attempt") // 現在のリトライ回数
+  maxRetries         Int              @default(3) @map("max_retries")   // 最大リトライ回数
+  nextRetryAt        DateTime         @map("next_retry_at")   // 次回リトライ予定時刻
+  status             RetryQueueStatus @default(PENDING)
+  lastError          String?          @map("last_error")      // 最後のエラーメッセージ
+  createdAt          DateTime         @default(now()) @map("created_at")
+  updatedAt          DateTime         @updatedAt @map("updated_at")
+
+  @@index([status, nextRetryAt])
+  @@index([originalLogId])
+  @@map("webhook_retry_queue")
+}
+
+enum RetryQueueStatus {
+  PENDING    @map("pending")
+  PROCESSING @map("processing")
+  COMPLETED  @map("completed")
+  FAILED     @map("failed")
 }
