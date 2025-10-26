@@ -2,7 +2,7 @@
 
 **文書番号**: MP-2025-1026-001
 **作成日**: 2025年9月20日
-**最終更新**: 2025年10月26日（Version 2.35 - SettingsPage連携追加）
+**最終更新**: 2025年10月26日（Version 2.39 - Phase 2.9実装完了）
 **作成者**: 医療システムチーム
 **宛先**: VoiceDriveチーム
 **重要度**: 🔴 最重要
@@ -10,6 +10,85 @@
 ---
 
 ## 📢 重要更新
+
+### 🆕 Phase 2.9追加: MyReportsPage連携（2025年10月26日）
+
+VoiceDriveのMyReportsPage（コンプライアンス通報履歴）向けの医療システムWebhook実装を追加しました。
+
+**実装内容**:
+1. 通報エスカレーションWebhook受信（`POST /api/webhooks/voicedrive/whistleblowing/escalate`）
+2. ステータス更新Webhook送信（医療システム → VoiceDrive）
+3. 解決通知Webhook送信（医療システム → VoiceDrive）
+4. ケース番号発行ロジック（`MED-YYYY-NNNN`形式）
+5. 調査進捗通知Webhook送信（医療システム → VoiceDrive）
+
+**実装状況**:
+- ✅ 暫定マスターリスト受領: VoiceDriveから3テーブル定義を受領（10/26完了）
+- ✅ 医療システム確認結果文書作成: [MyReports_医療システム確認結果_20251026.md](./MyReports_医療システム確認結果_20251026.md)
+- ✅ データ管理責任確認: 通報データはVoiceDrive 83%、医療システム 17%（10/26完了）
+- ✅ セキュリティ要件確認: 匿名性保護・Webhook署名方式確認（10/26完了）
+- ✅ Webhook受信エンドポイント実装: `/api/webhooks/voicedrive/whistleblowing/escalate`（10/26完了）
+- ✅ ケース番号生成ユーティリティ実装: `src/lib/utils/case-number-generator.ts`（10/26完了）
+- ✅ Webhook送信サービス実装: `src/lib/services/whistleblowing-webhook.ts`（10/26完了）
+- 📅 実装開始予定: 2025年11月18日（月） → 10/26に前倒し実装完了
+- 📅 統合テスト予定: 2025年11月21日（木）〜 11月22日（金）
+- 📅 リリース予定: 2025年11月25日（月）
+
+**Webhook連携フロー**:
+1. VoiceDrive → 医療システム: 通報エスカレーション通知受信（高深刻度通報のみ）
+2. 医療システム → VoiceDrive: ケース番号発行通知送信（即座に）
+3. 医療システム → VoiceDrive: ステータス更新送信（調査進行中）
+4. 医療システム → VoiceDrive: 調査進捗通知送信（随時）
+5. 医療システム → VoiceDrive: 解決通知送信（対応完了時）
+
+**推定工数**: 4日（実装3日 + テスト1日） → ✅ 10/26に基礎実装完了（統合テストのみ残存）
+
+**VoiceDriveへの質問事項**:
+1. Webhook署名方式の詳細確認（既存HMAC-SHA256で問題ないか？）
+2. リトライポリシーの確認（既存の指数バックオフ方式で問題ないか？）
+3. ステータス遷移の制約確認（`triaging`を自動スキップして良いか？）
+4. 緊急度の再評価可否（医療システム側で`medium` → `high`に引き上げ可能か？）
+5. InvestigationNote運用確認（Phase 2.10で実装を検討）
+6. 統合テスト日程の調整（11/21-22で問題ないか？）
+
+---
+
+### 🆕 Phase 2.8追加: AnalyticsFunctionsPage連携（2025年10月26日）
+
+VoiceDriveの分析機能ページ（AnalyticsFunctionsPage）向けの医療システムAPI実装を追加しました。
+
+**実装内容**:
+1. 施設マスタ取得API（`GET /api/voicedrive/facilities`）
+2. 職員満足度取得API（`GET /api/voicedrive/employee-satisfaction`）
+3. 組織階層取得API（`GET /api/voicedrive/organization-hierarchy`）
+4. Webhook拡張（`profession`, `hierarchyLevel`, `birthYear`フィールド追加）
+
+**実装状況**:
+- ✅ 医療システムDB構造確認完了: 95%以上のデータが既存DBに存在（10/26完了）
+- ✅ API実装可能性確認: 100%実装可能（10/26完了）
+- ✅ 医療システム確認結果文書作成: [AnalyticsFunctionsPage_医療システム確認結果_20251026.md](./AnalyticsFunctionsPage_医療システム確認結果_20251026.md)
+- ✅ VoiceDriveからの回答受領: 全面承認・実装合意（10/26完了）
+- ✅ 医療システム最終確認書作成: [AnalyticsFunctionsPage_医療システム最終確認書_20251026.md](./AnalyticsFunctionsPage_医療システム最終確認書_20251026.md)
+- 📅 実装開始予定: 2025年11月4日（月）
+- 📅 統合テスト予定: 2025年11月11日（月）〜 11月15日（金）
+
+**データ対応状況**:
+- 組織分析: facilityId, departmentId, departmentLevel, parentDepartmentId, employeeCount ✅ 100%対応
+- 人材分析: profession, hierarchyLevel, birthYear, evaluationScore, healthScore, skillLevel ✅ 100%対応
+- 面談分析: interviewStatus, completionRate, noShowRate, avgDuration ✅ 既にPhase 2.5で実装済み
+
+**実装スケジュール**:
+- 11/4-11/5: API-1実装（施設マスタAPI）
+- 11/5-11/6: API-3実装（組織階層API）
+- 11/6-11/7: API-2実装（職員満足度API）
+- 11/7: Webhook拡張（profession, hierarchyLevel, birthYear）
+- 11/8: 単体テスト・API仕様書作成
+- 11/11-11/15: 統合テスト（VoiceDriveチームと協力）
+- 11/18: リリース予定
+
+**推定工数**: 3.5日（実装2.5日 + テスト1日）
+
+---
 
 ### 🆕 Phase 2.7追加: SettingsPage連携（2025年10月26日）
 
