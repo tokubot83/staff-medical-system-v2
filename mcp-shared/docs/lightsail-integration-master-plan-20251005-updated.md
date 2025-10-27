@@ -2,7 +2,7 @@
 
 **文書番号**: MP-2025-1027-001
 **作成日**: 2025年9月20日
-**最終更新**: 2025年10月27日（Version 2.56 - Phase 2.20 通知設定作業をマスタープラン実行時に延期）
+**最終更新**: 2025年10月27日（Version 2.57 - Phase 2.20 作業再開指示書を追加）
 **作成者**: 医療システムチーム
 **宛先**: VoiceDriveチーム
 **重要度**: 🔴 最重要
@@ -195,7 +195,23 @@ VoiceDrive 100% 管理（VoiceDrive内のみ）
 - [AuditLogsPage_医療システム確認結果_20251027.md](./AuditLogsPage_医療システム確認結果_20251027.md)
 - [Response_AuditLogsPage_VoiceDrive_Confirmation_20251027.md](./Response_AuditLogsPage_VoiceDrive_Confirmation_20251027.md)（Slack/メール通知詳細設定）
 - [AuditLogsPage_最終実装計画書_20251027.md](./AuditLogsPage_最終実装計画書_20251027.md)
+- **[AuditLogsPage_作業再開指示書_20251027.md](./AuditLogsPage_作業再開指示書_20251027.md)**（マスタープラン実行時に発行）
 - 🟡 医療システム側（任意）: 独自の改ざん検知機能実装（2-3日）
+
+**マスタープラン実行時の作業フロー**:
+```
+【マスタープラン実行決定】
+        ↓
+【医療システム: 作業再開指示書をVoiceDriveへ発行】
+        ↓
+【医療システム: Slack/メール設定（3時間）】
+        ↓
+【医療システム: 環境変数情報をVoiceDriveへ提供】
+        ↓
+【VoiceDrive: Phase 4作業再開】
+        ↓
+【両チーム: 統合テスト・本番デプロイ（2-3週間）】
+```
 
 **優先度**: 🟢 **最低**（医療システム実装不要、各システム独立管理）
 
