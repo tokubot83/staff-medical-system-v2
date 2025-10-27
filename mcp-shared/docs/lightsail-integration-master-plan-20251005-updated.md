@@ -1,8 +1,8 @@
-# AWS Lightsail統合実装マスタープラン【2025年10月26日更新版】
+# AWS Lightsail統合実装マスタープラン【2025年10月27日更新版】
 
-**文書番号**: MP-2025-1026-001
+**文書番号**: MP-2025-1027-001
 **作成日**: 2025年9月20日
-**最終更新**: 2025年10月26日（Version 2.46 - Phase 2.10 ExecutiveFunctionsPage API実装完了）
+**最終更新**: 2025年10月27日（Version 2.53 - Phase 2.19 WhistleblowingPage実装不要確認、Phase 2.15 QRコード+PWA認証方式採用）
 **作成者**: 医療システムチーム
 **宛先**: VoiceDriveチーム
 **重要度**: 🔴 最重要
@@ -10,6 +10,527 @@
 ---
 
 ## 📢 重要更新
+
+### 🆕 Phase 2.18追加: HomePage連携（2025年10月27日）- ✅ 医療システム実装不要（最低優先度）
+
+VoiceDriveのHomePage（投稿タイムラインページ）のデータ要件を分析し、医療システム側で**実装が不要**であることを確認しました。
+
+**確認結果**: ✅ **医療システム側実装不要、既存API継続提供のみ**
+
+**理由**:
+1. ✅ **データ管理責任**: 投稿・投票・コメントはVoiceDrive 100%管理（医療システム不関与）
+2. ✅ **既存API利用**: ユーザー情報は既存の`GET /api/v2/employees/:id` APIで提供済み
+3. ✅ **Webhook実装済み**: 職員情報変更通知は既にPhase 3で実装完了（2025年10月2日）
+4. ✅ **新規テーブル不要**: 医療システムには投稿管理テーブルが存在しない（設計として正しい）
+
+**実装状況**:
+- ✅ 暫定マスターリスト受領: HomePageの要件定義を受領（43項目）（10/27完了）
+- ✅ 医療システム確認結果文書作成: [HomePage_医療システム確認結果_20251027.md](./HomePage_医療システム確認結果_20251027.md)
+- ✅ データ管理責任確認: VoiceDrive 88.4%管理、医療システム 11.6%管理（職員情報のみ）（10/27完了）
+- ✅ **DB実装不要**: 医療システムには投稿テーブルなし（確認済み）
+- ✅ **API実装不要**: 既存の職員情報API（GET /api/v2/employees/:id）継続提供のみ
+- ✅ **Webhook実装完了**: Phase 3で実装済み（employee.updated）
+
+**医療システム実装範囲**:
+- ✅ **対応完了**: 既存API継続提供のみ（追加実装なし）
+
+**VoiceDrive側の実装範囲（参考）**:
+- 🟢 HomePageコンポーネント実装済み（タブ切り替え、投稿一覧）
+- 🟢 Postテーブル実装済み（VoiceDrive schema.prisma）
+- 🟢 Voteテーブル実装済み（VoiceDrive schema.prisma）
+- 🟢 VoteHistoryテーブル実装済み（VoiceDrive schema.prisma）
+- 🟢 Commentテーブル実装済み（VoiceDrive schema.prisma）
+- 🟢 Timeline / EnhancedPost / FreespacePost コンポーネント実装済み
+- 🟢 useVoting / VotingService実装済み
+- 🟡 Userキャッシュ実装推奨（医療システムAPIから取得）
+- 🟡 Webhook受信エンドポイント実装推奨（employee.updated）
+
+**推定工数**: 0日（医療システム側対応不要）
+
+**VoiceDrive側工数（参考）**: 2-3日（Userキャッシュ + Webhook受信実装）
+
+**データ管理責任分界点**:
+```
+【投稿・投票・コメントデータ】
+VoiceDrive 88.4% 管理（38項目）
+├─ 投稿データ（Post: 15項目）
+├─ 投票データ（Vote: 8項目）
+├─ コメントデータ（Comment: 7項目）
+├─ UI状態（5項目）
+└─ URLパラメータ（2項目）
+
+【職員マスター情報】
+医療システム 11.6% 管理（5項目）
+└─ Employee（職員マスタ: 5項目）
+   ├─ employeeId（職員コード）
+   ├─ name（氏名）
+   ├─ department（部署）
+   ├─ permissionLevel（権限レベル）
+   └─ professionCategory（職種カテゴリ）
+   → 既存API（GET /api/v2/employees/:id）で提供
+   → Webhook（employee.updated）で即時更新
+```
+
+**次のステップ**:
+- ✅ 医療システム側: 対応完了（既存API提供継続のみ）
+- ⏳ VoiceDrive側: Userキャッシュ実装
+- ⏳ VoiceDrive側: Webhook受信エンドポイント実装
+- ⏳ VoiceDrive側: HomePageデモモード解除（実データ切り替え）
+
+**優先度**: 🟢 **最低**（医療システム実装不要、既存API継続提供のみ）
+
+
+### 🆕 Phase 2.19追加: WhistleblowingPage連携（2025年10月27日）- ✅ 医療システム実装不要（最低優先度）
+
+VoiceDriveのWhistleblowingPage（内部通報窓口ページ）のデータ要件を分析し、医療システム側で**実装が不要**であることを確認しました。
+
+**確認結果**: ✅ **医療システム側実装不要、既存API継続提供のみ**
+
+**理由**:
+1. ✅ **データ管理責任**: 内部通報データはVoiceDrive 100%管理（医療システム不関与）
+2. ✅ **既存API利用**: 職員権限情報は既存の`GET /api/v2/users/:id` APIで提供済み
+3. ✅ **新規テーブル不要**: 医療システムには通報管理テーブルが存在しない（設計として正しい）
+4. ✅ **Webhook連携不要**: 内部通報窓口はVoiceDrive単独運用を推奨
+
+**実装状況**:
+- ✅ 暫定マスターリスト受領: WhistleblowingPageの要件定義を受領（10/27完了）
+- ✅ 医療システム確認結果文書作成: [WhistleblowingPage_医療システム確認結果_20251027.md](./WhistleblowingPage_医療システム確認結果_20251027.md)
+- ✅ データ管理責任確認: VoiceDrive 100%管理、医療システム 0%管理（10/27完了）
+- ✅ **DB実装不要**: 医療システムには通報テーブルなし（確認済み）
+- ✅ **API実装不要**: 既存の職員権限API（GET /api/v2/users/:id）継続提供のみ
+- ✅ **Webhook実装不要**: VoiceDrive単独運用推奨
+
+**医療システム実装範囲**:
+- ✅ **対応完了**: 既存API継続提供のみ（追加実装なし）
+
+**VoiceDrive側の実装範囲（参考）**:
+- 🟢 WhistleblowingReportテーブル実装済み（VoiceDrive schema.prisma）
+- 🟢 InvestigationNoteテーブル実装済み（VoiceDrive schema.prisma）
+- 🟡 WhistleblowingAccessLogテーブル追加推奨（監査証跡）
+- 🟡 evidenceDescriptionフィールド追加推奨
+- ⏳ 7つのAPIエンドポイント実装必要（VoiceDrive側のみ）
+- 🟡 Webhook通知はオプション（医療システム連携は任意）
+
+**推定工数**: 0日（医療システム側対応不要）
+
+**VoiceDrive側工数（参考）**: 20.5日（約4週間）
+
+**データ管理責任分界点**:
+```
+【内部通報データ】
+VoiceDrive 100% 管理
+├─ 通報データ（WhistleblowingReport）
+├─ 調査ノート（InvestigationNote）
+├─ 統計データ（集計）
+└─ アクセス監査ログ（推奨）
+
+【職員権限情報】
+医療システム 100% 管理
+└─ ユーザー権限レベル（既存 Employee.permissionLevel）
+   → VoiceDrive側でキャッシュして利用（既存実装継続）
+```
+
+**次のステップ**:
+- ✅ 医療システム側: 対応完了（既存API提供継続のみ）
+- ⏳ VoiceDrive側: スキーマ更新（evidenceDescription等）
+- ⏳ VoiceDrive側: 7つのAPI実装
+- ⏳ VoiceDrive側: セキュリティ強化（アクセス監査ログ）
+
+**優先度**: 🟢 **最低**（医療システム実装不要、既存API継続提供のみ）
+
+---
+
+### 🔄 Phase 2.15更新: UnauthorizedPage - QRコード + PWA認証方式採用決定（2025年10月27日）
+
+VoiceDriveチームから認証システムの採用方式について検討依頼があり、「**QRコード初回認証 + PWA（Progressive Web App）方式**」を評価した結果、この方式を正式に採用することが決定しました。
+
+**採用決定**: ✅ **QRコード + PWA方式**（⭐⭐⭐⭐⭐ 最推奨）
+
+**採用理由（UX観点）**:
+1. ✅ **高齢職員・パートタイム職員にとって最も使いやすい**
+   - キーボード入力不要
+   - パスワード記憶不要
+   - QRコードスキャン → 以降はアイコンタップのみ
+
+2. ✅ **緊急時の迅速なアクセス**
+   - 夜勤帯での迅速な情報アクセス
+   - ホーム画面アイコンタップで即起動
+
+3. ✅ **初回セットアップの簡単さ**
+   - 所要時間: 約2-3分
+   - 人事部から受け取ったQRコードをスキャンするだけ
+   - 次回からアイコンタップのみ（30日間自動ログイン）
+
+**実装内容の変更**:
+
+**【医療システム側】工数: 3日 → 6.5日**
+
+| 項目 | 旧実装 | 新実装（QRコード+PWA） | 追加工数 |
+|-----|-------|---------------------|---------|
+| **データベース** | passwordHashのみ | +3テーブル（OnetimeToken、LoginHistory、LoginAttempt） | +1日 |
+| **API実装** | 1本（authenticate） | 4本（+generate-token、verify-token、change-password） | +2.5日 |
+| **セキュリティ** | Rate Limit、ロック | 同左 + トークン管理 | 変更なし |
+
+**新規テーブル**:
+- `OnetimeToken`: QRコード用ワンタイムトークン管理（64文字、24時間有効）
+- `LoginHistory`: 監査ログ（3年間保持）
+- `LoginAttempt`: アカウントロック判定用（5回失敗で30分ロック）
+
+**新規API**:
+- `POST /api/v2/auth/generate-onetime-token`: QRコード生成（人事部管理者のみ）
+- `POST /api/v2/auth/verify-onetime-token`: トークン検証
+- `POST /api/v2/auth/authenticate`: 従来型ログイン（バックアップ手段）
+- `PUT /api/v2/auth/change-password`: パスワード変更
+
+**【VoiceDrive側】工数: 3週間 → 約5週間**
+
+| Phase | 内容 | 工数 |
+|-------|------|------|
+| Week 1 | 基盤実装（DB拡張） | 5日 |
+| Week 2 | QRコード認証実装 | 5日 |
+| Week 3 | 従来型認証実装 | 5日 |
+| Week 4 | 統合テスト | 5日 |
+| Week 5 | 本番リリース | 5日 |
+
+**実装スケジュール**:
+- **開始予定**: 2025年11月4日（月）
+- **完了予定**: 2025年12月6日（金）
+- **並行実施**: Phase 1.6（共通DB構築）と並行実施
+  - Phase 1.6: 週3日（月・火・水）
+  - 認証システム: 週2日（木・金）
+
+**セキュリティ仕様**:
+- **トークン生成**: crypto.randomBytes(32) → 64文字（256ビット）
+- **トークン有効期限**: 24時間
+- **パスワードハッシュ**: bcrypt (cost factor = 10)
+- **アカウントロック**: 5回失敗 → 30分間ロック
+- **Rate Limiting**: 5回/15分/IP
+
+**期待される効果**:
+- ✅ 初回ログイン成功率: 95%以上（目標）
+- ✅ QRコード利用率: 70%以上（目標）
+- ✅ PWAインストール率: 60%以上（目標）
+- ✅ 平均ログイン時間: 30秒以内（QRコード方式）
+- ✅ ヘルプデスク問い合わせ: 月10件以下（目標）
+
+**承認状況**:
+- ✅ VoiceDriveチームから採用決定通知受領（10/27）
+- ✅ 医療システムチームから全面承認回答（10/27）
+  - 文書: [Response_Authentication_System_Approval_20251027.md](./Response_Authentication_System_Approval_20251027.md)
+
+**関連文書**:
+- [UnauthorizedPage_医療システム確認結果_20251027.md](./UnauthorizedPage_医療システム確認結果_20251027.md)（Version 2.0）
+- [Response_UnauthorizedPage_Confirmation_20251027.md](./Response_UnauthorizedPage_Confirmation_20251027.md)（8つの質問への回答）
+- [Response_QRCode_Authentication_20251027.md](./Response_QRCode_Authentication_20251027.md)（評価書）
+- [認証システム最終設計_QRコード方式_20251027.md](./認証システム最終設計_QRコード方式_20251027.md)（技術設計書、1627行）
+- [Response_Authentication_System_Approval_20251027.md](./Response_Authentication_System_Approval_20251027.md)（承認回答書）
+
+**次のステップ**:
+- ✅ 承認回答書送信完了（10/27）
+- ⏳ キックオフミーティング（11/1または11/4予定）
+- ⏳ 準備フェーズ（Week 0: 10/28-11/1）
+- ⏳ Phase 1実装開始（Week 1: 11/4-）
+
+**優先度**: 🔴 **最高**（VoiceDrive全体の認証基盤として必須）
+
+---
+---
+
+### 🆕 Phase 2.16追加: MyRequestsPage連携（2025年10月27日）- 🔴 医療システム実装必要（高優先度）
+
+VoiceDriveのMyRequestsPage（キャリアコース申請状況確認ページ）のデータ要件を分析し、医療システム側で**完全な実装が必要**であることを確認しました。
+
+**確認結果**: 🔴 **医療システム側DB実装が100%必要、VoiceDrive側テーブル追加は不要**
+
+**理由**:
+1. ✅ **データ管理責任**: キャリアコース管理データは医療システム100%（コース定義、選択状況、申請履歴）
+2. ✅ **新規テーブル必要**: 3テーブル（career_course_definitions、career_course_selections、career_course_change_requests）
+3. ✅ **API実装必要**: 3エンドポイント（申請履歴取得、コース定義取得、申請作成）
+4. ✅ **Webhook実装必要**: 2通知（申請承認、申請却下）
+5. ✅ **管理画面実装必要**: 人事担当者向け申請審査画面
+
+**実装状況**:
+- ✅ 暫定マスターリスト受領: MyRequestsPageの要件定義を受領（10/27完了）
+- ✅ 医療システム確認結果文書作成: [MyRequestsPage_医療システム確認結果_20251027.md](./MyRequestsPage_医療システム確認結果_20251027.md)
+- ✅ データ管理責任確認: 医療システム100%管理、VoiceDrive側は表示のみ（10/27完了）
+- ⏳ **DB実装待機**: 3テーブル新規作成必要（約5日）
+- ⏳ **API実装待機**: 3エンドポイント新規実装必要（約5日）
+- ⏳ **管理画面実装待機**: 申請審査画面実装必要（約5日）
+
+**医療システム実装範囲**:
+- ⏳ データベーステーブル追加（3件）- 5日
+  - career_course_definitions（コース定義マスタ）
+  - career_course_selections（現在のコース選択状況）
+  - career_course_change_requests（コース変更申請履歴）
+- ⏳ API実装（3件）- 5日
+  - GET /api/career-course/my-requests（申請履歴取得）
+  - GET /api/career-course/definitions（コース定義取得）
+  - POST /api/career-course/change-request（申請作成）
+- ⏳ Webhook実装（2件）- 2日
+  - course_change_approved（申請承認通知）
+  - course_change_rejected（申請却下通知）
+- ⏳ 管理画面実装（1件）- 5日
+  - 申請審査画面（人事担当者向け）
+
+**VoiceDrive側の実装範囲（参考）**:
+- 🟢 MyRequestsPage UI実装済み（統計サマリー、申請一覧、詳細モーダル）
+- 🟢 careerCourseService実装済み（API呼び出し）
+- 🟢 通知サービス実装済み（リアルタイム更新リスナー）
+- 🔴 Webhookエンドポイント未実装（/api/webhooks/career-course）
+- ❌ 新規テーブル不要（医療システムAPIから取得）
+
+**推定工数**: ~~約22日（約4.5週間）~~ → **約22.45日（約4.5週間）**
+
+**⚠️ 訂正**: ファイルアップロード方式を既存インフラ流用に変更（-2.3日削減）
+- 詳細: [MyRequestsPage_ファイルアップロード方式訂正_20251027.md](./MyRequestsPage_ファイルアップロード方式訂正_20251027.md)
+
+**内訳**:
+- 医療システムDB構築: 5日
+- 医療システムAPI実装: 5日
+- 医療システムWebhook実装: 2日
+- 医療システム管理画面: 5日
+- ~~医療システムファイルアップロードAPI新規実装: 1日~~ → **0.1日（既存API拡張のみ）** ✅ **-0.9日削減**
+- ~~医療システムS3統合: 0.5日~~ → **0日（既存バケット流用）** ✅ **-0.5日削減**
+- ~~WebhookFailureLogテーブル: 0.25日~~ → **0.25日（変更なし）**
+- ~~管理者通知機能: 0.5日~~ → **0日（既存Slackアラート流用）** ✅ **-0.5日削減**
+- ~~手動再送機能: 0.5日~~ → **0日（将来実装）** ✅ **-0.5日削減**
+- 医療システム添付ファイルWebhook: 0.1日（phase2-photo-webhook.ts拡張のみ）
+- VoiceDrive Webhook受信: 2日
+- 統合テスト: 2日
+- E2Eテスト: 1日
+
+**コスト削減の詳細**:
+- **既存の顔写真アップロード方式を流用** ✅
+- 新規API不要（既存 POST /api/v2/upload/file を拡張）
+- 新規S3バケット不要（既存 medical-system-employee-photos を流用）
+- phase2-photo-webhook.ts に1イベントタイプ追加のみ（約25行）
+- **総削減: -2.3日**
+
+**次のステップ**:
+- ⏳ 医療システム側: Phase 1.6（共通DB構築）と同時実施を推奨
+- ⏳ 医療システム側: 3テーブル設計・実装
+- ⏳ 医療システム側: 3API実装（JWT認証含む）
+- ⏳ 医療システム側: Webhook実装（HMAC署名）
+- ⏳ 医療システム側: 申請審査管理画面実装
+- ⏳ VoiceDrive側: Webhookエンドポイント実装
+- ⏳ 両チーム: 統合テスト（申請作成→審査→通知→画面更新）
+
+**優先度**: 🔴 **HIGH**（キャリア選択制度の中核機能として必須）
+
+---
+
+### 🆕 Phase 2.15追加: UnauthorizedPage認証API実装（2025年10月27日）- ⚠️ 認証API実装必要（高優先度）
+
+VoiceDriveのUnauthorizedPage（権限エラーページ）のデータ要件を分析し、医療システム側で**認証API実装が必要**であることを確認しました。
+
+**確認結果**: ⚠️ **認証API実装必要（VoiceDrive全体の認証基盤）**
+
+**理由**:
+1. ✅ **認証API実装**: POST /api/v2/auth/authenticate（職員認証）- 新規実装必要
+2. ✅ **Webhook通知**: 既存Webhook（employee.updated）で対応可能
+3. ✅ **DBテーブル**: EmployeeテーブルにpasswordHashフィールド追加必要
+4. ✅ **既存テーブル活用**: その他のフィールドは既存で対応可能
+
+**実装状況**:
+- ✅ 暫定マスターリスト受領: UnauthorizedPageの要件定義を受領（10/27完了）
+- ✅ 医療システム確認結果文書作成: [UnauthorizedPage_医療システム確認結果_20251027.md](./UnauthorizedPage_医療システム確認結果_20251027.md)
+- ✅ データ管理責任確認: 認証情報は医療システム管理、セッション管理はVoiceDrive（10/27完了）
+- ⏳ **認証API実装待機**: POST /api/v2/auth/authenticate実装（約3日）
+
+**医療システム実装範囲**:
+- ⏳ POST /api/v2/auth/authenticate（認証API）- 新規実装必要（2日）
+- ⏳ Employeeテーブル拡張（passwordHashフィールド追加）- 0.5日
+- ⏳ Rate Limit実装（5 req/min/IP）- 0.5日
+- ⏳ アカウントロック実装（5回失敗で30分）- 0.5日
+- ⏳ 単体テスト作成 - 0.5日
+
+**VoiceDrive側の実装範囲（参考）**:
+- 🟡 useAuthフック実装（新規）
+- 🟡 セッション管理実装（express-session + Redis）
+- 🟡 GET /api/auth/me実装
+- 🟡 POST /api/auth/login実装
+- 🟡 POST /api/auth/logout実装
+- 🟡 usePermissions修正（デモモードから実データへ切り替え）
+
+**推定工数**: 約3日（医療システム側）
+
+**VoiceDrive側工数（参考）**:
+- Phase 1（認証基盤）: 2週間
+- Phase 2（usePermissions修正）: 1週間
+- Phase 3（UnauthorizedPage実データ対応）: 1日
+
+**次のステップ**:
+- ⏳ 医療システム側: Employeeテーブル拡張（passwordHash追加）
+- ⏳ 医療システム側: 認証API実装（POST /api/v2/auth/authenticate）
+- ⏳ 医療システム側: Rate Limit、アカウントロック実装
+
+---
+
+### 🆕 Phase 2.17追加: WhistleblowingPage連携（2025年10月27日）- ✅ 医療システム実装不要（最低優先度）
+
+VoiceDriveのWhistleblowingPage（内部通報窓口）のデータ要件を分析し、医療システム側で**実装が不要**であることを確認しました。
+
+**確認結果**: ✅ **医療システム側実装不要、VoiceDrive単独運用で完結**
+
+**理由**:
+1. ✅ **データ管理責任**: 内部通報データはVoiceDrive 100%管理（通報データ、調査ノート、統計）
+2. ✅ **既存テーブル活用**: VoiceDrive側のWhistleblowingReport + InvestigationNoteで完結
+3. ✅ **新規テーブル不要（医療）**: 医療システムには内部通報関連テーブルが存在しない（設計として正しい）
+4. ✅ **既存API継続提供**: GET /api/v2/users/:id（職員権限情報取得）のみ継続
+5. 🟡 **Webhook連携はオプション**: 重大案件の通知は任意（推奨: 連携なし）
+
+**実装状況**:
+- ✅ 暫定マスターリスト受領: WhistleblowingPageの要件定義を受領（10/27完了）
+- ✅ 医療システム確認結果文書作成: [WhistleblowingPage_医療システム確認結果_20251027.md](./WhistleblowingPage_医療システム確認結果_20251027.md)
+- ✅ データ管理責任確認: VoiceDrive 100%管理、医療システム側は職員権限API継続提供のみ（10/27完了）
+- ✅ **DB実装不要**: 医療システム側に内部通報テーブルなし（確認済み）
+- ✅ **API実装不要**: 既存の職員権限API（GET /api/v2/users/:id）継続提供のみ
+- ✅ **Webhook実装はオプション**: 重大案件通知は任意（推奨: 実装しない）
+
+**医療システム実装範囲**:
+- ✅ **対応完了**: 既存API継続提供のみ（追加実装なし）
+- 🟡 **オプション**: Webhook受信実装（重大案件通知）- 2日（実装推奨度: 低）
+
+**VoiceDrive側の実装範囲（参考）**:
+- 🟢 WhistleblowingReportテーブル実装済み（VoiceDrive schema.prisma）
+- 🟢 InvestigationNoteテーブル実装済み（VoiceDrive schema.prisma）
+- 🟡 WhistleblowingAccessLog推奨追加（監査証跡）
+- 🟡 evidenceDescriptionフィールド推奨追加
+- ⏳ API実装（7件）- 5日
+- 🟡 Webhook実装（オプション）- 5日（スキップ可能）
+- ⏳ セキュリティ強化（暗号化、監査ログ）- 3日
+- 🟢 UI実装済み（デモモード動作中）
+- ⏳ テスト - 7日
+
+**推定工数**: 0日（医療システム側、オプション連携を含めても2日）
+
+**VoiceDrive側工数（参考）**: 20.5日（約4週間）
+
+**データ管理責任分界点**:
+```
+【内部通報データ】
+VoiceDrive 100% 管理
+├─ 通報データ（WhistleblowingReport）
+├─ 調査ノート（InvestigationNote）
+├─ 統計データ（集計）
+└─ アクセス監査ログ（推奨）
+
+【職員権限情報】
+医療システム 100% 管理
+└─ ユーザー権限レベル（既存 Employee.permissionLevel）
+   → VoiceDrive側でキャッシュして利用（既存実装継続）
+```
+
+**Webhook連携パターン（オプション）**:
+1. ✅ **推奨**: VoiceDrive単独運用（連携なし）- シンプル、迅速
+2. 🟡 **任意**: 重大案件のみ通知（Webhook 1のみ実装）- 人事・法務部門への緊急通知
+3. 🟢 **低優先度**: 双方向連携（Webhook 3件実装）- 医療システム側で案件管理
+
+**次のステップ**:
+- ✅ 医療システム側: 対応完了（既存API継続提供のみ）
+- ⏳ VoiceDrive側: Phase 1-7実装（約4週間）
+- 🟡 両チーム: Webhook連携の要否協議（任意、推奨: 実装しない）
+
+**優先度**: 🟢 **最低**（医療システム実装不要、VoiceDrive単独完結）
+
+---
+
+### 🆕 Phase 2.13-2.14追加: ProjectListPage / ProjectDetailPage連携（2025年10月26日）- ✅ 医療システム対応不要確認完了
+
+VoiceDriveのProjectListPage（プロジェクト一覧ページ）およびProjectDetailPage（プロジェクト詳細ページ）のデータ要件を分析し、医療システム側の対応が不要であることを確認しました。
+
+**確認結果**: ❌ **医療システム側の追加実装は一切不要**
+
+**理由**:
+1. ✅ **データ管理責任**: プロジェクト管理データはVoiceDrive 100%（Project, ProjectApproval, ProjectTeamMember, VoteHistory）
+2. ✅ **既存API利用**: 職員・施設・部署情報は既存の`/api/v2/employees`, `/api/v2/departments`, `/api/v2/facilities` APIで提供済み
+3. ✅ **Webhook実装済み**: 職員情報変更通知は既にPhase 3で実装完了（2025年10月2日）
+4. ✅ **新規データ提供不要**: ProjectList/DetailPageは100% VoiceDrive内部データ + 医療システムマスターAPIで動作
+
+**実装状況**:
+- ✅ 暫定マスターリスト受領: ProjectListPage / ProjectDetailPageの要件定義を受領（10/26完了）
+- ✅ 医療システム確認結果文書作成:
+  - [ProjectListPage_医療システム確認結果_20251026.md](./ProjectListPage_医療システム確認結果_20251026.md)
+  - [ProjectDetailPage_医療システム確認結果_20251026.md](./ProjectDetailPage_医療システム確認結果_20251026.md)
+- ✅ データ管理責任確認: VoiceDrive 100%管理（プロジェクト、承認、メンバー、投票）（10/26完了）
+- ✅ DB要件確認: VoiceDrive側でDB実装必要（Project, ProjectApproval, ProjectTeamMember, VoteHistory, ProjectSummary）（10/26完了）
+- ✅ **対応完了**: 医療システム側の対応不要を確認（10/26完了）
+
+**医療システム提供API（既に実装済み）**:
+- ✅ GET /api/v2/employees（職員マスター）- Phase 1実装済み
+- ✅ GET /api/v2/employees/:employeeId（職員詳細）- Phase 1実装済み
+- ✅ GET /api/v2/departments（部署マスター）- Phase 1実装済み
+- ✅ GET /api/v2/facilities（施設マスター）- Phase 1実装済み
+- ✅ GET /api/v2/employees/count（職員総数）- Phase 1実装済み
+- ✅ Webhook通知（職員情報変更）- Phase 3実装済み（2025年10月2日）
+
+**VoiceDrive側の実装範囲（医療システム不要）**:
+- 🟡 Projectテーブル追加（基本情報、votingDeadlineフィールド追加必要）
+- 🟡 ProjectApprovalテーブル活用（承認フロー管理）
+- 🟡 ProjectTeamMemberテーブル活用（メンバー管理）
+- 🟡 VoteHistoryテーブル追加（投票・合意形成データ）
+- 🟡 ProjectSummaryテーブル拡張（集計データ: upvotes, downvotes, consensusLevel）
+- 🟡 MedicalSystemService実装（医療システムAPIクライアント）
+- 🟡 Webhook受信エンドポイント実装（職員情報即時更新）
+
+**推定工数**: 0日（医療システム側対応不要）
+
+**VoiceDrive側工数（参考）**:
+- ProjectListPage Phase 1: 2-3日（DB実装、サービス実装、キャッシュ戦略）
+- ProjectDetailPage Phase 1: 2-3日（DB実装、サービス実装）
+- ProjectDetailPage Phase 2: 2-3日（投票機能実装）
+- ProjectDetailPage Phase 3: 2日（アクション実装）
+
+**次のステップ**:
+- ✅ 医療システム側: 対応完了（既存API提供継続のみ）
+- ⏳ VoiceDrive側: Phase 1 DB実装（Project, VoteHistory, ProjectSummary）
+- ⏳ VoiceDrive側: MedicalSystemService実装
+- ⏳ VoiceDrive側: Webhook受信エンドポイント実装
+
+---
+
+### 🆕 Phase 2.12追加: IdeaVoiceTrackingPage連携（2025年10月26日）- ✅ 医療システム対応不要確認完了
+
+VoiceDriveのIdeaVoiceTrackingPage（アイデア追跡ページ）のデータ要件を分析し、医療システム側の対応が不要であることを確認しました。
+
+**確認結果**: ❌ **医療システム側の実装は一切不要**
+
+**理由**:
+1. ✅ **データ管理責任**: VoiceDrive 100%（投稿データ、投票データ、スコア計算、プロジェクトレベル判定）
+2. ✅ **既存API利用**: ユーザー情報は既存の`/api/v2/users` APIで提供済み
+3. ✅ **マスターデータ**: VoiceDrive側でコード内定数として管理（プロジェクトレベル、スコア閾値、投票オプション等）
+4. ✅ **新規データ提供不要**: IdeaVoiceTrackingPageは100% VoiceDrive内部データで動作
+
+**実装状況**:
+- ✅ 暫定マスターリスト受領: VoiceDriveから5つのマスターデータ定義を受領（10/26完了）
+- ✅ 医療システム確認結果文書作成: [IdeaVoiceTrackingPage_医療システム確認結果_20251026.md](./IdeaVoiceTrackingPage_医療システム確認結果_20251026.md)
+- ✅ データ管理責任確認: VoiceDrive 100%管理（投稿、投票、スコア計算、プロジェクトレベル）（10/26完了）
+- ✅ DB要件確認: VoiceDrive既存テーブル（Post, Vote, VoteHistory）で十分（10/26完了）
+- ✅ **対応完了**: 医療システム側の対応不要を確認（10/26完了）
+
+**データ管理責任**:
+- アイデア投稿データ: VoiceDrive 100%管理（Postテーブル）
+- 投票データ: VoiceDrive 100%管理（Voteテーブル）
+- スコア計算: VoiceDrive 100%管理（useProjectScoring hook）
+- プロジェクトレベル判定: VoiceDrive 100%管理（ローカル計算）
+- プロジェクト化閾値: VoiceDrive 100%管理（コード内定数 - 100点）
+- ユーザー情報: 医療システム 100%管理（既存 `/api/v2/users` API利用）
+
+**VoiceDrive側の推奨実装（医療システム不要）**:
+- 🟡 ProjectizedHistoryテーブル追加（Phase 2）- プロジェクト化達成記録
+- 🟡 ProjectLevelTransitionHistoryテーブル追加（Phase 3）- レベル遷移追跡
+- 🟡 VoteHistoryテーブル活用（Phase 4）- PersonalStation Phase 2と統合
+
+**推定工数**: 0日（医療システム側対応不要）
+
+**VoiceDrive側工数（参考）**: 5-8日（Phase 2-4実装時）
+
+**次のステップ**:
+- ✅ 医療システム側: 対応完了（既存API提供継続のみ）
+- ⏳ VoiceDrive側: Phase 1動作確認
+- ⏳ VoiceDrive側: Phase 2-4実装検討（任意）
+
+---
 
 ### ✅ Phase 2.10実装完了: ExecutiveFunctionsPage連携（2025年10月26日）
 
@@ -8749,3 +9270,12 @@ consensusLevel = Math.round(
 
 ---
 
+
+
+| **2025-10-26** | **2.49** | **医療システムチーム** | **🆕 Phase 2.13-2.14追加: ProjectListPage / ProjectDetailPage連携 - 医療システム対応不要確認完了**<br>- **VoiceDriveチームから2つのページ（ProjectListPage / ProjectDetailPage）の暫定マスターリスト＋DB要件分析受領**<br>- **医療システム側の対応: 一切不要** ✅<br>- **データ管理責任分界**: プロジェクト管理データは100% VoiceDrive管理（Project, ProjectApproval, ProjectTeamMember, VoteHistory, ProjectSummary）<br>- **医療システムが提供するAPI（既に実装済み）**:<br>  - GET /api/v2/employees（職員マスター）- Phase 1実装済み<br>  - GET /api/v2/employees/:employeeId（職員詳細）- Phase 1実装済み<br>  - GET /api/v2/departments（部署マスター）- Phase 1実装済み<br>  - GET /api/v2/facilities（施設マスター）- Phase 1実装済み<br>  - GET /api/v2/employees/count（職員総数）- Phase 1実装済み<br>  - Webhook通知（職員情報変更）- Phase 3実装済み（2025年10月2日）<br>- **VoiceDrive側の実装範囲（医療システム不要）**:<br>  - Projectテーブル追加（基本情報、votingDeadlineフィールド追加必要）<br>  - ProjectApprovalテーブル活用（承認フロー管理）<br>  - ProjectTeamMemberテーブル活用（メンバー管理）<br>  - VoteHistoryテーブル追加（投票・合意形成データ）<br>  - ProjectSummaryテーブル拡張（集計データ: upvotes, downvotes, consensusLevel）<br>  - MedicalSystemService実装（医療システムAPIクライアント）<br>  - Webhook受信エンドポイント実装（職員情報即時更新）<br>- **推定工数**: 0日（医療システム側対応不要）<br>- **VoiceDrive側工数（参考）**:<br>  - ProjectListPage Phase 1: 2-3日（DB実装、サービス実装、キャッシュ戦略）<br>  - ProjectDetailPage Phase 1: 2-3日（DB実装、サービス実装）<br>  - ProjectDetailPage Phase 2: 2-3日（投票機能実装）<br>  - ProjectDetailPage Phase 3: 2日（アクション実装）<br>- **確認結果文書作成**:<br>  - ProjectListPage_医療システム確認結果_20251026.md（文書番号: MED-CONF-2025-1026-006）<br>  - ProjectDetailPage_医療システム確認結果_20251026.md（文書番号: MED-CONF-2025-1026-007）<br>- **マスタープラン Version 2.49更新**: Phase 2.13-2.14追加、医療システム対応不要を確認 |
+
+| **2025-10-27** | **2.50** | **医療システムチーム** | **🆕 Phase 2.15追加: UnauthorizedPage認証API実装 - 認証API実装必要（高優先度）**<br>- **VoiceDriveチームからUnauthorizedPageの暫定マスターリスト受領**<br>- **医療システム側の対応: 認証API実装必要** ⚠️<br>- **実装内容**:<br>  - POST /api/v2/auth/authenticate（職員認証API）- 新規実装必要（2日）<br>  - Employeeテーブル拡張（passwordHashフィールド追加）- 0.5日<br>  - Rate Limit実装（5 req/min/IP）- 0.5日<br>  - アカウントロック実装（5回失敗で30分）- 0.5日<br>  - 単体テスト作成 - 0.5日<br>- **Webhook通知**: 既存Webhook（employee.updated）で対応可能<br>- **DBテーブル**: EmployeeテーブルにpasswordHashフィールド追加のみ<br>- **既存テーブル活用**: permissionLevel、accountType、roleは既存フィールドで対応<br>- **セキュリティ要件**:<br>  - HTTPS必須（既に実装済み）<br>  - パスワードハッシュ化（bcrypt、コスト10）<br>  - Rate Limit（5 req/min/IP）<br>  - アカウントロック（5回失敗で30分ロック）<br>  - CORS設定（VoiceDriveドメイン許可、既に実装済み）<br>- **VoiceDrive側の実装範囲（参考）**:<br>  - useAuthフック実装（新規）<br>  - セッション管理実装（express-session + Redis）<br>  - GET /api/auth/me実装<br>  - POST /api/auth/login実装（医療システム認証API呼び出し）<br>  - POST /api/auth/logout実装<br>  - usePermissions修正（デモモードから実データへ切り替え）<br>- **推定工数**: 約3日（医療システム側）<br>- **VoiceDrive側工数（参考）**:<br>  - Phase 1（認証基盤）: 2週間<br>  - Phase 2（usePermissions修正）: 1週間<br>  - Phase 3（UnauthorizedPage実データ対応）: 1日<br>- **優先度**: 🔴 HIGH（VoiceDrive全体の認証基盤として必須）<br>- **確認結果文書作成**: UnauthorizedPage_医療システム確認結果_20251027.md（文書番号: MED-CONF-2025-1027-005）<br>- **マスタープラン Version 2.50更新**: Phase 2.15追加、認証API実装戦略反映 |
+
+| **2025-10-27** | **2.51** | **医療システムチーム** | **✅ Phase 2.16訂正: MyRequestsPage実装工数削減 - 既存インフラ流用により-2.3日削減**<br>- **ファイルアップロード方式の訂正**: 顔写真アップロードと同じ方式を流用 ✅<br>- **コスト削減の詳細**:<br>  - ~~新規ファイルアップロードAPI実装: 1日~~ → **0.1日（既存API拡張のみ）** ✅ **-0.9日削減**<br>  - ~~S3統合: 0.5日~~ → **0日（既存バケット流用）** ✅ **-0.5日削減**<br>  - ~~管理者通知機能: 0.5日~~ → **0日（既存Slackアラート流用）** ✅ **-0.5日削減**<br>  - ~~手動再送機能: 0.5日~~ → **0日（将来実装）** ✅ **-0.5日削減**<br>  - WebhookFailureLogテーブル: 0.25日（変更なし）<br>  - 添付ファイルWebhook: 0.1日（phase2-photo-webhook.ts拡張のみ）<br>- **実装方針変更**:<br>  - 新規API不要 → 既存 POST /api/v2/upload/file を拡張（if分岐追加のみ）<br>  - 新規S3バケット不要 → 既存 medical-system-employee-photos を流用<br>  - phase2-photo-webhook.ts に1イベントタイプ追加のみ（約25行）<br>  - career_course_request.attachment.uploaded イベント追加<br>- **推定工数**: ~~約22日~~ → **約22.45日**（**-2.3日削減**） ✅<br>- **内訳更新**:<br>  - 医療システムDB構築: 5日<br>  - 医療システムAPI実装: 5日<br>  - 医療システムWebhook実装: 2日<br>  - 医療システム管理画面: 5日<br>  - 医療システムファイルアップロード: 0.1日（既存API拡張）<br>  - 医療システム添付ファイルWebhook: 0.1日<br>  - VoiceDrive Webhook受信: 2日<br>  - 統合テスト: 2日<br>  - E2Eテスト: 1日<br>- **既存インフラ活用のメリット**:<br>  - 既存のCloudFront Distribution使用（追加料金なし）<br>  - 既存のIAMロール使用（追加料金なし）<br>  - 同一バケット内のフォルダ追加のみ（/career-course/{requestId}/{filename}）<br>  - 既存のHMAC署名検証・リトライ機構を流用<br>- **訂正文書作成**: MyRequestsPage_ファイルアップロード方式訂正_20251027.md（文書番号: MED-CORRECTION-2025-1027-001）<br>- **マスタープラン Version 2.51更新**: Phase 2.16工数訂正、既存インフラ流用による削減を反映 |
+| **2025-10-27** | **2.52** | **医療システムチーム** | **✅ Phase 2.18追加: HomePage実装不要確認**<br>- **VoiceDriveチームからHomePageの暫定マスターリスト受領**<br>- **医療システム側の対応: 一切不要** ✅<br>- HomePage_医療システム確認結果_20251027.md作成 |
+| **2025-10-27** | **2.53** | **医療システムチーム** | **🔄 Phase 2.15更新 + 🆕 Phase 2.19追加: 認証システムQRコード+PWA方式採用 & WhistleblowingPage実装不要確認**<br>- **Phase 2.15更新: UnauthorizedPage - QRコード + PWA認証方式採用決定**<br>  - VoiceDriveチームから採用決定通知受領（⭐⭐⭐⭐⭐ 最推奨）<br>  - 医療システムチームから全面承認回答<br>  - **採用理由**: 高齢職員・パートタイム職員にとって最も使いやすい<br>  - **実装工数変更**: 3日 → **6.5日**（+3.5日）<br>  - **新規テーブル**: 3テーブル追加（OnetimeToken、LoginHistory、LoginAttempt）<br>  - **新規API**: 4本実装（generate-token、verify-token、authenticate、change-password）<br>  - **実装スケジュール**: 2025年11月4日～12月6日（5週間、Phase 1.6と並行実施）<br>  - **期待される効果**:<br>    - 初回ログイン成功率: 95%以上<br>    - QRコード利用率: 70%以上<br>    - PWAインストール率: 60%以上<br>    - 平均ログイン時間: 30秒以内<br>  - **セキュリティ仕様**:<br>    - トークン: crypto.randomBytes(32) → 64文字（256ビット）<br>    - トークン有効期限: 24時間<br>    - パスワードハッシュ: bcrypt (cost=10)<br>    - アカウントロック: 5回失敗 → 30分間ロック<br>  - **関連文書**:<br>    - Response_UnauthorizedPage_Confirmation_20251027.md（8つの質問への回答）<br>    - Response_QRCode_Authentication_20251027.md（評価書）<br>    - 認証システム最終設計_QRコード方式_20251027.md（技術設計書、1627行）<br>    - Response_Authentication_System_Approval_20251027.md（承認回答書）<br>- **🆕 Phase 2.19追加: WhistleblowingPage連携 - 医療システム実装不要確認完了**<br>  - **VoiceDriveチームからWhistleblowingPageの暫定マスターリスト受領**<br>  - **医療システム側の対応: 一切不要** ✅<br>  - **データ管理責任**: 内部通報データはVoiceDrive 100%管理<br>  - **医療システム実装範囲**: 既存API継続提供のみ（追加実装なし）<br>  - **推定工数**: 0日（医療システム側対応不要）<br>  - **VoiceDrive側工数（参考）**: 20.5日（約4週間）<br>  - **確認結果文書作成**: WhistleblowingPage_医療システム確認結果_20251027.md<br>- **マスタープラン Version 2.53更新**: Phase 2.15詳細更新（QRコード+PWA方式）、Phase 2.19追加（WhistleblowingPage実装不要確認） |

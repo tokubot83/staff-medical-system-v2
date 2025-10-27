@@ -17,6 +17,60 @@ import { authenticateAndAuthorize } from '@/lib/middleware/jwt-auth';
 const prisma = new PrismaClient();
 
 /**
+ * accountType → professionCategory 変換関数
+ *
+ * VoiceDrive側で期待される professionCategory 値:
+ * - 'nursing': 看護職
+ * - 'medical': 医師
+ * - 'rehabilitation': リハビリ職
+ * - 'administrative': 事務職
+ * - 'support': サポート職
+ * - 'management': 管理職
+ * - 'other': その他
+ */
+function convertAccountTypeToProfessionCategory(accountType: string): string {
+  const mapping: Record<string, string> = {
+    // 看護職
+    'NURSE': 'nursing',
+    'NURSE_MANAGER': 'nursing',
+    'NURSING_DIRECTOR': 'nursing',
+
+    // 医師
+    'DOCTOR': 'medical',
+    'MEDICAL_DIRECTOR': 'medical',
+
+    // 介護職
+    'CARE_WORKER': 'nursing',
+    'CARE_MANAGER': 'nursing',
+
+    // リハビリ職
+    'THERAPIST': 'rehabilitation',
+    'PHYSICAL_THERAPIST': 'rehabilitation',
+    'OCCUPATIONAL_THERAPIST': 'rehabilitation',
+    'SPEECH_THERAPIST': 'rehabilitation',
+
+    // 医療技術職
+    'PHARMACIST': 'medical',
+    'RADIOLOGIST': 'medical',
+    'LAB_TECHNICIAN': 'medical',
+    'DIETITIAN': 'support',
+    'MEDICAL_SOCIAL_WORKER': 'support',
+
+    // 事務職
+    'ADMIN': 'administrative',
+    'CLERK': 'administrative',
+
+    // 経営層
+    'CHAIRMAN': 'management',
+    'DIRECTOR': 'management',
+    'DEPARTMENT_HEAD': 'management',
+    'MANAGER': 'management',
+  };
+
+  return mapping[accountType] || 'other';
+}
+
+/**
  * 全職員取得API
  *
  * 認証: Bearer Token（JWT）
@@ -104,7 +158,7 @@ export async function GET(request: NextRequest) {
       permissionLevel: e.permissionLevel,
       accountType: e.position.accountType,
       canPerformLeaderDuty: e.permissionLevel >= 8,
-      professionCategory: null, // Phase 2で実装予定
+      professionCategory: convertAccountTypeToProfessionCategory(e.position.accountType), // Phase 2.18: HomePage対応で実装完了
       parentId: e.supervisorId,
       isActive: e.status === 'active' || e.status === 'leave',
       isRetired: e.status === 'retired',
