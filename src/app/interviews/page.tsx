@@ -19,6 +19,7 @@ import UnifiedInterviewDashboard from '@/components/interview/UnifiedInterviewDa
 import UnifiedInterviewBankSystem from '@/components/interview/UnifiedInterviewBankSystem'
 import InterviewManualSimulator from '@/components/interview/InterviewManualSimulator'
 import InterviewStatisticsChart from '@/components/charts/InterviewStatisticsChart'
+import InterviewerManagementSimple from '@/components/interview/InterviewerManagementSimple'
 // import ReservationManagement from '@/components/interview/ReservationManagement' - 削除済み（面談ステーションに統合）
 
 // タブ順序を業務フローに合わせて修正（統合面談ステーション→バンク→分析）
@@ -2410,11 +2411,59 @@ function ReportTab(): React.ReactElement {
 }
 
 function SettingsTab(): React.ReactElement {
+  const [activeSettingsTab, setActiveSettingsTab] = useState('interviewers');
+
+  const settingsTabs = [
+    { id: 'interviewers', label: '担当者スケジュール', icon: '📅', description: '稼働日・NG日・時間枠管理' },
+    { id: 'templates', label: 'テンプレート', icon: '📝', description: '面談シート設定' },
+    { id: 'notifications', label: '通知設定', icon: '🔔', description: 'リマインダー・アラート' },
+    { id: 'general', label: '一般設定', icon: '⚙️', description: 'システム全般' },
+  ];
+
   return (
-    <div className={styles.settingsContainer}>
-      <h2>面談設定</h2>
-      <div className={styles.comingSoon}>
-        <p>面談設定機能は現在開発中です</p>
+    <div className="space-y-6">
+      {/* 設定カテゴリー選択 */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {settingsTabs.map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveSettingsTab(tab.id)}
+            className={`p-6 rounded-xl border-2 transition-all text-left hover:shadow-md ${
+              activeSettingsTab === tab.id
+                ? 'border-blue-500 bg-blue-50 shadow-md'
+                : 'border-gray-200 bg-white hover:border-blue-300'
+            }`}
+          >
+            <div className="text-3xl mb-3">{tab.icon}</div>
+            <h3 className="font-semibold text-lg mb-1">{tab.label}</h3>
+            <p className="text-sm text-gray-600">{tab.description}</p>
+          </button>
+        ))}
+      </div>
+
+      {/* 設定コンテンツ */}
+      <div className="bg-white rounded-xl border shadow-sm">
+        {activeSettingsTab === 'interviewers' && (
+          <InterviewerManagementSimple accessLevel="L7" />
+        )}
+        {activeSettingsTab === 'templates' && (
+          <div className="p-6">
+            <h3 className="text-xl font-bold mb-4">テンプレート管理</h3>
+            <p className="text-gray-600">面談シートテンプレートの設定機能は開発中です</p>
+          </div>
+        )}
+        {activeSettingsTab === 'notifications' && (
+          <div className="p-6">
+            <h3 className="text-xl font-bold mb-4">通知設定</h3>
+            <p className="text-gray-600">通知・リマインダー設定機能は開発中です</p>
+          </div>
+        )}
+        {activeSettingsTab === 'general' && (
+          <div className="p-6">
+            <h3 className="text-xl font-bold mb-4">一般設定</h3>
+            <p className="text-gray-600">システム一般設定機能は開発中です</p>
+          </div>
+        )}
       </div>
     </div>
   )

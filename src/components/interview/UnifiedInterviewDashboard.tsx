@@ -79,7 +79,7 @@ import InterviewTemplateManager from '@/components/templates/InterviewTemplateMa
 import DynamicInterviewFlow from './DynamicInterviewFlow';
 import InterviewCalendar from './InterviewCalendar';
 import EnhancedOverdueAlert from './EnhancedOverdueAlert';
-import InterviewerManagement from './InterviewerManagement';
+import InterviewerManagementSimple from './InterviewerManagementSimple';
 import PatternDAnalytics from './PatternDAnalytics';
 import { EnhancedInterviewReservation } from '@/types/pattern-d-interview';
 import { TimeSlotManager } from '@/services/time-slot-manager';
@@ -1243,7 +1243,7 @@ export default function UnifiedInterviewDashboard() {
             </DialogTitle>
           </DialogHeader>
           <div className="flex-1 overflow-y-auto">
-            <InterviewerManagement accessLevel="L8" />
+            <InterviewerManagementSimple accessLevel="L8" />
           </div>
         </DialogContent>
       </Dialog>
@@ -1377,13 +1377,16 @@ function ReservationManagementSection({ provisionalReservations, onConfirmed, on
               variant="outline"
               size="sm"
               onClick={() => {
-                console.log('担当者管理ボタンクリック');
-                onShowInterviewerManagement();
+                console.log('設定タブへ移動');
+                // 設定タブに移動
+                if (typeof window !== 'undefined') {
+                  window.location.href = '/interviews?tab=settings';
+                }
               }}
               className="flex items-center gap-2 bg-white hover:bg-blue-50"
             >
               <Settings className="h-4 w-4" />
-              担当者管理
+              設定
             </Button>
             <Button
               variant="outline"
