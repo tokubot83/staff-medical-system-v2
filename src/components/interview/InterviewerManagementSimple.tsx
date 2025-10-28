@@ -77,6 +77,7 @@ export default function InterviewerManagementSimple({ accessLevel }: Interviewer
   const [editingInterviewer, setEditingInterviewer] = useState<SimpleInterviewer | null>(null);
   const [selectedMonth, setSelectedMonth] = useState(new Date());
   const [showNGDateForm, setShowNGDateForm] = useState(false);
+  const [editingNGDateId, setEditingNGDateId] = useState<string | null>(null);
   const [newNGDate, setNewNGDate] = useState<Partial<NGDate>>({
     type: 'full-day',
     date: '',
@@ -243,7 +244,7 @@ export default function InterviewerManagementSimple({ accessLevel }: Interviewer
     return isWorkingDay ? 'working' : 'non-working';
   };
 
-  // NG日追加
+  // NG日追加・更新
   const handleAddNGDate = () => {
     if (!editingInterviewer || !newNGDate.date) {
       alert('日付を選択してください');
@@ -255,22 +256,43 @@ export default function InterviewerManagementSimple({ accessLevel }: Interviewer
       return;
     }
 
-    const ng: NGDate = {
-      id: `NG-${Date.now()}`,
-      date: newNGDate.date,
-      type: newNGDate.type || 'full-day',
-      startTime: newNGDate.startTime,
-      endTime: newNGDate.endTime,
-      reason: newNGDate.reason || '',
-    };
+    if (editingNGDateId) {
+      // 編集モード：既存のNG日を更新
+      setEditingInterviewer({
+        ...editingInterviewer,
+        ngDates: editingInterviewer.ngDates.map(ng =>
+          ng.id === editingNGDateId
+            ? {
+                ...ng,
+                date: newNGDate.date,
+                type: newNGDate.type || 'full-day',
+                startTime: newNGDate.startTime,
+                endTime: newNGDate.endTime,
+                reason: newNGDate.reason || '',
+              }
+            : ng
+        ).sort((a, b) => a.date.localeCompare(b.date)),
+      });
+    } else {
+      // 新規追加モード
+      const ng: NGDate = {
+        id: `NG-${Date.now()}`,
+        date: newNGDate.date,
+        type: newNGDate.type || 'full-day',
+        startTime: newNGDate.startTime,
+        endTime: newNGDate.endTime,
+        reason: newNGDate.reason || '',
+      };
 
-    setEditingInterviewer({
-      ...editingInterviewer,
-      ngDates: [...editingInterviewer.ngDates, ng].sort((a, b) => a.date.localeCompare(b.date)),
-    });
+      setEditingInterviewer({
+        ...editingInterviewer,
+        ngDates: [...editingInterviewer.ngDates, ng].sort((a, b) => a.date.localeCompare(b.date)),
+      });
+    }
 
     // フォームリセット
     setNewNGDate({ type: 'full-day', date: '', reason: '' });
+    setEditingNGDateId(null);
     setShowNGDateForm(false);
   };
 
@@ -522,6 +544,8 @@ export default function InterviewerManagementSimple({ accessLevel }: Interviewer
             setSelectedInterviewer(null);
             setEditingInterviewer(null);
             setShowNGDateForm(false);
+            setEditingNGDateId(null);
+            setNewNGDate({ type: 'full-day', date: '', reason: '' });
           }
         }}
       >
@@ -821,8 +845,8 @@ export default function InterviewerManagementSimple({ accessLevel }: Interviewer
                                 endTime: ng.endTime,
                                 reason: ng.reason,
                               });
-                              // 既存のNG日を削除
-                              handleDeleteNGDate(ng.id);
+                              // 編集中のNG日IDを保存
+                              setEditingNGDateId(ng.id);
                               // フォームを表示
                               setShowNGDateForm(true);
                             }}
@@ -869,6 +893,7 @@ export default function InterviewerManagementSimple({ accessLevel }: Interviewer
                           onClick={() => {
                             setShowNGDateForm(false);
                             setNewNGDate({ type: 'full-day', date: '', reason: '' });
+                            setEditingNGDateId(null);
                           }}
                         >
                           <X className="h-4 w-4" />
@@ -900,7 +925,12 @@ export default function InterviewerManagementSimple({ accessLevel }: Interviewer
                             <Button
                               variant={newNGDate.type === 'time-range' ? 'default' : 'outline'}
                               size="sm"
-                              onClick={() => setNewNGDate({ ...newNGDate, type: 'time-range' })}
+                              onClick={() => setNewNGDate({
+                                ...newNGDate,
+                                type: 'time-range',
+                                startTime: newNGDate.startTime || '09:00',
+                                endTime: newNGDate.endTime || '17:00'
+                              })}
                             >
                               時間指定
                             </Button>
@@ -963,6 +993,7 @@ export default function InterviewerManagementSimple({ accessLevel }: Interviewer
                           onClick={() => {
                             setShowNGDateForm(false);
                             setNewNGDate({ type: 'full-day', date: '', reason: '' });
+                            setEditingNGDateId(null);
                           }}
                         >
                           キャンセル
@@ -987,6 +1018,8 @@ export default function InterviewerManagementSimple({ accessLevel }: Interviewer
                 setSelectedInterviewer(null);
                 setEditingInterviewer(null);
                 setShowNGDateForm(false);
+                setEditingNGDateId(null);
+                setNewNGDate({ type: 'full-day', date: '', reason: '' });
               }}
             >
               キャンセル
